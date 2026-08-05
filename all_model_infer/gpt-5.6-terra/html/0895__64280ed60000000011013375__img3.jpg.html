@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>二次函数笔记</title>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: #eeeae1;
+      color: #4f5273;
+      font-family: "KaiTi", "STKaiti", "FangSong", serif;
+    }
+
+    body {
+      padding: 20px 26px;
+    }
+
+    .page-wrap {
+      position: relative;
+      width: min(100%, 930px);
+      margin: 0 auto;
+    }
+
+    .page {
+      position: relative;
+      min-height: 1350px;
+      overflow: hidden;
+      border: 1px solid #77746e;
+      background-color: #fffef7;
+      background-image:
+        linear-gradient(rgba(103, 147, 175, .18) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(103, 147, 175, .18) 1px, transparent 1px),
+        linear-gradient(rgba(103, 147, 175, .08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(103, 147, 175, .08) 1px, transparent 1px);
+      background-size: 32px 32px, 32px 32px, 8px 8px, 8px 8px;
+      box-shadow: 7px 7px 17px rgba(55, 49, 35, .18);
+    }
+
+    .header {
+      height: 49px;
+      display: grid;
+      grid-template-columns: 155px 1fr;
+      border-bottom: 1px solid #8d8b83;
+      background: rgba(255, 255, 250, .58);
+      color: #77736a;
+      font: 12px/1.2 Arial, sans-serif;
+    }
+
+    .header div {
+      padding: 12px 10px;
+      border-right: 1px solid #8d8b83;
+    }
+
+    .header div:last-child {
+      border-right: 0;
+    }
+
+    .notes {
+      padding: 26px 38px 55px 46px;
+      font-size: 27px;
+      line-height: 1.62;
+      letter-spacing: 0;
+    }
+
+    .blue { color: #4e5794; }
+    .purple { color: #8b5c9d; }
+    .red { color: #c64f4e; }
+    .green { color: #3b9d7c; }
+
+    .top-line {
+      white-space: nowrap;
+      font-size: 29px;
+      margin-left: 8px;
+    }
+
+    .formula-row {
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-start;
+      height: 235px;
+      padding-top: 10px;
+      color: #87579b;
+      font-size: 28px;
+    }
+
+    .formula {
+      width: 42%;
+      text-align: center;
+      position: relative;
+    }
+
+    .formula .arrow {
+      display: block;
+      color: #75649a;
+      font-size: 38px;
+      line-height: .8;
+      transform: rotate(-12deg);
+      margin: -2px 0 2px 42px;
+      text-align: left;
+    }
+
+    .parabola {
+      width: 130px;
+      height: 112px;
+      margin: 13px auto 0;
+      position: relative;
+    }
+
+    .parabola::before {
+      content: "";
+      position: absolute;
+      left: 64px;
+      top: 0;
+      height: 112px;
+      border-left: 1px dashed rgba(91, 83, 128, .45);
+    }
+
+    .parabola::after {
+      content: "";
+      position: absolute;
+      left: 14px;
+      top: 18px;
+      width: 102px;
+      height: 85px;
+      border-top: 2px solid #8a5d9e;
+      border-radius: 50% 50% 0 0;
+      transform: rotate(0deg);
+    }
+
+    .formula.down .parabola::after {
+      top: 8px;
+      border-top: 0;
+      border-bottom: 2px solid #8061a0;
+      border-radius: 0 0 50% 50%;
+    }
+
+    .section-title {
+      margin-top: 0;
+      margin-bottom: 5px;
+      font-size: 34px;
+      font-weight: bold;
+    }
+
+    .entry {
+      margin: 0;
+      line-height: 1.65;
+    }
+
+    .indent {
+      padding-left: 3px;
+    }
+
+    .mark {
+      color: #cf5553;
+      font-size: 28px;
+      margin-left: 12px;
+    }
+
+    .small-note {
+      color: #c84e4b;
+      font-size: 23px;
+      display: inline-block;
+      margin-left: 48px;
+      transform: rotate(-2deg);
+    }
+
+    .example-two {
+      margin-top: 20px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(91, 88, 76, .65);
+    }
+
+    .example-two .entry {
+      font-size: 26px;
+    }
+
+    .edge {
+      position: absolute;
+      right: -27px;
+      top: 14px;
+      width: 28px;
+      height: 1280px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding-top: 2px;
+    }
+
+    .tab {
+      width: 26px;
+      height: 43px;
+      border-radius: 0 4px 4px 0;
+      border: 1px solid #d0d3d3;
+      border-left: 0;
+      background: #dbe4e5;
+      color: #718489;
+      font: 12px/43px Arial, sans-serif;
+      text-align: center;
+      box-shadow: 1px 1px 2px rgba(0,0,0,.08);
+    }
+
+    .placeholder {
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .signature-placeholder {
+      right: 26px;
+      bottom: 26px;
+      width: 100px;
+      height: 55px;
+    }
+
+    @media (max-width: 650px) {
+      body {
+        padding: 10px 12px;
+      }
+
+      .page {
+        min-height: 1120px;
+      }
+
+      .header {
+        grid-template-columns: 104px 1fr;
+        font-size: 9px;
+      }
+
+      .notes {
+        padding: 20px 20px 35px 24px;
+        font-size: 18px;
+        line-height: 1.62;
+      }
+
+      .top-line {
+        font-size: 19px;
+        white-space: normal;
+      }
+
+      .formula-row {
+        height: 178px;
+        font-size: 19px;
+      }
+
+      .formula .arrow {
+        font-size: 27px;
+      }
+
+      .parabola {
+        transform: scale(.72);
+        transform-origin: top center;
+        margin-top: 5px;
+      }
+
+      .section-title {
+        font-size: 25px;
+      }
+
+      .mark,
+      .small-note {
+        font-size: 16px;
+      }
+
+      .example-two .entry {
+        font-size: 18px;
+      }
+
+      .edge {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page-wrap">
+    <article class="page">
+      <header class="header">
+        <div>Knowledge area</div>
+        <div>Notes area</div>
+      </header>
+
+      <section class="notes">
+        <div class="top-line blue">
+          2, 开口方向：括号内取0（顶点式）；$a=-?$（一般式）
+        </div>
+
+        <div class="formula-row">
+          <div class="formula">
+            <span class="arrow">↓</span>
+            <div class="purple">$y=(x-[?])^2$</div>
+            <div class="parabola"></div>
+          </div>
+          <div class="formula down">
+            <span class="arrow">↓</span>
+            <div class="purple">$y=-2x^2-3x+3$</div>
+            <div class="parabola"></div>
+          </div>
+        </div>
+
+        <div class="section-title">
+          <span class="red">例题</span> <span class="green">精讲</span>
+        </div>
+
+        <p class="entry blue">[例1(1)] [illegible] 福安庭园门拱高</p>
+        <p class="entry blue">用二次函数 $y=2(x-3)^2+1$，问知（<span class="red">B</span>）</p>
+
+        <p class="entry blue">
+          A，其图象的开口向下
+          <span class="mark">× $a&gt;0$ 向上</span>
+        </p>
+
+        <p class="entry blue">
+          B，其图象的顶点坐标为（1，1）
+          <span class="mark">√ 对应为（3,1）</span>
+        </p>
+
+        <p class="entry blue">
+          C，其图象的对称轴为直线 $x=2$
+          <span class="mark">×</span>
+        </p>
+
+        <p class="entry blue">
+          D，当 $x=3$ 时，$y$ 随着 $x$ 的增大而增大
+          <span class="mark">×</span>
+        </p>
+        <div class="small-note">再小</div>
+
+        <div class="example-two">
+          <p class="entry blue">例1(2)</p>
+          <p class="entry blue">
+            对于二次函数 $y=x^2-2x+1$，下列说法中正确的是（<span class="red">D</span>）
+          </p>
+          <p class="entry blue">
+            A，函数图象关于对称轴有交点 $x=1$
+            <span class="mark">对称轴：$\frac{-b}{2a}=1$</span>
+          </p>
+          <p class="entry blue">
+            B，函数图象的顶点坐标为（1，-2）
+            <span class="mark">（1，?）</span>
+          </p>
+          <p class="entry blue">
+            <span class="red">当 $x=1$ 时，$y=1-2+1=0$</span>
+          </p>
+        </div>
+      </section>
+
+      <div class="placeholder signature-placeholder" aria-label="Notebook handwriting mark"></div>
+    </article>
+
+    <aside class="edge" aria-label="Notebook edge tabs">
+      <div class="tab">1</div>
+      <div class="tab">2</div>
+      <div class="tab">3</div>
+      <div class="tab">4</div>
+      <div class="tab">5</div>
+      <div class="tab">6</div>
+      <div class="tab">7</div>
+      <div class="tab">8</div>
+      <div class="tab">9</div>
+      <div class="tab">10</div>
+      <div class="tab">11</div>
+      <div class="tab">12</div>
+      <div class="tab">13</div>
+      <div class="tab">14</div>
+      <div class="tab">15</div>
+      <div class="tab">16</div>
+      <div class="tab">17</div>
+      <div class="tab">18</div>
+      <div class="tab">19</div>
+      <div class="tab">20</div>
+      <div class="tab">21</div>
+      <div class="tab">22</div>
+      <div class="tab">23</div>
+      <div class="tab">24</div>
+    </aside>
+  </main>
+</body>
+</html>

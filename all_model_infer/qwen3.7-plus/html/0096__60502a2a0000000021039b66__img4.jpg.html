@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>教学论重点知识整理</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: "SimSun", "宋体", serif;
+    font-size: 14px;
+    line-height: 1.8;
+    color: #222;
+    background: #f5f5f5;
+    padding: 20px;
+  }
+  .page {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 30px 25px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    display: flex;
+    gap: 20px;
+  }
+  .column {
+    flex: 1;
+    min-width: 0;
+  }
+  .question-block {
+    margin-bottom: 18px;
+    position: relative;
+  }
+  .question-title {
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  .question-title .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    background: #c0392b;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: bold;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .question-title .text {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .answer {
+    padding-left: 26px;
+    font-size: 13.5px;
+    line-height: 1.9;
+  }
+  .answer p {
+    margin-bottom: 2px;
+  }
+  .annotation {
+    position: absolute;
+    font-family: "KaiTi", "楷体", cursive;
+    font-size: 22px;
+    font-weight: bold;
+    color: #c0392b;
+    pointer-events: none;
+  }
+  .annotation-left-top {
+    top: -10px;
+    left: -55px;
+  }
+  .annotation-left-mid {
+    top: 50%;
+    left: -55px;
+    transform: translateY(-50%);
+  }
+  .annotation-right-top {
+    top: -10px;
+    right: -55px;
+  }
+  .annotation-right-mid {
+    top: 50%;
+    right: -55px;
+    transform: translateY(-50%);
+  }
+  .highlight-red {
+    color: #c0392b;
+    font-weight: bold;
+  }
+  .underline-red {
+    text-decoration: underline;
+    text-decoration-color: #c0392b;
+    text-underline-offset: 2px;
+  }
+  .bracket-group {
+    position: relative;
+    border-left: 3px solid #27ae60;
+    padding-left: 10px;
+    margin-left: 5px;
+  }
+  .watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 40px;
+    color: rgba(0,0,0,0.04);
+    font-weight: bold;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  .page-wrapper {
+    position: relative;
+  }
+  .side-annotation {
+    position: absolute;
+    font-family: "KaiTi", "楷体", cursive;
+    font-size: 26px;
+    font-weight: bold;
+    color: #c0392b;
+    writing-mode: vertical-rl;
+  }
+  .side-annotation-left {
+    left: -40px;
+  }
+  .side-annotation-right {
+    right: -40px;
+  }
+  .q-header {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+  .q-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: #c0392b;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: bold;
+    flex-shrink: 0;
+  }
+  .q-text {
+    font-weight: bold;
+    font-size: 14.5px;
+  }
+  .q-text.underlined {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .ans-text {
+    font-size: 13.5px;
+    line-height: 2;
+    padding-left: 30px;
+  }
+  .ans-text .item {
+    display: block;
+  }
+  .key-point-label {
+    font-family: "KaiTi", "楷体", cursive;
+    font-size: 24px;
+    font-weight: bold;
+    color: #c0392b;
+    position: absolute;
+  }
+  .understand-label {
+    font-family: "KaiTi", "楷体", cursive;
+    font-size: 24px;
+    font-weight: bold;
+    color: #27ae60;
+    position: absolute;
+  }
+  .col-left {
+    position: relative;
+    padding-left: 50px;
+  }
+  .col-right {
+    position: relative;
+    padding-right: 50px;
+  }
+  .green-bracket {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: #27ae60;
+    border-radius: 2px;
+  }
+  .green-bracket::before,
+  .green-bracket::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 12px;
+    height: 4px;
+    background: #27ae60;
+    border-radius: 2px;
+  }
+  .green-bracket::before {
+    top: 0;
+  }
+  .green-bracket::after {
+    bottom: 0;
+  }
+  .section-group {
+    position: relative;
+    margin-bottom: 10px;
+  }
+  .group-bracket {
+    position: absolute;
+    left: -18px;
+    top: 10px;
+    bottom: 10px;
+    width: 3px;
+    background: #27ae60;
+    border-radius: 2px;
+  }
+  .group-bracket::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 10px;
+    height: 3px;
+    background: #27ae60;
+  }
+  .group-bracket::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 10px;
+    height: 3px;
+    background: #27ae60;
+  }
+  .label-understand {
+    font-family: "KaiTi", "楷体", cursive;
+    font-size: 28px;
+    font-weight: bold;
+    color: #27ae60;
+    position: absolute;
+    left: -50px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .label-keypoint {
+    font-family: "KaiTi", "楷体", cursive;
+    font-size: 28px;
+    font-weight: bold;
+    color: #c0392b;
+    position: absolute;
+  }
+  .label-keypoint.left {
+    left: -55px;
+  }
+  .label-keypoint.right {
+    right: -55px;
+  }
+  .label-keypoint.top-right {
+    right: -55px;
+    top: -5px;
+  }
+  .label-keypoint.top-left {
+    left: -55px;
+    top: -5px;
+  }
+  .label-keypoint.mid-right {
+    right: -55px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .label-keypoint.mid-left {
+    left: -55px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .label-keypoint.bottom-right {
+    right: -55px;
+    bottom: 10px;
+  }
+  .label-keypoint.bottom-left {
+    left: -55px;
+    bottom: 10px;
+  }
+  .q-block {
+    position: relative;
+    margin-bottom: 16px;
+  }
+  .q-block:last-child {
+    margin-bottom: 0;
+  }
+  .ans-line {
+    text-indent: 0;
+  }
+  .red-underline {
+    border-bottom: 2px solid #c0392b;
+    padding-bottom: 1px;
+  }
+  .red-text {
+    color: #c0392b;
+  }
+  .bold-text {
+    font-weight: bold;
+  }
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 30px 40px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+    position: relative;
+  }
+  .two-col {
+    display: flex;
+    gap: 30px;
+  }
+  .two-col .col {
+    flex: 1;
+    min-width: 0;
+    position: relative;
+  }
+  .col-left-inner {
+    padding-left: 45px;
+  }
+  .col-right-inner {
+    padding-right: 45px;
+  }
+  .abs-label {
+    position: absolute;
+    font-family: "KaiTi", "楷体", cursive;
+    font-size: 26px;
+    font-weight: bold;
+    color: #c0392b;
+  }
+  .abs-label-green {
+    position: absolute;
+    font-family: "KaiTi", "楷体", cursive;
+    font-size: 26px;
+    font-weight: bold;
+    color: #27ae60;
+  }
+  .bracket-wrap {
+    position: relative;
+    padding-left: 15px;
+  }
+  .bracket-wrap::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 5px;
+    bottom: 5px;
+    width: 3px;
+    background: #27ae60;
+    border-radius: 2px;
+  }
+  .bracket-wrap::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 5px;
+    width: 10px;
+    height: 3px;
+    background: #27ae60;
+  }
+  .bracket-wrap .bracket-bottom {
+    position: absolute;
+    left: 0;
+    bottom: 5px;
+    width: 10px;
+    height: 3px;
+    background: #27ae60;
+  }
+  .watermark-text {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 36px;
+    color: rgba(180,180,180,0.15);
+    font-weight: bold;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 0;
+  }
+  .content-area {
+    position: relative;
+    z-index: 1;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="watermark-text">百问百答 From 小红书</div>
+  <div class="content-area">
+    <div class="two-col">
+      <!-- Left Column -->
+      <div class="col col-left-inner">
+
+        <!-- Q17 -->
+        <div class="q-block" style="position:relative;">
+          <span class="abs-label" style="left:-50px; top:-5px;">重点</span>
+          <div class="q-header">
+            <span class="q-num">17</span>
+            <span class="q-text underlined">简述现代教学观</span>
+          </div>
+          <div class="ans-text">
+            答：(1)教学是课程创生和开发的过程<br>
+            (2)教学是师生交往、积极互动、共同发展的过程<br>
+            (3)教学过程重于教学结果<br>
+            (4)教学更关注人而不只是科学
+          </div>
+        </div>
+
+        <!-- Q18 -->
+        <div class="q-block" style="position:relative;">
+          <span class="abs-label-green" style="left:-50px; top:50%; transform:translateY(-50%);">了解</span>
+          <div class="q-header">
+            <span class="q-num">18</span>
+            <span class="q-text underlined">简述新课程改革评价的特点</span>
+          </div>
+          <div class="ans-text">
+            答：(1)评价目的是促进发展(2)评价内容综合化，全面素质评价<br>
+            (3)评价方式多样化，定性和定量相结合的评价(4)评价主体多元化，教师、学生、家长、管理者共同参与的、交互作用的评价<br>
+            (5)更注重评价过程，形成性评价和终结性评价有机结合
+          </div>
+        </div>
+
+        <!-- Q19 -->
+        <div class="q-block" style="position:relative;">
+          <span class="abs-label" style="left:-50px; top:50%; transform:translateY(-50%);">重点</span>
+          <div class="q-header">
+            <span class="q-num">19</span>
+            <span class="q-text underlined">简述教学工作的基本环节</span>
+          </div>
+          <div class="ans-text">
+            答：(1)备课，备课是上好课的前提<br>
+            (2)上课，上课是教学工作的中心环节，上好课是提高教学质量的关键<br>
+            (3)课外作业的布置和批改<br>
+            (4)课外辅导，课外辅导是对课的补充和延伸<br>
+            (5)学业成绩的检查与评定
+          </div>
+        </div>
+
+        <!-- Q20 -->
+        <div class="q-block" style="position:relative;">
+          <div class="q-header">
+            <span class="q-num">20</span>
+            <span class="q-text underlined">简述教学过程是一种特殊的认识过程的表现</span>
+          </div>
+          <div class="ans-text">
+            答：(1)认识的间接性；(2)认识的交往性；(3)认识的教育性；(4)有领导的认识
+          </div>
+        </div>
+
+        <!-- Q21 -->
+        <div class="q-block" style="position:relative;">
+          <span class="abs-label" style="left:-50px; top:50%; transform:translateY(-50%);">重点</span>
+          <div class="q-header">
+            <span class="q-num">21</span>
+            <span class="q-text underlined">教学过程的基本规律</span>
+          </div>
+          <div class="ans-text">
+            答：(1)直接经验与间接经验相结合<br>
+            (2)掌握知识与发展智力相统一<br>
+            (3)掌握知识与提高思想相结合<br>
+            (4)教师主导作用与学生主体相结合
+          </div>
+        </div>
+
+        <!-- Q22 -->
+        <div class="q-block" style="position:relative;">
+          <div class="q-header">
+            <span class="q-num">22</span>
+            <span class="q-text underlined">教学过程的基本阶段</span>
+          </div>
+          <div class="ans-text">
+            答：(1)引起学习动机；(2)领会知识；(3)巩固知识；(4)运用知识；(5)检查知识
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Column -->
+      <div class="col col-right-inner">
+
+        <!-- Q23 -->
+        <div class="q-block" style="position:relative;">
+          <span class="abs-label" style="right:-50px; top:-5px;">重点</span>
+          <div class="q-header">
+            <span class="q-num">23</span>
+            <span class="q-text underlined">简述直观性原则及基本要求</span>
+          </div>
+          <div class="ans-text">
+            答：<span class="red-underline bold-text">直观性原则</span>是指在教学中引导学生直接感知事物、模型或通过教师用形象语言描绘教学对象，使学生获得丰富的感性认识。贯彻直观性原则的基本要求是：①正确选择直观教具和现代化教学手段；②直观要与讲解相结合；③重视运用语言直观
+          </div>
+        </div>
+
+        <!-- Q24 -->
+        <div class="q-block" style="position:relative;">
+          <span class="abs-label" style="right:-50px; top:-5px;">重点</span>
+          <div class="q-header">
+            <span class="q-num">24</span>
+            <span class="q-text underlined">简述启发性原则及基本要求</span>
+          </div>
+          <div class="ans-text">
+            答：启发性原则是指在教学中教师要承认学生是学习的主体，注意调动他们的学习主动性，引导他们独立思考，积极探索，生动活泼地学习，自觉地掌握科学知识，提高分析问题和解决问题的能力。<br>
+            贯彻启发性原则的基本要求是：①加强学习的目的性教育，调动学生学习的主动性；②启发学生独立思考，发展学生的逻辑思维能力；③让学生动手，培养独立解决问题的能力；④发扬教学民主
+          </div>
+        </div>
+
+        <!-- Q25 -->
+        <div class="q-block" style="position:relative;">
+          <span class="abs-label" style="right:-50px; top:50%; transform:translateY(-50%);">重点</span>
+          <div class="q-header">
+            <span class="q-num">25</span>
+            <span class="q-text underlined">简述循序渐进原则及基本要求</span>
+          </div>
+          <div class="ans-text">
+            答：循序渐进原则是指教学要按照学科的逻辑系统和学生认识发展的顺序进行，使学生系统地掌握基础知识、基本技能，形成严密的逻辑思维能力。<br>
+            贯彻循序渐进原则的基本要求是：①按教材的系统性进行教学；②注意主要矛盾，解决好重点与难点的教学；③由浅入深，由易到难，由简到繁。
+          </div>
+        </div>
+
+        <!-- Q26 -->
+        <div class="q-block" style="position:relative;">
+          <span class="abs-label" style="right:-50px; top:-5px;">重点</span>
+          <div class="q-header">
+            <span class="q-num">26</span>
+            <span class="q-text underlined">简述讲授法及基本要求</span>
+          </div>
+          <div class="ans-text">
+            答：讲授法是教师通过口头语言系统连贯地向学生传授知识的方法。讲授法的基本要求：①讲授内容要有科学性、系统性、思想性；②注意启发；③讲究语言艺术。
+          </div>
+        </div>
+
+        <!-- Q27 -->
+        <div class="q-block" style="position:relative;">
+          <div class="q-header">
+            <span class="q-num">27</span>
+            <span class="q-text underlined">简述谈话法及基本要求</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

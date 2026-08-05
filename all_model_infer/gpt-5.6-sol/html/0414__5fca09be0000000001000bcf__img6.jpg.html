@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Music Playlist</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  body {
+    background: #173f60;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  .screen {
+    position: relative;
+    width: 540px;
+    height: 720px;
+    margin: 0 auto;
+    overflow: hidden;
+    color: #f5f7fa;
+    background:
+      radial-gradient(circle at 19px 25px, rgba(210,230,238,.22) 0 1px, transparent 1.5px),
+      radial-gradient(circle at 90px 10px, rgba(207,229,238,.13) 0 1px, transparent 1.6px),
+      radial-gradient(circle at 173px 17px, rgba(210,229,236,.12) 0 1px, transparent 1.5px),
+      radial-gradient(circle at 279px 31px, rgba(220,236,243,.17) 0 1px, transparent 1.5px),
+      radial-gradient(circle at 354px 15px, rgba(214,232,240,.12) 0 1px, transparent 1.5px),
+      radial-gradient(circle at 468px 21px, rgba(215,234,241,.17) 0 1px, transparent 1.5px),
+      radial-gradient(circle at 28px 108px, rgba(212,233,241,.15) 0 1px, transparent 1.5px),
+      radial-gradient(circle at 133px 86px, rgba(211,230,239,.13) 0 1px, transparent 1.5px),
+      radial-gradient(circle at 240px 105px, rgba(217,235,242,.15) 0 1px, transparent 1.5px),
+      radial-gradient(circle at 385px 83px, rgba(214,233,240,.22) 0 1px, transparent 1.5px),
+      radial-gradient(circle at 488px 101px, rgba(211,232,240,.12) 0 1px, transparent 1.5px),
+      radial-gradient(circle at 38px 194px, rgba(218,236,242,.17) 0 1px, transparent 1.5px),
+      radial-gradient(circle at 160px 170px, rgba(210,232,239,.12) 0 1px, transparent 1.5px),
+      radial-gradient(circle at 272px 206px, rgba(218,234,241,.13) 0 1px, transparent 1.5px),
+      radial-gradient(circle at 406px 179px, rgba(215,235,242,.19) 0 1px, transparent 1.5px),
+      radial-gradient(circle at 511px 215px, rgba(212,231,240,.17) 0 1px, transparent 1.5px),
+      radial-gradient(circle at 21px 285px, rgba(219,236,243,.15) 0 1px, transparent 1.5px),
+      radial-gradient(circle at 122px 267px, rgba(211,231,239,.14) 0 1px, transparent 1.5px),
+      radial-gradient(circle at 250px 302px, rgba(211,232,240,.13) 0 1px, transparent 1.5px),
+      radial-gradient(circle at 356px 324px, rgba(206,233,238,.27) 0 1.5px, transparent 2px),
+      radial-gradient(circle at 470px 279px, rgba(214,234,242,.13) 0 1px, transparent 1.5px),
+      radial-gradient(circle at 45px 395px, rgba(218,235,243,.12) 0 1px, transparent 1.5px),
+      radial-gradient(circle at 190px 383px, rgba(215,232,240,.13) 0 1px, transparent 1.5px),
+      radial-gradient(circle at 317px 410px, rgba(213,234,241,.14) 0 1px, transparent 1.5px),
+      radial-gradient(circle at 427px 375px, rgba(211,232,240,.19) 0 1px, transparent 1.5px),
+      linear-gradient(180deg, #153c5d 0%, #174261 55%, #1b465f 100%);
+  }
+
+  .top-handle {
+    position: absolute;
+    z-index: 8;
+    top: -8px;
+    left: 381px;
+    width: 133px;
+    height: 12px;
+    border-radius: 0 0 16px 16px;
+    background: rgba(210, 220, 224, .68);
+  }
+
+  .texture {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    opacity: .35;
+    pointer-events: none;
+    background-image:
+      radial-gradient(circle, rgba(218,235,240,.55) 0 1px, transparent 1.4px),
+      radial-gradient(circle, rgba(210,230,237,.35) 0 1px, transparent 1.4px);
+    background-position: 7px 67px, 42px 39px;
+    background-size: 91px 93px, 127px 121px;
+  }
+
+  .wave-back,
+  .wave-front {
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .wave-back {
+    top: 590px;
+    height: 130px;
+    background: rgba(44, 83, 106, .47);
+    clip-path: polygon(
+      0 24%, 4% 19%, 8% 23%, 13% 20%, 18% 25%, 25% 23%, 31% 27%,
+      38% 23%, 45% 27%, 53% 22%, 60% 26%, 68% 21%, 75% 25%, 83% 23%,
+      91% 26%, 100% 24%, 100% 100%, 0 100%
+    );
+  }
+
+  .wave-front {
+    top: 620px;
+    height: 100px;
+    background: rgba(24, 59, 82, .47);
+    clip-path: polygon(
+      0 14%, 8% 17%, 15% 13%, 23% 18%, 31% 14%, 40% 19%, 48% 15%,
+      57% 20%, 66% 15%, 75% 19%, 84% 16%, 93% 19%, 100% 15%,
+      100% 100%, 0 100%
+    );
+  }
+
+  .playlist {
+    position: relative;
+    z-index: 4;
+    width: 100%;
+    height: 100%;
+  }
+
+  .song {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 87px;
+  }
+
+  .n49 { top: 14px; }
+  .n50 { top: 101px; }
+  .n51 { top: 188px; }
+  .n52 { top: 275px; }
+  .n53 { top: 362px; }
+  .n54 { top: 449px; }
+  .n55 { top: 536px; }
+  .n56 { top: 623px; }
+  .n57 { top: 710px; }
+
+  .number {
+    position: absolute;
+    top: 14px;
+    left: 15px;
+    width: 32px;
+    color: rgba(221, 229, 235, .78);
+    font-size: 25px;
+    font-weight: 400;
+    line-height: 31px;
+    text-align: left;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, .25);
+  }
+
+  .song-content {
+    position: absolute;
+    top: 0;
+    left: 60px;
+    right: 42px;
+    min-width: 0;
+  }
+
+  .title {
+    height: 33px;
+    overflow: hidden;
+    color: #f8f8f9;
+    font-size: 25px;
+    font-weight: 500;
+    line-height: 31px;
+    letter-spacing: -.2px;
+    white-space: nowrap;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, .45);
+  }
+
+  .n49 .title {
+    font-size: 23px;
+  }
+
+  .n55 .title {
+    font-size: 24px;
+  }
+
+  .meta {
+    display: flex;
+    align-items: center;
+    height: 25px;
+    color: rgba(233, 236, 241, .86);
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 23px;
+    white-space: nowrap;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, .42);
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    height: 14px;
+    margin-right: 4px;
+    border: 1px solid rgba(183, 201, 213, .55);
+    border-radius: 2px;
+    color: rgba(193, 211, 222, .72);
+    font-size: 10px;
+    line-height: 12px;
+    text-shadow: none;
+  }
+
+  .badge.vip {
+    width: 27px;
+    border-color: rgba(236, 67, 82, .9);
+    color: #f1515d;
+    font-size: 10px;
+  }
+
+  .badge.audition {
+    width: 32px;
+    font-size: 10px;
+  }
+
+  .badge.sq {
+    width: 26px;
+    margin-right: 5px;
+    font-size: 10px;
+    font-weight: 600;
+  }
+
+  .flower {
+    display: inline-block;
+    margin: 0 4px;
+    color: rgba(218, 226, 232, .75);
+    font-size: 14px;
+    line-height: 1;
+  }
+
+  .more {
+    position: absolute;
+    top: 14px;
+    right: 34px;
+    width: 10px;
+    height: 27px;
+  }
+
+  .more::before,
+  .more::after,
+  .more span {
+    content: "";
+    position: absolute;
+    left: 4px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: rgba(217, 229, 235, .57);
+    box-shadow: 0 1px 1px rgba(0,0,0,.15);
+  }
+
+  .more::before { top: 1px; }
+  .more span { top: 10px; }
+  .more::after { top: 19px; }
+
+  .action {
+    position: absolute;
+    top: 13px;
+    right: 77px;
+    width: 30px;
+    height: 28px;
+    border: 1.5px solid rgba(205, 221, 230, .52);
+    border-radius: 11px;
+  }
+
+  .action.play::after {
+    content: "";
+    position: absolute;
+    top: 8px;
+    left: 11px;
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 8px solid rgba(211, 225, 233, .58);
+  }
+
+  .action.document::before {
+    content: "";
+    position: absolute;
+    top: 7px;
+    left: 10px;
+    width: 8px;
+    height: 10px;
+    border: 1px solid rgba(211, 225, 233, .52);
+    border-radius: 1px;
+  }
+
+  .action.document::after {
+    content: "";
+    position: absolute;
+    top: 10px;
+    left: 13px;
+    width: 5px;
+    height: 1px;
+    background: rgba(211, 225, 233, .48);
+    box-shadow: 0 3px 0 rgba(211, 225, 233, .48);
+  }
+
+  .scrollbar {
+    position: absolute;
+    z-index: 9;
+    top: 59px;
+    right: 5px;
+    width: 4px;
+    height: 52px;
+    border-radius: 4px;
+    background: rgba(3, 22, 39, .68);
+  }
+</style>
+</head>
+<body>
+<div class="screen">
+  <div class="top-handle"></div>
+  <div class="texture"></div>
+  <div class="wave-back"></div>
+  <div class="wave-front"></div>
+  <div class="scrollbar"></div>
+
+  <main class="playlist">
+    <section class="song n49">
+      <div class="number">49</div>
+      <div class="song-content">
+        <div class="title">end</div>
+        <div class="meta">
+          <span class="badge vip">VIP</span>
+          <span class="badge audition">试听</span>
+          <span>Jeremy Zucker - idle</span>
+        </div>
+      </div>
+      <div class="action document"></div>
+      <div class="more"><span></span></div>
+    </section>
+
+    <section class="song n50">
+      <div class="number">50</div>
+      <div class="song-content">
+        <div class="title">Placebo</div>
+        <div class="meta">
+          <span class="badge sq">SQ</span>
+          <span>r e l - Placebo</span>
+        </div>
+      </div>
+      <div class="more"><span></span></div>
+    </section>
+
+    <section class="song n51">
+      <div class="number">51</div>
+      <div class="song-content">
+        <div class="title">streetcar</div>
+        <div class="meta">Dhan - streetcar</div>
+      </div>
+      <div class="more"><span></span></div>
+    </section>
+
+    <section class="song n52">
+      <div class="number">52</div>
+      <div class="song-content">
+        <div class="title">Seasons</div>
+        <div class="meta">
+          <span class="badge sq">SQ</span>
+          <span>Cylew Chance - Seasons</span>
+        </div>
+      </div>
+      <div class="action play"></div>
+      <div class="more"><span></span></div>
+    </section>
+
+    <section class="song n53">
+      <div class="number">53</div>
+      <div class="song-content">
+        <div class="title">she likes spring, I prefer winter.</div>
+        <div class="meta">SLCHLD - she likes spring, I prefer winter.</div>
+      </div>
+      <div class="more"><span></span></div>
+    </section>
+
+    <section class="song n54">
+      <div class="number">54</div>
+      <div class="song-content">
+        <div class="title">Big City Blues</div>
+        <div class="meta">Lynn Syren - Big City Blues</div>
+      </div>
+      <div class="more"><span></span></div>
+    </section>
+
+    <section class="song n55">
+      <div class="number">55</div>
+      <div class="song-content">
+        <div class="title">come and see me in marvin's room...</div>
+        <div class="meta">lanie<span class="flower">❀</span>- come and see me in marvin's room i've...</div>
+      </div>
+      <div class="more"><span></span></div>
+    </section>
+
+    <section class="song n56">
+      <div class="number">56</div>
+      <div class="song-content">
+        <div class="title">call me.</div>
+        <div class="meta">eiiwun/keshi - call me.</div>
+      </div>
+      <div class="more"><span></span></div>
+    </section>
+
+    <section class="song n57">
+      <div class="song-content">
+        <div class="title">Can I Have The Day With You</div>
+      </div>
+    </section>
+  </main>
+</div>
+</body>
+</html>

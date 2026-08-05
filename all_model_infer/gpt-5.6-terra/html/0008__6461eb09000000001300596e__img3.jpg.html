@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game Item Dialogue</title>
+  <script>
+    window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; }
+    body {
+      background: #192b2a;
+      font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+      color: #f3f1e4;
+    }
+    .scene {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      min-height: 300px;
+      overflow: hidden;
+      background:
+        linear-gradient(rgba(8, 30, 30, .18), rgba(27, 73, 65, .15)),
+        repeating-linear-gradient(92deg, rgba(0,0,0,.08) 0 2px, transparent 2px 46px),
+        linear-gradient(180deg, #122728 0%, #152e2f 49%, #4b8581 77%, #a3cebd 100%);
+    }
+    .wall {
+      position: absolute;
+      inset: 0 0 41% 0;
+      opacity: .75;
+      background:
+        linear-gradient(90deg, transparent 0 5%, rgba(5,17,18,.63) 5% 6%, transparent 6% 29%, rgba(7,20,20,.75) 29% 35%, transparent 35% 62%, rgba(6,19,19,.76) 62% 68%, transparent 68% 100%),
+        repeating-linear-gradient(0deg, rgba(161,198,183,.07) 0 2px, transparent 2px 47px);
+    }
+    .floor {
+      position: absolute;
+      inset: 50% 0 0;
+      background:
+        linear-gradient(140deg, transparent 0 42%, rgba(20,92,86,.42) 42% 43%, transparent 43%),
+        linear-gradient(30deg, transparent 0 38%, rgba(13,84,80,.4) 38% 39%, transparent 39%),
+        repeating-linear-gradient(170deg, transparent 0 55px, rgba(19,100,95,.25) 56px 58px),
+        linear-gradient(180deg, rgba(39,116,108,.4), rgba(177,221,198,.55));
+    }
+    .platform {
+      position: absolute;
+      width: 42%;
+      height: 19%;
+      left: 36%;
+      bottom: 4%;
+      clip-path: polygon(11% 24%, 100% 0, 100% 53%, 74% 100%, 0 77%);
+      background: #b4c7b9;
+      border-bottom: 4px solid #668f88;
+      opacity: .9;
+    }
+    .chest {
+      position: absolute;
+      width: 9%;
+      height: 23%;
+      left: 57%;
+      bottom: 13%;
+      border: 4px solid #355e59;
+      background: repeating-linear-gradient(90deg, #3e8276 0 13px, #285b56 13px 18px);
+      box-shadow: inset 0 11px #265954, 0 8px 8px rgba(0,0,0,.25);
+    }
+    .character {
+      position: absolute;
+      left: 46%;
+      bottom: 12%;
+      width: 9%;
+      height: 31%;
+    }
+    .character::before {
+      content: "";
+      position: absolute;
+      width: 48%;
+      height: 32%;
+      left: 27%;
+      top: 0;
+      border-radius: 48% 44% 42% 40%;
+      background: #657e76;
+      box-shadow: 0 0 0 5px #314a46;
+    }
+    .character::after {
+      content: "";
+      position: absolute;
+      width: 44%;
+      height: 54%;
+      left: 30%;
+      bottom: 0;
+      background: linear-gradient(90deg, #6f8e83 0 42%, #f0eee0 42% 63%, #5d8278 63%);
+      clip-path: polygon(20% 0, 82% 0, 100% 100%, 67% 100%, 54% 50%, 43% 100%, 0 100%);
+    }
+    .dialogue {
+      position: absolute;
+      left: 23%;
+      top: 27%;
+      width: 54%;
+      height: 34%;
+      padding: 4.3% 6.8% 3%;
+      background: rgba(91, 132, 127, .78);
+      border: 2px solid rgba(205, 224, 211, .5);
+      box-shadow: 0 0 14px rgba(177, 222, 209, .5), inset 0 0 21px rgba(15, 54, 53, .55);
+    }
+    .dialogue::before, .dialogue::after {
+      content: "";
+      position: absolute;
+      top: 8%;
+      bottom: 8%;
+      width: 8px;
+      opacity: .55;
+      background: repeating-linear-gradient(0deg, #b8c9b9 0 2px, transparent 2px 5px);
+    }
+    .dialogue::before { left: 3%; }
+    .dialogue::after { right: 3%; }
+    .mask {
+      position: absolute;
+      left: 13%;
+      top: 31%;
+      width: 13%;
+      aspect-ratio: 1;
+      border-radius: 48% 48% 46% 46%;
+      background:
+        radial-gradient(circle at 31% 45%, #e4dd0c 0 8%, #b31316 9% 18%, transparent 19%),
+        radial-gradient(circle at 69% 45%, #e4dd0c 0 8%, #b31316 9% 18%, transparent 19%),
+        radial-gradient(circle at 50% 53%, #d3251e 0 36%, #682225 37% 48%, transparent 49%),
+        #ea8b0f;
+      box-shadow: 0 0 14px #f2bc1f;
+    }
+    .mask::before {
+      content: "";
+      position: absolute;
+      inset: -35%;
+      background: repeating-conic-gradient(from 0deg, #e2a416 0 5deg, transparent 5deg 18deg);
+      z-index: -1;
+    }
+    h1 {
+      margin: 0 0 4%;
+      font-size: clamp(12px, 1.9vw, 20px);
+      font-weight: 700;
+      text-shadow: 1px 1px 2px #29423e;
+    }
+    .count {
+      display: inline-block;
+      margin-left: 13px;
+      padding: 0 7px;
+      font-size: clamp(10px, 1.4vw, 15px);
+      border: 1px solid rgba(230,240,226,.5);
+    }
+    p {
+      margin: 0;
+      font-size: clamp(9px, 1.35vw, 14px);
+      line-height: 1.38;
+      text-shadow: 1px 1px 2px #29423e;
+    }
+    .continue {
+      position: absolute;
+      right: 5%;
+      bottom: 7%;
+      font-size: clamp(8px, 1.1vw, 12px);
+    }
+    .continue b {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      margin-left: 4px;
+      text-align: center;
+      line-height: 11px;
+      border-radius: 50%;
+      color: #567a72;
+      background: #edf0dc;
+    }
+  </style>
+</head>
+<body>
+  <main class="scene">
+    <div class="wall"></div>
+    <div class="floor"></div>
+    <div class="platform"></div>
+    <div class="chest"></div>
+    <div class="character"></div>
+    <section class="dialogue">
+      <div class="mask" aria-label="[Item icon: colorful mask]"></div>
+      <h1>厄吉拉の面具 <span class="count">1</span></h1>
+      <p>迷古の時間保存で来た面具。<br>これを使えば、古を使った方針と混ざる。<br>使い切る前に気を付けよう。</p>
+      <div class="continue">続きを表示 <b>A</b></div>
+    </section>
+  </main>
+</body>
+</html>

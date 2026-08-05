@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>曲线式构图</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    margin: 0;
+    min-height: 100%;
+    background: #efefef;
+  }
+
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    font-family: "Songti SC", "STSong", "SimSun", serif;
+  }
+
+  .page {
+    position: relative;
+    width: 540px;
+    height: 736px;
+    overflow: hidden;
+    background: #fff;
+    color: #000;
+  }
+
+  .yellow {
+    background: #ffed00;
+  }
+
+  .black {
+    background: #000;
+  }
+
+  .header-left {
+    position: absolute;
+    top: 20px;
+    left: 37px;
+    width: 220px;
+  }
+
+  .header-left .cn {
+    font-size: 20px;
+    line-height: 23px;
+    font-weight: 400;
+    white-space: nowrap;
+  }
+
+  .header-left .en {
+    margin-top: 1px;
+    font-family: "Times New Roman", serif;
+    font-size: 8px;
+    line-height: 10px;
+    letter-spacing: .15px;
+    white-space: nowrap;
+  }
+
+  .header-right {
+    position: absolute;
+    top: 20px;
+    right: 37px;
+    width: 75px;
+    text-align: left;
+  }
+
+  .header-right .cn {
+    font-size: 16px;
+    line-height: 22px;
+    letter-spacing: 3px;
+    white-space: nowrap;
+  }
+
+  .header-right .date {
+    margin-top: 2px;
+    font-family: "Times New Roman", serif;
+    font-size: 9px;
+    line-height: 11px;
+    letter-spacing: 2.5px;
+    white-space: nowrap;
+  }
+
+  .cool-square {
+    position: absolute;
+    top: 65px;
+    left: 37px;
+    width: 139px;
+    height: 126px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 5px;
+  }
+
+  .cool-square span {
+    font-size: 88px;
+    line-height: 1;
+    font-weight: 500;
+  }
+
+  .main-title {
+    position: absolute;
+    top: 65px;
+    left: 196px;
+    width: 307px;
+    height: 126px;
+    color: #ffed00;
+    overflow: hidden;
+  }
+
+  .main-title .cn {
+    position: absolute;
+    top: 8px;
+    left: 20px;
+    width: 269px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 45px;
+    line-height: 52px;
+    white-space: nowrap;
+  }
+
+  .main-title .en {
+    position: absolute;
+    top: 66px;
+    left: 20px;
+    width: 273px;
+    font-family: "Times New Roman", serif;
+    font-size: 49px;
+    line-height: 54px;
+    letter-spacing: 11px;
+    white-space: nowrap;
+  }
+
+  .bar-one {
+    position: absolute;
+    top: 218px;
+    left: 65px;
+    width: 75px;
+    height: 18px;
+  }
+
+  .importance-cn {
+    position: absolute;
+    top: 263px;
+    left: 37px;
+    width: 139px;
+    height: 126px;
+    padding: 10px 10px 7px 11px;
+    font-size: 40px;
+    line-height: 1.26;
+    white-space: nowrap;
+  }
+
+  .forever {
+    position: absolute;
+    top: 228px;
+    left: 339px;
+    width: 164px;
+    height: 161px;
+    color: #ffed00;
+    padding-top: 12px;
+    text-align: center;
+    font-size: 47px;
+    line-height: 1.36;
+  }
+
+  .importance-en {
+    position: absolute;
+    top: 416px;
+    left: 37px;
+    width: 139px;
+    height: 126px;
+    color: #d8c357;
+  }
+
+  .importance-en div {
+    position: absolute;
+    top: 52px;
+    left: 9px;
+    font-family: "Times New Roman", serif;
+    font-size: 9px;
+    line-height: 13px;
+    letter-spacing: 2.2px;
+    white-space: nowrap;
+  }
+
+  .bar-two {
+    position: absolute;
+    top: 403px;
+    left: 377px;
+    width: 121px;
+    height: 23px;
+  }
+
+  .top-point {
+    position: absolute;
+    top: 434px;
+    left: 196px;
+    width: 307px;
+    height: 108px;
+    color: #ffed00;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 7px;
+    font-size: 69px;
+    line-height: 1;
+    letter-spacing: 7px;
+    white-space: nowrap;
+  }
+
+  .small-yellow-bar {
+    position: absolute;
+    top: 559px;
+    left: 64px;
+    width: 68px;
+    height: 21px;
+  }
+
+  .yellow-circle {
+    position: absolute;
+    top: 596px;
+    left: 48px;
+    width: 82px;
+    height: 82px;
+    border-radius: 50%;
+  }
+
+  .micro-lines {
+    position: absolute;
+    top: 559px;
+    left: 186px;
+    width: 317px;
+    height: 49px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .micro-line {
+    width: 317px;
+    height: 12px;
+    overflow: hidden;
+    background: #000;
+    color: #d8c247;
+    font-family: "Songti SC", "STSong", "SimSun", serif;
+    font-size: 6px;
+    line-height: 12px;
+    letter-spacing: .5px;
+    white-space: nowrap;
+    padding-left: 4px;
+  }
+
+  .micro-line span {
+    display: inline-block;
+    margin-right: 10px;
+  }
+
+  .rule {
+    position: absolute;
+    top: 616px;
+    left: 186px;
+    width: 317px;
+    height: 2px;
+    background: #000;
+  }
+
+  .bottom-yellow-block {
+    position: absolute;
+    top: 627px;
+    left: 430px;
+    width: 73px;
+    height: 50px;
+  }
+
+  .slogan {
+    position: absolute;
+    top: 643px;
+    left: 155px;
+    width: 292px;
+    height: 20px;
+    background: #000;
+    color: #e4cf5e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "Times New Roman", serif;
+    font-size: 14px;
+    line-height: 20px;
+    white-space: nowrap;
+  }
+
+  .footer {
+    position: absolute;
+    top: 693px;
+    left: 37px;
+    width: 466px;
+    height: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+    line-height: 22px;
+    white-space: nowrap;
+  }
+
+  .footer .slash {
+    font-family: "Times New Roman", serif;
+    font-size: 17px;
+  }
+</style>
+</head>
+<body>
+<main class="page">
+  <header class="header-left">
+    <div class="cn">曲线式构图</div>
+    <div class="en">CURVILINEAR COMPOSITION</div>
+  </header>
+
+  <header class="header-right">
+    <div class="cn">版式设计</div>
+    <div class="date">2023/6/07</div>
+  </header>
+
+  <section class="cool-square yellow">
+    <span>酷</span>
+  </section>
+
+  <section class="main-title black">
+    <div class="cn"><span>酷</span><span>设</span><span>而</span><span>遇</span></div>
+    <div class="en">COOLS</div>
+  </section>
+
+  <div class="bar-one black"></div>
+
+  <section class="importance-cn yellow">
+    构图的<br>重要性
+  </section>
+
+  <section class="forever black">
+    酷&nbsp;设<br>永&nbsp;远
+  </section>
+
+  <section class="importance-en black">
+    <div>THE IMPORTANCE<br>OF COMPOSITION</div>
+  </section>
+
+  <div class="bar-two black"></div>
+
+  <section class="top-point black">在顶点</section>
+
+  <div class="small-yellow-bar yellow"></div>
+  <div class="yellow-circle yellow"></div>
+
+  <section class="micro-lines">
+    <div class="micro-line">
+      <span>都可以是图片</span><span>都可以是图片</span><span>都可以是图片</span><span>都可以是图片</span><span>都可以是图片</span>
+    </div>
+    <div class="micro-line">
+      <span>都可以是图片</span><span>都可以是图片</span><span>都可以是图片</span><span>都可以是图片</span><span>都可以是图片</span>
+    </div>
+    <div class="micro-line">
+      <span>都可以是图片</span><span>都可以是图片</span><span>都可以是图片</span><span>都可以是图片</span><span>都可以是图片</span>
+    </div>
+  </section>
+
+  <div class="rule"></div>
+  <div class="bottom-yellow-block yellow"></div>
+
+  <div class="slogan">COOL SET IS ALWAYS AT THE TOP</div>
+
+  <footer class="footer">
+    <span>我</span><span class="slash">/</span>
+    <span>看</span><span class="slash">/</span>
+    <span>不</span><span class="slash">/</span>
+    <span>懂</span><span class="slash">/</span>
+    <span>但</span><span class="slash">/</span>
+    <span>大</span><span class="slash">/</span>
+    <span>爱</span><span class="slash">/</span>
+    <span>震</span><span class="slash">/</span>
+    <span>撼</span>
+  </footer>
+</main>
+</body>
+</html>

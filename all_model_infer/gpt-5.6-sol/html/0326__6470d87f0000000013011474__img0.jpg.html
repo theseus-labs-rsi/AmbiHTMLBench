@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Why climate changes</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #202a28;
+  }
+
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  .scene {
+    position: relative;
+    width: min(100vw, 133.333vh);
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background:
+      linear-gradient(to bottom,
+        #aeb8b1 0%,
+        #b7c1ba 30%,
+        #49635e 30.5%,
+        #49635e 100%);
+  }
+
+  /* Classroom wall */
+  .ceiling-line {
+    position: absolute;
+    left: 5%;
+    top: 1.5%;
+    width: 90%;
+    height: 1.2%;
+    background: #d4d7d0;
+    box-shadow: 0 2px 4px rgba(0,0,0,.3);
+    transform: rotate(-1.5deg);
+  }
+
+  .left-wall-panel {
+    position: absolute;
+    left: -2%;
+    top: -4%;
+    width: 10%;
+    height: 21%;
+    border: 3px solid rgba(83,94,88,.35);
+    background: rgba(195,202,196,.38);
+    transform: rotate(-2deg);
+  }
+
+  .right-wall-lines {
+    position: absolute;
+    right: 4.5%;
+    top: 0;
+    width: 9%;
+    height: 29%;
+    border-left: 1px solid rgba(71,80,76,.25);
+    border-right: 1px solid rgba(71,80,76,.25);
+  }
+
+  .right-wall-lines::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 10%;
+    width: 100%;
+    height: 1px;
+    background: rgba(71,80,76,.35);
+    box-shadow: 0 41px rgba(71,80,76,.25);
+  }
+
+  .wall-outlet {
+    position: absolute;
+    left: 1.8%;
+    top: 21.5%;
+    width: 3.1%;
+    height: 5.2%;
+    border: 1px solid #9ba49e;
+    background: #b9c1bb;
+    color: #777f7a;
+    font-size: 5px;
+    text-align: center;
+    padding-top: 5px;
+    box-shadow: inset 0 0 3px rgba(255,255,255,.6);
+  }
+
+  /* Chalkboards */
+  .board-right {
+    position: absolute;
+    right: -2%;
+    top: 30%;
+    width: 33%;
+    height: 68%;
+    border: 4px solid #303a37;
+    background:
+      radial-gradient(circle at 80% 36%, rgba(215,220,202,.11), transparent 17%),
+      linear-gradient(130deg, #254740, #183c36 72%);
+    box-shadow: inset 0 0 20px rgba(0,0,0,.38);
+  }
+
+  .board-right::before {
+    content: "○";
+    position: absolute;
+    right: 3%;
+    top: 15%;
+    color: rgba(209,216,197,.18);
+    font-family: serif;
+    font-size: 25px;
+    transform: rotate(-42deg);
+  }
+
+  .board-bottom {
+    position: absolute;
+    left: 21%;
+    bottom: 1.8%;
+    width: 70%;
+    height: 17%;
+    border: 4px solid #37433f;
+    background: #284942;
+    box-shadow: inset 0 0 13px rgba(0,0,0,.42);
+  }
+
+  .chalk-tray {
+    position: absolute;
+    left: 20.5%;
+    bottom: 1.6%;
+    width: 73%;
+    height: 2.2%;
+    background: #8e846a;
+    border-top: 2px solid #beb398;
+    box-shadow: 0 3px 3px rgba(0,0,0,.35);
+  }
+
+  /* Projection screen */
+  .screen-shadow {
+    position: absolute;
+    left: 6.5%;
+    top: 7.8%;
+    width: 81.5%;
+    height: 80%;
+    background: rgba(0,0,0,.22);
+    filter: blur(6px);
+    transform: skewX(-5deg) rotate(-1.4deg);
+  }
+
+  .screen-frame {
+    position: absolute;
+    left: 6.4%;
+    top: 5.1%;
+    width: 81.4%;
+    height: 81.5%;
+    padding: 1.6%;
+    background: #263b3f;
+    clip-path: polygon(5.2% 4%, 98% 0, 100% 100%, 0 100%);
+    box-shadow: 0 5px 6px rgba(0,0,0,.5);
+    transform: rotate(-1.2deg);
+  }
+
+  .screen-surface {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: #aeb8b4;
+    clip-path: polygon(4.5% 3.5%, 97.8% 0, 100% 96.5%, 0 100%);
+    overflow: hidden;
+  }
+
+  .projected-slide {
+    position: absolute;
+    left: 5.2%;
+    top: 13%;
+    width: 90.5%;
+    height: 76%;
+    overflow: hidden;
+    color: #328780;
+    background: #a4f8dc;
+    clip-path: polygon(2% 2%, 96.7% 0, 100% 95%, 0 100%);
+    text-shadow: 0 0 1px rgba(0,90,80,.15);
+  }
+
+  .slide-title {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 12%;
+    padding-top: 1.1%;
+    text-align: center;
+    color: #c1ffe8;
+    background: linear-gradient(90deg, #62bfc3, #668ddf 68%, #6f9edb);
+    font-size: clamp(10px, 2.8vw, 17px);
+    font-weight: 400;
+    letter-spacing: .15px;
+  }
+
+  .slide-mark {
+    position: absolute;
+    left: 3.2%;
+    top: 2%;
+    z-index: 2;
+    width: 4.5%;
+    height: 7%;
+    color: rgba(216,255,244,.85);
+    border: 1px solid rgba(216,255,244,.25);
+    font-size: clamp(3px, .7vw, 5px);
+    line-height: 1;
+    text-align: center;
+    padding-top: 1.2%;
+  }
+
+  .slide-content {
+    position: absolute;
+    left: 6.5%;
+    top: 17%;
+    width: 87%;
+    height: 78%;
+    font-size: clamp(4.5px, 1.24vw, 7.2px);
+    line-height: 1.52;
+  }
+
+  .topic {
+    margin-bottom: .5%;
+    white-space: nowrap;
+  }
+
+  .number {
+    display: inline-block;
+    margin-right: 3%;
+  }
+
+  .bullets {
+    margin: 0 0 0 7.7%;
+    padding: 0;
+    list-style: none;
+  }
+
+  .bullets li {
+    position: relative;
+    white-space: nowrap;
+  }
+
+  .bullets li::before {
+    content: "–";
+    position: absolute;
+    left: -4.5%;
+  }
+
+  .orbit-zone {
+    position: absolute;
+    left: 12.5%;
+    top: 49%;
+    width: 61%;
+    height: 42%;
+  }
+
+  .orbit-diagram {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    background: #548c84;
+  }
+
+  .orbit {
+    position: absolute;
+    left: 4%;
+    top: 7%;
+    width: 91%;
+    height: 77%;
+    border: 1.4px solid #a6eee0;
+    border-radius: 50%;
+    transform: rotate(4deg);
+  }
+
+  .sun {
+    position: absolute;
+    left: 29%;
+    top: 29%;
+    width: 10%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #91daa1;
+    color: #65a87b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(3px, .75vw, 5px);
+    box-shadow: 0 0 5px rgba(178,255,177,.55);
+  }
+
+  .sunbeam {
+    position: absolute;
+    left: 33%;
+    top: 39%;
+    width: 49%;
+    height: 18%;
+    background: rgba(185,224,211,.55);
+    clip-path: polygon(0 40%, 100% 0, 100% 100%);
+    transform: rotate(11deg);
+    transform-origin: left center;
+  }
+
+  .earth {
+    position: absolute;
+    width: 4.5%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #79cae2;
+    box-shadow: 0 0 2px #d6ffff;
+  }
+
+  .e1 { left: 3%; top: 42%; }
+  .e2 { left: 13%; top: 14%; }
+  .e3 { left: 39%; top: 1%; }
+  .e4 { right: 0; top: 38%; }
+  .e5 { right: 9%; bottom: 6%; }
+  .e6 { left: 38%; bottom: 0; }
+  .e7 { left: 14%; bottom: 11%; }
+
+  .arrow {
+    position: absolute;
+    color: #b6eee4;
+    font-size: clamp(4px, 1.05vw, 7px);
+    line-height: 1;
+  }
+
+  .a1 { left: 18%; top: 3%; transform: rotate(-10deg); }
+  .a2 { left: 50%; top: 2%; }
+  .a3 { right: 1%; top: 17%; transform: rotate(70deg); }
+  .a4 { right: 12%; bottom: 0; transform: rotate(167deg); }
+  .a5 { left: 41%; bottom: -1%; transform: rotate(180deg); }
+
+  .orbit-label {
+    position: absolute;
+    color: #d1f8ee;
+    font-size: clamp(3px, .72vw, 5px);
+    font-weight: bold;
+  }
+
+  .la { left: 31%; top: 1%; }
+  .lb { left: 9%; top: 14%; }
+  .lc { left: 16%; bottom: 3%; }
+  .ld { left: 43%; bottom: -2%; }
+  .le { right: 6%; bottom: 9%; }
+  .lf { right: 7%; top: 47%; }
+
+  .left-note,
+  .right-note {
+    position: absolute;
+    color: #397e78;
+    font-size: clamp(4px, 1.1vw, 6.5px);
+    line-height: 1.34;
+  }
+
+  .left-note {
+    left: 1.5%;
+    top: 66%;
+    width: 13%;
+  }
+
+  .right-note {
+    left: 75%;
+    top: 48%;
+    width: 23%;
+  }
+
+  .screen-bottom-bar {
+    position: absolute;
+    left: 5%;
+    bottom: -1.2%;
+    width: 96%;
+    height: 2.6%;
+    background: #34494a;
+    box-shadow: 0 3px 5px rgba(0,0,0,.55);
+  }
+
+  .screen-stand {
+    position: absolute;
+    left: 22%;
+    top: 84%;
+    width: 8%;
+    height: 13%;
+    background: linear-gradient(90deg, #59625e, #969b8b 42%, #4e5955);
+    border: 2px solid #3c4743;
+    box-shadow: 4px 4px 5px rgba(0,0,0,.35);
+  }
+
+  /* Burned-in subtitle */
+  .subtitle {
+    position: absolute;
+    z-index: 20;
+    left: 45.6%;
+    top: 78.5%;
+    width: 47%;
+    color: #fff;
+    font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif;
+    font-size: clamp(13px, 3.25vw, 19px);
+    font-weight: 900;
+    font-style: italic;
+    line-height: 1.08;
+    letter-spacing: -.6px;
+    text-align: left;
+    text-shadow:
+      -2px -2px 0 #222,
+       2px -2px 0 #222,
+      -2px  2px 0 #222,
+       2px  2px 0 #222,
+       0 3px 2px rgba(0,0,0,.9);
+    transform: rotate(-1deg);
+  }
+
+  .subtitle .emoji {
+    font-style: normal;
+    letter-spacing: 0;
+  }
+</style>
+
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$']],
+      displayMath: [['$$', '$$']]
+    }
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+  <main class="scene">
+    <div class="ceiling-line"></div>
+    <div class="left-wall-panel"></div>
+    <div class="right-wall-lines"></div>
+    <div class="wall-outlet">[?]</div>
+
+    <div class="board-right"></div>
+    <div class="board-bottom"></div>
+    <div class="chalk-tray"></div>
+
+    <div class="screen-shadow"></div>
+
+    <section class="screen-frame">
+      <div class="screen-surface">
+        <article class="projected-slide">
+          <div class="slide-mark">[?]</div>
+          <header class="slide-title">Why climate changes</header>
+
+          <div class="slide-content">
+            <div class="topic">
+              <span class="number">6.</span>
+              Changes in Earth’s orbit (Milankovitch cycles)
+            </div>
+
+            <ul class="bullets">
+              <li>Eccentricity (~100,000 year cycle) – how elliptical Earth’s orbit is</li>
+              <li>Obliquity (~41,000 year cycle) – how tilted the Earth’s axis is</li>
+              <li>Precession (~23,000 year cycle) – position of equinoxes over time</li>
+            </ul>
+
+            <div class="left-note">
+              Today...<br>
+              NH winter:<br>
+              tilted away from<br>
+              sun, but closer<br>
+              to it
+            </div>
+
+            <div class="orbit-zone">
+              <div class="orbit-diagram placeholder" aria-label="Diagram of Earth’s elliptical orbit around the Sun">
+                <div class="sunbeam"></div>
+                <div class="orbit"></div>
+                <div class="sun">Sun</div>
+
+                <div class="earth e1"></div>
+                <div class="earth e2"></div>
+                <div class="earth e3"></div>
+                <div class="earth e4"></div>
+                <div class="earth e5"></div>
+                <div class="earth e6"></div>
+                <div class="earth e7"></div>
+
+                <span class="arrow a1">➜</span>
+                <span class="arrow a2">➜</span>
+                <span class="arrow a3">➜</span>
+                <span class="arrow a4">➜</span>
+                <span class="arrow a5">➜</span>
+
+                <span class="orbit-label la">A</span>
+                <span class="orbit-label lb">B</span>
+                <span class="orbit-label lc">C</span>
+                <span class="orbit-label ld">2</span>
+                <span class="orbit-label le">E</span>
+                <span class="orbit-label lf">F</span>
+              </div>
+            </div>
+
+            <div class="right-note">
+              Today...<br>
+              NH summer,<br>
+              tilted toward sun,<br>
+              but farther away
+            </div>
+          </div>
+        </article>
+
+        <div class="screen-bottom-bar"></div>
+      </div>
+    </section>
+
+    <div class="screen-stand"></div>
+
+    <div class="subtitle">
+      地科非常非常多PPT都是英文<br>
+      包括教材&nbsp;&nbsp;这里点名批评<br>
+      普通地质学 <span class="emoji">🖕🔥</span>
+    </div>
+  </main>
+</body>
+</html>

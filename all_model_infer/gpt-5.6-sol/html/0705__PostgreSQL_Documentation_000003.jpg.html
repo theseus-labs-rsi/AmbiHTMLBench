@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PostgreSQL 18 Documentation — Part II. The SQL Language</title>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$']],
+        displayMath: [['$$', '$$']]
+      }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-width: 980px;
+      background: #ffffff;
+      color: #111111;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 15px;
+      letter-spacing: 0;
+    }
+
+    a {
+      color: #840032;
+      text-decoration: none;
+    }
+
+    .site-header {
+      height: 55px;
+      border-bottom: 1px solid #e1e1e1;
+      background: #ffffff;
+      box-shadow: 0 1px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .header-inner {
+      height: 55px;
+      display: flex;
+      align-items: center;
+      padding: 0 15px 0 29px;
+    }
+
+    .placeholder.logo {
+      width: 35px;
+      height: 42px;
+      margin-right: 21px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      color: #32658a;
+      font-size: 9px;
+      line-height: 10px;
+      text-align: center;
+      border: 0;
+    }
+
+    .logo-mark {
+      position: relative;
+      width: 31px;
+      height: 31px;
+      border: 2px solid #32658a;
+      border-radius: 45% 45% 48% 48%;
+      color: #32658a;
+      font-family: Georgia, serif;
+      font-size: 21px;
+      font-weight: bold;
+      line-height: 27px;
+    }
+
+    .logo-mark::after {
+      content: "";
+      position: absolute;
+      left: 12px;
+      bottom: -9px;
+      width: 7px;
+      height: 12px;
+      border-left: 2px solid #32658a;
+      border-bottom: 2px solid #32658a;
+      border-radius: 0 0 0 6px;
+      transform: rotate(-7deg);
+    }
+
+    .primary-nav {
+      display: flex;
+      align-items: center;
+      gap: 19px;
+      white-space: nowrap;
+    }
+
+    .primary-nav a {
+      color: #315d7b;
+      font-size: 15px;
+    }
+
+    .site-search {
+      display: flex;
+      align-items: center;
+      margin-left: auto;
+      height: 40px;
+    }
+
+    .site-search input {
+      width: 196px;
+      height: 40px;
+      padding: 8px 13px;
+      border: 1px solid #cccccc;
+      border-radius: 4px 0 0 4px;
+      background: #ffffff;
+      color: #555555;
+      font-size: 14px;
+    }
+
+    .icon-button {
+      width: 42px;
+      height: 40px;
+      border: 1px solid #cccccc;
+      background: #ffffff;
+      color: #356581;
+      font-size: 21px;
+      line-height: 36px;
+      text-align: center;
+    }
+
+    .site-search .icon-button {
+      border-left: 0;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .moon-button {
+      width: 43px;
+      margin-left: 5px;
+      border-radius: 4px;
+      font-size: 23px;
+    }
+
+    .release-banner {
+      height: 29px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #33678e;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .release-banner a {
+      color: #ffffff;
+      text-decoration: underline;
+    }
+
+    .page {
+      width: calc(100% - 180px);
+      max-width: 1260px;
+      margin: 0 auto;
+    }
+
+    .documentation-tools {
+      min-height: 158px;
+      padding-top: 17px;
+      display: grid;
+      grid-template-columns: minmax(450px, 1fr) 507px;
+      column-gap: 35px;
+    }
+
+    .version-block {
+      font-size: 15px;
+      line-height: 23px;
+    }
+
+    .version-block strong,
+    .version-block a {
+      font-weight: bold;
+    }
+
+    .documentation-search {
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .documentation-search input {
+      width: 455px;
+      height: 39px;
+      padding: 8px 13px;
+      border: 1px solid #cfcfcf;
+      border-radius: 4px 0 0 4px;
+      color: #555555;
+      font-size: 14px;
+    }
+
+    .documentation-search .icon-button {
+      height: 39px;
+      border-left: 0;
+      border-radius: 0 4px 4px 0;
+      line-height: 35px;
+    }
+
+    .section-navigation {
+      height: 44px;
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      align-items: end;
+      padding-bottom: 4px;
+      border-bottom: 1px solid #d9d9d9;
+      color: #444444;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .nav-left,
+    .nav-right {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .nav-left {
+      padding-right: 30px;
+    }
+
+    .nav-right {
+      padding-left: 30px;
+    }
+
+    .nav-center {
+      text-align: center;
+      line-height: 23px;
+    }
+
+    .document-content {
+      padding-top: 19px;
+      padding-bottom: 50px;
+    }
+
+    h1 {
+      margin: 0 0 20px;
+      color: #356b8e;
+      font-size: 30px;
+      line-height: 34px;
+      font-weight: 600;
+    }
+
+    p {
+      margin: 0 0 15px;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .contents-title {
+      margin: 17px 0 17px;
+      color: #444444;
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    .toc {
+      margin: 0;
+      padding: 0;
+      width: 620px;
+      list-style: none;
+      color: #840032;
+      font-size: 14px;
+      line-height: 21px;
+    }
+
+    .toc > li {
+      margin: 0;
+      padding: 0;
+    }
+
+    .toc ol {
+      margin: 0;
+      padding: 0 0 0 32px;
+      list-style: none;
+    }
+
+    .toc code {
+      color: inherit;
+      background: transparent;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 13px;
+      font-weight: normal;
+    }
+
+    @media (max-width: 1100px) {
+      .page {
+        width: calc(100% - 80px);
+      }
+
+      .primary-nav {
+        gap: 12px;
+      }
+
+      .documentation-tools {
+        grid-template-columns: 1fr 420px;
+      }
+
+      .documentation-search input {
+        width: 368px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="placeholder logo" aria-label="PostgreSQL logo">
+        <div class="logo-mark">P</div>
+      </div>
+
+      <nav class="primary-nav" aria-label="Primary navigation">
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <a href="#">Download</a>
+        <a href="#">Documentation</a>
+        <a href="#">Community</a>
+        <a href="#">Developers</a>
+        <a href="#">Support</a>
+        <a href="#">Donate</a>
+        <a href="#">Your account</a>
+      </nav>
+
+      <form class="site-search">
+        <input type="text" aria-label="Search" placeholder="Search for...">
+        <button class="icon-button" type="button" aria-label="Search">&#128269;</button>
+        <button class="icon-button moon-button" type="button" aria-label="Dark mode">&#9790;</button>
+      </form>
+    </div>
+  </header>
+
+  <div class="release-banner">
+    May 14, 2026:&nbsp;<a href="#">PostgreSQL 18.4, 17.10, 16.14, 15.18, and 14.23 Released!</a>
+  </div>
+
+  <main class="page">
+    <section class="documentation-tools">
+      <div class="version-block">
+        <div><a href="#">Documentation</a> &rarr; <a href="#">PostgreSQL 18</a></div>
+        <div>Supported Versions: <a href="#">Current (18)</a> / <a href="#">17</a> / <a href="#">16</a> / <a href="#">15</a> / <a href="#">14</a></div>
+        <div>Development Versions: <a href="#">devel</a></div>
+        <div>Unsupported versions: <a href="#">13</a> / <a href="#">12</a> / <a href="#">11</a> / <a href="#">10</a> / <a href="#">9.6</a> / <a href="#">9.5</a> / <a href="#">9.4</a> / <a href="#">9.3</a> / <a href="#">9.2</a> / <a href="#">9.1</a> / <a href="#">9.0</a> / <a href="#">8.4</a> / <a href="#">8.3</a> /<br><a href="#">8.2</a> / <a href="#">8.1</a> / <a href="#">8.0</a> / <a href="#">7.4</a> / <a href="#">7.1</a></div>
+      </div>
+
+      <form class="documentation-search">
+        <input type="text" aria-label="Search the documentation" placeholder="Search the documentation for...">
+        <button class="icon-button" type="button" aria-label="Search documentation">&#128269;</button>
+      </form>
+    </section>
+
+    <nav class="section-navigation" aria-label="Documentation navigation">
+      <div class="nav-left">
+        <a href="#">Prev</a>
+        <a href="#">Up</a>
+      </div>
+      <div class="nav-center">
+        <div>Part II. The SQL Language</div>
+        <div>PostgreSQL 18.4 Documentation</div>
+      </div>
+      <div class="nav-right">
+        <a href="#">Home</a>
+        <a href="#">Next</a>
+      </div>
+    </nav>
+
+    <article class="document-content">
+      <h1>Part II. The SQL Language</h1>
+
+      <p>This part describes the use of the SQL language in PostgreSQL. We start with describing the general syntax of SQL, then how to create tables, how to populate the database, and how to query it. The middle part lists the available data types and functions for use in SQL commands. Lastly, we address several aspects of importance for tuning a database.</p>
+
+      <p>The information is arranged so that a novice user can follow it from start to end and gain a full understanding of the topics without having to refer forward too many times. The chapters are intended to be self-contained, so that advanced users can read the chapters individually as they choose. The information is presented in narrative form with topical units. Readers looking for a complete description of a particular command are encouraged to review the <a href="#">Part VI</a>.</p>
+
+      <p>Readers should know how to connect to a PostgreSQL database and issue SQL commands. Readers that are unfamiliar with these issues are encouraged to read <a href="#">Part I</a> first. SQL commands are typically entered using the PostgreSQL interactive terminal psql, but other programs that have similar functionality can be used as well.</p>
+
+      <div class="contents-title">Table of Contents</div>
+
+      <ol class="toc">
+        <li><a href="#">4. SQL Syntax</a>
+          <ol>
+            <li><a href="#">4.1. Lexical Structure</a></li>
+            <li><a href="#">4.2. Value Expressions</a></li>
+            <li><a href="#">4.3. Calling Functions</a></li>
+          </ol>
+        </li>
+        <li><a href="#">5. Data Definition</a>
+          <ol>
+            <li><a href="#">5.1. Table Basics</a></li>
+            <li><a href="#">5.2. Default Values</a></li>
+            <li><a href="#">5.3. Identity Columns</a></li>
+            <li><a href="#">5.4. Generated Columns</a></li>
+            <li><a href="#">5.5. Constraints</a></li>
+            <li><a href="#">5.6. System Columns</a></li>
+            <li><a href="#">5.7. Modifying Tables</a></li>
+            <li><a href="#">5.8. Privileges</a></li>
+            <li><a href="#">5.9. Row Security Policies</a></li>
+            <li><a href="#">5.10. Schemas</a></li>
+            <li><a href="#">5.11. Inheritance</a></li>
+            <li><a href="#">5.12. Table Partitioning</a></li>
+            <li><a href="#">5.13. Foreign Data</a></li>
+            <li><a href="#">5.14. Other Database Objects</a></li>
+            <li><a href="#">5.15. Dependency Tracking</a></li>
+          </ol>
+        </li>
+        <li><a href="#">6. Data Manipulation</a>
+          <ol>
+            <li><a href="#">6.1. Inserting Data</a></li>
+            <li><a href="#">6.2. Updating Data</a></li>
+            <li><a href="#">6.3. Deleting Data</a></li>
+            <li><a href="#">6.4. Returning Data from Modified Rows</a></li>
+          </ol>
+        </li>
+        <li><a href="#">7. Queries</a>
+          <ol>
+            <li><a href="#">7.1. Overview</a></li>
+            <li><a href="#">7.2. Table Expressions</a></li>
+            <li><a href="#">7.3. Select Lists</a></li>
+            <li><a href="#">7.4. Combining Queries (<code>UNION</code>, <code>INTERSECT</code>, <code>EXCEPT</code>)</a></li>
+            <li><a href="#">7.5. Sorting Rows (<code>ORDER BY</code>)</a></li>
+            <li><a href="#">7.6. <code>LIMIT</code> and <code>OFFSET</code></a></li>
+            <li><a href="#">7.7. <code>VALUES</code> Lists</a></li>
+            <li><a href="#">7.8. <code>WITH</code> Queries (Common Table Expressions)</a></li>
+          </ol>
+        </li>
+        <li><a href="#">8. Data Types</a>
+          <ol>
+            <li><a href="#">8.1. Numeric Types</a></li>
+            <li><a href="#">8.2. Monetary Types</a></li>
+            <li><a href="#">8.3. Character Types</a></li>
+            <li><a href="#">8.4. Binary Data Types</a></li>
+            <li><a href="#">8.5. Date/Time Types</a></li>
+            <li><a href="#">8.6. Boolean Type</a></li>
+            <li><a href="#">8.7. Enumerated Types</a></li>
+            <li><a href="#">8.8. Geometric Types</a></li>
+            <li><a href="#">8.9. Network Address Types</a></li>
+            <li><a href="#">8.10. Bit String Types</a></li>
+            <li><a href="#">8.11. Text Search Types</a></li>
+          </ol>
+        </li>
+      </ol>
+    </article>
+  </main>
+</body>
+</html>

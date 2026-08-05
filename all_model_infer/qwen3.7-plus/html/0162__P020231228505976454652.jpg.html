@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Needle is an Outlier in a Haystack: Hunting Malicious PyPI Packages with Code Clustering</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Times New Roman', Times, serif;
+    background: #fff;
+    max-width: 1100px;
+    margin: 0 auto;
+    color: #000;
+    line-height: 1.5;
+  }
+  .header {
+    background: linear-gradient(135deg, #e87722 0%, #f5a623 30%, #f7c948 60%, #f5a623 80%, #e87722 100%);
+    padding: 20px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(255,255,255,0.15) 0%, transparent 70%);
+  }
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 1;
+  }
+  .iscas-logo {
+    font-size: 42px;
+    font-weight: bold;
+    color: #fff;
+    font-style: italic;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    letter-spacing: 2px;
+  }
+  .header-text {
+    color: #fff;
+    font-size: 16px;
+    line-height: 1.4;
+  }
+  .header-text .year {
+    font-size: 36px;
+    font-weight: bold;
+    color: #fff;
+    display: inline;
+  }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 1;
+  }
+  .header-icon {
+    width: 30px;
+    height: 30px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 14px;
+  }
+  .header-right-text {
+    font-size: 28px;
+    color: #fff;
+    font-weight: bold;
+  }
+  .title-section {
+    text-align: center;
+    padding: 30px 40px 20px;
+  }
+  .title-en {
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    line-height: 1.3;
+  }
+  .title-en-sub {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  .title-cn {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 15px;
+  }
+  .authors {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  .conference {
+    font-size: 15px;
+    margin-bottom: 8px;
+  }
+  .contact {
+    font-size: 15px;
+  }
+  .section {
+    margin: 15px 20px;
+    border: 1px dashed #d4a843;
+    border-radius: 5px;
+    padding: 15px 20px;
+    background: #fff;
+  }
+  .section-header {
+    background: #f5a623;
+    color: #000;
+    font-weight: bold;
+    font-size: 18px;
+    padding: 5px 15px;
+    display: inline-block;
+    margin-bottom: 12px;
+    clip-path: polygon(0 0, 90% 0, 100% 50%, 90% 100%, 0 100%);
+    padding-right: 25px;
+  }
+  .section ul {
+    padding-left: 25px;
+    margin-bottom: 10px;
+  }
+  .section li {
+    margin-bottom: 8px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .section p {
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+  .methodology-diagram {
+    width: 100%;
+    height: 320px;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px 0;
+    position: relative;
+  }
+  .methodology-diagram .placeholder {
+    color: #888;
+    font-size: 14px;
+  }
+  .two-col {
+    display: flex;
+    gap: 15px;
+    margin: 15px 20px;
+  }
+  .two-col .col {
+    flex: 1;
+  }
+  .two-col .col-left {
+    flex: 1.1;
+  }
+  .two-col .col-right {
+    flex: 0.9;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 10px 0;
+    font-size: 13px;
+  }
+  table th, table td {
+    border: 1px solid #333;
+    padding: 3px 8px;
+    text-align: center;
+  }
+  table th {
+    background: #f0f0f0;
+    font-weight: bold;
+  }
+  .table-title {
+    font-size: 14px;
+    font-weight: bold;
+    margin: 12px 0 5px;
+    text-align: center;
+  }
+  .footer {
+    background: linear-gradient(135deg, #e87722 0%, #f5a623 50%, #e87722 100%);
+    padding: 20px 30px;
+    text-align: center;
+    margin-top: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .footer::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(ellipse at 70% 50%, rgba(255,255,255,0.2) 0%, transparent 60%);
+  }
+  .footer p {
+    color: #000;
+    font-size: 22px;
+    font-weight: bold;
+    z-index: 1;
+    position: relative;
+  }
+  .bold { font-weight: bold; }
+  .italic { font-style: italic; }
+  .underline { text-decoration: underline; }
+  .highlight { background: #fff3cd; padding: 1px 3px; }
+  .diagram-container {
+    width: 100%;
+    height: 340px;
+    margin: 10px 0;
+    position: relative;
+    background: #fafafa;
+    border: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .diagram-container svg {
+    width: 100%;
+    height: 100%;
+  }
+  .col-right .section {
+    margin: 0 0 15px 0;
+  }
+  .col-left .section {
+    margin: 0 0 15px 0;
+  }
+  .section-header-conclusion {
+    background: #f5a623;
+    color: #000;
+    font-weight: bold;
+    font-size: 18px;
+    padding: 5px 15px;
+    display: inline-block;
+    margin-bottom: 12px;
+    clip-path: polygon(0 0, 90% 0, 100% 50%, 90% 100%, 0 100%);
+    padding-right: 25px;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div class="iscas-logo">ISCAS</div>
+    <div class="header-text">
+      中国科学院软件研究所学术年会 <span class="year">2023</span><br>
+      暨计算机科学国家重点实验室开放周
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="header-icon">✻</div>
+    <div class="header-right-text">学术论文</div>
+  </div>
+</div>
+
+<div class="title-section">
+  <div class="title-en">A Needle is an Outlier in a Haystack:</div>
+  <div class="title-en-sub">Hunting Malicious PyPI Packages with Code Clustering</div>
+  <div class="title-cn">基于代码聚类的PyPI软件仓库恶意软件包检测方法</div>
+  <div class="authors">梁文韬 凌祥 吴敬征 罗天悦 武延军</div>
+  <div class="conference">The 38th IEEE/ACM International Conference on Automated Software Engineering (ASE2023)</div>
+  <div class="contact">联系人：梁文韬，13146538991，liangwentao@iscas.ac.cn</div>
+</div>
+
+<div class="section">
+  <div class="section-header">Background</div>
+  <ul>
+    <li>The Python Package Index (PyPI), the official third-party software repository for Python, is becoming an increasingly vital resource for developers. Regrettably, the open nature of PyPI exposes end-users to substantial security risks stemming from malicious packages. Consequently, the timely and effective identification of malware within the vast number of newly-uploaded PyPI packages has emerged as a pressing concern.</li>
+    <li>Existing detection methods are dependent on difficult-to-obtain explicit knowledge, such as taint sources, sinks, and malicious code patterns, rendering them susceptible to overlooking emergent malicious packages.</li>
+  </ul>
+</div>
+
+<div class="section">
+  <div class="section-header">Methodology</div>
+  <p>We introduce a novel method called <strong>MPHunter</strong> (<strong>M</strong>alicious <strong>P</strong>ackages <strong>H</strong>unter) based on code clustering to detect malicious PyPI packages without requiring explicit knowledge. MPHunter is composed of four steps. First, it builds an API encoding model APIEM for canonical sequence extraction (<strong>❶</strong>). Second, it trains a code embedding model CCEM with the extracted API sequence (<strong>❷</strong>). Third, the installation scripts to be detected are encoded into vectors using CCEM, and then clustered in the vector space (<strong></strong>). Finally, identified outliers are ranked to highlight the suspects for auditing (<strong>❹</strong>).</p>
+  <div class="diagram-container">
+    <svg viewBox="0 0 900 320" xmlns="http://www.w3.org/2000/svg">
+      <!-- PyPI icon -->
+      <rect x="30" y="130" width="50" height="50" rx="5" fill="#3776ab" opacity="0.8"/>
+      <text x="55" y="160" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">PyPI</text>
+      <text x="55" y="195" text-anchor="middle" font-size="10">PyPI</text>
+
+      <!-- Training scripts -->
+      <rect x="120" y="80" width="60" height="40" rx="3" fill="#e8e8e8" stroke="#999"/>
+      <text x="150" y="100" text-anchor="middle" font-size="9">Training</text>
+      <text x="150" y="112" text-anchor="middle" font-size="9">scripts</text>
+      <text x="150" y="75" text-anchor="middle" font-size="10">📄</text>
+
+      <!-- Benign setup.py -->
+      <rect x="120" y="155" width="60" height="40" rx="3" fill="#e8e8e8" stroke="#999"/>
+      <text x="150" y="175" text-anchor="middle" font-size="9">Benign</text>
+      <text x="150" y="187" text-anchor="middle" font-size="9">setup.py</text>
+
+      <!-- Newly-uploaded setup.py -->
+      <rect x="120" y="225" width="60" height="40" rx="3" fill="#e8e8e8" stroke="#999"/>
+      <text x="150" y="245" text-anchor="middle" font-size="9">NEW</text>
+      <text x="150" y="257" text-anchor="middle" font-size="8">Newly-uploaded</text>
+      <text x="150" y="270" text-anchor="middle" font-size="8">setup.py</text>
+
+      <!-- CG box -->
+      <rect x="220" y="70" width="80" height="60" rx="5" fill="#d0e8ff" stroke="#4a90d9"/>
+      <text x="260" y="105" text-anchor="middle" font-size="11" font-weight="bold">CG</text>
+      <!-- Nodes in CG -->
+      <circle cx="240" cy="85" r="6" fill="#4a90d9"/>
+      <circle cx="260" cy="80" r="6" fill="#4a90d9"/>
+      <circle cx="280" cy="85" r="6" fill="#4a90d9"/>
+      <circle cx="250" cy="100" r="6" fill="#4a90d9"/>
+      <circle cx="270" cy="100" r="6" fill="#4a90d9"/>
+
+      <!-- Plus sign -->
+      <text x="310" y="105" text-anchor="middle" font-size="18" font-weight="bold">+</text>
+
+      <!-- CFG box -->
+      <rect x="325" y="70" width="80" height="60" rx="5" fill="#d0e8ff" stroke="#4a90d9"/>
+      <text x="365" y="105" text-anchor="middle" font-size="11" font-weight="bold">CFG</text>
+      <circle cx="345" cy="85" r="5" fill="#4a90d9"/>
+      <circle cx="365" cy="80" r="5" fill="#4a90d9"/>
+      <circle cx="385" cy="85" r="5" fill="#4a90d9"/>
+      <circle cx="355" cy="100" r="5" fill="#4a90d9"/>
+      <circle cx="375" cy="100" r="5" fill="#4a90d9"/>
+
+      <!-- API Sequences -->
+      <rect x="240" y="145" width="120" height="25" rx="3" fill="#f0f0f0" stroke="#999"/>
+      <text x="300" y="162" text-anchor="middle" font-size="10">API Sequences</text>
+
+      <!-- Training arrow to APIEM -->
+      <line x1="360" y1="157" x2="420" y2="157" stroke="#333" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <text x="390" y="150" text-anchor="middle" font-size="9">Training</text>
+
+      <!-- APIEM box -->
+      <rect x="420" y="140" width="70" height="35" rx="3" fill="#fff3cd" stroke="#f5a623" stroke-width="2"/>
+      <text x="455" y="162" text-anchor="middle" font-size="11" font-weight="bold">APIEM</text>
+      <circle cx="420" cy="140" r="10" fill="#f5a623"/>
+      <text x="420" y="144" text-anchor="middle" font-size="9" fill="#fff" font-weight="bold">1</text>
+
+      <!-- Canonical Seq. Extraction box -->
+      <rect x="310" y="30" width="280" height="55" rx="5" fill="#f0f0f0" stroke="#999"/>
+      <text x="450" y="48" text-anchor="middle" font-size="10" font-weight="bold">Canonical Seq. Extraction</text>
+
+      <!-- BB boxes inside -->
+      <rect x="330" y="52" width="25" height="18" rx="2" fill="#ddd" stroke="#999"/>
+      <text x="342" y="64" text-anchor="middle" font-size="7">BB1</text>
+      <rect x="360" y="52" width="25" height="18" rx="2" fill="#ddd" stroke="#999"/>
+      <text x="372" y="64" text-anchor="middle" font-size="7">BB2</text>
+      <rect x="390" y="52" width="25" height="18" rx="2" fill="#ddd" stroke="#999"/>
+      <text x="402" y="64" text-anchor="middle" font-size="7">BB3</text>
+      <rect x="420" y="52" width="25" height="18" rx="2" fill="#ddd" stroke="#999"/>
+      <text x="432" y="64" text-anchor="middle" font-size="7">BB4</text>
+      <rect x="450" y="52" width="25" height="18" rx="2" fill="#ddd" stroke="#999"/>
+      <text x="462" y="64" text-anchor="middle" font-size="7">BB5</text>
+      <rect x="480" y="52" width="25" height="18" rx="2" fill="#ddd" stroke="#999"/>
+      <text x="492" y="64" text-anchor="middle" font-size="7">BB6</text>
+
+      <!-- Canonical DFS/BFS Traversal -->
+      <text x="450" y="95" text-anchor="middle" font-size="9">Canonical DFS/BFS</text>
+      <text x="450" y="107" text-anchor="middle" font-size="9">Traversal</text>
+
+      <!-- Arrow from APIEM up to Canonical Seq Extraction -->
+      <line x1="455" y1="140" x2="455" y2="115" stroke="#333" stroke-width="1" stroke-dasharray="4"/>
+
+      <!-- Canonical API Sequences -->
+      <rect x="490" y="85" width="100" height="30" rx="3" fill="#f0f0f0" stroke="#999"/>
+      <text x="540" y="100" text-anchor="middle" font-size="9">Canonical</text>
+      <text x="540" y="112" text-anchor="middle" font-size="9">API Sequences</text>
+
+      <!-- Arrow to CCEM -->
+      <line x1="590" y1="100" x2="640" y2="100" stroke="#333" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <text x="615" y="93" text-anchor="middle" font-size="9">Training</text>
+      <circle cx="640" cy="90" r="10" fill="#f5a623"/>
+      <text x="640" y="94" text-anchor="middle" font-size="9" fill="#fff" font-weight="bold">2</text>
+
+      <!-- CCEM box -->
+      <rect x="660" y="80" width="70" height="40" rx="3" fill="#d4edda" stroke="#28a745" stroke-width="2"/>
+      <text x="695" y="105" text-anchor="middle" font-size="12" font-weight="bold">CCEM</text>
+
+      <!-- Dashed line from CCEM down -->
+      <line x1="695" y1="120" x2="695" y2="200" stroke="#333" stroke-width="1" stroke-dasharray="4"/>
+
+      <!-- Lower flow: Canonical Seq. Extraction -->
+      <rect x="240" y="195" width="100" height="30" rx="3" fill="#f0f0f0" stroke="#999"/>
+      <text x="290" y="210" text-anchor="middle" font-size="9">Canonical</text>
+      <text x="290" y="222" text-anchor="middle" font-size="9">Seq. Extraction</text>
+
+      <!-- Canonical API Sequences (lower) -->
+      <rect x="350" y="195" width="100" height="30" rx="3" fill="#f0f0f0" stroke="#999"/>
+      <text x="400" y="210" text-anchor="middle" font-size="9">Canonical</text>
+      <text x="400" y="222" text-anchor="middle" font-size="9">API Sequences</text>
+
+      <!-- Embedding -->
+      <text x="470" y="210" text-anchor="middle" font-size="9">Embedding</text>
+
+      <!-- Vectors -->
+      <text x="470" y="230" text-anchor="middle" font-size="9">Vectors</text>
+
+      <!-- Clustering -->
+      <circle cx="510" cy="210" r="10" fill="#f5a623"/>
+      <text x="510" y="214" text-anchor="middle" font-size="9" fill="#fff" font-weight="bold">3</text>
+      <text x="530" y="210" text-anchor="middle" font-size="9">Clustering</text>
+
+      <!-- Cluster visualization -->
+      <ellipse cx="570" cy="210" rx="35" ry="25" fill="none" stroke="#4a90d9" stroke-width="1.5"/>
+      <circle cx="560" cy="205" r="3" fill="#4a90d9"/>
+      <circle cx="570" cy="200" r="3" fill="#4a90d9"/>
+      <circle cx="580" cy="210" r="3" fill="#4a90d9"/>
+      <circle cx="565" cy="215" r="3" fill="#4a90d9"/>
+      <circle cx="575" cy="220" r="3" fill="#4a90d9"/>
+
+      <ellipse cx="620" cy="210" rx="30" ry="22" fill="none" stroke="#4a90d9" stroke-width="1.5"/>
+      <circle cx="615" cy="205" r="3" fill="#4a90d9"/>
+      <circle cx="625" cy="210" r="3" fill="#4a90d9"/>
+      <circle cx="620" cy="218" r="3" fill="#4a90d9"/>
+
+      <!-- Outlier points (red) -->
+      <circle cx="660" cy="195" r="3" fill="#dc3545"/>
+      <circle cx="670" cy="190" r="3" fill="#dc3545"/>
+      <circle cx="665" cy="200" r="3" fill="#dc3545"/>
+      <circle cx="675" cy="198" r="3" fill="#dc3545"/>
+      <circle cx="680" cy="192" r="3" fill="#dc3545"/>
+
+      <!-- Ranking -->
+      <circle cx="690" cy="210" r="10" fill="#f5a623"/>
+      <text x="690" y="214" text-anchor="middle" font-size="9" fill="#fff" font-weight="bold">4</text>
+      <text x="710" y="210" text-anchor="middle" font-size="9">Ranking</text>
+
+      <!-- Arrow up for ranking -->
+      <line x1="690" y1="200" x2="690" y2="175" stroke="#333" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+      <!-- Known Malicious setup.py -->
+      <rect x="640" y="240" width="100" height="25" rx="3" fill="#f0f0f0" stroke="#999"/>
+      <text x="690" y="256" text-anchor="middle" font-size="8">Known Malicious setup.py</text>
+
+      <!-- Manual Audit -->
+      <rect x="760" y="200" width="70" height="30" rx="3" fill="#f0f0f0" stroke="#999"/>
+      <text x="795" y="215" text-anchor="middle" font-size="9">Manual</text>
+      <text x="795" y="227" text-anchor="middle" font-size="9">Audit</text>
+
+      <!-- Arrow to Manual Audit -->
+      <line x1="720" y1="210" x2="760" y2="210" stroke="#333" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+      <!-- Dashed arrows from upper flow to lower -->
+      <line x1="290" y1="170" x2="290" y2="195" stroke="#333" stroke-width="1" stroke-dasharray="4" marker-end="url(#arrow)"/>
+      <line x1="400" y1="170" x2="400" y2="195" stroke="#333" stroke-width="1" stroke-dasharray="4" marker-end="url(#arrow)"/>
+
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#333"/>
+        </marker>
+      </defs>
+    </svg>
+  </div>
+</div>
+
+<div class="two-col">
+  <div class="col col-left">
+    <div class="section">
+      <div class="section-header">Evaluation</div>
+      <div class="table-title">Table I: The Recall on Known Malicious Samples</div>
+      <table>
+        <tr>
+          <th>Set No.</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>Total</th>
+        </tr>
+        <tr>
+          <th>Detected</th><td>10</td><td>10</td><td>9</td><td>9</td><td>8</td><td>9</td><td>8</td><td>10</td><td>10</td><td>9</td><td><strong>92</strong></td>
+        </tr>
+      </table>
+      <ul>
+        <li>We also evaluated the recall rate of MPHunter using known malicious samples. As result, 92 of 100 malicious samples were ranked in the top ten by MPHunter (recall of 92%).</li>
+        <li>We also conduct controlled experiments detecting malicious packages with only benign set or known malicious set, of which recall decline to 30% and 40% respectively.</li>
+      </ul>
+      <div class="table-title">Table II: The Time Cost of the Offline Stage</div>
+      <table>
+        <tr>
+          <th>Offline Task</th><th>Preprocessing</th><th>Training</th><th>Embedding</th><th>Sum</th>
+        </tr>
+        <tr>
+          <td>Building APIEM</td><td>1,409s</td><td>320s</td><td>—</td><td>1,729s</td>
+        </tr>
+        <tr>
+          <td>Building CCEM</td><td>5,157s</td><td>572s</td><td>—</td><td>5,729s</td>
+        </tr>
+        <tr>
+          <td>Encoding Benign Samples</td><td>541s</td><td>—</td><td>1,101s</td><td>1,642s</td>
+        </tr>
+        <tr>
+          <td>Encoding Malicious Samples</td><td>191s</td><td>—</td><td>51s</td><td>242s</td>
+        </tr>
+        <tr>
+          <th>Total</th><td><strong>7,298s</strong></td><td><strong>892s</strong></td><td><strong>1,152s</strong></td><td><strong>9,342s</strong></td>
+        </tr>
+      </table>
+      <div class="table-title">Table III: The Time Cost of the Online Stage</div>
+      <table>
+        <tr>
+          <th>Batch</th><th>#Pkgs</th><th>Preprocessing</th><th>Embedding</th><th>Merging</th><th>Clustering &amp; Ranking</th><th>Sum</th>
+        </tr>
+        <tr><td>#1</td><td>4,435</td><td>178s</td><td>346s</td><td>155s</td><td>2.5s</td><td><strong>681.5s</strong></td></tr>
+        <tr><td>#3</td><td>1,278</td><td>218s</td><td>82s</td><td>35s</td><td>1.5s</td><td><strong>336.5s</strong></td></tr>
+        <tr><td>#6</td><td>533</td><td>42s</td><td>31s</td><td>14s</td><td>1.2s</td><td><strong>88.2s</strong></td></tr>
+        <tr><td>#7</td><td>737</td><td>48s</td><td>62s</td><td>26s</td><td>1.3s</td><td><strong>137.3s</strong></td></tr>
+        <tr><td>#10</td><td>974</td><td>243s</td><td>110s</td><td>47s</td><td>1.4s</td><td><strong>401.4s</strong></td></tr>
+        <tr><td>#13</td><td>1,392</td><td>251s</td><td>115s</td><td>45s</td><td>1.6s</td><td><strong>412.6s</strong></td></tr>
+        <tr><td>#16</td><td>1,334</td><td>353s</td><td>110s</td><td>49s</td><td>1.5s</td><td><strong>513.5s</strong></td></tr>
+        <tr><td>#17</td><td>3,226</td><td>834s</td><td>309s</td><td>131s</td><td>2.4s</td><td><strong>1276.4s</strong></td></tr>
+        <tr><td>#20</td><td>682</td><td>83s</td><td>59s</td><td>28s</td><td>1.5s</td><td><strong>171.5s</strong></td></tr>
+        <tr><td>#24</td><td>762</td><td>101s</td><td>66s</td><td>27s</td><td>1.2s</td><td><strong>195.2s</strong></td></tr>
+        <tr><td>#26</td><td>907</td><td>105s</td><td>93s</td><td>43s</td><td>1.5s</td><td><strong>242.5s</strong></td></tr>
+        <tr><td>#27</td><td>484</td><td>61s</td><td>37s</td><td>19s</td><td>1.3s</td><td><strong>118.3s</strong></td></tr>
+        <tr><td>#28</td><td>389</td><td>45s</td><td>39s</td><td>19s</td><td>1.3s</td><td><strong>104.3s</strong></td></tr>
+        <tr><td>#29</td><td>305</td><td>32s</td><td>25s</td><td>10s</td><td>1.0s</td><td><strong>68.0s</strong></td></tr>
+        <tr><td>#30</td><td>1,177</td><td>124s</td><td>80s</td><td>40s</td><td>1.4s</td><td><strong>245.4s</strong></td></tr>
+        <tr><th>Total</th><td><strong>18,615</strong></td><td><strong>2,718s</strong></td><td><strong>1,564s</strong></td><td><strong>688s</strong></td><td><strong>22.6s</strong></td><td><strong>4,992.6s</strong></td></tr>
+      </table>
+      <ul>
+        <li>The time cost experiment shows that MPHunter is a light-weight tool which can even be deployed on a laptop.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="col col-right">
+    <div class="section">
+      <div class="section-header">Result</div>
+      <ul>
+        <li>In total, we successfully discovered 60 malicious packages in 15 batches (50%) out of the 30. All 60 suspects were confirmed to be truly malicious packages.</li>
+        <li>All the 60 detected packages have been confirmed as real malware and removed by PyPI.</li>
+        <li>Note that most of them (53 out of 60, 88%) rank in the top three, and 15 even rank first.</li>
+        <li>To accurately evaluate the recall of MPHunter, we manually analyzed all installation scripts of the 15 batches and manual analysis showed that the recall rate of MPHunter for target batches is <span class="underline">100%</span>.</li>
+        <li>Surprisingly, The state-of-art malware detection tool, MalOSS, cannot discover any of these malwares.</li>
+      </ul>
+    </div>
+    <div class="section">
+      <div class="section-header-conclusion">Conclusion</div>
+      <ul>
+        <li>We employed MPHunter to detect 30 batches of PyPI software packages, totaling 31,329 packages. From 15 of these batches, we detected 60 previously unknown malicious packages.</li>
+        <li>The experiments also demonstrate that MPHunter's recall is perfect (100%) for detecting malicious setup.py in the target. For a detection method that does not require explicit knowledge, this result is very encouraging.</li>
+        <li>Moreover, MPHunter has proven to be scalable, requiring only a few minutes to complete its analysis for most batches.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <p>This paper is supported by Open Source Map</p>
+</div>
+
+</body>
+</html>

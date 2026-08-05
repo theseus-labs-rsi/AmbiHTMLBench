@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>人间清醒从懂人性开始</title>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$']],
+        displayMath: [['$$', '$$']]
+      }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: #ddd9d1;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", Arial, sans-serif;
+      color: #333b40;
+    }
+
+    .page {
+      position: relative;
+      width: 540px;
+      height: 720px;
+      overflow: hidden;
+      background: #f0eee8;
+    }
+
+    .watermark {
+      position: absolute;
+      z-index: 0;
+      border-radius: 50%;
+      background: rgba(205, 202, 194, 0.2);
+    }
+
+    .watermark.one {
+      width: 180px;
+      height: 180px;
+      top: 278px;
+      right: -83px;
+    }
+
+    .watermark.two {
+      width: 135px;
+      height: 135px;
+      right: -55px;
+      bottom: 10px;
+    }
+
+    .watermark-bar {
+      position: absolute;
+      z-index: 0;
+      right: 23px;
+      width: 115px;
+      height: 34px;
+      background: rgba(205, 202, 194, 0.15);
+    }
+
+    .watermark-bar.first {
+      top: 179px;
+    }
+
+    .watermark-bar.second {
+      top: 430px;
+    }
+
+    .watermark-bar.third {
+      top: 505px;
+    }
+
+    .masthead,
+    .headline,
+    .banner,
+    .content-card {
+      position: absolute;
+      z-index: 1;
+    }
+
+    .masthead {
+      top: 40px;
+      left: 55px;
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      height: 25px;
+      color: #080808;
+      font-weight: 800;
+    }
+
+    .masthead-label {
+      font-size: 13px;
+      letter-spacing: 0;
+    }
+
+    .brand-pill {
+      display: flex;
+      align-items: center;
+      height: 23px;
+      padding: 0 9px;
+      border-radius: 13px;
+      background: #090909;
+      color: #fff;
+      font-size: 11px;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .brand-pill strong {
+      margin-right: 5px;
+      font-size: 11px;
+      letter-spacing: 0;
+    }
+
+    .headline {
+      top: 77px;
+      left: 51px;
+      margin: 0;
+      color: #060606;
+      font-size: 34px;
+      line-height: 1.2;
+      font-weight: 900;
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+
+    .banner {
+      top: 132px;
+      left: 50px;
+      width: 443px;
+      height: 45px;
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      border-radius: 8px;
+      background: #050505;
+      color: #fff;
+      font-size: 23px;
+      line-height: 1;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .content-card {
+      top: 200px;
+      left: 49px;
+      width: 442px;
+      height: 493px;
+      border: 2px solid #46565c;
+      background: rgba(241, 239, 233, 0.7);
+    }
+
+    .intro {
+      height: 115px;
+      display: grid;
+      grid-template-columns: 93px 1fr;
+      border-bottom: 2px solid #46565c;
+    }
+
+    .intro-art {
+      position: relative;
+      overflow: hidden;
+      border-right: 1px solid #68747a;
+    }
+
+    .paper-back,
+    .paper-front {
+      position: absolute;
+      background: #b8b9b6;
+    }
+
+    .paper-back {
+      top: 27px;
+      left: 35px;
+      width: 42px;
+      height: 55px;
+      transform: rotate(-14deg);
+      clip-path: polygon(0 8%, 72% 0, 100% 100%, 19% 91%);
+    }
+
+    .paper-front {
+      top: 38px;
+      left: 21px;
+      width: 42px;
+      height: 51px;
+      clip-path: polygon(17% 0, 100% 0, 100% 100%, 0 100%, 0 17%);
+    }
+
+    .paper-front::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      border-top: 9px solid #f0eee8;
+      border-right: 9px solid transparent;
+    }
+
+    .people-word {
+      position: absolute;
+      top: 57px;
+      left: 27px;
+      z-index: 2;
+      color: #46565c;
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .small-person {
+      position: absolute;
+      z-index: 2;
+      width: 10px;
+      height: 13px;
+    }
+
+    .small-person::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 3px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #b8b9b6;
+    }
+
+    .small-person::after {
+      content: "";
+      position: absolute;
+      top: 5px;
+      left: 0;
+      width: 11px;
+      height: 8px;
+      background: #b8b9b6;
+      clip-path: polygon(50% 0, 100% 100%, 0 100%);
+    }
+
+    .small-person.a {
+      top: 23px;
+      left: 25px;
+    }
+
+    .small-person.b {
+      top: 29px;
+      left: 20px;
+      transform: scale(0.75);
+    }
+
+    .intro-copy {
+      position: relative;
+      padding: 34px 8px 5px 9px;
+    }
+
+    .intro-title {
+      position: absolute;
+      top: 5px;
+      left: 8px;
+      right: 8px;
+      height: 26px;
+      border-bottom: 1px solid #899095;
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 800;
+    }
+
+    .pin-icon {
+      position: absolute;
+      top: 3px;
+      right: 9px;
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      background: #46565c;
+    }
+
+    .pin-icon::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      bottom: -4px;
+      width: 7px;
+      height: 8px;
+      border-right: 2px solid #46565c;
+      transform: rotate(-28deg);
+    }
+
+    .intro-copy p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 19px;
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+
+    .attitudes {
+      height: 92px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 2px solid #46565c;
+    }
+
+    .attitude {
+      position: relative;
+      padding: 6px 12px 4px 12px;
+    }
+
+    .attitude + .attitude {
+      border-left: 1px solid #68747a;
+    }
+
+    .attitude h2 {
+      margin: 0 0 3px;
+      color: #35464d;
+      font-size: 16px;
+      line-height: 21px;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .attitude p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+
+    .face {
+      position: absolute;
+      top: 5px;
+      right: 9px;
+      width: 23px;
+      height: 23px;
+      border: 1px solid #526066;
+      border-radius: 50%;
+    }
+
+    .face::before {
+      content: "··";
+      position: absolute;
+      top: -5px;
+      left: 5px;
+      font-size: 16px;
+      letter-spacing: 2px;
+    }
+
+    .face.happy::after {
+      content: "⌣";
+      position: absolute;
+      left: 5px;
+      top: 7px;
+      font-size: 13px;
+      line-height: 1;
+    }
+
+    .face.sad::after {
+      content: "⌢";
+      position: absolute;
+      left: 5px;
+      top: 10px;
+      font-size: 13px;
+      line-height: 1;
+    }
+
+    .independence {
+      position: relative;
+      height: 117px;
+      padding: 44px 12px 5px;
+      border-bottom: 2px solid #46565c;
+    }
+
+    .independence h2 {
+      position: absolute;
+      top: 9px;
+      left: 12px;
+      height: 27px;
+      margin: 0;
+      padding: 2px 11px 3px;
+      border-radius: 15px;
+      background: #45575e;
+      color: #fff;
+      font-size: 16px;
+      line-height: 22px;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .independence p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+
+    .document-icon {
+      position: absolute;
+      top: 10px;
+      right: 9px;
+      width: 19px;
+      height: 23px;
+      border: 2px solid #536168;
+    }
+
+    .document-icon::before {
+      content: "≡";
+      position: absolute;
+      top: -3px;
+      left: 4px;
+      font-size: 15px;
+      line-height: 20px;
+    }
+
+    .factors {
+      position: relative;
+      height: 165px;
+      padding: 37px 11px 5px 12px;
+    }
+
+    .factors h2 {
+      position: absolute;
+      top: 6px;
+      left: 12px;
+      margin: 0;
+      color: #35464d;
+      font-size: 16px;
+      line-height: 23px;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .target-icon {
+      position: absolute;
+      top: 7px;
+      right: 9px;
+      width: 22px;
+      height: 22px;
+      border: 2px solid #46565c;
+      border-radius: 50%;
+    }
+
+    .target-icon::before {
+      content: "";
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      width: 8px;
+      height: 8px;
+      border: 2px solid #46565c;
+      border-radius: 50%;
+    }
+
+    .target-icon::after {
+      content: "➤";
+      position: absolute;
+      top: -9px;
+      right: -3px;
+      color: #46565c;
+      font-size: 14px;
+      transform: rotate(-43deg);
+    }
+
+    .factors ol {
+      margin: 0;
+      padding-left: 0;
+      list-style-position: inside;
+      font-size: 13.5px;
+      line-height: 20px;
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+
+    .factors li {
+      margin: 0;
+      padding: 0;
+    }
+
+    .placeholder-caption {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+
+    @media (max-width: 540px) {
+      body {
+        display: block;
+      }
+
+      .page {
+        transform-origin: top left;
+        transform: scale(calc(100vw / 540));
+      }
+
+      html,
+      body {
+        height: calc(720px * (100vw / 540));
+        min-height: calc(720px * (100vw / 540));
+        overflow-x: hidden;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="watermark one"></div>
+    <div class="watermark two"></div>
+    <div class="watermark-bar first"></div>
+    <div class="watermark-bar second"></div>
+    <div class="watermark-bar third"></div>
+
+    <header class="masthead">
+      <span class="masthead-label">Knowledge Cards</span>
+      <span class="brand-pill"><strong>TONG</strong>知识分享</span>
+    </header>
+
+    <h1 class="headline">人间清醒从懂人性开始</h1>
+    <div class="banner">每天一遍停止内耗，停止emo</div>
+
+    <section class="content-card">
+      <section class="intro">
+        <div class="intro-art placeholder" role="img" aria-label="从众主题插图">
+          <span class="placeholder-caption">[Illustration: upper-left]</span>
+          <span class="paper-back"></span>
+          <span class="paper-front"></span>
+          <span class="small-person a"></span>
+          <span class="small-person b"></span>
+          <span class="people-word">从众</span>
+        </div>
+        <div class="intro-copy">
+          <div class="intro-title">随大溜会让人变得平庸吗</div>
+          <span class="pin-icon" aria-hidden="true"></span>
+          <p>社会心理学关于从众的定义是，由于群体的压力而改变个体自己的行为或信念。正向，在安静的地方，会不自觉压低讲话的声音；相反，新店开业请一些托儿来排队，制造门庭若市的假象，产生好奇跟着去抢。</p>
+        </div>
+      </section>
+
+      <section class="attitudes">
+        <div class="attitude">
+          <h2>积极的从众心态</h2>
+          <span class="face happy" aria-hidden="true"></span>
+          <p>有助于学习他人的智慧和经验，修正自己盲目自信的缺点，完善思考方式，扩大视野。</p>
+        </div>
+        <div class="attitude">
+          <h2>消极的从众心态</h2>
+          <span class="face sad" aria-hidden="true"></span>
+          <p>会扼杀个人的独立意识和判断力，玩得愚蠢，陷入愚行危机，没有主见，甚至陷入骗局。</p>
+        </div>
+      </section>
+
+      <section class="independence">
+        <h2>从众≠丧失独立思考能力</h2>
+        <span class="document-icon" aria-hidden="true"></span>
+        <p>人被外界的信息影响几乎是件不可避免的事情，对多数人来说，从众是一种自我保护和低成本、高效率的决策方式。问题不在于从众，而在于要清楚自己的真实需求。</p>
+      </section>
+
+      <section class="factors">
+        <h2>影响个体从众的因素</h2>
+        <span class="target-icon" aria-hidden="true"></span>
+        <ol>
+          <li>规范影响来自人们希望获得别人的接纳，我们希望得到别人的喜欢，公开反应时从众度较高，这反映了规范影响的力量。其实不光是人类，动物界，甚至整个生物界也有明显的从众特质。和大多数一样更安全，这几乎成为刻在基因里的认知。</li>
+          <li>信息影响来自他人提供的事实证据。遇到困难的决策任务时从众度也较高，这反映了信息影响的力量，我们希望能正确行事。</li>
+        </ol>
+      </section>
+    </section>
+  </main>
+</body>
+</html>

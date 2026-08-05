@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>复数选择题与手写解析</title>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: #f5f5f3;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      color: #4a4a4a;
+      font-family: "SimSun", "Songti SC", serif;
+    }
+
+    .page {
+      position: relative;
+      width: 540px;
+      min-width: 540px;
+      height: 720px;
+      overflow: hidden;
+      background-color: #fff;
+      background-image:
+        linear-gradient(rgba(112, 153, 168, 0.075) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(112, 153, 168, 0.075) 1px, transparent 1px);
+      background-size: 20px 20px;
+      padding: 46px 18px 0 24px;
+    }
+
+    .printed {
+      position: relative;
+      z-index: 1;
+      font-size: 12.5px;
+      line-height: 1.65;
+      letter-spacing: 0;
+    }
+
+    .question {
+      position: relative;
+      width: 100%;
+    }
+
+    .question-text {
+      white-space: nowrap;
+    }
+
+    .answer-mark {
+      display: inline-block;
+      position: relative;
+      top: 4px;
+      margin: 0 4px;
+      color: #d71920;
+      font-family: "KaiTi", "STKaiti", cursive;
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 16px;
+      transform: rotate(7deg);
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr 1fr 1.15fr;
+      align-items: start;
+      width: 100%;
+      margin-top: 3px;
+      color: #454545;
+      font-family: Arial, "SimSun", serif;
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .options span {
+      white-space: nowrap;
+    }
+
+    .hand {
+      position: absolute;
+      z-index: 2;
+      color: #0794c8;
+      font-family: "KaiTi", "STKaiti", "FangSong", cursive;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: .3px;
+      line-height: 21px;
+      transform: rotate(-1deg);
+    }
+
+    .hand .line {
+      white-space: nowrap;
+    }
+
+    .blue {
+      color: #0794c8;
+    }
+
+    .red {
+      color: #df111b;
+      font-family: "KaiTi", "STKaiti", cursive;
+      font-weight: 700;
+    }
+
+    .vector {
+      display: inline-block;
+      position: relative;
+      padding-top: 1px;
+    }
+
+    .vector::before {
+      content: "→";
+      position: absolute;
+      left: 1px;
+      right: 0;
+      top: -10px;
+      height: 8px;
+      text-align: center;
+      font-size: 11px;
+      line-height: 8px;
+    }
+
+    .q1 {
+      height: 78px;
+    }
+
+    .q1 .question-text {
+      line-height: 20px;
+    }
+
+    .q1-notes {
+      left: 207px;
+      top: 125px;
+      width: 330px;
+      height: 151px;
+    }
+
+    .q1-notes .heading {
+      margin-bottom: 0;
+      font-size: 15px;
+    }
+
+    .q1-notes .compact {
+      line-height: 20px;
+    }
+
+    .q1-notes .long {
+      font-size: 12.5px;
+      letter-spacing: 0;
+    }
+
+    .margin-scribble {
+      position: absolute;
+      left: 145px;
+      top: 180px;
+      color: #5d7078;
+      font-family: cursive;
+      font-size: 10px;
+      transform: rotate(-63deg);
+    }
+
+    .placeholder.diagram {
+      position: absolute;
+      left: 381px;
+      top: 156px;
+      width: 104px;
+      height: 56px;
+      margin: 0;
+      border: 0;
+      background: transparent;
+    }
+
+    .diagram figcaption {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+
+    .q2 {
+      height: 204px;
+      padding-top: 161px;
+    }
+
+    .q2 .options {
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      margin-top: 4px;
+    }
+
+    .q2-notes {
+      left: 201px;
+      top: 349px;
+      width: 245px;
+      height: 126px;
+      font-size: 14px;
+      line-height: 21px;
+    }
+
+    .q2-notes .red-box {
+      display: inline-block;
+      margin: 1px 0 0 5px;
+      padding: 0 4px;
+      border: 1.7px solid #e11a22;
+      color: #0794c8;
+      line-height: 20px;
+      transform: rotate(.4deg);
+    }
+
+    .q2-notes .cycle-note {
+      margin-left: 13px;
+      font-size: 11px;
+      line-height: 16px;
+    }
+
+    .q2-notes .final {
+      margin-left: 10px;
+      margin-top: 1px;
+    }
+
+    .q3 {
+      height: 128px;
+      padding-top: 0;
+    }
+
+    .q3 .question-text {
+      margin-left: -7px;
+      line-height: 22px;
+    }
+
+    .q3 .options {
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      margin-top: 5px;
+      margin-left: -7px;
+      width: calc(100% + 7px);
+    }
+
+    .frac {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      vertical-align: middle;
+      margin: 0 2px;
+      font-family: "Times New Roman", serif;
+      font-size: 11px;
+      line-height: 10px;
+    }
+
+    .frac .num {
+      min-width: 14px;
+      padding: 0 2px 1px;
+      text-align: center;
+      border-bottom: 1px solid currentColor;
+    }
+
+    .frac .den {
+      padding-top: 1px;
+      text-align: center;
+    }
+
+    .q3-notes {
+      left: 207px;
+      top: 551px;
+      width: 322px;
+      height: 165px;
+      font-size: 14px;
+      line-height: 22px;
+      transform: rotate(-.6deg);
+    }
+
+    .q3-notes .equation {
+      white-space: nowrap;
+    }
+
+    .q3-notes .indent {
+      margin-left: 30px;
+    }
+
+    .q3-notes .red-side-1 {
+      position: absolute;
+      left: 183px;
+      top: 24px;
+      font-size: 13px;
+      transform: rotate(-2deg);
+    }
+
+    .q3-notes .red-side-2 {
+      position: absolute;
+      left: 203px;
+      top: 61px;
+      width: 111px;
+      font-size: 12px;
+      line-height: 16px;
+      transform: rotate(-3deg);
+    }
+
+    .q3-notes .imag-box {
+      display: inline-block;
+      padding: 0 2px;
+      border: 1.5px solid #e11a22;
+      line-height: 18px;
+      transform: rotate(2deg);
+    }
+
+    .tiny-red-label {
+      position: absolute;
+      left: 255px;
+      top: 649px;
+      color: #df111b;
+      font-family: "KaiTi", "STKaiti", cursive;
+      font-size: 11px;
+      font-weight: 700;
+      transform: rotate(-7deg);
+    }
+
+    sup, sub {
+      font-size: 75%;
+      line-height: 0;
+    }
+
+    i.math {
+      font-family: "Times New Roman", serif;
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="question q1 printed">
+      <div class="question-text">
+        A，B分别是复数<i class="math">z</i><sub>1</sub>，<i class="math">z</i><sub>2</sub>在复平面内对应的点，O是原点，若
+        |<i class="math">z</i><sub>1</sub> + <i class="math">z</i><sub>2</sub>| =
+        |<i class="math">z</i><sub>1</sub> − <i class="math">z</i><sub>2</sub>|，则三角形AOB—
+      </div>
+      <div>定是<span class="answer-mark">B</span>.</div>
+      <div class="options">
+        <span>A.&nbsp; 等腰三角形</span>
+        <span>B.&nbsp; 直角三角形</span>
+        <span>C.&nbsp; 等边三角形</span>
+        <span>D.&nbsp; 等腰直角三角形</span>
+      </div>
+    </section>
+
+    <div class="margin-scribble">∵</div>
+
+    <aside class="hand q1-notes">
+      <div class="line heading">由复数的几何意义得</div>
+      <div class="line">∵ <span class="vector">OA</span>，<span class="vector">OB</span> 表示 <i>z</i><sub>1</sub>，<i>z</i><sub>2</sub></div>
+      <div class="line">∵ |<i>z</i><sub>1</sub>+<i>z</i><sub>2</sub>| = |<i>z</i><sub>1</sub>−<i>z</i><sub>2</sub>|</div>
+      <div class="line compact">∴ 由平面向量的加法法则</div>
+      <div class="line compact long">以OA、OB为邻边作平行四边形，则两条对角线模相等</div>
+      <div class="line compact">∴ 此平行四边形为长方形</div>
+      <div class="line compact">∴ △AOB为直角三角形</div>
+    </aside>
+
+    <figure class="placeholder diagram">
+      <svg width="104" height="56" viewBox="0 0 104 56" aria-label="手绘平行四边形向量图">
+        <defs>
+          <marker id="arrow-red" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6" fill="none" stroke="#e31b23" stroke-width="1.4"/>
+          </marker>
+        </defs>
+        <path d="M8 12 L96 8" fill="none" stroke="#e31b23" stroke-width="1.7" marker-end="url(#arrow-red)"/>
+        <path d="M8 12 L36 46" fill="none" stroke="#e31b23" stroke-width="1.7" marker-end="url(#arrow-red)"/>
+        <path d="M36 46 L96 8" fill="none" stroke="#168cb5" stroke-width="1.1" stroke-dasharray="3 2"/>
+        <path d="M8 12 L62 39 L96 8" fill="none" stroke="#168cb5" stroke-width="1.1" stroke-dasharray="3 2"/>
+        <circle cx="8" cy="12" r="2.3" fill="#e31b23"/>
+        <text x="0" y="10" fill="#e31b23" font-size="10" font-family="KaiTi">O</text>
+        <text x="34" y="55" fill="#168cb5" font-size="9" font-family="KaiTi">A</text>
+        <text x="95" y="18" fill="#168cb5" font-size="9" font-family="KaiTi">B</text>
+        <text x="20" y="31" fill="#168cb5" font-size="8" font-family="KaiTi">θ</text>
+        <text x="70" y="28" fill="#168cb5" font-size="8" font-family="KaiTi">90°</text>
+      </svg>
+      <figcaption>[Diagram: upper-right]</figcaption>
+    </figure>
+
+    <section class="question q2 printed">
+      <div class="question-text">
+        已知<i class="math">i</i>为虚数单位，则<i class="math">i</i> +
+        <i class="math">i</i><sup>2</sup> +
+        <i class="math">i</i><sup>3</sup> + ⋯ +
+        <i class="math">i</i><sup>2019</sup>等于（<span class="answer-mark">D</span>）.
+      </div>
+      <div class="options">
+        <span>A.&nbsp; <i>i</i></span>
+        <span>B.&nbsp; 1</span>
+        <span>C.&nbsp; −<i>i</i></span>
+        <span>D.&nbsp; −1</span>
+      </div>
+    </section>
+
+    <aside class="hand q2-notes">
+      <div class="line"><i>i</i> + <i>i</i><sup>2</sup> + <i>i</i><sup>3</sup> + ⋯ + <i>i</i><sup>2019</sup></div>
+      <div class="line">= <i>i</i> + <i>i</i><sup>2</sup> + <i>i</i><sup>3</sup> + ⋯ + <i>i</i><sup>2019</sup></div>
+      <div class="red-box">
+        <i>i</i><sup>2017</sup>+<i>i</i><sup>2018</sup>+<i>i</i><sup>2019</sup>+<i>i</i><sup>2020</sup> = 0
+      </div>
+      <div class="red cycle-note">周期为4，因此四项和为0</div>
+      <div class="line final">∴ 原式 = <i>i</i> + <i>i</i><sup>2</sup> + <i>i</i><sup>3</sup></div>
+      <div class="line final">　　= −1</div>
+    </aside>
+
+    <section class="question q3 printed">
+      <div class="question-text">
+        若复数<i class="math">z</i>满足(3 − 4<i class="math">i</i>)<i class="math">z</i> =
+        |4 + 3<i class="math">i</i>|，则<i class="math">z</i>的虚部为（<span class="answer-mark">B</span>）.
+      </div>
+      <div class="options">
+        <span>A.&nbsp; −4</span>
+        <span>B.&nbsp; <span class="frac"><span class="num">4</span><span class="den">5</span></span></span>
+        <span>C.&nbsp; −4<i>i</i></span>
+        <span>D.&nbsp; −<span class="frac"><span class="num">4</span><span class="den">5</span></span><i>i</i></span>
+      </div>
+    </section>
+
+    <aside class="hand q3-notes">
+      <div class="equation">∵ (3−4<i>i</i>)<i>z</i> = |4+3<i>i</i>|</div>
+      <div class="equation">∴ <i>z</i> =
+        <span class="frac"><span class="num">|4+3<i>i</i>|</span><span class="den">3−4<i>i</i></span></span>
+        =
+        <span class="frac"><span class="num">5</span><span class="den">3−4<i>i</i></span></span>
+      </div>
+      <div class="equation indent">=
+        <span class="frac">
+          <span class="num">5(3+4<i>i</i>)</span>
+          <span class="den">(3−4<i>i</i>)(3+4<i>i</i>)</span>
+        </span>
+      </div>
+      <div class="equation indent">=
+        <span class="frac"><span class="num">3</span><span class="den">5</span></span>
+        +
+        <span class="frac"><span class="num">4</span><span class="den">5</span></span><i>i</i>
+      </div>
+      <div class="equation">∴ <i>z</i> =
+        <span class="frac"><span class="num">3</span><span class="den">5</span></span>
+        +
+        <span class="imag-box"><span class="frac"><span class="num">4</span><span class="den">5</span></span><i>i</i></span>，∴ <i>z</i>的虚部为
+        <span class="frac"><span class="num">4</span><span class="den">5</span></span>
+      </div>
+      <div class="red red-side-1">→先求出<i>z</i></div>
+      <div class="red red-side-2">→利用分母的3−4<i>i</i><br>的共轭复数</div>
+    </aside>
+
+    <div class="tiny-red-label">虚部</div>
+  </main>
+</body>
+</html>

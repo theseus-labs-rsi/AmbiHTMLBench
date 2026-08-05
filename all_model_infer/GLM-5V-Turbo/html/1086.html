@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>window.MathJax={tex:{inlineMath:[["$","$"]],displayMath:[["$$","$$"]]}};</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Troubleshoot single sign-on | Docker Docs</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fff;
+        }
+
+        /* Top Banner */
+        .top-banner {
+            background-color: #1e293b;
+            color: white;
+            padding: 8px 16px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .top-banner .new-badge {
+            color: #f97316;
+            font-weight: bold;
+            margin-right: 6px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .top-banner a {
+            color: white;
+            text-decoration: underline;
+            margin-left: 8px;
+        }
+
+        .top-banner .close-btn {
+            position: absolute;
+            right: 16px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        /* Header */
+        header {
+            background-color: #2563eb;
+            color: white;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        nav.main-nav {
+            display: flex;
+            gap: 24px;
+        }
+
+        nav.main-nav a {
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            font-size: 14px;
+            padding-bottom: 2px;
+        }
+
+        nav.main-nav a.active {
+            color: white;
+            border-bottom: 2px solid white;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-gordon {
+            background-color: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .btn-search {
+            background-color: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .theme-toggle {
+            background-color: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        /* Layout Container */
+        .container {
+            display: grid;
+            grid-template-columns: 260px 1fr 240px;
+            max-width: 1400px;
+            margin: 0 auto;
+            min-height: calc(100vh - 100px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background-color: #f9fafb;
+            padding: 24px 16px;
+            overflow-y: auto;
+            height: calc(100vh - 100px);
+            position: sticky;
+            top: 0;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-section-title {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            color: #6b7280;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 0;
+            color: #374151;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            color: #2563eb;
+        }
+
+        .nav-item.active {
+            background-color: #e5e7eb;
+            color: #111827;
+            font-weight: 500;
+            margin: 0 -8px;
+            padding: 6px 8px;
+            border-radius: 4px;
+        }
+
+        .nav-item .arrow {
+            font-size: 10px;
+            color: #9ca3af;
+        }
+
+        .beta-tag {
+            background-color: #2563eb;
+            color: white;
+            font-size: 10px;
+            padding: 1px 4px;
+            border-radius: 3px;
+            margin-left: 6px;
+            font-weight: 600;
+        }
+
+        .new-tag {
+            background-color: #10b981;
+            color: white;
+            font-size: 10px;
+            padding: 1px 4px;
+            border-radius: 3px;
+            margin-left: 6px;
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        main {
+            padding: 32px 48px;
+            max-width: 800px;
+        }
+
+        .breadcrumbs {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 16px;
+        }
+
+        .breadcrumbs a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .breadcrumbs span {
+            margin: 0 4px;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .action-bar {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 32px;
+            font-size: 13px;
+            color: #4b5563;
+        }
+
+        .action-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .action-item:hover {
+            color: #2563eb;
+        }
+
+        .intro-text {
+            color: #374151;
+            margin-bottom: 32px;
+            line-height: 1.7;
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #111827;
+            margin-top: 40px;
+            margin-bottom: 16px;
+        }
+
+        h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #111827;
+            margin-top: 28px;
+            margin-bottom: 12px;
+        }
+
+        p {
+            margin-bottom: 16px;
+            color: #374151;
+            line-height: 1.7;
+        }
+
+        ol {
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
+            color: #374151;
+            line-height: 1.7;
+        }
+
+        code {
+            background-color: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #dc2626;
+        }
+
+        pre {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            padding: 16px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 16px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #374151;
+        }
+
+        ul {
+            margin-left: 20px;
+            margin-bottom: 16px;
+        }
+
+        ul li {
+            list-style-type: disc;
+            margin-bottom: 8px;
+        }
+
+        strong {
+            font-weight: 600;
+            color: #111827;
+        }
+
+        a.content-link {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        a.content-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Right Sidebar - TOC */
+        .toc-sidebar {
+            padding: 24px 16px;
+            border-left: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            height: fit-content;
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+        }
+
+        .toc-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #111827;
+        }
+
+        .toc-item {
+            display: block;
+            padding: 4px 0 4px 12px;
+            font-size: 13px;
+            color: #4b5563;
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            margin-left: -12px;
+        }
+
+        .toc-item:hover {
+            color: #2563eb;
+        }
+
+        .toc-item.active {
+            color: #111827;
+            font-weight: 500;
+            border-left-color: #2563eb;
+        }
+
+        .edit-links {
+            margin-bottom: 24px;
+            font-size: 13px;
+        }
+
+        .edit-link {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #2563eb;
+            text-decoration: none;
+            margin-bottom: 8px;
+        }
+
+        .feedback-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background-color: #2563eb;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="top-banner">
+        <span class="new-badge">✨ New</span>
+        <span>Insights on the state of AI agents from 800+ builders and leaders. Download your copy →</span>
+        <span class="close-btn">×</span>
+    </div>
+
+    <header>
+        <div class="header-left">
+            <div class="logo">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M13.983 11.078h2.119a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.119a.186.186 0 00-.185.185v1.888c0 .102.083.185.185.185zm-2.954-5.43h2.118a.186.186 0 00.186-.186V3.574a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.186zm0 2.716h2.118a.187.187 0 00.186-.186V6.29a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.887c0 .102.082.185.185.186zm-2.93 0h2.12a.186.186 0 00.184-.186V6.29a.186.186 0 00-.185-.185H8.1a.185.185 0 00-.185.185v1.887c0 .102.083.185.185.186zm-2.964 0h2.119a.186.186 0 00.185-.186V6.29a.186.186 0 00-.185-.185H5.136a.186.186 0 00-.186.185v1.887c0 .102.084.185.186.186zm5.893 2.715h2.118a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.185zm-2.93 0h2.12a.185.185 0 00.184-.185V9.006a.186.186 0 00-.185-.186h-2.12a.185.185 0 00-.184.185v1.888c0 .102.083.185.185.185zm-2.964 0h2.119a.186.186 0 00.185-.185V9.006a.186.186 0 00-.185-.186H5.136a.186.186 0 00-.186.185v1.888c0 .102.084.185.186.185zm-2.92 0h2.12a.185.185 0 00.184-.185V9.006a.186.186 0 00-.184-.186h-2.12a.186.186 0 00-.186.185v1.888c0 .102.084.185.186.185zm13.585-5.43h2.117a.186.186 0 00.186-.186V3.574a.186.186 0 00-.186-.185h-2.117a.185.185 0 00-.185.185v1.888c0 .102.083.185.185.186zM8.1 3.39H5.98a.186.186 0 00-.186.185v1.888c0 .102.084.185.186.186h2.119a.186.186 0 00.185-.186V3.575a.186.186 0 00-.185-.185zm8.102 0h-2.12a.185.185 0 00-.184.185v1.888c0 .102.083.185.185.186h2.119a.186.186 0 00.185-.186V3.575a.186.186 0 00-.185-.185z"/>
+                </svg>
+                dockerdocs
+            </div>
+            <nav class="main-nav">
+                <a href="#">Get started</a>
+                <a href="#">Guides</a>
+                <a href="#" class="active">Manuals</a>
+                <a href="#">Reference</a>
+            </nav>
+        </div>
+        <div class="header-right">
+            <button class="btn-gordon">
+                🤖 Gordon
+            </button>
+            <button class="btn-search">
+                🔍 Search
+            </button>
+            <button class="theme-toggle">☀️</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Left Sidebar -->
+        <aside class="sidebar">
+            <div class="nav-section">
+                <div class="nav-section-title">AI AND AGENTS</div>
+                <a href="#" class="nav-item">Overview</a>
+                <a href="#" class="nav-item">
+                    Docker Sandboxes
+                    <span class="arrow">⌄</span>
+                </a>
+                <a href="#" class="nav-item">
+                    MCP Catalog and Toolkit<span class="beta-tag">Beta</span>
+                    <span class="arrow">⌄</span>
+                </a>
+                <a href="#" class="nav-item">
+                    Model Runner
+                    <span class="arrow">⌄</span>
+                </a>
+                <a href="#" class="nav-item">
+                    Gordon
+                    <span class="arrow">⌄</span>
+                </a>
+                <a href="#" class="nav-item">
+                    AI and Docker Compose
+                    <span class="arrow">⌄</span>
+                </a>
+                <a href="#" class="nav-item">
+                    Docker Agent
+                    <span class="arrow">⌄</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">APPLICATION DEVELOPMENT</div>
+                <a href="#" class="nav-item">
+                    Docker Desktop
+                    <span class="arrow">⌄</span>
+                </a>
+                <a href="#" class="nav-item">
+                    Docker Engine
+                    <span class="arrow">⌄</span>
+                </a>
+                <a href="#" class="nav-item">
+                    Docker Offload
+                    <span class="arrow">⌄</span>
+                </a>
+                <a href="#" class="nav-item">
+                    Docker Build
+                    <span class="arrow">⌄</span>
+                </a>
+                <a href="#" class="nav-item">
+                    Docker Build Cloud
+                    <span class="arrow">⌄</span>
+                </a>
+                <a href="#" class="nav-item">
+                    Docker Compose
+                    <span class="arrow">⌄</span>
+                </a>
+                <a href="#" class="nav-item">
+                    Docker Extensions
+                    <span class="arrow">⌄</span>
+                </a>
+                <a href="#" class="nav-item">Deprecated products and features</a>
+                <a href="#" class="nav-item">Release lifecycle</a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">SUPPLY CHAIN SECURITY</div>
+                <a href="#" class="nav-item">
+                    Docker Hardened Images<span class="new-tag">New</span>
+                    <span class="arrow">⌄</span>
+                </a>
+                <a href="#" class="nav-item">
+                    Docker Hub
+                    <span class="arrow">⌄</span>
+                </a>
+                <a href="#" class="nav-item">
+                    Docker Scout
+                    <span class="arrow">⌄</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">PLATFORM</div>
+                <a href="#" class="nav-item">Support</a>
+                <a href="#" class="nav-item">
+                    Billing
+                    <span class="arrow">⌄</span>
+                </a>
+                <a href="#" class="nav-item">
+                    Docker accounts
+                    <span class="arrow">⌄</span>
+                </a>
+                <a href="#" class="nav-item">
+                    Security
+                    <span class="arrow">⌄</span>
+                </a>
+                <a href="#" class="nav-item">
+                    Subscription
+                    <span class="arrow">⌄</span>
+                </a>
+                <a href="#" class="nav-item">Release notes</a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">ENTERPRISE</div>
+                <a href="#" class="nav-item">
+                    Administration
+                    <span class="arrow">⌄</span>
+                </a>
+                <a href="#" class="nav-item">
+                    Deploy Docker Desktop
+                    <span class="arrow">⌄</span>
+                </a>
+                <a href="#" class="nav-item">
+                    Security
+                    <span class="arrow">⌄</span>
+                </a>
+                <a href="#" class="nav-item" style="padding-left: 20px; font-size: 13px;">Add and manage domains</a>
+                <a href="#" class="nav-item active" style="padding-left: 20px; font-size: 13px;">
+                    Single sign-on
+                    <span class="arrow">∧</span>
+                </a>
+                <a href="#" class="nav-item" style="padding-left: 36px; font-size: 13px;">Setup</a>
+                <a href="#" class="nav-item" style="padding-left: 36px; font-size: 13px;">Manage connections</a>
+                <a href="#" class="nav-item" style="padding-left: 36px; font-size: 13px; background-color: #e5e7eb;">Troubleshoot</a>
+                <a href="#" class="nav-item" style="padding-left: 36px; font-size: 13px;">
+                    FAQs
+                    <span class="arrow">⌄</span>
+                </a>
+                <a href="#" class="nav-item" style="padding-left: 20px; font-size: 13px;">
+                    Provision
+                    <span class="arrow">⌄</span>
+                </a>
+                <a href="#" class="nav-item" style="padding-left: 20px; font-size: 13px;">
+                    Enforce sign-in
+                    <span class="arrow">⌄</span>
+                </a>
+                <a href="#" class="nav-item" style="padding-left: 20px; font-size: 13px;">
+                    Roles and permissions
+                    <span class="arrow">⌄</span>
+                </a>
+                <a href="#" class="nav-item" style="padding-left: 20px; font-size: 13px;">
+                    Hardened Docker Desktop
+                    <span class="arrow">⌄</span>
+                </a>
+                <a href="#" class="nav-item" style="padding-left: 20px; font-size: 13px;">Organization access tokens</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main>
+            <div class="breadcrumbs">
+                <a href="#">Home</a> <span>/</span>
+                <a href="#">Manuals</a> <span>/</span>
+                <a href="#">Security</a> <span>/</span>
+                <a href="#">Single sign-on</a> <span>/</span>
+                Troubleshoot
+            </div>
+
+            <h1>Troubleshoot single sign-on</h1>
+
+            <div class="action-bar">
+                <span class="action-item">👤 Ask Gordon</span>
+                <span class="action-item">📋 Copy Markdown</span>
+                <span class="action-item">👁 View Markdown</span>
+            </div>
+
+            <p class="intro-text">
+                This page describes common single sign-on (SSO) errors and their solutions. Issues can stem from your identity provider (IdP) configuration or Docker settings.
+            </p>
+
+            <h2 id="check-for-errors">Check for errors</h2>
+            <p>If you experience SSO issues, check both Docker and your identity provider for errors first.</p>
+
+            <h3 id="check-docker-error-logs">Check Docker error logs</h3>
+            <ol>
+                <li>Sign to <a href="#" class="content-link">Docker Home</a> and select your organization from the top-left account drop-down.</li>
+                <li>Select <strong>Admin Console</strong>, then <strong>SSO and SCIM</strong>.</li>
+                <li>In the SSO connections table, select the <strong>Action</strong> menu and then <strong>View error logs</strong>.</li>
+                <li>For more details on specific errors, select <strong>View error details</strong> next to an error message.</li>
+                <li>Note any errors you see on this page for further troubleshooting.</li>
+            </ol>
+
+            <h3 id="check-idp-errors">Check identity provider errors</h3>
+            <ol>
+                <li>Review your IdP's logs or audit trails for any failed authentication or provisioning attempts.</li>
+                <li>Confirm that your IdP's SSO settings match the values provided in Docker.</li>
+                <li>If applicable, confirm that you have configured user provisioning correctly and that it is enabled in your IdP.</li>
+                <li>If applicable, verify that your IdP correctly maps Docker's required user attributes.</li>
+                <li>Try provisioning a test user from your IdP and verify if they appear in Docker.</li>
+            </ol>
+            <p>For further troubleshooting, check your IdP's documentation or contact their support team.</p>
+
+            <h2 id="groups-formatting">Groups are not formatted correctly</h2>
+            
+            <h3>Error message</h3>
+            <p>When this issue occurs, the following error message is common:</p>
+            
+            <pre>Some of the groups assigned to the user are not formatted as '&lt;organization&gt;:&lt;team&gt;'.</pre>
+
+            <h3>Causes</h3>
+            <ul>
+                <li><strong>Incorrect group name formatting in your identity provider (IdP):</strong> Docker requires groups to follow the format <code>&lt;organization&gt;:&lt;team&gt;</code>. If the groups assigned to a user do not follow this format, they will be ignored.</li>
+                <li><strong>Non-matching groups between IdP and Docker organization:</strong> If a group in your IdP does not have a corresponding team in Docker, it will not be recognized, and the user will be placed in the default organization and team.</li>
+            </ul>
+
+            <h3>Affected environments</h3>
+            <ul>
+                <li>Docker single sign-on setup using IdPs such as Okta or Azure AD</li>
+            </ul>
+        </main>
+
+        <!-- Right Sidebar -->
+        <aside class="toc-sidebar">
+            <div class="edit-links">
+                <a href="#" class="edit-link">✏️ Edit this page</a>
+                <a href="#" class="edit-link">📝 Request changes</a>
+            </div>
+
+            <div class="toc-title">Table of contents</div>
+            <a href="#check-for-errors" class="toc-item active">Check for errors</a>
+            <a href="#groups-formatting" class="toc-item" style="margin-left: 12px;">Groups are not formatted correctly</a>
+            <a href="#" class="toc-item" style="margin-left: 24px; font-size: 12px; color: #6b7280;">User is not assigned to the organization</a>
+            <a href="#" class="toc-item" style="margin-left: 24px; font-size: 12px; color: #6b7280;">IdP-initiated sign in is not enabled for connection</a>
+            <a href="#" class="toc-item" style="margin-left: 24px; font-size: 12px; color: #6b7280;">Not enough seats in organization</a>
+            <a href="#" class="toc-item" style="margin-left: 24px; font-size: 12px; color: #6b7280;">Domain is not verified for SSO connection</a>
+            <a href="#" class="toc-item" style="margin-left: 24px; font-size: 12px; color: #6b7280;">Unable to find session</a>
+            <a href="#" class="toc-item" style="margin-left: 24px; font-size: 12px; color: #6b7280;">Name ID is not an email address</a>
+        </aside>
+    </div>
+
+    <a href="#" class="feedback-btn">💬 Give feedback</a>
+</body>
+</html>

@@ -1,0 +1,32 @@
+{
+  "id": "chatcmpl-20260803055014311611034nqVuBDib",
+  "model": "gemini-3.1-pro-preview",
+  "object": "chat.completion",
+  "created": 1785707474,
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>RFC 9000 - QUIC Transport Protocol</title>\n    <style>\n        body {\n            font-family: \"Times New Roman\", Times, serif;\n            font-size: 16px;\n            line-height: 1.5;\n            color: #000;\n            background-color: #fff;\n            margin: 0;\n            padding: 2em;\n            display: flex;\n            justify-content: center;\n        }\n        .page {\n            width: 100%;\n            max-width: 850px;\n            text-align: justify;\n        }\n        .header, .footer {\n            display: flex;\n            justify-content: space-between;\n            font-size: 1em;\n        }\n        .header {\n            margin-bottom: 0.5em;\n        }\n        .footer {\n            margin-top: 0.5em;\n        }\n        hr {\n            border: none;\n            border-top: 1px solid #000;\n            margin: 0 0 2.5em 0;\n        }\n        .footer-hr {\n            margin: 3.5em 0 0 0;\n        }\n        pre {\n            font-family: \"Courier New\", Courier, monospace;\n            background-color: #fafafa;\n            border: 1px solid #f0f0f0;\n            padding: 1.2em 2em;\n            font-size: 0.95em;\n            overflow-x: auto;\n            margin: 1.5em 0;\n            white-space: pre;\n            text-align: left;\n        }\n        .figure-caption {\n            font-style: italic;\n            margin-bottom: 1.5em;\n        }\n        p {\n            margin: 1.2em 0;\n        }\n        .def-list {\n            display: grid;\n            grid-template-columns: max-content 1fr;\n            column-gap: 1.5em;\n            row-gap: 1.5em;\n            margin: 1.5em 0;\n        }\n        code {\n            font-family: \"Courier New\", Courier, monospace;\n            font-size: 0.95em;\n        }\n    </style>\n</head>\n<body>\n    <div class=\"page\">\n        <div class=\"header\">\n            <span>RFC 9000</span>\n            <span>QUIC Transport Protocol</span>\n            <span>May 2021</span>\n        </div>\n        <hr>\n\n        <pre>ACK Range {\n  Gap (i),\n  ACK Range Length (i),\n}</pre>\n\n        <div class=\"figure-caption\">Figure 26: ACK Ranges</div>\n\n        <p>The fields that form each ACK Range are:</p>\n\n        <div class=\"def-list\">\n            <div class=\"def-term\">Gap:</div>\n            <div class=\"def-desc\">A variable-length integer indicating the number of contiguous unacknowledged packets preceding the packet number one lower than the smallest in the preceding ACK Range.</div>\n            \n            <div class=\"def-term\">ACK Range Length:</div>\n            <div class=\"def-desc\">A variable-length integer indicating the number of contiguous acknowledged packets preceding the largest packet number, as determined by the preceding Gap.</div>\n        </div>\n\n        <p>Gap and ACK Range Length values use a relative integer encoding for efficiency. Though each encoded value is positive, the values are subtracted, so that each ACK Range describes progressively lower-numbered packets.</p>\n\n        <p>Each ACK Range acknowledges a contiguous range of packets by indicating the number of acknowledged packets that precede the largest packet number in that range. A value of 0 indicates that only the largest packet number is acknowledged. Larger ACK Range values indicate a larger range, with corresponding lower values for the smallest packet number in the range. Thus, given a largest packet number for the range, the smallest value is determined by the following formula:</p>\n\n        <pre>  smallest = largest - ack_range</pre>\n\n        <p>An ACK Range acknowledges all packets between the smallest packet number and the largest, inclusive.</p>\n\n        <p>The largest value for an ACK Range is determined by cumulatively subtracting the size of all preceding ACK Range Lengths and Gaps.</p>\n\n        <p>Each Gap indicates a range of packets that are not being acknowledged. The number of packets in the gap is one higher than the encoded value of the Gap field.</p>\n\n        <p>The value of the Gap field establishes the largest packet number value for the subsequent ACK Range using the following formula:</p>\n\n        <pre>  largest = previous_smallest - gap - 2</pre>\n\n        <p>If any computed packet number is negative, an endpoint MUST generate a connection error of type <code>FRAME_ENCODING_ERROR</code>.</p>\n\n        <hr class=\"footer-hr\">\n        <div class=\"footer\">\n            <span>Iyengar &amp; Thomson</span>\n            <span>Standards Track</span>\n            <span>Page 107</span>\n        </div>\n    </div>\n</body>\n</html>"
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1802,
+    "completion_tokens": 7463,
+    "total_tokens": 9265,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "text_tokens": 0,
+      "audio_tokens": 0,
+      "image_tokens": 0
+    },
+    "completion_tokens_details": {
+      "text_tokens": 0,
+      "audio_tokens": 0,
+      "reasoning_tokens": 6230
+    }
+  }
+}

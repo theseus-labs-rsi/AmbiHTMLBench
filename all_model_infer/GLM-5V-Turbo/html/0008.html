@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>游戏物品提示框</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #1a1a1a;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect fill="%23222" width="100" height="100"/></svg>');
+            font-family: "Microsoft YaHei", "SimHei", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .game-container {
+            position: relative;
+            width: 800px;
+            height: 600px;
+            background: linear-gradient(135deg, #3a4a4a 0%, #2a3a3a 100%);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        /* 模拟背景场景 */
+        .background-scene {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 50% 30%, rgba(100,120,120,0.3) 0%, transparent 70%),
+                linear-gradient(to bottom, #4a5a5a 0%, #3a4a4a 50%, #2a3a3a 100%);
+            filter: brightness(0.7);
+        }
+
+        /* 提示框容器 */
+        .tooltip-container {
+            position: absolute;
+            top: 35%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 520px;
+            background: rgba(40, 45, 50, 0.92);
+            border: 2px solid rgba(180, 190, 200, 0.6);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 
+                0 0 40px rgba(150, 200, 220, 0.3),
+                inset 0 0 20px rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+
+        .content-wrapper {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        /* 左侧图标区域 */
+        .icon-section {
+            flex-shrink: 0;
+            width: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .item-icon {
+            width: 72px;
+            height: 72px;
+            background: linear-gradient(145deg, #2a3035, #1a2025);
+            border: 2px solid #4a5560;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 
+                inset 0 2px 4px rgba(0,0,0,0.5),
+                0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        /* 魔吉拉面具图标模拟 */
+        .mask-icon {
+            width: 56px;
+            height: 56px;
+            position: relative;
+        }
+
+        .mask-face {
+            width: 48px;
+            height: 44px;
+            background: radial-gradient(ellipse at center, #d44926 0%, #8b2500 70%, #5c1600 100%);
+            border-radius: 50% 50% 45% 45%;
+            position: absolute;
+            top: 10px;
+            left: 4px;
+            box-shadow: 
+                inset 0 -4px 8px rgba(0,0,0,0.4),
+                inset 0 4px 8px rgba(255,200,100,0.3);
+        }
+
+        .mask-eye {
+            width: 14px;
+            height: 16px;
+            background: radial-gradient(circle at 30% 30%, #ffcc00, #ff6600);
+            border-radius: 50%;
+            position: absolute;
+            top: 18px;
+            box-shadow: 
+                0 0 8px rgba(255,150,0,0.8),
+                inset 0 -2px 4px rgba(0,0,0,0.5);
+        }
+
+        .eye-left { left: 10px; }
+        .eye-right { right: 10px; }
+
+        .mask-spikes {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 52px;
+            height: 20px;
+        }
+
+        .spike {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 14px solid #c43d1f;
+            top: 0;
+        }
+
+        .spike:nth-child(1) { left: 8px; transform: rotate(-15deg); }
+        .spike:nth-child(2) { left: 20px; }
+        .spike:nth-child(3) { left: 32px; }
+        .spike:nth-child(4) { right: 8px; transform: rotate(15deg); }
+
+        .quantity-badge {
+            font-size: 13px;
+            color: #e0e0e0;
+            font-weight: bold;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+            margin-top: 4px;
+        }
+
+        /* 右侧文本区域 */
+        .text-section {
+            flex: 1;
+            color: #e8eaec;
+            line-height: 1.6;
+        }
+
+        .item-title {
+            font-size: 19px;
+            font-weight: bold;
+            color: #ffffff;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .item-description {
+            font-size: 14px;
+            color: #c8ccd0;
+            line-height: 1.7;
+            margin-bottom: 16px;
+            text-align: justify;
+        }
+
+        .button-area {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 8px;
+        }
+
+        .action-button {
+            background: rgba(60, 65, 70, 0.9);
+            border: 1px solid rgba(200, 210, 220, 0.4);
+            color: #d0d8e0;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+
+        .action-button:hover {
+            background: rgba(80, 85, 90, 0.95);
+            border-color: rgba(230, 240, 250, 0.6);
+        }
+
+        .button-icon {
+            width: 14px;
+            height: 14px;
+            border: 1.5px solid currentColor;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+
+        /* 底部装饰性元素（宝箱等） */
+        .chest-element {
+            position: absolute;
+            bottom: 25%;
+            left: 55%;
+            width: 80px;
+            height: 60px;
+            background: linear-gradient(to bottom, #3a5a4a, #2a4a3a);
+            border-radius: 4px;
+            opacity: 0.6;
+            filter: blur(1px);
+        }
+
+        .character-feet {
+            position: absolute;
+            bottom: 22%;
+            left: 48%;
+            width: 40px;
+            height: 50px;
+            background: linear-gradient(to bottom, #e0e8f0, #c0d0e0);
+            clip-path: polygon(20% 0%, 80% 0%, 90% 100%, 10% 100%);
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="background-scene"></div>
+        
+        <div class="chest-element"></div>
+        <div class="character-feet"></div>
+
+        <div class="tooltip-container">
+            <div class="content-wrapper">
+                <div class="icon-section">
+                    <div class="item-icon">
+                        <div class="mask-icon">
+                            <div class="mask-spikes">
+                                <div class="spike"></div>
+                                <div class="spike"></div>
+                                <div class="spike"></div>
+                                <div class="spike"></div>
+                            </div>
+                            <div class="mask-face"></div>
+                            <div class="mask-eye eye-left"></div>
+                            <div class="mask-eye eye-right"></div>
+                        </div>
+                    </div>
+                    <div class="quantity-badge">1</div>
+                </div>
+
+                <div class="text-section">
+                    <div class="item-title">魔吉拉的面具</div>
+                    <div class="item-description">
+                        从远古时期遗留下来的面具。<br>
+                        戴上它后，有怪物就会以为是你自己，<br>
+                        友好地对你手无寸铁的袭击。
+                    </div>
+                    <div class="button-area">
+                        <button class="action-button">
+                            <span class="button-icon">A</span>
+                            <span>订单接受</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)'], ['$$', '$$'], ['\\[', '\\]']], 
+                displayMath: []
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</body>
+</html>

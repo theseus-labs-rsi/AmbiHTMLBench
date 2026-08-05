@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script>window.MathJax={tex:{inlineMath:[["$","$"]],displayMath:[["$$","$$"]]}};</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>浙江大学报 - 求是苑·课堂</title>
+    <style>
+        :root {
+            --font-main: "Songti SC", "SimSun", serif;
+            --font-hei: "Heiti SC", "SimHei", sans-serif;
+            --color-text: #333;
+            --color-title: #000;
+            --color-meta: #666;
+            --bg-paper: #fdfdfd;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+            font-family: var(--font-main);
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+
+        .newspaper-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: var(--bg-paper);
+            padding: 20px 30px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .page-num {
+            font-size: 32px;
+            font-weight: bold;
+            font-family: var(--font-hei);
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: bold;
+            font-family: var(--font-hei);
+            color: #8b0000;
+        }
+
+        .header-center {
+            text-align: center;
+            font-size: 14px;
+            color: var(--color-meta);
+        }
+
+        .header-right {
+            font-family: var(--font-hei);
+            font-size: 36px;
+            font-weight: bold;
+            font-style: italic;
+            letter-spacing: 2px;
+        }
+        
+        .header-right span {
+            display: block;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: normal;
+            letter-spacing: 5px;
+            text-align: right;
+            margin-top: 5px;
+        }
+
+        /* Main Layout Grid */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1.8fr 0.6fr 1.5fr;
+            gap: 20px;
+            position: relative;
+        }
+
+        /* Column 1: Main Article */
+        .col-main {
+            position: relative;
+        }
+
+        .main-headline {
+            font-size: 32px;
+            font-weight: bold;
+            font-family: var(--font-hei);
+            line-height: 1.4;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .byline {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .article-body {
+            font-size: 15px;
+            text-align: justify;
+            column-count: 2;
+            column-gap: 20px;
+        }
+        
+        .article-body p {
+            margin-bottom: 10px;
+            text-indent: 2em;
+        }
+
+        /* Images in Main Column */
+        .img-placeholder {
+            background-color: #e0e0e0;
+            border: 1px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 12px;
+            text-align: center;
+            margin: 10px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .img-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255,255,255,0.8);
+            font-size: 10px;
+            padding: 2px;
+            text-align: left;
+        }
+
+        .img-top-left {
+            float: left;
+            width: 45%;
+            height: 200px;
+            margin-right: 15px;
+            margin-bottom: 10px;
+        }
+
+        .img-mid-right {
+            float: right;
+            width: 45%;
+            height: 250px;
+            margin-left: 15px;
+            margin-bottom: 10px;
+        }
+
+        .img-bottom-left {
+            float: left;
+            width: 48%;
+            height: 250px;
+            margin-right: 2%;
+            margin-bottom: 10px;
+        }
+
+        .img-bottom-right {
+            float: right;
+            width: 48%;
+            height: 250px;
+            margin-left: 2%;
+            margin-bottom: 10px;
+        }
+
+        /* Column 2: Vertical Homework */
+        .col-homework {
+            border-left: 1px solid #eee;
+            border-right: 1px solid #eee;
+            padding: 0 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .vertical-title {
+            font-size: 80px;
+            font-weight: bold;
+            font-family: var(--font-hei);
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            letter-spacing: 10px;
+            margin: 20px 0;
+            line-height: 1;
+        }
+
+        .vertical-text {
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            font-size: 13px;
+            text-align: justify;
+            height: 600px;
+            margin-top: 50px;
+            line-height: 1.8;
+        }
+
+        /* Column 3: Students Say */
+        .col-students {
+            border-left: 1px solid #000;
+            padding-left: 15px;
+        }
+
+        .students-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .students-logo {
+            font-size: 30px;
+            color: #d9534f;
+            margin-right: 10px;
+            font-weight: bold;
+            font-style: italic;
+        }
+
+        .students-title {
+            font-size: 20px;
+            font-weight: bold;
+            font-family: var(--font-hei);
+        }
+
+        .student-essay {
+            margin-bottom: 25px;
+        }
+
+        .essay-title {
+            font-size: 16px;
+            font-weight: bold;
+            font-family: var(--font-hei);
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .essay-body {
+            font-size: 14px;
+            text-align: justify;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 30px;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+            font-size: 12px;
+            text-align: center;
+            color: #666;
+        }
+
+        /* Utility */
+        .clearfix::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        @media (max-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            .col-homework {
+                border: none;
+                order: 3;
+                flex-direction: row;
+                justify-content: center;
+            }
+            .vertical-title {
+                writing-mode: horizontal-tb;
+                font-size: 40px;
+                margin: 10px;
+            }
+            .vertical-text {
+                writing-mode: horizontal-tb;
+                height: auto;
+                width: 100%;
+                margin-top: 0;
+            }
+            .img-top-left, .img-mid-right, .img-bottom-left, .img-bottom-right {
+                float: none;
+                width: 100%;
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="newspaper-container">
+    <header>
+        <div class="header-left">
+            <div class="page-num">4</div>
+            <div class="section-title">求是苑·课堂</div>
+        </div>
+        <div class="header-center">
+            <div>2020年11月13日 星期五</div>
+            <div>责任编辑:张岚 联系电话:0571-88981339</div>
+        </div>
+        <div class="header-right">
+            浙江大学报
+            <span>ZHE JIANG DA XUE BAO</span>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <!-- Left Column: Main Article -->
+        <div class="col-main clearfix">
+            <div class="img-placeholder img-top-left" style="background: #d4a5a5;">
+                [Image: Red Rock Village Bridge Painting]
+                <div class="img-caption">
+                    <strong>红岩村大桥</strong><br>
+                    冯忆馨<br>
+                    指导:蔡萌 赵华<br>
+                    重庆红岩村大桥即将合龙，红岩遗址对面的磁器口古镇游客云集、生意红火；烈士雕像被郁郁葱葱的树木环绕。滚滚长江东逝，灼灼红岩长留。
+                </div>
+            </div>
+
+            <h1 class="main-headline">跨越半个中国<br>上一门思政味美术课</h1>
+            <div class="byline">■马宇丹</div>
+
+            <div class="article-body">
+                <p>美术实习是门“老牌”课程，伴随着建筑系创建而开设。而今年，这门已有33年历史的课程增添了许多“思政味儿”。</p>
+                <p>每年夏天，建筑系即将升大三的同学们会跟随两位老师，前往有着丰富建筑特色以及文化底蕴的青岛、厦门、宏村、庐山等地。在那里，他们对照实习地点的真实景物，综合运用前两年所学习的素描、速写、水彩、水粉等美术知识，在完成建筑风景、自然风景、创作型风景和建筑风景小品的创作过程中，熟练掌握各类绘画技巧，深化对绘画艺术理论知识的理解，进一步提高艺术修养。</p>
+                <p>之前的美术实习课程，在深入集中培训绘画技巧的同时，两位老师就将了解实习地的人文地理背景、提高学生的艺术修养、丰富学生的文化底蕴积累，作为重要教学目标。</p>
+                <p>“美术实习课本身就非常适合‘课程思政’，两者的结合，大大提升原有的美术实习课程的思想内涵，更是通过美术课程的特色，以图文并茂的形式，丰富思想政治课程的外延。”蔡萌说。</p>
+                <p>受到疫情影响，今年的美术实习无法集中开展，采用学生根据实际情况选择实习地点，老师通过网络进行远程指导的方式。但这种不得已而为之的方法，却带来意想不到的惊喜效果。</p>
+                <p>分散在全国各地的44位同学，独立寻找和捕捉身边的人文古迹、红色遗迹，用笔尖的水墨色彩挖掘人文建筑背后的历史文化脉络和革命价值导向，循着走出去、看过来、画进去的学习过程，在训练绘画技巧专长的同时，更体悟和升华爱国之情。</p>
+                <p>从重庆歌乐山到山西吕梁“高家沟高级军事会议”旧址，从赣南瑞金到故居到海防遗址……同学们的脚步跨越半个中国，调研的内容更丰富，角度也更多元。</p>
+                <p>作为土生土长的杭州人，刘佳琪去到了富阳龙门古镇。在她的调研报告中，中间的古镇鱼眼全景图角度特别、非常吸睛，而全景图的下方，则是她用钢笔淡彩描绘的古镇党建三馆——廉政文化馆、两岸交流馆和孙晓梅烈士故居。“孙晓梅烈士的故事深深震撼了我。她没比我大几岁，却可以为了保卫家国光荣牺牲，身在和平年代的我，要积极向党组织服务，为了祖国的美好明天奋斗！”刘佳琪说。</p>
+                <p>“大家聊起上海，张口都是魔都、国际化都市、快节奏，但是我认为，上海不应该只是摩登的，不应该只是迪士尼、陆家嘴，我想要去探索它的过去，去寻访那些民主主义革命时期的救亡图存人士留在上海的碎片。”带着这样的初衷，李帆去到了徐汇区的武康路，用建筑美学语言将宋庆龄故居、黄兴故居进行表达。</p>
+                <p>1949年解放前夕，驻嘉兴的国民党陆军预备干部局所属训练团第一总队在嘉兴发动起义，在国民党心脏地区打响重要一枪。基于对这个场景的想象，胡玥琪创作了《嘉兴起义》：士兵们搬上梯子，爬上屋顶，手举红旗，向人们号召解放和正义。“画面采用了较深较灰的主题色调，重点突出了红旗的鲜亮，象征着起义志士的热血与决心。”胡玥琪介绍。</p>
+                <p>今年的作品提交形式也有一定变化。除了上交10张水彩/水粉和20幅速写外，同学们还需要将10张左右最有代表性的作品汇编到一张调研报告上。调研报告最终以课程展览的形式跟大家见面，一开展就吸引了全校师生的目光，受到广泛好评。</p>
+                <p>蔡萌多次感叹，这次课改尝试让带课老师非常惊喜。她说，集中上课转为分散实践，实质上将“由上而下的传输”变为“自下而上的探索”。学生们主动寻找、挖掘、体悟革命历史文化，让价值引领、思想引领的教学目标更具真实性、生动性、合理性。</p>
+                <p>而对于课程思政，蔡萌也有自己的理解。“在信息获取高度便利的今天，面对学习能力强大的青年学子，浙大老师不能止步于回答‘学什么’，更为重要的是启发‘为什么学’，要做学生精神上的引路人。”她说，美术本就有疗愈功能，从教给学生如何画好一棵树的比例出发，到引导他们保持积极乐观的生活态度，再到培育青年学子向上的世界观、价值观、人生观，这就是老师的责任所在。</p>
+            </div>
+
+            <div class="img-placeholder img-mid-right" style="background: #a5c4d4;">
+                [Image: Red Rock Village Painting]
+                <div class="img-caption">
+                    <strong>红色离石</strong><br>
+                    薛岱蓉<br>
+                    指导:蔡萌 赵华<br>
+                    “高家沟高级军事会议”旧址位于离石区交口街道办高家沟村，为清代民居，东厢房为会议旧址。这次会议是解放战争初期，在国民党胡宗南集团调集重兵准备偷袭延安的危急关头，中共中央军委和毛泽东主席委派，于1946年12月16日在高家沟村主持召开的，在我军历史上具有十分重要的意义。
+                </div>
+            </div>
+
+            <div class="img-placeholder img-bottom-left" style="background: #d4c4a5;">
+                [Image: North Mountain Road Painting]
+                <div class="img-caption">
+                    <strong>一条北山路 半部杭城史</strong><br>
+                    金晨断<br>
+                    指导:蔡萌 赵华<br>
+                    北山路，始于民国修筑沿西湖北岸宝石山脚的环湖公路，沿路皆面对西湖，紧邻湖岸，背靠西湖北山。民国以来是各种富商巨子在西湖边置办别墅别业的地方，留有大量的历史建筑。<br>
+                    原本的杭州，东西向为街，南北向为路。后来这个规则被打破，称为北山路，但因为这个习惯也称为北山街，北街梦寻。
+                </div>
+            </div>
+
+            <div class="img-placeholder img-bottom-right" style="background: #a5d4a5;">
+                [Image: Constitution Memory Photo]
+                <div class="img-caption">
+                    <strong>宪法的记忆</strong><br>
+                    陈诗怡<br>
+                    指导:蔡萌 赵华<br>
+                    杭州是新中国第一部宪法——1954年宪法的起草地，“五四宪法”历史资料陈列馆于2016年12月4日第三个国家宪法日正式建成开放。陈列馆现有北山街、栖霞岭两个馆区，北山街馆区所在的北山街84号大院30号楼是毛泽东主席当年在杭州起草宪法时的办公地，展出了《西子湖畔宪法草案基本原则、主要讲述五四宪法从起草、讨论、通过到实施的全过程，让当年制定宪法的光荣历史从档案中走出来、活起来。
+                </div>
+            </div>
+        </div>
+
+        <!-- Middle Column: Vertical Homework -->
+        <div class="col-homework">
+            <div class="vertical-title">作业</div>
+            <div class="vertical-text">
+                今年的考察和支教活动... 让同学们带着问题去... 最终课程要以... 就让‘美术’... 明确爱国情怀... 最终课程要... 开展‘美术... 吸取历史... 引文化自信... 传统要... 师的求
+            </div>
+        </div>
+
+        <!-- Right Column: Students Say -->
+        <div class="col-students">
+            <div class="students-header">
+                <div class="students-logo">X</div>
+                <div class="students-title">学生说</div>
+            </div>
+
+            <div class="student-essay">
+                <div class="essay-title">建筑1802班 夏志伟</div>
+                <div class="essay-body">
+                    我来自云南，这次调研我选择的主题是寻访西南联大。<br>
+                    当时一看到西南联大，就想起了我们浙大文军长征的历史，所以想借着这样的机会去感受相似的故事。<br>
+                    当真正开始调研后，我发现并不容易。当年三校迁来是租场地办学，所以整个学校也是四散分布。我实地调研了云南师范大学里的旧址主体和昆明周边的几个乡镇，同时也在网上查找了一些当年留下来的旧照片作为绘画的素材。<br>
+                    进了师范大学的旧址，看到当年留下来的那个茅草土坯校舍和里面那些老旧的桌椅，能够想象出当年教学环境的艰苦。同时可以看到现在旧址上新建的现代化教学楼。两者相比，产生了一种很强烈的新与旧的冲突感，而这种对比其实也是两个时代的对比。所以我采用黑白速写的方式去还原当年的旧貌，又用水彩来勾勒当下的繁荣，同时对那些留存于昆明大街小巷里的教授故居，我也用水彩的方式来记录他们如今的面貌。<br>
+                    经过这次调研，我感受到了当时虽然身处战乱但仍然弦歌不辍的家国情怀。也想到一代人有一代人的历史使命，无论是西南联大的“刚毅坚卓”，还是浙大的“求是”精神，这种对于民族文化的坚持，使得国家危难之际，一批批教育的精粹得以汇聚，最终又开花结果，将培养出的种子播撒出去，为国家民族的建设做出了贡献。<br>
+                    我也认识到，无论是战争年代，还是和平时期，教育都是国家的重中之重，作为新时代大学生的我们也应该把个人的命运与国家、民族的命运联结在一起，心中不断叩问竺校长的两个问题，承担起肩上的使命与重任！
+                </div>
+            </div>
+
+            <div class="student-essay">
+                <div class="essay-title">建筑1801班 孙硕琦</div>
+                <div class="essay-body">
+                    我的家乡在湖南邵阳隆回。说起近代家乡的革命人物，我最先想到的就是魏源先生。作为近代中国“睁眼看世界”的首批知识分子代表，魏源先生率先提出“师夷长技以制夷”的主张，在近代中国掀起思想的浪潮，开启了对西方世界探索的大门。<br>
+                    身为魏源家乡人，我却还从未去过先生的故居，这也是一直以来的一个遗憾。所以，我把本次调研的地点定在了魏源故居，趁此机会去看看这位伟人到底有怎样的不凡。<br>
+                    我们从县城驱车三个多小时才找到这个藏在大山和农田里的小瓦房。说实话，第一眼看到它我是有点失望的，这和我想的有点不一样。这样一个名留青史的大人物不应该住在雕梁画栋的大宅子里吗？眼前这个小小的、荒草丛生、藏在穷乡僻壤的土坯四合院实在有些掉档次了。<br>
+                    但是进屋后，当我看到先生从幼时的深夜苦读，到做官后革新图强、兴办实业等一系列举措后，再来看这残破的故居，才更加感叹先生的见识卓越，面对列强侵华的举国危机，生于草野，却能放眼世界。<br>
+                    当我走出故居后，想到当下世界正处于百年未有之大变局，中国也面临着来自西方国家和种种威胁。百年后的危机再现，我们作为当代青年，更应该像魏源先生一样，有着放眼世界的眼光和勇于探索的精神，才能在这变局中为祖国贡献自己的光和热。
+                </div>
+            </div>
+
+            <div class="student-essay">
+                <div class="essay-title">建筑1801班 华颖</div>
+                <div class="essay-body">
+                    我调研的主题是红船幽微，薪火不息。红船就是杭州市上城区的小营巷，巷子里留存着许多红色革命记忆：它是太平天国时期的听王府，是杭州最高指挥部；它是中共杭州小组成立纪念馆所在地；它因为爱国卫生运动开展得好，在1958年接受了毛主席的视察；著名科学家钱学森先生的故居也坐落于此……<br>
+                    调研以及排版中，我都以时间为主线，由于小营巷中有很多建筑，我主要选择了中共杭州小组纪念馆和毛主席视察小营巷纪念馆为中心。这次的美术实习虽然很遗憾没有办法像往常一样和同学一起写生，但是通过自己实地走访的形式让我收获了很多。让作为一个杭州人的我第一次深刻地了解了杭州的红色革命记忆。以前想到红色革命景点只会想到嘉兴南湖、上海一大会址这些，却忽略了去挖掘与探索杭州本地的红色印记。<br>
+                    此外，经历新冠疫情这样一个特殊时期之后再了解爱国卫生运动，我有了很大的共鸣：当时的爱国卫生运动是为了让全国人民都能养成良好健康的卫生习惯，这一点在现在依然重要，并且这场疫情让我更深刻的体会到了我们现在健康安定的生活都是无数人，尤其是无数的共产党员替我们负重前行，健康安定就是对毛主席视察小营巷时的殷切期待交出的最好答卷，国泰民安就是最好的生活！
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        本报通讯地址:浙江大学紫金港校区东三105《浙江大学报》编辑部 邮编:310058 电子信箱:zdxb@zju.edu.cn 电话:0571-88981339 88273707 总编:叶梓方 副总编:雪芽 电子编辑:曹嘉 承印:新华通讯社浙江分社印刷厂
+    </footer>
+</div>
+
+</body>
+</html>

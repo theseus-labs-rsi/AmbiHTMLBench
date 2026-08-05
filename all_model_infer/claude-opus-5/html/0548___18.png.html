@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FGER-Net Architecture and Algorithm</title>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$']],
+    displayMath: [['$$', '$$']]
+  }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+  body {
+    font-family: "Times New Roman", Times, serif;
+    margin: 0 auto;
+    padding: 24px 32px;
+    max-width: 1400px;
+    background: #fff;
+    color: #000;
+  }
+  .placeholder {
+    border: 1px dashed #999;
+    background: #fbfbfb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #555;
+    font-size: 13px;
+    font-family: Arial, Helvetica, sans-serif;
+    box-sizing: border-box;
+  }
+  .figure-block {
+    width: 100%;
+    height: 390px;
+    margin: 0 0 18px 0;
+  }
+  .caption {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    line-height: 1.35;
+    text-align: justify;
+    margin: 0 0 34px 0;
+  }
+  .two-col {
+    display: flex;
+    gap: 34px;
+    align-items: flex-start;
+  }
+  .col-left {
+    flex: 1 1 0;
+    font-size: 19px;
+    line-height: 1.45;
+    text-align: justify;
+  }
+  .col-left p {
+    margin: 0;
+    text-indent: 1.6em;
+  }
+  .col-left p.first {
+    text-indent: 0;
+  }
+  .col-right {
+    flex: 1 1 0;
+  }
+  .algorithm {
+    border-top: 2px solid #000;
+    border-bottom: 2px solid #000;
+    font-size: 18px;
+    line-height: 1.5;
+  }
+  .algorithm .alg-title {
+    padding: 3px 4px;
+    border-bottom: 1px solid #000;
+  }
+  .algorithm .alg-body {
+    padding: 4px 4px 8px 4px;
+  }
+  .ind1 { padding-left: 1.6em; }
+  .ind2 { padding-left: 3.2em; }
+  .kw { font-weight: bold; }
+  .cmt { font-style: italic; }
+</style>
+</head>
+<body>
+
+<figure class="placeholder figure-block">
+  [Diagram: full-width architecture figure of FGER-Net, spanning the top of the page. Left column (green dashed box) labeled "Rapidly Adapting Receptors" with skin cross-section illustrations "Meissner's corpuscles" / "Ruffini endings", and below "Slowly Adapting Receptors" with "Merkel's disks" / "Pacinian corpuscles". Second column (blue dashed box) labeled "Common perceptual mechanism" with "Perceiving dynamic force" and "Perceiving static force", connected by dashed arrows. Diagonal arrow labeled "Time Series". Center top (green rounded box): "Event Stream Recurrent Network" — event voxel cube, MLP network, "Pooling", feature vectors, "LSTM" with (h_t-1, c_t-1) and (h_t, c_t), "MLP", ΔF, summation node, "At time step t+1". Center bottom (blue rounded box): "Frame-Guided Network" — image icon, "CNN", feature vectors, "MLP", ΔF, summation node, "At time step t+1". Outputs merge at "F_output". Right column (blue dashed box) labeled "Perceiving" containing a yellow dashed box "Dynamic" with an oscillating force-vs-time plot (axis F) and a purple dashed box "Static" with a step/decay force-vs-time plot (axis F).]
+</figure>
+
+<p class="caption">
+Fig. 2. The architecture of the proposed FGER-Net is presented, alongside its conceptual underpinnings. The left portion illustrates the biological inspiration for the network: the synergistic function of fast and slow adapting mechanoreceptors in perceiving dynamic and static forces, respectively. These biological principles are emulated by the FGER-Net. In the network itself (center), event streams and image frames are synergistically fused for robust force estimation. In this architecture, frames are used to periodically correct for drift during training and to continuously stabilize the high frequency force predictions derived from the event stream during inference. The resulting force estimation is thereby made accurate and robust against drift, successfully capturing both dynamic and static tactile information, mirroring the perceptual capabilities shown on the right side of the diagram.
+</p>
+
+<div class="two-col">
+  <div class="col-left">
+    <p class="first">dual rate architecture mirrors biological perception: a high frequency recurrent pathway integrates transient force increments from the event stream, while a low frequency pathway extracts absolute spatial references from single image frames for periodic training corrections.</p>
+    <p>During inference, we maximize estimation stability via a continuous correction strategy. By persistently fusing the most recent frame feature with incoming events, this absolute spatial anchor effectively eliminates integration drift.</p>
+    <p>The architecture utilizes dual parallel pathways optimized for each modality's distinct characteristics. To circumvent the extreme sparsity typical of standard convolutions on event data, individual events are normalized and processed by a pointwise MLP, followed by max-pooling to generate an aggregated feature vector for each packet. Conversely, dense spatial information from image frames is extracted into a compact feature vector using a residual CNN backbone coupled with average pooling.</p>
+    <p><em>a) Data Stream Segmentation:</em> The algorithm's processing cycle is driven by the arrival of new frames. A cycle is [illegible]</p>
+  </div>
+
+  <div class="col-right">
+    <div class="algorithm">
+      <div class="alg-title"><span class="kw">Algorithm 1</span> FGER-Net</div>
+      <div class="alg-body">
+        <div><span class="kw">Input:</span> $I_{\text{guide}}$, $\{P_m\}_{m=1}^{M}$, $f_{\text{prev\_cycle}}$, $(h_{\text{prev\_cycle}}, C_{\text{prev\_cycle}})$</div>
+        <div><span class="kw">Output:</span> $\hat{f}_{\text{final}}$, $(h_M, C_M)$</div>
+        <div class="cmt">Guiding Frame Feature Extraction</div>
+        <div>$\mathbf{f}_{\text{frame}} \leftarrow \Phi_f(I_{\text{guide}})$</div>
+        <div class="cmt">Recurrent Processing Loop</div>
+        <div>$\hat{f}_0 \leftarrow f_{\text{prev\_cycle}}$; $(h_0, C_0) \leftarrow (h_{\text{prev\_cycle}}, C_{\text{prev\_cycle}})$</div>
+        <div><span class="kw">for</span> $m \leftarrow 1$ <span class="kw">to</span> $M$ <span class="kw">do</span></div>
+        <div class="ind2">$\mathbf{f}_{e,m} \leftarrow \Phi_e(P_m)$</div>
+        <div class="ind2">$\mathbf{x}_m \leftarrow \text{concatenate}(\mathbf{f}_{e,m}, \hat{f}_{m-1})$</div>
+        <div class="ind2">$(h_m, C_m) \leftarrow \text{LSTM}(\mathbf{x}_m, (h_{m-1}, C_{m-1}))$</div>
+        <div class="ind2">$\Delta \hat{f}_m \leftarrow \text{MLP}_{\Delta f}(h_m)$</div>
+        <div class="ind2">$\hat{f}_m \leftarrow \hat{f}_{m-1} + \Delta \hat{f}_m$</div>
+        <div><span class="kw">end for</span></div>
+        <div class="cmt">Fusion and Correction</div>
+        <div>$\mathbf{f}_{\text{fusion}} \leftarrow \text{concatenate}(\hat{f}_M, \mathbf{f}_{\text{frame}})$</div>
+        <div>$\Delta f_{\text{corr}} \leftarrow \text{MLP}_{\text{corr}}(\mathbf{f}_{\text{fusion}})$</div>
+        <div>$\hat{f}_{\text{final}} \leftarrow \hat{f}_M + \Delta f_{\text{corr}}$</div>
+        <div><span class="kw">return</span> $\hat{f}_{\text{final}}$, $(h_M, C_M)$</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

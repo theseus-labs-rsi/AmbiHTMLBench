@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analyzing Healthcare in the US</title>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-width: 1680px;
+      background: #ffffff;
+      color: #625f6d;
+      font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+    }
+
+    .page {
+      position: relative;
+      width: 1680px;
+      height: 2520px;
+      margin: 0 auto;
+      overflow: hidden;
+      background: #ffffff;
+    }
+
+    .hero {
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 441px;
+      color: #ffffff;
+      text-align: center;
+      background: linear-gradient(105deg, #4e3269 0%, #2c174b 100%);
+    }
+
+    .hero .eyebrow {
+      margin-top: 127px;
+      color: #04b9c4;
+      font-size: 77px;
+      line-height: 1;
+      font-weight: 300;
+      letter-spacing: -2px;
+    }
+
+    .hero h1 {
+      margin: 37px 0 0;
+      color: #ffffff;
+      font-size: 78px;
+      line-height: 1;
+      font-weight: 700;
+      letter-spacing: -2px;
+    }
+
+    .accent-strip {
+      position: absolute;
+      top: 441px;
+      left: 0;
+      width: 1680px;
+      height: 44px;
+      display: grid;
+      grid-template-columns: 491px 1189px;
+    }
+
+    .accent-strip .purple {
+      background: #21103c;
+    }
+
+    .accent-strip .teal {
+      background: linear-gradient(90deg, #08a5aa 0%, #09c1c8 100%);
+    }
+
+    .main-content {
+      position: absolute;
+      top: 485px;
+      left: 0;
+      width: 1680px;
+      height: 1173px;
+      background: #ffffff;
+    }
+
+    .photo {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 745px;
+      height: 1173px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 75% 7%, rgba(248,255,255,.95) 0 8%, rgba(199,234,236,.72) 9% 16%, transparent 17%),
+        radial-gradient(ellipse at 22% 35%, rgba(0,185,186,.88) 0 16%, transparent 17%),
+        radial-gradient(ellipse at 24% 58%, rgba(22,71,194,.92) 0 28%, transparent 29%),
+        radial-gradient(ellipse at 52% 92%, rgba(5,176,185,.55) 0 18%, transparent 19%),
+        linear-gradient(130deg, #d9dcda 0%, #eff2f0 47%, #c6c9c7 100%);
+    }
+
+    .photo::before {
+      content: "";
+      position: absolute;
+      left: -110px;
+      top: 72px;
+      width: 505px;
+      height: 1070px;
+      transform: rotate(-7deg);
+      border-radius: 48% 48% 20% 20%;
+      background:
+        radial-gradient(ellipse at 60% 19%, #987c72 0 12%, transparent 13%),
+        radial-gradient(ellipse at 57% 27%, #14c6ce 0 18%, transparent 19%),
+        linear-gradient(165deg, #00a7a4 0 22%, #1a61ca 23% 83%, #14247d 100%);
+      filter: saturate(1.08);
+      opacity: .93;
+    }
+
+    .photo::after {
+      content: "";
+      position: absolute;
+      left: -90px;
+      bottom: -85px;
+      width: 865px;
+      height: 292px;
+      transform: rotate(8deg);
+      border-radius: 50%;
+      background: linear-gradient(90deg, rgba(27,37,119,.82), rgba(10,189,197,.75));
+      filter: blur(10px);
+    }
+
+    .photo-caption {
+      position: absolute;
+      left: 40px;
+      bottom: 34px;
+      z-index: 2;
+      padding: 8px 12px;
+      color: rgba(255,255,255,.72);
+      background: rgba(31,25,62,.24);
+      font-size: 18px;
+      letter-spacing: .2px;
+    }
+
+    .right-column {
+      position: absolute;
+      top: 0;
+      left: 745px;
+      width: 935px;
+      height: 1173px;
+      padding: 0;
+      background: #ffffff;
+    }
+
+    .content-section {
+      position: absolute;
+      left: 104px;
+      width: 800px;
+      padding-left: 4px;
+    }
+
+    .content-section.market {
+      top: 104px;
+    }
+
+    .content-section.coverage {
+      top: 685px;
+    }
+
+    .check-icon {
+      position: absolute;
+      left: -148px;
+      top: 1px;
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      background: #4b2868;
+    }
+
+    .check-icon::before,
+    .check-icon::after {
+      content: "";
+      position: absolute;
+      display: block;
+      height: 12px;
+      border-radius: 8px;
+      background: #ffffff;
+      transform-origin: left center;
+    }
+
+    .check-icon::before {
+      left: 23px;
+      top: 43px;
+      width: 30px;
+      transform: rotate(44deg);
+    }
+
+    .check-icon::after {
+      left: 43px;
+      top: 58px;
+      width: 48px;
+      transform: rotate(-47deg);
+    }
+
+    .content-section h2 {
+      margin: 12px 0 28px;
+      color: #4b2868;
+      font-size: 42px;
+      line-height: 1.1;
+      font-weight: 700;
+      letter-spacing: -1.1px;
+    }
+
+    .content-section p {
+      margin: 0;
+      width: 728px;
+      color: #64616d;
+      font-size: 28px;
+      line-height: 1.57;
+      font-weight: 300;
+      letter-spacing: -.55px;
+    }
+
+    .content-section p + p {
+      margin-top: 43px;
+    }
+
+    .coverage h2 {
+      margin-bottom: 31px;
+      white-space: nowrap;
+    }
+
+    .coverage p {
+      line-height: 1.51;
+    }
+
+    .coverage ul {
+      margin: 2px 0 0 13px;
+      padding-left: 22px;
+      color: #625f6d;
+      font-size: 28px;
+      line-height: 1.58;
+      font-weight: 300;
+      letter-spacing: -.5px;
+    }
+
+    .coverage li {
+      padding-left: 0;
+    }
+
+    .coverage li::marker {
+      color: #05bec7;
+      font-size: .68em;
+    }
+
+    .statistics {
+      position: absolute;
+      top: 1658px;
+      left: 0;
+      width: 1680px;
+      height: 862px;
+      background: #f5f5f5;
+    }
+
+    .statistics-header {
+      position: absolute;
+      top: 87px;
+      left: 80px;
+      height: 100px;
+    }
+
+    .statistics-header .check-icon {
+      left: 0;
+      top: 0;
+      width: 83px;
+      height: 83px;
+    }
+
+    .statistics-header h2 {
+      margin: 20px 0 0 159px;
+      color: #4b2868;
+      font-size: 41px;
+      line-height: 1;
+      font-weight: 700;
+      letter-spacing: -1px;
+      white-space: nowrap;
+    }
+
+    .chart-title {
+      position: absolute;
+      top: 205px;
+      left: 240px;
+      color: #676474;
+      font-size: 29px;
+      line-height: 1;
+      font-weight: 300;
+      letter-spacing: -.3px;
+    }
+
+    .chart {
+      position: absolute;
+      top: 261px;
+      left: 239px;
+      width: 1357px;
+      height: 284px;
+      border-left: 1px solid #777780;
+      border-bottom: 1px solid #777780;
+      background-image:
+        repeating-linear-gradient(
+          to right,
+          transparent 0,
+          transparent 117px,
+          rgba(112,112,120,.19) 117px,
+          rgba(112,112,120,.19) 118px
+        ),
+        repeating-linear-gradient(
+          to bottom,
+          transparent 0,
+          transparent 70px,
+          rgba(112,112,120,.19) 70px,
+          rgba(112,112,120,.19) 71px
+        );
+    }
+
+    .bar-row {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 48px;
+    }
+
+    .bar-row.one {
+      top: 11px;
+    }
+
+    .bar-row.two {
+      top: 82px;
+    }
+
+    .bar-row.three {
+      top: 153px;
+    }
+
+    .bar-row.four {
+      top: 224px;
+    }
+
+    .bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 47px;
+      border-radius: 0 11px 11px 0;
+      background: linear-gradient(180deg, #05c4ca 0%, #05bfc6 100%);
+    }
+
+    .one .bar {
+      width: 1179px;
+    }
+
+    .two .bar {
+      width: 943px;
+    }
+
+    .three .bar {
+      width: 707px;
+    }
+
+    .four .bar {
+      width: 236px;
+    }
+
+    .bar-label {
+      position: absolute;
+      top: 2px;
+      color: #4b2868;
+      font-size: 40px;
+      line-height: 1;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+
+    .one .bar-label {
+      left: 1185px;
+    }
+
+    .two .bar-label {
+      left: 949px;
+    }
+
+    .three .bar-label {
+      left: 713px;
+    }
+
+    .four .bar-label {
+      left: 242px;
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <div class="eyebrow">Analyzing</div>
+      <h1>Healthcare in the US</h1>
+    </header>
+
+    <div class="accent-strip" aria-hidden="true">
+      <div class="purple"></div>
+      <div class="teal"></div>
+    </div>
+
+    <section class="main-content">
+      <figure class="photo placeholder" aria-label="Healthcare professional performing a medical procedure">
+        <figcaption class="photo-caption">[Photo: healthcare professional performing a medical procedure, left]</figcaption>
+      </figure>
+
+      <div class="right-column">
+        <section class="content-section market">
+          <span class="check-icon" aria-hidden="true"></span>
+          <h2>The Market Fundamentals</h2>
+          <p>
+            The healthcare market is fundamentally different from<br>
+            any other commodity market. The fundamental difference<br>
+            is one cannot predict when demand will rise and fall.<br>
+            COVID-19 did away with all underlying presumptions<br>
+            about how the market behaves.
+          </p>
+          <p>
+            If patients are customers, the customers themselves cannot<br>
+            plan ahead on when to opt for healthcare services. ER/<br>
+            Accident distinguish this market in fundamental ways.
+          </p>
+        </section>
+
+        <section class="content-section coverage">
+          <span class="check-icon" aria-hidden="true"></span>
+          <h2>Healthcare Coverage Across the US</h2>
+          <p>
+            Healthcare coverage has increased in America over the years<br>
+            due to the following reasons.
+          </p>
+          <ul>
+            <li>Government-sponsored Medicaid plans</li>
+            <li>Medicare</li>
+            <li>Liberalization of laws</li>
+            <li>Competition amongst private health insurers</li>
+            <li>State-level health plans</li>
+          </ul>
+        </section>
+      </div>
+    </section>
+
+    <section class="statistics">
+      <header class="statistics-header">
+        <span class="check-icon" aria-hidden="true"></span>
+        <h2>Healthcare Coverage Statistics</h2>
+      </header>
+
+      <div class="chart-title">Adults Covered</div>
+
+      <div class="chart" role="img" aria-label="Horizontal bar chart showing 50%, 40%, 30%, and 10%">
+        <div class="bar-row one">
+          <div class="bar"></div>
+          <div class="bar-label">50%</div>
+        </div>
+        <div class="bar-row two">
+          <div class="bar"></div>
+          <div class="bar-label">40%</div>
+        </div>
+        <div class="bar-row three">
+          <div class="bar"></div>
+          <div class="bar-label">30%</div>
+        </div>
+        <div class="bar-row four">
+          <div class="bar"></div>
+          <div class="bar-label">10%</div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

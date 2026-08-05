@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>一张图搞定HMO</title>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$']],
+        displayMath: [['$$', '$$']]
+      }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 14px 0;
+      background-color: #a9e7f5;
+      background-image:
+        linear-gradient(rgba(36, 157, 190, 0.22) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(36, 157, 190, 0.22) 1px, transparent 1px),
+        linear-gradient(rgba(36, 157, 190, 0.12) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(36, 157, 190, 0.12) 1px, transparent 1px);
+      background-size: 12px 12px, 12px 12px, 6px 6px, 6px 6px;
+      font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", Arial, sans-serif;
+    }
+
+    .document {
+      position: relative;
+      width: min(516px, calc(100vw - 24px));
+      min-height: 694px;
+      padding: 0 18px 25px;
+      overflow: visible;
+      border-radius: 45px 45px 38px 38px;
+      background: #fff;
+      box-shadow: 0 4px 8px rgba(25, 115, 141, 0.25);
+    }
+
+    .header {
+      height: 112px;
+      margin: 0 -18px;
+      padding: 15px 43px 0;
+      border-radius: 45px 45px 34px 34px;
+      background: rgba(255, 255, 255, 0.98);
+      text-align: center;
+    }
+
+    .headline {
+      margin: 0;
+      color: #d85045;
+      font-family: "STKaiti", "KaiTi", "Microsoft YaHei", sans-serif;
+      font-size: 45px;
+      font-weight: 900;
+      line-height: 1.62;
+      letter-spacing: 0;
+      white-space: nowrap;
+      text-shadow:
+        1px 1px 0 #fff,
+        2px 2px 0 #bdbdbd;
+    }
+
+    .headline::before {
+      content: "";
+      display: inline-block;
+      width: 39px;
+      height: 3px;
+      margin: 0 8px 12px 0;
+      border-radius: 3px;
+      background: #d85045;
+      transform: rotate(-2deg);
+    }
+
+    .hanger {
+      position: absolute;
+      z-index: 4;
+      top: 82px;
+      left: 43px;
+      width: 7px;
+      height: 54px;
+      background:
+        radial-gradient(circle, #fff 1px, #a36d42 1.7px, transparent 2.2px)
+        center top / 6px 7px repeat-y;
+      transform: rotate(-1deg);
+    }
+
+    .hanger::before,
+    .hanger::after {
+      content: "";
+      position: absolute;
+      left: 1px;
+      width: 5px;
+      height: 5px;
+      border: 1px solid #9b704c;
+      border-radius: 50%;
+      background: #f4eee5;
+    }
+
+    .hanger::before {
+      top: -2px;
+    }
+
+    .hanger::after {
+      bottom: -2px;
+    }
+
+    .mascot {
+      position: absolute;
+      z-index: 6;
+      top: 67px;
+      right: -5px;
+      width: 58px;
+      height: 78px;
+      overflow: hidden;
+      border: 2px dashed #9d9d9d;
+      border-radius: 48% 48% 42% 42%;
+      background:
+        radial-gradient(circle at 52% 23%, #f1849b 0 7%, transparent 8%),
+        radial-gradient(circle at 37% 17%, #fff 0 9%, #222 10% 13%, transparent 14%),
+        radial-gradient(circle at 67% 17%, #fff 0 9%, #222 10% 13%, transparent 14%),
+        linear-gradient(115deg, transparent 0 20%, #1f2528 21% 31%, transparent 32% 50%, #1f2528 51% 63%, transparent 64%),
+        #f7f7f4;
+      color: transparent;
+      font-size: 0;
+      transform: rotate(7deg);
+    }
+
+    .mascot::before,
+    .mascot::after {
+      content: "";
+      position: absolute;
+      top: 48px;
+      width: 9px;
+      height: 28px;
+      border: 2px solid #424242;
+      background: #f6f6f3;
+    }
+
+    .mascot::before {
+      left: 10px;
+      transform: rotate(7deg);
+    }
+
+    .mascot::after {
+      right: 10px;
+      transform: rotate(-7deg);
+    }
+
+    .intro {
+      position: relative;
+      z-index: 2;
+      margin: 19px 0 17px;
+      padding: 17px 20px 14px;
+      border-radius: 23px;
+      background: #87d7f2;
+      color: #fff;
+      font-size: 18px;
+      font-weight: 900;
+      line-height: 1.54;
+      letter-spacing: 0;
+      text-align: left;
+      text-shadow:
+        -1px -1px 0 #202020,
+        1px -1px 0 #202020,
+        -1px 1px 0 #202020,
+        1px 1px 0 #202020,
+        2px 2px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    sup {
+      position: relative;
+      top: -0.15em;
+      font-size: 60%;
+      line-height: 0;
+    }
+
+    .panel {
+      position: relative;
+      margin: 0 0 21px;
+      overflow: hidden;
+      border-radius: 29px;
+      background: #ededed;
+    }
+
+    .panel:last-child {
+      margin-bottom: 0;
+    }
+
+    .panel-header {
+      position: relative;
+      min-height: 45px;
+      padding: 6px 15px 5px;
+      border-radius: 29px 29px 0 0;
+      background: #ff9d43;
+      text-align: center;
+    }
+
+    .panel-title {
+      display: inline-block;
+      max-width: 100%;
+      margin: 0;
+      padding: 1px 13px 3px;
+      border: 2px solid #fff;
+      border-radius: 21px;
+      box-shadow:
+        0 0 0 1px #935e30,
+        inset 0 0 0 1px #935e30;
+      color: #fff;
+      font-size: 21px;
+      font-weight: 900;
+      line-height: 1.18;
+      letter-spacing: 0;
+      white-space: nowrap;
+      text-shadow:
+        -1px -1px 0 #704821,
+        1px -1px 0 #704821,
+        -1px 1px 0 #704821,
+        1px 1px 0 #704821,
+        2px 2px 0 #704821;
+    }
+
+    .panel-body {
+      min-height: 86px;
+      padding: 8px 17px 11px;
+      color: #fff;
+      font-size: 17px;
+      font-weight: 900;
+      line-height: 1.31;
+      letter-spacing: 0;
+      text-align: center;
+      text-shadow:
+        -1px -1px 0 #202020,
+        1px -1px 0 #202020,
+        -1px 1px 0 #202020,
+        1px 1px 0 #202020,
+        2px 2px 0 rgba(0, 0, 0, 0.32);
+    }
+
+    .panel:nth-of-type(4) .panel-body {
+      min-height: 65px;
+      padding-top: 8px;
+    }
+
+    .panel:nth-of-type(5) .panel-body {
+      min-height: 77px;
+      padding-top: 9px;
+    }
+
+    .nowrap {
+      white-space: nowrap;
+    }
+
+    @media (max-width: 520px) {
+      body {
+        padding-top: 8px;
+      }
+
+      .document {
+        min-height: auto;
+        padding-right: 3.5vw;
+        padding-left: 3.5vw;
+      }
+
+      .header {
+        height: 21vw;
+        min-height: 88px;
+        margin-right: -3.5vw;
+        margin-left: -3.5vw;
+        padding-right: 7vw;
+        padding-left: 7vw;
+      }
+
+      .headline {
+        font-size: clamp(31px, 8.4vw, 45px);
+      }
+
+      .intro {
+        font-size: clamp(14px, 3.4vw, 18px);
+      }
+
+      .panel-title {
+        padding-right: 2vw;
+        padding-left: 2vw;
+        font-size: clamp(15px, 3.85vw, 21px);
+      }
+
+      .panel-body {
+        font-size: clamp(13px, 3.2vw, 17px);
+      }
+
+      .mascot {
+        right: -1vw;
+        transform: scale(0.85) rotate(7deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="document">
+    <header class="header">
+      <h1 class="headline">一张图搞定HMO</h1>
+    </header>
+
+    <div class="hanger" aria-hidden="true"></div>
+    <div class="mascot placeholder" role="img" aria-label="Illustration: cow mascot, top-right">[Illustration: cow mascot, top-right]</div>
+
+    <section class="intro">
+      HMO-中文“母乳低聚糖”，是源乳中的第一次免疫<br>
+      活性营养，而且含量还是乳铁蛋白的12倍<sup>1</sup>，在牛乳、<br>
+      羊乳中都没有这个成分，被誉为“乳黄金”。
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h2 class="panel-title">HMO具有调节肠道菌群平衡作用<sup>3-6</sup></h2>
+      </div>
+      <div class="panel-body">
+        肠道是人体第一大免疫器官，宝宝70%的免疫细胞来自<br>
+        于肠道，因此呵护好宝宝肠道对提升保护力非常重要。<br>
+        而HMO可以促进有益菌生长，提高保护力。
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h2 class="panel-title">HMO为宝宝建立一道健康防护屏障<sup>5-6</sup></h2>
+      </div>
+      <div class="panel-body">
+        HMO能够为宝宝建立一道健康防护屏障，<br>
+        防止有害菌侵扰。
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h2 class="panel-title">HMO激发免疫系统，提高宝宝保护力<sup>6</sup></h2>
+      </div>
+      <div class="panel-body">
+        HMO能够双倍激发宝宝体内的活性抗体，大大提高宝宝<br>
+        保护力，增强宝宝体质。<sup>7-8</sup>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

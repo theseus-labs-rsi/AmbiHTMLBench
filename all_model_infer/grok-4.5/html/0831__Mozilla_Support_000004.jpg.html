@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy and security | Mozilla Support</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: Arial, Helvetica, sans-serif; background: #fff; color: #0c0c0d; line-height: 1.5; }
+  a { color: #0060df; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  
+  /* Header */
+  .top-nav { display: flex; align-items: center; justify-content: space-between; padding: 12px 40px; border-bottom: 1px solid #e0e0e0; background: #fff; }
+  .logo-area { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 18px; color: #000; }
+  .logo-area .moz-logo { width: 28px; height: 28px; background: #000; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; color: #fff; font-size: 10px; font-weight: bold; }
+  .nav-links { display: flex; gap: 28px; list-style: none; }
+  .nav-links a { color: #0c0c0d; font-size: 14px; font-weight: 500; }
+  .sign-in-btn { border: 2px solid #0060df; color: #0060df; background: #fff; padding: 8px 16px; border-radius: 4px; font-size: 14px; font-weight: 600; cursor: pointer; }
+  
+  /* Breadcrumb + search row */
+  .sub-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 40px; }
+  .breadcrumb { font-size: 13px; color: #5b5b66; }
+  .breadcrumb a { color: #5b5b66; }
+  .search-box { display: flex; align-items: center; border: 1px solid #c0c0c0; border-radius: 4px; padding: 8px 12px; width: 240px; }
+  .search-box input { border: none; outline: none; font-size: 13px; width: 100%; color: #5b5b66; }
+  .search-box .search-icon { color: #5b5b66; font-size: 14px; }
+  
+  /* Main layout */
+  .main-wrapper { display: flex; padding: 0 40px 40px; gap: 40px; max-width: 1200px; }
+  .content-area { flex: 1; min-width: 0; }
+  .sidebar { width: 260px; flex-shrink: 0; }
+  
+  /* Firefox header section */
+  .fx-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px; position: relative; }
+  .fx-logo-placeholder { width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, #ff9500, #ff3b4e, #9b2d5a); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+  .fx-logo-placeholder::after { content: "🦊"; font-size: 28px; }
+  .download-section { text-align: right; }
+  .download-btn { background: #0060df; color: #fff; border: none; padding: 10px 20px; border-radius: 4px; font-size: 14px; font-weight: 600; cursor: pointer; }
+  .download-links { margin-top: 8px; font-size: 12px; }
+  .download-links a { margin-left: 8px; color: #0060df; }
+  
+  h1 { font-size: 36px; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; letter-spacing: -0.5px; }
+  .page-desc { font-size: 16px; color: #5b5b66; margin-bottom: 28px; }
+  
+  /* Tabs */
+  .tabs { display: flex; gap: 24px; border-bottom: 1px solid #e0e0e0; margin-bottom: 24px; font-size: 14px; }
+  .tabs .tab { padding-bottom: 10px; color: #5b5b66; cursor: pointer; }
+  .tabs .tab.active { color: #0060df; font-weight: 600; border-bottom: 3px solid #0060df; }
+  
+  /* Article list */
+  .article { padding: 20px 0; border-bottom: 1px solid #e0e0e0; }
+  .article-title-row { display: flex; align-items: flex-start; gap: 10px; }
+  .doc-icon { width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px; color: #5b5b66; font-size: 16px; }
+  .article h2 { font-size: 16px; font-weight: 700; color: #1a1a2e; margin-bottom: 4px; }
+  .article .desc { font-size: 14px; color: #5b5b66; margin-bottom: 10px; padding-left: 30px; }
+  .article-meta { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #5b5b66; padding-left: 30px; }
+  .article-meta .tag { font-weight: 600; color: #5b5b66; }
+  .article-meta .pencil { font-size: 12px; }
+  .article-meta .updated { color: #5b5b66; }
+  .article-meta .updated strong { font-weight: 700; color: #0c0c0d; }
+  
+  /* Sidebar */
+  .sidebar h3 { font-size: 16px; font-weight: 700; margin-bottom: 16px; color: #1a1a2e; }
+  .topics-list { list-style: none; margin-bottom: 32px; }
+  .topics-list li { padding: 8px 12px; font-size: 14px; color: #0c0c0d; border-radius: 4px; margin-bottom: 2px; }
+  .topics-list li.active { background: #e8e8e8; font-weight: 600; }
+  .topics-list li a { color: #0c0c0d; }
+  
+  .ask-card { background: #1a1a2e; color: #fff; border-radius: 12px; padding: 28px 24px; text-align: center; }
+  .ask-card .ask-icon { font-size: 20px; margin-bottom: 8px; }
+  .ask-card h4 { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+  .ask-card p { font-size: 13px; color: #c0c0c8; margin-bottom: 18px; line-height: 1.4; }
+  .ask-card .continue-btn { background: #0060df; color: #fff; border: none; padding: 10px 28px; border-radius: 4px; font-size: 14px; font-weight: 600; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<!-- Top Navigation -->
+<nav class="top-nav">
+  <div class="logo-area">
+    <div class="moz-logo">M</div>
+    Mozilla<br>Support
+  </div>
+  <ul class="nav-links">
+    <li><a href="#">Explore Help Articles</a></li>
+    <li><a href="#">Community Forums</a></li>
+    <li><a href="#">Ask a Question</a></li>
+    <li><a href="#">Contribute</a></li>
+  </ul>
+  <button class="sign-in-btn">Sign In/Up</button>
+</nav>
+
+<!-- Breadcrumb + Search -->
+<div class="sub-header">
+  <div class="breadcrumb">Home / Firefox / Privacy and security</div>
+  <div class="search-box">
+    <input type="text" placeholder="Search questions, arti" />
+    <span class="search-icon">🔍</span>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="main-wrapper">
+  <div class="content-area">
+    <!-- Firefox branding row -->
+    <div class="fx-header">
+      <div>
+        <div class="fx-logo-placeholder"></div>
+      </div>
+      <div class="download-section">
+        <button class="download-btn">Download Firefox</button>
+        <div class="download-links">
+          <a href="#">Systems and Languages</a>
+          <a href="#">What's New</a>
+          <a href="#">Privacy</a>
+        </div>
+      </div>
+    </div>
+
+    <h1>Privacy and security</h1>
+    <p class="page-desc">Learn how to protect your privacy and secure your data.</p>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <div class="tab active">All articles and threads</div>
+      <div class="tab">Tracking protection</div>
+      <div class="tab">Encryption</div>
+      <div class="tab">Security</div>
+    </div>
+
+    <!-- Articles -->
+    <div class="article">
+      <div class="article-title-row">
+        <span class="doc-icon">📄</span>
+        <h2>Use built-in VPN in Firefox</h2>
+      </div>
+      <p class="desc">Learn how to activate and use the built-in VPN feature in Firefox to protect your browsing.</p>
+      <div class="article-meta">
+        <span class="tag">Firefox</span>
+        <span class="pencil">✏️</span>
+        <span class="updated"><strong>Last updated:</strong> 1 day ago</span>
+      </div>
+    </div>
+
+    <div class="article">
+      <div class="article-title-row">
+        <span class="doc-icon">📄</span>
+        <h2>Common Myths about Private Browsing</h2>
+      </div>
+      <p class="desc">Learn more about common misconceptions about Private Browsing in Firefox.</p>
+      <div class="article-meta">
+        <span class="tag">Firefox</span>
+        <span class="pencil">✏️</span>
+        <span class="updated"><strong>Last updated:</strong> 11/3/25</span>
+      </div>
+    </div>
+
+    <div class="article">
+      <div class="article-title-row">
+        <span class="doc-icon">📄</span>
+        <h2>Avoid and report Mozilla tech support scams</h2>
+      </div>
+      <p class="desc">Mozilla does not provide telephone support and does not charge for software downloads, upgrades or technical help. Learn more.</p>
+      <div class="article-meta">
+        <span class="tag">Firefox, Firefox for Android, Firefox for iOS,...</span>
+        <span class="pencil">✏️</span>
+        <span class="updated"><strong>Last updated:</strong> 2/3/25</span>
+      </div>
+    </div>
+
+    <div class="article">
+      <div class="article-title-row">
+        <span class="doc-icon">📄</span>
+        <h2>Insecure connection password warning in Firefox</h2>
+      </div>
+      <p class="desc">Firefox will show you a "connection is not secure" warning message when a website login page is insecure and information could be stolen.</p>
+      <div class="article-meta">
+        <span class="tag">Firefox</span>
+        <span class="pencil">✏️</span>
+        <span class="updated"><strong>Last updated:</strong> 3/19/26</span>
+      </div>
+    </div>
+
+    <div class="article">
+      <div class="article-title-row">
+        <span class="doc-icon">📄</span>
+        <h2>Third-party trackers</h2>
+      </div>
+      <p class="desc">Learn about cross-site (third-party) cookies that collect information to track your browsing, which are used on many websites.</p>
+      <div class="article-meta">
+        <span class="tag">Firefox</span>
+        <span class="pencil">✏️</span>
+        <span class="updated"><strong>Last updated:</strong> 10/26/24</span>
+      </div>
+    </div>
+
+    <div class="article">
+      <div class="article-title-row">
+        <span class="doc-icon">📄</span>
+        <h2>Does Firefox share my location with websites?</h2>
+      </div>
+      <p class="desc">Learn what information Firefox sends to websites about your location and how to use and manage location-aware features of your browser.</p>
+      <div class="article-meta">
+        <span class="tag">Firefox</span>
+        <span class="pencil">✏️</span>
+        <span class="updated"><strong>Last updated:</strong> 3/22/26</span>
+      </div>
+    </div>
+
+    <div class="article">
+      <div class="article-title-row">
+        <span class="doc-icon">📄</span>
+        <h2>Configure DNS over HTTPS protection levels in Firefox</h2>
+      </div>
+      <p class="desc">DNS over HTTPS (DoH) is a recommended feature that enhances privacy. Learn more about the DoH protection levels you can configure in Firefox settings.</p>
+      <div class="article-meta">
+        <span class="tag">Firefox</span>
+        <span class="pencil">✏️</span>
+        <span class="updated"><strong>Last updated:</strong> 3/27/25</span>
+      </div>
+    </div>
+
+    <div class="article">
+      <div class="article-title-row">
+        <span class="doc-icon">📄</span>
+        <h2>Enhanced Tracking Protection in Firefox for desktop</h2>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h3>Popular Firefox Topics</h3>
+    <ul class="topics-list">
+      <li><a href="#">Backup, recovery, and sync</a></li>
+      <li><a href="#">Browse</a></li>
+      <li><a href="#">Performance and connectivity</a></li>
+      <li><a href="#">Accessibility</a></li>
+      <li><a href="#">Download and save</a></li>
+      <li><a href="#">Search, tag, and share</a></li>
+      <li><a href="#">Installation and updates</a></li>
+      <li><a href="#">Settings</a></li>
+      <li class="active">Privacy and security</li>
+      <li><a href="#">Passwords and sign in</a></li>
+    </ul>
+
+    <div class="ask-card">
+      <div class="ask-icon">✏️</div>
+      <h4>Ask a Question</h4>
+      <p>Still need help? Sign in to ask your question on our forums.</p>
+      <button class="continue-btn">Continue</button>
+    </div>
+  </aside>
+</div>
+
+</body>
+</html>

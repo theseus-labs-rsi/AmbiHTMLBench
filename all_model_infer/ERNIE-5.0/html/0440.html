@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script>window.MathJax={tex:{inlineMath:[["$","$"]],displayMath:[["$$","$$"]]}};</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>几点 (分享) Vol.07 - Design studio web</title>
+    <style>
+        :root {
+            --bg-blue: #9ef0ff;
+            --text-black: #000;
+            --card-bg: #fff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            background-color: #fff;
+            color: var(--text-black);
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 3px solid #000;
+            margin-bottom: 20px;
+        }
+
+        .header-left {
+            font-size: 24px;
+            font-weight: bold;
+            font-style: italic;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .header-left span {
+            font-style: normal;
+            font-weight: normal;
+            font-size: 18px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .icon-box {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+
+        /* Main Content - Cards Section */
+        .cards-section {
+            position: relative;
+            height: 400px;
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            position: absolute;
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+            font-weight: bold;
+            font-size: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            min-width: 150px;
+        }
+
+        .card-number {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            width: 30px;
+            height: 30px;
+            background: #f0f0f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #999;
+            border: 1px solid #ccc;
+        }
+
+        /* Card Positions */
+        .card-1 {
+            top: 20px;
+            left: 20px;
+            transform: rotate(-15deg);
+            width: 180px;
+            height: 100px;
+        }
+        .card-1 div { line-height: 1.2; }
+
+        .card-2 {
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 80px;
+        }
+
+        .card-3 {
+            top: 30px;
+            right: 30px;
+            transform: rotate(15deg);
+            width: 160px;
+            height: 90px;
+        }
+
+        .card-4 {
+            bottom: 40px;
+            left: 25%;
+            width: 180px;
+            height: 70px;
+        }
+
+        .card-5 {
+            bottom: 50px;
+            right: 25%;
+            width: 180px;
+            height: 80px;
+        }
+
+        /* Main Content - Blue Text Section */
+        .blue-section {
+            background-color: var(--bg-blue);
+            padding: 40px 20px;
+            margin-top: 20px;
+        }
+
+        .blue-text-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .big-title {
+            font-size: 64px;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+        }
+
+        .big-subtitle {
+            font-size: 64px;
+            font-weight: 900;
+            line-height: 1.1;
+            border-top: 2px solid #000;
+            padding-top: 10px;
+        }
+
+        /* Footer */
+        footer {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-top: 1px solid #eee;
+            margin-top: 20px;
+            font-size: 12px;
+        }
+
+        .footer-left {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .footer-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .logo-a {
+            width: 30px;
+            height: 30px;
+            border: 2px solid #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .footer-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .barcode {
+            width: 150px;
+            height: 30px;
+            background: repeating-linear-gradient(
+                90deg,
+                #000 0px,
+                #000 2px,
+                #fff 2px,
+                #fff 4px
+            );
+            margin-top: 5px;
+        }
+        
+        .barcode-text {
+            font-family: monospace;
+            font-size: 10px;
+            letter-spacing: 1px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .big-title, .big-subtitle {
+                font-size: 36px;
+            }
+            .cards-section {
+                height: auto;
+                min-height: 500px;
+            }
+            .card {
+                position: relative;
+                transform: none !important;
+                margin: 20px auto;
+                width: 80%;
+            }
+            .card-1, .card-2, .card-3, .card-4, .card-5 {
+                top: auto;
+                left: auto;
+                right: auto;
+                bottom: auto;
+            }
+            footer {
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+                text-align: center;
+            }
+            .footer-right {
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            几点 <span>(分享) Vol.07</span>
+        </div>
+        <div class="header-right">
+            <div class="icon-box">■</div>
+            Design studio web
+        </div>
+    </header>
+
+    <main>
+        <section class="cards-section">
+            <!-- Card 1 -->
+            <div class="card card-1">
+                <div class="card-number">1</div>
+                <div>ABCD<br>A BLACK<br>COVER DESIGN</div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="card card-2">
+                <div class="card-number">2</div>
+                <div>条件反射<br>REFLEX<br>DESIGN</div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="card card-3">
+                <div class="card-number">3</div>
+                <div>STUDIO<br>NA. EO<br>立入禁止</div>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="card card-4">
+                <div class="card-number">4</div>
+                <div>王志弘<br>WANG ZHI HONG</div>
+            </div>
+
+            <!-- Card 5 -->
+            <div class="card card-5">
+                <div class="card-number">5</div>
+                <div>NICE<br><span style="font-size: 10px; font-weight: normal;">NICE LAB<br>STUDIO</span><br>LAB</div>
+            </div>
+        </section>
+
+        <section class="blue-section">
+            <div class="blue-text-container">
+                <h1 class="big-title">国内知名设计</h1>
+                <h2 class="big-subtitle">工作室的官网</h2>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-left">
+            <div>Copyright© 2023</div>
+            <div>Jidn share all rights reserved.</div>
+        </div>
+
+        <div class="footer-center">
+            <div>(官网)</div>
+            <div class="logo-a">A</div>
+        </div>
+
+        <div class="footer-right">
+            <div class="barcode-text">&lt;&lt;&lt; JIDN SHARE 82829 &gt;&gt;&gt;</div>
+            <div class="barcode"></div>
+        </div>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Violin “Playing-In”: Disentangling Physical Change from Player Adaptation via Physical Measurements</title>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']]
+  }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #fff;
+  }
+
+  body {
+    color: #111;
+    font-family: "Times New Roman", Times, serif;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  .page {
+    position: relative;
+    width: 826px;
+    height: 1091px;
+    margin: 0 auto;
+    overflow: hidden;
+    background: #fff;
+  }
+
+  .submission {
+    position: absolute;
+    top: 42px;
+    left: 60px;
+    font-size: 13px;
+    line-height: 13px;
+  }
+
+  .submission a {
+    color: #0000ee;
+    text-decoration: none;
+  }
+
+  .article-bar {
+    position: absolute;
+    top: 150px;
+    left: 60px;
+    width: 710px;
+    height: 25px;
+    padding: 4px 9px 0;
+    background: #909090;
+    color: #fff;
+    font-size: 13px;
+    font-variant: small-caps;
+    letter-spacing: .15px;
+  }
+
+  .vertical-id {
+    position: absolute;
+    top: 237px;
+    left: 22px;
+    height: 605px;
+    color: #777;
+    font-size: 27px;
+    line-height: 27px;
+    white-space: nowrap;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+  }
+
+  .title {
+    position: absolute;
+    top: 216px;
+    left: 60px;
+    width: 710px;
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 23px;
+    font-weight: 700;
+    line-height: 27px;
+    letter-spacing: .1px;
+  }
+
+  .authors {
+    position: absolute;
+    top: 283px;
+    left: 60px;
+    width: 710px;
+    font-size: 13.5px;
+    line-height: 18px;
+  }
+
+  .authors sup,
+  .affiliations sup {
+    font-size: 9px;
+    vertical-align: super;
+  }
+
+  .affiliations {
+    position: absolute;
+    top: 306px;
+    left: 60px;
+    width: 710px;
+    font-size: 12.5px;
+    line-height: 13px;
+  }
+
+  .affiliation {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .affiliation .number {
+    flex: 0 0 13px;
+    width: 13px;
+    font-size: 9px;
+    line-height: 12px;
+  }
+
+  .affiliation .text {
+    flex: 1;
+  }
+
+  .abstract {
+    position: absolute;
+    top: 383px;
+    left: 120px;
+    width: 590px;
+    font-size: 12.2px;
+    line-height: 13.1px;
+    text-align: justify;
+  }
+
+  .abstract p {
+    margin: 0;
+  }
+
+  .abstract-label {
+    font-weight: 700;
+  }
+
+  .keywords {
+    position: absolute;
+    top: 573px;
+    left: 120px;
+    width: 590px;
+    font-size: 12.2px;
+    line-height: 14px;
+  }
+
+  .keywords strong {
+    font-weight: 700;
+  }
+
+  .section-title {
+    position: absolute;
+    top: 625px;
+    left: 60px;
+    margin: 0;
+    font-size: 15.5px;
+    line-height: 18px;
+    font-weight: 700;
+  }
+
+  .columns {
+    position: absolute;
+    top: 660px;
+    left: 60px;
+    display: flex;
+    width: 710px;
+    gap: 28px;
+  }
+
+  .column {
+    width: 341px;
+    font-size: 13.2px;
+    line-height: 14.2px;
+    text-align: justify;
+  }
+
+  .column p {
+    margin: 0 0 8px;
+  }
+
+  .column p.indent {
+    text-indent: 21px;
+  }
+
+  .quotation {
+    margin: 8px 22px 9px 22px;
+    font-size: 12.6px;
+    line-height: 13.5px;
+    font-style: italic;
+    text-align: justify;
+  }
+
+  .quotation p {
+    margin: 0;
+    text-indent: 20px;
+  }
+
+  .attribution {
+    margin-top: 3px;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .channel {
+    margin-top: 0;
+    text-align: left;
+  }
+
+  .right .quotation {
+    margin-top: 17px;
+    margin-left: 22px;
+    margin-right: 22px;
+    margin-bottom: 18px;
+  }
+
+  .right .quotation p {
+    text-indent: 19px;
+  }
+
+  .citation {
+    color: #0000ee;
+  }
+
+  .footnote {
+    position: absolute;
+    top: 988px;
+    left: 60px;
+    width: 341px;
+    border-top: 1px solid #333;
+    padding-top: 4px;
+    font-size: 11.7px;
+    line-height: 14px;
+  }
+
+  .footnote .star {
+    display: inline-block;
+    width: 17px;
+    text-align: center;
+  }
+
+  .footnote a {
+    color: #0000ee;
+    text-decoration: none;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 10.4px;
+  }
+
+  .page-number {
+    position: absolute;
+    top: 1034px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="submission">
+    Submitted to <strong>Acta Acustica</strong><br>
+    Template provided by <a href="#">EDP Sciences</a>
+  </div>
+
+  <div class="article-bar">Research Article</div>
+
+  <div class="vertical-id">arXiv:2605.18305v1&nbsp; [physics.class-ph]&nbsp; 18 May 2026</div>
+
+  <h1 class="title">
+    Violin “Playing-In”: Disentangling Physical Change from Player<br>
+    Adaptation via Physical Measurements
+  </h1>
+
+  <div class="authors">
+    Hugo Pauget Ballesteros<sup>1,*</sup>, Philippe Lalitte<sup>2</sup>, Vincent Lostanlen<sup>3</sup>, and Claudia Fritz<sup>2</sup>
+  </div>
+
+  <div class="affiliations">
+    <div class="affiliation">
+      <span class="number"><sup>1</sup></span>
+      <span class="text">Sorbonne Université, CNRS, Institut Jean Le Rond d’Alembert, F-75005 Paris, France</span>
+    </div>
+    <div class="affiliation">
+      <span class="number"><sup>2</sup></span>
+      <span class="text">Sorbonne Université, CNRS, Ministère de la Culture, Bibliothèque nationale de France, Institut de Recherche en Musicologie,<br>IReMus, F-75018 Paris, France</span>
+    </div>
+    <div class="affiliation">
+      <span class="number"><sup>3</sup></span>
+      <span class="text">Nantes Université, Centrale Nantes, CNRS, LS2N, UMR 6004, F-44000 Nantes, France</span>
+    </div>
+  </div>
+
+  <div class="abstract">
+    <p><span class="abstract-label">Abstract</span> – It is a widespread belief among musicians that a violin’s sound “opens up” or improves through regular playing. However, physical evidence for this “playing-in” effect remains elusive. This study revisited the phenomenon by testing two hypotheses: (1) the instrument undergoes physical evolution, or (2) the player undergoes behavioral adaptation. We conducted a longitudinal study centered on a seldom-played test violin played daily by a professional soloist for six months, alongside two stored control violins and a control group of ten violinists (N=10). All three violins had been rarely played prior to the experiment. Assessments performed at the beginning (“Before” phase) and end (“After” phase) of the period included input admittance measurements via laser vibrometry, standardized sound recordings, and acquisition of the soloist’s bowing gestures via motion capture. Results revealed no acoustical evolution in the played violin exceeding the environmental drift observed in the control instruments. Furthermore, kinematic analysis showed no significant drift in the soloist’s bowing strategy (bow position, velocity, contact point). These findings suggest that the “playing-in” phenomenon is driven neither by macroscopic physical changes in the instrument nor by a fundamental reorganization of the player’s technique.</p>
+  </div>
+
+  <div class="keywords">
+    <strong>Keywords.</strong> playing-in, violin, adaptation, bridge mobility, sound features, bowing parameters
+  </div>
+
+  <h2 class="section-title">1. Introduction</h2>
+
+  <div class="columns">
+    <div class="column left">
+      <p class="indent">Luthiers and violinists often claim that a new or dormant instrument requires a period of musical practice (“playing-in”) before reaching its full potential (“opening up”). For instance, when describing his relationship with the instrument recently loaned to him, the soloist Elias David Moncado says:</p>
+
+      <div class="quotation">
+        <p>I would name Szigeti as one of my sound idols, alongside David Oistrakh, Isaac Stern, and Jascha Heifetz, and, in many ways, I can sense the influence and the impact it had on the violin; it is as if the soul of Szigeti continues to live on.</p>
+        <p>I immediately sensed an incredible sound potential, and as I spend my time intensely performing and practicing on it, I continue to discover new sound colors which I didn’t know existed. The instrument “opens up” even more and unveils a new dimension of possibilities.</p>
+        <div class="attribution">— Elias David Moncado, on The Violin</div>
+        <div class="channel">Channel</div>
+      </div>
+
+      <p class="indent">Moncado explicitly refers to the concept of “opening-up”, reached after a certain time of practice, and even</p>
+    </div>
+
+    <div class="column right">
+      <p>feels that a previous owner (Joseph Szigeti) had physically imprinted his sound on the violin. Other string players have noted that this experience is so universally shared that it transcends the need for a scientific explanation:</p>
+
+      <div class="quotation">
+        <p>[T]here are many theories which attempt to explain [this effect] and there is validity behind the science. Plate vibrations, bridge and soundpost settling into the plates, wood drying so sap pockets become air chambers, etc. But we honestly don’t know why [violins] require breaking-in. No matter the reasoning it’s a no-brainer we string players accept without precise explanation and trust simply from pure experience.</p>
+        <div class="attribution">— Fiddleheads.com</div>
+      </div>
+
+      <p class="indent">The strength and consistency of such testimonies have prompted scientific efforts to determine whether the perceived “playing-in” effect can be objectively measured and explained. Early research often reported measurable vibro-acoustic changes or improved subjective ratings <span class="citation">[1, 2, 3]</span>; however, these studies frequently lacked non-vibrated control groups or rigorous blinding protocols, making it difficult to isolate vibrational effects from environmental fluctuations or observer bias. While some</p>
+    </div>
+  </div>
+
+  <div class="footnote">
+    <span class="star">*</span> Corresponding author:
+    <a href="mailto:hugo.pauget@dalembert.upmc.fr">hugo.pauget@dalembert.upmc.fr</a>
+  </div>
+
+  <div class="page-number">1</div>
+
+</div>
+</body>
+</html>

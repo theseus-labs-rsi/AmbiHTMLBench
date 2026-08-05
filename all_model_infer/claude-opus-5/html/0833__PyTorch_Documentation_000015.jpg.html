@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AdaptiveAvgPool3d — PyTorch 2.12 documentation</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$']], displayMath: [['$$','$$']] }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+    color: #262626;
+    font-size: 15px;
+    background: #fff;
+  }
+  a { color: #262626; text-decoration: none; }
+
+  /* ---------- Top navigation ---------- */
+  .topbar {
+    border-bottom: 1px solid #e2e2e2;
+    padding: 14px 40px 0 40px;
+    position: relative;
+    height: 128px;
+  }
+  .topbar-inner { display: flex; align-items: flex-start; }
+  .logo {
+    font-size: 24px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+    margin-right: 22px;
+    white-space: nowrap;
+  }
+  .logo .flame { color: #ee4c2c; font-weight: 400; }
+  .version {
+    border: 1px solid #c8c8c8;
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #ee4c2c;
+    display: inline-flex;
+    align-items: center;
+    gap: 18px;
+    margin-right: 30px;
+  }
+  .version .caret { color: #6c757d; font-weight: 400; font-size: 11px; }
+  .navitems { display: flex; align-items: flex-start; gap: 26px; padding-top: 4px; }
+  .navitem {
+    font-size: 14px;
+    line-height: 1.45;
+    max-width: 92px;
+    display: flex;
+    gap: 8px;
+  }
+  .navitem .caret { color: #6c757d; font-size: 10px; align-self: flex-end; }
+  .navitem .ext { font-size: 10px; color: #6c757d; }
+
+  .top-right {
+    position: absolute;
+    right: 40px;
+    top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .goto {
+    font-size: 11px;
+    line-height: 1.3;
+    text-align: left;
+  }
+  .goto b { font-size: 13px; display: block; }
+  .searchbox {
+    border: 1px solid #d0d0d0;
+    border-radius: 20px;
+    padding: 8px 14px;
+    width: 220px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #6c757d;
+    font-size: 14px;
+  }
+  .toggle {
+    width: 34px; height: 18px; border-radius: 10px; background: #262626;
+    position: relative; display: inline-block;
+  }
+  .toggle::after {
+    content: ""; position: absolute; top: 2px; left: 3px;
+    width: 14px; height: 14px; border-radius: 50%; background: #fff;
+  }
+  .half-circle {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: linear-gradient(90deg, #262626 50%, #fff 50%);
+    border: 2px solid #262626;
+  }
+  .social {
+    position: absolute; right: 40px; top: 82px;
+    display: flex; gap: 22px; font-size: 17px; color: #262626;
+  }
+
+  /* ---------- Layout ---------- */
+  .page { display: flex; align-items: flex-start; }
+
+  /* ---------- Left sidebar ---------- */
+  .sidebar {
+    width: 216px;
+    flex: 0 0 216px;
+    border-right: 1px solid #e2e2e2;
+    padding: 0 0 40px 0;
+    font-size: 14px;
+    overflow: hidden;
+  }
+  .sidebar .clipped {
+    padding-left: 50px;
+    color: #6c757d;
+    height: 10px;
+    overflow: hidden;
+    font-size: 14px;
+  }
+  .sidebar ul { list-style: none; margin: 0; padding: 0; }
+  .sidebar li a {
+    display: block;
+    padding: 8px 12px 8px 50px;
+    line-height: 1.35;
+  }
+  .sidebar li.current-section {
+    border-left: 3px solid #ee4c2c;
+  }
+  .sidebar li.current-section > a {
+    padding-left: 47px;
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 6px;
+    padding-right: 20px;
+  }
+  .sidebar li.sub a { padding-left: 66px; }
+  .sidebar .caret-up { font-size: 11px; font-weight: 400; }
+
+  /* ---------- Main content ---------- */
+  .content {
+    flex: 1 1 auto;
+    padding: 26px 48px 0 32px;
+    min-width: 0;
+  }
+  .breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: #262626;
+  }
+  .breadcrumbs .sep { color: #6c757d; font-size: 11px; }
+  .rate {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13.5px;
+    font-weight: 700;
+  }
+  .stars { color: #d4d4d4; letter-spacing: 3px; font-size: 14px; font-weight: 400; }
+
+  h1 {
+    font-size: 40px;
+    font-weight: 400;
+    margin: 44px 0 26px 0;
+  }
+  .sig {
+    font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+    font-size: 16.5px;
+    font-weight: 700;
+    position: relative;
+    margin-bottom: 14px;
+  }
+  .sig .kw { font-style: italic; font-weight: 400; }
+  .sig .cls { color: #a2228f; }
+  .sig .param { font-style: italic; color: #262626; }
+  .source-link {
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+    font-size: 14px;
+    color: #b8341f;
+    text-decoration: underline;
+    font-weight: 700;
+  }
+  .desc { margin: 0 0 20px 32px; line-height: 1.6; }
+
+  .field {
+    margin: 0 0 6px 32px;
+    background: #f3f4f6;
+    padding: 8px 10px;
+    font-weight: 700;
+    font-size: 14.5px;
+  }
+  .field-body { margin: 0 0 22px 40px; line-height: 1.65; }
+  .em { font-style: italic; }
+  .lnk { color: #b8341f; text-decoration: underline; font-style: italic; }
+  code.lit {
+    font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+    background: #f3f4f6;
+    border: 1px solid #e3e3e3;
+    border-radius: 3px;
+    padding: 1px 5px;
+    font-size: 13px;
+  }
+  .shape-title { margin: 0 0 8px 32px; font-weight: 700; }
+  .content ul.shape { margin: 0 0 24px 46px; padding-left: 20px; }
+  .content ul.shape li { margin-bottom: 8px; line-height: 1.6; }
+
+  h2.examples {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 34px 0 0 32px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e2e2e2;
+  }
+  pre.code {
+    margin: 22px 0 0 32px;
+    background: #f3f4f6;
+    border: 1px solid #eaeaea;
+    padding: 14px 16px;
+    font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+    font-size: 13.5px;
+    line-height: 1.32;
+    overflow-x: auto;
+  }
+  .pr { color: #6c757d; }
+  .cm { color: #6c757d; }
+  .nb { color: #b8341f; }
+  .nm { color: #0b7285; }
+  .num { color: #1c7ed6; }
+  .kwd { color: #a2228f; }
+
+  .method {
+    margin: 34px 0 0 32px;
+    position: relative;
+    font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+    font-size: 16.5px;
+    font-weight: 700;
+    color: #b8341f;
+  }
+  .method .pname { font-style: italic; color: #262626; }
+  .method .paren { color: #262626; }
+  .method-desc { margin: 12px 0 20px 64px; }
+
+  /* ---------- Right sidebar ---------- */
+  .rightbar {
+    width: 190px;
+    flex: 0 0 190px;
+    border-left: 1px solid #e2e2e2;
+    padding: 26px 10px 40px 18px;
+    font-size: 14px;
+    min-height: 660px;
+  }
+  .rightbar .onthis { font-weight: 400; margin-bottom: 14px; line-height: 1.5; }
+  .rightbar .toccode {
+    font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+    background: #f3f4f6;
+    border: 1px solid #e3e3e3;
+    border-radius: 3px;
+    padding: 2px 6px;
+    font-size: 13px;
+    color: #262626;
+    display: inline-block;
+    margin-bottom: 6px;
+  }
+  .rightbar .indent { margin-left: 16px; }
+  .rightbar .show-source {
+    color: #b8341f;
+    text-decoration: underline;
+    display: block;
+    margin: 18px 0 22px 0;
+    line-height: 1.5;
+  }
+  .rightbar h3 {
+    font-size: 15px;
+    margin: 0 0 12px 0;
+    line-height: 1.3;
+  }
+  .rightbar ul { list-style: none; margin: 0; padding: 0; }
+  .rightbar ul li { margin-bottom: 8px; line-height: 1.35; }
+  .rightbar ul li .ext { font-size: 10px; color: #6c757d; }
+
+  /* ---------- Footer ---------- */
+  .footer {
+    margin: 60px 48px 0 264px;
+    border-top: 1px solid #e2e2e2;
+    padding-top: 22px;
+    text-align: center;
+  }
+  .footer .rate2 { font-size: 13.5px; font-weight: 700; }
+  .btn-feedback {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid #d0d0d0;
+    border-radius: 6px;
+    padding: 14px 22px;
+    margin-top: 22px;
+    font-size: 16px;
+  }
+  .prevnext {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 46px;
+    padding-bottom: 30px;
+  }
+  .prevnext .arrow { color: #9a9a9a; font-size: 16px; }
+  .prevnext .lbl { font-size: 15px; }
+  .prevnext a {
+    color: #b8341f;
+    font-weight: 700;
+    text-decoration: underline;
+    font-size: 16px;
+  }
+  .prevnext .left { display: flex; align-items: center; gap: 14px; }
+  .prevnext .right { display: flex; align-items: center; gap: 14px; text-align: right; }
+
+  .askai {
+    position: fixed;
+    right: 62px;
+    bottom: 62px;
+    border: 2px solid #b9c8f5;
+    border-radius: 26px;
+    background: #fff;
+    padding: 12px 24px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,.08);
+  }
+  .askai .chev { color: #4864e8; letter-spacing: -3px; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="logo"><span class="flame">&#x21bb;</span> PyTorch</div>
+    <div class="version">v2.12... <span class="caret">&#9660;</span></div>
+    <div class="navitems">
+      <div class="navitem">Install<br>PyTorch <span class="ext">&#x2197;</span></div>
+      <div class="navitem">User<br>Guide <span class="caret">&#9660;</span></div>
+      <div class="navitem">Reference<br>API <span class="caret">&#9660;</span></div>
+      <div class="navitem">Developer<br>Notes <span class="caret">&#9660;</span></div>
+      <div class="navitem" style="max-width:none">Community <span class="caret">&#9660;</span></div>
+      <div class="navitem" style="max-width:none">Tutorials <span class="ext">&#x2197;</span></div>
+    </div>
+  </div>
+
+  <div class="top-right">
+    <div class="goto">Go to<br><b>pytorch.org</b> <span class="ext">&#x2197;</span></div>
+    <div class="searchbox"><span>&#128269;</span> <span>Search the docs ...</span> <span class="toggle"></span></div>
+    <div class="half-circle"></div>
+  </div>
+
+  <div class="social">
+    <span>&#120143;</span>
+    <span>&#128187;</span>
+    <span>&#128172;</span>
+    <span>&#128021;</span>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- Left sidebar -->
+  <nav class="sidebar">
+    <div class="clipped">Python API</div>
+    <ul>
+      <li><a href="#">torch</a></li>
+      <li class="current-section"><a href="#">Aliases in torch.nn <span class="caret-up">&#9650;</span></a></li>
+      <li class="sub"><a href="#">Sequential</a></li>
+      <li class="sub"><a href="#">ModuleList</a></li>
+      <li class="sub"><a href="#">ModuleDict</a></li>
+      <li class="sub"><a href="#">ParameterList</a></li>
+      <li class="sub"><a href="#">ParameterDict</a></li>
+      <li class="sub"><a href="#">Conv1d</a></li>
+      <li class="sub"><a href="#">Conv2d</a></li>
+      <li class="sub"><a href="#">Conv3d</a></li>
+      <li class="sub"><a href="#">ConvTranspose1d</a></li>
+      <li class="sub"><a href="#">ConvTranspose2d</a></li>
+      <li class="sub"><a href="#">ConvTranspose3d</a></li>
+      <li class="sub"><a href="#">LazyConv1d</a></li>
+      <li class="sub"><a href="#">LazyConv2d</a></li>
+      <li class="sub"><a href="#">LazyConv3d</a></li>
+      <li class="sub"><a href="#">LazyConvTranspose1d</a></li>
+      <li class="sub"><a href="#">LazyConvTranspose2d</a></li>
+      <li class="sub"><a href="#">LazyConvTranspose3d</a></li>
+      <li class="sub"><a href="#">Unfold</a></li>
+      <li class="sub"><a href="#">Fold</a></li>
+      <li class="sub"><a href="#">MaxPool1d</a></li>
+      <li class="sub"><a href="#">MaxPool2d</a></li>
+      <li class="sub"><a href="#">MaxPool3d</a></li>
+      <li class="sub"><a href="#">MaxUnpool1d</a></li>
+      <li class="sub"><a href="#">MaxUnpool2d</a></li>
+      <li class="sub"><a href="#">MaxUnpool3d</a></li>
+      <li class="sub"><a href="#">AvgPool1d</a></li>
+      <li class="sub"><a href="#">AvgPool2d</a></li>
+      <li class="sub"><a href="#">AvgPool3d</a></li>
+      <li class="sub"><a href="#">FractionalMaxPool2d</a></li>
+      <li class="sub"><a href="#">FractionalMaxPool3d</a></li>
+      <li class="sub"><a href="#">LPPool1d</a></li>
+      <li class="sub"><a href="#">LPPool2d</a></li>
+      <li class="sub"><a href="#">LPPool3d</a></li>
+      <li class="sub"><a href="#">AdaptiveMaxPool1d</a></li>
+      <li class="sub"><a href="#">AdaptiveMaxPool2d</a></li>
+      <li class="sub"><a href="#">AdaptiveMaxPool3d</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main content -->
+  <main class="content">
+    <div class="breadcrumbs">
+      <span>&#127968;</span>
+      <span class="sep">&#10095;</span>
+      <a href="#">Reference API</a>
+      <span class="sep">&#10095;</span>
+      <span>&#8943;</span>
+      <span class="sep">&#10095;</span>
+      <a href="#">Aliases in torch.nn</a>
+      <span class="sep">&#10095;</span>
+      <span>AdaptiveAvgPool3d</span>
+      <span class="rate">Rate this Page <span class="stars">&#9734;&#9734;&#9734;&#9734;&#9734;</span></span>
+    </div>
+
+    <h1>AdaptiveAvgPool3d</h1>
+
+    <div class="sig">
+      <span class="kw">class</span> torch.nn.modules.pooling.<span class="cls">AdaptiveAvgPool3d</span>(<span class="param">output_size</span>)
+      <a class="source-link" href="#">[source]</a>
+    </div>
+
+    <p class="desc">Applies a 3D adaptive average pooling over an input signal composed of several input planes.</p>
+
+    <p class="desc">The output is of size D x H x W, for any input size. The number of output features is equal to the number of input planes.</p>
+
+    <div class="field">Parameters:</div>
+    <div class="field-body">
+      <b>output_size</b> (<a class="lnk" href="#">int</a> <span class="em">| None |</span> <a class="lnk" href="#">tuple</a><span class="em">[</span><a class="lnk" href="#">int</a> <span class="em">| None,</span> <a class="lnk" href="#">int</a> <span class="em">| None,</span> <a class="lnk" href="#">int</a> <span class="em">| None]</span>) – the target output size of the form D x H x W. Can be a tuple (D, H, W) or a single number D for a cube D x D x D. D, H and W can be either a <code class="lit">int</code>, or <code class="lit">None</code> which means the size will be the same as that of the input.
+    </div>
+
+    <div class="shape-title">Shape:</div>
+    <ul class="shape">
+      <li>Input: $(N, C, D_{in}, H_{in}, W_{in})$ or $(C, D_{in}, H_{in}, W_{in})$.</li>
+      <li>Output: $(N, C, S_0, S_1, S_2)$ or $(C, S_0, S_1, S_2)$, where $S = \text{output\_size}$.</li>
+    </ul>
+
+    <h2 class="examples">Examples</h2>
+
+<pre class="code"><span class="pr">&gt;&gt;&gt;</span> <span class="cm"># target output size of 5x7x9</span>
+<span class="pr">&gt;&gt;&gt;</span> m = nn.AdaptiveAvgPool3d((<span class="num">5</span>, <span class="num">7</span>, <span class="num">9</span>))
+<span class="pr">&gt;&gt;&gt;</span> <span class="nm">input</span> = torch.randn(<span class="num">1</span>, <span class="num">64</span>, <span class="num">8</span>, <span class="num">9</span>, <span class="num">10</span>)
+<span class="pr">&gt;&gt;&gt;</span> output = m(<span class="nm">input</span>)
+<span class="pr">&gt;&gt;&gt;</span> <span class="cm"># target output size of 7x7x7 (cube)</span>
+<span class="pr">&gt;&gt;&gt;</span> m = nn.AdaptiveAvgPool3d(<span class="num">7</span>)
+<span class="pr">&gt;&gt;&gt;</span> <span class="nm">input</span> = torch.randn(<span class="num">1</span>, <span class="num">64</span>, <span class="num">10</span>, <span class="num">9</span>, <span class="num">8</span>)
+<span class="pr">&gt;&gt;&gt;</span> output = m(<span class="nm">input</span>)
+<span class="pr">&gt;&gt;&gt;</span> <span class="cm"># target output size of 7x9x8</span>
+<span class="pr">&gt;&gt;&gt;</span> m = nn.AdaptiveAvgPool3d((<span class="num">7</span>, <span class="kwd">None</span>, <span class="kwd">None</span>))
+<span class="pr">&gt;&gt;&gt;</span> <span class="nm">input</span> = torch.randn(<span class="num">1</span>, <span class="num">64</span>, <span class="num">10</span>, <span class="num">9</span>, <span class="num">8</span>)
+<span class="pr">&gt;&gt;&gt;</span> output = m(<span class="nm">input</span>)</pre>
+
+    <div class="method">
+      forward<span class="paren">(</span><span class="pname">input</span><span class="paren">)</span>
+      <a class="source-link" href="#">[source]</a>
+    </div>
+    <p class="method-desc">Runs the forward pass.</p>
+
+    <div class="field" style="margin-left:72px;">Return type:</div>
+    <div class="field-body" style="margin-left:104px;"><a class="lnk" href="#">Tensor</a></div>
+  </main>
+
+  <!-- Right sidebar -->
+  <aside class="rightbar">
+    <div class="onthis">&#9776; On this page</div>
+    <div><code class="toccode">AdaptiveAvgPool3d</code></div>
+    <div class="indent"><code class="toccode">AdaptiveAvgPool3d</code></div>
+
+    <a class="show-source" href="#">&#128196; Show Source</a>
+
+    <h3>PyTorch Libraries</h3>
+    <ul>
+      <li><a href="#">ExecuTorch</a> <span class="ext">&#x2197;</span></li>
+      <li><a href="#">Helion</a> <span class="ext">&#x2197;</span></li>
+      <li><a href="#">torchao</a> <span class="ext">&#x2197;</span></li>
+      <li><a href="#">kineto</a> <span class="ext">&#x2197;</span></li>
+      <li><a href="#">torchtitan</a> <span class="ext">&#x2197;</span></li>
+      <li><a href="#">TorchRL</a> <span class="ext">&#x2197;</span></li>
+      <li><a href="#">torchvision</a> <span class="ext">&#x2197;</span></li>
+      <li><a href="#">torchaudio</a> <span class="ext">&#x2197;</span></li>
+      <li><a href="#">tensordict</a> <span class="ext">&#x2197;</span></li>
+      <li><a href="#">PyTorch on XLA Devices</a> <span class="ext">&#x2197;</span></li>
+    </ul>
+  </aside>
+</div>
+
+<div class="footer">
+  <div class="rate2">Rate this Page <span class="stars">&#9734;&#9734;&#9734;&#9734;&#9734;</span></div>
+  <div class="btn-feedback">Send Feedback <span>&#10095;</span></div>
+
+  <div class="prevnext">
+    <div class="left">
+      <span class="arrow">&#10094;</span>
+      <div style="text-align:left">
+        <div class="lbl">Previous</div>
+        <a href="#">AdaptiveAvgPool2d</a>
+      </div>
+    </div>
+    <div class="right">
+      <div>
+        <div class="lbl">Next</div>
+        <a href="#">ReflectionPad1d</a>
+      </div>
+      <span class="arrow">&#10095;</span>
+    </div>
+  </div>
+</div>
+
+<div class="askai"><span class="chev">&#10095;&#10095;&#10095;</span> Ask AI</div>
+
+</body>
+</html>

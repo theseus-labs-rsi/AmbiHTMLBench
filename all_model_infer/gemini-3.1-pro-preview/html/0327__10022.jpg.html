@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>浙江大学报</title>
+    <style>
+        :root {
+            --zju-red: #c00000;
+            --text-color: #333;
+            --line-color: #000;
+        }
+        body {
+            font-family: "SimSun", "Songti SC", serif; /* Traditional newspaper font */
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+            display: flex;
+            justify-content: center;
+        }
+        .page-container {
+            width: 1200px;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        /* Header Styles */
+        header {
+            margin-bottom: 10px;
+        }
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .header-left {
+            width: 20%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: "SimHei", "Microsoft YaHei", sans-serif;
+            font-size: 14px;
+        }
+        .logo-placeholder {
+            width: 80px;
+            height: 80px;
+            border: 1px dashed #999;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 5px;
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+        }
+        .header-center {
+            width: 50%;
+            text-align: center;
+        }
+        .header-center h1 {
+            font-family: "KaiTi", "Kaiti SC", serif;
+            font-size: 80px;
+            color: var(--zju-red);
+            margin: 0;
+            letter-spacing: 10px;
+        }
+        .header-right {
+            width: 30%;
+            text-align: right;
+            font-family: "SimHei", "Microsoft YaHei", sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .header-right .red-text {
+            color: var(--zju-red);
+        }
+        .red-bar {
+            background-color: var(--zju-red);
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 20px;
+            font-family: "SimHei", "Microsoft YaHei", sans-serif;
+            font-size: 14px;
+        }
+        
+        /* Main Content Layout */
+        .main-content {
+            display: flex;
+            margin-top: 15px;
+            border-top: 2px solid var(--line-color);
+            padding-top: 15px;
+        }
+        .left-column {
+            width: 75%;
+            padding-right: 20px;
+            border-right: 1px solid var(--line-color);
+        }
+        .right-column {
+            width: 25%;
+            padding-left: 20px;
+        }
+
+        /* Typography & Common Styles */
+        h2 {
+            font-family: "SimHei", "Microsoft YaHei", sans-serif;
+            text-align: center;
+            margin: 10px 0;
+            font-size: 32px;
+        }
+        h3 {
+            font-family: "KaiTi", "Kaiti SC", serif;
+            text-align: center;
+            margin: 5px 0 15px 0;
+            font-size: 20px;
+            font-weight: normal;
+        }
+        p {
+            text-indent: 2em;
+            margin: 0 0 10px 0;
+            line-height: 1.6;
+            font-size: 14px;
+            text-align: justify;
+        }
+        .article-separator {
+            border-top: 1px solid #ccc;
+            margin: 20px 0;
+        }
+        .placeholder {
+            background-color: #eee;
+            border: 1px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-family: sans-serif;
+            font-size: 14px;
+        }
+
+        /* Specific Article Layouts */
+        .four-col-layout {
+            display: flex;
+            gap: 20px;
+        }
+        .col {
+            flex: 1;
+        }
+        
+        /* Article 1 specific */
+        .article-1 .img-col {
+            margin-bottom: 10px;
+        }
+        .article-1 .placeholder {
+            height: 150px;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        /* Middle Banner Section */
+        .middle-banner {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+            border-top: 1px solid var(--line-color);
+            border-bottom: 1px solid var(--line-color);
+            padding: 15px 0;
+        }
+        .middle-banner .banner-img {
+            flex: 3;
+        }
+        .middle-banner .banner-img .placeholder {
+            width: 100%;
+            height: 250px;
+        }
+        .middle-banner .banner-article {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .middle-banner .banner-article h4 {
+            font-family: "SimHei", "Microsoft YaHei", sans-serif;
+            font-size: 20px;
+            text-align: center;
+            margin: 0 0 10px 0;
+        }
+        .middle-banner .banner-article p {
+            font-size: 13px;
+        }
+        .author-right {
+            text-align: right;
+            font-style: italic;
+            margin-top: 5px;
+        }
+
+        /* Right Column Articles */
+        .article-vertical {
+            display: flex;
+            flex-direction: row-reverse;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .article-vertical .titles {
+            display: flex;
+            flex-direction: row-reverse;
+            gap: 10px;
+        }
+        .article-vertical h2 {
+            writing-mode: vertical-rl;
+            font-size: 36px;
+            letter-spacing: 5px;
+            margin: 0;
+        }
+        .article-vertical h3 {
+            writing-mode: vertical-rl;
+            font-size: 22px;
+            margin: 0;
+            padding-top: 40px;
+        }
+        .article-vertical .content {
+            flex: 1;
+        }
+        
+        .right-article {
+            margin-bottom: 30px;
+            border-top: 1px solid #ccc;
+            padding-top: 15px;
+        }
+        .right-article h4 {
+            font-family: "SimHei", "Microsoft YaHei", sans-serif;
+            font-size: 22px;
+            text-align: center;
+            margin: 0 0 15px 0;
+        }
+
+        /* Footer */
+        footer {
+            text-align: right;
+            margin-top: 20px;
+            font-family: "SimHei", "Microsoft YaHei", sans-serif;
+            font-size: 14px;
+            border-top: 2px solid var(--line-color);
+            padding-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <header>
+            <div class="header-top">
+                <div class="header-left">
+                    <div class="logo-placeholder">[Logo: Zhejiang University]</div>
+                    <div>中共浙江大学委员会主办</div>
+                    <div>《浙江大学报》编辑部出版</div>
+                </div>
+                <div class="header-center">
+                    <h1>浙江大学报</h1>
+                </div>
+                <div class="header-right">
+                    <div class="red-text">2018年5月18日 星期五</div>
+                    <div class="red-text">农历戊戌年四月初四</div>
+                    <div>周报 本期4版</div>
+                    <div>总1492(新) 第672期</div>
+                    <div class="red-text" style="margin-top: 10px;">国内统一刊号 CN33-0801(G)</div>
+                </div>
+            </div>
+            <div class="red-bar">
+                <div>网址:http://www.zdxb.zju.edu.cn</div>
+                <div>E-mail:zdxb@zju.edu.cn</div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="left-column">
+                <!-- Article 1 -->
+                <div class="article-1">
+                    <h2>汇聚创新资源 推进多维合作</h2>
+                    <h3>浙大代表团访问美国顶尖高校 出席浙大—斯坦福学术交流招待会</h3>
+                    <div class="four-col-layout">
+                        <div class="col img-col">
+                            <div class="placeholder">[Image: Group photo with text overlay "学习贯彻党的十九大精神 喜迎建校一百二十一周年"]</div>
+                            <p>本报讯 5月7日至9日，浙江大学校长吴朝晖率团访问美国洛杉矶加州大学、戴维斯加州大学、斯坦福大学，并出席浙大—斯坦福学术交流招待会，推动深度交流与合作。</p>
+                            <p>5月9日上午，吴朝晖一行访问斯坦福大学，分别会见了教务长Persis Drell教授和工学、医学院院长等。吴朝晖围绕综合型、研究型、创新型的办学特色，介绍了学校的基本情况，并回顾了两校教授在医学、材料、化工、能源等诸多领域所取得的合作成果。他表示，在“浙大—斯坦福合作交流基金”的支持下，教授合作还将不断深入，并拓展至更多学科。Persis Drell对双方的合作基础和浙大的国际合作激励机制予以赞赏。她认为，落实和拓展教师间的合作对于推动校际合作至关重要，下一步双方可探索在交叉研究和转化研究领域开展合作。双方一致认为，打</p>
+                        </div>
+                        <div class="col">
+                            <p>破学科界限、促进学科交叉、构建创新生态是两校应对未来挑战的共同路径。双方还探讨了加强校际合作的具体模式，同意选取重点领域有规模地开展科研合作与学生联合培养。</p>
+                            <p>斯坦福大学成立于1885年，在THE世界大学排名中与加州理工并列第3，在THE所有11个学科排名中，斯坦福的所有学科均列全球前4位。在顶尖大学计划的支持下，我校工学、医学、信息、人文等多个学科与斯坦福开展了多种形式的交流与合作，取得了较好的进展。</p>
+                            <p>5月9日下午，我校在斯坦福大学所在的帕罗奥多市举办浙江大学—斯坦福大学学术交流招待会，包括诺奖得主Michael Levitt在内的110余位斯坦福教授、浙大教授以及硅谷企业家校友代表出席。吴朝晖发表主题演讲，介绍浙江大学的全球开放发展战略，并展望与斯坦福的合</p>
+                        </div>
+                        <div class="col">
+                            <p>作前景。他强调，浙大与斯坦福均位于富有创新活力的湾区，与区域经济和产业联动发展，双方可汇集丰富资源促进全方位合作，携手追求卓越。</p>
+                            <p>斯坦福大学医学院Ann Hsing教授介绍了与浙大公共卫生的合作历程。Vobile有限公司董事长王扬斌代表浙大在旧金山湾区的校友企业家致辞，展示浙大与斯坦福、杭州与硅谷的紧密联系与未来合作机遇。交流会上，浙江大学国际创新研究院硅谷创新中心揭牌成立。中心将致力于融合硅谷创新资源，锻造国际产学研合作创新生态链。吴朝晖一行还考察了在建的杭州硅谷协同创新中心。</p>
+                            <p>5月7日，代表团访问洛杉矶加州大学，会见UCLA常务副校长兼教务长Scott Waugh、主管全球合作的副教务长Cindy Fan等。吴朝晖一行还出席了多学科领域对口会谈，并见证浙江大学医学院附属第二医院与UCLA公共卫生学院签署合作协议。访问进一步深化了两校校长去年11月和今年5月分别在浙大和北京论坛期间达成的会谈共识。</p>
+                            <p>在与常务副校长Scott Waugh的会谈中，吴朝晖介绍了浙江大学“双一流”建设情况及全球开放发展战略，希望抓住机遇与UCLA携手并</p>
+                        </div>
+                        <div class="col">
+                            <p>进，提升合作的广度与深度。Scott Waugh对此予以高度肯定，表示与浙大的伙伴关系是其对华合作的重中之重，将持续推进与我校的多维度合作。双方一致同意，将整合学科资源促进医工交叉研究，并拓展在影视、社会学、计算机等领域的合作。浙江大学与UCLA互为重要合作伙伴，携手十余年，已从学生交流发展至医学领域多层次合作。双方开展了医学联合PhD/MD项目，并成立了多个联合中心。</p>
+                            <p>5月8日，代表团前往戴维斯加州大学，会见署理副校长Cindy Kiel等，并访问该校农业与环境科学学院，深化在环境科学、食品科学、农学等重点领域的合作。农学相关学院教授则与UC Davis相关院系进行对口会谈，达成多项合作共识。自2005年签署校际合作协议以来，两校建立了全方位、多层次的合作关系，双方师生交流活跃，合作持续深入。</p>
+                            <p>访美期间，吴朝晖一行出席了南加州浙大校友见面会，在校庆临近之际，与校友们共叙母校情谊，共话学校发展。中国驻洛杉矶副总领事孙鲁山应邀出席。</p>
+                            <p>外事处、科研院和工学、信息、农学、医学领域相关单位负责人及教师代表陪同访问。<span style="float:right;">（童骏）</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="article-separator"></div>
+
+                <!-- Article 2 -->
+                <div class="article-2">
+                    <h3>2018浙大制造·科技生活双年展喊你来看</h3>
+                    <h2>浙大“智”造，让生活变得更美好</h2>
+                    <div class="four-col-layout">
+                        <div class="col">
+                            <p>本报讯（记者 柯溢能）超越材料制成的衣服穿起来是什么感受？会“翻墙”的机器人能带来什么变革？沉浸式的VR烟花体验如何？这些答案可以从紫金港校区正在进行中的一场展览中获得。</p>
+                            <p>5月14日，第二届“浙大制造·科技生活双年展”在紫金港校区拉开帷幕。本届双年展以“浙大‘智’造，让生活变得更美好！”为主题，邀请了来自浙江大学相关学科的30余项科技作品参加此次活动。</p>
+                            <p>浙江大学党委副书记、工会主席叶民，腾讯大浙网总裁马小燕出席、讲话，并与主办方代表、项目参展方代表一起为本次展会开幕。</p>
+                            <p>叶民表示，第二届浙大制造·科</p>
+                        </div>
+                        <div class="col">
+                            <p>技生活双年展，引领了科技创新的新风尚，丰富了校内公共服务的新内涵。他就科技创新和服务创新的融合共生、协同推进指出，创新需要全生态，服务是重要的链条；创新需要大情怀，服务是重要的导向；创新需要新空间，服务是重要的平台。</p>
+                            <p>现场展示了能让体感升温高3.4℃且耐脏的毛衣、适合糖尿病人群食用的低糖米、集颜值营养于一身的番茄樱桃……各个展台前挤满了来参观的师生。高分子系高超教授说：“这样的展览让学校部分代表性成果，走出实验室与公众交流，是对科普创新工作的重要诠释。”传媒学院2016级本科生徐铭婕在观看展览时</p>
+                        </div>
+                        <div class="col">
+                            <p>说：“外骨骼机器人、无人机、虚拟现实头盔等一系列神奇科技产品，令人应接不暇，真切感受到创新精神和对科技创造的不懈追求。”</p>
+                            <p>本届双年展活动延续创新创业服务民生主线，突出浙大围绕国家加快实施创新驱动发展战略，推进科技创新创业，助推中小企业创新发展，弘扬创新文化、鼓励成果转化而做出的积极尝试和努力。展览以“互动体验”作为特色亮点，还同期举办智能家电展。</p>
+                            <p>据了解，“浙大制造·科技生活双年展”创办于2016年，是目前中国高校唯一举办的科技服务类大型展览，已在厦门、杭州等多地进行了巡回展出。双年展依托浙江大学师生在十</p>
+                        </div>
+                        <div class="col">
+                            <p>二五、十三五期间取得的与人民生活紧密相关的代表性创新成果，推选出中小体量、生动可触的原创落地研究成果，从一个方面展示浙大人扎根中国大地，脚踏实地建设创新型国家所做的努力和贡献。作为浙江大学的一个品牌，“浙大制造·科技生活双年展”已成为营造创新文化氛围，展示浙大人创新成果转化并向公众传播浙江大学创新文化的平台，每逢偶数年举办。</p>
+                            <p>作为浙大121周年校庆活动之一，第二届“浙大制造·科技生活双年展”由浙江大学工会牵头，党委宣传部、科研院、工研院、学术委员会、学工部、团委、农推中心以及腾讯大浙网联合发起和组织。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Middle Banner -->
+                <div class="middle-banner">
+                    <div class="banner-img">
+                        <div class="placeholder">[Image: Track and field athletes running in a stadium]</div>
+                    </div>
+                    <div class="banner-article">
+                        <h4>省田径精英赛<br>我校揽14金</h4>
+                        <p>5月12至13日，由浙江省教育厅、浙江省体育局主办的2018年浙江省大学生田径精英赛在我校紫金港校区东田径场举行。浙大田径健儿们参与了高水平组的赛事，用14金9银5铜的优异表现，展示了速度和力量。本次赛事分为普通组和高水平组两个组别，设有100米、110米栏、400米栏、4X100接力、跳高、跳远、铅球、标枪、铁饼、十项全能等男子、女子各17个项目。共有来自全省52所高校的723名运动员参赛，创下历史之最。</p>
+                        <div class="author-right">摄/钱嘉寅</div>
+                    </div>
+                </div>
+
+                <!-- Article 3 -->
+                <div class="article-3">
+                    <h2>海洋学院与定海区启动战略合作</h2>
+                    <div class="four-col-layout">
+                        <div class="col">
+                            <p>本报讯 近日，浙江大学海洋学院与舟山定海区启动战略合作，双方合作共建区院协同创新中心，以此为平台，实质性推动在科技服务、人才培养、资源共享等方面的深度合作。</p>
+                            <p>浙江大学服务舟山，海洋学院是桥头堡。海洋学院服务舟山，定海区是重点和先行先试区。2018年，海</p>
+                        </div>
+                        <div class="col">
+                            <p>洋学院把服务舟山地方工作作为一项重点任务来抓，确定首先与学院所在的定海区开展全面合作，以期先行先试、探索经验、做出示范，再向普陀、岱山、嵊泗等区县拓展。经过前期的对接、调研和会商，区院双方决定建立多角度、多领域、全方位战略合作关系，并建设区院协同创新中</p>
+                        </div>
+                        <div class="col">
+                            <p>心，将其打造成为定海区重要的社会经济发展思想库、技术研发和成果转化中心、人才创新创业基地，推进在科技服务支撑、创新人才培养、资源开放共享等领域的战略合作。</p>
+                            <p>目前，海洋学院正努力打造具有浙大特色的海洋科学与工程会聚型学科，为舟山经济发展和企业转型升</p>
+                        </div>
+                        <div class="col">
+                            <p>级提供人才科技的服务和支撑。会上，海洋学院和浙大涉海学科的专家与定海区属重点企业签订了6个校企合作项目的协议，涉及年加工3万吨水产品智能工厂建设、液氨速冻生产线开发、船舶智能移动导航系统开发、20万吨环保水泥砂浆智能生产线开发等。<span style="float:right;">(高楚清)</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-column">
+                <!-- Article 4 (Vertical) -->
+                <div class="article-vertical">
+                    <div class="titles">
+                        <h2>韩庆祥教授受聘求是讲座教授</h2>
+                        <h3>为学校全体中层干部作专题辅导报告</h3>
+                    </div>
+                    <div class="content">
+                        <p>本报讯（记者 叶鑫）5月10日下午，在浙大紫金港校区，韩庆祥教授受聘为浙江大学求是讲座教授、加盟马克思主义学院。校党委书记邹晓东为韩庆祥颁发聘书、佩戴校徽。</p>
+                        <p>韩庆祥是国内研究马克思主义的著名专家学者，中央党校一级教授，十八届中央政治局第11次集体学习主讲专家。韩庆祥教授在党的实践创新和理论创新成果研究，尤其是在对习近平治国理政思想研究方面成果丰硕，多次得到中央领导的批示和肯定。曾在《中国社会科学》、《哲学研究》、《求是》、《人民日报》、《光明日报》等刊物上发表学术论文百余篇；出版学术专著13部；主持国家社科基金重大项目2项；10项以上科研成果获国家级奖。</p>
+                        <p>邹晓东对韩庆祥加盟浙江大学表示欢迎和感谢。他说，习近平新时代中国特色社会主义思想是马克思主义基本原理与中国实际相结合的新飞跃，为建设社会主义现代化国家、实现中华民族伟大复兴指明了方向。当前，全校上下正认真学习领会习近平新时代中国特色社会主义思想，韩庆祥教授的加盟，必将为推动浙江大学马克思主义理论学科建设、浙江大学习近平新时代中国特色社会主义思想研究，起到至关重要的作用。</p>
+                        <p>韩庆祥说，浙江是习近平新时代中国特色社会主义思想的重要发源地之一，八八战略、“两山”理论等都是习近平总书记在浙江工作时提出的战略思考。浙江大学地处浙江，又是我国最著名的高等学府之一，具备高水平研究新时代新思想的能力与优势条件。对于加盟浙江大学，韩庆祥表示非常荣幸，“今后我会尽我所能，为学校的理论研究和发展贡献绵薄之力”。</p>
+                        <p>聘任仪式结束后，韩庆祥为学校全体中层干部作了题为《习近平新时代中国特色社会主义思想概论》的专题报告。他指出，广大领导干部要学懂弄通做实习近平新时代中国特色社会主义思想，要充分认识“八个明确和十四个坚持”为权威的逻辑起点、总体框架和立论基础。</p>
+                        <p>他从历史方位论、民族复兴论、人民中心论、发展理念论、两大布局论、战略安排论、强军战略论、命运共同论、深化改革论、强大政党论等十大方面出发，对习近平新时代中国特色社会主义思想进行了全面而深入的解读，论述精辟、深入浅出，对深入学习贯彻习近平新时代中国特色社会主义思想具有重要的指导意义。</p>
+                        <p>全体在杭校领导，全体中层干部参加了学习。马克思主义学院相关负责人参加了聘任仪式。</p>
+                    </div>
+                </div>
+
+                <!-- Article 5 -->
+                <div class="right-article">
+                    <h4>“老书的故事”主题图书特展开展</h4>
+                    <p>本报讯（学生记者 沈雨若）5月10日，“老书的故事”主题图书特展在浙江大学紫金港校区图书馆二楼外文特藏室开展。本次展览旨在向先辈致敬，展出的三十本老书跨越近六十年时光，涉及包括理、工、农、文、法、教多个学科，与学科、与科学、与浙大人息息相关。</p>
+                    <p>三十本精心挑选出的老书背后各有自己的故事。参与整理的学生团队成员都非常感慨，在资料收集过程中，他们进入了一个历史的时空，认识了浙大的前辈。浙江大学报学生记者蒋天铮说：“在阅读中，我与各位学者零距离接触，看到了他们的专注、他们的求真，他们身体中涌动的力量并不因为时光的流逝而消散。”负责《东方蝾螈胚胎发育图谱》一书的陆理宁同学则为该书作者蔡堡先生的治学精神折服，“每本书的作者都是浙大人。比如蔡堡先生，热爱学术，研究专注，是学者精神的最好体现，这应该成为我们每一位学子在学术之路上的榜样与指引。”</p>
+                    <p>正如展前语所说，本次展览“所呈的这些文字，是沉睡在库房中的千万之一，就如高楼大厦深入地下的基础。”老书是大学文化自信的营养土，对今日的大学有着非凡的作用。在现场观展的2016级杨晔同学表示，她在展览中见到了许多富有历史感的教科书和学术专著，她希望老书展览能够成为常规展，今后可以展出更多相同类型的老书。</p>
+                    <p>5月11日，副校长罗卫东及相关部门负责人参观了展览。展览由浙江大学党委宣传部、浙江大学图书馆和浙江大学档案馆联合举办，展览将持续到6月10日。马一浮先生的木刻版《泰和会语雪山会语》合刻本、竺可桢校长亲笔题赠图书馆的《科学记录》、王淦昌先生的早期论文和蒋百里先生的《国防论》等珍贵书刊、杂志均在展出之列。</p>
+                </div>
+
+                <!-- Article 6 -->
+                <div class="right-article">
+                    <h4>浙江大学医学院附属第一医院<br>器官移植基金成立</h4>
+                    <p>本报讯 5月9日，“浙江大学医学院附属第一医院器官移植基金”成立仪式在浙江大学医学院附属第一医院举行，该基金第一笔600万元人民币由财通证券股份有限公司、浙江国富慈善基金会捐赠。</p>
+                    <p>浙江大学副校长罗卫东与国富资产管理有限公司副总经理、浙江国富慈善基金会秘书长张桂珍代表双方签署捐赠协议。</p>
+                    <p>此次设立的基金将用于支持附属一院器官移植学科建设及高层次人才培养，以及为贫困患者提供器官移植医疗救助。<span style="float:right;">(朱原之 王蕊 胡枭峰)</span></p>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            责任编辑 陆兴华
+        </footer>
+    </div>
+</body>
+</html>

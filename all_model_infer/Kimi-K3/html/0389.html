@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>window.MathJax={tex:{inlineMath:[["$","$"]],displayMath:[["$$","$$"]]}};</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Invoice - WRGX</title>
+<style>
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    margin: 20px 40px;
+    color: #000;
+    line-height: 1.4;
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+  .logo-section {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  .logo-placeholder {
+    width: 160px;
+    height: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .logo-placeholder .nbc-logo {
+    font-size: 60px;
+    line-height: 1;
+  }
+  .logo-placeholder .wrgx-text {
+    font-size: 28px;
+    font-weight: bold;
+    letter-spacing: 2px;
+  }
+  .logo-placeholder .tagline {
+    font-size: 9px;
+    letter-spacing: 1px;
+  }
+  .send-payment {
+    margin-top: 10px;
+  }
+  .send-payment p {
+    margin: 2px 0;
+  }
+  .send-payment .label {
+    font-size: 12px;
+  }
+  .send-payment .name {
+    font-weight: bold;
+    font-size: 14px;
+  }
+  .send-payment .address {
+    font-weight: bold;
+    font-size: 13px;
+  }
+  .invoice-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-top: 10px;
+  }
+  .page-info {
+    text-align: right;
+    font-size: 12px;
+  }
+  .invoice-table {
+    border-collapse: collapse;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: 0;
+    width: 580px;
+  }
+  .invoice-table td, .invoice-table th {
+    border: 1px solid #000;
+    padding: 3px 8px;
+    font-size: 12px;
+  }
+  .invoice-table .label-cell {
+    background-color: #e8e8e8;
+    font-weight: normal;
+    width: 120px;
+  }
+  .invoice-table .value-cell {
+    width: 180px;
+  }
+  .main-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 11px;
+  }
+  .main-table th {
+    text-align: left;
+    padding: 4px 6px;
+    border-bottom: 2px solid #000;
+    font-weight: bold;
+    font-size: 11px;
+  }
+  .main-table td {
+    padding: 3px 6px;
+  }
+  .main-table .line-row {
+    border-bottom: 1px solid #000;
+  }
+  .spots-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+    margin-top: 5px;
+  }
+  .spots-table th {
+    text-align: left;
+    padding: 2px 4px;
+    font-weight: bold;
+    border-bottom: 1px solid #000;
+  }
+  .spots-table td {
+    padding: 2px 4px;
+  }
+  .weeks-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+    margin-top: 5px;
+  }
+  .weeks-table th {
+    text-align: left;
+    padding: 2px 4px;
+    font-weight: bold;
+    border-bottom: 1px solid #000;
+  }
+  .weeks-table td {
+    padding: 2px 4px;
+  }
+  .total-spots {
+    text-align: right;
+    margin-top: 10px;
+    font-size: 12px;
+  }
+  .total-spots span {
+    text-decoration: underline;
+    margin-right: 30px;
+  }
+  .total-spots .value {
+    font-weight: bold;
+    margin-left: 20px;
+  }
+  .bottom-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 30px;
+    border-top: 3px solid #000;
+    padding-top: 15px;
+  }
+  .payment-terms {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  .totals-section {
+    text-align: right;
+    font-size: 12px;
+  }
+  .totals-section .row {
+    margin: 8px 0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 40px;
+  }
+  .totals-section .row .label {
+    text-decoration: underline;
+  }
+  .totals-section .row .value {
+    font-weight: bold;
+    min-width: 80px;
+    text-align: right;
+  }
+  .footer-text {
+    margin-top: 60px;
+    font-size: 9px;
+    text-align: center;
+    line-height: 1.5;
+  }
+  .powered-by {
+    text-align: right;
+    font-size: 10px;
+    margin-top: 20px;
+  }
+  .header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .left-header {
+    display: flex;
+    gap: 20px;
+  }
+  .right-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  .invoice-details-table {
+    border-collapse: collapse;
+    margin-top: 5px;
+  }
+  .invoice-details-table td {
+    border: 1px solid #000;
+    padding: 3px 8px;
+    font-size: 12px;
+  }
+  .invoice-details-table .gray-bg {
+    background-color: #e8e8e8;
+  }
+  .data-table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 2px solid #000;
+    padding-bottom: 4px;
+    margin-top: 20px;
+    font-size: 11px;
+    font-weight: bold;
+  }
+  .data-table-header .left-cols {
+    display: flex;
+    gap: 15px;
+  }
+  .data-table-header .right-cols {
+    display: flex;
+    gap: 20px;
+  }
+  .data-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 4px 0;
+    border-bottom: 1px solid #000;
+    font-size: 11px;
+  }
+  .data-row .left-cols {
+    display: flex;
+    gap: 15px;
+  }
+  .data-row .right-cols {
+    display: flex;
+    gap: 20px;
+  }
+  .spots-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    font-weight: bold;
+    border-bottom: 1px solid #000;
+    padding-bottom: 2px;
+    margin-top: 5px;
+  }
+  .spots-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    padding: 2px 0;
+  }
+  .weeks-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    font-weight: bold;
+    border-bottom: 1px solid #000;
+    padding-bottom: 2px;
+    margin-top: 5px;
+  }
+  .weeks-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    padding: 2px 0;
+  }
+  .thick-border-top {
+    border-top: 3px solid #000;
+    margin-top: 10px;
+    padding-top: 15px;
+  }
+  .indent {
+    margin-left: 20px;
+  }
+  .indent2 {
+    margin-left: 40px;
+  }
+  .indent3 {
+    margin-left: 60px;
+  }
+  table.full-width {
+    width: 100%;
+  }
+</style>
+</head>
+<body>
+
+<div class="header-row">
+  <div class="left-header">
+    <div class="logo-placeholder">
+      <div style="font-size:50px; line-height:1;">🌈</div>
+      <div class="wrgx-text" style="font-size:28px; font-weight:bold; letter-spacing:2px;">WRGX</div>
+      <div class="tagline" style="font-size:9px; letter-spacing:1px;">YOUR HOMETOWN NBC</div>
+    </div>
+    <div class="send-payment">
+      <p class="label">Send Payment To:</p>
+      <p class="name">WRGX</p>
+      <p class="address">P.O. Box 14200</p>
+      <p class="address">Tallahassee, FL 32317-4200</p>
+    </div>
+  </div>
+  <div class="right-header">
+    <div class="page-info">Page 2 of 2</div>
+    <div class="invoice-title">INVOICE</div>
+  </div>
+</div>
+
+<table class="invoice-details-table" style="margin-left: auto; margin-top: 10px; width: 580px;">
+  <tr>
+    <td class="gray-bg">Invoice #</td>
+    <td>1501053-2</td>
+    <td class="gray-bg">Invoice Month</td>
+    <td>March 2020</td>
+  </tr>
+  <tr>
+    <td class="gray-bg">Invoice Date</td>
+    <td>03/29/20</td>
+    <td class="gray-bg">Invoice Period</td>
+    <td>02/24/20 - 03/02/20</td>
+  </tr>
+  <tr>
+    <td class="gray-bg">Advertiser</td>
+    <td colspan="3">Mary Windom Court of Criminal Appeals</td>
+  </tr>
+  <tr>
+    <td class="gray-bg">Product</td>
+    <td colspan="3">TV</td>
+  </tr>
+  <tr>
+    <td class="gray-bg">Estimate #</td>
+    <td colspan="3">6034</td>
+  </tr>
+</table>
+
+<div style="margin-top: 25px;">
+  <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: bold; border-bottom: 2px solid #000; padding-bottom: 4px;">
+    <div style="display: flex; gap: 12px;">
+      <span style="width: 30px;">Line</span>
+      <span style="width: 70px;">Start Date</span>
+      <span style="width: 70px;">End Date</span>
+      <span style="width: 180px;">Description</span>
+      <span style="width: 160px;">Start/End Time</span>
+      <span style="width: 70px;">MTWTFSS</span>
+      <span style="width: 50px;">Length</span>
+    </div>
+    <div style="display: flex; gap: 20px;">
+      <span style="width: 50px; text-align: center;">Spots/<br>Week</span>
+      <span style="width: 60px;">Rate</span>
+      <span style="width: 40px;">Type</span>
+    </div>
+  </div>
+  <div style="display: flex; justify-content: space-between; font-size: 11px; padding: 4px 0; border-bottom: 1px solid #000;">
+    <div style="display: flex; gap: 12px;">
+      <span style="width: 30px;">3</span>
+      <span style="width: 70px;">02/10/20</span>
+      <span style="width: 70px;">03/02/20</span>
+      <span style="width: 180px;">WTVY News 4 @10p Silmulca</span>
+      <span style="width: 160px;">9:59 PM-10:34 PM</span>
+      <span style="width: 70px;">11111---</span>
+      <span style="width: 50px;">:30</span>
+    </div>
+    <div style="display: flex; gap: 20px;">
+      <span style="width: 50px; text-align: center;">4</span>
+      <span style="width: 60px;">$15.00</span>
+      <span style="width: 40px;">NM</span>
+    </div>
+  </div>
+</div>
+
+<div style="margin-top: 10px; font-size: 11px;">
+  <div style="display: flex; justify-content: space-between; font-weight: bold; border-bottom: 1px solid #000; padding-bottom: 2px;">
+    <div style="display: flex; gap: 8px;">
+      <span>Spots: #</span>
+      <span style="width: 30px;">Ch</span>
+      <span style="width: 30px;">Day</span>
+      <span style="width: 60px;">Air Date</span>
+      <span style="width: 60px;">Air Time</span>
+      <span style="width: 200px;">Description</span>
+    </div>
+    <div style="display: flex; gap: 10px;">
+      <span style="width: 130px;">Start/End Time</span>
+      <span style="width: 40px;">Length</span>
+      <span style="width: 100px;">Ad-ID</span>
+      <span style="width: 50px;">Rate</span>
+      <span style="width: 30px;">Type</span>
+    </div>
+  </div>
+  <div style="display: flex; justify-content: space-between; padding: 2px 0;">
+    <div style="display: flex; gap: 8px;">
+      <span style="width: 50px;">11</span>
+      <span style="width: 30px;">WRGX</span>
+      <span style="width: 30px;">W</span>
+      <span style="width: 60px;">02/26/20</span>
+      <span style="width: 60px;">10:33 PM</span>
+      <span style="width: 200px;">WTVY News 4 @10p Silmulca</span>
+    </div>
+    <div style="display: flex; gap: 10px;">
+      <span style="width: 130px;">9:59 PM-10:34 PM</span>
+      <span style="width: 40px;">:30</span>
+      <span style="width: 100px;">TPALWIN2001H</span>
+      <span style="width: 50px;">$15.00</span>
+      <span style="width: 30px;">NM</span>
+    </div>
+  </div>
+  <div style="display: flex; justify-content: space-between; padding: 2px 0;">
+    <div style="display: flex; gap: 8px;">
+      <span style="width: 50px;">12</span>
+      <span style="width: 30px;">WRGX</span>
+      <span style="width: 30px;">Th</span>
+      <span style="width: 60px;">02/27/20</span>
+      <span style="width: 60px;">10:33 PM</span>
+      <span style="width: 200px;">WTVY News 4 @10p Silmulca</span>
+    </div>
+    <div style="display: flex; gap: 10px;">
+      <span style="width: 130px;">9:59 PM-10:34 PM</span>
+      <span style="width: 40px;">:30</span>
+      <span style="width: 100px;">TPALWIN2001H</span>
+      <span style="width: 50px;">$15.00</span>
+      <span style="width: 30px;">NM</span>
+    </div>
+  </div>
+</div>
+
+<div style="margin-top: 8px; font-size: 11px;">
+  <div style="display: flex; gap: 8px; font-weight: bold; border-bottom: 1px solid #000; padding-bottom: 2px;">
+    <span style="width: 50px;">Weeks:</span>
+    <span style="width: 70px;">Start Date</span>
+    <span style="width: 70px;">End Date</span>
+    <span style="width: 80px;">MTWTFSS</span>
+    <span style="width: 80px;">Spots/Week</span>
+    <span style="width: 60px;">Rate</span>
+  </div>
+  <div style="display: flex; gap: 8px; padding: 2px 0;">
+    <span style="width: 50px;"></span>
+    <span style="width: 70px;">03/02/20</span>
+    <span style="width: 70px;">03/08/20</span>
+    <span style="width: 80px;">1------</span>
+    <span style="width: 80px; text-align: right;">1</span>
+    <span style="width: 60px;">$15.00</span>
+  </div>
+</div>
+
+<div style="margin-top: 8px; font-size: 11px;">
+  <div style="display: flex; justify-content: space-between; font-weight: bold; border-bottom: 1px solid #000; padding-bottom: 2px;">
+    <div style="display: flex; gap: 8px;">
+      <span>Spots: #</span>
+      <span style="width: 30px;">Ch</span>
+      <span style="width: 30px;">Day</span>
+      <span style="width: 60px;">Air Date</span>
+      <span style="width: 60px;">Air Time</span>
+      <span style="width: 200px;">Description</span>
+    </div>
+    <div style="display: flex; gap: 10px;">
+      <span style="width: 130px;">Start/End Time</span>
+      <span style="width: 40px;">Length</span>
+      <span style="width: 100px;">Ad-ID</span>
+      <span style="width: 50px;">Rate</span>
+      <span style="width: 30px;">Type</span>
+    </div>
+  </div>
+  <div style="display: flex; justify-content: space-between; padding: 2px 0;">
+    <div style="display: flex; gap: 8px;">
+      <span style="width: 50px;">13</span>
+      <span style="width: 30px;">WRGX</span>
+      <span style="width: 30px;">M</span>
+      <span style="width: 60px;">03/02/20</span>
+      <span style="width: 60px;">10:00 PM</span>
+      <span style="width: 200px;">WTVY News 4 @10p Silmulca</span>
+    </div>
+    <div style="display: flex; gap: 10px;">
+      <span style="width: 130px;">9:59 PM-10:34 PM</span>
+      <span style="width: 40px;">:30</span>
+      <span style="width: 100px;">TPALWIN2001H</span>
+      <span style="width: 50px;">$15.00</span>
+      <span style="width: 30px;">NM</span>
+    </div>
+  </div>
+</div>
+
+<div style="text-align: right; margin-top: 15px; font-size: 12px;">
+  <span style="text-decoration: underline; margin-right: 40px;">Total Spots</span>
+  <span style="font-weight: bold; margin-left: 20px;">15</span>
+</div>
+
+<div class="thick-border-top" style="display: flex; justify-content: space-between; align-items: flex-start; margin-top: 20px;">
+  <div class="payment-terms" style="font-size: 18px; font-weight: bold;">Payment Terms 30 Days</div>
+  <div style="text-align: right; font-size: 12px;">
+    <div style="display: flex; justify-content: flex-end; gap: 40px; margin: 8px 0;">
+      <span style="text-decoration: underline;">Gross Total</span>
+      <span style="font-weight: bold; min-width: 80px; text-align: right;">$325.00</span>
+    </div>
+    <div style="display: flex; justify-content: flex-end; gap: 40px; margin: 8px 0;">
+      <span style="text-decoration: underline;">Agency Commission</span>
+      <span style="font-weight: bold; min-width: 80px; text-align: right;">$48.75</span>
+    </div>
+    <div style="display: flex; justify-content: flex-end; gap: 40px; margin: 8px 0;">
+      <span style="text-decoration: underline;">Net Amount Due</span>
+      <span style="font-weight: bold; min-width: 80px; text-align: right;">$276.25</span>
+    </div>
+    <div style="display: flex; justify-content: flex-end; gap: 40px; margin: 8px 0;">
+      <span style="text-decoration: underline;">Invoice Balance as of 03/31/20 3:25:15 PM ET</span>
+      <span style="font-weight: bold; min-width: 80px; text-align: right;">$0.00</span>
+    </div>
+  </div>
+</div>
+
+<div class="footer-text">
+  We warrant that the actual broadcast information shown on this invoice was taken from the program log. The station does not discriminate in its advertising contracts, and it will not accept advertising intended to discriminate on the basis of race or ethnicity. Advertiser hereto affirms that nothing in this Agreement is intended to discriminate on the basis of race or ethnicity. This Agreement is subject to the Standard Terms and Conditions available at the link located above on this invoice.
+</div>
+
+<div class="powered-by">
+  powered by WideOrbit
+</div>
+
+</body>
+</html>

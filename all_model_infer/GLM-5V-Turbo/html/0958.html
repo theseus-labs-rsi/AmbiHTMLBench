@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>window.MathJax={tex:{inlineMath:[["$","$"]],displayMath:[["$$","$$"]]}};</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compute Engine documentation | Google Cloud</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Google Sans', Roboto, Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #202124;
+            background-color: #fff;
+        }
+
+        /* Header Styles */
+        .top-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 24px;
+            border-bottom: 1px solid #dadce0;
+            background: #fff;
+            height: 64px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #5f6368;
+            text-decoration: none;
+            font-size: 22px;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text {
+            color: #5f6368;
+            font-weight: 400;
+        }
+
+        .nav-dropdowns {
+            display: flex;
+            gap: 4px;
+            margin-left: 12px;
+        }
+
+        .dropdown-btn {
+            background: none;
+            border: none;
+            padding: 6px 12px;
+            font-size: 14px;
+            color: #5f6368;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            border-radius: 4px;
+        }
+
+        .dropdown-btn:hover {
+            background-color: #f1f3f4;
+        }
+
+        .dropdown-btn.active {
+            color: #1967d2;
+            border-bottom: 2px solid #1967d2;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .search-container {
+            position: relative;
+            width: 280px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 8px 12px 8px 40px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #5f6368;
+        }
+
+        .console-btn {
+            padding: 8px 16px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            background: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: #5f6368;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #5f6368;
+        }
+
+        .lang-selector {
+            padding: 6px 12px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            background: #fff;
+            cursor: pointer;
+            font-size: 14px;
+            color: #5f6368;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .sign-in-link {
+            color: #1967d2;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        /* Product Header */
+        .product-header {
+            background: #e8f0fe;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .product-title-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .product-icon {
+            width: 28px;
+            height: 28px;
+        }
+
+        .product-name {
+            font-size: 20px;
+            font-weight: 400;
+            color: #202124;
+        }
+
+        .start-free-btn {
+            background: #1967d2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        /* Tabs */
+        .tabs-container {
+            background: #e8f0fe;
+            padding: 0 24px;
+            display: flex;
+            gap: 24px;
+            border-bottom: 1px solid #dadce0;
+        }
+
+        .tab {
+            padding: 12px 0;
+            color: #5f6368;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .tab.active {
+            color: #1967d2;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #1967d2;
+        }
+
+        /* Main Layout */
+        .main-layout {
+            display: flex;
+            min-height: calc(100vh - 180px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            border-right: 1px solid #e8eaed;
+            overflow-y: auto;
+            background: #fff;
+            flex-shrink: 0;
+        }
+
+        .filter-section {
+            padding: 12px 16px;
+            border-bottom: 1px solid #e8eaed;
+        }
+
+        .filter-input-wrapper {
+            position: relative;
+        }
+
+        .filter-icon {
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #5f6368;
+            font-size: 18px;
+        }
+
+        .filter-input {
+            width: 100%;
+            padding: 8px 8px 8px 32px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .nav-tree {
+            padding: 8px 0;
+        }
+
+        .nav-item {
+            padding: 8px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #202124;
+        }
+
+        .nav-item:hover {
+            background: #f1f3f4;
+        }
+
+        .nav-item.active {
+            background: #e8f0fe;
+            color: #1967d2;
+            font-weight: 500;
+        }
+
+        .nav-item.indent-1 {
+            padding-left: 32px;
+        }
+
+        .nav-item.indent-2 {
+            padding-left: 48px;
+        }
+
+        .nav-group-header {
+            padding: 8px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+            font-weight: 500;
+            color: #202124;
+        }
+
+        .nav-group-header:hover {
+            background: #f1f3f4;
+        }
+
+        .chevron {
+            transition: transform 0.2s;
+            font-size: 12px;
+        }
+
+        .chevron.expanded {
+            transform: rotate(90deg);
+        }
+
+        .sub-nav {
+            display: none;
+        }
+
+        .sub-nav.open {
+            display: block;
+        }
+
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            padding: 24px 48px;
+            max-width: 1200px;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #e8f0fe 0%, #f8f9fa 100%);
+            border-radius: 8px;
+            padding: 48px;
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .hero-text {
+            max-width: 600px;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 36px;
+            font-weight: 400;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            color: #202124;
+        }
+
+        .hero-btn {
+            background: #1967d2;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .hero-illustration {
+            width: 400px;
+            height: 200px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .placeholder-diagram {
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.5);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #5f6368;
+            font-size: 13px;
+        }
+
+        /* Description Text */
+        .description {
+            margin-bottom: 32px;
+            line-height: 1.6;
+            color: #202124;
+        }
+
+        .link-blue {
+            color: #1967d2;
+            text-decoration: none;
+        }
+
+        .link-blue:hover {
+            text-decoration: underline;
+        }
+
+        /* Promo Banner */
+        .promo-banner {
+            background: #e6f4ea;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .promo-content h3 {
+            font-size: 18px;
+            font-weight: 400;
+            margin-bottom: 12px;
+            color: #202124;
+        }
+
+        .promo-list {
+            list-style: disc;
+            padding-left: 20px;
+            margin-bottom: 0;
+        }
+
+        .promo-list li {
+            margin-bottom: 6px;
+            font-size: 14px;
+            color: #202124;
+        }
+
+        .promo-btn {
+            background: #1967d2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+            margin-left: 24px;
+            margin-top: 4px;
+        }
+
+        /* Resources Section */
+        .resources-section {
+            margin-bottom: 48px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 400;
+            margin-bottom: 8px;
+            color: #202124;
+        }
+
+        .section-subtitle {
+            font-size: 14px;
+            color: #5f6368;
+            margin-bottom: 24px;
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .resource-card {
+            border: 1px solid #dadce0;
+            border-radius: 8px;
+            padding: 24px;
+            background: #fff;
+        }
+
+        .resource-icon {
+            width: 40px;
+            height: 40px;
+            background: #e8f0fe;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            color: #1967d2;
+            font-size: 20px;
+        }
+
+        .resource-card h4 {
+            font-size: 18px;
+            font-weight: 400;
+            margin-bottom: 16px;
+            color: #202124;
+        }
+
+        .resource-links {
+            list-style: none;
+        }
+
+        .resource-links li {
+            margin-bottom: 12px;
+        }
+
+        .resource-links a {
+            color: #1967d2;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .resource-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Related Resources */
+        .related-resources {
+            margin-top: 48px;
+        }
+
+        .tabs-nav {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid #dadce0;
+        }
+
+        .tab-pill {
+            padding: 10px 20px;
+            border: 1px solid #dadce0;
+            border-radius: 4px 4px 0 0;
+            background: #fff;
+            cursor: pointer;
+            font-size: 14px;
+            color: #5f6368;
+            margin-bottom: -1px;
+            border-bottom: none;
+        }
+
+        .tab-pill.active {
+            background: #1967d2;
+            color: white;
+            border-color: #1967d2;
+        }
+
+        .related-description {
+            text-align: center;
+            color: #202124;
+            margin-bottom: 32px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .training-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .training-card {
+            border: 1px solid #dadce0;
+            border-radius: 8px;
+            padding: 16px;
+            min-height: 100px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #fef7e0;
+            color: #ea8600;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Header -->
+    <header class="top-header">
+        <div class="header-left">
+            <a href="#" class="logo">
+                <span style="color: #4285f4; font-weight: bold;">G</span><span style="color: #ea4335; font-weight: bold;">o</span><span style="color: #fbbc04; font-weight: bold;">o</span><span style="color: #4285f4; font-weight: bold;">g</span><span style="color: #34a853; font-weight: bold;">l</span><span style="color: #ea4335; font-weight: bold;">e</span>
+                <span class="logo-text">Cloud</span>
+            </a>
+            
+            <div class="nav-dropdowns">
+                <button class="dropdown-btn active">
+                    Technology areas
+                    <span>▼</span>
+                </button>
+                <button class="dropdown-btn">
+                    Cross-product tools
+                    <span>▼</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <div class="search-container">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" placeholder="Search" />
+                <span style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #5f6368;">/</span>
+            </div>
+            
+            <button class="console-btn">
+                <span>☐</span>
+                Console
+            </button>
+            
+            <button class="icon-btn">☀</button>
+            
+            <button class="lang-selector">
+                🌐 English ▼
+            </button>
+            
+            <a href="#" class="sign-in-link">Sign in</a>
+        </div>
+    </header>
+
+    <!-- Product Header -->
+    <div class="product-header">
+        <div class="product-title-section">
+            <svg class="product-icon" viewBox="0 0 24 24" fill="#1967d2">
+                <path d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"/>
+            </svg>
+            <h1 class="product-name">Compute Engine</h1>
+        </div>
+        <button class="start-free-btn">Start free</button>
+    </div>
+
+    <!-- Tabs -->
+    <nav class="tabs-container">
+        <a href="#" class="tab active">Overview</a>
+        <a href="#" class="tab">Guides</a>
+        <a href="#" class="tab">APIs & Reference</a>
+        <a href="#" class="tab">Samples</a>
+        <a href="#" class="tab">Resources</a>
+    </nav>
+
+    <!-- Main Layout -->
+    <div class="main-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="filter-section">
+                <div class="filter-input-wrapper">
+                    <span class="filter-icon">☰</span>
+                    <input type="text" class="filter-input" placeholder="Filter" />
+                </div>
+            </div>
+
+            <nav class="nav-tree">
+                <div class="nav-item">Google Cloud Documentation home</div>
+                <div class="nav-item">Get started with Google Cloud</div>
+                <div class="nav-item">Product list</div>
+                <div class="nav-item">Integrated AI assistance with Gemini for Google Cloud</div>
+                <div class="nav-item">What's new in documentation</div>
+                <div class="nav-item">Recent product release notes</div>
+                <div class="nav-item">Cloud Customer Care</div>
+
+                <div class="nav-group-header" onclick="toggleGroup(this)">
+                    Cross-product tools
+                    <span class="chevron">▶</span>
+                </div>
+
+                <div class="nav-group-header" onclick="toggleGroup(this)">
+                    AI and ML
+                    <span class="chevron">▶</span>
+                </div>
+
+                <div class="nav-group-header" onclick="toggleGroup(this)">
+                    Application development
+                    <span class="chevron">▶</span>
+                </div>
+
+                <div class="nav-group-header" onclick="toggleGroup(this)">
+                    Application hosting
+                    <span class="chevron">▶</span>
+                </div>
+
+                <div class="nav-group-header" onclick="toggleGroup(this)">
+                    Compute
+                    <span class="chevron expanded">▼</span>
+                </div>
+                <div class="sub-nav open">
+                    <div class="nav-item indent-1">Overview of compute</div>
+                    
+                    <div class="nav-item indent-1" onclick="toggleGroup(this)" style="justify-content: flex-start; gap: 8px;">
+                        <span style="font-size: 10px;">▼</span>
+                        Virtual machines
+                    </div>
+                    <div class="sub-nav open">
+                        <div class="nav-item indent-2 active">Compute Engine</div>
+                        <div class="nav-item indent-2">Capacity Planner</div>
+                        <div class="nav-item indent-2">See additional products on overview page</div>
+                    </div>
+
+                    <div class="nav-item indent-1" onclick="toggleGroup(this)" style="justify-content: flex-start; gap: 8px;">
+                        <span style="font-size: 10px;">▶</span>
+                        Images
+                    </div>
+                    <div class="nav-item indent-1" onclick="toggleGroup(this)" style="justify-content: flex-start; gap: 8px;">
+                        <span style="font-size: 10px;">▶</span>
+                        Block storage
+                    </div>
+                    <div class="nav-item indent-1" onclick="toggleGroup(this)" style="justify-content: flex-start; gap: 8px;">
+                        <span style="font-size: 10px;">▶</span>
+                        Workloads
+                    </div>
+                    <div class="nav-item indent-1" onclick="toggleGroup(this)" style="justify-content: flex-start; gap: 8px;">
+                        <span style="font-size: 10px;">▶</span>
+                        Selected related products
+                    </div>
+                </div>
+
+                <div class="nav-group-header" onclick="toggleGroup(this)">
+                    Data analytics
+                    <span class="chevron">▶</span>
+                </div>
+
+                <div class="nav-group-header" onclick="toggleGroup(this)">
+                    Databases
+                    <span class="chevron">▶</span>
+                </div>
+
+                <div class="nav-group-header" onclick="toggleGroup(this)">
+                    Distributed, hybrid, and multicloud
+                    <span class="chevron">▶</span>
+                </div>
+
+                <div class="nav-group-header" onclick="toggleGroup(this)">
+                    Industry solutions
+                    <span class="chevron">▶</span>
+                </div>
+
+                <div class="nav-group-header" onclick="toggleGroup(this)">
+                    Migration
+                    <span class="chevron">▶</span>
+                </div>
+
+                <div class="nav-group-header" onclick="toggleGroup(this)">
+                    Networking
+                    <span class="chevron">▶</span>
+                </div>
+
+                <div class="nav-group-header" onclick="toggleGroup(this)">
+                    Observability and monitoring
+                    <span class="chevron">▶</span>
+                </div>
+
+                <div class="nav-group-header" onclick="toggleGroup(this)">
+                    Security
+                    <span class="chevron">▶</span>
+                </div>
+
+                <div class="nav-group-header" onclick="toggleGroup(this)">
+                    Storage
+                    <span class="chevron">▶</span>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content-area">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <div class="hero-text">
+                    <h1 class="hero-title">Compute Engine<br>documentation</h1>
+                    <button class="hero-btn">Read product documentation</button>
+                </div>
+                <div class="hero-illustration">
+                    <div class="placeholder-diagram">[Abstract geometric illustration]</div>
+                </div>
+            </section>
+
+            <!-- Description -->
+            <p class="description">
+                Compute Engine is a <a href="#" class="link-blue">computing and hosting service</a> that lets you create and run virtual machines on Google infrastructure. Compute Engine offers scale, performance, and value that lets you easily launch large compute clusters on Google's infrastructure. There are no upfront investments, and you can run thousands of virtual CPUs on a system that offers quick, consistent performance.
+            </p>
+            <p class="description" style="margin-top: -24px;">
+                <a href="#" class="link-blue">Go to the Compute Engine product page for more.</a>
+            </p>
+
+            <!-- Promo Banner -->
+            <div class="promo-banner">
+                <div class="promo-content">
+                    <h3>Start your proof of concept with $300 in free credit</h3>
+                    <ul class="promo-list">
+                        <li>Develop with our latest Generative AI models and tools.</li>
+                        <li>Get free usage of 20+ popular products, including Compute Engine and AI APIs.</li>
+                        <li>No automatic charges, no commitment.</li>
+                    </ul>
+                </div>
+                <button class="promo-btn">Get started for free</button>
+            </div>
+
+            <!-- Documentation Resources -->
+            <section class="resources-section">
+                <h2 class="section-title">Documentation resources</h2>
+                <p class="section-subtitle">Find quickstarts and guides, review key references, and get help with common issues.</p>
+
+                <div class="resources-grid">
+                    <div class="resource-card">
+                        <div class="resource-icon">☰</div>
+                        <h4>Guides</h4>
+                        <ul class="resource-links">
+                            <li><a href="#">Machine families resource and comparison guide</a></li>
+                            <li><a href="#">Choose a deployment strategy</a></li>
+                            <li><a href="#">Create and start a VM</a></li>
+                            <li><a href="#">About SSH connections</a></li>
+                            <li><a href="#">Choose a migration path</a></li>
+                            <li><a href="#">Data protection options</a></li>
+                            <li><a href="#">VM instance lifecycle</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="resource-card">
+                        <div class="resource-icon">🔍</div>
+                        <h4>Reference</h4>
+                        <ul class="resource-links">
+                            <li><a href="#">gcloud compute command-line tool</a></li>
+                            <li><a href="#">Client libraries</a></li>
+                            <li><a href="#">REST API</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="resource-card">
+                        <div class="resource-icon">ℹ</div>
+                        <h4>Resources</h4>
+                        <ul class="resource-links">
+                            <li><a href="#">Pricing</a></li>
+                            <li><a href="#">Quotas and limits</a></li>
+                            <li><a href="#">Release notes</a></li>
+                            <li><a href="#">Support</a></li>
+                            <li><a href="#">Samples and videos</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Related Resources -->
+            <section class="related-resources">
+                <h2 class="section-title" style="text-align: center;">Related resources</h2>
+                
+                <div class="tabs-nav">
+                    <button class="tab-pill active">✓ Training and tutorials</button>
+                    <button class="tab-pill">Use cases</button>
+                    <button class="tab-pill">Code samples</button>
+                </div>
+
+                <p class="related-description">
+                    Explore self-paced training, use cases, reference architectures, and code samples with examples of how to use and connect Google Cloud services.
+                </p>
+
+                <div class="training-cards">
+                    <div class="training-card">
+                        <span class="badge">Training</span>
+                    </div>
+                    <div class="training-card">
+                        <span class="badge">Training</span>
+                    </div>
+                    <div class="training-card">
+                        <span class="badge">Training</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        function toggleGroup(element) {
+            const chevron = element.querySelector('.chevron');
+            if (chevron) {
+                chevron.classList.toggle('expanded');
+            }
+            
+            // Find next sibling sub-nav or handle parent logic
+            const parent = element.parentElement;
+            const subNav = element.nextElementSibling;
+            
+            if (subNav && subNav.classList.contains('sub-nav')) {
+                subNav.classList.toggle('open');
+            }
+        }
+    </script>
+
+</body>
+</html>

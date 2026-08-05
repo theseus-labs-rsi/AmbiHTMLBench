@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fortress: A Case Study in Stabilizing Search Recommendations via Temporal Data Augmentation and Feature Pruning</title>
+<script>
+window.MathJax = { tex: { inlineMath: [['$','$'], ['\\(','\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] } };
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  html, body { margin:0; padding:0; background:#d8d8d8; }
+  body { font-family:"Times New Roman", Times, serif; color:#000; }
+  .page {
+    position:relative;
+    width:850px;
+    min-height:1100px;
+    margin:18px auto;
+    background:#ffffff;
+    box-shadow:0 0 6px rgba(0,0,0,.35);
+    overflow:hidden;
+  }
+  .sidebar {
+    position:absolute;
+    left:0; top:0;
+    width:42px; height:100%;
+  }
+  .sidebar span {
+    position:absolute;
+    top:50%; left:50%;
+    transform:translate(-50%,-50%) rotate(-90deg);
+    white-space:nowrap;
+    font-size:12px;
+    color:#222;
+    letter-spacing:.2px;
+  }
+  .content { margin:0 56px 0 72px; padding-top:66px; }
+  h1.title {
+    margin:0;
+    text-align:center;
+    font-weight:normal;
+    font-size:25px;
+    line-height:1.22;
+  }
+  .authors { margin-top:14px; }
+  .author-row { display:flex; justify-content:space-between; }
+  .author-row + .author-row { margin-top:13px; }
+  .author { flex:1 1 0; text-align:center; padding:0 3px; font-size:11px; line-height:1.28; }
+  .author .aname { font-size:12px; }
+  .author sup { font-size:8px; }
+  .cols { display:flex; gap:22px; margin-top:26px; }
+  .col { flex:1 1 0; font-size:10.5px; line-height:1.17; text-align:justify; }
+  .col p { margin:0 0 7px 0; text-indent:13px; }
+  .col p.noindent { text-indent:0; }
+  .abstract { margin:0 0 7px 0; text-indent:0; }
+  .abstract b { font-weight:bold; }
+  .sec {
+    text-align:center;
+    font-size:11px;
+    margin:13px 0 8px 0;
+    letter-spacing:.2px;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="sidebar"><span>arXiv:2605.15299v1 [cs.IR] 14 May 2026</span></div>
+  <div class="content">
+    <h1 class="title">Fortress: A Case Study in Stabilizing Search<br>
+    Recommendations via Temporal Data Augmentation<br>
+    and Feature Pruning</h1>
+
+    <div class="authors">
+      <div class="author-row">
+        <div class="author">
+          <div class="aname">1<sup>st</sup> Milind Pandurang Jagre</div>
+          <div>Apple</div>
+          <div>m_jagre@apple.com</div>
+        </div>
+        <div class="author">
+          <div class="aname">2<sup>nd</sup> Jia Huang</div>
+          <div>Apple</div>
+          <div>jiahuang2016@gmail.com</div>
+        </div>
+        <div class="author">
+          <div class="aname">3<sup>rd</sup> Dayvid V. R. Oliveira</div>
+          <div>Apple</div>
+          <div>dvro@apple.com</div>
+        </div>
+        <div class="author">
+          <div class="aname">4<sup>th</sup> Zhinan Cheng</div>
+          <div>Apple</div>
+          <div>jzcheng96@gmail.com</div>
+        </div>
+      </div>
+      <div class="author-row">
+        <div class="author">
+          <div class="aname">5<sup>th</sup> Babak Seyed Aghazadeh</div>
+          <div>Apple</div>
+          <div>babak9796@gmail.com</div>
+        </div>
+        <div class="author">
+          <div class="aname">6<sup>th</sup> Puja Das</div>
+          <div>Apple</div>
+          <div>pdas3@apple.com</div>
+        </div>
+        <div class="author">
+          <div class="aname">7<sup>th</sup> Chris Alvino</div>
+          <div>Apple</div>
+          <div>calvino@apple.com</div>
+        </div>
+        <div class="author">
+          <div class="aname">8<sup>th</sup> Jinda Han</div>
+          <div>Apple</div>
+          <div>jinda_han@apple.com</div>
+        </div>
+        <div class="author">
+          <div class="aname">9<sup>th</sup> Kailash Thiyagarajan</div>
+          <div>Apple</div>
+          <div>k_thiyagarajan@apple.com</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cols">
+      <div class="col">
+        <p class="abstract"><b>Abstract—</b>In search and recommendation systems, predictive models often suffer from temporal instability when certain input features introduce volatility in output scores. This instability can degrade model reliability and user experience especially in multi-stage systems where consistent predictions are critical for downstream decision making. We introduce Fortress, a general framework for enhancing model stability and accuracy by identifying and pruning features that contribute to inconsistent prediction scores over time. Fortress leverages historical snapshots temporally partitioned datasets capturing score fluctuations for the same entity across periods and follows a four-step process: (1) collect historical snapshots, (2) identify samples with unstable predictions, (3) isolate and remove instability-inducing features, and (4) retrain models using only stable features. While semantic features from LLMs and BERT-based models improve generalization, they often lack full query or entity coverage. Engagement-based features offer strong predictive power but tend to introduce temporal instability. Fortress mitigates this trade-off by suppressing the volatility of engagement signals while retaining their predictive value leading to more stable and accurate models. We validate Fortress on a query-to-app relevance model in a large-scale app marketplace. Offline experiments demonstrate notable improvements in prediction stability (measured by Coefficient of Variation) and classification performance (measured by PR-AUC).</p>
+
+        <div class="sec">I. INTRODUCTION</div>
+        <p class="noindent">Recommendation systems must provide not only relevant results, but also consistent and predictable ones. Instability in model predictions where the same query-app pair yields significantly different scores across time can lead to poor user experience and undermine trust in the system. While recent advancements in LLM-based features have improved contextual relevance [2, 4, 10], engineered features derived from organic user engagement behavior (clicks, searches, etc.) continue to play a crucial role [7, 8, 12, 14, 15]. However, these features can introduce temporal inconsistencies that affect score stability.</p>
+        <p>Model instability often arises when certain features cause the output score to vary across temporal snapshots, leading to inconsistent user experiences. In search-based recommen-</p>
+      </div>
+
+      <div class="col">
+        <p class="noindent">dation systems, these score fluctuations can cause items to alternate between being shown and not shown in search results. Such instability can affect the overall quality of the recommendations, leading to a less consistent and predictable user experience.</p>
+        <p>In this work, we present Fortress, a generalizable framework for improving model prediction stability through feature selection by leveraging historical snapshots of model inputs and outputs over time. The core insight is that some features though potentially predictive in isolated snapshots may introduce volatility across time. By identifying and pruning such features, we can enhance both model robustness and accuracy. This method fits into the broader class of “wrapper” feature selection methods, where a feature subset is selected based on validation performance, as introduced in [6]. A review of feature selection methods can be found in [11].</p>
+        <p>We evaluate this method on a relevance prediction task for an app marketplace, where the goal is to classify query-app pairs as relevant or not. While this case study grounds the methodology, the technique is broadly applicable to any scenario where a scoring model evaluates the same entity over time, such as user-item recommendations. Our results show improved prediction consistency as measured by decreased Coefficient of Variation (CV) [5] and improved classification performance as measured by increased PR-AUC.</p>
+
+        <div class="sec">II. THE FORTRESS FRAMEWORK</div>
+        <p class="noindent">Our method assumes that certain features may lead to unstable predictions when used in model scoring across time. We define a feature as unstable if its inclusion causes prediction volatility across historical snapshots for the same entity. Historical snapshots are temporally partitioned datasets contiguous intervals over a time period allowing us to evaluate prediction consistency for entities scored multiple times.</p>
+        <p>We demonstrate the method using a dataset of query-app pairs from a major commercial app marketplace. Human raters</p>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

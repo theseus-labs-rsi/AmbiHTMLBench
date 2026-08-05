@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>window.MathJax={tex:{inlineMath:[["$","$"]],displayMath:[["$$","$$"]]}};</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows technical documentation | Microsoft Learn</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.5;
+            color: #171717;
+            background-color: #fff;
+        }
+
+        /* Top Banner */
+        .top-banner {
+            background-color: #000;
+            color: #fff;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .banner-content {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            z-index: 2;
+        }
+
+        .banner-text h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .banner-text p {
+            font-size: 13px;
+            color: #e0e0e0;
+        }
+
+        .banner-btn {
+            background-color: #fff;
+            color: #000;
+            padding: 6px 12px;
+            border-radius: 2px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .banner-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 28px;
+            height: 28px;
+            background: transparent;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            z-index: 10;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .banner-graphic {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 300px;
+            opacity: 0.9;
+            background: linear-gradient(90deg, transparent 0%, rgba(0,120,212,0.3) 100%);
+        }
+
+        /* Main Navigation */
+        .main-nav {
+            background: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .ms-logo {
+            width: 22px;
+            height: 22px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px;
+        }
+
+        .ms-logo div {
+            width: 10px;
+            height: 10px;
+        }
+
+        .ms-logo div:nth-child(1) { background: #f25022; }
+        .ms-logo div:nth-child(2) { background: #7fba00; }
+        .ms-logo div:nth-child(3) { background: #00a4ef; }
+        .ms-logo div:nth-child(4) { background: #ffb900; }
+
+        .nav-divider {
+            width: 1px;
+            height: 24px;
+            background: #ccc;
+        }
+
+        .learn-label {
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+
+        .nav-links li {
+            font-size: 13px;
+            color: #242424;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav-links li::after {
+            content: '⌄';
+            font-size: 10px;
+            margin-left: 2px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-icon {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .sign-in {
+            color: #0078d4;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        /* Secondary Navigation */
+        .secondary-nav {
+            background: #f5f5f5;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            border-bottom: 1px solid #e0e0e0;
+            overflow-x: auto;
+        }
+
+        .windows-title {
+            font-weight: 700;
+            font-size: 15px;
+            white-space: nowrap;
+        }
+
+        .sub-nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+
+        .sub-nav-links li {
+            font-size: 13px;
+            color: #242424;
+            cursor: pointer;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .sub-nav-links li.has-dropdown::after {
+            content: '⌄';
+            font-size: 10px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background-color: #0078d4;
+            color: #fff;
+            padding: 40px 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 25% 50%, rgba(255,255,255,0.05) 1px, transparent 1px),
+                radial-gradient(circle at 75% 75%, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 60px 60px, 80px 80px;
+            opacity: 0.5;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 36px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+
+        /* Card Grid */
+        .card-grid {
+            max-width: 1400px;
+            margin: 32px auto;
+            padding: 0 24px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        @media (max-width: 1024px) {
+            .card-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 24px;
+            transition: box-shadow 0.2s;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 16px;
+            color: #0078d4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-icon svg {
+            width: 48px;
+            height: 48px;
+        }
+
+        .card h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0078d4;
+            margin-bottom: 8px;
+        }
+
+        .card p {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        /* Footer */
+        footer {
+            background: #f2f2f2;
+            padding: 30px 24px;
+            margin-top: 60px;
+            font-size: 12px;
+            color: #616161;
+        }
+
+        .footer-top {
+            display: flex;
+            gap: 32px;
+            margin-bottom: 24px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .footer-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .privacy-icon {
+            width: 20px;
+            height: 12px;
+            background: #0078d4;
+            border-radius: 10px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .privacy-icon::before {
+            content: '✓';
+            color: white;
+            font-size: 10px;
+            position: absolute;
+            left: 4px;
+            top: -1px;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            list-style: none;
+        }
+
+        .footer-links li {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .footer-links li.external::after {
+            content: '↗';
+            font-size: 10px;
+        }
+
+        .copyright {
+            margin-left: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Banner -->
+    <div class="top-banner">
+        <div class="banner-content">
+            <div class="banner-text">
+                <h1>Microsoft Build 2026</h1>
+                <p>June 2–3, 2026</p>
+            </div>
+            <a href="#" class="banner-btn">Learn more <span>›</span></a>
+        </div>
+        <button class="banner-close">✕</button>
+        <div class="banner-graphic"></div>
+    </div>
+
+    <!-- Main Navigation -->
+    <nav class="main-nav">
+        <div class="nav-left">
+            <div class="ms-logo">
+                <div></div><div></div><div></div><div></div>
+            </div>
+            <div class="nav-divider"></div>
+            <span class="learn-label">Learn</span>
+            <ul class="nav-links">
+                <li>Documentation</li>
+                <li>Training & Labs</li>
+                <li>Q&A</li>
+                <li>Topics</li>
+            </ul>
+        </div>
+        <div class="nav-right">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <a href="#" class="sign-in">Sign in</a>
+        </div>
+    </nav>
+
+    <!-- Secondary Navigation -->
+    <nav class="secondary-nav">
+        <span class="windows-title">Windows</span>
+        <ul class="sub-nav-links">
+            <li>Release health</li>
+            <li class="has-dropdown">Windows client</li>
+            <li class="has-dropdown">Application developers</li>
+            <li class="has-dropdown">Hardware developers</li>
+            <li>Windows Server</li>
+            <li>Windows for IoT</li>
+            <li>Windows Insider Program</li>
+            <li>Windows 365</li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Windows technical documentation for developers and IT pros.</h1>
+            <p>Information for Windows application developers, hardware developers, and IT pros.</p>
+        </div>
+    </section>
+
+    <!-- Card Grid -->
+    <main class="card-grid">
+        <!-- Card 1 -->
+        <article class="card">
+            <div class="card-icon">
+                <svg viewBox="0 0 48 48" fill="none" stroke="#0078d4" stroke-width="2">
+                    <rect x="6" y="18" width="36" height="24" rx="2"/>
+                    <rect x="11" y="23" width="10" height="7" rx="1"/>
+                    <rect x="27" y="23" width="10" height="7" rx="1"/>
+                    <path d="M6 26H42"/>
+                    <rect x="17" y="10" width="14" height="8" rx="1"/>
+                    <line x1="24" y1="10" x2="24" y2="6"/>
+                </svg>
+            </div>
+            <h3>Application developers</h3>
+            <p>Design, develop, and deploy applications and other solutions for Windows PCs and other devices.</p>
+        </article>
+
+        <!-- Card 2 -->
+        <article class="card">
+            <div class="card-icon">
+                <svg viewBox="0 0 48 48" fill="none" stroke="#0078d4" stroke-width="2">
+                    <polyline points="16,18 8,26 16,34"/>
+                    <polyline points="32,18 40,26 32,34"/>
+                    <line x1="28" y1="14" x2="20" y2="38"/>
+                </svg>
+            </div>
+            <h3>Developer tools</h3>
+            <p>No matter what you're building, Windows is optimized for developers.</p>
+        </article>
+
+        <!-- Card 3 -->
+        <article class="card">
+            <div class="card-icon">
+                <svg viewBox="0 0 48 48" fill="none" stroke="#0078d4" stroke-width="2">
+                    <rect x="12" y="12" width="24" height="24" rx="2"/>
+                    <circle cx="24" cy="24" r="4"/>
+                    <line x1="24" y1="12" x2="24" y2="18"/>
+                    <line x1="24" y1="30" x2="24" y2="36"/>
+                    <line x1="12" y1="24" x2="18" y2="24"/>
+                    <line x1="30" y1="24" x2="36" y2="24"/>
+                    <circle cx="19" cy="19" r="1.5" fill="#0078d4"/>
+                    <circle cx="29" cy="19" r="1.5" fill="#0078d4"/>
+                    <circle cx="19" cy="29" r="1.5" fill="#0078d4"/>
+                    <circle cx="29" cy="29" r="1.5" fill="#0078d4"/>
+                </svg>
+            </div>
+            <h3>Hardware developers</h3>
+            <p>Design, develop, and deploy hardware and device drivers for Windows PCs and other devices.</p>
+        </article>
+
+        <!-- Card 4 -->
+        <article class="card">
+            <div class="card-icon">
+                <svg viewBox="0 0 48 48" fill="none" stroke="#0078d4" stroke-width="2">
+                    <rect x="8" y="14" width="32" height="22" rx="2"/>
+                    <line x1="8" y1="32" x2="40" y2="32"/>
+                    <line x1="20" y1="36" x2="28" y2="36"/>
+                    <line x1="20" y1="38" x2="28" y2="38"/>
+                </svg>
+            </div>
+            <h3>Windows client for IT pros</h3>
+            <p>Evaluate, plan, deploy, secure, and manage devices running Windows 10 and Windows 11.</p>
+        </article>
+
+        <!-- Card 5 -->
+        <article class="card">
+            <div class="card-icon">
+                <svg viewBox="0 0 48 48" fill="none" stroke="#0078d4" stroke-width="2">
+                    <rect x="14" y="8" width="20" height="32" rx="2"/>
+                    <line x1="18" y1="14" x2="30" y2="14"/>
+                    <line x1="18" y1="18" x2="30" y2="18"/>
+                    <line x1="18" y1="22" x2="26" y2="22"/>
+                    <line x1="18" y1="26" x2="30" y2="26"/>
+                    <line x1="18" y1="30" x2="28" y2="30"/>
+                </svg>
+            </div>
+            <h3>Windows Server for IT pros</h3>
+            <p>Build and deploy connected applications, networks, and web services on Windows Server.</p>
+        </article>
+
+        <!-- Card 6 -->
+        <article class="card">
+            <div class="card-icon">
+                <svg viewBox="0 0 48 48" fill="none" stroke="#0078d4" stroke-width="2">
+                    <circle cx="24" cy="16" r="4"/>
+                    <circle cx="14" cy="26" r="3"/>
+                    <circle cx="34" cy="26" r="3"/>
+                    <circle cx="18" cy="35" r="3"/>
+                    <circle cx="30" cy="35" r="3"/>
+                    <line x1="24" y1="20" x2="16" y2="24"/>
+                    <line x1="24" y1="20" x2="32" y2="24"/>
+                    <line x1="16" y1="28" x2="20" y2="33"/>
+                    <line x1="32" y1="28" x2="28" y2="33"/>
+                    <line x1="21" y1="37" x2="27" y2="37"/>
+                </svg>
+            </div>
+            <h3>Windows for IoT</h3>
+            <p>Create IoT solutions with secure devices that can be quickly provisioned, easily managed, and seamlessly connected to an overall cloud strategy.</p>
+        </article>
+
+        <!-- Card 7 -->
+        <article class="card">
+            <div class="card-icon">
+                <svg viewBox="0 0 48 48" fill="none" stroke="#0078d4" stroke-width="2">
+                    <circle cx="18" cy="20" r="5"/>
+                    <circle cx="30" cy="20" r="5"/>
+                    <path d="M13 27 C13 31 16 34 24 34 C32 34 35 31 35 27"/>
+                    <path d="M24 34 L24 38"/>
+                    <path d="M20 38 L28 38"/>
+                </svg>
+            </div>
+            <h3>Windows Insider Program</h3>
+            <p>Be the first to see what's next and help shape Windows' future by running Windows Insider Preview builds and giving feedback.</p>
+        </article>
+
+        <!-- Card 8 -->
+        <article class="card">
+            <div class="card-icon">
+                <svg viewBox="0 0 48 48" fill="none" stroke="#0078d4" stroke-width="2">
+                    <rect x="10" y="10" width="28" height="28" rx="2"/>
+                    <line x1="10" y1="18" x2="38" y2="18"/>
+                    <line x1="10" y1="26" x2="38" y2="26"/>
+                    <line x1="18" y1="10" x2="18" y2="38"/>
+                    <line x1="26" y1="10" x2="26" y2="38"/>
+                </svg>
+            </div>
+            <h3>Windows 365</h3>
+            <p>Official product documentation for Windows 365.</p>
+        </article>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-top">
+            <div class="footer-item">
+                <span>🌐 English (United States)</span>
+            </div>
+            <div class="footer-item">
+                <span class="privacy-icon"></span>
+                <span>Your Privacy Choices</span>
+            </div>
+            <div class="footer-item">
+                <span>☀️ Theme ⌄</span>
+            </div>
+        </div>
+        
+        <ul class="footer-links">
+            <li>AI Disclaimer</li>
+            <li>Previous Versions</li>
+            <li class="external">Blog</li>
+            <li>Contribute</li>
+            <li class="external">Privacy</li>
+            <li class="external">Consumer Health Privacy</li>
+            <li>Terms of Use</li>
+            <li class="external">Trademarks</li>
+            <li class="copyright">© Microsoft 2026</li>
+        </ul>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,32 @@
+{
+  "id": "chatcmpl-20260803120242933299583rxDxFQzZ",
+  "model": "gemini-3.1-pro-preview",
+  "object": "chat.completion",
+  "created": 1785729799,
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>RFC 9101</title>\n<style>\n    body {\n        font-family: \"Times New Roman\", Times, serif;\n        line-height: 1.5;\n        color: #000;\n        max-width: 850px;\n        margin: 0 auto;\n        padding: 40px;\n        background-color: #fff;\n    }\n    .header, .footer {\n        display: flex;\n        justify-content: space-between;\n        font-size: 0.95em;\n    }\n    .header {\n        margin-bottom: 15px;\n    }\n    .footer {\n        margin-top: 15px;\n    }\n    .hr-header {\n        border: 0;\n        border-top: 1px solid #000;\n        margin-bottom: 40px;\n    }\n    .hr-footer {\n        border: 0;\n        border-top: 1px solid #000;\n        margin-top: 40px;\n        margin-bottom: 15px;\n    }\n    h1 {\n        font-size: 1.6em;\n        font-weight: bold;\n        margin-top: 0;\n        margin-bottom: 20px;\n    }\n    p {\n        margin-bottom: 16px;\n        text-align: justify;\n    }\n    .link {\n        color: #0000EE;\n        text-decoration: none;\n    }\n    code {\n        font-family: monospace;\n        font-size: 0.95em;\n    }\n    .code-block {\n        font-family: monospace;\n        background-color: #f8f8f8;\n        padding: 15px 20px;\n        margin: 20px 0 20px 40px;\n        white-space: pre-wrap;\n        font-size: 0.9em;\n        line-height: 1.4;\n    }\n    .list {\n        margin-bottom: 16px;\n    }\n    .list-item {\n        display: flex;\n        margin-bottom: 6px;\n    }\n    .list-label {\n        width: 40px;\n        flex-shrink: 0;\n    }\n    .list-content {\n        flex-grow: 1;\n        text-align: justify;\n    }\n</style>\n</head>\n<body>\n\n<div class=\"header\">\n    <span>RFC 9101</span>\n    <span>OAuth JAR</span>\n    <span>August 2021</span>\n</div>\n<hr class=\"hr-header\">\n\n<h1>1.&nbsp;&nbsp;Introduction</h1>\n\n<p>The authorization request in <span class=\"link\">OAuth 2.0</span> [<span class=\"link\">RFC6749</span>] utilizes query parameter serialization and is typically sent through user agents such as web browsers.</p>\n\n<p>For example, the parameters <code>response_type</code>, <code>client_id</code>, <code>state</code>, and <code>redirect_uri</code> are encoded in the URI of the request:</p>\n\n<div class=\"code-block\">GET /authorize?response_type=code&amp;client_id=s6BhdRkqt3&amp;state=xyz\n&amp;redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb HTTP/1.1\nHost: server.example.com</div>\n\n<p>While it is easy to implement, the encoding in the URI does not allow application-layer security to be used to provide confidentiality and integrity protection. While TLS is used to offer communication security between the client and the user agent as well as the user agent and the authorization server, TLS sessions are terminated in the user agent. In addition, TLS sessions may be terminated prematurely at some middlebox (such as a load balancer).</p>\n\n<p>As a result, the authorization request of [<span class=\"link\">RFC6749</span>] has shortcomings in that:</p>\n\n<div class=\"list\">\n    <div class=\"list-item\">\n        <div class=\"list-label\">(a)</div>\n        <div class=\"list-content\">the communication through the user agents is not integrity protected, and thus, the parameters can be tainted (integrity protection failure);</div>\n    </div>\n    <div class=\"list-item\">\n        <div class=\"list-label\">(b)</div>\n        <div class=\"list-content\">the source of the communication is not authenticated (source authentication failure);</div>\n    </div>\n    <div class=\"list-item\">\n        <div class=\"list-label\">(c)</div>\n        <div class=\"list-content\">the communication through the user agents can be monitored (containment/<br>confidentiality failure).</div>\n    </div>\n</div>\n\n<p>Due to these inherent weaknesses, several attacks against the protocol, such as redirection URI rewriting, have been identified.</p>\n\n<p>The use of application-layer security mitigates these issues.</p>\n\n<p>The use of application-layer security allows requests to be prepared by a trusted third party so that a client application cannot request more permissions than previously agreed upon.</p>\n\n<p>Furthermore, passing the request by reference allows the reduction of over-the-wire overhead.</p>\n\n<p>The <span class=\"link\">JWT</span> [<span class=\"link\">RFC7519</span>] encoding has been chosen because of:</p>\n\n<div class=\"list\">\n    <div class=\"list-item\">\n        <div class=\"list-label\">(1)</div>\n        <div class=\"list-content\">its close relationship with JSON, which is used as OAuth's response format</div>\n    </div>\n    <div class=\"list-item\">\n        <div class=\"list-label\">(2)</div>\n        <div class=\"list-content\">its developer friendliness due to its textual nature</div>\n    </div>\n    <div class=\"list-item\">\n        <div class=\"list-label\">(3)</div>\n        <div class=\"list-content\">its relative compactness compared to XML</div>\n    </div>\n    <div class=\"list-item\">\n        <div class=\"list-label\">(4)</div>\n        <div class=\"list-content\">its development status as a Proposed Standard, along with the associated signing and encryption methods [<span class=\"link\">RFC7515</span>] [<span class=\"link\">RFC7516</span>]</div>\n    </div>\n</div>\n\n<hr class=\"hr-footer\">\n<div class=\"footer\">\n    <span>Sakimura, et al.</span>\n    <span>Standards Track</span>\n    <span>Page 4</span>\n</div>\n\n</body>\n</html>"
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1801,
+    "completion_tokens": 5475,
+    "total_tokens": 7276,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "text_tokens": 709,
+      "audio_tokens": 0,
+      "image_tokens": 0
+    },
+    "completion_tokens_details": {
+      "text_tokens": 1604,
+      "audio_tokens": 0,
+      "reasoning_tokens": 3871
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "id": "msg_fc9706fd42454530b4d51a20753e6417",
+  "model": "claude-opus-5",
+  "object": "chat.completion",
+  "created": 1785729775,
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>RFC 9101 - OAuth JAR - Page 4</title>\n<script>\nwindow.MathJax = {\n  tex: {\n    inlineMath: [['$', '$']],\n    displayMath: [['$$', '$$']]\n  }\n};\n</script>\n<script src=\"https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js\" async></script>\n<style>\n  html { background: #f0f0f0; }\n  body {\n    font-family: \"Noto Serif\", \"Times New Roman\", Georgia, serif;\n    font-size: 12pt;\n    line-height: 1.45;\n    color: #000;\n    margin: 0;\n  }\n  .page {\n    width: 8.5in;\n    min-height: 11in;\n    margin: 0 auto;\n    background: #fff;\n    padding: 0.75in 0.9in 0.6in 0.9in;\n    box-sizing: border-box;\n    display: flex;\n    flex-direction: column;\n  }\n  .runhead, .runfoot {\n    display: flex;\n    justify-content: space-between;\n    align-items: baseline;\n    font-size: 11.5pt;\n  }\n  .runhead {\n    border-bottom: 1px solid #d8d8d8;\n    padding-bottom: 0.22in;\n    margin-bottom: 0.75in;\n  }\n  .runfoot {\n    border-top: 1px solid #d8d8d8;\n    padding-top: 0.2in;\n    margin-top: 0.5in;\n  }\n  .runhead .center, .runfoot .center { text-align: center; }\n  .content { flex: 1 1 auto; }\n  h1 {\n    font-size: 20pt;\n    font-weight: bold;\n    margin: 0 0 0.3em 0;\n  }\n  h1 .num { margin-right: 0.55em; }\n  p { margin: 0 0 1.05em 0; }\n  code, pre, .mono {\n    font-family: \"DejaVu Sans Mono\", \"Consolas\", monospace;\n    font-size: 10.5pt;\n  }\n  pre.artwork {\n    background: #f7f7f7;\n    border: 1px solid #eeeeee;\n    padding: 14px 14px 14px 60px;\n    margin: 0 0 1.2em 0;\n    line-height: 1.5;\n    white-space: pre;\n    overflow-x: auto;\n  }\n  ol.alpha, ol.num {\n    list-style: none;\n    margin: 1.5em 0 1.4em 0;\n    padding: 0;\n  }\n  ol.alpha > li, ol.num > li {\n    position: relative;\n    padding-left: 5.6em;\n    margin-bottom: 0.15em;\n  }\n  ol.alpha > li > .lbl, ol.num > li > .lbl {\n    position: absolute;\n    left: 0;\n    width: 5em;\n  }\n  a { color: #2222cc; text-decoration: none; }\n</style>\n</head>\n<body>\n<div class=\"page\">\n\n  <div class=\"runhead\">\n    <div class=\"left\">RFC 9101</div>\n    <div class=\"center\">OAuth JAR</div>\n    <div class=\"right\">August 2021</div>\n  </div>\n\n  <div class=\"content\">\n\n    <h1><span class=\"num\">1.</span>Introduction</h1>\n\n    <p>The authorization request in <a href=\"#\">OAuth 2.0</a> [<a href=\"#\">RFC6749</a>] utilizes query parameter serialization and is typically sent through user agents such as web browsers.</p>\n\n    <p>For example, the parameters <code>response_type</code>, <code>client_id</code>, <code>state</code>, and <code>redirect_uri</code> are encoded in the URI of the request:</p>\n\n<pre class=\"artwork\">GET /authorize?response_type=code&amp;client_id=s6BhdRkqt3&amp;state=xyz\n&amp;redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb HTTP/1.1\nHost: server.example.com</pre>\n\n    <p>While it is easy to implement, the encoding in the URI does not allow application-layer security to be used to provide confidentiality and integrity protection. While TLS is used to offer communication security between the client and the user agent as well as the user agent and the authorization server, TLS sessions are terminated in the user agent. In addition, TLS sessions may be terminated prematurely at some middlebox (such as a load balancer).</p>\n\n    <p>As a result, the authorization request of [<a href=\"#\">RFC6749</a>] has shortcomings in that:</p>\n\n    <ol class=\"alpha\">\n      <li><span class=\"lbl\">(a)</span>the communication through the user agents is not integrity protected, and thus, the parameters can be tainted (integrity protection failure);</li>\n      <li><span class=\"lbl\">(b)</span>the source of the communication is not authenticated (source authentication failure);</li>\n      <li><span class=\"lbl\">(c)</span>the communication through the user agents can be monitored (containment/ confidentiality failure).</li>\n    </ol>\n\n    <p>Due to these inherent weaknesses, several attacks against the protocol, such as redirection URI rewriting, have been identified.</p>\n\n    <p>The use of application-layer security mitigates these issues.</p>\n\n    <p>The use of application-layer security allows requests to be prepared by a trusted third party so that a client application cannot request more permissions than previously agreed upon.</p>\n\n    <p>Furthermore, passing the request by reference allows the reduction of over-the-wire overhead.</p>\n\n    <p>The <a href=\"#\">JWT</a> [<a href=\"#\">RFC7519</a>] encoding has been chosen because of:</p>\n\n    <ol class=\"num\">\n      <li><span class=\"lbl\">(1)</span>its close relationship with JSON, which is used as OAuth's response format</li>\n      <li><span class=\"lbl\">(2)</span>its developer friendliness due to its textual nature</li>\n      <li><span class=\"lbl\">(3)</span>its relative compactness compared to XML</li>\n      <li><span class=\"lbl\">(4)</span>its development status as a Proposed Standard, along with the associated signing and encryption methods [<a href=\"#\">RFC7515</a>] [<a href=\"#\">RFC7516</a>]</li>\n    </ol>\n\n  </div>\n\n  <div class=\"runfoot\">\n    <div class=\"left\">Sakimura, et al.</div>\n    <div class=\"center\">Standards Track</div>\n    <div class=\"right\">Page 4</div>\n  </div>\n\n</div>\n</body>\n</html>"
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 2382,
+    "completion_tokens": 1223,
+    "total_tokens": 3605,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "text_tokens": 0,
+      "audio_tokens": 0,
+      "image_tokens": 0
+    },
+    "completion_tokens_details": {
+      "text_tokens": 0,
+      "audio_tokens": 0,
+      "reasoning_tokens": 0
+    }
+  }
+}

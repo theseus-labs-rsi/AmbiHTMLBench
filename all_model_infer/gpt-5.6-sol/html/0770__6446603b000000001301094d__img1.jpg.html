@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>传媒公司春招倒计时</title>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$']],
+        displayMath: [['$$', '$$']]
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      background: #f2f2f2;
+      font-family: "Microsoft YaHei", "PingFang SC", SimHei, Arial, sans-serif;
+      color: #181818;
+    }
+
+    .page {
+      position: relative;
+      width: 540px;
+      min-width: 540px;
+      height: 720px;
+      overflow: hidden;
+      border: 1px solid #333;
+      background: #ef666c;
+    }
+
+    .top-strip {
+      position: absolute;
+      top: 4px;
+      left: 0;
+      width: 100%;
+      height: 17px;
+      border-top: 1px solid #222;
+      border-bottom: 1px solid #222;
+      background: #f7c4d0;
+    }
+
+    .header {
+      position: relative;
+      height: 167px;
+      overflow: hidden;
+      border-bottom: 3px solid #333;
+      background-color: #faf9f5;
+      background-image:
+        linear-gradient(rgba(97, 108, 124, 0.16) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(97, 108, 124, 0.16) 1px, transparent 1px);
+      background-size: 17px 17px;
+      background-position: 0 20px;
+    }
+
+    .header::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 8px;
+      width: 100%;
+      height: 7px;
+      border-top: 1px solid #26324f;
+      border-bottom: 1px solid #26324f;
+      background: #f9848c;
+    }
+
+    .yellow-corner {
+      position: absolute;
+      top: 19px;
+      right: -8px;
+      width: 63px;
+      height: 39px;
+      border: 2px solid #222;
+      border-radius: 50% 0 0 50%;
+      background: #ffd958;
+      transform: rotate(8deg);
+    }
+
+    .header-star {
+      position: absolute;
+      z-index: 3;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      font-size: 37px;
+      line-height: 1;
+      -webkit-text-stroke: 1.5px #161616;
+      transform: rotate(-10deg);
+    }
+
+    .header-star.top {
+      top: -2px;
+      right: 52px;
+    }
+
+    .header-star.bottom {
+      right: 8px;
+      bottom: -1px;
+      color: #ffe246;
+      font-size: 42px;
+      transform: rotate(12deg);
+    }
+
+    .arrows {
+      position: absolute;
+      top: 24px;
+      right: 73px;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      color: #ec4c4c;
+      font-family: Arial, sans-serif;
+      font-size: 27px;
+      font-weight: 900;
+      line-height: 1;
+      -webkit-text-stroke: 1.4px #1c1c1c;
+    }
+
+    .main-title {
+      position: absolute;
+      z-index: 4;
+      top: 46px;
+      left: 7px;
+      width: 526px;
+      white-space: nowrap;
+      font-family: SimHei, "Microsoft YaHei", sans-serif;
+      font-size: 50px;
+      font-weight: 900;
+      line-height: 1.08;
+      color: #dc5255;
+      -webkit-text-stroke: 6px #fff;
+      filter:
+        drop-shadow(3px 0 0 #2d315b)
+        drop-shadow(-3px 0 0 #2d315b)
+        drop-shadow(0 3px 0 #2d315b)
+        drop-shadow(0 -3px 0 #2d315b);
+    }
+
+    .main-title .blue {
+      color: #4279b9;
+    }
+
+    .heart-box {
+      position: absolute;
+      z-index: 5;
+      left: 1px;
+      bottom: 13px;
+      display: flex;
+      width: 91px;
+      height: 31px;
+      padding: 3px 4px;
+      justify-content: space-between;
+      align-items: center;
+      border: 2px solid #252525;
+      background: #fff;
+      box-shadow: 3px 3px 0 #283055;
+    }
+
+    .heart-box span {
+      color: #f57b85;
+      font-size: 25px;
+      line-height: 1;
+      -webkit-text-stroke: 1px #262626;
+    }
+
+    .progress {
+      position: absolute;
+      z-index: 4;
+      left: 98px;
+      bottom: 13px;
+      width: 395px;
+      height: 10px;
+      border: 1px solid #273253;
+      background: #fff;
+    }
+
+    .progress::before {
+      content: "";
+      display: block;
+      width: 171px;
+      height: 100%;
+      background: #698cd8;
+      border-right: 1px solid #283052;
+    }
+
+    .small-heart {
+      position: absolute;
+      z-index: 6;
+      left: 315px;
+      bottom: 10px;
+      color: #5684c8;
+      font-size: 27px;
+      line-height: 1;
+      -webkit-text-stroke: 1.3px #1e273e;
+      transform: rotate(8deg);
+    }
+
+    .motion-lines {
+      position: absolute;
+      right: 35px;
+      bottom: 17px;
+      width: 39px;
+      height: 29px;
+    }
+
+    .motion-lines i {
+      position: absolute;
+      display: block;
+      width: 26px;
+      height: 3px;
+      border-radius: 2px;
+      background: #222;
+    }
+
+    .motion-lines i:nth-child(1) {
+      top: 2px;
+      right: 0;
+      transform: rotate(31deg);
+    }
+
+    .motion-lines i:nth-child(2) {
+      top: 14px;
+      right: 8px;
+    }
+
+    .motion-lines i:nth-child(3) {
+      right: 1px;
+      bottom: 0;
+      transform: rotate(-25deg);
+    }
+
+    .content {
+      display: grid;
+      grid-template-rows: 172px 173px 172px;
+      gap: 9px;
+      padding: 9px 11px 10px;
+    }
+
+    .company {
+      position: relative;
+      overflow: hidden;
+      border: 2px solid #252525;
+      border-radius: 20px 0 20px 0;
+      background: #fff;
+      box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.22);
+    }
+
+    .badge {
+      position: absolute;
+      top: 8px;
+      left: 16px;
+      height: 44px;
+      padding: 3px 21px 2px 25px;
+      border: 1.7px solid #242424;
+      border-radius: 26px;
+      background: #fff;
+      color: #5489c5;
+      font-family: SimHei, "Microsoft YaHei", sans-serif;
+      font-size: 29px;
+      font-weight: 900;
+      line-height: 35px;
+      white-space: nowrap;
+      -webkit-text-stroke: 1px #fff;
+      text-shadow:
+        1px 1px 0 #24375d,
+        -1px 1px 0 #24375d,
+        1px -1px 0 #24375d,
+        -1px -1px 0 #24375d;
+    }
+
+    .badge::before {
+      content: "☀";
+      position: absolute;
+      top: -12px;
+      left: 8px;
+      color: #f6b831;
+      font-family: Arial, sans-serif;
+      font-size: 22px;
+      line-height: 1;
+      -webkit-text-stroke: 0.6px #333;
+      text-shadow: none;
+    }
+
+    .badge::after {
+      content: "";
+      position: absolute;
+      left: 20px;
+      right: 16px;
+      bottom: -4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #f4a62d;
+    }
+
+    .copy {
+      position: absolute;
+      top: 57px;
+      left: 14px;
+      right: 10px;
+      font-size: 14.5px;
+      font-weight: 600;
+      line-height: 18px;
+      letter-spacing: 0;
+    }
+
+    .copy p {
+      margin: 0;
+      white-space: nowrap;
+    }
+
+    .label {
+      color: #ed4f58;
+      font-weight: 900;
+    }
+
+    .company-logo {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      height: 48px;
+      background: #fff;
+    }
+
+    .en-logo {
+      width: 182px;
+      text-align: center;
+      font-family: Arial, sans-serif;
+    }
+
+    .en-logo .bar {
+      display: block;
+      width: 178px;
+      height: 14px;
+      margin: 0 auto 2px;
+      border-radius: 8px 8px 2px 2px;
+      background: #c7132c;
+      box-shadow: inset 0 -5px 0 #f7f7f7;
+    }
+
+    .en-logo .name {
+      display: inline-block;
+      color: #b90e29;
+      font-size: 39px;
+      font-weight: 700;
+      line-height: 29px;
+      letter-spacing: 0;
+    }
+
+    .en-logo .small-cn {
+      display: inline-block;
+      margin-left: 2px;
+      color: #b90e29;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 11px;
+      vertical-align: 5px;
+    }
+
+    .ray-logo {
+      display: flex;
+      width: 211px;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 9px;
+    }
+
+    .ray-symbol {
+      display: flex;
+      width: 57px;
+      height: 43px;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #555;
+      border-radius: 6px;
+      color: #ce1026;
+      font-family: Georgia, serif;
+      font-size: 45px;
+      font-style: italic;
+      font-weight: 900;
+      line-height: 1;
+      transform: rotate(-5deg);
+    }
+
+    .ray-name {
+      font-family: SimSun, "Songti SC", serif;
+      font-size: 29px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .tf-logo {
+      display: flex;
+      width: 190px;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .tf-mark {
+      position: relative;
+      width: 57px;
+      height: 48px;
+      overflow: hidden;
+    }
+
+    .tf-mark::before {
+      content: "";
+      position: absolute;
+      top: 1px;
+      left: 14px;
+      width: 34px;
+      height: 55px;
+      background: #f5a10a;
+      clip-path: polygon(49% 0, 100% 67%, 76% 100%, 48% 51%, 21% 100%, 0 74%);
+    }
+
+    .tf-mark::after {
+      content: "";
+      position: absolute;
+      top: 21px;
+      left: 8px;
+      width: 40px;
+      height: 4px;
+      background: #fff;
+      transform: rotate(59deg);
+    }
+
+    .tf-wording {
+      width: 117px;
+      text-align: center;
+      color: #151515;
+      font-family: "STKaiti", KaiTi, serif;
+      font-size: 23px;
+      font-weight: 900;
+      line-height: 25px;
+      white-space: nowrap;
+    }
+
+    .tf-wording small {
+      display: block;
+      margin-top: 2px;
+      font-family: Arial, sans-serif;
+      font-size: 6px;
+      font-weight: 600;
+      line-height: 8px;
+      letter-spacing: 2px;
+    }
+
+    .company-two .copy,
+    .company-three .copy {
+      top: 58px;
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="header">
+      <div class="top-strip"></div>
+      <div class="yellow-corner"></div>
+      <div class="arrows" aria-hidden="true"><span>➤</span><span>➤</span><span>➤</span><span>➤</span></div>
+      <div class="header-star top" aria-hidden="true">☆</div>
+      <h1 class="main-title">传媒公司<span class="blue">春招倒计时</span></h1>
+      <div class="heart-box" aria-hidden="true"><span>♥</span><span>♥</span><span>♥</span></div>
+      <div class="progress" aria-hidden="true"></div>
+      <div class="small-heart" aria-hidden="true">♥</div>
+      <div class="motion-lines" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div class="header-star bottom" aria-hidden="true">★</div>
+    </header>
+
+    <section class="content">
+      <article class="company company-one">
+        <div class="badge">壹心娱乐</div>
+        <div class="company-logo en-logo" aria-label="easyent 壹心">
+          <span class="bar"></span>
+          <span class="name">easyent</span><span class="small-cn">壹<br>心</span>
+        </div>
+        <div class="copy">
+          <p><span class="label">推荐理由：</span>是一家提供定制化服务的经纪公司，</p>
+          <p>业务范围涉及艺人影视剧拍摄、广告代言、形象包装、演出、法律咨询等多项</p>
+          <p>经纪业务。旗下艺人有白宇、朴冠今、李现、李现、马思纯等。</p>
+          <p><span class="label">网申时间：</span>4月11日起-招满即止</p>
+          <p><span class="label">招聘岗位：</span>宣传主管、执行经纪、影视经纪、平面设计、段视频编导等</p>
+          <p><span class="label">工作地点：</span>北京</p>
+        </div>
+      </article>
+
+      <article class="company company-two">
+        <div class="badge">光线传媒</div>
+        <div class="company-logo ray-logo" aria-label="光线传媒">
+          <span class="ray-symbol">e</span>
+          <span class="ray-name">光线传媒</span>
+        </div>
+        <div class="copy">
+          <p><span class="label">推荐理由：</span>中国最大的民营传媒娱乐集团。主营业务包括电视节目制作与发</p>
+          <p>行，电影投资、制作、宣发，电视剧投资、发行，艺人经纪等，发行作品有</p>
+          <p>《西游记之大圣归来》等动画电影，旗下艺人有任敏、孙千、胡先煦等。</p>
+          <p><span class="label">网申时间：</span>3月26日起-招满即止</p>
+          <p><span class="label">招聘岗位：</span>艺人宣传、人力资源、平面设计、预告片剪辑</p>
+          <p><span class="label">工作地点：</span>北京</p>
+        </div>
+      </article>
+
+      <article class="company company-three">
+        <div class="badge">时代峰峻</div>
+        <div class="company-logo tf-logo" aria-label="时代峰峻 TF ENTERTAINMENT">
+          <span class="tf-mark"></span>
+          <span class="tf-wording">时代峰峻<small>TF ENTERTAINMENT</small></span>
+        </div>
+        <div class="copy">
+          <p><span class="label">推荐理由：</span>是中国领先的偶像艺人经济公司，</p>
+          <p>现公司旗下所属艺人中拥有当红组合TFBOYS、时代少年团。</p>
+          <p><span class="label">网申时间：</span>2月9日起、招满即止</p>
+          <p><span class="label">招聘岗位：</span>音乐/舞台企划、平面美工设计、后期策划、后期精剪辑师等</p>
+          <p><span class="label">工作地点：</span>北京、重庆</p>
+        </div>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

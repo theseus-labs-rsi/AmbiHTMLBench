@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Handwritten Grid Notebook Notes</title>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$']],
+        displayMath: [['$$', '$$']]
+      }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: #827d6e;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 8px 0 20px;
+      overflow-x: auto;
+      font-family: "KaiTi", "STKaiti", "FangSong", serif;
+    }
+
+    .notebook {
+      position: relative;
+      width: 540px;
+      height: 700px;
+      margin-left: 18px;
+      overflow: hidden;
+      border-radius: 0 17px 13px 0;
+      background-color: #f1f2ed;
+      background-image:
+        linear-gradient(rgba(111, 127, 128, 0.22) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(111, 127, 128, 0.22) 1px, transparent 1px);
+      background-size: 15px 15px;
+      box-shadow:
+        5px 7px 8px rgba(0, 0, 0, 0.38),
+        inset 0 0 20px rgba(120, 113, 91, 0.12);
+      transform: rotate(0.7deg);
+    }
+
+    .binding-strip {
+      position: absolute;
+      z-index: 4;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 65px;
+      border-right: 1px solid rgba(123, 119, 103, 0.28);
+      background: rgba(244, 244, 238, 0.72);
+    }
+
+    .hole {
+      position: absolute;
+      z-index: 6;
+      left: 42px;
+      width: 17px;
+      height: 17px;
+      border: 2px solid #b3aa93;
+      border-radius: 50%;
+      background: #24211c;
+      box-shadow:
+        inset 2px 1px 3px #000,
+        1px 1px 2px rgba(255, 255, 255, 0.7);
+    }
+
+    .ring {
+      position: absolute;
+      z-index: 7;
+      left: -17px;
+      width: 67px;
+      height: 22px;
+      border: 7px solid #928469;
+      border-left-color: #6f644f;
+      border-right-color: #b7aa8b;
+      border-radius: 50%;
+      box-shadow: 1px 2px 2px rgba(0, 0, 0, 0.4);
+    }
+
+    .content {
+      position: absolute;
+      z-index: 2;
+      inset: 0;
+      color: #171715;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .vertical {
+      position: absolute;
+      margin: 0;
+      writing-mode: vertical-rl;
+      text-orientation: upright;
+      line-height: 1.45;
+      letter-spacing: 0;
+      white-space: normal;
+    }
+
+    .small {
+      font-size: 12px;
+    }
+
+    .tiny {
+      font-size: 11px;
+    }
+
+    .teal {
+      color: #397f78;
+    }
+
+    .red {
+      color: #9a3836;
+    }
+
+    .title {
+      position: absolute;
+      top: 19px;
+      left: 190px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 37px;
+      color: #185d5d;
+      font-size: 23px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .title span {
+      display: inline-block;
+      transform: rotate(89deg);
+    }
+
+    .map-line {
+      position: absolute;
+      z-index: 1;
+      background: #58a39b;
+      opacity: 0.82;
+    }
+
+    .map-line.horizontal {
+      height: 3px;
+    }
+
+    .map-line.vertical-line {
+      width: 3px;
+    }
+
+    .correction {
+      position: absolute;
+      z-index: 3;
+      height: 16px;
+      background: rgba(235, 237, 232, 0.96);
+      box-shadow: 0 1px 1px rgba(120, 120, 110, 0.16);
+      transform: rotate(1deg);
+    }
+
+    .placeholder {
+      position: absolute;
+      overflow: hidden;
+      color: transparent;
+      background: rgba(239, 240, 235, 0.88);
+    }
+
+    .placeholder figcaption {
+      color: transparent;
+      font-size: 1px;
+    }
+  </style>
+</head>
+<body>
+  <main class="notebook" aria-label="Handwritten notes on graph paper">
+    <div class="binding-strip" aria-hidden="true"></div>
+
+    <span class="hole" style="top:30px"></span>
+    <span class="hole" style="top:76px"></span>
+    <span class="hole" style="top:122px"></span>
+    <span class="hole" style="top:168px"></span>
+    <span class="hole" style="top:214px"></span>
+    <span class="hole" style="top:260px"></span>
+    <span class="hole" style="top:306px"></span>
+    <span class="hole" style="top:352px"></span>
+    <span class="hole" style="top:398px"></span>
+    <span class="hole" style="top:444px"></span>
+    <span class="hole" style="top:490px"></span>
+    <span class="hole" style="top:536px"></span>
+    <span class="hole" style="top:582px"></span>
+    <span class="hole" style="top:628px"></span>
+    <span class="hole" style="top:674px"></span>
+
+    <span class="ring" style="top:17px"></span>
+    <span class="ring" style="top:63px"></span>
+    <span class="ring" style="top:109px"></span>
+    <span class="ring" style="top:155px"></span>
+    <span class="ring" style="top:201px"></span>
+    <span class="ring" style="top:247px"></span>
+    <span class="ring" style="top:293px"></span>
+    <span class="ring" style="top:339px"></span>
+    <span class="ring" style="top:385px"></span>
+    <span class="ring" style="top:431px"></span>
+    <span class="ring" style="top:477px"></span>
+    <span class="ring" style="top:523px"></span>
+    <span class="ring" style="top:569px"></span>
+    <span class="ring" style="top:615px"></span>
+    <span class="ring" style="top:661px"></span>
+
+    <section class="content">
+      <div class="title" aria-label="Unreadable handwritten title">
+        <span>[?]</span><span>[?]</span><span>[?]</span><span>[?]</span><span>[?]</span><span>[?]</span><span>[?]</span>
+      </div>
+
+      <div class="map-line horizontal" style="left:153px; top:68px; width:348px"></div>
+      <div class="map-line vertical-line" style="left:153px; top:68px; height:24px"></div>
+      <div class="map-line vertical-line" style="left:326px; top:47px; height:31px"></div>
+      <div class="map-line vertical-line" style="left:498px; top:68px; height:25px"></div>
+
+      <div class="map-line vertical-line" style="left:145px; top:101px; height:42px"></div>
+      <div class="map-line horizontal" style="left:75px; top:143px; width:73px"></div>
+      <div class="map-line vertical-line" style="left:75px; top:143px; height:39px"></div>
+
+      <div class="map-line vertical-line" style="left:331px; top:96px; height:62px"></div>
+      <div class="map-line horizontal" style="left:290px; top:158px; width:44px"></div>
+      <div class="map-line vertical-line" style="left:290px; top:158px; height:43px"></div>
+
+      <div class="map-line vertical-line" style="left:498px; top:95px; height:67px"></div>
+      <div class="map-line horizontal" style="left:408px; top:160px; width:93px"></div>
+      <div class="map-line vertical-line" style="left:408px; top:160px; height:36px"></div>
+
+      <p class="vertical small" style="left:128px; top:80px; height:67px;">单元选择</p>
+
+      <p class="vertical" style="left:493px; top:91px; height:558px;">
+        行为决策利用　[illegible]
+      </p>
+
+      <p class="vertical small" style="left:467px; top:115px; height:522px;">
+        [illegible]
+      </p>
+
+      <p class="vertical red small" style="left:451px; top:123px; height:292px;">
+        [illegible]
+      </p>
+
+      <p class="vertical small" style="left:430px; top:93px; height:510px;">
+        不服从于[illegible]
+      </p>
+
+      <p class="vertical small" style="left:408px; top:172px; height:451px;">
+        [illegible]
+      </p>
+
+      <p class="vertical small" style="left:385px; top:180px; height:442px;">
+        [illegible]
+      </p>
+
+      <p class="vertical red tiny" style="left:367px; top:387px; height:214px;">
+        [illegible]
+      </p>
+
+      <p class="vertical small" style="left:329px; top:93px; height:534px;">
+        有限理性　[illegible]
+      </p>
+
+      <p class="vertical small" style="left:307px; top:180px; height:436px;">
+        [illegible]
+      </p>
+
+      <p class="vertical small" style="left:285px; top:202px; height:416px;">
+        [illegible]
+      </p>
+
+      <p class="vertical small" style="left:258px; top:180px; height:440px;">
+        决策是一个过程　[illegible]
+      </p>
+
+      <p class="vertical small" style="left:236px; top:195px; height:425px;">
+        [illegible]
+      </p>
+
+      <p class="vertical small" style="left:214px; top:190px; height:437px;">
+        有限理性　[illegible]
+      </p>
+
+      <p class="vertical small" style="left:190px; top:190px; height:435px;">
+        [illegible]
+      </p>
+
+      <p class="vertical red small" style="left:171px; top:359px; height:199px;">
+        沉没成本　[illegible]
+      </p>
+
+      <p class="vertical small" style="left:145px; top:170px; height:459px;">
+        选择过程　[illegible]
+      </p>
+
+      <p class="vertical small" style="left:120px; top:181px; height:462px;">
+        [illegible]
+      </p>
+
+      <p class="vertical small" style="left:97px; top:158px; height:494px;">
+        行为决策的[illegible]
+      </p>
+
+      <p class="vertical small" style="left:74px; top:173px; height:489px;">
+        [illegible]
+      </p>
+
+      <div class="correction" style="left:143px; top:407px; width:92px;"></div>
+      <div class="correction" style="left:143px; top:425px; width:85px;"></div>
+      <div class="correction" style="left:143px; top:443px; width:76px;"></div>
+      <div class="correction" style="left:143px; top:461px; width:66px;"></div>
+
+      <figure class="placeholder" style="left:143px; top:407px; width:92px; height:70px;">
+        <figcaption>[Obscured handwritten text: center-left]</figcaption>
+      </figure>
+    </section>
+  </main>
+</body>
+</html>

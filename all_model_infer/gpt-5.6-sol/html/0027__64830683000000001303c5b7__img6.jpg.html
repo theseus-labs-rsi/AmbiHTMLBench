@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>贝果食谱</title>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 28px;
+      background: #f9a660;
+      color: #563313;
+      font-family: "STKaiti", "KaiTi", "Kaiti SC", "Microsoft YaHei", sans-serif;
+    }
+
+    .page {
+      position: relative;
+      width: 490px;
+      height: 666px;
+      overflow: hidden;
+      border: 7px solid #dc7208;
+      background:
+        repeating-linear-gradient(
+          0deg,
+          rgba(241, 170, 87, 0.13) 0,
+          rgba(241, 170, 87, 0.13) 7px,
+          rgba(255, 255, 255, 0.72) 7px,
+          rgba(255, 255, 255, 0.72) 14px
+        ),
+        repeating-linear-gradient(
+          90deg,
+          rgba(242, 180, 112, 0.11) 0,
+          rgba(242, 180, 112, 0.11) 15px,
+          rgba(255, 255, 255, 0.55) 15px,
+          rgba(255, 255, 255, 0.55) 30px
+        ),
+        #fffdf7;
+      box-shadow: inset 0 0 5px rgba(150, 75, 0, 0.2);
+    }
+
+    .top-section {
+      position: relative;
+      height: 322px;
+      padding: 4px 9px 0;
+    }
+
+    .bottom-section {
+      position: relative;
+      height: 330px;
+      padding: 0 9px;
+      border-top: 5px dashed #d97705;
+    }
+
+    .title {
+      margin: 0;
+      color: #3f270e;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: 2px;
+      white-space: nowrap;
+    }
+
+    .top-title {
+      padding-left: 91px;
+      font-size: 35px;
+    }
+
+    .bottom-title {
+      padding-top: 7px;
+      padding-left: 96px;
+      font-size: 35px;
+    }
+
+    .bagel-symbol {
+      display: inline-block;
+      width: 40px;
+      height: 31px;
+      margin-left: 7px;
+      vertical-align: -3px;
+      border: 2px solid #a66a24;
+      border-radius: 50%;
+      background:
+        radial-gradient(ellipse at center, #fff7dc 0 16%, #c57b25 18% 31%, #f0b55e 33% 55%, #9b5418 57% 65%, #efd096 67%);
+      transform: rotate(15deg);
+      box-shadow: 3px 3px 1px rgba(110, 61, 15, 0.18);
+    }
+
+    .sticker {
+      position: absolute;
+      top: 9px;
+      left: 7px;
+      width: 82px;
+      height: 76px;
+      padding-top: 8px;
+      border: 2px solid #c3a54a;
+      border-radius: 9px 18px 11px 17px;
+      background: #fffef4;
+      color: #50628a;
+      font-size: 25px;
+      font-weight: 700;
+      line-height: 1.15;
+      text-align: center;
+      transform: rotate(-10deg);
+      box-shadow: 1px 2px 2px rgba(84, 62, 12, 0.2);
+    }
+
+    .step-heading {
+      margin: 6px 0 2px;
+      font-size: 19px;
+      line-height: 1.1;
+    }
+
+    .top-heading {
+      margin-left: 155px;
+    }
+
+    .ingredients {
+      position: absolute;
+      top: 68px;
+      left: 166px;
+      display: flex;
+      width: 274px;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .ingredient {
+      width: 78px;
+      text-align: center;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: transparent;
+      overflow: hidden;
+      text-align: center;
+      font: 8px/1.1 Arial, sans-serif;
+    }
+
+    .cream-cheese {
+      width: 61px;
+      height: 43px;
+      margin: 0 auto 2px;
+      border: 1px solid #a9b7bd;
+      border-radius: 5px;
+      background:
+        linear-gradient(0deg, #73a5c0 0 24%, #f5f5ee 25% 66%, #d8e5ea 67%),
+        #e9f1f3;
+      box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
+    }
+
+    .mini-bagel {
+      width: 55px;
+      height: 42px;
+      margin: 0 auto 2px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, #7d4319 0 10%, #d98a39 13% 53%, #a95c21 70%, #f0b55e 100%);
+      box-shadow: inset 3px 3px 5px rgba(255, 227, 168, 0.7), 0 2px 2px rgba(0, 0, 0, 0.15);
+    }
+
+    .walnuts {
+      width: 65px;
+      height: 48px;
+      margin: 0 auto 1px;
+      background:
+        radial-gradient(ellipse at 45% 22%, #d09b35 0 13%, transparent 15%),
+        radial-gradient(ellipse at 62% 45%, #a87316 0 16%, transparent 18%),
+        radial-gradient(ellipse at 40% 66%, #d9a93c 0 17%, transparent 19%),
+        radial-gradient(ellipse at 69% 76%, #8d5f10 0 14%, transparent 16%);
+      transform: rotate(8deg);
+    }
+
+    .large-bagel {
+      position: absolute;
+      top: 82px;
+      left: 7px;
+      width: 148px;
+      height: 119px;
+      border-radius: 51% 49% 47% 53%;
+      background:
+        radial-gradient(ellipse at 50% 40%, #7c431d 0 7%, transparent 8%),
+        radial-gradient(ellipse at 35% 33%, rgba(255,255,255,.8) 0 1.2%, transparent 1.5%),
+        radial-gradient(ellipse at 60% 28%, rgba(255,255,255,.8) 0 1.2%, transparent 1.5%),
+        radial-gradient(ellipse at 68% 42%, rgba(255,255,255,.8) 0 1.2%, transparent 1.5%),
+        linear-gradient(#dfa05b 0 53%, #704321 54% 59%, #fff6df 60% 73%, #49301e 74% 80%, #bd7640 81%);
+      border: 2px solid #754117;
+      box-shadow: inset 8px 7px 11px rgba(255, 217, 160, 0.55);
+      transform: rotate(5deg);
+    }
+
+    .instructions {
+      position: absolute;
+      left: 160px;
+      top: 142px;
+      width: 296px;
+      margin: 0;
+      font-size: 19px;
+      font-weight: 600;
+      line-height: 1.42;
+    }
+
+    .process {
+      position: absolute;
+      left: 169px;
+      top: 215px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .oven {
+      position: relative;
+      width: 84px;
+      height: 75px;
+      border: 2px solid #bbb9ad;
+      border-radius: 8px;
+      background: #f7f4e9;
+      box-shadow: 2px 3px 3px rgba(0,0,0,.12);
+    }
+
+    .oven::before {
+      content: "";
+      position: absolute;
+      top: 6px;
+      left: 7px;
+      width: 55px;
+      height: 14px;
+      border-radius: 4px;
+      background: #171717;
+      box-shadow: 62px 0 0 -3px #b7b2a4;
+    }
+
+    .oven::after {
+      content: "";
+      position: absolute;
+      top: 27px;
+      left: 11px;
+      width: 61px;
+      height: 34px;
+      border: 3px solid #5e5549;
+      background: linear-gradient(#382d24 0 38%, #c4702e 40% 63%, #25211c 66%);
+    }
+
+    .arrow {
+      color: #7b450e;
+      font-family: Arial, sans-serif;
+      font-size: 37px;
+      line-height: 1;
+    }
+
+    .bowl {
+      width: 81px;
+      height: 48px;
+      border: 2px solid #7f4c13;
+      border-top-width: 1px;
+      border-radius: 50% 50% 45% 45% / 15% 15% 83% 83%;
+      background:
+        radial-gradient(circle at 35% 65%, #c79816 0 3px, transparent 4px),
+        radial-gradient(circle at 48% 73%, #d3a21b 0 3px, transparent 4px),
+        radial-gradient(circle at 62% 61%, #ab7610 0 2px, transparent 3px),
+        #fffef5;
+    }
+
+    .spread-bagel {
+      width: 66px;
+      height: 57px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 48% 48%, #f8f0d8 0 10%, transparent 11%),
+        radial-gradient(circle at 30% 28%, #a57719 0 2px, transparent 3px),
+        radial-gradient(circle at 62% 32%, #b98a29 0 2px, transparent 3px),
+        radial-gradient(circle at 70% 65%, #94650d 0 2px, transparent 3px),
+        radial-gradient(ellipse, #fff9e9 0 56%, #d29947 58% 64%, transparent 66%);
+      transform: rotate(10deg);
+    }
+
+    .girl {
+      position: absolute;
+      left: 2px;
+      top: 202px;
+      width: 102px;
+      height: 117px;
+    }
+
+    .girl .hair {
+      position: absolute;
+      left: 12px;
+      top: 4px;
+      width: 79px;
+      height: 88px;
+      border-radius: 50% 50% 42% 42%;
+      background: #75472f;
+      border: 2px solid #59321f;
+    }
+
+    .girl .face {
+      position: absolute;
+      left: 23px;
+      top: 28px;
+      width: 58px;
+      height: 54px;
+      border-radius: 45% 45% 50% 50%;
+      background:
+        radial-gradient(circle at 31% 50%, #68420f 0 4px, #fff 5px 8px, transparent 9px),
+        radial-gradient(circle at 70% 50%, #68420f 0 4px, #fff 5px 8px, transparent 9px),
+        #fff1d2;
+      border: 1px solid #6e4228;
+    }
+
+    .girl .body {
+      position: absolute;
+      left: 27px;
+      top: 76px;
+      width: 54px;
+      height: 40px;
+      border-radius: 9px 9px 0 0;
+      background: #f7f1d9;
+      border: 1px solid #674633;
+    }
+
+    .bottom-heading {
+      margin-top: 9px;
+      font-size: 19px;
+    }
+
+    .handle {
+      position: absolute;
+      top: 61px;
+      right: 24px;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .bottom-ingredients {
+      display: flex;
+      width: 305px;
+      margin: 9px 0 0 5px;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .bottom-ingredients .ingredient {
+      width: 66px;
+    }
+
+    .banana {
+      position: relative;
+      width: 48px;
+      height: 55px;
+      margin: 0 auto;
+      border-radius: 50%;
+      border-left: 10px solid #f5be16;
+      transform: rotate(12deg);
+    }
+
+    .banana::after {
+      content: "";
+      position: absolute;
+      left: -2px;
+      top: 2px;
+      width: 23px;
+      height: 45px;
+      border-left: 5px solid #ffd638;
+      border-radius: 50%;
+    }
+
+    .cocoa {
+      width: 42px;
+      height: 51px;
+      margin: 0 auto 1px;
+      border: 1px solid #b5a897;
+      background:
+        linear-gradient(0deg, #c1926d 0 28%, #eee8d7 29% 68%, #b89379 69%),
+        #d8c8b7;
+      box-shadow: 1px 2px 2px rgba(0,0,0,.13);
+    }
+
+    .bottom-copy {
+      margin: 8px 0 0 0;
+      width: 300px;
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.45;
+    }
+
+    .sign {
+      position: absolute;
+      top: 116px;
+      right: 68px;
+      width: 67px;
+      height: 75px;
+      padding-top: 10px;
+      background: #ef5547;
+      color: #fff;
+      font-size: 21px;
+      font-weight: 700;
+      line-height: 1.35;
+      text-align: center;
+      transform: rotate(-10deg);
+      box-shadow: 2px 2px 2px rgba(84, 40, 15, 0.2);
+    }
+
+    .sign::after {
+      content: "";
+      position: absolute;
+      left: 52px;
+      top: 68px;
+      width: 3px;
+      height: 72px;
+      background: #9a5b24;
+      transform: rotate(-11deg);
+      transform-origin: top;
+    }
+
+    .bottom-process {
+      position: absolute;
+      left: 10px;
+      top: 218px;
+      display: flex;
+      align-items: center;
+      gap: 13px;
+    }
+
+    .cocoa-bowl {
+      width: 78px;
+      height: 48px;
+      border: 2px solid #784611;
+      border-radius: 50% 50% 44% 44% / 15% 15% 80% 80%;
+      background:
+        radial-gradient(circle at 40% 64%, #9d683c 0 1px, transparent 2px),
+        radial-gradient(circle at 57% 67%, #8f5c32 0 1px, transparent 2px),
+        #fffdf2;
+    }
+
+    .brown-spread {
+      width: 70px;
+      height: 53px;
+      border-radius: 49%;
+      background:
+        radial-gradient(ellipse at 50% 35%, #86542b 0 12%, transparent 13%),
+        radial-gradient(ellipse, #8b5b35 0 55%, #f5e4c0 57% 65%, transparent 67%);
+      transform: rotate(3deg);
+    }
+
+    .banana-topping {
+      width: 76px;
+      height: 61px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 30% 30%, #f7d14a 0 9px, #d5a51c 10px 11px, transparent 12px),
+        radial-gradient(circle at 53% 25%, #ffe36b 0 9px, #d5a51c 10px 11px, transparent 12px),
+        radial-gradient(circle at 69% 45%, #f8ce3c 0 9px, #d5a51c 10px 11px, transparent 12px),
+        radial-gradient(circle at 45% 51%, #ffe265 0 9px, #d5a51c 10px 11px, transparent 12px),
+        radial-gradient(circle at 30% 70%, #f6cd3c 0 9px, #d5a51c 10px 11px, transparent 12px),
+        radial-gradient(circle at 58% 72%, #ffe36b 0 9px, #d5a51c 10px 11px, transparent 12px),
+        radial-gradient(ellipse, #7b4d29 0 55%, transparent 57%);
+    }
+
+    .butter-arrow {
+      position: absolute;
+      left: 269px;
+      top: 193px;
+      color: #7b450e;
+      font-family: Arial, sans-serif;
+      font-size: 29px;
+      transform: rotate(-30deg);
+    }
+
+    .butter {
+      position: absolute;
+      left: 274px;
+      top: 184px;
+      width: 33px;
+      height: 15px;
+      border: 1px solid #d8a318;
+      background: #ffd63b;
+      transform: skewY(8deg);
+    }
+
+    .final-bagel {
+      position: absolute;
+      right: -5px;
+      bottom: 4px;
+      width: 153px;
+      height: 133px;
+      border-radius: 50% 49% 45% 47%;
+      background:
+        radial-gradient(ellipse at 50% 36%, #75431f 0 7%, transparent 8%),
+        radial-gradient(circle at 30% 31%, #fff1c1 0 1px, transparent 2px),
+        radial-gradient(circle at 61% 28%, #fff1c1 0 1px, transparent 2px),
+        radial-gradient(circle at 70% 43%, #fff1c1 0 1px, transparent 2px),
+        linear-gradient(#d9954f 0 54%, #faf0c0 55% 64%, #d8ab31 65% 73%, #5c321f 74% 82%, #ba7138 83%);
+      border: 2px solid #724016;
+      box-shadow: inset 9px 8px 11px rgba(255, 216, 151, 0.6);
+      transform: rotate(8deg);
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="top-section">
+      <div class="sticker">元气<br>满满</div>
+      <h1 class="title top-title">核桃奶酪贝果<span class="bagel-symbol" aria-label="[Photo: bagel]"></span></h1>
+
+      <div class="step-heading top-heading">1.准备材料</div>
+
+      <div class="placeholder large-bagel">[Photo: walnut cream-cheese bagel, left]</div>
+
+      <div class="ingredients">
+        <div class="ingredient">
+          <div class="placeholder cream-cheese">[Photo: cream cheese]</div>
+          <span>奶酪</span>
+        </div>
+        <div class="ingredient">
+          <div class="placeholder mini-bagel">[Photo: bagel]</div>
+          <span>贝果</span>
+        </div>
+        <div class="ingredient">
+          <div class="placeholder walnuts">[Photo: walnut kernels]</div>
+          <span>核桃仁</span>
+        </div>
+      </div>
+
+      <p class="instructions">
+        2.核桃仁烤2分钟有香，搓掉皮<br>
+        捣碎后和奶酪混合到一起，涂抹<br>
+        在贝果上
+      </p>
+
+      <div class="process">
+        <div class="placeholder oven">[Photo: oven]</div>
+        <span class="arrow">→</span>
+        <div class="placeholder bowl">[Photo: bowl with walnuts]</div>
+        <span class="arrow">→</span>
+        <div class="placeholder spread-bagel">[Photo: prepared bagel half]</div>
+      </div>
+
+      <div class="placeholder girl" aria-label="[Illustration: girl, bottom-left]">
+        <div class="hair"></div>
+        <div class="face"></div>
+        <div class="body"></div>
+      </div>
+    </section>
+
+    <section class="bottom-section">
+      <h2 class="title bottom-title">香蕉可可贝果<span class="bagel-symbol" aria-label="[Photo: bagel]"></span></h2>
+
+      <div class="step-heading bottom-heading">1.准备材料</div>
+      <div class="handle">@哎呀牌绿豆汤</div>
+
+      <div class="bottom-ingredients">
+        <div class="ingredient">
+          <div class="placeholder cream-cheese">[Photo: cream cheese]</div>
+          <span>奶酪</span>
+        </div>
+        <div class="ingredient">
+          <div class="placeholder mini-bagel">[Photo: bagel]</div>
+          <span>贝果</span>
+        </div>
+        <div class="ingredient">
+          <div class="placeholder banana">[Photo: banana]</div>
+          <span>香蕉</span>
+        </div>
+        <div class="ingredient">
+          <div class="placeholder cocoa">[Photo: cocoa powder]</div>
+          <span>可可粉</span>
+        </div>
+      </div>
+
+      <p class="bottom-copy">
+        2.奶酪加入可可粉，搅拌均匀<br>
+        抹在贝果上摆上水果
+      </p>
+
+      <div class="sign">平安<br>喜乐</div>
+      <div class="butter"></div>
+      <div class="butter-arrow">↙</div>
+
+      <div class="bottom-process">
+        <div class="placeholder cocoa-bowl">[Photo: bowl with cocoa powder]</div>
+        <span class="arrow">→</span>
+        <div class="placeholder brown-spread">[Photo: cocoa-covered bagel]</div>
+        <span class="arrow">→</span>
+        <div class="placeholder banana-topping">[Photo: banana-topped bagel]</div>
+      </div>
+
+      <div class="placeholder final-bagel">[Photo: finished banana cocoa bagel, bottom-right]</div>
+    </section>
+  </main>
+</body>
+</html>

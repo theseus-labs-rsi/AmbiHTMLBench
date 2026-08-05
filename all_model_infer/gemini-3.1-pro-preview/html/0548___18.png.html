@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FGER-Net Architecture and Algorithm</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+            line-height: 1.15;
+            margin: 0 auto;
+            max-width: 1000px;
+            padding: 20px;
+            color: #000;
+            font-size: 16px;
+        }
+        .placeholder {
+            width: 100%;
+            height: 350px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-style: italic;
+            color: #555;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .figure-caption {
+            font-size: 0.95em;
+            text-align: justify;
+            margin-bottom: 35px;
+        }
+        .two-column {
+            display: flex;
+            gap: 25px;
+            align-items: flex-start;
+        }
+        .column-left {
+            flex: 1;
+            text-align: justify;
+        }
+        .column-right {
+            flex: 1;
+        }
+        .column-left p {
+            text-indent: 1.5em;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+        .column-left p:first-child {
+            text-indent: 0;
+        }
+        .algorithm-box {
+            border-top: 2px solid black;
+            border-bottom: 1px solid black;
+            padding: 3px 0;
+        }
+        .algorithm-title {
+            font-weight: bold;
+            font-size: 1.05em;
+            margin-bottom: 3px;
+        }
+        .algorithm-content {
+            border-top: 1px solid black;
+            padding-top: 5px;
+            font-size: 1em;
+        }
+        .algo-line {
+            margin-bottom: 2px;
+        }
+        .algo-indent {
+            margin-left: 1.5em;
+        }
+        .algo-bold {
+            font-weight: bold;
+        }
+        .algo-italic {
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="placeholder">
+        [Diagram: Neural network architecture showing Rapidly Adapting Receptors, Slowly Adapting Receptors, Event Stream Recurrent Network, Frame-Guided Network, and Perceiving Dynamic/Static forces.]
+    </div>
+
+    <div class="figure-caption">
+        Fig. 2. The architecture of the proposed FGER-Net is presented, alongside its conceptual underpinnings. The left portion illustrates the biological inspiration for the network: the synergistic function of fast and slow adapting mechanoreceptors in perceiving dynamic and static forces, respectively. These biological principles are emulated by the FGER-Net. In the network itself (center), event streams and image frames are synergistically fused for robust force estimation. In this architecture, frames are used to periodically correct for drift during training and to continuously stabilize the high frequency force predictions derived from the event stream during inference. The resulting force estimation is thereby made accurate and robust against drift, successfully capturing both dynamic and static tactile information, mirroring the perceptual capabilities shown on the right side of the diagram.
+    </div>
+
+    <div class="two-column">
+        <div class="column-left">
+            <p>dual rate architecture mirrors biological perception: a high frequency recurrent pathway integrates transient force increments from the event stream, while a low frequency pathway extracts absolute spatial references from single image frames for periodic training corrections.</p>
+            <p>During inference, we maximize estimation stability via a continuous correction strategy. By persistently fusing the most recent frame feature with incoming events, this absolute spatial anchor effectively eliminates integration drift.</p>
+            <p>The architecture utilizes dual parallel pathways optimized for each modality's distinct characteristics. To circumvent the extreme sparsity typical of standard convolutions on event data, individual events are normalized and processed by a pointwise MLP, followed by max-pooling to generate an aggregated feature vector for each packet. Conversely, dense spatial information from image frames is extracted into a compact feature vector using a residual CNN backbone coupled with average pooling.</p>
+            <p><i>a) Data Stream Segmentation:</i> The algorithm's processing cycle is driven by the arrival of new frames. A cycle is</p>
+        </div>
+        <div class="column-right">
+            <div class="algorithm-box">
+                <div class="algorithm-title">Algorithm 1 FGER-Net</div>
+                <div class="algorithm-content">
+                    <div class="algo-line"><span class="algo-bold">Input:</span> \(I_{\text{guide}}, \{P_m\}_{m=1}^M, f_{\text{prev\_cycle}}, (h_{\text{prev\_cycle}}, C_{\text{prev\_cycle}})\)</div>
+                    <div class="algo-line"><span class="algo-bold">Output:</span> \(\hat{f}_{\text{final}}, (h_M, C_M)\)</div>
+                    <div class="algo-line algo-italic">Guiding Frame Feature Extraction</div>
+                    <div class="algo-line">\(\mathbf{f}_{\text{frame}} \leftarrow \Phi_f(I_{\text{guide}})\)</div>
+                    <div class="algo-line algo-italic">Recurrent Processing Loop</div>
+                    <div class="algo-line">\(\hat{f}_0 \leftarrow f_{\text{prev\_cycle}}; (h_0, C_0) \leftarrow (h_{\text{prev\_cycle}}, C_{\text{prev\_cycle}})\)</div>
+                    <div class="algo-line"><span class="algo-bold">for</span> \(m \leftarrow 1\) <span class="algo-bold">to</span> \(M\) <span class="algo-bold">do</span></div>
+                    <div class="algo-line algo-indent">\(\mathbf{f}_{e,m} \leftarrow \Phi_e(P_m)\)</div>
+                    <div class="algo-line algo-indent">\(\mathbf{x}_m \leftarrow \text{concatenate}(\mathbf{f}_{e,m}, \hat{f}_{m-1})\)</div>
+                    <div class="algo-line algo-indent">\((h_m, C_m) \leftarrow \text{LSTM}(\mathbf{x}_m, (h_{m-1}, C_{m-1}))\)</div>
+                    <div class="algo-line algo-indent">\(\Delta \hat{f}_m \leftarrow \text{MLP}_{\Delta f}(h_m)\)</div>
+                    <div class="algo-line algo-indent">\(\hat{f}_m \leftarrow \hat{f}_{m-1} + \Delta \hat{f}_m\)</div>
+                    <div class="algo-line"><span class="algo-bold">end for</span></div>
+                    <div class="algo-line algo-italic">Fusion and Correction</div>
+                    <div class="algo-line">\(\mathbf{f}_{\text{fusion}} \leftarrow \text{concatenate}(\hat{f}_M, \mathbf{f}_{\text{frame}})\)</div>
+                    <div class="algo-line">\(\Delta f_{\text{corr}} \leftarrow \text{MLP}_{\text{corr}}(\mathbf{f}_{\text{fusion}})\)</div>
+                    <div class="algo-line">\(\hat{f}_{\text{final}} \leftarrow \hat{f}_M + \Delta f_{\text{corr}}\)</div>
+                    <div class="algo-line"><span class="algo-bold">return</span> \(\hat{f}_{\text{final}}, (h_M, C_M)\)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transformada de Fourier</title>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  }
+};
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+    body {
+        font-family: 'Times New Roman', Times, serif;
+        margin: 0;
+        padding: 30px 40px;
+        color: #000;
+        line-height: 1.4;
+    }
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        font-family: Arial, sans-serif;
+        font-size: 11px;
+        margin-bottom: 15px;
+    }
+    .page-footer {
+        display: flex;
+        justify-content: space-between;
+        font-family: Arial, sans-serif;
+        font-size: 11px;
+        margin-top: 40px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 40px;
+    }
+    th, td {
+        border: 1px solid #999;
+        padding: 8px 12px;
+        text-align: left;
+        vertical-align: middle;
+        font-size: 15px;
+    }
+    th {
+        text-align: center;
+        font-weight: bold;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+    }
+    .center-text {
+        text-align: center;
+    }
+    h1 {
+        font-family: 'Linux Libertine', Georgia, Times, serif;
+        font-size: 26px;
+        font-weight: bold;
+        margin: 0 0 8px 0;
+    }
+    .heading-divider {
+        border-top: 2px solid #000;
+        border-bottom: 1px solid #000;
+        height: 1px;
+        margin-bottom: 15px;
+    }
+    p {
+        font-size: 15px;
+        margin: 0;
+    }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+    <span>2026/6/29 03:05</span>
+    <span>Transformada de Fourier – Wikipédia, a enciclopédia livre</span>
+</div>
+
+<table>
+    <tr>
+        <th colspan="2">Alguns pares de transformadas de Fourier</th>
+    </tr>
+    <tr>
+        <td class="center-text">$f(t)$</td>
+        <td class="center-text">$F(\omega)$</td>
+    </tr>
+    <tr>
+        <td>$\delta(t)$</td>
+        <td>$1$</td>
+    </tr>
+    <tr>
+        <td>$\delta(t - a)$</td>
+        <td>$e^{-ia\omega}$</td>
+    </tr>
+    <tr>
+        <td>$u(t)$</td>
+        <td>$\pi\delta(\omega) + \frac{1}{i\omega}$</td>
+    </tr>
+    <tr>
+        <td>$1$</td>
+        <td>$2\pi\delta(\omega)$</td>
+    </tr>
+    <tr>
+        <td>$\operatorname{sgn}(t)$</td>
+        <td>$\frac{2}{i\omega}$</td>
+    </tr>
+    <tr>
+        <td>$e^{i\omega_0 t}$</td>
+        <td>$2\pi\delta(\omega - \omega_0)$</td>
+    </tr>
+    <tr>
+        <td>$\cos \omega_0 t$</td>
+        <td>$\pi(\delta(\omega - \omega_0) + \delta(\omega + \omega_0))$</td>
+    </tr>
+    <tr>
+        <td>$\operatorname{sen} \omega_0 t$</td>
+        <td>$\frac{\pi}{i}(\delta(\omega - \omega_0) - \delta(\omega + \omega_0))$</td>
+    </tr>
+    <tr>
+        <td>$\operatorname{rect}\left(\frac{t}{a}\right)$</td>
+        <td>$|a| \cdot \operatorname{sinc}\left(a \frac{\omega}{2\pi}\right) = \frac{2}{\omega}\operatorname{sen}\left(\frac{\omega a}{2}\right)$</td>
+    </tr>
+    <tr>
+        <td>$\cos(\omega_0 t)u(t)$</td>
+        <td>$\frac{\pi}{2}(\delta(\omega - \omega_0) + \delta(\omega + \omega_0)) + \frac{i\omega}{\omega_0^2 - \omega^2}$</td>
+    </tr>
+    <tr>
+        <td>$\operatorname{sen}(\omega_0 t)u(t)$</td>
+        <td>$\frac{\pi}{2i}(\delta(\omega - \omega_0) - \delta(\omega + \omega_0)) + \frac{\omega_0}{\omega_0^2 - \omega^2}$</td>
+    </tr>
+    <tr>
+        <td>$\operatorname{rect}(t/a) \cos(\omega_0 t)$</td>
+        <td>$a \left( \operatorname{sinc} \frac{(\omega - \omega_0)a}{2\pi} + \operatorname{sinc} \frac{(\omega + \omega_0)a}{2\pi} \right)$</td>
+    </tr>
+    <tr>
+        <td>$\operatorname{sinc}\left(\frac{t}{a}\right)$</td>
+        <td>$|a| \cdot \operatorname{rect}\left(\frac{\omega}{2\pi a}\right)$</td>
+    </tr>
+    <tr>
+        <td>$\operatorname{sinc}^2\left(\frac{t}{a}\right)$</td>
+        <td>$|a| \cdot \operatorname{tri}\left(\frac{\omega}{2\pi a}\right)$</td>
+    </tr>
+    <tr>
+        <td>$e^{-at} u(t), \operatorname{Re}(a) > 0$</td>
+        <td>$\frac{1}{a + i\omega}$</td>
+    </tr>
+    <tr>
+        <td>$t^n$</td>
+        <td>$2\pi i^n \delta^n(\omega)$</td>
+    </tr>
+    <tr>
+        <td>$t^{n-1} e^{-at} u(t), \operatorname{Re}(a) > 0$</td>
+        <td>$\frac{(n - 1)!}{(a + i\omega)^n}$</td>
+    </tr>
+    <tr>
+        <td>$e^{-a|t|}, \operatorname{Re}(a) > 0$</td>
+        <td>$\frac{2a}{a^2 + \omega^2}$</td>
+    </tr>
+    <tr>
+        <td>$e^{-\pi t^2}$</td>
+        <td>$e^{-\frac{\omega^2}{4\pi}}$</td>
+    </tr>
+    <tr>
+        <td>$\frac{1}{\sqrt{|t|}}$</td>
+        <td>$\sqrt{\frac{2\pi}{|\omega|}}$</td>
+    </tr>
+    <tr>
+        <td>$\frac{1}{t^2 + a^2}$</td>
+        <td>$\frac{\pi}{a} e^{-a|\omega|}$</td>
+    </tr>
+    <tr>
+        <td>$\operatorname{tri}(t)$</td>
+        <td>$\operatorname{sinc}^2\left(\frac{\omega}{2\pi}\right)$</td>
+    </tr>
+</table>
+
+<h1>Transformadas operacionais</h1>
+<div class="heading-divider"></div>
+
+<p>As transformadas de Fourier, assim como as de Laplace, podem ser classificadas como funcionais e operacionais.</p>
+
+<div class="page-footer">
+    <span>https://pt.wikipedia.org/wiki/Transformada_de_Fourier</span>
+    <span>22/37</span>
+</div>
+
+</body>
+</html>

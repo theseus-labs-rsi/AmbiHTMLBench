@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module Lattice Security (Part III)</title>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+  <style>
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      width: 827px;
+      height: 1170px;
+      background: #fff;
+    }
+    body {
+      position: relative;
+      overflow: hidden;
+      color: #171717;
+      font-family: "Times New Roman", Times, serif;
+    }
+    .page {
+      width: 827px;
+      height: 1170px;
+      position: relative;
+      padding-top: 154px;
+    }
+    .arxiv {
+      position: absolute;
+      left: 23px;
+      top: 337px;
+      width: 37px;
+      transform: rotate(-90deg);
+      transform-origin: top left;
+      white-space: nowrap;
+      color: #666;
+      font-family: Arial, sans-serif;
+      font-size: 24px;
+      font-weight: 400;
+      letter-spacing: .2px;
+    }
+    .title-block {
+      width: 650px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: normal;
+      letter-spacing: -.35px;
+    }
+    .subtitle {
+      margin-top: 8px;
+      font-size: 17px;
+      letter-spacing: .15px;
+    }
+    .author {
+      margin-top: 24px;
+      font-size: 17px;
+    }
+    .affiliation {
+      margin-top: 3px;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+    .date {
+      margin-top: 16px;
+      font-size: 17px;
+    }
+    .abstract {
+      width: 552px;
+      margin: 35px auto 0;
+      font-size: 14.5px;
+      line-height: 1.16;
+      text-align: justify;
+    }
+    .abstract h2 {
+      margin: 0 0 7px;
+      font-size: 15.5px;
+      font-weight: bold;
+      text-align: center;
+    }
+    .keywords {
+      width: 628px;
+      margin: 20px auto 0;
+      font-size: 15.5px;
+      line-height: 1.25;
+    }
+    .main {
+      width: 628px;
+      margin: 24px auto 0;
+    }
+    .section-title {
+      margin: 0 0 13px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .section-title .number {
+      display: inline-block;
+      width: 34px;
+    }
+    p {
+      margin: 0 0 5px;
+      font-size: 15.5px;
+      line-height: 1.13;
+      text-align: justify;
+    }
+    .indent {
+      text-indent: 25px;
+    }
+    .footer {
+      position: absolute;
+      bottom: 55px;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      font-size: 14px;
+    }
+    mjx-container { margin: 0 !important; }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="arxiv">arXiv:2605.17404v1&nbsp; [cs.DS]&nbsp; 17 May 2026</div>
+
+    <header class="title-block">
+      <h1>Module Lattice Security (Part III):</h1>
+      <div class="subtitle">Structured CVP Distance on the Log-Unit Lattice</div>
+      <div class="author">Ming-Xing Luo</div>
+      <div class="affiliation">School of Information Science and Technology, Southwest Jiaotong University, Chengdu 610031, China</div>
+      <div class="date">May 19, 2026</div>
+    </header>
+
+    <section class="abstract">
+      <h2>Abstract</h2>
+      We prove that the $L^2$ CVP distance from a random short ring element to the log-unit lattice of $\mathbb{Q}(\zeta_{2^k})$ converges to $\frac{\pi}{2\sqrt{6}}\sqrt{n}$ as $n=2^{k-1}\to\infty$. We then show that this target lies inside the Voronoi cell of the origin for $k\geq 4$. For the $L^\infty$ norm, the maximum over $n$ sub-Gaussian coordinates yields $O(\sqrt{\log n})$ which translates into a sub-polynomial approximation factor for the Short Generator Problem. We show a Coarse Lattice Theorem that Babai’s algorithm returns zero for all structured targets, yet exactly recovers unit perturbations of arbitrary size. For module determinant ideals, we further prove the Trigramma Theorem that proves an intrinsic imbalance $\sigma_{g_0}=O(1)$ independent of the modulus $q$. Finally, combined with Parts I and II, we reduce the CDPR factor for ML-KEM from $\exp(\widetilde{O}(\sqrt{n}))$ to a sub-polynomial value.
+    </section>
+
+    <div class="keywords"><strong>Keywords:</strong> Log-unit lattice, Short Generator Problem, CVP, CDPR attack, sub-Gaussian,<br>ML-KEM, post-quantum cryptography.</div>
+
+    <main class="main">
+      <h2 class="section-title"><span class="number">1</span>Introduction</h2>
+
+      <p>The CDPR quantum attack [1] on ideal lattices over $R=\mathbb{Z}[\zeta_{2^k}]$ achieves an approximation factor $\gamma=\exp(C_0\sqrt{n}\log n)$, where $n=2^{k-1}$ and $C_0&gt;0$ is an absolute constant. Refined by Cramer, Ducas, and Wesolowski [2, 3] using Stickelberger relations, this attack implements with three phases. Phase 1 is named as quantum PIP which uses the Biais-Song algorithm [4] to find some generator $g$ of a given principal ideal $I=(g_0)\subset R$ in quantum polynomial time. Unfortunately, $g$ may be exponentially larger than the shortest generator $g_0$ as $g=g_0\varepsilon$ for some unit $\varepsilon\in R^\times$ that can have enormous norm. Phase 2 is log-unit CVP, where Closest Vector Problem (CVP) is resolved on the log-unit lattice $\Lambda$ to recover $\varepsilon$. Note in the log-Minkowski embedding, the generators of ideal $I$ form the coset $\log\sigma(g_0)+\Lambda$. So, the problem of finding a short generator is then reduced to locate the lattice point closest to $\log\sigma(g)$. In Phase 3, the CVP solution can be used to identify a unit $\varepsilon'$ that closes to $\varepsilon$. Meanwhile, the short generator is recovered as $g'=g(\varepsilon')^{-1}$. In this case, the approximation factor is given by $\gamma=\exp(\rho_\infty)$, where $\rho_\infty$ denotes the $L^\infty$-norm of the CVP residual.</p>
+
+      <p class="indent">Pellét-Mary, Hanrot, and Stehlé [5] gave a time-approximation tradeoff with preprocessing. Felderhoff <em>et al.</em> [6] proved Ideal-SVP remains hard for small-norm prime ideals. For module lattices, Langlois and Stehlé [7] proved the worst-case MLWE hardness. Mureau <em>et al.</em> [8] and Allombert <em>et al.</em> [9] attacked rank-2 module-LIP. Chevignat <em>et al.</em> [10] reduced Hawk scheme to PIP. Ducas <em>et al.</em> [11] predicted module-BKZ quality. Babai [12] introduced the nearest-plane CVP algorithm, while refs.[13, 14, 15, 16] provide generic lattice reduction with progressively better approximation factors.</p>
+
+      <p class="indent">Note the worst-case bound treats the CVP target as an arbitrary point in the ambient space. However, the targets arising from short generators are highly structured: they are log-embeddings</p>
+    </main>
+
+    <div class="footer">1</div>
+  </div>
+</body>
+</html>

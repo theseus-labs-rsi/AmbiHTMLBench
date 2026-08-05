@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The sales effect of "Free App of the Day" on Amazon Appstore: An empirical study</title>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$']],
+    displayMath: [['$$', '$$']]
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: #ffffff;
+    font-family: "Trebuchet MS", "Segoe UI", Verdana, sans-serif;
+    color: #14203a;
+    font-size: 15.5px;
+    line-height: 1.5;
+  }
+  .poster {
+    width: 1100px;
+    margin: 0 auto;
+    background: #ffffff;
+  }
+
+  /* ---------- Header ---------- */
+  header {
+    background: #d92b21;
+    color: #ffffff;
+    padding: 75px 78px 60px 78px;
+    position: relative;
+    overflow: hidden;
+  }
+  header .bg-note {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(105deg, #cf2a20 0%, #d8352b 45%, #c9251c 100%);
+    opacity: 1;
+    z-index: 0;
+  }
+  header .head-inner { position: relative; z-index: 1; }
+  header h1 {
+    font-size: 40px;
+    line-height: 1.2;
+    font-weight: 600;
+    margin: 0 0 14px 0;
+    color: #ffffff;
+    max-width: 780px;
+  }
+  header .authors {
+    font-size: 27px;
+    font-weight: 400;
+    color: #1b1b1b;
+    margin: 0;
+  }
+  .header-photo-note {
+    position: absolute;
+    right: 20px;
+    top: 12px;
+    z-index: 2;
+    width: 430px;
+    height: 300px;
+    border: 1px dashed rgba(255,255,255,0.55);
+    color: rgba(255,255,255,0.85);
+    font-size: 12px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: 6px 8px;
+  }
+
+  /* ---------- Section headings ---------- */
+  h2.section {
+    color: #e8503f;
+    font-size: 25px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    margin: 0 0 20px 0;
+  }
+
+  /* ---------- Upper band ---------- */
+  .band {
+    background: #f1f1f1;
+    padding: 55px 78px 60px 78px;
+    display: flex;
+    gap: 20px;
+  }
+  .band .left { flex: 1 1 auto; max-width: 730px; }
+  .band .right { flex: 0 0 300px; position: relative; }
+  .band p { margin: 0; }
+  .band .objective { margin-top: 52px; }
+
+  .placeholder {
+    border: 1px dashed #b3b3b3;
+    color: #7a7a7a;
+    font-size: 12px;
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: rgba(255,255,255,0.35);
+  }
+  .phone-ph {
+    width: 290px;
+    height: 400px;
+    margin-top: 10px;
+  }
+
+  /* ---------- Two column body ---------- */
+  .cols {
+    display: flex;
+    padding: 45px 78px 0 78px;
+    gap: 0;
+  }
+  .col-left {
+    flex: 0 0 48%;
+    padding-right: 45px;
+  }
+  .col-right {
+    flex: 1 1 auto;
+    padding-left: 55px;
+    border-left: 1px solid #cfcfcf;
+  }
+  .col-left ol.method {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .col-left ol.method > li {
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+  .col-left ol.method .sub {
+    font-weight: 400;
+    margin: 0 0 0 30px;
+    text-indent: 0;
+  }
+  .col-left ol.method .sub.wrap {
+    margin-left: 0;
+    text-indent: 30px;
+  }
+  .col-right p { margin: 0; }
+
+  /* ---------- Table ---------- */
+  table.results {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 40px;
+    font-size: 15px;
+  }
+  table.results thead th {
+    background: #e8483c;
+    color: #ffffff;
+    font-weight: 500;
+    padding: 14px 10px;
+    text-align: center;
+  }
+  table.results tbody td {
+    padding: 8px 10px;
+    text-align: center;
+  }
+  table.results tbody td.rowlab {
+    background: #35aec2;
+    color: #ffffff;
+    font-style: italic;
+    font-weight: 500;
+  }
+  table.results tbody tr:nth-child(odd) td.val { background: #f0f0f0; }
+  table.results tbody tr:nth-child(even) td.val { background: #ffffff; }
+
+  .table-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 14px;
+  }
+  .table-foot .r2 {
+    font-style: italic;
+    font-weight: 700;
+  }
+  .table-foot .sig {
+    font-style: italic;
+    font-size: 13px;
+    text-align: right;
+    line-height: 1.5;
+  }
+
+  /* ---------- Conclusion ---------- */
+  .conclusion {
+    padding: 30px 78px 55px 78px;
+  }
+  .conclusion h2.section { margin-bottom: 16px; }
+  .conclusion p { margin: 0; font-size: 17px; }
+
+  /* ---------- Footer ---------- */
+  footer {
+    background: #000000;
+    color: #ffffff;
+    padding: 45px 78px 55px 78px;
+    font-size: 16.5px;
+    line-height: 1.55;
+  }
+  footer b { font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="poster">
+
+  <header>
+    <div class="bg-note"></div>
+    <div class="header-photo-note placeholder">[Photo: background, top-right — hands holding a mobile device]</div>
+    <div class="head-inner">
+      <h1>The sales effect of &ldquo;Free App of the Day&rdquo;<br>on Amazon Appstore: An empirical study</h1>
+      <p class="authors">Hong Chen, Kevin Lachaud, Wenqi Zhou</p>
+    </div>
+  </header>
+
+  <section class="band">
+    <div class="left">
+      <h2 class="section">INTRODUCTION</h2>
+      <p>Apps, as an abbreviation of mobile applications, are software products for mobile platforms (Tang, 2016). They are designed to perform certain tasks on mobile devices (Islam, Islam, &amp; Mazumder, 2010). This product category has grown to become a gigantic differentiated market with over 3.48 million apps on Google Play, an app marketplace, and the recent projection of over 935-billion-dollar revenue in 2023 (Statista Research, 2021a, Statista Research, 2021b).</p>
+
+      <div class="objective">
+        <h2 class="section">OBJECTIVE</h2>
+        <p>This work studies the adverse effect of &ldquo;Free App of the Day&rdquo; at Amazon Appstore.</p>
+      </div>
+    </div>
+    <div class="right">
+      <div class="placeholder phone-ph">[Illustration: right side — 3D hand tapping a smartphone screen, wearing a red smartwatch reading 20:12]</div>
+    </div>
+  </section>
+
+  <section class="cols">
+    <div class="col-left">
+      <h2 class="section">METHODOLOGY</h2>
+      <ol class="method">
+        <li>1. Literature review</li>
+        <div class="sub">a. Digital free sampling</div>
+        <div class="sub">b. eWOM</div>
+        <li>2. Hypotheses</li>
+        <div class="sub wrap">a. H1 - Online user decisions to adopt apps are discouraged by the price rebound after the zero-price offering of FAD ends. The sharper price rebound leads to a greater decrease in app adoptions.</div>
+        <div class="sub wrap">b. H2 - Conditional on the total volume of eWOM, organic reviews are more influential to online user decisions of adopting apps than promotion-induced reviews after the FAD promotion ends.</div>
+        <li>3. Data</li>
+        <div class="sub">a. Context and data collection</div>
+        <div class="sub">b. Key variables</div>
+        <li>4. Empirical analysis</li>
+        <div class="sub">a. Exploratory analysis</div>
+        <div class="sub">b. Regression model and results</div>
+      </ol>
+    </div>
+
+    <div class="col-right">
+      <h2 class="section">RESULTS</h2>
+      <p>We notice that a few apps were off the direct spotlight post-promotion; however, they still offer zero price for another one or two days.</p>
+      <p>Specifically, an increase in SkewDailyi indicates a more right skewed distribution of daily number of reviews during the post-promotion period.</p>
+
+      <table class="results">
+        <thead>
+          <tr>
+            <th>Empty Cell</th>
+            <th>Mean</th>
+            <th>S.D.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="rowlab">PriceReboundi,t</td><td class="val">&minus;0.40***</td><td class="val">0.06</td></tr>
+          <tr><td class="rowlab">SkewDailyi</td><td class="val">&minus;0.19*</td><td class="val">0.11</td></tr>
+          <tr><td class="rowlab">KurtDdailyi</td><td class="val">&minus;0.09**</td><td class="val">0.05</td></tr>
+          <tr><td class="rowlab">Ln(NumReviewsi,t)</td><td class="val">0.59***</td><td class="val">0.08</td></tr>
+          <tr><td class="rowlab">AverageRatingi,t</td><td class="val">2.06***</td><td class="val">0.40</td></tr>
+          <tr><td class="rowlab">VarianceRatingi,t</td><td class="val">1.17***</td><td class="val">0.30</td></tr>
+          <tr><td class="rowlab">Dayi,t</td><td class="val">&minus;0.11*</td><td class="val">0.03</td></tr>
+          <tr><td class="rowlab">Agei,t</td><td class="val">&minus;0.0004***</td><td class="val">0.0002</td></tr>
+          <tr><td class="rowlab">AppSizei,t</td><td class="val">0.01***</td><td class="val">0.002</td></tr>
+        </tbody>
+      </table>
+
+      <div class="table-foot">
+        <div class="r2">R2 = 0.45</div>
+        <div class="sig">
+          * $p &lt; 0.1$.<br>
+          **$p &lt; 0.05$.<br>
+          ***$p &lt; 0.01$.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="conclusion">
+    <h2 class="section">CONCLUSION</h2>
+    <p>We conclude that these promotion-induced reviews are less influential than organic reviews.</p>
+  </section>
+
+  <footer>
+    <b>References:</b> Chen, H., Lachaud, K. and Zhou, W., 2022. The sales effect of &ldquo;Free App of the Day&rdquo; on Amazon Appstore: An empirical study. Digital Business, 2(2), p.100020.
+  </footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>自我组织笔记</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    margin: 0;
+    min-height: 100%;
+    background: #ffffff;
+    color: #303332;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+      "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
+  }
+
+  body {
+    display: flex;
+    justify-content: center;
+  }
+
+  .app {
+    position: relative;
+    width: 372px;
+    height: 720px;
+    overflow: hidden;
+    background: #ffffff;
+  }
+
+  .topbar {
+    position: absolute;
+    z-index: 5;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #dedede;
+    background: rgba(255, 255, 255, 0.98);
+    color: #202524;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .menu-icon {
+    position: relative;
+    width: 20px;
+    height: 18px;
+    margin-left: 11px;
+    margin-right: 13px;
+  }
+
+  .menu-icon span,
+  .menu-icon::before,
+  .menu-icon::after {
+    position: absolute;
+    left: 1px;
+    width: 15px;
+    height: 1.5px;
+    background: #252a29;
+    content: "";
+  }
+
+  .menu-icon::before {
+    top: 3px;
+  }
+
+  .menu-icon span {
+    top: 8px;
+  }
+
+  .menu-icon::after {
+    top: 13px;
+  }
+
+  .pencil {
+    width: 20px;
+    margin-right: 3px;
+    color: #262b2a;
+    font-size: 19px;
+    line-height: 1;
+    transform: rotate(-5deg);
+  }
+
+  .crumb {
+    overflow: hidden;
+    color: #252a29;
+    text-overflow: clip;
+  }
+
+  .crumb.first {
+    width: 58px;
+  }
+
+  .slash {
+    margin: 0 8px 0 4px;
+    color: #777b7a;
+  }
+
+  .crumb.second {
+    width: 91px;
+  }
+
+  .top-actions {
+    margin-left: auto;
+    display: flex;
+    height: 100%;
+    align-items: center;
+    gap: 16px;
+    padding-right: 10px;
+  }
+
+  .share-icon {
+    position: relative;
+    width: 17px;
+    height: 18px;
+    margin-top: 2px;
+    border: 1.6px solid #252a29;
+    border-radius: 2px;
+  }
+
+  .share-icon::before {
+    position: absolute;
+    top: -6px;
+    left: 6px;
+    width: 6px;
+    height: 8px;
+    border-left: 1.6px solid #252a29;
+    content: "";
+  }
+
+  .share-icon::after {
+    position: absolute;
+    top: -4px;
+    left: 4px;
+    width: 6px;
+    height: 6px;
+    border-top: 1.6px solid #252a29;
+    border-left: 1.6px solid #252a29;
+    content: "";
+    transform: rotate(45deg);
+  }
+
+  .comment-icon {
+    position: relative;
+    width: 18px;
+    height: 14px;
+    border: 1.6px solid #252a29;
+    border-radius: 4px;
+  }
+
+  .comment-icon::before,
+  .comment-icon::after {
+    position: absolute;
+    left: 4px;
+    width: 8px;
+    height: 1px;
+    background: #252a29;
+    content: "";
+  }
+
+  .comment-icon::before {
+    top: 4px;
+  }
+
+  .comment-icon::after {
+    top: 7px;
+  }
+
+  .comment-tail {
+    position: absolute;
+    bottom: -4px;
+    left: 4px;
+    width: 6px;
+    height: 6px;
+    border-left: 1.6px solid #252a29;
+    transform: skewY(-38deg);
+  }
+
+  .more-icon {
+    display: flex;
+    width: 22px;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .more-icon i {
+    display: block;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #252a29;
+  }
+
+  .article {
+    position: absolute;
+    top: 35px;
+    left: 0;
+    width: 100%;
+    height: 643px;
+    overflow: hidden;
+    padding: 8px 22px 20px 23px;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 21px;
+    letter-spacing: 0;
+  }
+
+  ul {
+    margin: 0;
+    padding-left: 26px;
+  }
+
+  li {
+    padding-left: 0;
+  }
+
+  li::marker {
+    color: #222625;
+    font-size: 11px;
+  }
+
+  strong {
+    font-weight: 700;
+  }
+
+  .green {
+    color: #3d8967;
+    font-weight: 700;
+  }
+
+  .lead {
+    margin: 0;
+  }
+
+  .section-title {
+    height: 27px;
+    margin: 16px 0 7px 0;
+    padding: 2px 3px 2px 3px;
+    background: #edf2ee;
+    color: #252b29;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 23px;
+  }
+
+  .section-title .label {
+    color: #448c6c;
+  }
+
+  .main-list > li {
+    margin-bottom: 7px;
+  }
+
+  .main-list > li:last-child {
+    margin-bottom: 0;
+  }
+
+  .nested {
+    margin-top: 6px;
+    padding-left: 25px;
+  }
+
+  .nested li {
+    padding-left: 0;
+  }
+
+  .nested li::marker {
+    font-size: 10px;
+  }
+
+  .bottom-nav {
+    position: absolute;
+    z-index: 10;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 42px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    align-items: center;
+    background: #f7f7f7;
+  }
+
+  .nav-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 42px;
+  }
+
+  .search-icon {
+    position: relative;
+    width: 16px;
+    height: 16px;
+    border: 1.8px solid #202625;
+    border-radius: 50%;
+  }
+
+  .search-icon::after {
+    position: absolute;
+    right: -5px;
+    bottom: -4px;
+    width: 7px;
+    height: 1.8px;
+    background: #202625;
+    content: "";
+    transform: rotate(48deg);
+    transform-origin: left center;
+  }
+
+  .bell-icon {
+    position: relative;
+    width: 15px;
+    height: 16px;
+    margin-top: -1px;
+    border: 1.6px solid #202625;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom: 0;
+  }
+
+  .bell-icon::before {
+    position: absolute;
+    left: -3px;
+    bottom: -2px;
+    width: 19px;
+    height: 5px;
+    border-bottom: 1.6px solid #202625;
+    border-radius: 50%;
+    content: "";
+  }
+
+  .bell-icon::after {
+    position: absolute;
+    left: 5px;
+    bottom: -5px;
+    width: 4px;
+    height: 2px;
+    border-bottom: 1.6px solid #202625;
+    border-radius: 50%;
+    content: "";
+  }
+
+  .add-icon {
+    position: relative;
+    width: 18px;
+    height: 18px;
+    border: 1.6px solid #202625;
+    border-radius: 4px;
+  }
+
+  .add-icon::before,
+  .add-icon::after {
+    position: absolute;
+    top: 7px;
+    left: 4px;
+    width: 8px;
+    height: 1.5px;
+    background: #202625;
+    content: "";
+  }
+
+  .add-icon::after {
+    transform: rotate(90deg);
+  }
+
+  @media (max-width: 372px) {
+    .app {
+      width: 100vw;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="menu-icon" aria-hidden="true"><span></span></div>
+    <div class="pencil" aria-hidden="true">✎</div>
+    <div class="crumb first">自我...</div>
+    <div class="slash">/</div>
+    <div class="crumb second">How to Org...</div>
+
+    <div class="top-actions" aria-hidden="true">
+      <div class="share-icon"></div>
+      <div class="comment-icon"><span class="comment-tail"></span></div>
+      <div class="more-icon"><i></i><i></i><i></i></div>
+    </div>
+  </header>
+
+  <main class="article">
+    <ul class="lead">
+      <li>
+        你的经验法则应该是：<strong>每次接触笔记时都要为其增加价值。</strong>这可以包括在你第一次看到一个笔记时，添加一个内容丰富的标题，在你下次看到它时，突出最重要的内容，并在以后的某个时候添加一个相关笔记的链接。通过在一段时间内分散整理笔记的繁重工作，你不仅可以节省时间和精力，还可以确保最终经常使用的（因此也是最有价值的）笔记能够浮现出来。
+      </li>
+    </ul>
+
+    <div class="section-title"><span class="label">E: Express</span>&nbsp; 表达</div>
+
+    <ul class="main-list">
+      <li>
+        在建立第二个大脑的过程中，有很多好处：压力更小、注意力更集中、有更多的洞察力，以及提高生产力。但真正的回报是在最后，当你从你所收集的知识中创造出<span class="green">一些东西并与世界分享时</span>
+      </li>
+
+      <li>
+        一切都在变化中，一切都在进行中，你所做的一切都有一个隐含的 "1.0版本" 在上面。这可能是巨大的力量--<span class="green">因为没有什么是最终的，所以没有必要等待开始。</span>
+        <ul class="nested">
+          <li>
+            你可以现在就发布一个简单的网站，然后在你有时间的时候慢慢添加其他页面。你可以现在发表一篇博客文章的草稿，然后在收到反馈后再进行修改。你甚至可以在Kindle商店里自助出版一本电子书，今后对稿件的任何更新都会无线同步给每个购买该书的人。
+          </li>
+        </ul>
+      </li>
+
+      <li>
+        <span class="green">通过持续地与他人分享你的作品</span>--无论是你的家人、朋友、同事，还是在社交媒体上的外部
+      </li>
+    </ul>
+  </main>
+
+  <nav class="bottom-nav" aria-hidden="true">
+    <div class="nav-item"><div class="search-icon"></div></div>
+    <div class="nav-item"><div class="bell-icon"></div></div>
+    <div class="nav-item"><div class="add-icon"></div></div>
+  </nav>
+</div>
+</body>
+</html>

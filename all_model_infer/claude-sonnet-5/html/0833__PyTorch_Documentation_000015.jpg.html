@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AdaptiveAvgPool3d — PyTorch documentation</title>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: #24292e;
+    font-size: 14px;
+  }
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  .topbar-left { display: flex; align-items: center; gap: 20px; }
+  .logo { font-weight: bold; font-size: 16px; display:flex; align-items:center; gap:6px; }
+  .logo span.pt { color: #ee4c2c; }
+  .topbar-left select, .topbar-left a {
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+  }
+  .topbar-nav-item { color: #333; cursor: pointer; }
+  .search-box {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 4px 10px;
+    color: #888;
+    font-size: 13px;
+    gap: 8px;
+    width: 220px;
+  }
+  .topbar-right { display: flex; align-items: center; gap: 16px; }
+  .go-to { font-size: 11px; color: #888; text-align: right; }
+  .go-to a { color: #ee4c2c; font-weight: bold; text-decoration: none; }
+
+  .layout {
+    display: flex;
+  }
+  .sidebar {
+    width: 215px;
+    padding: 15px 10px 15px 20px;
+    border-right: 1px solid #eee;
+    font-size: 13.5px;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  .sidebar .top-label { color: #888; font-size: 12px; margin-bottom: 8px; }
+  .sidebar div.section-title { color:#888; font-size:12px; margin: 6px 0; }
+  .sidebar .active {
+    color: #ee4c2c;
+    border-left: 3px solid #ee4c2c;
+    padding-left: 8px;
+    margin-left: -11px;
+    font-weight: 600;
+  }
+  .sidebar a {
+    display: block;
+    color: #333;
+    text-decoration: none;
+    padding: 4px 0 4px 8px;
+    line-height: 1.3;
+  }
+  .sidebar a:hover { color: #ee4c2c; }
+
+  .main-content {
+    flex: 1;
+    padding: 20px 40px;
+    max-width: 1000px;
+  }
+  .breadcrumb {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 10px;
+  }
+  .breadcrumb a { color: #666; text-decoration: none; }
+  .rate-page { color: #333; font-size: 13px; }
+  .stars { color: #ccc; margin-left: 6px; }
+
+  h1 { font-size: 32px; margin: 10px 0 20px 0; font-weight: 500; }
+  .classdef {
+    font-family: "SFMono-Regular", Consolas, monospace;
+    font-size: 15px;
+    margin-bottom: 20px;
+  }
+  .classdef .kw { font-style: italic; }
+  .classdef .name { color: #a020a0; font-weight: bold; }
+  .source-link { float: right; color: #ee4c2c; font-size: 13px; text-decoration: none; }
+  a.source-link { text-decoration: none; }
+
+  p { line-height: 1.6; margin: 12px 0; }
+
+  .box {
+    background: #f5f6f7;
+    padding: 10px 15px;
+    margin: 15px 0;
+  }
+  .box-title { font-weight: bold; margin-bottom: 8px; }
+  .box p { margin: 6px 0; }
+  code.inline {
+    background: #eceff1;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-family: Consolas, monospace;
+    font-size: 13px;
+  }
+  a.link { color: #ee4c2c; text-decoration: underline; }
+
+  h3.section-h { border-bottom: 1px solid #ddd; padding-bottom: 6px; margin-top: 30px; }
+  ul.shape-list { margin: 10px 0; padding-left: 20px; }
+  ul.shape-list li { margin: 6px 0; }
+
+  pre.example {
+    background: #f5f6f7;
+    padding: 15px;
+    font-family: Consolas, monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    overflow-x: auto;
+    margin: 10px 0;
+  }
+  .num { color: #1750eb; }
+  .kwval { color: #a020a0; }
+
+  .forward-title {
+    font-family: Consolas, monospace;
+    font-size: 16px;
+    color: #a020a0;
+    font-weight: bold;
+    margin-top: 30px;
+  }
+  .forward-title .arg { font-style: italic; color: #a020a0; }
+
+  .rightbar {
+    width: 190px;
+    padding: 20px 15px;
+    font-size: 13px;
+    color: #444;
+  }
+  .rightbar .on-page-title { font-weight: 600; margin-bottom: 10px; }
+  .rightbar .pill {
+    display: block;
+    background: #eceff1;
+    border-radius: 3px;
+    padding: 4px 8px;
+    margin-bottom: 6px;
+    font-size: 12px;
+  }
+  .rightbar .show-source { color: #ee4c2c; margin: 20px 0; font-size: 13px; }
+  .rightbar .libs-title { font-weight: 600; margin: 20px 0 10px 0; }
+  .rightbar a.lib-link { display: block; color: #333; text-decoration: none; margin-bottom: 8px; }
+
+  .bottom-bar {
+    text-align: center;
+    padding: 20px 0;
+    border-top: 1px solid #eee;
+    margin-top: 40px;
+  }
+  .feedback-btn {
+    background: #eee;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    color: #333;
+    margin-top: 10px;
+  }
+  .prev-next {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 40px;
+    font-size: 14px;
+  }
+  .prev-next a { color: #ee4c2c; text-decoration: none; font-weight: bold; }
+  .prev-next .label { color: #888; display: block; font-size: 13px; font-weight: normal; }
+
+  .ask-ai {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    padding: 8px 18px;
+    font-size: 14px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="logo">🔥 PyTorch</div>
+    <select><option>v2.12...</option></select>
+    <a href="#">Install PyTorch ↗</a>
+    <a href="#">User Guide ▾</a>
+    <a href="#">Reference API ▾</a>
+    <a href="#">Developer Notes ▾</a>
+    <a href="#">Community ▾</a>
+    <a href="#">Tutorials ↗</a>
+  </div>
+  <div class="topbar-right">
+    <div class="go-to">Go to<br><a href="#">pytorch.org</a></div>
+    <div class="search-box">🔍 Search the docs ...</div>
+    <span>◐</span>
+  </div>
+</div>
+
+<div class="layout">
+  <div class="sidebar">
+    <div style="color:#888; font-size:12px; margin-bottom:10px;">Python API</div>
+    <div style="margin-bottom:6px;">torch</div>
+    <div class="active">Aliases in torch.nn</div>
+    <a href="#">Sequential</a>
+    <a href="#">ModuleList</a>
+    <a href="#">ModuleDict</a>
+    <a href="#">ParameterList</a>
+    <a href="#">ParameterDict</a>
+    <a href="#">Conv1d</a>
+    <a href="#">Conv2d</a>
+    <a href="#">Conv3d</a>
+    <a href="#">ConvTranspose1d</a>
+    <a href="#">ConvTranspose2d</a>
+    <a href="#">ConvTranspose3d</a>
+    <a href="#">LazyConv1d</a>
+    <a href="#">LazyConv2d</a>
+    <a href="#">LazyConv3d</a>
+    <a href="#">LazyConvTranspose1d</a>
+    <a href="#">LazyConvTranspose2d</a>
+    <a href="#">LazyConvTranspose3d</a>
+    <a href="#">Unfold</a>
+    <a href="#">Fold</a>
+    <a href="#">MaxPool1d</a>
+    <a href="#">MaxPool2d</a>
+    <a href="#">MaxPool3d</a>
+    <a href="#">MaxUnpool1d</a>
+    <a href="#">MaxUnpool2d</a>
+    <a href="#">MaxUnpool3d</a>
+    <a href="#">AvgPool1d</a>
+    <a href="#">AvgPool2d</a>
+    <a href="#">AvgPool3d</a>
+    <a href="#">FractionalMaxPool2d</a>
+    <a href="#">FractionalMaxPool3d</a>
+    <a href="#">LPPool1d</a>
+    <a href="#">LPPool2d</a>
+    <a href="#">LPPool3d</a>
+    <a href="#">AdaptiveMaxPool1d</a>
+    <a href="#">AdaptiveMaxPool2d</a>
+    <a href="#">AdaptiveMaxPool3d</a>
+  </div>
+
+  <div class="main-content">
+    <div class="breadcrumb">
+      <div>
+        <a href="#">⌂</a> &nbsp; <a href="#">Reference API</a> &nbsp;›&nbsp; ... &nbsp;›&nbsp; <a href="#">Aliases in torch.nn</a> &nbsp;›&nbsp; AdaptiveAvgPool3d
+      </div>
+      <div class="rate-page">Rate this Page <span class="stars">☆☆☆☆☆</span></div>
+    </div>
+
+    <h1>AdaptiveAvgPool3d</h1>
+
+    <div class="classdef">
+      <a href="#" class="source-link">[source]</a>
+      <span class="kw">class</span> torch.nn.modules.pooling.<span class="name">AdaptiveAvgPool3d</span>(<span class="kw">output_size</span>)
+    </div>
+
+    <p>Applies a 3D adaptive average pooling over an input signal composed of several input planes.</p>
+
+    <p>The output is of size D x H x W, for any input size. The number of output features is equal to the number of input planes.</p>
+
+    <div class="box">
+      <div class="box-title">Parameters:</div>
+      <p>
+        <b>output_size</b> (<a href="#" class="link"><i>int</i></a> | None | <a href="#" class="link"><i>tuple</i></a>[<a href="#" class="link"><i>int</i></a> | None, <i>int</i> | None, <i>int</i> | None]) – the target output size of the form D x H x W. Can be a
+        tuple (D, H, W) or a single number D for a cube D x D x D. D, H and W can be either a <code class="inline">int</code>, or <code class="inline">None</code> which means the size
+        will be the same as that of the input.
+      </p>
+    </div>
+
+    <h3 class="section-h">Shape:</h3>
+    <ul class="shape-list">
+      <li>Input: $(N, C, D_{in}, H_{in}, W_{in})$ or $(C, D_{in}, H_{in}, W_{in})$.</li>
+      <li>Output: $(N, C, S_0, S_1, S_2)$ or $(C, S_0, S_1, S_2)$, where $S = \text{output\_size}$.</li>
+    </ul>
+
+    <h3 class="section-h">Examples</h3>
+    <pre class="example">&gt;&gt;&gt; # target output size of 5x7x9
+&gt;&gt;&gt; m = nn.AdaptiveAvgPool3d((<span class="num">5</span>, <span class="num">7</span>, <span class="num">9</span>))
+&gt;&gt;&gt; input = torch.randn(<span class="num">1</span>, <span class="num">64</span>, <span class="num">8</span>, <span class="num">9</span>, <span class="num">10</span>)
+&gt;&gt;&gt; output = m(input)
+&gt;&gt;&gt; # target output size of 7x7x7 (cube)
+&gt;&gt;&gt; m = nn.AdaptiveAvgPool3d(<span class="num">7</span>)
+&gt;&gt;&gt; input = torch.randn(<span class="num">1</span>, <span class="num">64</span>, <span class="num">10</span>, <span class="num">9</span>, <span class="num">8</span>)
+&gt;&gt;&gt; output = m(input)
+&gt;&gt;&gt; # target output size of 7x9x8
+&gt;&gt;&gt; m = nn.AdaptiveAvgPool3d((<span class="num">7</span>, <span class="kwval">None</span>, <span class="kwval">None</span>))
+&gt;&gt;&gt; input = torch.randn(<span class="num">1</span>, <span class="num">64</span>, <span class="num">10</span>, <span class="num">9</span>, <span class="num">8</span>)
+&gt;&gt;&gt; output = m(input)</pre>
+
+    <div class="forward-title">
+      <a href="#" class="source-link">[source]</a>
+      forward(<span class="arg">input</span>)
+    </div>
+    <p>Runs the forward pass.</p>
+
+    <div class="box">
+      <div class="box-title">Return type:</div>
+      <p><a href="#" class="link" style="font-style: italic;">Tensor</a></p>
+    </div>
+
+    <div class="bottom-bar">
+      <div>Rate this Page <span class="stars">☆☆☆☆☆</span></div>
+      <button class="feedback-btn">Send Feedback ›</button>
+    </div>
+
+    <div class="prev-next">
+      <a href="#">‹ <span class="label">Previous</span>AdaptiveAvgPool2d</a>
+      <a href="#" style="text-align:right;"><span class="label">Next</span>ReflectionPad1d ›</a>
+    </div>
+  </div>
+
+  <div class="rightbar">
+    <div class="on-page-title">☷ On this page</div>
+    <div class="pill">AdaptiveAvgPool3d</div>
+    <div class="pill" style="margin-left:15px;">AdaptiveAvgPool3d</div>
+
+    <div class="show-source">🚩 Show Source</div>
+
+    <div class="libs-title">PyTorch Libraries</div>
+    <a class="lib-link" href="#">ExecuTorch ↗</a>
+    <a class="lib-link" href="#">Helion ↗</a>
+    <a class="lib-link" href="#">torchao ↗</a>
+    <a class="lib-link" href="#">kineto ↗</a>
+    <a class="lib-link" href="#">torchtitan ↗</a>
+    <a class="lib-link" href="#">TorchRL ↗</a>
+    <a class="lib-link" href="#">torchvision ↗</a>
+    <a class="lib-link" href="#">torchaudio ↗</a>
+    <a class="lib-link" href="#">tensordict ↗</a>
+    <a class="lib-link" href="#">PyTorch on XLA Devices ↗</a>
+  </div>
+</div>
+
+<div class="ask-ai">≫ Ask AI</div>
+
+</body>
+</html>

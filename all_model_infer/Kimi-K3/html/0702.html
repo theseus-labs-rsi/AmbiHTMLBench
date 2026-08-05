@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Images, contours and fields — Matplotlib Examples</title>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color:#262626; background:#ffffff; font-size:15px;
+  }
+  a { color:#1f77b4; text-decoration:none; }
+
+  /* ---------- Top bar ---------- */
+  .topbar {
+    height:64px; display:flex; align-items:center;
+    border-bottom:1px solid #e6e6e6; padding:0 28px 0 40px; position:relative;
+  }
+  .logo { font-size:27px; font-weight:700; letter-spacing:-.5px; color:#11557c; font-style:italic; white-space:nowrap; }
+  .logo .lib { color:#4c9ac8; font-weight:700; }
+  .logo .o { display:inline-block; width:15px; height:15px; border:2px solid #e0a030; border-radius:50%;
+             vertical-align:-1px; margin:0 -1px; position:relative; }
+  .mainnav { position:absolute; left:50%; transform:translateX(-50%); display:flex; gap:34px; }
+  .mainnav a { color:#3a3a3a; font-size:15px; }
+  .topicons { margin-left:auto; display:flex; align-items:center; gap:18px; color:#444; }
+  .ver { border:1px solid #cfcfcf; border-radius:5px; padding:5px 10px; font-size:14px; color:#333; background:#fff; }
+  .hicon { display:inline-block; width:19px; height:19px; border-radius:4px; color:#444; font-size:17px; line-height:19px; text-align:center; }
+
+  /* ---------- Page columns ---------- */
+  .page { display:flex; align-items:flex-start; }
+  aside {
+    width:368px; flex:0 0 368px; border-right:1px solid #ececec;
+    padding:46px 0 60px 32px; min-height:100vh;
+  }
+  aside h2 { font-size:19px; font-weight:700; margin:0 0 22px 0; color:#222; }
+  ul.nav, ul.sub { list-style:none; margin:0; padding:0; }
+  ul.nav > li.top { position:relative; font-size:14.5px; color:#4a4a4a; padding:7px 26px 7px 0; }
+  ul.nav > li.top .chev { position:absolute; right:14px; top:6px; color:#777; font-size:13px; }
+  li.active > .lbl { display:block; font-weight:700; color:#1a1a1a; border-left:3px solid #2a6f97; padding-left:12px; margin-left:-15px; }
+  ul.sub { margin-top:2px; }
+  ul.sub li { font-size:14px; color:#4d4d4d; padding:6.5px 0 6.5px 26px; line-height:1.3; }
+
+  main { flex:1; padding:22px 80px 80px 96px; }
+  .crumbs { font-size:13.5px; color:#6a6a6a; margin:4px 0 0 0; }
+  .crumbs .home { color:#555; }
+  .crumbs a { color:#6a6a6a; }
+  h1 { font-size:41px; font-weight:300; color:#202020; margin:58px 0 34px 0; letter-spacing:.2px; }
+
+  /* ---------- Gallery ---------- */
+  .gallery { display:grid; grid-template-columns:repeat(5, 1fr); column-gap:24px; row-gap:42px; align-items:start; }
+  .card { min-width:0; }
+  .thumb.placeholder {
+    width:100%; aspect-ratio:10/7; border:1px solid #dcdcdc; border-radius:6px; background:#ffffff;
+    display:flex; align-items:center; justify-content:center; color:#b9b9b9; font-size:11px; text-align:center; padding:6px;
+  }
+  .cap { margin-top:13px; font-size:15px; line-height:1.32; color:#262626; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">matpl<span class="o"></span>t<span class="lib">lib</span></div>
+  <nav class="mainnav">
+    <a>Plot types</a><a>User guide</a><a>Tutorials</a><a>Examples</a><a>Reference</a><a>Contribute</a><a>Releases</a>
+  </nav>
+  <div class="topicons">
+    <span class="hicon">&#128269;</span>
+    <span class="hicon">&#9684;</span>
+    <span class="ver">3.10 (stable) &#9662;</span>
+    <span class="hicon">&#182;</span>
+    <span class="hicon">&#128172;</span>
+    <span class="hicon">&#9889;</span>
+    <span class="hicon">&#128038;</span>
+  </div>
+</div>
+
+<div class="page">
+  <aside>
+    <h2>Section Navigation</h2>
+    <ul class="nav">
+      <li class="top">Lines, bars and markers <span class="chev">&#8964;</span></li>
+      <li class="top active"><span class="lbl">Images, contours and fields</span> <span class="chev">&#8963;</span>
+        <ul class="sub">
+          <li>Affine transform of an image</li>
+          <li>Wind barbs</li>
+          <li>Barcode</li>
+          <li>Interactive adjustment of colormap range</li>
+          <li>Colormap normalizations</li>
+          <li>Colormap normalizations SymLogNorm</li>
+          <li>Contour corner mask</li>
+          <li>Contour Demo</li>
+          <li>Contour image</li>
+          <li>Contour Label Demo</li>
+          <li>Contourf demo</li>
+          <li>Contourf hatching</li>
+          <li>Contour and log color scale</li>
+          <li>Contouring the solution space of optimizations</li>
+          <li>BboxImage Demo</li>
+          <li>Figimage Demo</li>
+          <li>Annotated heatmap</li>
+          <li>Image resampling</li>
+          <li>Clipping images with patches</li>
+          <li>Many ways to plot images</li>
+          <li>Image with masked values</li>
+          <li>Image nonuniform</li>
+          <li>Blend transparency with color in 2D images</li>
+          <li>Modifying the coordinate formatter</li>
+          <li>Interpolations for imshow</li>
+          <li>Contour plot of irregularly spaced data</li>
+          <li>Layer images with alpha blending</li>
+          <li>Visualize matrices with matshow</li>
+          <li>Multiple images with one colorbar</li>
+          <li>pcolor images</li>
+          <li>pcolormesh grids and shading</li>
+          <li>pcolormesh</li>
+          <li>Streamplot</li>
+          <li>QuadMesh Demo</li>
+          <li>Advanced quiver and quiverkey functions</li>
+          <li>Quiver Simple Demo</li>
+          <li>Shading example</li>
+          <li>Spectrogram</li>
+          <li>Spy Demos</li>
+          <li>Tricontour Demo</li>
+          <li>Tricontour Smooth Delaunay</li>
+          <li>Tricontour Smooth User</li>
+          <li>Trigradient Demo</li>
+        </ul>
+      </li>
+    </ul>
+  </aside>
+
+  <main>
+    <div class="crumbs"><span class="home">&#8962;</span> &gt; <a>Examples</a> &gt; Images,...</div>
+    <h1>Images, contours and fields</h1>
+
+    <div class="gallery">
+      <div class="card"><div class="thumb placeholder">[Plot thumbnail]</div><div class="cap">Affine transform of an image</div></div>
+      <div class="card"><div class="thumb placeholder">[Plot thumbnail]</div><div class="cap">Wind barbs</div></div>
+      <div class="card"><div class="thumb placeholder">[Plot thumbnail]</div><div class="cap">Barcode</div></div>
+      <div class="card"><div class="thumb placeholder">[Plot thumbnail]</div><div class="cap">Interactive adjustment of colormap range</div></div>
+      <div class="card"><div class="thumb placeholder">[Plot thumbnail]</div><div class="cap">Colormap normalizations</div></div>
+
+      <div class="card"><div class="thumb placeholder">[Plot thumbnail]</div><div class="cap">Colormap normalizations SymLogNorm</div></div>
+      <div class="card"><div class="thumb placeholder">[Plot thumbnail]</div><div class="cap">Contour corner mask</div></div>
+      <div class="card"><div class="thumb placeholder">[Plot thumbnail]</div><div class="cap">Contour Demo</div></div>
+      <div class="card"><div class="thumb placeholder">[Plot thumbnail]</div><div class="cap">Contour image</div></div>
+      <div class="card"><div class="thumb placeholder">[Plot thumbnail]</div><div class="cap">Contour Label Demo</div></div>
+
+      <div class="card"><div class="thumb placeholder">[Plot thumbnail]</div><div class="cap">Contourf demo</div></div>
+      <div class="card"><div class="thumb placeholder">[Plot thumbnail]</div><div class="cap">Contourf hatching</div></div>
+      <div class="card"><div class="thumb placeholder">[Plot thumbnail]</div><div class="cap">Contourf and log color scale</div></div>
+      <div class="card"><div class="thumb placeholder">[Plot thumbnail]</div><div class="cap">Contouring the solution space of optimizations</div></div>
+      <div class="card"><div class="thumb placeholder">[Plot thumbnail]</div><div class="cap">BboxImage Demo</div></div>
+
+      <div class="card"><div class="thumb placeholder">[Plot thumbnail]</div><div class="cap">Figimage Demo</div></div>
+      <div class="card"><div class="thumb placeholder">[Plot thumbnail]</div><div class="cap">Annotated heatmap</div></div>
+      <div class="card"><div class="thumb placeholder">[Plot thumbnail]</div><div class="cap">Image resampling</div></div>
+      <div class="card"><div class="thumb placeholder">[Plot thumbnail]</div><div class="cap">Clipping images with patches</div></div>
+      <div class="card"><div class="thumb placeholder">[Plot thumbnail]</div><div class="cap">Many ways to plot images</div></div>
+
+      <div class="card"><div class="thumb placeholder">[Plot thumbnail]</div><div class="cap">Image with masked values</div></div>
+      <div class="card"><div class="thumb placeholder">[Plot thumbnail]</div><div class="cap">Image nonuniform</div></div>
+      <div class="card"><div class="thumb placeholder">[Plot thumbnail]</div><div class="cap">Blend transparency with color in 2D images</div></div>
+      <div class="card"><div class="thumb placeholder">[Plot thumbnail]</div><div class="cap">Modifying the coordinate formatter</div></div>
+      <div class="card"><div class="thumb placeholder">[Plot thumbnail]</div><div class="cap">Interpolations for imshow</div></div>
+
+      <div class="card"><div class="thumb placeholder">[Plot thumbnail]</div><div class="cap">Contour plot of irregularly spaced data</div></div>
+      <div class="card"><div class="thumb placeholder">[Plot thumbnail]</div><div class="cap">Layer images with alpha blending</div></div>
+      <div class="card"><div class="thumb placeholder">[Plot thumbnail]</div><div class="cap">Visualize matrices with matshow</div></div>
+      <div class="card"><div class="thumb placeholder">[Plot thumbnail]</div><div class="cap">Multiple images with one colorbar</div></div>
+      <div class="card"><div class="thumb placeholder">[Plot thumbnail]</div><div class="cap">pcolor images</div></div>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

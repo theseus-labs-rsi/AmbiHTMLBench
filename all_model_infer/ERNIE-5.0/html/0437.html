@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script>window.MathJax={tex:{inlineMath:[["$","$"]],displayMath:[["$$","$$"]]}};</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>100+页MAPK信号通路详解</title>
+    <style>
+        body {
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #000;
+        }
+
+        .intro-text {
+            font-size: 16px;
+            margin-bottom: 40px;
+            text-align: justify;
+        }
+
+        h2 {
+            font-size: 20px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* Section 1: Apoptosis */
+        .apoptosis-section {
+            margin-bottom: 50px;
+        }
+
+        .charts-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .chart-box {
+            flex: 1;
+            min-width: 150px;
+            border: 1px solid #ddd;
+            background: #fff;
+            padding: 10px;
+            text-align: center;
+            position: relative;
+        }
+
+        .chart-title {
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chart-content {
+            height: 200px;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            padding-bottom: 20px;
+        }
+
+        .bar {
+            width: 15px;
+            background-color: #999;
+            margin: 0 2px;
+            position: relative;
+        }
+
+        .bar-label {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            white-space: nowrap;
+        }
+
+        .y-axis {
+            position: absolute;
+            left: -25px;
+            top: 0;
+            bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            font-size: 10px;
+        }
+
+        .apoptosis-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .citation {
+            font-style: italic;
+            color: #666;
+        }
+
+        .legend {
+            list-style: none;
+            padding: 0;
+        }
+
+        .legend li {
+            margin-bottom: 5px;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .legend li::before {
+            content: "◆";
+            position: absolute;
+            left: 0;
+            color: #333;
+        }
+
+        /* Section 2: Pathway */
+        .pathway-section {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+        }
+
+        .pathway-diagram {
+            flex: 2;
+            border: 1px solid #ccc;
+            height: 400px;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Simulating the diagram content roughly */
+        .diagram-placeholder-text {
+            color: #aaa;
+            font-size: 20px;
+            text-align: center;
+        }
+
+        .pathway-text {
+            flex: 1;
+        }
+
+        .pathway-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .pathway-list li {
+            margin-bottom: 15px;
+            padding-left: 20px;
+            position: relative;
+            font-size: 15px;
+        }
+
+        .pathway-list li::before {
+            content: "◆";
+            position: absolute;
+            left: 0;
+            color: #333;
+        }
+
+        .pathway-citation {
+            margin-top: 30px;
+            text-align: right;
+            font-size: 12px;
+            color: #666;
+            font-style: italic;
+        }
+
+        /* Utility for chart bars simulation */
+        .bar-1 { height: 20%; }
+        .bar-2 { height: 80%; }
+        .bar-3 { height: 90%; }
+        .bar-4 { height: 10%; }
+        .bar-5 { height: 5%; }
+        .bar-6 { height: 40%; }
+        .bar-7 { height: 60%; }
+        .bar-8 { height: 15%; }
+        .bar-9 { height: 25%; }
+        .bar-10 { height: 35%; }
+        .bar-11 { height: 50%; }
+        .bar-12 { height: 85%; }
+
+    </style>
+</head>
+<body>
+
+    <h1>100+页MAPK信号通路详解</h1>
+
+    <div class="intro-text">
+        <p>丝裂原活化蛋白激酶(mitogen-activated protein kinase, MAPK)，一种丝氨酸-苏氨酸蛋白激酶。丝裂原，顾名思义，最早发现该激酶参与细胞有丝分裂。所有的真核细胞都能表达MAPK，从酵母到人类都高度保守。</p>
+    </div>
+
+    <div class="apoptosis-section">
+        <h2>细胞凋亡与MAPK</h2>
+        
+        <div class="charts-container">
+            <!-- Chart 1 -->
+            <div class="chart-box">
+                <div class="chart-title">Apoptotic cells (%)</div>
+                <div class="chart-content">
+                    <div class="y-axis">
+                        <span>5</span><span>4</span><span>3</span><span>2</span><span>1</span><span>0</span>
+                    </div>
+                    <div class="bar bar-1"><span class="bar-label">Control</span></div>
+                    <div class="bar bar-2"><span class="bar-label">Mek1</span></div>
+                    <div class="bar bar-3"><span class="bar-label">Mek2</span></div>
+                    <div class="bar bar-4"><span class="bar-label">Mek1+Mek2</span></div>
+                    <div class="bar bar-5"><span class="bar-label">Mek1(CA)</span></div>
+                    <div class="bar bar-6"><span class="bar-label">Mek2(CA)</span></div>
+                    <div class="bar bar-7"><span class="bar-label">Mek1(CA)+Mek2(CA)</span></div>
+                    <div class="bar bar-8"><span class="bar-label">Mek1(DN)</span></div>
+                    <div class="bar bar-9"><span class="bar-label">Mek2(DN)</span></div>
+                    <div class="bar bar-10"><span class="bar-label">Mek1(DN)+Mek2(DN)</span></div>
+                </div>
+            </div>
+
+            <!-- Chart 2 -->
+            <div class="chart-box">
+                <div class="chart-title">Caspase activity (fold of control)</div>
+                <div class="chart-content">
+                    <div class="y-axis">
+                        <span>150</span><span>100</span><span>50</span><span>0</span>
+                    </div>
+                    <div class="bar bar-1"><span class="bar-label">Control</span></div>
+                    <div class="bar bar-2"><span class="bar-label">Mek1</span></div>
+                    <div class="bar bar-3"><span class="bar-label">Mek2</span></div>
+                    <div class="bar bar-4"><span class="bar-label">Mek1+Mek2</span></div>
+                    <div class="bar bar-5"><span class="bar-label">Mek1(CA)</span></div>
+                    <div class="bar bar-6"><span class="bar-label">Mek2(CA)</span></div>
+                    <div class="bar bar-7"><span class="bar-label">Mek1(CA)+Mek2(CA)</span></div>
+                    <div class="bar bar-8"><span class="bar-label">Mek1(DN)</span></div>
+                    <div class="bar bar-9"><span class="bar-label">Mek2(DN)</span></div>
+                    <div class="bar bar-10"><span class="bar-label">Mek1(DN)+Mek2(DN)</span></div>
+                </div>
+            </div>
+
+            <!-- Chart 3 -->
+            <div class="chart-box">
+                <div class="chart-title">Relative LDH release (%)</div>
+                <div class="chart-content">
+                    <div class="y-axis">
+                        <span>300</span><span>200</span><span>100</span><span>0</span>
+                    </div>
+                    <div class="bar bar-1"><span class="bar-label">Control</span></div>
+                    <div class="bar bar-2"><span class="bar-label">Mek1</span></div>
+                    <div class="bar bar-3"><span class="bar-label">Mek2</span></div>
+                    <div class="bar bar-4"><span class="bar-label">Mek1+Mek2</span></div>
+                    <div class="bar bar-5"><span class="bar-label">Mek1(CA)</span></div>
+                    <div class="bar bar-6"><span class="bar-label">Mek2(CA)</span></div>
+                    <div class="bar bar-7"><span class="bar-label">Mek1(CA)+Mek2(CA)</span></div>
+                    <div class="bar bar-8"><span class="bar-label">Mek1(DN)</span></div>
+                    <div class="bar bar-9"><span class="bar-label">Mek2(DN)</span></div>
+                    <div class="bar bar-10"><span class="bar-label">Mek1(DN)+Mek2(DN)</span></div>
+                </div>
+            </div>
+
+            <!-- Chart 4 -->
+            <div class="chart-box">
+                <div class="chart-title">Relative cell viability</div>
+                <div class="chart-content">
+                    <div class="y-axis">
+                        <span>0.30</span><span>0.20</span><span>0.10</span><span>0.00</span>
+                    </div>
+                    <div class="bar bar-11"><span class="bar-label">Control</span></div>
+                    <div class="bar bar-12"><span class="bar-label">Anti-NGF</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="apoptosis-footer">
+            <div class="citation">
+                Zhengui Xia et al., Science, 1995
+            </div>
+            <ul class="legend">
+                <li>一般认为，ERK抑制细胞凋亡</li>
+                <li>p38与JNK促进凋亡</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="pathway-section">
+        <h2>MAPK信号通路</h2>
+        <div style="flex: 2; border: 1px solid #ccc; height: 400px; background: #fff; display: flex; align-items: center; justify-content: center; position: relative;">
+            <!-- Simulated Diagram Content -->
+            <div style="text-align: center; color: #ccc;">
+                [Diagram: Complex cell signaling pathway map showing membrane receptors, cytoplasmic kinases, and nuclear transcription factors]
+            </div>
+        </div>
+        <div class="pathway-text">
+            <ul class="pathway-list">
+                <li>多级调控，级联放大</li>
+                <li>基于磷酸化的信号传导形式</li>
+                <li>相对简单、直线、单一的传导方式</li>
+            </ul>
+            <div class="pathway-citation">
+                Jing-Yuan Fang and Bruce C Richardson, Lancet Oncol, 2005
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

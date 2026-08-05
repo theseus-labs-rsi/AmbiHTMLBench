@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第一章 教育与教育学</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "Microsoft YaHei", "SimSun", sans-serif;
+    font-size: 14px;
+    color: #333;
+    background: #fff;
+    padding: 10px;
+    line-height: 1.6;
+  }
+  .chapter-title {
+    text-align: center;
+    background: #f5a623;
+    color: #333;
+    padding: 6px 30px;
+    display: inline-block;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0 auto 15px;
+    border-radius: 3px;
+  }
+  .title-wrapper {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .main-container {
+    display: flex;
+    position: relative;
+  }
+  .sidebar {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    font-size: 18px;
+    font-weight: bold;
+    color: #2e7d32;
+    padding: 10px 8px;
+    letter-spacing: 8px;
+    border-right: 3px solid #2e7d32;
+    margin-right: 5px;
+    min-height: 100%;
+  }
+  .content-area {
+    flex: 1;
+    position: relative;
+    padding-left: 20px;
+  }
+  .bracket-container {
+    position: relative;
+    padding-left: 15px;
+  }
+  .bracket-container::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10px;
+    bottom: 10px;
+    width: 3px;
+    background: #1565c0;
+    border-radius: 2px;
+  }
+  .bracket-container::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 15px;
+    height: 3px;
+    background: #1565c0;
+  }
+  .bracket-bottom::after {
+    top: auto;
+    bottom: 10px;
+  }
+  .main-item {
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .main-item-title {
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  .sub-section {
+    margin-left: 30px;
+    margin-bottom: 8px;
+  }
+  .section-header {
+    background: #fff9c4;
+    border: 1px solid #f9a825;
+    padding: 4px 10px;
+    display: inline-block;
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 5px;
+    border-radius: 3px;
+  }
+  .bullet-item {
+    margin-left: 10px;
+    margin-bottom: 3px;
+    position: relative;
+    padding-left: 15px;
+  }
+  .bullet-item::before {
+    content: '●';
+    position: absolute;
+    left: 0;
+    color: #1565c0;
+    font-size: 12px;
+  }
+  .bullet-item .highlight {
+    color: #c62828;
+    font-weight: bold;
+  }
+  .bullet-item .underline {
+    text-decoration: underline;
+  }
+  .sub-bullet {
+    margin-left: 25px;
+    margin-bottom: 2px;
+    position: relative;
+    padding-left: 15px;
+  }
+  .sub-bullet::before {
+    content: '①';
+    position: absolute;
+    left: 0;
+    font-size: 13px;
+  }
+  .sub-bullet.num2::before { content: '②'; }
+  .sub-bullet.num3::before { content: '③'; }
+  .sub-bullet.num4::before { content: '④'; }
+  .detail-item {
+    margin-left: 40px;
+    margin-bottom: 2px;
+    position: relative;
+    padding-left: 15px;
+  }
+  .detail-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 8px;
+    height: 1px;
+    background: #333;
+  }
+  .detail-box {
+    border: 1px solid #999;
+    padding: 3px 8px;
+    display: inline-block;
+    margin: 2px 0;
+    background: #fafafa;
+    font-size: 13px;
+  }
+  .branch-box {
+    border: 1px solid #999;
+    padding: 3px 8px;
+    display: inline-block;
+    margin: 2px 0;
+    background: #fafafa;
+    font-size: 13px;
+  }
+  .nested-list {
+    margin-left: 40px;
+    border-left: 1px solid #999;
+    padding-left: 10px;
+  }
+  .nested-list .detail-item {
+    margin-left: 0;
+  }
+  .nested-list .detail-item::before {
+    display: none;
+  }
+  .flow-item {
+    margin-left: 40px;
+    margin-bottom: 2px;
+  }
+  .flow-item .label {
+    display: inline-block;
+    border: 1px solid #999;
+    padding: 2px 6px;
+    background: #fafafa;
+    font-size: 13px;
+  }
+  .flow-item .arrow {
+    color: #666;
+  }
+  .flow-detail {
+    margin-left: 55px;
+    font-size: 13px;
+    color: #555;
+  }
+  .indent-block {
+    margin-left: 55px;
+    font-size: 13px;
+  }
+  .tree-line {
+    border-left: 2px solid #1565c0;
+    margin-left: 8px;
+    padding-left: 12px;
+  }
+  .section-block {
+    margin-bottom: 12px;
+  }
+  .item-row {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 2px;
+  }
+  .item-label {
+    min-width: 20px;
+    font-weight: bold;
+  }
+  .item-content {
+    flex: 1;
+  }
+  .boxed-text {
+    border: 1px solid #aaa;
+    padding: 2px 6px;
+    display: inline-block;
+    background: #f9f9f9;
+    font-size: 13px;
+  }
+  .red-text {
+    color: #c62828;
+    font-weight: bold;
+  }
+  .blue-bullet {
+    color: #1565c0;
+  }
+  .sub-tree {
+    margin-left: 20px;
+    position: relative;
+  }
+  .sub-tree::before {
+    content: '';
+    position: absolute;
+    left: -10px;
+    top: 5px;
+    width: 10px;
+    height: 2px;
+    background: #1565c0;
+  }
+  .connector-line {
+    position: relative;
+  }
+  .connector-line::before {
+    content: '';
+    position: absolute;
+    left: -12px;
+    top: 50%;
+    width: 12px;
+    height: 2px;
+    background: #1565c0;
+  }
+  .group-box {
+    border: 1px solid #bbb;
+    padding: 5px 8px;
+    margin: 3px 0;
+    display: inline-block;
+    background: #fafafa;
+    font-size: 13px;
+  }
+  .multi-line-box {
+    border: 1px solid #bbb;
+    padding: 4px 8px;
+    margin: 3px 0;
+    background: #fafafa;
+    font-size: 13px;
+    display: inline-block;
+  }
+  .right-brace {
+    position: relative;
+    display: inline-block;
+  }
+  .brace-content {
+    border-left: 2px solid #999;
+    padding-left: 8px;
+    margin-left: 5px;
+  }
+  .h-flex {
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+  }
+  .v-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .inline-box {
+    border: 1px solid #aaa;
+    padding: 2px 5px;
+    display: inline-block;
+    font-size: 13px;
+    background: #f5f5f5;
+  }
+  .text-block {
+    margin-left: 40px;
+    font-size: 13px;
+  }
+  .sub-text {
+    margin-left: 55px;
+    font-size: 13px;
+  }
+  .deep-text {
+    margin-left: 70px;
+    font-size: 13px;
+  }
+  .section-title-box {
+    background: #fff9c4;
+    border: 1.5px solid #f9a825;
+    padding: 4px 12px;
+    display: inline-block;
+    font-weight: bold;
+    font-size: 14px;
+    border-radius: 3px;
+    margin-bottom: 6px;
+  }
+  .main-section {
+    margin-bottom: 15px;
+  }
+  .top-level {
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+  .sub-level {
+    margin-left: 25px;
+    margin-bottom: 5px;
+  }
+  .detail-level {
+    margin-left: 45px;
+    margin-bottom: 3px;
+    font-size: 13px;
+  }
+  .deep-level {
+    margin-left: 65px;
+    margin-bottom: 2px;
+    font-size: 13px;
+  }
+  .boxed-group {
+    display: inline-block;
+    border: 1px solid #aaa;
+    padding: 3px 8px;
+    margin: 2px 0;
+    background: #fafafa;
+    font-size: 13px;
+  }
+  .bracket-right {
+    position: relative;
+  }
+  .bracket-right-content {
+    display: flex;
+    flex-direction: column;
+    border-left: 2px solid #999;
+    padding-left: 8px;
+    margin-left: 5px;
+  }
+  .flex-row {
+    display: flex;
+    align-items: flex-start;
+  }
+  .flex-col {
+    display: flex;
+    flex-direction: column;
+  }
+  .ml-10 { margin-left: 10px; }
+  .ml-20 { margin-left: 20px; }
+  .ml-30 { margin-left: 30px; }
+  .ml-40 { margin-left: 40px; }
+  .ml-50 { margin-left: 50px; }
+  .ml-60 { margin-left: 60px; }
+  .mb-2 { margin-bottom: 2px; }
+  .mb-3 { margin-bottom: 3px; }
+  .mb-5 { margin-bottom: 5px; }
+  .fw-bold { font-weight: bold; }
+  .fs-13 { font-size: 13px; }
+  .fs-14 { font-size: 14px; }
+  .text-red { color: #c62828; }
+  .text-blue { color: #1565c0; }
+  .bullet-blue::before {
+    content: '●';
+    color: #1565c0;
+    margin-right: 5px;
+    font-size: 11px;
+  }
+  .no-bullet { padding-left: 0; }
+  .no-bullet::before { display: none; }
+  .indent-15 { padding-left: 15px; }
+  .indent-25 { padding-left: 25px; }
+  .indent-40 { padding-left: 40px; }
+  .indent-55 { padding-left: 55px; }
+  .indent-70 { padding-left: 70px; }
+  .box-inline {
+    border: 1px solid #aaa;
+    padding: 2px 6px;
+    display: inline-block;
+    background: #f8f8f8;
+    font-size: 13px;
+  }
+  .box-block {
+    border: 1px solid #aaa;
+    padding: 3px 8px;
+    display: inline-block;
+    background: #f8f8f8;
+    font-size: 13px;
+    margin: 2px 0;
+  }
+  .line-group {
+    border-left: 1.5px solid #999;
+    padding-left: 8px;
+    margin-left: 5px;
+  }
+  .h-line {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+  .arrow-text::after {
+    content: '——';
+    margin: 0 3px;
+  }
+  .em-dash {
+    margin: 0 2px;
+  }
+  .study-outline {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .header-bar {
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  .header-bar span {
+    background: #f5a623;
+    padding: 5px 25px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 3px;
+  }
+  .layout-flex {
+    display: flex;
+  }
+  .left-label {
+    writing-mode: vertical-rl;
+    font-size: 17px;
+    font-weight: bold;
+    color: #2e7d32;
+    padding: 10px 6px;
+    letter-spacing: 6px;
+    border-right: 3px solid #2e7d32;
+    margin-right: 8px;
+  }
+  .main-body {
+    flex: 1;
+    position: relative;
+  }
+  .big-bracket {
+    position: relative;
+    padding-left: 18px;
+  }
+  .big-bracket::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 15px;
+    bottom: 15px;
+    width: 3px;
+    background: #1565c0;
+    border-radius: 2px;
+  }
+  .big-bracket-top::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 15px;
+    width: 18px;
+    height: 3px;
+    background: #1565c0;
+  }
+  .big-bracket-bot::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 15px;
+    width: 18px;
+    height: 3px;
+    background: #1565c0;
+  }
+  .item-1 { margin-bottom: 10px; }
+  .item-2 { margin-top: 10px; }
+  .section-h {
+    background: #fff9c4;
+    border: 1.5px solid #f9a825;
+    padding: 4px 12px;
+    display: inline-block;
+    font-weight: bold;
+    font-size: 14px;
+    border-radius: 3px;
+    margin-bottom: 6px;
+  }
+  .b-item {
+    position: relative;
+    padding-left: 18px;
+    margin-bottom: 3px;
+    font-size: 14px;
+  }
+  .b-item::before {
+    content: '●';
+    position: absolute;
+    left: 0;
+    color: #1565c0;
+    font-size: 11px;
+    top: 2px;
+  }
+  .sb-item {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 2px;
+    font-size: 13px;
+  }
+  .sb-item::before {
+    content: '①';
+    position: absolute;
+    left: 0;
+    font-size: 12px;
+    top: 1px;
+  }
+  .sb-item.n2::before { content: '②'; }
+  .sb-item.n3::before { content: '③'; }
+  .sb-item.n4::before { content: '④'; }
+  .db-item {
+    position: relative;
+    padding-left: 15px;
+    margin-bottom: 2px;
+    font-size: 13px;
+  }
+  .db-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 7px;
+    width: 8px;
+    height: 1.5px;
+    background: #666;
+  }
+  .box {
+    border: 1px solid #aaa;
+    padding: 2px 7px;
+    display: inline-block;
+    background: #f8f8f8;
+    font-size: 13px;
+  }
+  .box2 {
+    border: 1px solid #aaa;
+    padding: 3px 8px;
+    display: inline-block;
+    background: #f8f8f8;
+    font-size: 13px;
+    margin: 2px 0;
+  }
+  .red { color: #c62828; font-weight: bold; }
+  .blue-dot { color: #1565c0; }
+  .ml15 { margin-left: 15px; }
+  .ml25 { margin-left: 25px; }
+  .ml35 { margin-left: 35px; }
+  .ml45 { margin-left: 45px; }
+  .ml55 { margin-left: 55px; }
+  .ml65 { margin-left: 65px; }
+  .mb2 { margin-bottom: 2px; }
+  .mb3 { margin-bottom: 3px; }
+  .mb4 { margin-bottom: 4px; }
+  .mb6 { margin-bottom: 6px; }
+  .fw { font-weight: bold; }
+  .fs13 { font-size: 13px; }
+  .fs14 { font-size: 14px; }
+  .fs15 { font-size: 15px; }
+  .line-block {
+    border-left: 1.5px solid #999;
+    padding-left: 8px;
+    margin-left: 5px;
+  }
+  .flex-h {
+    display: flex;
+    align-items: flex-start;
+  }
+  .flex-v {
+    display: flex;
+    flex-direction: column;
+  }
+  .gap2 { gap: 2px; }
+  .gap3 { gap: 3px; }
+  .gap5 { gap: 5px; }
+  .top-title {
+    text-align: center;
+    margin-bottom: 12px;
+  }
+  .top-title span {
+    background: #f5a623;
+    padding: 5px 28px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 3px;
+    display: inline-block;
+  }
+  .outline-wrapper {
+    display: flex;
+    max-width: 920px;
+    margin: 0 auto;
+  }
+  .side-text {
+    writing-mode: vertical-rl;
+    font-size: 17px;
+    font-weight: bold;
+    color: #2e7d32;
+    padding: 12px 6px;
+    letter-spacing: 6px;
+    border-right: 3px solid #2e7d32;
+    margin-right: 8px;
+    flex-shrink: 0;
+  }
+  .content-main {
+    flex: 1;
+    position: relative;
+    padding-left: 20px;
+  }
+  .big-bracket-wrap {
+    position: relative;
+    padding-left: 18px;
+  }
+  .big-bracket-wrap::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 12px;
+    bottom: 12px;
+    width: 3px;
+    background: #1565c0;
+    border-radius: 2px;
+  }
+  .bb-top::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 12px;
+    width: 18px;
+    height: 3px;
+    background: #1565c0;
+  }
+  .bb-bot::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 12px;
+    width: 18px;
+    height: 3px;
+    background: #1565c0;
+  }
+  .sec-title {
+    background: #fff9c4;
+    border: 1.5px solid #f9a825;
+    padding: 4px 12px;
+    display: inline-block;
+    font-weight: bold;
+    font-size: 14px;
+    border-radius: 3px;
+    margin-bottom: 6px;
+  }
+  .bi {
+    position: relative;
+    padding-left: 18px;
+    margin-bottom: 3px;
+    font-size: 14px;
+  }
+  .bi::before {
+    content: '●';
+    position: absolute;
+    left: 0;
+    color: #1565c0;
+    font-size: 11px;
+    top: 2px;
+  }
+  .sbi {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 2px;
+    font-size: 13px;
+  }
+  .sbi::before { content: '①'; position: absolute; left: 0; font-size: 12px; top: 1px; }
+  .sbi.n2::before { content: '②'; }
+  .sbi.n3::before { content: '③'; }
+  .sbi.n4::before { content: '④'; }
+  .dli {
+    position: relative;
+    padding-left: 15px;
+    margin-bottom: 2px;
+    font-size: 13px;
+  }
+  .dli::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 7px;
+    width: 8px;
+    height: 1.5px;
+    background: #666;
+  }
+  .bx {
+    border: 1px solid #aaa;
+    padding: 2px 7px;
+    display: inline-block;
+    background: #f8f8f8;
+    font-size: 13px;
+  }
+  .bx2 {
+    border: 1px solid #aaa;
+    padding: 3px 8px;
+    display: inline-block;
+    background: #f8f8f8;
+    font-size: 13px;
+    margin: 2px 0;
+  }
+  .lb {
+    border-left: 1.5px solid #999;
+    padding-left: 8px;
+    margin-left: 5px;
+  }
+  .fh { display: flex; align-items: flex-start; }
+  .fv { display: flex; flex-direction: column; }
+</style>
+</head>
+<body>
+
+<div class="top-title">
+  <span>第一章 教育与教育学</span>
+</div>
+
+<div class="outline-wrapper">
+  <div class="side-text">教育与教育学</div>
+  <div class="content-main">
+    <div class="big-bracket-wrap bb-top bb-bot">
+
+      <!-- Item 1 -->
+      <div class="item-1">
+        <div class="fs15 fw mb4">1、教育及其产生与发展</div>
+
+        <!-- 研究对象和任务 -->
+        <div class="ml25 mb4 fs14">研究对象和任务</div>
+
+        <!-- (四) -->
+        <div class="ml25 mb6">
+          <div class="sec-title">（四）发展多样化阶段（19世纪末——20世纪初）</div>
+
+          <div class="bi mb3">
+            <span class="red">杜威</span>——"现代教育"代言人，实用主义代表
+          </div>
+
+          <div class="fh ml35 mb3">
+            <div class="sbi" style="flex-shrink:0;">
+              《民主主义与教育》
+            </div>
+            <div class="lb">
+              <div class="dli">活动课程：从做中学</div>
+              <div class="dli">五部教学法：困难、问题、假设、验证、结论</div>
+              <div class="dli">儿童中心论：儿童、活动、经验</div>
+              <div class="dli">教育无目的论</div>
+            </div>
+          </div>
+
+          <div class="fh ml35 mb4">
+            <div class="sbi n2" style="flex-shrink:0;">
+              论教育的本质——什么是教育？
+            </div>
+            <div class="lb">
+              <div class="dli">教育即生长</div>
+              <div class="dli">教育即生活</div>
+              <div class="dli">教育即经验的改组和改造</div>
+            </div>
+          </div>
+
+          <div class="bi mb2"><span class="red">梅伊曼、拉伊</span>——首次提出实验教育学</div>
+          <div class="bi mb2"><span class="red">斯宾塞</span>——教育的任务是教导人们怎样生活</div>
+          <div class="bi mb2"><span class="red">凯洛夫</span>——世界上第一部马克思主义教育学著作</div>
+          <div class="bi mb2"><span class="red">福禄贝尔</span>——世界"幼儿教育之父"</div>
+          <div class="bi mb2"><span class="red">马卡连柯</span>——集体主义教育思想</div>
+        </div>
+
+        <!-- (五) -->
+        <div class="ml25 mb6">
+          <div class="sec-title">（五）教育学的分化与拓展阶段（20世纪中期至今）</div>
+
+          <div class="bi mb2"><span class="red">布卢姆</span>(美国)《教育目标的分类系统》——认知、情感、动作、技能目标</div>
+          <div class="bi mb2"><span class="red">巴班斯基</span>(苏联)《教学过程最优化》</div>
+          <div class="bi mb2"><span class="red">苏霍姆林斯基</span>(苏联)《给教师的一百条建议》《把整个心灵献给孩子》</div>
+
+          <div class="ml35 mb3 fs14">现代教育理<span class="red">论三大流派</span></div>
+
+          <div class="fh ml35 mb2">
+            <div class="sbi" style="flex-shrink:0;">
+              <span class="red">赞可夫</span>《教学与发展》五大教学原则
+            </div>
+            <div class="lb">
+              <div class="dli">高难度、高速度、理论起指导作用、理解学习过程、</div>
+              <div class="dli">使所有学生得到一般发展</div>
+            </div>
+          </div>
+
+          <div class="bi ml35 mb2"><span class="sbi n2" style="padding-left:0;"><span class="red">布鲁纳</span>《教学过程》——结构教学论、发现法</span></div>
+          <div class="bi ml35 mb2"><span class="sbi n3" style="padding-left:0;"><span class="red">瓦·根舍因</span>——范例教学</span></div>
+        </div>
+
+        <!-- (六) -->
+        <div class="ml25 mb6">
+          <div class="sec-title">（六）中国近现代的教育思想</div>
+
+          <div class="bi mb3"><span class="red">蔡元培</span></div>
+          <div class="sbi ml35 mb2">学界泰斗，人世楷模——毛泽东</div>
+          <div class="sbi n2 ml35 mb2">"五育并举"——美育第一人</div>
+          <div class="sbi n3 ml35 mb2">完全人格</div>
+          <div class="sbi n4 ml35 mb2">北大改革——思想自由，兼容并包</div>
+
+          <div class="bi mb3 mt4"><span class="red">陶行知</span></div>
+          <div class="sbi ml35 mb2">伟大的人民教育家——毛泽东，万世师表——宋庆龄</div>
+          <div class="sbi n2 ml35 mb2">捧着一颗心来，不带半根草去</div>
+          <div class="sbi n3 ml35 mb2">
+            生活教育论——生活即教育：核心思想
+            <div class="ml45 fs13">社会即学校：范围论、重要命题</div>
+            <div class="ml45 fs13">教学做合一：方法论</div>
+          </div>
+
+          <div class="bi mb3 mt4"><span class="red">陈鹤琴</span></div>
+          <div class="sbi ml35 mb2">中国幼儿教育奠基人（之父）</div>
+          <div class="sbi n2 ml35 mb2">创办了中国第一所实验幼稚园——南京鼓楼幼稚园</div>
+          <div class="sbi n3 ml35 mb2">活教育体系——四个步骤:实验观察/阅读思考/创作发表/批评研讨</div>
+
+          <div class="bi mb2 mt4"><span class="red">杨贤江</span>《新教育大纲》1930年是我国第一部马克思主义的教育学著作</div>
+          <div class="bi mb2"><span class="red">黄炎培</span>——中国职业教育之父</div>
+          <div class="bi mb2"><span class="red">晏阳初</span>——国际平民教育之父</div>
+          <div class="bi mb2"><span class="red">梁漱溟</span>——中国最后一位大儒</div>
+        </div>
+      </div>
+
+      <!-- Item 2 -->
+      <div class="item-2">
+        <div class="fs15 fw mb4">2、教育学的产生与发展</div>
+        <div class="ml25 mb4 fs14">产生和发展历程</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>公司资产负债表</title>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$']],
+    displayMath: [['$$', '$$']]
+  }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    color: #242223;
+  }
+
+  body {
+    font-family: "Noto Sans SC", "Source Han Sans SC", "PingFang SC",
+                 "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+  }
+
+  .page {
+    position: relative;
+    width: 1654px;
+    height: 2284px;
+    margin: 0 auto;
+    overflow: hidden;
+    background: #fff;
+  }
+
+  .document-header {
+    position: absolute;
+    top: 59px;
+    left: 118px;
+  }
+
+  .document-header h1 {
+    margin: 0;
+    font-size: 70px;
+    line-height: 1.13;
+    font-weight: 400;
+    letter-spacing: 1px;
+  }
+
+  .date {
+    margin-top: 7px;
+    font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", SimSun, serif;
+    font-size: 25px;
+    line-height: 1.35;
+    font-weight: 400;
+  }
+
+  .unit-note {
+    margin-top: 2px;
+    font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", SimSun, serif;
+    font-size: 25px;
+    line-height: 1.45;
+    font-weight: 400;
+  }
+
+  .statement-wrap {
+    position: absolute;
+    top: 414px;
+    left: 118px;
+    width: 1418px;
+  }
+
+  .statement {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+
+  .statement col.description {
+    width: 820px;
+  }
+
+  .statement col.note {
+    width: 105px;
+  }
+
+  .statement col.current {
+    width: 255px;
+  }
+
+  .statement col.previous {
+    width: 238px;
+  }
+
+  .statement thead {
+    border-bottom: 1.5px solid #ff4b1f;
+  }
+
+  .statement thead th {
+    height: 30px;
+    padding: 0 14px 7px;
+    color: #ff4b1f;
+    font-size: 19px;
+    line-height: 23px;
+    font-weight: 400;
+    text-align: right;
+    white-space: nowrap;
+    vertical-align: bottom;
+  }
+
+  .statement thead th:first-child {
+    padding-left: 0;
+    text-align: left;
+  }
+
+  .statement thead th.current-head {
+    font-weight: 700;
+  }
+
+  .statement td {
+    height: 43px;
+    padding: 0 14px;
+    font-size: 24px;
+    line-height: 43px;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+
+  .statement td.label {
+    padding-left: 25px;
+    color: #4b4949;
+    font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", SimSun, serif;
+    font-weight: 400;
+    text-align: left;
+  }
+
+  .statement td.label.deep-indent {
+    padding-left: 50px;
+  }
+
+  .statement td.note-number {
+    color: #ff4b1f;
+    font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", SimSun, serif;
+    font-size: 20px;
+    font-weight: 400;
+    text-align: center;
+  }
+
+  .statement td.amount {
+    text-align: right;
+    font-size: 23px;
+    letter-spacing: 0.2px;
+  }
+
+  .statement td.amount.current {
+    font-weight: 700;
+  }
+
+  .statement td.amount.previous {
+    color: #464344;
+    font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", SimSun, serif;
+    font-weight: 400;
+  }
+
+  .statement tr.section-heading td {
+    height: 46px;
+    padding: 0;
+    font-size: 25px;
+    line-height: 46px;
+    font-weight: 700;
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  .statement tr.subsection-heading td {
+    height: 43px;
+    padding: 0;
+    font-size: 25px;
+    line-height: 43px;
+    font-weight: 700;
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  .statement tr.total-row {
+    border-top: 1.5px solid #ff4b1f;
+    border-bottom: 1.5px solid #ff4b1f;
+  }
+
+  .statement tr.total-row td {
+    height: 50px;
+    line-height: 50px;
+  }
+
+  .statement tr.total-row td.label {
+    padding-left: 25px;
+    color: #262324;
+    font-family: "Noto Sans SC", "Source Han Sans SC", "PingFang SC",
+                 "Microsoft YaHei", sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+  }
+
+  .statement tr.grand-total {
+    border-top: 1.5px solid #ff4b1f;
+    border-bottom: 1.5px solid #ff4b1f;
+  }
+
+  .statement tr.grand-total td {
+    height: 50px;
+    line-height: 50px;
+  }
+
+  .statement tr.grand-total td.label {
+    padding-left: 0;
+    color: #262324;
+    font-family: "Noto Sans SC", "Source Han Sans SC", "PingFang SC",
+                 "Microsoft YaHei", sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+  }
+
+  .statement tr.major-heading td {
+    padding-left: 0;
+  }
+
+  .financial-note {
+    position: absolute;
+    top: 2164px;
+    left: 118px;
+    margin: 0;
+    color: #4b4949;
+    font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", SimSun, serif;
+    font-size: 24px;
+    line-height: 1.5;
+    font-weight: 400;
+  }
+
+  .page-footer {
+    position: absolute;
+    left: 41px;
+    right: 118px;
+    bottom: 47px;
+    height: 34px;
+  }
+
+  .page-number {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 30px;
+    line-height: 34px;
+    font-weight: 300;
+  }
+
+  .annual-report {
+    position: absolute;
+    left: 77px;
+    bottom: 1px;
+    color: #ff4b1f;
+    font-size: 18px;
+    line-height: 30px;
+    font-weight: 400;
+  }
+
+  .company-name {
+    position: absolute;
+    right: 0;
+    bottom: 1px;
+    color: #666364;
+    font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", SimSun, serif;
+    font-size: 17px;
+    line-height: 30px;
+    font-weight: 400;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="document-header">
+    <h1>公司资产负债表</h1>
+    <div class="date">2024年12月31日</div>
+    <div class="unit-note">（除特别注明外，金额单位为人民币百万元）</div>
+  </header>
+
+  <main class="statement-wrap">
+    <table class="statement" aria-label="公司资产负债表">
+      <colgroup>
+        <col class="description">
+        <col class="note">
+        <col class="current">
+        <col class="previous">
+      </colgroup>
+      <thead>
+        <tr>
+          <th></th>
+          <th>附注十五</th>
+          <th class="current-head">2024年12月31日</th>
+          <th>2023年12月31日</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="section-heading">
+          <td colspan="4">资产</td>
+        </tr>
+        <tr>
+          <td class="label">货币资金</td>
+          <td class="note-number">1</td>
+          <td class="amount current">20,705</td>
+          <td class="amount previous">8,217</td>
+        </tr>
+        <tr>
+          <td class="label">买入返售金融资产</td>
+          <td class="note-number"></td>
+          <td class="amount current">5,777</td>
+          <td class="amount previous">2,440</td>
+        </tr>
+        <tr>
+          <td class="label">定期存款</td>
+          <td class="note-number"></td>
+          <td class="amount current">5,189</td>
+          <td class="amount previous">12,410</td>
+        </tr>
+        <tr>
+          <td class="label">金融投资：</td>
+          <td class="note-number"></td>
+          <td class="amount current"></td>
+          <td class="amount previous"></td>
+        </tr>
+        <tr>
+          <td class="label deep-indent">以公允价值计量且其变动计入当期损益的金融资产</td>
+          <td class="note-number">2</td>
+          <td class="amount current">35,455</td>
+          <td class="amount previous">9,070</td>
+        </tr>
+        <tr>
+          <td class="label deep-indent">债权投资</td>
+          <td class="note-number">3</td>
+          <td class="amount current">32,715</td>
+          <td class="amount previous">30,654</td>
+        </tr>
+        <tr>
+          <td class="label deep-indent">其他债权投资</td>
+          <td class="note-number">4</td>
+          <td class="amount current">9,493</td>
+          <td class="amount previous">8,000</td>
+        </tr>
+        <tr>
+          <td class="label">长期股权投资</td>
+          <td class="note-number">5</td>
+          <td class="amount current">240,152</td>
+          <td class="amount previous">239,302</td>
+        </tr>
+        <tr>
+          <td class="label">固定资产</td>
+          <td class="note-number"></td>
+          <td class="amount current">6</td>
+          <td class="amount previous">5</td>
+        </tr>
+        <tr>
+          <td class="label">投资性房地产</td>
+          <td class="note-number"></td>
+          <td class="amount current">2,177</td>
+          <td class="amount previous">2,042</td>
+        </tr>
+        <tr>
+          <td class="label">无形资产</td>
+          <td class="note-number"></td>
+          <td class="amount current">7</td>
+          <td class="amount previous">8</td>
+        </tr>
+        <tr>
+          <td class="label">使用权资产</td>
+          <td class="note-number"></td>
+          <td class="amount current">85</td>
+          <td class="amount previous">169</td>
+        </tr>
+        <tr>
+          <td class="label">其他资产</td>
+          <td class="note-number"></td>
+          <td class="amount current">465</td>
+          <td class="amount previous">443</td>
+        </tr>
+        <tr class="total-row">
+          <td class="label">资产总计</td>
+          <td class="note-number"></td>
+          <td class="amount current">352,226</td>
+          <td class="amount previous">312,760</td>
+        </tr>
+
+        <tr class="section-heading major-heading">
+          <td colspan="4">负债及股东权益</td>
+        </tr>
+        <tr class="subsection-heading">
+          <td colspan="4">负债</td>
+        </tr>
+        <tr>
+          <td class="label">短期借款</td>
+          <td class="note-number">6</td>
+          <td class="amount current">18,243</td>
+          <td class="amount previous">17,609</td>
+        </tr>
+        <tr>
+          <td class="label">拆入资金</td>
+          <td class="note-number"></td>
+          <td class="amount current">500</td>
+          <td class="amount previous">1,701</td>
+        </tr>
+        <tr>
+          <td class="label">衍生金融负债</td>
+          <td class="note-number"></td>
+          <td class="amount current">7,871</td>
+          <td class="amount previous">–</td>
+        </tr>
+        <tr>
+          <td class="label">卖出回购金融资产款</td>
+          <td class="note-number"></td>
+          <td class="amount current">370</td>
+          <td class="amount previous">–</td>
+        </tr>
+        <tr>
+          <td class="label">应付职工薪酬</td>
+          <td class="note-number">7</td>
+          <td class="amount current">1,191</td>
+          <td class="amount previous">1,154</td>
+        </tr>
+        <tr>
+          <td class="label">应交税费</td>
+          <td class="note-number"></td>
+          <td class="amount current">47</td>
+          <td class="amount previous">15</td>
+        </tr>
+        <tr>
+          <td class="label">长期借款</td>
+          <td class="note-number">6</td>
+          <td class="amount current">–</td>
+          <td class="amount previous">701</td>
+        </tr>
+        <tr>
+          <td class="label">应付债券</td>
+          <td class="note-number"></td>
+          <td class="amount current">21,381</td>
+          <td class="amount previous">–</td>
+        </tr>
+        <tr>
+          <td class="label">租赁负债</td>
+          <td class="note-number"></td>
+          <td class="amount current">88</td>
+          <td class="amount previous">172</td>
+        </tr>
+        <tr>
+          <td class="label">其他负债</td>
+          <td class="note-number"></td>
+          <td class="amount current">352</td>
+          <td class="amount previous">323</td>
+        </tr>
+        <tr class="total-row">
+          <td class="label">负债合计</td>
+          <td class="note-number"></td>
+          <td class="amount current">50,043</td>
+          <td class="amount previous">21,675</td>
+        </tr>
+
+        <tr class="section-heading major-heading">
+          <td colspan="4">股东权益</td>
+        </tr>
+        <tr>
+          <td class="label">股本</td>
+          <td class="note-number"></td>
+          <td class="amount current">18,210</td>
+          <td class="amount previous">18,210</td>
+        </tr>
+        <tr>
+          <td class="label">资本公积</td>
+          <td class="note-number"></td>
+          <td class="amount current">126,880</td>
+          <td class="amount previous">126,589</td>
+        </tr>
+        <tr>
+          <td class="label">减：库存股</td>
+          <td class="note-number"></td>
+          <td class="amount current">(5,001)</td>
+          <td class="amount previous">(5,001)</td>
+        </tr>
+        <tr>
+          <td class="label">其他综合收益</td>
+          <td class="note-number"></td>
+          <td class="amount current">242</td>
+          <td class="amount previous">212</td>
+        </tr>
+        <tr>
+          <td class="label">盈余公积</td>
+          <td class="note-number"></td>
+          <td class="amount current">12,164</td>
+          <td class="amount previous">12,164</td>
+        </tr>
+        <tr>
+          <td class="label">一般风险准备</td>
+          <td class="note-number"></td>
+          <td class="amount current">395</td>
+          <td class="amount previous">395</td>
+        </tr>
+        <tr>
+          <td class="label">未分配利润</td>
+          <td class="note-number"></td>
+          <td class="amount current">149,293</td>
+          <td class="amount previous">138,516</td>
+        </tr>
+        <tr class="total-row">
+          <td class="label">股东权益合计</td>
+          <td class="note-number"></td>
+          <td class="amount current">302,183</td>
+          <td class="amount previous">291,085</td>
+        </tr>
+        <tr class="grand-total">
+          <td class="label">负债和股东权益总计</td>
+          <td class="note-number"></td>
+          <td class="amount current">352,226</td>
+          <td class="amount previous">312,760</td>
+        </tr>
+      </tbody>
+    </table>
+  </main>
+
+  <p class="financial-note">后附财务报表附注为财务报表的组成部分。</p>
+
+  <footer class="page-footer">
+    <span class="page-number">160</span>
+    <span class="annual-report">二零二四年年报</span>
+    <span class="company-name">中国平安保险（集团）股份有限公司</span>
+  </footer>
+</div>
+</body>
+</html>

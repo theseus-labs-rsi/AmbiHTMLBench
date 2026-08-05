@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>个人经验总结课堂投影</title>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$']],
+        displayMath: [['$$', '$$']]
+      }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: #202326;
+      font-family: Arial, "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .scene {
+      position: relative;
+      width: min(100vw, 1082px);
+      aspect-ratio: 541 / 405;
+      overflow: hidden;
+      background: #8b8b82;
+      color: #111;
+    }
+
+    .ceiling {
+      position: absolute;
+      inset: 0 0 auto;
+      height: 8.5%;
+      background: linear-gradient(180deg, #c8c4b7 0%, #a7a59b 72%, #797a75 100%);
+      border-bottom: 2px solid #5c5e5b;
+    }
+
+    .ceiling-line {
+      position: absolute;
+      top: 4%;
+      left: 3%;
+      width: 90%;
+      height: 1px;
+      background: rgba(65, 65, 62, 0.65);
+      transform: rotate(-0.4deg);
+    }
+
+    .light {
+      position: absolute;
+      top: 0.7%;
+      width: 2.2%;
+      height: 0.7%;
+      border-radius: 50%;
+      background: #fffde4;
+      box-shadow: 0 0 3px #fff;
+    }
+
+    .light.l1 { left: 20%; }
+    .light.l2 { left: 43%; }
+    .light.l3 { left: 61%; }
+    .light.l4 { left: 79%; }
+
+    .left-wall {
+      position: absolute;
+      top: 8%;
+      bottom: 38%;
+      left: 0;
+      width: 6.3%;
+      background:
+        linear-gradient(90deg, #3f4241 0 9%, #777a75 10% 29%, #343737 30% 39%, #969791 40% 64%, #494b49 65%);
+      border-right: 2px solid #292b2b;
+    }
+
+    .right-wall {
+      position: absolute;
+      top: 8%;
+      right: 0;
+      width: 32.6%;
+      height: 55%;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,0.08), transparent 45%),
+        #99998f;
+      border-left: 3px solid #565753;
+    }
+
+    .panel-line-v,
+    .panel-line-h {
+      position: absolute;
+      background: rgba(65, 66, 62, 0.55);
+    }
+
+    .panel-line-v {
+      top: 8%;
+      right: 16.7%;
+      width: 1px;
+      height: 55%;
+    }
+
+    .panel-line-h.h1 {
+      top: 30%;
+      right: 0;
+      width: 32.6%;
+      height: 1px;
+    }
+
+    .panel-line-h.h2 {
+      top: 49%;
+      right: 0;
+      width: 32.6%;
+      height: 1px;
+    }
+
+    .projector-cable {
+      position: absolute;
+      top: 0;
+      left: 71.8%;
+      width: 2px;
+      height: 15.5%;
+      background: #484946;
+    }
+
+    .projector-cable::after {
+      content: "";
+      position: absolute;
+      left: -4px;
+      bottom: -13px;
+      width: 8px;
+      height: 19px;
+      background: #424442;
+      border-radius: 1px 1px 5px 5px;
+      transform: rotate(7deg);
+    }
+
+    .screen-frame {
+      position: absolute;
+      z-index: 2;
+      top: 4.6%;
+      left: 3%;
+      width: 64.6%;
+      height: 50.2%;
+      padding: 1.8% 2.8% 2.3% 3.2%;
+      background: #e6e8e8;
+      border: 4px solid #313535;
+      border-top-width: 6px;
+      box-shadow: 3px 4px 7px rgba(0, 0, 0, 0.55);
+      transform: perspective(900px) rotateY(0.8deg) rotateZ(0.25deg);
+      transform-origin: top left;
+      overflow: hidden;
+    }
+
+    .projection {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      color: #555a5d;
+      text-shadow: 0 0 0.4px rgba(0, 0, 0, 0.45);
+    }
+
+    .projection h1 {
+      margin: 0 0 0.7% 0;
+      font-size: clamp(7px, 1.18vw, 13px);
+      line-height: 1.2;
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+
+    .projection .subtitle,
+    .projection .intro {
+      margin: 0;
+      font-size: clamp(4px, 0.72vw, 8px);
+      line-height: 1.45;
+      letter-spacing: 0;
+    }
+
+    .projection .intro {
+      margin-top: 1.3%;
+    }
+
+    .projection ol {
+      margin: 5.4% 0 0 10%;
+      padding-left: 4%;
+      width: 81%;
+      font-size: clamp(4px, 0.64vw, 7px);
+      line-height: 1.55;
+      letter-spacing: 0;
+    }
+
+    .projection li {
+      padding-left: 1.2%;
+      margin: 0.6% 0;
+    }
+
+    .projection .continuation {
+      display: block;
+      margin-left: 4%;
+      line-height: 1.55;
+    }
+
+    .front-floor {
+      position: absolute;
+      z-index: 1;
+      left: 0;
+      right: 0;
+      top: 53%;
+      bottom: 0;
+      background:
+        linear-gradient(170deg, transparent 0 22%, rgba(35,38,39,0.35) 23%, transparent 25%),
+        #393d3e;
+    }
+
+    .lecturer {
+      position: absolute;
+      z-index: 6;
+      top: 40%;
+      left: 70.3%;
+      width: 7%;
+      height: 27%;
+      font-size: 0;
+    }
+
+    .lecturer::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 31%;
+      width: 31%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: #292c2e;
+    }
+
+    .lecturer::after {
+      content: "";
+      position: absolute;
+      top: 16%;
+      left: 19%;
+      width: 56%;
+      height: 84%;
+      background: #202428;
+      clip-path: polygon(32% 0, 71% 5%, 85% 50%, 100% 100%, 12% 100%, 21% 48%);
+    }
+
+    .placeholder {
+      overflow: hidden;
+    }
+
+    .placeholder span {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+
+    .desk {
+      position: absolute;
+      z-index: 8;
+      height: 8%;
+      background:
+        linear-gradient(180deg, #292b2c 0 11%, #a48b74 12% 65%, #755e4d 66% 100%);
+      border: 2px solid #1e2224;
+      box-shadow: 0 5px 0 #202528;
+      transform: perspective(350px) rotateX(2deg);
+    }
+
+    .desk.d1 { left: 6%; top: 66%; width: 23%; }
+    .desk.d2 { left: 25%; top: 69%; width: 30%; }
+    .desk.d3 { left: 52%; top: 76%; width: 32%; }
+    .desk.d4 { left: 78%; top: 84%; width: 25%; }
+    .desk.d5 { left: 12%; top: 86%; width: 30%; }
+
+    .chair-back {
+      position: absolute;
+      z-index: 10;
+      width: 10%;
+      height: 25%;
+      background: linear-gradient(90deg, #111619, #303537 48%, #111619);
+      border: 3px solid #181c1e;
+      border-radius: 2px 2px 0 0;
+    }
+
+    .chair-back.c1 { left: 19%; top: 72%; transform: rotate(-2deg); }
+    .chair-back.c2 { left: 36%; top: 75%; }
+    .chair-back.c3 { left: 54%; top: 75%; }
+    .chair-back.c4 { left: 83%; top: 80%; }
+    .chair-back.c5 { left: 2%; top: 76%; }
+
+    .person {
+      position: absolute;
+      z-index: 9;
+      font-size: 0;
+    }
+
+    .person .head {
+      position: absolute;
+      border-radius: 48% 48% 44% 44%;
+      background: #29282a;
+    }
+
+    .person .body {
+      position: absolute;
+      background: #303438;
+      clip-path: polygon(22% 0, 78% 0, 100% 100%, 0 100%);
+    }
+
+    .person.p1 {
+      left: 7%;
+      top: 57%;
+      width: 12%;
+      height: 31%;
+    }
+
+    .person.p1 .head {
+      left: 32%;
+      top: 0;
+      width: 39%;
+      height: 31%;
+    }
+
+    .person.p1 .body {
+      left: 2%;
+      top: 25%;
+      width: 96%;
+      height: 75%;
+      background: repeating-linear-gradient(45deg, #353b40 0 7px, #8b8d89 8px 12px, #282d31 13px 18px);
+    }
+
+    .person.p2 {
+      left: 28%;
+      top: 55%;
+      width: 13%;
+      height: 31%;
+    }
+
+    .person.p2 .head {
+      left: 32%;
+      top: 0;
+      width: 37%;
+      height: 30%;
+    }
+
+    .person.p2 .body {
+      left: 0;
+      top: 26%;
+      width: 100%;
+      height: 74%;
+      background: #22272b;
+    }
+
+    .person.p3 {
+      left: 39%;
+      top: 53%;
+      width: 14%;
+      height: 38%;
+    }
+
+    .person.p3 .head {
+      left: 30%;
+      top: 0;
+      width: 39%;
+      height: 29%;
+      background: #202126;
+    }
+
+    .person.p3 .body {
+      left: 0;
+      top: 25%;
+      width: 100%;
+      height: 75%;
+      background: #262c31;
+    }
+
+    .person.p4 {
+      left: 48%;
+      top: 45%;
+      width: 25%;
+      height: 49%;
+      z-index: 11;
+    }
+
+    .person.p4 .head {
+      left: 30%;
+      top: 0;
+      width: 34%;
+      height: 32%;
+      background: #26262a;
+    }
+
+    .person.p4 .body {
+      left: 0;
+      top: 25%;
+      width: 100%;
+      height: 75%;
+      background: #d8d7ca;
+    }
+
+    .person.p4::after {
+      content: "";
+      position: absolute;
+      top: 7%;
+      left: 55%;
+      width: 34%;
+      height: 40%;
+      background: #27272b;
+      border-radius: 70% 35% 45% 50%;
+      transform: rotate(17deg);
+    }
+
+    .person.p5 {
+      left: 69%;
+      top: 53%;
+      width: 12%;
+      height: 29%;
+    }
+
+    .person.p5 .head {
+      left: 31%;
+      top: 0;
+      width: 39%;
+      height: 31%;
+    }
+
+    .person.p5 .body {
+      left: 0;
+      top: 26%;
+      width: 100%;
+      height: 74%;
+      background: #171b1f;
+    }
+
+    .person.p6 {
+      left: 74%;
+      top: 42%;
+      width: 27%;
+      height: 58%;
+      z-index: 12;
+    }
+
+    .person.p6 .head {
+      left: 29%;
+      top: 0;
+      width: 38%;
+      height: 32%;
+      background: #242326;
+    }
+
+    .person.p6 .body {
+      left: 0;
+      top: 27%;
+      width: 100%;
+      height: 73%;
+      background: #eee6dc;
+    }
+
+    .person.p6::before {
+      content: "";
+      position: absolute;
+      z-index: 2;
+      top: 1%;
+      left: 39%;
+      width: 53%;
+      height: 78%;
+      border-radius: 55% 45% 30% 40%;
+      background: linear-gradient(90deg, #2b2728, #59413c 68%, #30292b);
+      transform: rotate(-7deg);
+    }
+
+    .foreground-arm {
+      position: absolute;
+      z-index: 14;
+      left: -5%;
+      bottom: -8%;
+      width: 20%;
+      height: 43%;
+      border-radius: 45% 50% 0 0;
+      background: #e8c4ad;
+      transform: rotate(-34deg);
+      border-right: 1px solid rgba(84, 58, 49, 0.4);
+    }
+
+    .foreground-shirt {
+      position: absolute;
+      z-index: 15;
+      left: -2%;
+      bottom: -4%;
+      width: 16%;
+      height: 18%;
+      background: repeating-linear-gradient(12deg, #f2f2e8 0 4px, #51716c 5px 8px);
+      transform: rotate(17deg);
+    }
+
+    .phone {
+      position: absolute;
+      z-index: 13;
+      top: 55%;
+      left: 82%;
+      width: 2.4%;
+      height: 10%;
+      border-radius: 3px;
+      background: #15191b;
+      transform: rotate(10deg);
+      box-shadow: 0 0 0 1px #777;
+    }
+
+    @media (max-width: 600px) {
+      .scene {
+        width: 100vw;
+      }
+
+      .screen-frame {
+        border-width: 2px;
+        border-top-width: 3px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="scene" aria-label="教室内的个人经验总结投影">
+    <div class="ceiling"></div>
+    <div class="ceiling-line"></div>
+    <div class="light l1"></div>
+    <div class="light l2"></div>
+    <div class="light l3"></div>
+    <div class="light l4"></div>
+
+    <div class="left-wall"></div>
+    <div class="right-wall"></div>
+    <div class="panel-line-v"></div>
+    <div class="panel-line-h h1"></div>
+    <div class="panel-line-h h2"></div>
+    <div class="projector-cable"></div>
+
+    <section class="screen-frame">
+      <div class="projection">
+        <h1>个人经验总结</h1>
+        <p class="subtitle">学习资料——[illegible]</p>
+        <p class="intro">根据面试会中总结的经验：</p>
+        <ol>
+          <li>着装：穿对方[illegible]，加深印象[illegible]，正规、简洁</li>
+          <li>自我介绍：[illegible]，小度、风度</li>
+          <li>[illegible]：不急不躁，机灵</li>
+          <li>问题：站在上面，[illegible]</li>
+          <li>
+            争论：站住，学到哪，参加么？个性，自我[illegible]（[illegible]）
+            <span class="continuation">如何不显眼及自我[illegible]。（各[illegible]不要太多，会[illegible]，</span>
+            <span class="continuation">今天一总结，明天一个总结，[illegible]？）</span>
+          </li>
+          <li>[illegible]在温柔[illegible]及其社交关系</li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="front-floor"></div>
+
+    <div class="placeholder lecturer" role="img" aria-label="讲台右侧站立的讲述者">
+      <span>[Photo: lecturer standing to the right of the projection]</span>
+    </div>
+
+    <div class="placeholder person p1" role="img" aria-label="左侧就座听众">
+      <span>[Photo: seated audience member, left]</span>
+      <div class="head"></div>
+      <div class="body"></div>
+    </div>
+    <div class="placeholder person p2" role="img" aria-label="中左侧就座听众">
+      <span>[Photo: seated audience member, center-left]</span>
+      <div class="head"></div>
+      <div class="body"></div>
+    </div>
+    <div class="placeholder person p3" role="img" aria-label="中央就座听众">
+      <span>[Photo: seated audience member, center]</span>
+      <div class="head"></div>
+      <div class="body"></div>
+    </div>
+    <div class="placeholder person p4" role="img" aria-label="中央前景就座听众">
+      <span>[Photo: seated audience member, foreground center]</span>
+      <div class="head"></div>
+      <div class="body"></div>
+    </div>
+    <div class="placeholder person p5" role="img" aria-label="中右侧就座听众">
+      <span>[Photo: seated audience member, center-right]</span>
+      <div class="head"></div>
+      <div class="body"></div>
+    </div>
+    <div class="placeholder person p6" role="img" aria-label="右侧前景长发听众">
+      <span>[Photo: long-haired audience member, foreground right]</span>
+      <div class="head"></div>
+      <div class="body"></div>
+    </div>
+
+    <div class="placeholder desk d1" role="img" aria-label="左侧课桌"><span>[Photo: desk, left]</span></div>
+    <div class="placeholder desk d2" role="img" aria-label="中左课桌"><span>[Photo: desk, center-left]</span></div>
+    <div class="placeholder desk d3" role="img" aria-label="中央课桌"><span>[Photo: desk, center]</span></div>
+    <div class="placeholder desk d4" role="img" aria-label="右侧课桌"><span>[Photo: desk, right]</span></div>
+    <div class="placeholder desk d5" role="img" aria-label="前景课桌"><span>[Photo: desk, foreground]</span></div>
+
+    <div class="chair-back c1"></div>
+    <div class="chair-back c2"></div>
+    <div class="chair-back c3"></div>
+    <div class="chair-back c4"></div>
+    <div class="chair-back c5"></div>
+
+    <div class="phone"></div>
+    <div class="foreground-arm"></div>
+    <div class="foreground-shirt"></div>
+  </main>
+</body>
+</html>

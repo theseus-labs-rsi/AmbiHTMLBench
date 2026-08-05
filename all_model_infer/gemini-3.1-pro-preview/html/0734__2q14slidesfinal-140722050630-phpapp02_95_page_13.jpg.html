@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Performance Materials</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #fff;
+        color: #000;
+    }
+    .slide {
+        width: 1024px;
+        height: 768px;
+        margin: 0 auto;
+        position: relative;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+    .header {
+        height: 50px;
+        background: linear-gradient(to right, #d31245 88%, #8a8d91 88%);
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        padding-right: 20px;
+    }
+    .logo {
+        width: 90px;
+        height: 40px;
+        background-color: #d31245;
+        border-radius: 50%;
+        border: 2px solid white;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+        font-size: 18px;
+        font-family: "Times New Roman", Times, serif;
+        letter-spacing: 1px;
+    }
+    .title-container {
+        text-align: center;
+        margin-top: 15px;
+    }
+    .main-title {
+        font-size: 32px;
+        font-weight: bold;
+        margin: 0;
+    }
+    .sub-title {
+        font-size: 22px;
+        font-style: italic;
+        margin: 5px 0 25px 0;
+        font-weight: normal;
+    }
+    .content {
+        display: flex;
+        padding: 0 40px;
+        gap: 40px;
+    }
+    .col-left {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+    .col-right {
+        flex: 1.15;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+    
+    /* Chart Styles */
+    .chart-box {
+        display: flex;
+        flex-direction: column;
+    }
+    .chart-header {
+        background-color: #2b5d9c;
+        color: white;
+        text-align: center;
+        padding: 6px 0;
+        font-weight: bold;
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+    .chart-body {
+        display: flex;
+        align-items: stretch;
+    }
+    .y-axis-label {
+        writing-mode: vertical-rl;
+        transform: rotate(180deg);
+        font-size: 13px;
+        font-weight: bold;
+        text-align: center;
+    }
+    .y-axis-label-right {
+        writing-mode: vertical-rl;
+        transform: rotate(180deg);
+        font-size: 13px;
+        font-weight: bold;
+        text-align: center;
+    }
+    .y-axis-values {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        font-size: 13px;
+        font-weight: bold;
+        text-align: right;
+        padding: 0 8px;
+    }
+    .y-axis-values-right {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        font-size: 13px;
+        font-weight: bold;
+        text-align: left;
+        padding: 0 8px;
+    }
+    .graph-area {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+    .placeholder {
+        flex-grow: 1;
+        background-color: #f9f9f9;
+        border: 1px dashed #aaa;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #555;
+        font-style: italic;
+        font-size: 12px;
+        text-align: center;
+        padding: 10px;
+    }
+    .x-axis-values {
+        display: flex;
+        justify-content: space-around;
+        font-size: 13px;
+        font-weight: bold;
+        padding-top: 8px;
+    }
+    
+    /* Specific Chart Adjustments */
+    .chart1-body { height: 180px; }
+    .chart2-body { height: 220px; }
+    .chart1-graph { border-left: 1px solid #000; border-bottom: 1px solid #000; }
+    .chart2-graph { border-left: 1px solid #000; border-bottom: 1px solid #000; border-right: 1px solid #000; }
+    
+    .legend-left {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding-bottom: 25px;
+        padding-right: 5px;
+    }
+    .legend-blue-square {
+        width: 14px;
+        height: 14px;
+        background-color: #2b5d9c;
+    }
+    .legend-right {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .legend-red-line {
+        width: 2px;
+        height: 20px;
+        background-color: #d31245;
+        margin-bottom: 25px;
+    }
+
+    /* Text Box Styles */
+    .text-box {
+        background-color: #f2f2f2;
+        border-radius: 15px;
+        padding: 15px 25px 20px 25px;
+        box-shadow: 2px 2px 6px rgba(0,0,0,0.15);
+    }
+    .text-box-title {
+        text-align: center;
+        font-weight: bold;
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+    .text-box ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+    .text-box li {
+        position: relative;
+        padding-left: 22px;
+        margin-bottom: 15px;
+        font-size: 14px;
+        line-height: 1.3;
+    }
+    .text-box li:last-child {
+        margin-bottom: 0;
+    }
+    .text-box li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 3px;
+        width: 8px;
+        height: 8px;
+        border: 1px solid #333;
+        background: linear-gradient(to bottom right, #fff, #ddd);
+        box-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    }
+
+    /* Footer Styles */
+    .footer {
+        position: absolute;
+        bottom: 15px;
+        left: 40px;
+        right: 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+    .footnotes {
+        font-size: 11px;
+        line-height: 1.4;
+    }
+    .footnotes div {
+        margin-bottom: 2px;
+    }
+    .page-number {
+        font-size: 18px;
+        font-weight: bold;
+    }
+</style>
+</head>
+<body>
+<div class="slide">
+    <div class="header">
+        <div class="logo">OU PONT</div>
+    </div>
+    
+    <div class="title-container">
+        <h1 class="main-title">Performance Materials***</h1>
+        <h2 class="sub-title">Performance Polymers (DPP), Packaging & Industrial Polymers (P&IP)</h2>
+    </div>
+
+    <div class="content">
+        <div class="col-left">
+            <!-- Chart 1 -->
+            <div class="chart-box">
+                <div class="chart-header">2Q Sales *</div>
+                <div class="chart-body chart1-body">
+                    <div class="y-axis-label">$ in Billions</div>
+                    <div class="y-axis-values">
+                        <span>2.0</span><span>1.6</span><span>1.2</span><span>0.8</span><span>0.4</span><span>0.0</span>
+                    </div>
+                    <div class="graph-area">
+                        <div class="placeholder chart1-graph">
+                            [Bar Chart: 3 blue bars representing sales for 2Q12, 2Q13, 2Q14. All bars are approximately at the 1.6 level.]
+                        </div>
+                        <div class="x-axis-values">
+                            <span>2Q12</span><span>2Q13</span><span>2Q14</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chart 2 -->
+            <div class="chart-box">
+                <div class="chart-header">2Q Operating Earnings **</div>
+                <div class="chart-body chart2-body">
+                    <div class="legend-left">
+                        <div class="legend-blue-square"></div>
+                    </div>
+                    <div class="y-axis-label">$ in Millions</div>
+                    <div class="y-axis-values">
+                        <span>375</span><span>300</span><span>225</span><span>150</span><span>75</span><span>0</span>
+                    </div>
+                    <div class="graph-area">
+                        <div class="placeholder chart2-graph">
+                            [Combo Chart: Blue bars for Operating Earnings (left axis), Red line for Margin (right axis).<br>
+                            2Q12: Bar ~320, Line ~20%<br>
+                            2Q13: Bar ~330, Line ~21%<br>
+                            2Q14: Bar ~305, Line ~19%]
+                        </div>
+                        <div class="x-axis-values">
+                            <span>2Q12</span><span>2Q13</span><span>2Q14</span>
+                        </div>
+                    </div>
+                    <div class="y-axis-values-right">
+                        <span>25%</span><span>20%</span><span>15%</span><span>10%</span><span>5%</span><span>0%</span>
+                    </div>
+                    <div class="legend-right">
+                        <div class="y-axis-label-right">Margin</div>
+                        <div class="legend-red-line"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-right">
+            <!-- Text Box 1 -->
+            <div class="text-box">
+                <div class="text-box-title">2Q Comments</div>
+                <ul>
+                    <li>Sales down 2% due to lower volumes resulting from the scheduled ethylene outage and portfolio impact of the GLS/Vinyls sale</li>
+                    <li>Demand for Performance Polymers up mid-single digits due to strengthening automotive market</li>
+                    <li>Demand environment in consumer, construction, and food packaging markets remains stable</li>
+                    <li>Operating earnings down 9% as higher sales in automotive were more than offset by reduced supply of ethylene and the portfolio impact of the GLS/Vinyls sale</li>
+                </ul>
+            </div>
+
+            <!-- Text Box 2 -->
+            <div class="text-box">
+                <div class="text-box-title">3Q Outlook</div>
+                <ul>
+                    <li>3Q sales essentially flat due to the GLS/Vinyls sale</li>
+                    <li>Consumer, construction, and food packaging volumes forecasted to remain stable</li>
+                    <li>Automotive volumes anticipated to remain strong led by China and Europe</li>
+                    <li>3Q operating earnings up modestly versus prior year which included a $30 million benefit related to a JV equity position</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="footnotes">
+            <div>* Segment sales include transfers.</div>
+            <div>** See appendix for reconciliation of non-GAAP measures.</div>
+            <div>*** Prior periods reflect reclassification of Viton® fluoroelastomers from Performance Materials to Performance Chemicals</div>
+        </div>
+        <div class="page-number">13</div>
+    </div>
+</div>
+</body>
+</html>

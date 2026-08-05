@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Broadband Microstrip Antenna Design</title>
+<script>
+  window.MathJax = { tex: { inlineMath: [['$','$'], ['\\(','\\)']] } };
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 26px 42px;
+    background: #fff;
+    color: #111;
+    font-family: "Times New Roman", Times, serif;
+    font-size: 20px;
+  }
+  .page {
+    width: 1355px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 675px 675px;
+    column-gap: 25px;
+    align-items: start;
+  }
+  .left, .right { width: 100%; }
+  .figure { width: 100%; margin: 0 0 10px; }
+  .chart {
+    width: 585px;
+    height: 370px;
+    margin: 0 auto 10px;
+    border: 1px solid #222;
+    position: relative;
+    background:
+      linear-gradient(to right, transparent 24%, #e5e5e5 24%, #e5e5e5 52%, transparent 52%),
+      repeating-linear-gradient(to bottom, transparent 0, transparent 60px, #ddd 61px);
+    overflow: hidden;
+  }
+  .chart:before {
+    content: "";
+    position: absolute;
+    left: 24%;
+    top: 0;
+    bottom: 0;
+    width: 28%;
+    background: rgba(210,210,210,.47);
+  }
+  .curve {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 3px;
+    border-radius: 50%;
+    border-top: 3px solid #222;
+    transform: rotate(-13deg);
+  }
+  .curve.one { top: 75px; left: 18px; width: 550px; }
+  .curve.two { top: 132px; left: 95px; width: 390px; transform: rotate(8deg); }
+  .curve.three { top: 180px; left: 150px; width: 310px; transform: rotate(-18deg); border-color:#555; border-style:dashed; }
+  .redline {
+    position:absolute; left:0; right:0; top:51px;
+    border-top:3px dashed red;
+  }
+  .blueline {
+    position:absolute; left:0; right:0; top:122px;
+    border-top:3px dashed blue;
+  }
+  .axis-y {
+    position:absolute; left:-43px; top:142px; transform:rotate(-90deg);
+    font-size:23px; white-space:nowrap;
+  }
+  .axis-x {
+    position:absolute; bottom:-34px; left:180px; font-size:24px;
+  }
+  .ticks-y {
+    position:absolute; left:-38px; top:-8px; height:370px;
+    display:flex; flex-direction:column; justify-content:space-between;
+    font-size:16px;
+  }
+  .ticks-x {
+    position:absolute; left:0; right:0; bottom:-27px;
+    display:flex; justify-content:space-between; font-size:16px;
+  }
+  .legend {
+    position:absolute; right:8px; bottom:7px;
+    border:1px solid #999; background:#fff; padding:4px 8px;
+    font-size:18px; line-height:1.45;
+  }
+  .legend .black { display:inline-block; width:52px; border-top:3px solid #111; vertical-align:middle; }
+  .legend .red { display:inline-block; width:52px; border-top:3px dashed red; vertical-align:middle; }
+  figcaption {
+    font-size: 20px;
+    line-height: 1.18;
+    text-align: left;
+    margin: 8px 2px 14px;
+  }
+  .small-chart {
+    width: 460px;
+    height: 322px;
+    margin: 0 auto 8px;
+    border: 1px solid #222;
+    position: relative;
+    background:
+      repeating-linear-gradient(to bottom, transparent 0, transparent 67px, #ddd 68px);
+  }
+  .small-chart:before {
+    content:"";
+    position:absolute; left:0; top:0; bottom:0; width:10px;
+    background:repeating-linear-gradient(135deg,#777 0,#777 1px,#ddd 1px,#ddd 4px);
+  }
+  .dash-vertical { position:absolute; left:100px; top:0; bottom:0; border-left:3px dashed #111; }
+  .dash-horizontal { position:absolute; left:0; right:0; top:237px; border-top:3px dashed #111; }
+  .small-curve { position:absolute; height:3px; border-top:3px solid #777; transform-origin:left; }
+  .sc1 { left:12px; top:65px; width:110px; transform:rotate(65deg); border-color:#aaa; }
+  .sc2 { left:10px; top:100px; width:125px; transform:rotate(35deg); border-color:blue; border-style:dashed; }
+  .sc3 { left:10px; top:130px; width:130px; transform:rotate(22deg); border-color:red; }
+  .sc4 { left:10px; top:150px; width:135px; transform:rotate(12deg); border-color:#bbb; }
+  .small-legend {
+    position:absolute; right:15px; top:8px; background:#fff; border:1px solid #aaa;
+    padding:4px 8px; font-size:18px; line-height:1.45;
+  }
+  .small-legend div:before { content:""; display:inline-block; width:45px; margin-right:6px; vertical-align:middle; border-top:3px solid; }
+  .bbso:before { border-color:blue !important; border-style:dashed; }
+  .bpso:before { border-color:blue !important; border-style:dotted; }
+  .mlao:before { border-color:red !important; }
+  .ag:before { border-color:#bbb !important; }
+  .small-axis-y { position:absolute; left:-64px; top:120px; transform:rotate(-90deg); white-space:nowrap; }
+  .small-axis-x { position:absolute; bottom:-39px; left:120px; }
+  .small-note { position:absolute; top:-43px; left:20px; font-size:19px; }
+  .small-label { position:absolute; left:110px; bottom:10px; font-size:18px; }
+  .table-title { text-align:center; margin-top:18px; font-size:21px; }
+  .table-subtitle {
+    text-align:center; font-variant:small-caps; line-height:1.05;
+    margin:7px 55px 15px;
+  }
+  table {
+    width: 100%; border-collapse: collapse; font-size:18px;
+  }
+  th, td { border:1px solid #222; padding:4px 7px; text-align:center; }
+  .footnote { font-size:17px; margin-top:0; line-height:1.1; }
+  .placeholder {
+    position: relative;
+    border: 1px solid #222;
+    background: #fafafa;
+    overflow: hidden;
+  }
+  .diagram {
+    width: 600px;
+    height: 600px;
+    margin: 0 auto 5px;
+    background:#fff;
+  }
+  .panel {
+    position:absolute; border:1px solid #222; background:#f1f1f1;
+  }
+  .top-panel { left:150px; top:22px; width:390px; height:260px; }
+  .ground-panel { left:132px; top:350px; width:425px; height:255px; }
+  .strip {
+    position:absolute; top:22px; left:345px; width:15px; height:260px;
+    background:#eee; border:1px dashed #222;
+  }
+  .strip2 {
+    position:absolute; top:350px; left:312px; width:28px; height:255px;
+    background:#eee; border:1px dashed #222;
+  }
+  .point { position:absolute; width:5px; height:5px; background:#111; border-radius:50%; }
+  .p1 { left:277px; top:170px; } .p2 { left:415px; top:170px; }
+  .p3 { left:265px; top:490px; } .p4 { left:390px; top:490px; }
+  .dtext { position:absolute; font-size:18px; line-height:1.1; }
+  .w1 { top:0; left:382px; font-style:italic; }
+  .w2 { top:92px; left:245px; font-style:italic; }
+  .l1 { top:142px; left:110px; font-style:italic; }
+  .l2 { top:160px; left:185px; font-style:italic; }
+  .design1 { top:38px; left:410px; width:150px; }
+  .decouple1 { top:220px; left:150px; width:180px; }
+  .feed { top:228px; left:390px; }
+  .g1 { top:145px; left:342px; font-style:italic; }
+  .g2 { top:286px; left:370px; font-style:italic; }
+  .decouple2 { top:360px; left:135px; width:155px; }
+  .design2 { top:380px; left:395px; width:160px; }
+  .g3 { top:535px; left:375px; font-style:italic; }
+  .arrow { position:absolute; border-top:1px solid #111; width:90px; transform:rotate(20deg); }
+  .a1 { top:215px; left:255px; } .a2 { top:110px; left:354px; transform:rotate(15deg); }
+  .a3 { top:425px; left:280px; width:70px; transform:rotate(-40deg); }
+  .diagram-label { text-align:center; font-size:18px; margin-top:0; }
+  .right-caption { margin-top:8px; }
+  .paragraph {
+    text-align: justify;
+    line-height: 1.18;
+    margin: 68px 0 0;
+  }
+  .section-heading {
+    font-size: 27px;
+    font-style: italic;
+    margin: 34px 0 9px;
+  }
+  .blue { color:blue; }
+</style>
+</head>
+<body>
+<div class="page">
+  <main class="left">
+    <figure class="figure">
+      <div class="chart placeholder">
+        <div class="redline"></div>
+        <div class="blueline"></div>
+        <div class="curve one"></div>
+        <div class="curve two"></div>
+        <div class="curve three"></div>
+        <div class="ticks-y"><span>0</span><span>−5</span><span>−10</span><span>−15</span><span>−20</span><span>−25</span><span>−30</span></div>
+        <div class="ticks-x"><span>1.5</span><span>2.0</span><span>2.5</span><span>3.0</span></div>
+        <div class="axis-y">|S<sub>11</sub>| (dB)</div>
+        <div class="axis-x">Frequency (GHz)</div>
+        <div class="legend">
+          <div><span class="black"></span> Optimized Design (Case 1-5)</div>
+          <div><span class="red"></span> Initial Design</div>
+        </div>
+      </div>
+      <figcaption><b>Fig. 8.</b> &nbsp; Performance of the broadband microstrip antenna: initial design and<br>optimized design with predicted and verified results.</figcaption>
+    </figure>
+
+    <figure class="figure">
+      <div class="small-chart placeholder">
+        <div class="small-note">Intial data preparation: 50 simulations</div>
+        <div class="dash-vertical"></div>
+        <div class="dash-horizontal"></div>
+        <div class="small-curve sc1"></div>
+        <div class="small-curve sc2"></div>
+        <div class="small-curve sc3"></div>
+        <div class="small-curve sc4"></div>
+        <div class="small-legend">
+          <div class="bbso">BBSO</div>
+          <div class="bpso">BPSO w/ improved TF</div>
+          <div class="mlao">MLAO-AGD</div>
+          <div class="ag">MLAO-AGD (case 1-5)</div>
+        </div>
+        <div class="small-axis-y">Avg. Fitness Function</div>
+        <div class="small-axis-x">Number of simulations</div>
+        <div class="small-label">500 iterations</div>
+        <div style="position:absolute;right:5px;top:215px;font-size:16px;">-10 dB</div>
+      </div>
+      <figcaption><b>Fig. 9.</b> &nbsp; Convergence rates for the broadband microstrip AGD using different<br>methods and different fitness functions.</figcaption>
+    </figure>
+
+    <section>
+      <div class="table-title">TABLE II</div>
+      <div class="table-subtitle">Statistics of different algorithm results for<br>the Wideband Microstrip Antenna Design</div>
+      <table>
+        <thead>
+          <tr><th>Algorithm</th><th>Worst iter.</th><th>Best iter.</th><th>Mean iter.</th><th>Time<sup>*</sup></th></tr>
+        </thead>
+        <tbody>
+          <tr><td>BPSO w/ imp. TF</td><td>&gt; 1000</td><td>250</td><td>&gt; 680</td><td>&gt; 17.94 h</td></tr>
+          <tr><td>MLAO-AGD</td><td>342</td><td>107</td><td>254</td><td>9.62 h</td></tr>
+        </tbody>
+      </table>
+      <div class="footnote"><sup>*</sup> The time for the BPSO with an improved TF is estimated using the mean<br>full-wave simulation time used in MLAO-AGD.</div>
+    </section>
+  </main>
+
+  <aside class="right">
+    <figure class="figure">
+      <div class="diagram placeholder">
+        <div class="panel top-panel"></div>
+        <div class="strip"></div>
+        <div class="panel ground-panel"></div>
+        <div class="strip2"></div>
+        <div class="point p1"></div><div class="point p2"></div>
+        <div class="point p3"></div><div class="point p4"></div>
+        <div class="dtext w1">w<sub>1</sub></div>
+        <div class="dtext w2">w<sub>2</sub></div>
+        <div class="dtext l1">l<sub>1</sub></div>
+        <div class="dtext l2">l<sub>2</sub></div>
+        <div class="dtext design1">Design domain<br>at top plane</div>
+        <div class="dtext decouple1">Decoupling structure<br>at top plane</div>
+        <div class="dtext feed">Feeding points</div>
+        <div class="dtext g1">g<sub>1</sub></div>
+        <div class="dtext g2">g<sub>2</sub></div>
+        <div class="dtext decouple2">Decoupling structure<br>at ground plane</div>
+        <div class="dtext design2">Design domain<br>at ground plane</div>
+        <div class="dtext g3">g<sub>3</sub></div>
+        <div class="arrow a1"></div><div class="arrow a2"></div><div class="arrow a3"></div>
+      </div>
+      <div class="diagram-label">(a)</div>
+      <div class="diagram-label" style="margin-top:272px;">(b)</div>
+      <figcaption class="right-caption"><b>Fig. 10.</b> &nbsp; Optimized DS of the MIMO antenna: (a) top plane and (b) ground<br>plane. &nbsp;<i>w</i><sub>1</sub> = 36.9, <i>l</i><sub>1</sub> = 24, <i>w</i><sub>2</sub> = 11.15, <i>g</i><sub>1</sub> = 1.75, <i>g</i><sub>2</sub> = 1.4, and<br><i>g</i><sub>3</sub> = 2.7 (units: mm).</figcaption>
+    </figure>
+
+    <p class="paragraph">
+      shown in Table <span class="blue">II</span>. In this case, the mean computational time<br>
+      costs for full-wave simulation, optimization, and training in<br>
+      one iteration are 1.58, 0.43, and 0.43 min, respectively. The<br>
+      time for the BPSO with an improved TF is estimated using<br>
+      the mean full-wave simulation time. MLAO-AGD can find<br>
+      optimal designs with a mean of 254 iterations, which takes<br>
+      approximately 9.62 h.
+    </p>
+
+    <div class="section-heading">C. Mutual Coupling Reduction Design</div>
+    <p class="paragraph" style="margin-top:0;">
+      The proposed algorithm is then implemented to design a DS<br>
+      for an MIMO system. Recently, many techniques, including<br>
+      the use of a decoupling network <span class="blue">[59]</span>, a shielding wall <span class="blue">[60]</span>,<br>
+      a defective ground structure (DGS) <span class="blue">[61]</span>, an EM bandgap<br>
+      (EBG) structure <span class="blue">[62]</span>, and a metasurface-based structure <span class="blue">[63]</span>,<br>
+      have been introduced to reduce the mutual coupling between<br>
+      different antenna elements and achieve greater channel
+    </p>
+  </aside>
+</div>
+</body>
+</html>

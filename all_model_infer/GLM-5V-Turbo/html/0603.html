@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script>window.MathJax={tex:{inlineMath:[["$","$"]],displayMath:[["$$","$$"]]}};</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6-12月龄喂养时间表</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "Microsoft YaHei", "SimHei", sans-serif;
+            background-color: #f0f8ff;
+            padding: 10px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+        }
+        
+        .header {
+            background: linear-gradient(to bottom, #4a90e2, #2171c7);
+            color: white;
+            text-align: center;
+            padding: 15px 10px;
+            position: relative;
+        }
+        
+        .main-title {
+            font-size: 42px;
+            font-weight: bold;
+            color: #ff3333;
+            text-shadow: 2px 2px 0 white, -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            color: #000;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .subtitle span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .subtitle::before {
+            content: "●";
+            color: #ff6600;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            padding: 8px;
+        }
+        
+        .bottom-row {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        
+        .section-card {
+            border: 3px solid #4a90e2;
+            border-radius: 8px;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #e6f3ff, #ffffff);
+        }
+        
+        .section-header {
+            background: linear-gradient(to bottom, #87ceeb, #4a90e2);
+            color: white;
+            text-align: center;
+            padding: 8px;
+            font-size: 22px;
+            font-weight: bold;
+            position: relative;
+        }
+        
+        .section-number {
+            font-size: 32px;
+            color: #ffcc00;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            margin-right: 5px;
+        }
+        
+        .section-body {
+            display: flex;
+            padding: 8px;
+            gap: 8px;
+        }
+        
+        .nutrition-col {
+            width: 45%;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .schedule-col {
+            width: 55%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .col-title {
+            font-size: 13px;
+            font-weight: bold;
+            color: #c41e3a;
+            text-align: center;
+            margin-bottom: 5px;
+            line-height: 1.3;
+        }
+        
+        .food-image-placeholder {
+            height: 70px;
+            background: linear-gradient(135deg, #fff8dc, #ffe4b5);
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            color: #666;
+            margin-bottom: 5px;
+            overflow: hidden;
+        }
+        
+        .food-image-placeholder img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+        }
+        
+        .nutrition-table {
+            width: 100%;
+            font-size: 13px;
+            border-collapse: collapse;
+        }
+        
+        .nutrition-table tr {
+            border-bottom: 1px dashed #ccc;
+        }
+        
+        .nutrition-table td {
+            padding: 3px 2px;
+            vertical-align: middle;
+        }
+        
+        .nutrition-table td:first-child {
+            background: linear-gradient(to right, #ff9999, #ffcccc);
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            width: 55px;
+            border-radius: 3px;
+            font-size: 12px;
+            text-shadow: 0.5px 0.5px 0 rgba(0,0,0,0.2);
+        }
+        
+        .nutrition-table td:last-child {
+            text-align: left;
+            padding-left: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .schedule-list {
+            list-style: none;
+            font-size: 13px;
+        }
+        
+        .schedule-item {
+            display: flex;
+            align-items: center;
+            padding: 3px 0;
+            border-bottom: 1px dotted #eee;
+            min-height: 24px;
+        }
+        
+        .time {
+            font-weight: bold;
+            color: #333;
+            width: 48px;
+            flex-shrink: 0;
+            font-size: 14px;
+        }
+        
+        .activity {
+            color: #444;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        
+        .icon-milk { color: #e74c3c; }
+        .icon-sleep { color: #9b59b6; }
+        .icon-food { color: #27ae60; }
+        .icon-bath { color: #3498db; }
+        .icon-fruit { color: #e91e63; }
+        
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            .bottom-row {
+                grid-template-columns: 1fr;
+            }
+            .main-title {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="main-title">6-12月龄喂养时间表</div>
+            <div class="subtitle">
+                <span>每日奶量</span>
+                <span>水量</span>
+                <span>添加辅食时间</span>
+                <span>作息时间表</span>
+            </div>
+        </div>
+        
+        <div class="content-grid">
+            <!-- 6 Month -->
+            <div class="section-card">
+                <div class="section-header">
+                    <span class="section-number">6</span>月龄喂养参考
+                </div>
+                <div class="section-body">
+                    <div class="nutrition-col">
+                        <div class="col-title">每天营养摄入参考<br><span style="font-size:11px;color:#666;">辅食性状：泥糊状</span></div>
+                        <div class="food-image-placeholder">
+                            [Image: 泥糊状食物]
+                        </div>
+                        <table class="nutrition-table">
+                            <tr><td>奶量</td><td>900ml</td></tr>
+                            <tr><td>水量</td><td>100ml左右</td></tr>
+                            <tr><td>谷物</td><td>5~15g</td></tr>
+                            <tr><td>蔬菜</td><td>3~5g</td></tr>
+                            <tr><td>水果</td><td>3~5g</td></tr>
+                            <tr><td>蛋</td><td>0</td></tr>
+                            <tr><td>鱼/禽/肉</td><td>0</td></tr>
+                            <tr><td>辅食油</td><td>0~10g</td></tr>
+                        </table>
+                    </div>
+                    <div class="schedule-col">
+                        <div class="col-title">宝宝作息安排参考</div>
+                        <ul class="schedule-list">
+                            <li class="schedule-item"><span class="time">6:00</span><span class="activity"><span class="icon-milk">🍼</span>奶160ml</span></li>
+                            <li class="schedule-item"><span class="time">10:00</span><span class="activity"><span class="icon-sleep">😴</span>小睡</span></li>
+                            <li class="schedule-item"><span class="time">10:00</span><span class="activity"><span class="icon-milk">🍼</span>奶100ml</span></li>
+                            <li class="schedule-item"><span class="time">12:00</span><span class="activity"><span class="icon-food">🥄</span>辅食+奶</span></li>
+                            <li class="schedule-item"><span class="time">15:00</span><span class="activity"><span class="icon-sleep">😴</span>午觉</span></li>
+                            <li class="schedule-item"><span class="time">15:00</span><span class="activity"><span class="icon-milk">🍼</span>奶160ml</span></li>
+                            <li class="schedule-item"><span class="time">16:00</span><span class="activity"><span class="icon-fruit">🍎</span>水果</span></li>
+                            <li class="schedule-item"><span class="time">18:30</span><span class="activity"><span class="icon-sleep">😴</span>小睡</span></li>
+                            <li class="schedule-item"><span class="time">19:00</span><span class="activity"><span class="icon-bath">🛁</span>洗澡</span></li>
+                            <li class="schedule-item"><span class="time">20:00</span><span class="activity"><span class="icon-milk">🍼</span>奶160ml</span></li>
+                            <li class="schedule-item"><span class="time">23:00</span><span class="activity"><span class="icon-milk">🍼</span>奶160ml</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 7 Month -->
+            <div class="section-card">
+                <div class="section-header">
+                    <span class="section-number">7</span>月龄喂养参考
+                </div>
+                <div class="section-body">
+                    <div class="nutrition-col">
+                        <div class="col-title">每天营养摄入参考<br><span style="font-size:11px;color:#666;">辅食性状：稠的泥状</span></div>
+                        <div class="food-image-placeholder">
+                            [Image: 稠泥状食物]
+                        </div>
+                        <table class="nutrition-table">
+                            <tr><td>奶量</td><td>800ml</td></tr>
+                            <tr><td>水量</td><td>150ml左右</td></tr>
+                            <tr><td>谷物</td><td>15~35g</td></tr>
+                            <tr><td>蔬菜</td><td>5~10g</td></tr>
+                            <tr><td>水果</td><td>5~10g</td></tr>
+                            <tr><td>蛋</td><td>0</td></tr>
+                            <tr><td>鱼/禽/肉</td><td>5~10g</td></tr>
+                            <tr><td>辅食油</td><td>0</td></tr>
+                        </table>
+                    </div>
+                    <div class="schedule-col">
+                        <div class="col-title">宝宝作息安排参考</div>
+                        <ul class="schedule-list">
+                            <li class="schedule-item"><span class="time">6:00</span><span class="activity"><span class="icon-milk">🍼</span>奶200ml</span></li>
+                            <li class="schedule-item"><span class="time">8:00</span><span class="activity"><span class="icon-sleep">☀️</span>起床</span></li>
+                            <li class="schedule-item"><span class="time">9:00</span><span class="activity"><span class="icon-milk">🍼</span>奶100ml</span></li>
+                            <li class="schedule-item"><span class="time"></span><span class="activity"><span class="icon-sleep">😴</span>小睡</span></li>
+                            <li class="schedule-item"><span class="time">11:00</span><span class="activity"><span class="icon-food">🥄</span>辅食</span></li>
+                            <li class="schedule-item"><span class="time"></span><span class="activity"><span class="icon-sleep">😴</span>午觉</span></li>
+                            <li class="schedule-item"><span class="time">19:00</span><span class="activity"><span class="icon-milk">🍼</span>奶200ml</span></li>
+                            <li class="schedule-item"><span class="time">16:00</span><span class="activity"><span class="icon-fruit">🍎</span>水果</span></li>
+                            <li class="schedule-item"><span class="time"></span><span class="activity"><span class="icon-sleep">🌙</span>纳晚觉</span></li>
+                            <li class="schedule-item"><span class="time">18:30</span><span class="activity"><span class="icon-food">🥄</span>辅食+奶</span></li>
+                            <li class="schedule-item"><span class="time">19:30</span><span class="activity"><span class="icon-bath">🛁</span>洗澡</span></li>
+                            <li class="schedule-item"><span class="time">21:00</span><span class="activity"><span class="icon-milk">🍼</span>睡前奶</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bottom Row: 8-9, 10-11, 12 months -->
+            <div class="bottom-row">
+                
+                <!-- 8-9 Month -->
+                <div class="section-card">
+                    <div class="section-header">
+                        <span class="section-number">8·9</span>月龄喂养参考
+                    </div>
+                    <div class="section-body">
+                        <div class="nutrition-col">
+                            <div class="col-title">每天营养摄入参考<br><span style="font-size:11px;color:#666;">辅食性状：碎末-颗粒</span></div>
+                            <div class="food-image-placeholder">
+                                [Image: 碎末状食物]
+                            </div>
+                            <table class="nutrition-table">
+                                <tr><td>奶量</td><td>700ml</td></tr>
+                                <tr><td>水量</td><td>250ml左右</td></tr>
+                                <tr><td>谷物</td><td>30~80g</td></tr>
+                                <tr><td>蔬菜</td><td>10~25g</td></tr>
+                                <tr><td>水果</td><td>10~25g</td></tr>
+                                <tr><td>蛋</td><td>1/4~1个</td></tr>
+                                <tr><td>鱼/禽/肉</td><td>10~20g</td></tr>
+                                <tr><td>辅食油</td><td>1~2ml</td></tr>
+                                <tr style="border:none;"><td colspan="2" style="font-size:11px;padding-top:5px;text-align:center;background:#f0f0f0;border-radius:3px;">食物颗粒：稀糊类</td></tr>
+                            </table>
+                        </div>
+                        <div class="schedule-col">
+                            <div class="col-title">宝宝作息安排参考</div>
+                            <ul class="schedule-list">
+                                <li class="schedule-item"><span class="time">8:00</span><span class="activity"><span class="icon-sleep">☀️</span>起床</span></li>
+                                <li class="schedule-item"><span class="time"></span><span class="activity"><span class="icon-milk">🍼</span>奶220ml</span></li>
+                                <li class="schedule-item"><span class="time">11:30</span><span class="activity"><span class="icon-sleep">😴</span>小睡</span></li>
+                                <li class="schedule-item"><span class="time"></span><span class="activity"><span class="icon-food">🍰</span>糕点</span></li>
+                                <li class="schedule-item"><span class="time"></span><span class="activity"><span class="icon-milk">🍼</span>午餐奶</span></li>
+                                <li class="schedule-item"><span class="time">15:00</span><span class="activity"><span class="icon-milk">🍼</span>230ml</span></li>
+                                <li class="schedule-item"><span class="time">16:00</span><span class="activity"><span class="icon-fruit">🍎</span>水果</span></li>
+                                <li class="schedule-item"><span class="time"></span><span class="activity"><span class="icon-sleep">😴</span>小睡</span></li>
+                                <li class="schedule-item"><span class="time">18:30</span><span class="activity"><span class="icon-food">🍰</span>糕点</span></li>
+                                <li class="schedule-item"><span class="time">19:30</span><span class="activity"><span class="icon-bath">🛁</span>洗澡</span></li>
+                                <li class="schedule-item"><span class="time">21:00</span><span class="activity"><span class="icon-milk">🍼</span>奶220ml</span></li>
+                                <li class="schedule-item"><span class="time"></span><span class="activity"><span class="icon-sleep">💤</span>喝喝</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 10-11 Month -->
+                <div class="section-card">
+                    <div class="section-header">
+                        <span class="section-number">10～11</span>月龄喂养参考
+                    </div>
+                    <div class="section-body">
+                        <div class="nutrition-col">
+                            <div class="col-title">每天营养摄入参考<br><span style="font-size:11px;color:#666;">辅食性状：饮食</span></div>
+                            <div class="food-image-placeholder">
+                                [Image: 颗粒状食物]
+                            </div>
+                            <table class="nutrition-table">
+                                <tr><td>奶量</td><td>600ml</td></tr>
+                                <tr><td>水量</td><td>350ml左右</td></tr>
+                                <tr><td>谷物</td><td>60~120g</td></tr>
+                                <tr><td>蔬菜</td><td>20~40g</td></tr>
+                                <tr><td>水果</td><td>20~40g</td></tr>
+                                <tr><td>蛋</td><td>1个或更多</td></tr>
+                                <tr><td>鱼/禽/肉</td><td>20~40g</td></tr>
+                                <tr><td>辅食油</td><td>2~4ml</td></tr>
+                                <tr style="border:none;"><td colspan="2" style="font-size:11px;padding-top:5px;text-align:center;background:#f0f0f0;border-radius:3px;">食物颗粒：颗粒、蛋卷</td></tr>
+                            </table>
+                        </div>
+                        <div class="schedule-col">
+                            <div class="col-title">宝宝作息安排参考</div>
+                            <ul class="schedule-list">
+                                <li class="schedule-item"><span class="time">6:00</span><span class="activity"><span class="icon-sleep">☀️</span>起床</span></li>
+                                <li class="schedule-item"><span class="time"></span><span class="activity"><span class="icon-milk">🍼</span>奶200ml</span></li>
+                                <li class="schedule-item"><span class="time">8:00</span><span class="activity"><span class="icon-food">🍳</span>早餐</span></li>
+                                <li class="schedule-item"><span class="time"></span><span class="activity"><span class="icon-sleep">😴</span>小睡</span></li>
+                                <li class="schedule-item"><span class="time">12:00</span><span class="activity"><span class="icon-food">🥄</span>辅食</span></li>
+                                <li class="schedule-item"><span class="time"></span><span class="activity"><span class="icon-food">🍱</span>午餐</span></li>
+                                <li class="schedule-item"><span class="time">15:00</span><span class="activity"><span class="icon-milk">🍼</span>奶200ml</span></li>
+                                <li class="schedule-item"><span class="time"></span><span class="activity"><span class="icon-fruit">🍎</span>水果</span></li>
+                                <li class="schedule-item"><span class="time"></span><span class="activity"><span class="icon-sleep">😴</span>小睡</span></li>
+                                <li class="schedule-item"><span class="time">18:00</span><span class="activity"><span class="icon-food">🍽️</span>晚餐</span></li>
+                                <li class="schedule-item"><span class="time">18:30</span><span class="activity"><span class="icon-food">🍰</span>糕点</span></li>
+                                <li class="schedule-item"><span class="time">20:00</span><span class="activity"><span class="icon-bath">🛁</span>洗澡</span></li>
+                                <li class="schedule-item"><span class="time">21:00</span><span class="activity"><span class="icon-milk">🍼</span>奶200ml</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 12 Month -->
+                <div class="section-card">
+                    <div class="section-header">
+                        <span class="section-number">12</span>月龄喂养参考
+                    </div>
+                    <div class="section-body">
+                        <div class="nutrition-col">
+                            <div class="col-title">每天营养摄入参考<br><span style="font-size:11px;color:#666;">辅食性状：与成人</span></div>
+                            <div class="food-image-placeholder">
+                                [Image: 成人饮食]
+                            </div>
+                            <table class="nutrition-table">
+                                <tr><td>奶量</td><td>500ml</td></tr>
+                                <tr><td>水量</td><td>500ml左右</td></tr>
+                                <tr><td>谷物</td><td>80~140g</td></tr>
+                                <tr><td>蔬菜</td><td>50~60g</td></tr>
+                                <tr><td>水果</td><td>50~60g</td></tr>
+                                <tr><td>蛋</td><td>1个整</td></tr>
+                                <tr><td>鱼/禽/肉</td><td>40~60g</td></tr>
+                                <tr><td>辅食油</td><td>3~5ml</td></tr>
+                                <tr style="border:none;"><td colspan="2" style="font-size:11px;padding-top:5px;text-align:center;background:#f0f0f0;border-radius:3px;">食物颗粒：家庭等</td></tr>
+                            </table>
+                        </div>
+                        <div class="schedule-col">
+                            <div class="col-title">宝宝作息安排参考</div>
+                            <ul class="schedule-list">
+                                <li class="schedule-item"><span class="time">7:00</span><span class="activity"><span class="icon-sleep">☀️</span>起床</span></li>
+                                <li class="schedule-item"><span class="time"></span><span class="activity"><span class="icon-milk">🍼</span>奶200ml</span></li>
+                                <li class="schedule-item"><span class="time">8:30</span><span class="activity"><span class="icon-food">🍳</span>早餐</span></li>
+                                <li class="schedule-item"><span class="time"></span><span class="activity"><span class="icon-sleep">😴</span>小睡</span></li>
+                                <li class="schedule-item"><span class="time">11:30</span><span class="activity"><span class="icon-food">🥄</span>辅食+水果</span></li>
+                                <li class="schedule-item"><span class="time"></span><span class="activity"><span class="icon-sleep">😴</span>午觉</span></li>
+                                <li class="schedule-item"><span class="time">16:00</span><span class="activity"><span class="icon-milk">🍼</span>奶150ml</span></li>
+                                <li class="schedule-item"><span class="time">18:00</span><span class="activity"><span class="icon-food">🥄</span>[?]辅食+水果</span></li>
+                                <li class="schedule-item"><span class="time">20:00</span><span class="activity"><span class="icon-bath">🛁</span>洗澡</span></li>
+                                <li class="schedule-item"><span class="time">21:00</span><span class="activity"><span class="icon-milk">🍼</span>奶150ml</span></li>
+                                <li class="schedule-item"><span class="time"></span><span class="activity"><span class="icon-sleep">💤</span>喝喝</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</body>
+</html>

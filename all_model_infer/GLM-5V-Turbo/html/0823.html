@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>window.MathJax={tex:{inlineMath:[["$","$"]],displayMath:[["$$","$$"]]}};</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What is Amazon DynamoDB? - Amazon DynamoDB Developer Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #16191f;
+            background-color: #fff;
+        }
+
+        /* Top Header */
+        .top-header {
+            background-color: #16191f;
+            color: #fff;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            font-size: 13px;
+        }
+
+        .top-header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .aws-logo {
+            height: 24px;
+            width: auto;
+        }
+
+        .top-header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .top-link {
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .top-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Navigation Bar */
+        .nav-bar {
+            background-color: #fff;
+            border-bottom: 1px solid #e1e4e8;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .nav-link {
+            color: #545b64;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .nav-link:hover {
+            color: #0073bb;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-input {
+            padding: 6px 12px 6px 32px;
+            border: 1px solid #888d94;
+            border-radius: 4px;
+            width: 240px;
+            font-size: 14px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #545b64;
+            font-size: 14px;
+        }
+
+        .create-account-btn {
+            background-color: #ec7211;
+            color: #fff;
+            padding: 6px 16px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        .create-account-btn:hover {
+            background-color: #eb5f07;
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Left Sidebar */
+        .left-sidebar {
+            width: 280px;
+            flex-shrink: 0;
+            border-right: 1px solid #e1e4e8;
+            height: calc(100vh - 97px);
+            overflow-y: auto;
+            position: sticky;
+            top: 0;
+        }
+
+        .sidebar-header {
+            padding: 20px 16px;
+            border-bottom: 1px solid #e1e4e8;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #16191f;
+        }
+
+        .sidebar-subtitle {
+            font-size: 12px;
+            color: #687078;
+            margin-top: 2px;
+        }
+
+        .back-arrow {
+            color: #545b64;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .sidebar-nav {
+            padding: 12px 0;
+        }
+
+        .nav-item {
+            padding: 6px 16px;
+            font-size: 13px;
+            color: #0073bb;
+            cursor: pointer;
+            line-height: 1.4;
+        }
+
+        .nav-item.active {
+            color: #0073bb;
+            font-weight: 500;
+        }
+
+        .nav-item:not(.active) {
+            color: #16191f;
+        }
+
+        .nav-item:hover {
+            background-color: #f2f3f3;
+        }
+
+        .nav-section {
+            margin-top: 4px;
+        }
+
+        .nav-parent {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 16px;
+            font-size: 13px;
+            color: #16191f;
+            cursor: pointer;
+        }
+
+        .nav-parent:hover {
+            background-color: #f2f3f3;
+        }
+
+        .expand-icon {
+            font-size: 10px;
+            color: #545b64;
+        }
+
+        .nav-child {
+            padding-left: 28px;
+            padding-right: 16px;
+            padding-top: 4px;
+            padding-bottom: 4px;
+            font-size: 13px;
+            color: #16191f;
+            cursor: pointer;
+            line-height: 1.4;
+        }
+
+        .nav-child:hover {
+            color: #0073bb;
+        }
+
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            min-width: 0;
+            padding: 24px 40px;
+            max-width: 800px;
+        }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: #545b64;
+            margin-bottom: 12px;
+        }
+
+        .breadcrumb a {
+            color: #0073bb;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .page-title {
+            font-size: 36px;
+            font-weight: 400;
+            color: #16191f;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .action-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border: 1px solid #0073bb;
+            border-radius: 16px;
+            color: #0073bb;
+            text-decoration: none;
+            font-size: 13px;
+            background: #fff;
+        }
+
+        .action-btn:hover {
+            background-color: #f2f3f3;
+        }
+
+        .focus-mode-toggle {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: 8px;
+            font-size: 13px;
+            color: #545b64;
+            cursor: pointer;
+        }
+
+        .content-text p {
+            margin-bottom: 16px;
+            line-height: 1.6;
+            color: #16191f;
+        }
+
+        .content-text a {
+            color: #0073bb;
+            text-decoration: none;
+        }
+
+        .content-text a:hover {
+            text-decoration: underline;
+        }
+
+        .topics-section {
+            margin-top: 24px;
+            margin-bottom: 24px;
+        }
+
+        .topics-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #16191f;
+        }
+
+        .topics-list {
+            list-style-type: disc;
+            padding-left: 24px;
+        }
+
+        .topics-list li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .section-heading {
+            font-size: 24px;
+            font-weight: 500;
+            margin-top: 32px;
+            margin-bottom: 16px;
+            color: #16191f;
+        }
+
+        .subsection-heading {
+            font-size: 20px;
+            font-weight: 500;
+            margin-top: 24px;
+            margin-bottom: 12px;
+            color: #16191f;
+        }
+
+        /* Right Sidebar */
+        .right-sidebar {
+            width: 300px;
+            flex-shrink: 0;
+            padding: 24px 16px;
+            border-left: 1px solid #e1e4e8;
+            height: calc(100vh - 97px);
+            overflow-y: auto;
+            position: sticky;
+            top: 0;
+        }
+
+        .right-sidebar-section {
+            margin-bottom: 32px;
+        }
+
+        .right-sidebar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .right-sidebar-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #16191f;
+        }
+
+        .close-btn {
+            cursor: pointer;
+            color: #545b64;
+            font-size: 18px;
+        }
+
+        .toc-list {
+            list-style: none;
+            border-left: 2px solid #0073bb;
+            padding-left: 12px;
+        }
+
+        .toc-list li {
+            margin-bottom: 8px;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .toc-list li.active {
+            color: #0073bb;
+            font-weight: 500;
+        }
+
+        .toc-list a {
+            color: #16191f;
+            text-decoration: none;
+        }
+
+        .toc-list a:hover {
+            color: #0073bb;
+        }
+
+        .related-links {
+            list-style: none;
+        }
+
+        .related-links li {
+            margin-bottom: 8px;
+        }
+
+        .related-links a {
+            color: #0073bb;
+            text-decoration: none;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .related-links a:hover {
+            text-decoration: underline;
+        }
+
+        .recommended-tasks {
+            border: 1px solid #e1e4e8;
+            border-radius: 4px;
+            padding: 16px;
+        }
+
+        .task-group {
+            margin-bottom: 16px;
+        }
+
+        .task-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .task-group-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: #16191f;
+        }
+
+        .task-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .task-list li {
+            margin-bottom: 8px;
+        }
+
+        .task-list a {
+            color: #0073bb;
+            text-decoration: none;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .task-list a:hover {
+            text-decoration: underline;
+        }
+
+        .feedback-section {
+            margin-top: 32px;
+        }
+
+        .feedback-question {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #16191f;
+        }
+
+        .feedback-buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .feedback-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 16px;
+            border: 1px solid #0073bb;
+            border-radius: 16px;
+            color: #0073bb;
+            background: #fff;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .feedback-btn:hover {
+            background-color: #f2f3f3;
+        }
+
+        .feedback-link {
+            color: #0073bb;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .feedback-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Header -->
+    <div class="top-header">
+        <div class="top-header-left">
+            <svg class="aws-logo" viewBox="0 0 60 36" fill="#fff">
+                <path d="M37.7 25.9c-.9-.1-1.7-.2-2.6-.2-2.6 0-5.1.5-7.5 1.4-.5.2-.8.6-.8 1.1v5c0 .7.7 1.2 1.3.9 2.2-1 4.6-1.6 7-1.6.9 0 1.7.1 2.6.2v-6.8zM26.3 27.4c-2.4-1-5-1.5-7.6-1.5-2.6 0-5.2.5-7.6 1.5-.6.3-1.3-.2-1.3-.9v-5c0-.5.3-.9.8-1.1 2.6-1 5.3-1.5 8.1-1.5 2.8 0 5.5.5 8.1 1.5.5.2.8.6.8 1.1v5c0 .7-.7 1.2-1.3.9zM11.5 19.8c-2.6 0-5.2.5-7.6 1.5-.6.3-1.3-.2-1.3-.9v-5c0-.5.3-.9.8-1.1 2.6-1 5.3-1.5 8.1-1.5 2.8 0 5.5.5 8.1 1.5.5.2.8.6.8 1.1v5c0 .7-.7 1.2-1.3.9-2.4-1-5-1.5-7.6-1.5z"/>
+                <path d="M48.5 22.3c-2.6 0-5.2.5-7.6 1.5-.6.3-1.3-.2-1.3-.9v-5c0-.5.3-.9.8-1.1 2.6-1 5.3-1.5 8.1-1.5 2.8 0 5.5.5 8.1 1.5.5.2.8.6.8 1.1v5c0 .7-.7 1.2-1.3.9-2.4-1-5-1.5-7.6-1.5zM37.7 14.2c-.9-.1-1.7-.2-2.6-.2-2.6 0-5.1.5-7.5 1.4-.5.2-.8.6-.8 1.1v5c0 .7.7 1.2 1.3.9 2.2-1 4.6-1.6 7-1.6.9 0 1.7.1 2.6.2v-6.8zM26.3 15.7c-2.4-1-5-1.5-7.6-1.5-2.6 0-5.2.5-7.6 1.5-.6.3-1.3-.2-1.3-.9v-5c0-.5.3-.9.8-1.1 2.6-1 5.3-1.5 8.1-1.5 2.8 0 5.5.5 8.1 1.5.5.2.8.6.8 1.1v5c0 .7-.7 1.2-1.3.9zM11.5 8.1c-2.6 0-5.2.5-7.6 1.5-.6.3-1.3-.2-1.3-.9v-5c0-.5.3-.9.8-1.1C6 2.6 8.7 2.1 11.5 2.1c2.8 0 5.5.5 8.1 1.5.5.2.8.6.8 1.1v5c0 .7-.7 1.2-1.3.9-2.4-1-5-1.5-7.6-1.5z"/>
+                <text x="52" y="23" font-family="Arial" font-size="20" fill="#fff">aws</text>
+            </svg>
+        </div>
+        <div class="top-header-right">
+            <span class="top-link">English ▼</span>
+            <span class="top-link">Preferences ▼</span>
+            <span class="top-link">Contact Us</span>
+            <span class="top-link">Feedback</span>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <div class="nav-bar">
+        <div class="nav-links">
+            <a href="#" class="nav-link">Get started</a>
+            <a href="#" class="nav-link">Service guides</a>
+            <a href="#" class="nav-link">Developer tools</a>
+            <a href="#" class="nav-link">AI resources</a>
+        </div>
+        <div class="search-container">
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" placeholder="Search in this guide">
+            </div>
+            <a href="#" class="create-account-btn">Create an AWS Account</a>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Left Sidebar -->
+        <aside class="left-sidebar">
+            <div class="sidebar-header">
+                <div>
+                    <div class="sidebar-title">Amazon DynamoDB</div>
+                    <div class="sidebar-subtitle">Developer Guide</div>
+                </div>
+                <span class="back-arrow">‹</span>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-item active">What is Amazon DynamoDB?</div>
+                
+                <div class="nav-section">
+                    <div class="nav-parent"><span class="expand-icon">▶</span> Getting started with DynamoDB</div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-parent"><span class="expand-icon">▶</span> How it works</div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-parent"><span class="expand-icon">▶</span> Reads and writes</div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-parent"><span class="expand-icon">▶</span> DynamoDB throughput capacity</div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-parent"><span class="expand-icon">▶</span> Programming with DynamoDB</div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-parent"><span class="expand-icon">▶</span> Working with DynamoDB</div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-parent"><span class="expand-icon">▶</span> In-memory acceleration with DAX</div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-parent"><span class="expand-icon">▶</span> Data modeling</div>
+                    <div class="nav-child">Migrating to DynamoDB</div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-parent"><span class="expand-icon">▶</span> NoSQL Workbench</div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-parent"><span class="expand-icon">▶</span> Backup and restore</div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-parent"><span class="expand-icon">▶</span> Code examples</div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-parent"><span class="expand-icon">▶</span> Security</div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-parent"><span class="expand-icon">▶</span> Monitoring and logging</div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-parent"><span class="expand-icon">▶</span> Best practices</div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-parent"><span class="expand-icon">▶</span> Using DynamoDB with other AWS services</div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-parent"><span class="expand-icon">▶</span> Using agentic AI with DynamoDB</div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-parent"><span class="expand-icon">▶</span> Quotas and constraints</div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-parent"><span class="expand-icon">▶</span> API reference</div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-parent"><span class="expand-icon">▶</span> Troubleshooting</div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-parent"><span class="expand-icon">▶</span> Appendix</div>
+                    <div class="nav-child">Document history</div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-parent"><span class="expand-icon">▶</span> Legacy features</div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content-area">
+            <div class="breadcrumb">
+                <a href="#">Documentation</a> › <a href="#">Amazon DynamoDB</a> › Developer Guide
+            </div>
+            
+            <h1 class="page-title">What is Amazon DynamoDB?</h1>
+            
+            <div class="action-bar">
+                <a href="#" class="action-btn">⬇ PDF</a>
+                <a href="#" class="action-btn">⬇ RSS</a>
+                <a href="#" class="action-btn">⬇ Markdown</a>
+                <span class="focus-mode-toggle">◐ Focus mode</span>
+            </div>
+            
+            <div class="content-text">
+                <p>Amazon DynamoDB is a serverless, fully managed, distributed NoSQL database with single-digit millisecond performance at any scale.</p>
+                
+                <p>DynamoDB addresses your needs to overcome scaling and operational complexities of relational databases. DynamoDB is purpose-built and optimized for operational workloads that require consistent performance at any scale. For example, DynamoDB delivers consistent single-digit millisecond performance for a shopping cart use case, whether you have 10 or 100 million users. <a href="#">Launched in 2012</a><sup>⊕</sup>, DynamoDB continues to help you move away from relational databases while reducing cost and improving performance at scale.</p>
+                
+                <p>Customers across all sizes, industries, and geographies use DynamoDB to build modern, serverless applications that can start small and scale globally. DynamoDB scales to support tables of virtually any size while providing consistent single-digit millisecond performance and high availability.</p>
+                
+                <p>For events, such as <a href="#">Amazon Prime Day</a><sup>⊕</sup>, DynamoDB powers multiple high-traffic Amazon properties and systems, including <a href="#">Alexa</a><sup>⊕</sup>, <a href="#">Amazon.com</a><sup>⊕</sup> sites, and all <a href="#">Amazon fulfillment centers</a><sup>⊕</sup>. For such events, DynamoDB APIs have handled trillions of calls from Amazon properties and systems. DynamoDB continuously serves hundreds of customers with tables that have peak traffic of over half a million requests per second. It also serves hundreds of customers whose table sizes exceed 200 TB, and processes over one billion requests per hour.</p>
+                
+                <div class="topics-section">
+                    <h2 class="topics-title">Topics</h2>
+                    <ul class="topics-list">
+                        <li><a href="#">Characteristics of DynamoDB</a></li>
+                        <li><a href="#">DynamoDB use cases</a></li>
+                        <li><a href="#">Capabilities of DynamoDB</a></li>
+                        <li><a href="#">Service integrations</a></li>
+                        <li><a href="#">Security</a></li>
+                        <li><a href="#">Resilience</a></li>
+                        <li><a href="#">Accessing DynamoDB</a></li>
+                        <li><a href="#">DynamoDB pricing</a></li>
+                        <li><a href="#">Getting started with DynamoDB</a></li>
+                    </ul>
+                </div>
+                
+                <h2 class="section-heading">Characteristics of DynamoDB</h2>
+                
+                <h3 class="subsection-heading">Serverless</h3>
+                
+                <p>With DynamoDB, you don't need to provision any servers, or patch, manage, install, maintain, or operate any software. DynamoDB provides zero downtime maintenance. It has no versions (major, minor, or patch), and there are no maintenance windows.</p>
+                
+                <p>DynamoDB's <a href="#">on-demand capacity mode</a> offers pay-as-you-go pricing for read and write requests so you only pay for what you use. With on-demand, DynamoDB instantly scales up or down your tables to adjust for capacity and maintains performance with zero administration. It also scales down to zero so you don't pay for throughput when your table doesn't have traffic and there are no cold starts.</p>
+                
+                <h3 class="subsection-heading">NoSQL</h3>
+                
+                <p>As a NoSQL database, DynamoDB is purpose-built to deliver improved performance, scalability, manageability, and flexibility compared to traditional relational databases. To support a wide variety of use cases, DynamoDB supports both key-value and document data models.</p>
+                
+                <p>Unlike relational databases, DynamoDB doesn't support a JOIN operator. We recommend that you</p>
+            </div>
+        </main>
+
+        <!-- Right Sidebar -->
+        <aside class="right-sidebar">
+            <div class="right-sidebar-section">
+                <div class="right-sidebar-header">
+                    <h3 class="right-sidebar-title">On this page</h3>
+                    <span class="close-btn">×</span>
+                </div>
+                <ul class="toc-list">
+                    <li class="active"><a href="#">Characteristics</a></li>
+                    <li><a href="#">Use cases</a></li>
+                    <li><a href="#">Capabilities</a></li>
+                    <li><a href="#">Service integrations</a></li>
+                    <li><a href="#">Security</a></li>
+                    <li><a href="#">Resilience</a></li>
+                    <li><a href="#">Accessing DynamoDB</a></li>
+                    <li><a href="#">Pricing</a></li>
+                    <li><a href="#">Getting started</a></li>
+                </ul>
+            </div>
+            
+            <div class="right-sidebar-section">
+                <h3 class="right-sidebar-title">Related resources</h3>
+                <ul class="related-links">
+                    <li><a href="#">Amazon DynamoDB API Reference</a></li>
+                    <li><a href="#">Cheat Sheet</a></li>
+                    <li><a href="#">Using Amazon DynamoDB with an AWS SDK</a></li>
+                </ul>
+            </div>
+            
+            <div class="right-sidebar-section">
+                <details open class="recommended-tasks">
+                    <summary class="task-group-header">
+                        <span>▼ Recommended tasks</span>
+                    </summary>
+                    
+                    <div class="task-group">
+                        <div class="task-group-header">
+                            <span>Learn about</span>
+                            <span>^</span>
+                        </div>
+                        <ul class="task-list">
+                            <li><a href="#">Understand what AWS Lambda is and how it works</a></li>
+                            <li><a href="#">Understand core components and data organization in DynamoDB</a></li>
+                            <li><a href="#">Understand what Amazon Relational Database Service is</a></li>
+                            <li><a href="#">Understand the features and capabilities of Amazon S3</a></li>
+                            <li><a href="#">Understand what Amazon API Gateway is and its key features</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="task-group">
+                        <div class="task-group-header">
+                            <span>How to</span>
+                            <span>^</span>
+                        </div>
+                        <ul class="task-list">
+                            <li><a href="#">Create and manage DynamoDB tables for database development</a></li>
+                            <li><a href="#">Use DynamoDB with AWS SDKs and CLI for basic operations</a></li>
+                        </ul>
+                    </div>
+                </details>
+            </div>
+            
+            <div class="feedback-section">
+                <div class="feedback-question">Did this page help you?</div>
+                <div class="feedback-buttons">
+                    <button class="feedback-btn">👍 Yes</button>
+                    <button class="feedback-btn">👎 No</button>
+                </div>
+                <a href="#" class="feedback-link">Provide feedback</a>
+            </div>
+        </aside>
+    </div>
+</body>
+</html>

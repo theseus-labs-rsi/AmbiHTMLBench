@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>什么是审计？</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+            background-color: #F4D03F;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .notebook-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            background: #ffffff;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15), 0 0 0 8px #F4D03F;
+            border-radius: 4px;
+            padding: 60px 50px 50px 60px;
+            min-height: 800px;
+        }
+
+        /* Binder Clips */
+        .binder-clip {
+            position: absolute;
+            top: -25px;
+            width: 50px;
+            height: 70px;
+            z-index: 10;
+        }
+
+        .binder-clip.left {
+            left: 120px;
+        }
+
+        .binder-clip.right {
+            right: 120px;
+        }
+
+        .clip-top {
+            width: 40px;
+            height: 35px;
+            background: #333;
+            margin: 0 auto;
+            border-radius: 20px 20px 5px 5px;
+            position: relative;
+        }
+
+        .clip-handle {
+            width: 12px;
+            height: 40px;
+            background: #333;
+            margin: 0 auto;
+            border-radius: 6px;
+            position: relative;
+            top: -5px;
+        }
+
+        .clip-hole {
+            width: 16px;
+            height: 16px;
+            background: #666;
+            border-radius: 50%;
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Spiral Binding */
+        .spiral-binding {
+            position: absolute;
+            left: -25px;
+            top: 80px;
+            bottom: 80px;
+            width: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            pointer-events: none;
+        }
+
+        .spiral-ring {
+            width: 45px;
+            height: 22px;
+            border: 4px solid #D4AC0D;
+            border-right: none;
+            border-radius: 22px 0 0 22px;
+            background: transparent;
+            position: relative;
+            left: 0;
+        }
+
+        .spiral-ring::after {
+            content: '';
+            position: absolute;
+            right: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 14px;
+            height: 14px;
+            background: #F4D03F;
+            border-radius: 50%;
+            border: 3px solid #D4AC0D;
+        }
+
+        /* Title */
+        .main-title {
+            font-size: 64px;
+            font-weight: 900;
+            color: #1a1a1a;
+            text-align: center;
+            margin-bottom: 40px;
+            letter-spacing: 4px;
+            background: linear-gradient(to bottom, transparent 60%, #FFF9C4 60%);
+            display: inline-block;
+            width: 100%;
+            line-height: 1.2;
+        }
+
+        /* Section Styles */
+        .section {
+            margin-bottom: 35px;
+            position: relative;
+        }
+
+        .section-header {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .star-icon {
+            color: #F4D03F;
+            font-size: 28px;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));
+        }
+
+        .section-content {
+            font-size: 18px;
+            line-height: 1.8;
+            color: #333;
+            text-align: justify;
+            text-indent: 0;
+        }
+
+        /* Sub-items styling */
+        .sub-item {
+            margin-bottom: 12px;
+            font-size: 18px;
+            line-height: 1.7;
+            color: #444;
+        }
+
+        .label {
+            color: #7B68EE;
+            font-weight: bold;
+            margin-right: 4px;
+        }
+
+        /* Decorative elements */
+        .pencil {
+            position: absolute;
+            right: -40px;
+            transform: rotate(-30deg);
+            opacity: 0.9;
+        }
+
+        .pencil.top {
+            top: 280px;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #F4D03F 0%, #F1C40F 50%, #D4AC0D 100%);
+            clip-path: polygon(0% 0%, 85% 0%, 100% 50%, 85% 100%, 0% 100%, 20% 50%);
+            border-radius: 2px;
+        }
+
+        .pencil.bottom {
+            top: 350px;
+            right: -55px;
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, #9B59B6 0%, #8E44AD 100%);
+            clip-path: polygon(0% 0%, 85% 0%, 100% 50%, 85% 100%, 0% 100%, 20% 50%);
+            border-radius: 2px;
+        }
+
+        .paper-airplane {
+            position: absolute;
+            bottom: -20px;
+            left: -30px;
+            width: 80px;
+            height: 80px;
+            opacity: 0.9;
+        }
+
+        .airplane-body {
+            width: 0;
+            height: 0;
+            border-left: 40px solid #BDC3C7;
+            border-top: 20px solid transparent;
+            border-bottom: 20px solid transparent;
+            position: relative;
+            transform: rotate(-45deg);
+        }
+
+        .airplane-body::before {
+            content: '';
+            position: absolute;
+            left: -60px;
+            top: -15px;
+            border-left: 30px solid #95A5A6;
+            border-top: 15px solid transparent;
+            border-bottom: 15px solid transparent;
+        }
+
+        .plus-sign {
+            position: absolute;
+            left: -35px;
+            top: 520px;
+            font-size: 48px;
+            color: #F4D03F;
+            font-weight: bold;
+            opacity: 0.8;
+        }
+
+        .watermark {
+            position: absolute;
+            top: 180px;
+            right: 100px;
+            font-size: 14px;
+            color: rgba(0,0,0,0.1);
+            transform: rotate(-30deg);
+            pointer-events: none;
+        }
+
+        @media (max-width: 600px) {
+            .main-title {
+                font-size: 42px;
+            }
+            
+            .notebook-container {
+                padding: 50px 25px 30px 40px;
+            }
+            
+            .section-header {
+                font-size: 20px;
+            }
+            
+            .section-content, .sub-item {
+                font-size: 16px;
+            }
+        }
+    </style>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)'], ['$$', '$$'], ['\\[', '\\]']], 
+                displayMath: []
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+<div class="notebook-container">
+    <!-- Binder Clips -->
+    <div class="binder-clip left">
+        <div class="clip-top">
+            <div class="clip-hole"></div>
+        </div>
+        <div class="clip-handle"></div>
+    </div>
+    
+    <div class="binder-clip right">
+        <div class="clip-top">
+            <div class="clip-hole"></div>
+        </div>
+        <div class="clip-handle"></div>
+    </div>
+
+    <!-- Spiral Binding -->
+    <div class="spiral-binding">
+        <div class="spiral-ring"></div>
+        <div class="spiral-ring"></div>
+        <div class="spiral-ring"></div>
+        <div class="spiral-ring"></div>
+        <div class="spiral-ring"></div>
+        <div class="spiral-ring"></div>
+        <div class="spiral-ring"></div>
+    </div>
+
+    <!-- Watermark -->
+    <div class="watermark">@小马审计</div>
+
+    <!-- Main Title -->
+    <h1 class="main-title">什么是审计？</h1>
+
+    <!-- Section 1: Definition -->
+    <div class="section">
+        <div class="section-header">
+            <span class="star-icon">🌟</span>
+            <span>审计定义</span>
+        </div>
+        <div class="section-content">
+            审计是对资料作出证据搜集及分析，以评估企业财务状况，然后就资料及一般公认准则之间的相关程度作出结论及报告。
+        </div>
+    </div>
+
+    <!-- Section 2: Basic Elements -->
+    <div class="section">
+        <div class="section-header">
+            <span class="star-icon">🌟</span>
+            <span>审计的基本要素</span>
+        </div>
+        <div class="section-content">
+            任何审计都具有三个基本要素，即审计主体、审计客体和审计授权或委托人。
+        </div>
+        
+        <div class="sub-item">
+            <span class="label">审计主体：</span>指审计行为的执行者，即审计机构和审计人员，为审计第一关系人；
+        </div>
+        
+        <div class="sub-item">
+            <span class="label">审计客体：</span>指审计行为的接受者，即指被审计的资产代管或经营者，为审计第二关系人；
+        </div>
+        
+        <div class="sub-item">
+            <span class="label">审计授权或委托人：</span>指依法授权或委托审计主体行使审计职责的单位或人员，为审计第三关系人。
+        </div>
+    </div>
+
+    <!-- Plus Sign Decoration -->
+    <div class="plus-sign">+</div>
+
+    <!-- Section 3: Essence -->
+    <div class="section">
+        <div class="section-header">
+            <span class="star-icon">🌟</span>
+            <span>审计本质</span>
+        </div>
+        <div class="section-content">
+            审计本质是一项具有独立性的经济监督活动。
+        </div>
+    </div>
+
+    <!-- Decorative Pencils -->
+    <div class="pencil top"></div>
+    <div class="pencil bottom"></div>
+
+    <!-- Paper Airplane -->
+    <div class="paper-airplane">
+        <div class="airplane-body"></div>
+    </div>
+</div>
+
+</body>
+</html>

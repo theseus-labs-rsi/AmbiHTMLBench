@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script>window.MathJax={tex:{inlineMath:[["$","$"]],displayMath:[["$$","$$"]]}};</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>魔吉拉的面具</title>
+<style>
+  html,body{margin:0;padding:0;background:#1c2422;}
+  .stage{
+    position:relative;
+    width:540px;
+    height:304px;
+    margin:0 auto;
+    overflow:hidden;
+    background:
+      radial-gradient(ellipse at 50% 100%, rgba(120,150,140,.35), rgba(0,0,0,0) 55%),
+      linear-gradient(180deg,#202a27 0%,#2a3531 45%,#3a4a44 100%);
+    font-family:"Microsoft YaHei","PingFang SC","Noto Sans CJK SC",sans-serif;
+    color:#f2f2f2;
+  }
+  /* 远景石柱/殿堂 */
+  .scene{position:absolute;inset:0;}
+  .pillar{position:absolute;top:0;background:linear-gradient(90deg,#141b19,#232e2a 50%,#141b19);opacity:.9;}
+  .p1{left:0;width:70px;height:120px;}
+  .p2{left:120px;width:90px;height:150px;}
+  .p3{right:120px;width:90px;height:150px;}
+  .p4{right:0;width:70px;height:120px;}
+  .floor{
+    position:absolute;left:0;right:0;bottom:0;height:150px;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(190,220,205,.28), rgba(0,0,0,0) 60%),
+      linear-gradient(180deg,#4a5c54,#33423c 70%,#26322e);
+  }
+  .floor:before{content:"";position:absolute;left:0;right:0;top:34px;height:2px;background:rgba(0,0,0,.25);box-shadow:0 26px 0 rgba(0,0,0,.18),0 54px 0 rgba(0,0,0,.15);}
+  .platform{
+    position:absolute;left:50%;bottom:34px;transform:translateX(-50%);
+    width:190px;height:56px;
+    background:linear-gradient(180deg,#7d938a,#55695f 60%,#3d4f47);
+    clip-path:polygon(12% 0,88% 0,100% 100%,0 100%);
+    box-shadow:0 6px 10px rgba(0,0,0,.35);
+  }
+  .chest{
+    position:absolute;left:50%;bottom:78px;transform:translateX(-50%);
+    width:74px;height:46px;border-radius:4px 4px 2px 2px;
+    background:linear-gradient(180deg,#5e7d72,#3c554c 55%,#2c4039);
+    box-shadow:inset 0 0 0 2px rgba(0,0,0,.35),0 4px 8px rgba(0,0,0,.4);
+  }
+  .chest:before{content:"";position:absolute;left:0;right:0;top:16px;height:3px;background:rgba(0,0,0,.4);}
+  .chest:after{content:"";position:absolute;left:50%;top:14px;transform:translateX(-50%);width:10px;height:12px;background:#22302b;border-radius:2px;box-shadow:0 0 0 2px rgba(0,0,0,.3);}
+  .link{
+    position:absolute;left:50%;bottom:88px;transform:translateX(-88px);
+    width:34px;height:56px;
+  }
+  .link .head{position:absolute;left:7px;top:0;width:20px;height:18px;border-radius:50%;background:#d8c9a8;box-shadow:inset -4px -3px 0 rgba(0,0,0,.15);}
+  .link .hair{position:absolute;left:4px;top:-3px;width:26px;height:14px;border-radius:12px 12px 4px 4px;background:#e8e2d2;}
+  .link .body{position:absolute;left:6px;top:18px;width:22px;height:24px;border-radius:5px;background:linear-gradient(180deg,#6f7d68,#4c584a);}
+  .link .leg{position:absolute;top:42px;width:8px;height:14px;background:#cfd6c8;border-radius:3px;}
+  .link .l1{left:8px;}.link .l2{left:19px;background:#8b9683;}
+  .link .sword{position:absolute;left:-8px;top:20px;width:4px;height:30px;background:linear-gradient(180deg,#c9d4d8,#7d8a90);transform:rotate(18deg);border-radius:2px;}
+
+  /* 物品说明面板 */
+  .panel{
+    position:absolute;
+    left:128px;top:78px;
+    width:292px;height:112px;
+    background:rgba(196,204,199,.78);
+    border:1px solid rgba(240,244,240,.85);
+    outline:1px solid rgba(90,100,95,.55);
+    outline-offset:3px;
+    box-shadow:0 0 0 1px rgba(60,70,66,.4), 0 6px 18px rgba(0,0,0,.35);
+    color:#3a3f3c;
+    padding:10px 14px 8px 12px;
+    box-sizing:border-box;
+  }
+  .panel .corner{position:absolute;width:9px;height:9px;border:1px solid rgba(70,80,75,.7);}
+  .c-tl{left:3px;top:3px;border-right:none;border-bottom:none;}
+  .c-tr{right:3px;top:3px;border-left:none;border-bottom:none;}
+  .c-bl{left:3px;bottom:3px;border-right:none;border-top:none;}
+  .c-br{right:3px;bottom:3px;border-left:none;border-top:none;}
+
+  .head-row{display:flex;align-items:flex-start;}
+  .mask-icon{
+    flex:0 0 auto;width:52px;height:52px;margin:2px 10px 0 2px;
+    position:relative;
+  }
+  .mask-icon .face{
+    position:absolute;left:6px;top:8px;width:40px;height:34px;
+    background:radial-gradient(circle at 50% 42%, #ffb13b 0 22%, #e23b2e 45%, #8f1d22 100%);
+    border-radius:46% 46% 52% 52%;
+    box-shadow:0 0 8px rgba(255,120,40,.8), inset 0 -6px 8px rgba(0,0,0,.35);
+  }
+  .mask-icon .eye{position:absolute;top:20px;width:9px;height:11px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#fff6c8,#f6c945 55%,#7a4a10);box-shadow:0 0 4px #ffd76a;}
+  .mask-icon .e1{left:15px;}.mask-icon .e2{left:30px;}
+  .mask-icon .spike{position:absolute;background:#caa24a;border-radius:2px;box-shadow:0 0 3px rgba(255,200,90,.7);}
+  .s1{left:2px;top:16px;width:8px;height:4px;transform:rotate(-35deg);}
+  .s2{left:44px;top:16px;width:8px;height:4px;transform:rotate(35deg);}
+  .s3{left:0px;top:30px;width:9px;height:4px;transform:rotate(-8deg);}
+  .s4{left:45px;top:30px;width:9px;height:4px;transform:rotate(8deg);}
+  .s5{left:8px;top:2px;width:5px;height:9px;transform:rotate(-18deg);}
+  .s6{left:38px;top:2px;width:5px;height:9px;transform:rotate(18deg);}
+  .s7{left:24px;top:0px;width:5px;height:10px;}
+  .s8{left:10px;top:44px;width:6px;height:8px;transform:rotate(20deg);}
+  .s9{left:36px;top:44px;width:6px;height:8px;transform:rotate(-20deg);}
+
+  .title-block{flex:1 1 auto;padding-top:2px;}
+  .item-name{font-size:17px;font-weight:700;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.55);letter-spacing:1px;line-height:1.2;}
+  .qty{margin-top:5px;font-size:12px;color:#f4f4f4;text-shadow:0 1px 1px rgba(0,0,0,.5);display:flex;align-items:center;gap:5px;}
+  .qty .tag{display:inline-block;width:13px;height:13px;border-radius:2px;background:linear-gradient(180deg,#f6f6f6,#c9cfcb);box-shadow:inset 0 0 0 1px rgba(0,0,0,.25);position:relative;}
+  .qty .tag:after{content:"";position:absolute;left:3px;top:3px;width:7px;height:7px;border-radius:50%;background:#7d8a84;}
+  .desc{margin-top:7px;font-size:12.5px;line-height:1.55;color:#2f3431;text-shadow:0 1px 0 rgba(255,255,255,.35);}
+  .open{
+    position:absolute;right:12px;bottom:7px;
+    font-size:12px;color:#f6f6f6;text-shadow:0 1px 2px rgba(0,0,0,.6);
+    display:flex;align-items:center;gap:5px;
+  }
+  .open .btn{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fdfdfd,#c9d2cd 60%,#8b968f);color:#3a423d;font-size:10px;font-weight:700;box-shadow:0 1px 2px rgba(0,0,0,.5), inset 0 0 0 1px rgba(0,0,0,.2);}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="scene">
+    <div class="pillar p1"></div>
+    <div class="pillar p2"></div>
+    <div class="pillar p3"></div>
+    <div class="pillar p4"></div>
+    <div class="floor"></div>
+    <div class="platform"></div>
+    <div class="chest"></div>
+    <div class="link">
+      <div class="hair"></div>
+      <div class="head"></div>
+      <div class="body"></div>
+      <div class="leg l1"></div>
+      <div class="leg l2"></div>
+      <div class="sword"></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <span class="corner c-tl"></span><span class="corner c-tr"></span>
+    <span class="corner c-bl"></span><span class="corner c-br"></span>
+
+    <div class="head-row">
+      <div class="mask-icon" aria-hidden="true">
+        <span class="spike s7"></span><span class="spike s5"></span><span class="spike s6"></span>
+        <span class="spike s1"></span><span class="spike s2"></span>
+        <span class="spike s3"></span><span class="spike s4"></span>
+        <span class="spike s8"></span><span class="spike s9"></span>
+        <div class="face"></div>
+        <span class="eye e1"></span><span class="eye e2"></span>
+      </div>
+      <div class="title-block">
+        <div class="item-name">魔吉拉的面具</div>
+        <div class="qty"><span class="tag"></span><span>1</span></div>
+      </div>
+    </div>
+
+    <div class="desc">
+      从太古时期流传下来的面具。<br>
+      戴上它的话，有些怪物就不容易发现自己。<br>
+      这样的珍品并非轻易就能得到。
+    </div>
+
+    <div class="open">打开袋子 <span class="btn">A</span></div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Troubleshoot single sign-on | Docker Docs</title>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: #1c2733;
+    background: #ffffff;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+  /* Top announcement banner */
+  .banner {
+    background: #111b4e;
+    color: #e8ecff;
+    font-size: 14px;
+    padding: 9px 44px 9px 16px;
+    text-align: center;
+    position: relative;
+    letter-spacing: .1px;
+  }
+  .banner .new { color:#ff8a3d; font-weight:700; margin-right:10px; }
+  .banner a { color:#ffffff; text-decoration:none; font-weight:600; }
+  .banner .close {
+    position:absolute; right:14px; top:50%; transform:translateY(-50%);
+    color:#cfd6ff; font-size:20px; line-height:1; cursor:pointer;
+  }
+  /* Header */
+  .header {
+    background: #1d63ed;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    height: 58px;
+    padding: 0 22px;
+    gap: 34px;
+  }
+  .brand { display:flex; align-items:center; gap:8px; font-size:21px; font-weight:700; letter-spacing:.2px; white-space:nowrap; }
+  .brand .whale { font-size:22px; }
+  .nav { display:flex; align-items:center; gap:34px; height:100%; }
+  .nav a { color:#eaf1ff; text-decoration:none; font-size:15px; font-weight:600; height:100%; display:flex; align-items:center; position:relative; }
+  .nav a.active { color:#fff; }
+  .nav a.active::after { content:""; position:absolute; left:0; right:0; bottom:0; height:3px; background:#8fd0ff; }
+  .header-right { margin-left:auto; display:flex; align-items:center; gap:12px; }
+  .btn-gordon {
+    display:flex; align-items:center; gap:8px; background:#0f4ad0; border:1px solid #3f7bf0;
+    color:#fff; font-weight:700; font-size:14px; padding:9px 16px; border-radius:8px;
+  }
+  .btn-search {
+    display:flex; align-items:center; gap:9px; background:#0f4ad0; border:1px solid #3f7bf0;
+    color:#fff; font-weight:600; font-size:14px; padding:9px 18px; border-radius:8px;
+  }
+  .mode-toggle {
+    width:38px; height:38px; border-radius:8px; border:1px solid #3f7bf0; background:#0f4ad0;
+    display:flex; align-items:center; justify-content:center; color:#fff; font-size:17px;
+  }
+  /* Body columns */
+  .layout { display:flex; align-items:stretch; }
+  /* Left sidebar */
+  .sidebar {
+    width: 296px;
+    flex: 0 0 296px;
+    border-right: 1px solid #e6ebf1;
+    padding: 22px 14px 60px 26px;
+    font-size: 14.5px;
+    background:#fff;
+  }
+  .side-section { margin-bottom: 26px; }
+  .side-title {
+    font-size: 12.5px; font-weight: 800; letter-spacing: .6px; color:#5b6b7d;
+    margin: 4px 0 10px 0; text-transform: uppercase;
+  }
+  .side-list { list-style:none; }
+  .side-list li {
+    position: relative;
+    padding: 6px 26px 6px 12px;
+    color:#22303f;
+    border-radius:6px;
+    margin: 1px 0;
+    white-space: nowrap;
+  }
+  .side-list li.leaf { font-weight:500; }
+  .side-list li .chev { position:absolute; right:8px; top:50%; transform:translateY(-50%); color:#7d8b9b; font-size:12px; }
+  .badge {
+    display:inline-block; font-size:10.5px; font-weight:800; padding:1px 6px; border-radius:4px;
+    vertical-align: middle; margin-left:6px; letter-spacing:.2px;
+  }
+  .badge.beta { background:#2f6df6; color:#fff; }
+  .badge.new { background:#25c16a; color:#fff; }
+  /* nested enterprise */
+  .lvl1 { padding-left: 24px !important; }
+  .lvl2 { padding-left: 38px !important; }
+  .side-list li.active { background:#e8f1ff; color:#1d63ed; font-weight:600; }
+  /* Main */
+  .main {
+    flex: 1 1 auto;
+    max-width: 830px;
+    padding: 24px 40px 80px 46px;
+    min-width: 0;
+  }
+  .crumbs { font-size:13.5px; color:#5b6b7d; margin-bottom:14px; }
+  .crumbs a { color:#5b6b7d; text-decoration:none; }
+  .crumbs .sep { margin:0 7px; color:#9aa8b6; }
+  .crumbs .current { color:#1c2733; }
+  h1 {
+    font-size: 33px; font-weight: 800; color:#101a26; letter-spacing:-.3px;
+    margin: 4px 0 14px 0;
+  }
+  .actions { display:flex; align-items:center; gap:26px; padding:0 0 18px 0; border-bottom:1px solid #e6ebf1; margin-bottom:22px; }
+  .actions a { display:inline-flex; align-items:center; gap:7px; color:#1d63ed; text-decoration:none; font-size:14px; font-weight:600; }
+  .actions .ico { color:#1d63ed; font-size:14px; }
+  p.lead { color:#22303f; margin-bottom:26px; max-width:100%; }
+  h2 { font-size:24px; font-weight:800; color:#101a26; margin: 26px 0 12px 0; letter-spacing:-.2px; }
+  h3 { font-size:19px; font-weight:800; color:#101a26; margin: 24px 0 12px 0; }
+  p.body { color:#22303f; margin-bottom:14px; }
+  ol.steps { margin: 6px 0 18px 0; padding-left: 24px; color:#22303f; }
+  ol.steps li { margin: 9px 0; padding-left:4px; }
+  ol.steps li::marker { color:#22303f; }
+  a.inline { color:#1d63ed; text-decoration:none; }
+  strong { font-weight:700; color:#101a26; }
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    background:#eef3f9; color:#33414f; padding:1px 5px; border-radius:4px; font-size:13px;
+  }
+  .codeblock {
+    background:#f6f9fc; border:1px solid #e6ebf1; border-radius:6px;
+    padding:13px 16px; margin:6px 0 22px 0;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size:13px; color:#33414f;
+    white-space: nowrap; overflow:hidden; text-overflow:clip;
+    width:100%; max-width:684px;
+  }
+  ul.bullets { margin:4px 0 20px 0; padding-left:0; list-style:none; color:#22303f; }
+  ul.bullets li { position:relative; padding-left:22px; margin:13px 0; }
+  ul.bullets li::before { content:""; position:absolute; left:4px; top:10px; width:5px; height:5px; border-radius:50%; background:#8a97a5; }
+  /* Right column */
+  .rightbar {
+    width: 258px; flex: 0 0 258px;
+    padding: 22px 26px 60px 6px;
+    font-size: 13.5px;
+    background:#fff;
+  }
+  .right-links a { display:flex; align-items:center; gap:8px; color:#1d63ed; text-decoration:none; font-weight:600; margin-bottom:12px; font-size:13.5px; }
+  .toc-title { font-size:17px; font-weight:800; color:#101a26; margin: 20px 0 12px 0; }
+  .toc { list-style:none; border-left:2px solid #e6ebf1; }
+  .toc li { padding:5px 0 5px 14px; color:#5b6b7d; line-height:1.35; }
+  .toc li.active { color:#101a26; font-weight:800; border-left:2px solid #1d63ed; margin-left:-2px; padding-left:12px; background:#f2f7ff; }
+  /* Feedback button */
+  .feedback {
+    position: fixed; right: 18px; bottom: 16px;
+    background:#1d63ed; color:#fff; font-weight:700; font-size:14px;
+    border:none; border-radius:9px; padding:11px 18px;
+    box-shadow: 0 6px 18px rgba(29,99,237,.35);
+    display:flex; align-items:center; gap:9px;
+  }
+  .placeholder { display:inline-flex; align-items:center; justify-content:center; background:#e6ebf1; color:#7d8b9b; border-radius:4px; font-size:11px; }
+</style>
+</head>
+<body>
+
+<div class="banner">
+  <span class="new">✦ New</span>Insights on the state of AI agents from 800+ builders and leaders. <a href="#">Download your copy →</a>
+  <span class="close">×</span>
+</div>
+
+<div class="header">
+  <div class="brand"><span class="whale">🐳</span>docker<span style="font-weight:800;">docs</span></div>
+  <nav class="nav">
+    <a href="#">Get started</a>
+    <a href="#">Guides</a>
+    <a href="#" class="active">Manuals</a>
+    <a href="#">Reference</a>
+  </nav>
+  <div class="header-right">
+    <div class="btn-gordon">🤖 Gordon</div>
+    <div class="btn-search">🔍 Search</div>
+    <div class="mode-toggle">☾</div>
+  </div>
+</div>
+
+<div class="layout">
+
+  <!-- LEFT SIDEBAR -->
+  <aside class="sidebar">
+    <div class="side-section">
+      <div class="side-title">AI and Agents</div>
+      <ul class="side-list">
+        <li class="leaf">Overview</li>
+        <li class="leaf">Docker Sandboxes<span class="chev">⌄</span></li>
+        <li class="leaf">MCP Catalog and Toolkit<span class="badge beta">Beta</span><span class="chev">⌄</span></li>
+        <li class="leaf">Model Runner<span class="chev">⌄</span></li>
+        <li class="leaf">Gordon<span class="chev">⌄</span></li>
+        <li class="leaf">AI and Docker Compose<span class="chev">⌄</span></li>
+        <li class="leaf">Docker Agent<span class="chev">⌄</span></li>
+      </ul>
+    </div>
+
+    <div class="side-section">
+      <div class="side-title">Application Development</div>
+      <ul class="side-list">
+        <li class="leaf">Docker Desktop<span class="chev">⌄</span></li>
+        <li class="leaf">Docker Engine<span class="chev">⌄</span></li>
+        <li class="leaf">Docker Offload<span class="chev">⌄</span></li>
+        <li class="leaf">Docker Build<span class="chev">⌄</span></li>
+        <li class="leaf">Docker Build Cloud<span class="chev">⌄</span></li>
+        <li class="leaf">Docker Compose<span class="chev">⌄</span></li>
+        <li class="leaf">Docker Extensions<span class="chev">⌄</span></li>
+        <li class="leaf">Deprecated products and features</li>
+        <li class="leaf">Release lifecycle</li>
+      </ul>
+    </div>
+
+    <div class="side-section">
+      <div class="side-title">Supply Chain Security</div>
+      <ul class="side-list">
+        <li class="leaf">Docker Hardened Images<span class="badge new">New</span><span class="chev">⌄</span></li>
+        <li class="leaf">Docker Hub<span class="chev">⌄</span></li>
+        <li class="leaf">Docker Scout<span class="chev">⌄</span></li>
+      </ul>
+    </div>
+
+    <div class="side-section">
+      <div class="side-title">Platform</div>
+      <ul class="side-list">
+        <li class="leaf">Support</li>
+        <li class="leaf">Billing<span class="chev">⌄</span></li>
+        <li class="leaf">Docker accounts<span class="chev">⌄</span></li>
+        <li class="leaf">Security<span class="chev">⌄</span></li>
+        <li class="leaf">Subscription<span class="chev">⌄</span></li>
+        <li class="leaf">Release notes</li>
+      </ul>
+    </div>
+
+    <div class="side-section">
+      <div class="side-title">Enterprise</div>
+      <ul class="side-list">
+        <li class="leaf">Administration<span class="chev">⌄</span></li>
+        <li class="leaf">Deploy Docker Desktop<span class="chev">⌄</span></li>
+        <li class="leaf">Security<span class="chev">⌄</span></li>
+        <li class="leaf lvl1">Add and manage domains</li>
+        <li class="leaf lvl1">Single sign-on<span class="chev">⌄</span></li>
+        <li class="leaf lvl2">Setup</li>
+        <li class="leaf lvl2">Manage connections</li>
+        <li class="leaf lvl2 active">Troubleshoot</li>
+        <li class="leaf lvl2">FAQs</li>
+        <li class="leaf lvl1">Provision<span class="chev">⌄</span></li>
+        <li class="leaf lvl1">Enforce sign-in<span class="chev">⌄</span></li>
+        <li class="leaf lvl1">Roles and permissions<span class="chev">⌄</span></li>
+        <li class="leaf lvl1">Hardened Docker Desktop<span class="chev">⌄</span></li>
+        <li class="leaf lvl1">Organization access tokens</li>
+      </ul>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+    <div class="crumbs">
+      <a href="#">Home</a><span class="sep">/</span><a href="#">Manuals</a><span class="sep">/</span><a href="#">Security</a><span class="sep">/</span><a href="#">Single sign-on</a><span class="sep">/</span><span class="current">Troubleshoot</span>
+    </div>
+
+    <h1>Troubleshoot single sign-on</h1>
+
+    <div class="actions">
+      <a href="#"><span class="ico">🤖</span>Ask Gordon</a>
+      <a href="#"><span class="ico">⧉</span>Copy Markdown</a>
+      <a href="#"><span class="ico">✧</span>View Markdown</a>
+    </div>
+
+    <p class="lead">This page describes common single sign-on (SSO) errors and their solutions. Issues can stem from your identity provider (IdP) configuration or Docker settings.</p>
+
+    <h2>Check for errors</h2>
+    <p class="body">If you experience SSO issues, check both Docker and your identity provider for errors first.</p>
+
+    <h3>Check Docker error logs</h3>
+    <ol class="steps">
+      <li>Sign in to <a href="#" class="inline">Docker Home</a> and select your organization from the top-left account drop-down.</li>
+      <li>Select <strong>Admin Console</strong>, then <strong>SSO and SCIM</strong>.</li>
+      <li>In the SSO connections table, select the <strong>Action</strong> menu and then <strong>View error logs</strong>.</li>
+      <li>For more details on specific errors, select <strong>View error details</strong> next to an error message.</li>
+      <li>Note any errors you see on this page for further troubleshooting.</li>
+    </ol>
+
+    <h3>Check identity provider errors</h3>
+    <ol class="steps">
+      <li>Review your IdP's logs or audit trails for any failed authentication or provisioning attempts.</li>
+      <li>Confirm that your IdP's SSO settings match the values provided in Docker.</li>
+      <li>If applicable, confirm that you have configured user provisioning correctly and that it is enabled in your IdP.</li>
+      <li>If applicable, verify that your IdP correctly maps Docker's required user attributes.</li>
+      <li>Try provisioning a test user from your IdP and verify if they appear in Docker.</li>
+    </ol>
+
+    <p class="body">For further troubleshooting, check your IdP's documentation or contact their support team.</p>
+
+    <h2>Groups are not formatted correctly</h2>
+
+    <h3>Error message</h3>
+    <p class="body">When this issue occurs, the following error message is common:</p>
+    <div class="codeblock">Some of the groups assigned to the user are not formatted as '&lt;organization&gt;:&lt;team&gt;'.</div>
+
+    <h3>Causes</h3>
+    <ul class="bullets">
+      <li>Incorrect group name formatting in your identity provider (IdP): Docker requires groups to follow the format <code>&lt;organization&gt;:&lt;team&gt;</code>. If the groups assigned to a user do not follow this format, they will be ignored.</li>
+      <li>Non-matching groups between IdP and Docker organization: If a group in your IdP does not have a corresponding team in Docker, it will not be recognized, and the user will be placed in the default organization and team.</li>
+    </ul>
+
+    <h3>Affected environments</h3>
+    <ul class="bullets">
+      <li>Docker single sign-on setup using IdPs such as Okta or Azure AD</li>
+    </ul>
+  </main>
+
+  <!-- RIGHT SIDEBAR -->
+  <aside class="rightbar">
+    <div class="right-links">
+      <a href="#">✎ Edit this page</a>
+      <a href="#">⚑ Request changes</a>
+    </div>
+    <div class="toc-title">Table of contents</div>
+    <ul class="toc">
+      <li class="active">Check for errors</li>
+      <li>Groups are not formatted correctly</li>
+      <li>User is not assigned to the organization</li>
+      <li>IdP-initiated sign in is not enabled for connection</li>
+      <li>Not enough seats in organization</li>
+      <li>Domain is not verified for SSO connection</li>
+      <li>Unable to find session</li>
+      <li>Name ID is not an email address</li>
+    </ul>
+  </aside>
+
+</div>
+
+<button class="feedback">😺 Give feedback</button>
+
+</body>
+</html>

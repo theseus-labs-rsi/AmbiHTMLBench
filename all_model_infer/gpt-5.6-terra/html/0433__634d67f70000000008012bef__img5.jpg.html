@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Untitled Document</title>
+  <script>
+    window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      background:
+        repeating-linear-gradient(90deg, #111 0 26px, #242424 27px 29px, #111 30px 56px),
+        repeating-linear-gradient(0deg, transparent 0 27px, rgba(210,210,210,.25) 28px 29px, transparent 30px 56px);
+      font-family: "Microsoft JhengHei", "PingFang TC", "Noto Sans CJK TC", sans-serif;
+      color: #424242;
+    }
+    .scene {
+      width: 540px;
+      height: 740px;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+      background:
+        repeating-linear-gradient(90deg, rgba(0,0,0,.18) 0 25px, rgba(255,255,255,.08) 26px 28px, rgba(0,0,0,.18) 29px 55px),
+        #121212;
+    }
+    .notebook {
+      position: absolute;
+      left: 20px;
+      top: 27px;
+      width: 499px;
+      height: 690px;
+      display: grid;
+      grid-template-columns: 246px 22px 231px;
+      transform: rotate(-1.15deg);
+      transform-origin: center;
+      filter: drop-shadow(2px 3px 2px rgba(0,0,0,.45));
+    }
+    .page {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid #bdbca8;
+      background-color: #eeeedc;
+      background-image:
+        linear-gradient(rgba(151,178,173,.40) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(151,178,173,.40) 1px, transparent 1px);
+      background-size: 10px 10px;
+      box-shadow: inset 0 0 10px rgba(150,130,85,.10);
+    }
+    .left-page { border-radius: 2px 0 0 4px; }
+    .right-page { border-radius: 0 3px 4px 0; }
+    .binding {
+      position: relative;
+      z-index: 5;
+      background: linear-gradient(90deg, #8c8b76, #d4d1b8 18%, #67675c 49%, #d1cfb8 76%, #8a8a7b);
+    }
+    .binding:before {
+      content: "";
+      position: absolute;
+      left: 8px;
+      top: -5px;
+      width: 8px;
+      height: 700px;
+      background: repeating-linear-gradient(to bottom, transparent 0 16px, #4e4e46 17px 20px, transparent 21px 34px);
+      opacity: .55;
+    }
+    .ring {
+      position: absolute;
+      left: -7px;
+      width: 36px;
+      height: 18px;
+      border: 4px solid #77776b;
+      border-top-color: #dddbc4;
+      border-left-color: #6c6c63;
+      border-radius: 50%;
+      background: transparent;
+      box-shadow: 1px 1px 1px rgba(0,0,0,.3);
+    }
+    .r1 { top: 7px; } .r2 { top: 38px; } .r3 { top: 69px; } .r4 { top: 100px; }
+    .r5 { top: 131px; } .r6 { top: 162px; } .r7 { top: 193px; } .r8 { top: 224px; }
+    .r9 { top: 255px; } .r10 { top: 286px; } .r11 { top: 317px; } .r12 { top: 348px; }
+    .r13 { top: 379px; } .r14 { top: 410px; } .r15 { top: 441px; } .r16 { top: 472px; }
+    .r17 { top: 503px; } .r18 { top: 534px; } .r19 { top: 565px; } .r20 { top: 596px; }
+    .r21 { top: 627px; } .r22 { top: 658px; }
+
+    .notes {
+      position: absolute;
+      inset: 0;
+      padding: 9px 8px;
+      font-size: 13px;
+      line-height: 1.48;
+      letter-spacing: -.15px;
+      font-weight: 500;
+      transform: rotate(.2deg);
+    }
+    .notes p { margin: 0 0 2px; }
+    .indent { padding-left: 13px; }
+    .small { font-size: 12px; }
+    .blue { color: #426b94; }
+    .purple { color: #87618c; }
+    .red { color: #b65d5c; }
+    .black { color: #3f3f3b; }
+    .heading { font-weight: 700; }
+    .boxed {
+      display: inline-block;
+      border: 1px solid #647d9d;
+      padding: 1px 3px;
+      margin: 1px 0;
+    }
+    .mark {
+      display: inline-block;
+      border-bottom: 1px solid currentColor;
+      line-height: 1.05;
+    }
+    .left-top { position: absolute; left: 9px; top: 7px; width: 221px; }
+    .left-mid { position: absolute; left: 9px; top: 173px; width: 221px; }
+    .left-bottom { position: absolute; left: 10px; top: 500px; width: 219px; }
+    .right-top { position: absolute; left: 8px; top: 10px; width: 211px; }
+    .right-mid { position: absolute; left: 10px; top: 186px; width: 209px; }
+    .right-bottom { position: absolute; left: 10px; top: 468px; width: 210px; }
+    .faint-line {
+      height: 10px;
+      margin-left: 10px;
+      border-bottom: 1px solid rgba(70,70,70,.15);
+      width: 164px;
+    }
+  </style>
+</head>
+<body>
+  <div class="scene">
+    <main class="notebook">
+      <section class="page left-page" aria-label="left notebook page">
+        <div class="notes">
+          <div class="left-top">
+            <p class="heading black">3. 大改變</p>
+            <p class="black">解決方法：<span class="blue">找到問題根源</span>，<span class="purple">提出做法</span></p>
+            <p class="blue">4. 調整時間與未來</p>
+            <p class="purple">（1）學習與生活</p>
+            <p class="black indent">① <span class="mark blue">舊習慣</span>　② <span class="mark purple">新方法</span></p>
+            <p class="black indent">③ <span class="red">自我提醒</span></p>
+            <p class="blue">（2）建立目標</p>
+            <p class="black indent">○ 了解自己所需的改變</p>
+            <p class="black indent">◎ <span class="purple">重視過程</span>，不要只看結果</p>
+            <p class="red indent">→ 自己應該做到</p>
+          </div>
+
+          <div class="left-mid">
+            <p class="purple heading">5. 特殊情況</p>
+            <p class="blue">（1）因環境而改變，才會慢慢習慣</p>
+            <p class="black">（2）不要因為一時的挫折而放棄</p>
+            <p class="blue">（3）生活與學習的平衡</p>
+            <p class="black indent">目標與行動要相互配合</p>
+            <p class="purple">（4）挫折時的反省</p>
+            <p class="black indent">改變不是一次完成，而是反覆練習</p>
+            <p class="red">要把握機會，記錄自己的進步。</p>
+            <p class="blue">2. 調整與選擇</p>
+            <p class="black">當發現方法不合適時，要重新思考；</p>
+            <p class="black">學習接納自己，並找出適合的做法。</p>
+            <p class="purple">不要只追求結果，過程也很重要。</p>
+            <p class="black">建立好習慣後，就可以慢慢改變。</p>
+          </div>
+
+          <div class="left-bottom">
+            <p class="blue heading">（三）成長與改變</p>
+            <p class="black">要持續練習，找到自己的方向。</p>
+            <p class="purple">學習不是短時間的事</p>
+            <p class="boxed blue">不斷累積經驗與信心</p>
+            <p class="red">三、培養良好習慣</p>
+            <p class="black">（五）能夠規劃</p>
+            <p class="blue">了解自己，調整步伐</p>
+            <p class="purple">勇敢面對新的挑戰</p>
+          </div>
+        </div>
+      </section>
+
+      <div class="binding" aria-hidden="true">
+        <span class="ring r1"></span><span class="ring r2"></span><span class="ring r3"></span><span class="ring r4"></span>
+        <span class="ring r5"></span><span class="ring r6"></span><span class="ring r7"></span><span class="ring r8"></span>
+        <span class="ring r9"></span><span class="ring r10"></span><span class="ring r11"></span><span class="ring r12"></span>
+        <span class="ring r13"></span><span class="ring r14"></span><span class="ring r15"></span><span class="ring r16"></span>
+        <span class="ring r17"></span><span class="ring r18"></span><span class="ring r19"></span><span class="ring r20"></span>
+        <span class="ring r21"></span><span class="ring r22"></span>
+      </div>
+
+      <section class="page right-page" aria-label="right notebook page">
+        <div class="notes">
+          <div class="right-top">
+            <p class="black heading">（四）學習與改變</p>
+            <p class="blue">目標要清楚，才能慢慢做到。</p>
+            <p class="black">當學習有困難時，<span class="purple">自己要找方法</span></p>
+            <p class="black">一、<span class="red">其他學習與改變的因素</span></p>
+            <p class="black indent">1. 時間安排　2. 環境影響</p>
+            <p class="blue indent">3. 自我要求與努力</p>
+            <p class="purple">（一）能不能持續</p>
+            <p class="black indent">① 每天做一點，慢慢累積</p>
+            <p class="black indent">② 訂出自己的規則</p>
+            <p class="blue">（二）了解自己的狀況</p>
+            <p class="black indent">有些事情不是立刻就能完成</p>
+            <p class="purple">（三）從錯誤中學習</p>
+            <p class="black indent">面對問題，才能找到答案。</p>
+          </div>
+
+          <div class="right-mid">
+            <p class="red heading">三、其他自我管理的重點</p>
+            <p class="purple">（一）學習要有計畫</p>
+            <p class="black indent">依照自己的時間來安排</p>
+            <p class="blue">（二）不要只是等待</p>
+            <p class="black indent">主動去做，才會有改變</p>
+            <p class="purple">（三）建立規律生活</p>
+            <p class="black indent">早睡早起、整理環境</p>
+            <p class="blue">（四）做好每一件小事</p>
+            <p class="black indent">把事情分成小步驟完成</p>
+            <p class="red">→ 學習不是壓力，而是一種累積。</p>
+            <p class="black">遇到不懂的地方，可以請教別人。</p>
+            <p class="purple">自己也要願意練習與嘗試。</p>
+            <p class="blue">時間管理能讓事情更有秩序。</p>
+          </div>
+
+          <div class="right-bottom">
+            <p class="black heading">二、如何改善</p>
+            <p class="blue">（一）訂定計畫　　（二）實際行動</p>
+            <p class="purple">（三）檢討與修正</p>
+            <p class="black">1. 檢視自己的問題</p>
+            <p class="black">2. 尋求協助</p>
+            <p class="blue">3. 養成固定的習慣</p>
+            <p class="black">4. 努力做到最好</p>
+            <p class="purple">（二）利用時間</p>
+            <p class="black">1. 對自己負責　2. 改善拖延</p>
+            <p class="black">3. 充實自己的生活</p>
+            <p class="blue">4. 保持積極態度</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FGER-Net Architecture and Algorithm</title>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']]
+  }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    color: #000;
+  }
+  body {
+    min-width: 1180px;
+  }
+  .page {
+    width: 1456px;
+    height: 1310px;
+    margin: 0 auto;
+    overflow: hidden;
+    background: white;
+  }
+
+  /* Top architecture figure */
+  .architecture {
+    position: relative;
+    width: 100%;
+    height: 425px;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  .dash-box {
+    position: absolute;
+    border: 3px dashed;
+    border-radius: 9px;
+  }
+  .green-box {
+    border-color: #b9d4aa;
+    background: rgba(232, 247, 227, .52);
+  }
+  .blue-box {
+    border-color: #aec2dc;
+    background: rgba(231, 238, 249, .78);
+  }
+  .purple-box {
+    border-color: #d8aed9;
+    background: rgba(248, 232, 248, .74);
+  }
+  .yellow-box {
+    border-color: #ffd87b;
+    background: rgba(255, 248, 219, .86);
+  }
+
+  .bio-panel {
+    left: 40px;
+    top: 42px;
+    width: 199px;
+    height: 338px;
+  }
+  .bio-title {
+    position: absolute;
+    top: 6px;
+    width: 100%;
+    text-align: center;
+    font: bold 13px Georgia, serif;
+  }
+  .receptor-label {
+    position: absolute;
+    left: 4px;
+    width: 188px;
+    text-align: left;
+    font: bold 13px Georgia, serif;
+  }
+  .receptor-label.fast { top: 169px; }
+  .receptor-label.slow { top: 286px; }
+  .receptor-card {
+    position: absolute;
+    left: 31px;
+    width: 131px;
+    height: 142px;
+    border: 5px solid #ead3eb;
+    background: #fff;
+    box-shadow: 0 0 3px rgba(0,0,0,.15);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    overflow: hidden;
+  }
+  .receptor-card.top { top: 29px; }
+  .receptor-card.bottom { top: 194px; }
+  .skin-half {
+    position: relative;
+    border-right: 1px solid #777;
+    background:
+      linear-gradient(to bottom,
+      #f5c7c8 0 28%, #f7d5d5 28% 38%,
+      #fff5f1 38% 77%, #9d7869 78% 82%, #f7e6d9 83% 100%);
+  }
+  .skin-half:last-child { border-right: 0; }
+  .skin-name {
+    position: absolute;
+    top: 3px;
+    width: 100%;
+    text-align: center;
+    font: 5px Georgia, serif;
+  }
+  .nerve {
+    position: absolute;
+    width: 2px;
+    background: #e89c21;
+    left: 31px;
+    top: 54px;
+    height: 48px;
+  }
+  .nerve:before, .nerve:after {
+    content: "";
+    position: absolute;
+    width: 15px;
+    height: 2px;
+    top: -1px;
+    left: -12px;
+    background: #e89c21;
+    transform: rotate(58deg);
+    transform-origin: right center;
+  }
+  .nerve:after {
+    left: -1px;
+    transform: rotate(-58deg);
+    transform-origin: left center;
+  }
+  .disc {
+    position: absolute;
+    width: 20px;
+    height: 8px;
+    border-radius: 50%;
+    background: #e9a720;
+    left: 15px;
+    bottom: 27px;
+    transform: rotate(-12deg);
+  }
+  .slow-nerve {
+    position: absolute;
+    left: 29px;
+    top: 51px;
+    width: 2px;
+    height: 43px;
+    background: #d76863;
+  }
+  .slow-nerve:before,
+  .slow-nerve:after {
+    content: "";
+    position: absolute;
+    top: -7px;
+    width: 7px;
+    height: 11px;
+    border-radius: 50%;
+    background: #d76863;
+  }
+  .slow-nerve:before { left: -6px; }
+  .slow-nerve:after { left: 2px; }
+  .corpuscle {
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+    width: 24px;
+    height: 11px;
+    border-radius: 50%;
+    background: #dea11d;
+  }
+
+  .concept-panel {
+    left: 247px;
+    top: 42px;
+    width: 149px;
+    height: 338px;
+    text-align: center;
+  }
+  .concept-title {
+    position: absolute;
+    top: 6px;
+    left: 4px;
+    right: 4px;
+    font: bold 13px Georgia, serif;
+    line-height: 17px;
+  }
+  .concept-force {
+    position: absolute;
+    width: 100%;
+    font: bold 16px Georgia, serif;
+    line-height: 18px;
+  }
+  .concept-force.dynamic { top: 111px; }
+  .concept-force.static { top: 221px; }
+  .time-series {
+    position: absolute;
+    left: 387px;
+    top: 196px;
+    transform: rotate(46deg);
+    font: italic 16px Georgia, serif;
+  }
+
+  .event-panel {
+    left: 483px;
+    top: 40px;
+    width: 600px;
+    height: 189px;
+  }
+  .event-title,
+  .frame-title {
+    position: absolute;
+    left: 14px;
+    top: 8px;
+    font: 18px Georgia, serif;
+  }
+  .event-time,
+  .frame-time {
+    position: absolute;
+    left: 24px;
+    bottom: 1px;
+    font: bold 17px Georgia, serif;
+  }
+  .memory-loop {
+    position: absolute;
+    left: 458px;
+    top: 16px;
+    width: 603px;
+    height: 186px;
+    border: 2px solid rgba(160,180,180,.34);
+    border-radius: 31px;
+  }
+  .memory-loop.second {
+    left: 432px;
+    top: 2px;
+    width: 629px;
+    height: 216px;
+    opacity: .58;
+  }
+
+  .frame-panel {
+    left: 483px;
+    top: 239px;
+    width: 600px;
+    height: 141px;
+  }
+  .flow {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .event-flow {
+    left: 518px;
+    top: 67px;
+    height: 112px;
+  }
+  .frame-flow {
+    left: 522px;
+    top: 283px;
+    height: 83px;
+  }
+  .arrow {
+    width: 39px;
+    height: 1px;
+    background: #111;
+    position: relative;
+    flex: 0 0 auto;
+  }
+  .arrow.short { width: 26px; }
+  .arrow.long { width: 93px; }
+  .arrow:after {
+    content: "";
+    position: absolute;
+    right: -1px;
+    top: -4px;
+    border-left: 7px solid #111;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+  }
+
+  .event-cube {
+    width: 39px;
+    height: 45px;
+    border: 1px solid #111;
+    background:
+      radial-gradient(circle at 20% 22%, #e54f51 0 2px, transparent 3px),
+      radial-gradient(circle at 74% 34%, #2f9bc2 0 2px, transparent 3px),
+      radial-gradient(circle at 45% 67%, #e54f51 0 2px, transparent 3px),
+      radial-gradient(circle at 82% 79%, #2f9bc2 0 2px, transparent 3px),
+      #f4fbfb;
+    transform: skewY(17deg);
+  }
+  .mini-stack {
+    width: 11px;
+    height: 53px;
+    background: repeating-linear-gradient(to bottom, #1f4b91 0 5px, #75a0db 5px 7px);
+    border: 1px solid #183a70;
+  }
+  .feature-stack {
+    width: 9px;
+    height: 108px;
+    border: 1px solid #17375f;
+    background: repeating-linear-gradient(to bottom, #8fc2dc 0 4px, #dceff7 4px 7px);
+  }
+  .feature-stack.dark {
+    background: repeating-linear-gradient(to bottom, #315e9e 0 4px, #87a7d1 4px 7px);
+  }
+  .network {
+    position: relative;
+    width: 52px;
+    height: 68px;
+    background:
+      radial-gradient(circle at 10% 28%, #ee6f70 0 2px, #000 2.5px 3.5px, transparent 4px),
+      radial-gradient(circle at 12% 51%, #e8c94e 0 2px, #000 2.5px 3.5px, transparent 4px),
+      radial-gradient(circle at 11% 74%, #67c7c5 0 2px, #000 2.5px 3.5px, transparent 4px),
+      radial-gradient(circle at 31% 18%, #e8c94e 0 2px, #000 2.5px 3.5px, transparent 4px),
+      radial-gradient(circle at 32% 39%, #fff 0 2px, #000 2.5px 3.5px, transparent 4px),
+      radial-gradient(circle at 32% 62%, #fff 0 2px, #000 2.5px 3.5px, transparent 4px),
+      radial-gradient(circle at 33% 83%, #ee6f70 0 2px, #000 2.5px 3.5px, transparent 4px),
+      radial-gradient(circle at 57% 11%, #67c7c5 0 2px, #000 2.5px 3.5px, transparent 4px),
+      radial-gradient(circle at 58% 34%, #fff 0 2px, #000 2.5px 3.5px, transparent 4px),
+      radial-gradient(circle at 58% 57%, #fff 0 2px, #000 2.5px 3.5px, transparent 4px),
+      radial-gradient(circle at 58% 81%, #e8c94e 0 2px, #000 2.5px 3.5px, transparent 4px),
+      radial-gradient(circle at 84% 26%, #ee6f70 0 2px, #000 2.5px 3.5px, transparent 4px),
+      radial-gradient(circle at 85% 50%, #e8c94e 0 2px, #000 2.5px 3.5px, transparent 4px),
+      radial-gradient(circle at 84% 73%, #67c7c5 0 2px, #000 2.5px 3.5px, transparent 4px);
+  }
+  .network:before,
+  .network:after {
+    content: "";
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    top: 16px;
+    height: 38px;
+    border-top: 1px solid #111;
+    border-bottom: 1px solid #111;
+    transform: skewY(27deg);
+    opacity: .8;
+  }
+  .network:after { transform: skewY(-27deg); }
+
+  .pool-label {
+    position: absolute;
+    left: 735px;
+    top: 139px;
+    font: 10px Georgia, serif;
+    color: #555;
+  }
+  .lstm {
+    width: 52px;
+    height: 38px;
+    border: 2px solid #7cae8f;
+    border-radius: 6px;
+    background: #f7fff7;
+    text-align: center;
+    line-height: 34px;
+    font: bold 16px Georgia, serif;
+    padding-top: 8px;
+  }
+  .mlp-wrap {
+    position: relative;
+    width: 55px;
+    height: 88px;
+  }
+  .mlp-wrap .network {
+    position: absolute;
+    left: 1px;
+    top: 0;
+  }
+  .mlp-label {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    font: bold 14px Georgia, serif;
+  }
+  .af {
+    width: 10px;
+    height: 19px;
+    border: 1px solid #17375f;
+    background: repeating-linear-gradient(to bottom, #f6e44c 0 4px, #fff 4px 6px);
+    position: relative;
+  }
+  .af:after {
+    content: "AF";
+    position: absolute;
+    top: 20px;
+    left: -2px;
+    font: 6px Georgia, serif;
+  }
+  .plus {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #104b83;
+    color: #fff;
+    font: bold 15px/14px Arial, sans-serif;
+    text-align: center;
+  }
+  .frame-icon {
+    width: 39px;
+    height: 39px;
+    border: 2px solid #111;
+    border-radius: 5px;
+    position: relative;
+    background: #fff;
+  }
+  .frame-icon:before {
+    content: "";
+    position: absolute;
+    left: 4px;
+    bottom: 7px;
+    width: 27px;
+    height: 15px;
+    border-left: 3px solid #111;
+    border-top: 3px solid #111;
+    transform: rotate(45deg) skew(-10deg);
+  }
+  .frame-icon:after {
+    content: "";
+    position: absolute;
+    left: 7px;
+    top: 6px;
+    width: 7px;
+    height: 7px;
+    border: 2px solid #111;
+    border-radius: 50%;
+    background: #fff;
+  }
+  .cnn {
+    width: 99px;
+    height: 61px;
+    border: 3px dashed #b9d4aa;
+    border-radius: 8px;
+    background: rgba(239,248,237,.8);
+    text-align: center;
+    font: bold 18px/55px Georgia, serif;
+  }
+
+  .guide-line {
+    position: absolute;
+    left: 395px;
+    top: 149px;
+    width: 91px;
+    border-top: 2px dashed #222;
+  }
+  .guide-line.static {
+    top: 319px;
+  }
+
+  .event-output-line {
+    position: absolute;
+    left: 1031px;
+    top: 137px;
+    width: 96px;
+    border-top: 1px solid #111;
+  }
+  .event-output-line:after,
+  .frame-output-line:after {
+    content: "";
+    position: absolute;
+    right: -1px;
+    top: -4px;
+    border-left: 7px solid #111;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+  }
+  .frame-output-line {
+    position: absolute;
+    left: 1017px;
+    top: 323px;
+    width: 109px;
+    border-top: 1px solid #111;
+  }
+  .merge-top,
+  .merge-bottom {
+    position: absolute;
+    left: 1125px;
+    width: 1px;
+    background: #111;
+  }
+  .merge-top { top: 138px; height: 95px; }
+  .merge-bottom { top: 233px; height: 91px; }
+  .merge-dot {
+    position: absolute;
+    left: 1119px;
+    top: 317px;
+  }
+  .fusion-route {
+    position: absolute;
+    left: 1132px;
+    top: 323px;
+    width: 39px;
+    height: 1px;
+    background: #111;
+  }
+  .fusion-route:after {
+    content: "";
+    position: absolute;
+    left: 38px;
+    top: -97px;
+    width: 1px;
+    height: 97px;
+    background: #111;
+  }
+  .output-stack {
+    position: absolute;
+    left: 1207px;
+    top: 217px;
+    width: 10px;
+    height: 21px;
+    border: 1px solid #17375f;
+    background: repeating-linear-gradient(to bottom, #295590 0 4px, #8bacd4 4px 7px);
+  }
+  .output-label {
+    position: absolute;
+    top: 239px;
+    left: 1199px;
+    font: 7px Georgia, serif;
+  }
+  .output-arrow {
+    position: absolute;
+    left: 1170px;
+    top: 226px;
+    width: 39px;
+    border-top: 1px solid #111;
+  }
+  .output-arrow:after {
+    content: "";
+    position: absolute;
+    right: -1px;
+    top: -4px;
+    border-left: 7px solid #111;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+  }
+
+  .perception {
+    left: 1261px;
+    top: 42px;
+    width: 155px;
+    height: 338px;
+  }
+  .perception-title {
+    position: absolute;
+    top: 14px;
+    width: 100%;
+    text-align: center;
+    font: bold 16px Georgia, serif;
+  }
+  .dynamic-panel {
+    left: 10px;
+    top: 46px;
+    width: 135px;
+    height: 112px;
+  }
+  .static-panel {
+    left: 10px;
+    top: 197px;
+    width: 135px;
+    height: 114px;
+  }
+  .force-title {
+    position: absolute;
+    top: 7px;
+    width: 100%;
+    text-align: center;
+    font: bold 17px Georgia, serif;
+  }
+  .plot {
+    position: absolute;
+    left: 21px;
+    top: 31px;
+    width: 91px;
+    height: 66px;
+  }
+  .plot .axis-x {
+    position: absolute;
+    left: 0;
+    bottom: 12px;
+    width: 87px;
+    border-top: 3px solid #111;
+  }
+  .plot .axis-x:after {
+    content: "";
+    position: absolute;
+    right: -1px;
+    top: -5px;
+    border-left: 9px solid #111;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+  }
+  .plot .axis-y {
+    position: absolute;
+    left: 12px;
+    top: 2px;
+    height: 63px;
+    border-left: 3px solid #111;
+  }
+  .plot .axis-y:before {
+    content: "";
+    position: absolute;
+    left: -6px;
+    top: -1px;
+    border-bottom: 9px solid #111;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+  }
+  .plot .f-label {
+    position: absolute;
+    left: -6px;
+    top: 3px;
+    font: 12px Georgia, serif;
+  }
+  .wave {
+    position: absolute;
+    left: 17px;
+    top: 21px;
+    width: 61px;
+    height: 34px;
+    border-bottom: 1px solid transparent;
+    overflow: hidden;
+  }
+  .wave svg { width: 100%; height: 100%; }
+  .perception-bracket {
+    position: absolute;
+    left: 1239px;
+    top: 107px;
+    width: 21px;
+    height: 249px;
+    border-left: 1px solid #111;
+    border-top: 1px solid #111;
+    border-bottom: 1px solid #111;
+    border-radius: 4px 0 0 4px;
+  }
+
+  /* Caption */
+  .caption {
+    margin: 19px 40px 0 40px;
+    width: 1375px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 21px;
+    line-height: 24px;
+    letter-spacing: -.32px;
+  }
+
+  /* Two-column paper body */
+  .paper-body {
+    display: grid;
+    grid-template-columns: 672px 670px;
+    column-gap: 30px;
+    margin: 47px 40px 0;
+    align-items: start;
+  }
+  .article-column {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 27px;
+    line-height: 1.18;
+    text-align: justify;
+  }
+  .article-column p {
+    margin: 0;
+    text-indent: 27px;
+  }
+  .article-column p:first-child {
+    text-indent: 0;
+  }
+  .subsection {
+    margin-top: 0;
+  }
+  .subsection .lead {
+    font-style: italic;
+    font-weight: bold;
+  }
+
+  /* Algorithm */
+  .algorithm {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 25px;
+    line-height: 1.18;
+    border-top: 2px solid #111;
+    border-bottom: 1px solid #111;
+  }
+  .algorithm-title {
+    height: 36px;
+    border-bottom: 1px solid #555;
+    padding: 0 0 4px;
+    font-size: 26px;
+    line-height: 32px;
+  }
+  .algorithm-title strong {
+    font-weight: bold;
+  }
+  .algorithm-content {
+    padding: 3px 26px 8px;
+  }
+  .alg-line {
+    white-space: nowrap;
+    min-height: 31px;
+  }
+  .alg-label {
+    font-weight: bold;
+  }
+  .alg-heading {
+    font-style: italic;
+    font-weight: bold;
+    font-size: 27px;
+  }
+  .indent1 { padding-left: 47px; }
+  .indent2 { padding-left: 47px; }
+  .forline, .endline, .returnline { font-weight: bold; }
+  .mjx-container {
+    margin: 0 !important;
+  }
+
+  .placeholder {
+    position: absolute;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <section class="architecture" aria-label="Architecture of the proposed FGER-Net">
+    <div class="dash-box green-box bio-panel">
+      <div class="bio-title">Rapidly Adapting Receptors</div>
+
+      <div class="receptor-card top placeholder" aria-label="Diagram: rapidly adapting receptors">
+        <div class="skin-half">
+          <div class="skin-name">Meissner’s corpuscles</div>
+          <div class="nerve"></div>
+        </div>
+        <div class="skin-half">
+          <div class="skin-name">Ruffini endings</div>
+          <div class="disc"></div>
+        </div>
+      </div>
+      <div class="receptor-label fast">Slowly Adapting Receptors</div>
+
+      <div class="receptor-card bottom placeholder" aria-label="Diagram: slowly adapting receptors">
+        <div class="skin-half">
+          <div class="skin-name">Merkel’s disks</div>
+          <div class="slow-nerve"></div>
+        </div>
+        <div class="skin-half">
+          <div class="skin-name">Pacinian corpuscle</div>
+          <div class="corpuscle"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-box blue-box concept-panel">
+      <div class="concept-title">Common perceptual<br>mechanism</div>
+      <div class="concept-force dynamic">Perceiving<br>dynamic<br>force</div>
+      <div class="concept-force static">Perceiving<br>static<br>force</div>
+    </div>
+
+    <div class="guide-line"></div>
+    <div class="guide-line static"></div>
+    <div class="time-series">Time Series</div>
+
+    <div class="memory-loop second"></div>
+    <div class="memory-loop"></div>
+
+    <div class="dash-box green-box event-panel">
+      <div class="event-title">Event Stream Recurrent Network</div>
+      <div class="event-time">At time step t+1</div>
+    </div>
+
+    <div class="flow event-flow">
+      <div class="event-cube placeholder" aria-label="Diagram: event packet"></div>
+      <div class="arrow short"></div>
+      <div class="mini-stack"></div>
+      <div class="arrow short"></div>
+      <div class="network"></div>
+      <div class="arrow short"></div>
+      <div class="feature-stack dark"></div>
+      <div class="feature-stack"></div>
+      <div class="arrow short"></div>
+      <div class="feature-stack"></div>
+      <div class="arrow short"></div>
+      <div class="feature-stack"></div>
+      <div class="arrow short"></div>
+      <div class="lstm">LSTM</div>
+      <div class="arrow short"></div>
+      <div class="mlp-wrap">
+        <div class="network"></div>
+        <div class="mlp-label">MLP</div>
+      </div>
+      <div class="arrow short"></div>
+      <div class="af"></div>
+      <div class="arrow short"></div>
+      <div class="plus">+</div>
+    </div>
+    <div class="pool-label">Pooling</div>
+
+    <div class="dash-box blue-box frame-panel">
+      <div class="frame-title">Frame-Guided&nbsp; Network</div>
+      <div class="frame-time">At time step t+1</div>
+    </div>
+
+    <div class="flow frame-flow">
+      <div class="frame-icon placeholder" aria-label="Diagram: guiding image frame"></div>
+      <div class="arrow long"></div>
+      <div class="cnn">CNN</div>
+      <div class="arrow short"></div>
+      <div class="feature-stack"></div>
+      <div class="arrow short"></div>
+      <div class="feature-stack dark"></div>
+      <div class="arrow short"></div>
+      <div class="mlp-wrap">
+        <div class="network"></div>
+        <div class="mlp-label">MLP</div>
+      </div>
+      <div class="arrow short"></div>
+      <div class="af"></div>
+    </div>
+
+    <div class="event-output-line"></div>
+    <div class="frame-output-line"></div>
+    <div class="merge-top"></div>
+    <div class="merge-bottom"></div>
+    <div class="plus merge-dot">+</div>
+    <div class="fusion-route"></div>
+    <div class="output-arrow"></div>
+    <div class="output-stack"></div>
+    <div class="output-label">F<sub>output</sub></div>
+
+    <div class="perception-bracket"></div>
+
+    <div class="dash-box blue-box perception">
+      <div class="perception-title">Perceiving</div>
+
+      <div class="dash-box yellow-box dynamic-panel">
+        <div class="force-title">Dynamic</div>
+        <div class="plot placeholder" aria-label="Chart: dynamic force">
+          <div class="axis-x"></div>
+          <div class="axis-y"></div>
+          <div class="f-label">F</div>
+          <div class="wave">
+            <svg viewBox="0 0 65 35" aria-hidden="true">
+              <path d="M0,31 C5,27 7,4 12,2 C16,2 15,31 20,31 C24,30 24,11 29,10 C34,10 34,24 39,24 C44,24 45,18 50,18 C56,18 56,29 65,30"
+                    fill="none" stroke="#18305d" stroke-width="1.4"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-box purple-box static-panel">
+        <div class="force-title">Static</div>
+        <div class="plot placeholder" aria-label="Chart: static force">
+          <div class="axis-x"></div>
+          <div class="axis-y"></div>
+          <div class="f-label">F</div>
+          <div class="wave">
+            <svg viewBox="0 0 65 35" aria-hidden="true">
+              <path d="M0,30 C5,26 7,11 13,10 C20,10 20,30 29,30 C37,30 39,25 46,26 C53,26 56,30 65,30"
+                    fill="none" stroke="#18305d" stroke-width="1.4"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="caption">
+    Fig. 2.&nbsp; The architecture of the proposed FGER-Net is presented, alongside its conceptual underpinnings. The left portion illustrates the biological inspiration for the network: the synergistic function of fast and slow adapting mechanoreceptors in perceiving dynamic and static forces, respectively.<br>
+    These biological principles are emulated by the FGER-Net. In the network itself (center), event streams and image frames are synergistically fused for robust force estimation. In this architecture, frames are used to periodically correct for drift during training and to continuously stabilize the high frequency force predictions derived from the event stream during inference. The resulting force estimation is thereby made accurate and robust against drift, successfully capturing both dynamic and static tactile information, mirroring the perceptual capabilities shown on the right side of the diagram.
+  </div>
+
+  <main class="paper-body">
+    <article class="article-column">
+      <p>dual rate architecture mirrors biological perception: a high frequency recurrent pathway integrates transient force increments from the event stream, while a low frequency pathway extracts absolute spatial references from single image frames for periodic training corrections.</p>
+
+      <p>During inference, we maximize estimation stability via a continuous correction strategy. By persistently fusing the most recent frame feature with incoming events, this absolute spatial anchor effectively eliminates integration drift.</p>
+
+      <p>The architecture utilizes dual parallel pathways optimized for each modality’s distinct characteristics. To circumvent the extreme sparsity typical of standard convolutions on event data, individual events are normalized and processed by a pointwise MLP, followed by max-pooling to generate an aggregated feature vector for each packet. Conversely, dense spatial information from image frames is extracted into a compact feature vector using a residual CNN backbone coupled with average pooling.</p>
+
+      <p class="subsection"><span class="lead">a) Data Stream Segmentation:</span>&nbsp; The algorithm’s processing cycle is driven by the arrival of new frames. A cycle is</p>
+    </article>
+
+    <section class="algorithm" aria-label="Algorithm 1 FGER-Net">
+      <div class="algorithm-title"><strong>Algorithm 1</strong>&nbsp; FGER-Net</div>
+      <div class="algorithm-content">
+        <div class="alg-line"><span class="alg-label">Input:</span>&nbsp; $I_{\mathrm{guide}},\ \{P_m\}_{m=1}^{M},\ f_{\mathrm{prev\_cycle}},\ (h_{\mathrm{prev\_cycle}}, C_{\mathrm{prev\_cycle}})$</div>
+        <div class="alg-line"><span class="alg-label">Output:</span>&nbsp; $\hat f_{\mathrm{final}},\ (h_M,C_M)$</div>
+
+        <div class="alg-line alg-heading">Guiding Frame Feature Extraction</div>
+        <div class="alg-line">$\mathbf{f}_{\mathrm{frame}} \leftarrow \Phi_f(I_{\mathrm{guide}})$</div>
+
+        <div class="alg-line alg-heading">Recurrent Processing Loop</div>
+        <div class="alg-line">$\hat f_0 \leftarrow f_{\mathrm{prev\_cycle}};\ (h_0,C_0) \leftarrow (h_{\mathrm{prev\_cycle}},C_{\mathrm{prev\_cycle}})$</div>
+        <div class="alg-line forline">for&nbsp; $m \leftarrow 1$ to $M$ do</div>
+        <div class="alg-line indent1">$\mathbf{f}_{e,m} \leftarrow \Phi_e(P_m)$</div>
+        <div class="alg-line indent1">$\mathbf{x}_m \leftarrow \operatorname{concatenate}(\mathbf{f}_{e,m},\hat f_{m-1})$</div>
+        <div class="alg-line indent1">$(h_m,C_m) \leftarrow \operatorname{LSTM}(\mathbf{x}_m,(h_{m-1},C_{m-1}))$</div>
+        <div class="alg-line indent1">$\Delta \hat f_m \leftarrow \operatorname{MLP}_{\Delta f}(h_m)$</div>
+        <div class="alg-line indent1">$\hat f_m \leftarrow \hat f_{m-1}+\Delta \hat f_m$</div>
+        <div class="alg-line endline">end for</div>
+
+        <div class="alg-line alg-heading">Fusion and Correction</div>
+        <div class="alg-line">$\mathbf{f}_{\mathrm{fusion}} \leftarrow \operatorname{concatenate}(\hat f_M,\mathbf{f}_{\mathrm{frame}})$</div>
+        <div class="alg-line">$\Delta f_{\mathrm{corr}} \leftarrow \operatorname{MLP}_{\mathrm{corr}}(\mathbf{f}_{\mathrm{fusion}})$</div>
+        <div class="alg-line">$\hat f_{\mathrm{final}} \leftarrow \hat f_M+\Delta f_{\mathrm{corr}}$</div>
+        <div class="alg-line returnline">return&nbsp; $\hat f_{\mathrm{final}},(h_M,C_M)$</div>
+      </div>
+    </section>
+  </main>
+</div>
+</body>
+</html>

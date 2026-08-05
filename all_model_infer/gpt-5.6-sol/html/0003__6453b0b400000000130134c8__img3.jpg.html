@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>时事热点综合练习</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+    }
+
+    body {
+      background: #d9d9d9;
+      color: #161616;
+      font-family: "KaiTi", "STKaiti", "SimSun", serif;
+    }
+
+    .page {
+      width: 540px;
+      min-height: 720px;
+      margin: 0 auto;
+      padding: 39px 63px 36px;
+      position: relative;
+      background-color: #fafcf9;
+      background-image:
+        linear-gradient(rgba(128, 151, 133, 0.09) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(128, 151, 133, 0.09) 1px, transparent 1px),
+        linear-gradient(rgba(128, 151, 133, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(128, 151, 133, 0.035) 1px, transparent 1px);
+      background-size: 5px 5px, 5px 5px, 2px 2px, 2px 2px;
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.18);
+      font-size: 12px;
+      line-height: 1.62;
+    }
+
+    .header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      height: 17px;
+      margin-bottom: 1px;
+      border-bottom: 1px solid #444;
+      font-size: 11px;
+      font-weight: bold;
+      line-height: 1;
+    }
+
+    .question {
+      margin: 0;
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      margin: 1px 0 6px;
+      padding-left: 1px;
+      line-height: 1.55;
+    }
+
+    .option {
+      white-space: nowrap;
+    }
+
+    .passage {
+      margin: 15px 0 6px;
+      font-size: 12px;
+      line-height: 1.72;
+      letter-spacing: 0;
+    }
+
+    .figures {
+      display: flex;
+      align-items: flex-start;
+      width: 100%;
+      height: 139px;
+      margin: 5px 0 4px 15px;
+      overflow: hidden;
+    }
+
+    .figure {
+      position: relative;
+      height: 124px;
+      color: #333;
+      font-family: "SimSun", serif;
+      font-size: 6px;
+    }
+
+    .map {
+      width: 160px;
+      border: 1px solid #777;
+      background:
+        linear-gradient(145deg, transparent 0 19%, #929292 19.5% 20%, transparent 20.5% 100%),
+        linear-gradient(34deg, transparent 0 43%, #999 43.5% 44%, transparent 44.5% 100%),
+        linear-gradient(165deg, transparent 0 61%, #a0a0a0 61.5% 62%, transparent 62.5% 100%),
+        rgba(255, 255, 255, 0.56);
+    }
+
+    .map .placeholder-label {
+      position: absolute;
+      left: 5px;
+      top: 3px;
+      color: #777;
+      font-size: 6px;
+    }
+
+    .land {
+      position: absolute;
+      border: 1px solid #8b8b8b;
+      background: rgba(242, 242, 242, 0.88);
+      transform: rotate(-5deg);
+    }
+
+    .land-one {
+      left: 18px;
+      top: 18px;
+      width: 68px;
+      height: 47px;
+      clip-path: polygon(0 20%, 21% 0, 46% 12%, 70% 3%, 100% 28%, 81% 57%, 90% 100%, 42% 87%, 13% 67%);
+    }
+
+    .land-two {
+      left: 62px;
+      top: 44px;
+      width: 84px;
+      height: 67px;
+      clip-path: polygon(0 7%, 35% 0, 52% 15%, 100% 5%, 89% 39%, 67% 47%, 58% 100%, 27% 73%, 5% 84%, 12% 48%);
+    }
+
+    .map-label {
+      position: absolute;
+      z-index: 2;
+      font-size: 6px;
+    }
+
+    .label-1 { left: 5px; top: 35px; }
+    .label-2 { left: 57px; top: 76px; }
+    .label-3 { left: 108px; top: 94px; }
+    .label-4 { left: 45px; top: 56px; }
+
+    .chart {
+      width: 100px;
+      margin-left: 8px;
+    }
+
+    .chart-title {
+      position: absolute;
+      top: 0;
+      right: 0;
+      font-size: 6px;
+    }
+
+    .chart-grid {
+      position: absolute;
+      left: 14px;
+      top: 14px;
+      width: 75px;
+      height: 88px;
+      border-left: 1px solid #555;
+      border-bottom: 1px solid #555;
+      background: repeating-linear-gradient(
+        to top,
+        transparent 0,
+        transparent 21px,
+        rgba(90, 90, 90, 0.18) 22px
+      );
+    }
+
+    .rain {
+      position: absolute;
+      bottom: 1px;
+      width: 3px;
+      background: #999;
+    }
+
+    .r1 { left: 4px; height: 3px; }
+    .r2 { left: 13px; height: 2px; }
+    .r3 { left: 22px; height: 1px; }
+    .r4 { left: 31px; height: 0; }
+    .r5 { left: 40px; height: 0; }
+    .r6 { left: 49px; height: 0; }
+    .r7 { left: 58px; height: 0; }
+    .r8 { left: 67px; height: 1px; }
+
+    .curve {
+      position: absolute;
+      height: 1px;
+      background: #111;
+      transform-origin: left center;
+    }
+
+    .c1 { left: 3px; top: 65px; width: 15px; transform: rotate(-47deg); }
+    .c2 { left: 13px; top: 54px; width: 15px; transform: rotate(-43deg); }
+    .c3 { left: 24px; top: 44px; width: 15px; transform: rotate(-30deg); }
+    .c4 { left: 37px; top: 36px; width: 15px; transform: rotate(-8deg); }
+    .c5 { left: 51px; top: 34px; width: 15px; transform: rotate(12deg); }
+    .c6 { left: 65px; top: 37px; width: 14px; transform: rotate(50deg); }
+
+    .dot {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: #111;
+      border-radius: 50%;
+    }
+
+    .d1 { left: 2px; top: 64px; }
+    .d2 { left: 13px; top: 52px; }
+    .d3 { left: 24px; top: 42px; }
+    .d4 { left: 37px; top: 34px; }
+    .d5 { left: 51px; top: 32px; }
+    .d6 { left: 65px; top: 35px; }
+    .d7 { left: 76px; top: 47px; }
+
+    .axis-left,
+    .axis-right,
+    .axis-months {
+      position: absolute;
+      color: #555;
+      font-size: 5px;
+      line-height: 1;
+    }
+
+    .axis-left {
+      left: 0;
+      top: 13px;
+      line-height: 21px;
+      text-align: right;
+    }
+
+    .axis-right {
+      right: 0;
+      top: 13px;
+      line-height: 21px;
+    }
+
+    .axis-months {
+      left: 14px;
+      top: 105px;
+      word-spacing: 5px;
+      white-space: nowrap;
+    }
+
+    .mascot {
+      width: 89px;
+      margin-left: 7px;
+    }
+
+    .mascot-shape {
+      position: absolute;
+      left: 10px;
+      top: 34px;
+      width: 69px;
+      height: 66px;
+      border: 1px solid #999;
+      background: linear-gradient(145deg, #ededed, #a9a9a9 52%, #f4f4f4);
+      clip-path: polygon(35% 0, 47% 17%, 63% 4%, 61% 22%, 91% 31%, 76% 48%, 100% 65%, 68% 66%, 58% 100%, 34% 72%, 0 78%, 25% 52%, 14% 31%);
+      transform: rotate(-7deg);
+    }
+
+    .mascot-eye {
+      position: absolute;
+      top: 51px;
+      width: 4px;
+      height: 5px;
+      border-radius: 50%;
+      background: #222;
+      z-index: 2;
+    }
+
+    .eye-left { left: 38px; }
+    .eye-right { left: 51px; }
+
+    .mascot-mouth {
+      position: absolute;
+      left: 42px;
+      top: 62px;
+      width: 13px;
+      height: 5px;
+      border-bottom: 1px solid #333;
+      border-radius: 50%;
+      z-index: 2;
+    }
+
+    .caption {
+      position: absolute;
+      top: 126px;
+      width: 100%;
+      text-align: center;
+      font-size: 7px;
+      line-height: 1;
+    }
+
+    .answer-grid {
+      display: grid;
+      grid-template-columns: repeat(4, auto);
+      justify-content: space-between;
+      margin: 0 3px 3px 0;
+      padding-left: 1px;
+      font-size: 11px;
+      line-height: 1.55;
+    }
+
+    .section-title {
+      display: inline-block;
+      margin: 21px 0 5px -30px;
+      padding: 2px 14px 1px;
+      border: 1.5px solid #b2352d;
+      background: rgba(255, 255, 255, 0.55);
+      font-family: "SimHei", sans-serif;
+      font-size: 17px;
+      font-weight: bold;
+      line-height: 1.35;
+    }
+
+    .next-passage {
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.75;
+    }
+
+    .page-number {
+      position: absolute;
+      bottom: 36px;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      font-family: Arial, sans-serif;
+      font-size: 7px;
+    }
+  </style>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [["$", "$"]],
+        displayMath: [["$$", "$$"]]
+      }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+  <main class="page">
+    <header class="header">
+      <span>高技地理</span>
+      <span>时事热点综合练习</span>
+    </header>
+
+    <p class="question">12．被巴利斯多哈的气候类型为（　　）</p>
+    <div class="options">
+      <span class="option">A．热带草原气候</span>
+      <span class="option">B．热带雨林气候</span>
+      <span class="option">C．热带沙漠气候</span>
+      <span class="option">D．热带季风气候</span>
+    </div>
+
+    <p class="passage">
+      2022 年 11 月 21 日至 12 月 18 日，第 22 届世界杯足球赛在卡塔尔举办。<br>
+      从场馆建设到纪念品生产，中国制造随处可见。图 8 为西亚地区图，<br>
+      图 9 为卡塔尔首都多哈气温曲线和降水量柱状图，图 10 为第 22 届世<br>
+      界杯足球赛吉祥物“拉伊卜”。读图，完成 13－15 题。
+    </p>
+
+    <section class="figures" aria-label="图8至图10">
+      <figure class="figure map placeholder">
+        <span class="placeholder-label">[地图：西亚地区]</span>
+        <div class="land land-one"></div>
+        <div class="land land-two"></div>
+        <span class="map-label label-1">地中海</span>
+        <span class="map-label label-2">沙特阿拉伯</span>
+        <span class="map-label label-3">阿拉伯海</span>
+        <span class="map-label label-4">多哈</span>
+        <figcaption class="caption">图8</figcaption>
+      </figure>
+
+      <figure class="figure chart placeholder">
+        <span class="chart-title">降水量/毫米<br>250</span>
+        <div class="axis-left">40<br>30<br>20<br>10<br>0<br>－10</div>
+        <div class="axis-right">200<br>150<br>100<br>50<br>0</div>
+        <div class="chart-grid">
+          <span class="rain r1"></span><span class="rain r2"></span>
+          <span class="rain r3"></span><span class="rain r4"></span>
+          <span class="rain r5"></span><span class="rain r6"></span>
+          <span class="rain r7"></span><span class="rain r8"></span>
+          <span class="curve c1"></span><span class="curve c2"></span>
+          <span class="curve c3"></span><span class="curve c4"></span>
+          <span class="curve c5"></span><span class="curve c6"></span>
+          <span class="dot d1"></span><span class="dot d2"></span>
+          <span class="dot d3"></span><span class="dot d4"></span>
+          <span class="dot d5"></span><span class="dot d6"></span>
+          <span class="dot d7"></span>
+        </div>
+        <div class="axis-months">1 4 7 10（月）</div>
+        <figcaption class="caption">图9</figcaption>
+      </figure>
+
+      <figure class="figure mascot placeholder">
+        <div class="mascot-shape"></div>
+        <span class="mascot-eye eye-left"></span>
+        <span class="mascot-eye eye-right"></span>
+        <span class="mascot-mouth"></span>
+        <figcaption class="caption">图10</figcaption>
+      </figure>
+    </section>
+
+    <p class="question">
+      13．通常世界杯会在 6、7 月举办，而卡塔尔世界杯选择在 11－12 月举办的<br>
+      主要原因是（　　）
+    </p>
+    <div class="answer-grid">
+      <span>A．降水最多</span>
+      <span>B．气温较低</span>
+      <span>C．光照强烈</span>
+      <span>D．昼长夜短</span>
+    </div>
+
+    <p class="question">
+      14．吉祥物“拉伊卜”的设计灵感来自于当地传统服饰，反映当地的自然环境特<br>
+      征是（　　）
+    </p>
+    <div class="answer-grid">
+      <span>① 海拔高</span>
+      <span>② 气温高</span>
+      <span>③ 光照强</span>
+      <span>④ 风沙大</span>
+    </div>
+    <div class="answer-grid">
+      <span>A．①②③</span>
+      <span>B．①②④</span>
+      <span>C．①③④</span>
+      <span>D．②③④</span>
+    </div>
+
+    <p class="question">15．我国与卡塔尔的合作可以（　　）</p>
+    <div class="answer-grid">
+      <span>A．消除经济差异</span>
+      <span>B．实现南北对话</span>
+      <span>C．实现互惠互利</span>
+      <span>D．缩短运输距离</span>
+    </div>
+
+    <h2 class="section-title">俄罗斯</h2>
+
+    <p class="next-passage">
+      2023 年 3 月 20 日至 22 日，国家主席习近平对俄罗斯进行国事访问。<br>
+      读俄罗斯示意图，完成 16-17 小题。
+    </p>
+
+    <div class="page-number">4</div>
+  </main>
+</body>
+</html>

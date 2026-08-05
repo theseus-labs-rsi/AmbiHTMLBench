@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detect and Treat Postpartum Haemorrhage Early</title>
+<script>
+window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #e2f0f1;
+    color: #1b2a63;
+  }
+  .page {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 30px 50px 40px 50px;
+    position: relative;
+    overflow: hidden;
+  }
+  .clouds {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 40px;
+    color: #cde7ea;
+    z-index: 0;
+  }
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 40px;
+    position: relative;
+    z-index: 1;
+  }
+  .badge {
+    border: 2px solid #1b2a63;
+    border-radius: 30px;
+    padding: 10px 28px;
+    font-size: 34px;
+    font-weight: 800;
+    color: #5b2e91;
+    background: #fff;
+    letter-spacing: 1px;
+  }
+  .and-text {
+    font-size: 18px;
+    letter-spacing: 3px;
+    color: #1b2a63;
+    font-weight: 600;
+  }
+  .title-text {
+    font-size: 32px;
+    letter-spacing: 4px;
+    color: #1b2a63;
+    font-weight: 400;
+  }
+
+  .letters-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    align-items: end;
+    position: relative;
+    margin-bottom: 10px;
+  }
+  .letter {
+    text-align: center;
+    font-size: 50px;
+    font-weight: 800;
+    color: #5b2e91;
+    position: relative;
+    z-index: 2;
+  }
+  .letter.shift-up { margin-bottom: 40px; }
+  .letter.shift-down { margin-bottom: 0; }
+
+  .wave-band {
+    position: relative;
+    height: 90px;
+    margin: 0 -10px 20px -10px;
+  }
+  .wave-svg {
+    width: 100%;
+    height: 90px;
+    display: block;
+  }
+  .icons-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    position: absolute;
+    top: -55px;
+    left: 0;
+    width: 100%;
+  }
+  .icon-col {
+    display: flex;
+    justify-content: center;
+  }
+  .icon-circle {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: #6fc9ca;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 34px;
+    color: #fff;
+    border: 4px solid #e2f0f1;
+  }
+
+  .content-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    gap: 14px;
+    align-items: start;
+    margin-top: 10px;
+  }
+  .col {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .label-box {
+    border: 2px solid #1b2a63;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-weight: 700;
+    font-size: 15px;
+    background: #fff;
+    display: inline-block;
+    width: fit-content;
+  }
+  .label-box .cap {
+    color: #5b2e91;
+  }
+  .col ul {
+    margin: 4px 0 0 0;
+    padding-left: 16px;
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+  .col ul li {
+    margin-bottom: 8px;
+  }
+  .hl {
+    background: #cfe7e8;
+    font-weight: 700;
+  }
+  .divider {
+    border-left: 1px solid #1b2a63;
+    height: 100%;
+    margin: 0 auto;
+  }
+
+  .lower-section {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 20px;
+    margin-top: 30px;
+  }
+
+  .left-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .trigger-title {
+    border: 2px solid #1b2a63;
+    border-radius: 20px;
+    padding: 6px 18px;
+    font-weight: 700;
+    font-size: 15px;
+    background: #fff;
+    width: fit-content;
+  }
+  .trigger-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .trigger-list li {
+    margin-bottom: 8px;
+    padding-left: 22px;
+    position: relative;
+  }
+  .trigger-list .num {
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+    color: #5b2e91;
+  }
+  .who-logo {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: #1b2a63;
+  }
+  .who-logo img {
+    display: none;
+  }
+  .who-block {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .who-circle {
+    width: 40px;
+    height: 40px;
+    border: 2px solid #1b2a63;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    font-weight: 700;
+    text-align: center;
+  }
+  .who-text {
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 1.1;
+  }
+  .hrp-text {
+    font-size: 10px;
+    line-height: 1.2;
+  }
+
+  .impl-box {
+    border: 2px solid #1b2a63;
+    border-radius: 16px;
+    padding: 20px 30px;
+    background: #f4fafa;
+  }
+  .impl-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #5b2e91;
+    margin-bottom: 16px;
+  }
+  .impl-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 40px;
+  }
+  .impl-item {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+  .impl-icon {
+    width: 55px;
+    height: 55px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+  }
+  .impl-text b {
+    color: #1b2a63;
+  }
+
+  .placeholder {
+    background: #f0f0f0;
+    border: 1px dashed #999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #777;
+    font-size: 11px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="clouds">☁ ☁</div>
+
+  <div class="header">
+    <div class="badge">DETECT</div>
+    <div class="and-text">AND</div>
+    <div class="badge">TREAT</div>
+    <div class="title-text">POSTPARTUM HAEMORRHAGE EARLY</div>
+  </div>
+
+  <!-- Letters row -->
+  <div class="letters-row">
+    <div class="letter shift-up">E</div>
+    <div class="letter shift-down">M</div>
+    <div class="letter shift-down" style="margin-bottom:60px;">O</div>
+    <div class="letter shift-down" style="margin-bottom:60px;">T</div>
+    <div class="letter shift-down">IV</div>
+    <div class="letter shift-up">E</div>
+  </div>
+
+  <!-- Wave band with icons -->
+  <div class="wave-band">
+    <svg class="wave-svg" viewBox="0 0 1200 90" preserveAspectRatio="none">
+      <path d="M0,10 C100,10 100,70 200,70 C300,70 300,10 400,10 C500,10 500,70 600,70 C700,70 700,10 800,10 C900,10 900,70 1000,70 C1100,70 1100,10 1200,10 L1200,40 C1100,40 1100,100 1000,100 C900,100 900,40 800,40 C700,40 700,100 600,100 C500,100 500,40 400,40 C300,40 300,100 200,100 C100,100 100,40 0,40 Z" fill="#ffffff"/>
+    </svg>
+    <div class="icons-row">
+      <div class="icon-col"><div class="icon-circle">🩸</div></div>
+      <div class="icon-col"><div class="icon-circle">🖐</div></div>
+      <div class="icon-col"><div class="icon-circle">💉</div></div>
+      <div class="icon-col"><div class="icon-circle">💉</div></div>
+      <div class="icon-col"><div class="icon-circle">🩹</div></div>
+      <div class="icon-col"><div class="icon-circle">🔍</div></div>
+    </div>
+  </div>
+
+  <!-- Content row -->
+  <div class="content-row">
+    <div class="col">
+      <div class="label-box"><span class="cap">E</span>arly detection<br>and trigger criteria</div>
+      <ul>
+        <li>Calibrated drape for blood loss collection with trigger lines at <span class="hl">300ml and 500ml</span> for the first hour after birth</li>
+        <li>Observations (blood loss, blood flow, uterine tone) every <span class="hl">15 minutes</span> documented on the blood loss monitoring chart</li>
+        <li>Blood pressure and pulse carried out once in the <span class="hl">1st hour</span> postpartum and documented on the blood loss monitoring chart</li>
+      </ul>
+    </div>
+
+    <div class="col">
+      <div class="label-box"><span class="cap">M</span>assage of uterus</div>
+      <ul>
+        <li>Massage until uterus has contracted or for <span class="hl">one minute</span></li>
+      </ul>
+    </div>
+
+    <div class="col">
+      <div class="label-box"><span class="cap">O</span>xytocic drugs</div>
+      <ul>
+        <li><b>10 IU IV oxytocin injection</b> or diluted in <b>200-500ml crystalloid</b> over <b>10 minutes</b> plus a maintenance dose for <b>20 IU IV oxytcin</b> diluted in <b>1000ml saline</b> over <b>4 hours</b> (+- misoprostol 800mcg PR/SL if used)</li>
+      </ul>
+    </div>
+
+    <div class="col">
+      <div class="label-box"><span class="cap">T</span>ranexamic acid</div>
+      <ul>
+        <li><b>1g IV injection of tranexamic acid</b> or diluted in <b>200ml crystalloid</b> over <b>10 minutes</b></li>
+      </ul>
+    </div>
+
+    <div class="col">
+      <div class="label-box"><span class="cap">IV</span> fluids</div>
+      <ul>
+        <li>IV fluids in addition to the infusion should be given if clinically indicated for resuscitation and will require a <b>2nd IV access</b></li>
+      </ul>
+    </div>
+
+    <div class="col">
+      <div class="label-box"><span class="cap">E</span>xamination<br>and escalation</div>
+      <ul>
+        <li>Ensure bladder is empty, evacuate clots, check for tears with an internal examination and placenta for completeness</li>
+        <li>Escalate if bleeding does not stop after first response or you are unable to identify or manage cause of bleeding</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Lower section -->
+  <div class="lower-section">
+    <div class="left-panel">
+      <div class="trigger-title">Trigger criteria</div>
+      <ul class="trigger-list">
+        <li><span class="num">1</span>Clinical judgement</li>
+        <li><span class="num">2</span>Blood loss 500ml or more</li>
+        <li><span class="num">3</span>Blood loss 300ml or more plus one abnormal observation</li>
+      </ul>
+
+      <div class="who-block">
+        <div class="who-circle">WHO</div>
+        <div>
+          <div class="who-text">World Health<br>Organization</div>
+        </div>
+        <div class="hrp-text">human<br>reproduction<br>programme<br><b>hrp</b><br>research for <b>impact</b></div>
+      </div>
+    </div>
+
+    <div class="impl-box">
+      <div class="impl-title">Implementation strategies</div>
+      <div class="impl-grid">
+        <div class="impl-item">
+          <div class="impl-icon">📋</div>
+          <div class="impl-text"><b>Audit newsletters:</b> sharing with all staff monthly detection and bundle use rates along with PPH, severe PPH, blood transfusion, laparotomy and death from PPH rates and given feedback at monthly departmental meetings</div>
+        </div>
+        <div class="impl-item">
+          <div class="impl-icon">🧰</div>
+          <div class="impl-text"><b>Trolley and/or carry case:</b> including all medicines and devices required for the treatment of PPH restocked after every use and complete a stocking checklist at the start of every shift</div>
+        </div>
+        <div class="impl-item">
+          <div class="impl-icon">🏆</div>
+          <div class="impl-text"><b>Champions:</b> midwife and doctor to oversee change, troubleshoot, give feedback on audit newsletters, connect with other champions through chats, meeting and websites for sharing knowledge and lessons learnt</div>
+        </div>
+        <div class="impl-item">
+          <div class="impl-icon">📈</div>
+          <div class="impl-text"><b>Training:</b> on-site, simulation-based, and peer-assisted training of 90 minutes to a whole day facilitated by the use of provider guides, flipcharts and job aids displayed in labour wards</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

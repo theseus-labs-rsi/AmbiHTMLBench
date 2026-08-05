@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2020 Kaohsiung Tea Culture Exhibition</title>
+    <style>
+        :root {
+            --bg-color: #e8e3d3;
+            --text-dark: #2a2722;
+            --text-red: #842b23;
+            --pin-gold: #a68c53;
+            --font-serif: "Noto Serif SC", "SimSun", "STSong", serif;
+            --font-en: "Times New Roman", Times, serif;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .poster {
+            position: relative;
+            width: 800px;
+            height: 1130px;
+            background-color: var(--bg-color);
+            font-family: var(--font-serif);
+            color: var(--text-dark);
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .placeholder {
+            border: 2px dashed #999;
+            background-color: rgba(0, 0, 0, 0.04);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            font-family: sans-serif;
+            padding: 5px;
+        }
+
+        /* Top Left - Vertical Text */
+        .vert-text {
+            position: absolute;
+            top: 60px;
+            left: 45px;
+            color: var(--text-red);
+            font-family: var(--font-en);
+            font-size: 22px;
+            width: 25px;
+            word-wrap: break-word;
+            text-align: center;
+            line-height: 1.05;
+            letter-spacing: 2px;
+        }
+
+        /* Top Left - Main Title Cluster */
+        .main-title-cluster {
+            position: absolute;
+            top: 70px;
+            left: 100px;
+            width: 320px;
+            height: 280px;
+            font-size: 105px;
+            font-weight: bold;
+            line-height: 1;
+        }
+        .title-char {
+            position: absolute;
+            letter-spacing: 5px;
+        }
+        .char-cha { top: 0; left: 20px; }
+        .char-yan { top: 0; left: 140px; }
+        .char-yun { top: 125px; left: 0px; }
+        .char-se { top: 135px; left: 160px; }
+
+        .ph-leaves {
+            position: absolute;
+            top: -10px;
+            left: -20px;
+            width: 45px;
+            height: 55px;
+        }
+        .ph-teaset {
+            position: absolute;
+            top: 100px;
+            left: 30px;
+            width: 80px;
+            height: 45px;
+            z-index: 2;
+        }
+        .ph-seal {
+            position: absolute;
+            top: 195px;
+            left: 115px;
+            width: 35px;
+            height: 40px;
+            border-color: var(--text-red);
+            color: var(--text-red);
+            font-size: 10px;
+        }
+        .ph-lady {
+            position: absolute;
+            top: 180px;
+            left: 275px;
+            width: 50px;
+            height: 80px;
+        }
+
+        /* Top Right - Exhibition Info */
+        .top-right-header {
+            position: absolute;
+            top: 60px;
+            right: 50px;
+            text-align: right;
+        }
+        .exhib-title-zh {
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+        .exhib-title-en {
+            font-family: var(--font-en);
+            font-size: 11px;
+            letter-spacing: 2px;
+            line-height: 1.5;
+            color: #555;
+        }
+
+        /* Top Right - Intro Paragraph */
+        .intro-text {
+            position: absolute;
+            top: 165px;
+            right: 50px;
+            text-align: right;
+            font-size: 13px;
+            line-height: 2.1;
+            letter-spacing: 1.5px;
+        }
+
+        /* Middle Left - Dates */
+        .date-section {
+            position: absolute;
+            top: 400px;
+            left: 55px;
+        }
+        .date-year {
+            font-size: 22px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+        .date-row {
+            display: flex;
+            align-items: baseline;
+            font-family: var(--font-en);
+            font-size: 38px;
+            font-weight: bold;
+        }
+        .date-day {
+            font-size: 18px;
+            margin-left: 10px;
+            font-weight: normal;
+        }
+        .date-triangle {
+            font-size: 14px;
+            margin: 8px 0 8px 45px;
+        }
+
+        /* Middle Left - Location */
+        .location-section {
+            position: absolute;
+            top: 620px;
+            left: 55px;
+        }
+        .loc-title-row {
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            font-size: 20px;
+            letter-spacing: 1px;
+        }
+        .pin-icon {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border: 2px solid var(--pin-gold);
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            margin-right: 12px;
+            position: relative;
+        }
+        .pin-icon::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background-color: var(--pin-gold);
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+        }
+        .loc-address {
+            font-size: 15px;
+            margin-top: 8px;
+            margin-left: 28px;
+            letter-spacing: 1px;
+        }
+
+        /* Middle Right - Ticket Info */
+        .ticket-info {
+            position: absolute;
+            top: 395px;
+            right: 50px;
+            width: 330px;
+            z-index: 10;
+        }
+        .ticket-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .ticket-circle {
+            width: 22px;
+            height: 22px;
+            border: 1px solid var(--text-dark);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+        .ticket-desc {
+            flex: 1;
+            margin-left: 12px;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+        }
+        .ticket-price {
+            font-family: var(--font-en);
+            font-weight: bold;
+            font-style: italic;
+            font-size: 18px;
+            white-space: nowrap;
+        }
+        .ticket-currency {
+            font-family: var(--font-serif);
+            font-style: normal;
+            font-size: 13px;
+            font-weight: normal;
+            margin-left: 3px;
+        }
+
+        /* Large Leaf Painting Graphic */
+        .leaf-graphic {
+            position: absolute;
+            bottom: 120px;
+            right: -60px;
+            width: 680px;
+            height: 520px;
+            border-radius: 100% 0 100% 0;
+            z-index: 5;
+        }
+
+        /* Bottom Left - Footer */
+        .footer-left {
+            position: absolute;
+            bottom: 40px;
+            left: 45px;
+            display: flex;
+            align-items: center;
+        }
+        .ph-logo {
+            width: 140px;
+            height: 55px;
+            margin-right: 25px;
+        }
+        .footer-contact {
+            font-size: 11px;
+            line-height: 1.7;
+            letter-spacing: 0.5px;
+            color: #333;
+        }
+
+        /* Bottom Right - Footer */
+        .footer-right {
+            position: absolute;
+            bottom: 50px;
+            right: 50px;
+            text-align: right;
+            color: var(--text-red);
+            font-family: var(--font-en);
+            font-size: 38px;
+            font-weight: bold;
+            line-height: 1.2;
+            letter-spacing: 3px;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="poster">
+        
+        <!-- Large Background Graphic -->
+        <div class="leaf-graphic placeholder">
+            [Graphic: Large leaf-shaped cutout revealing a classical Chinese painting of people gathered around a large table at a tea gathering]
+        </div>
+
+        <!-- Top Left Vertical Text -->
+        <div class="vert-text">CHAYANYUNSE</div>
+
+        <!-- Top Left Main Title -->
+        <div class="main-title-cluster">
+            <div class="ph-leaves placeholder">[Leaves]</div>
+            <div class="title-char char-cha">茶</div>
+            <div class="title-char char-yan">颜</div>
+            
+            <div class="ph-teaset placeholder">[Tea Set]</div>
+            <div class="title-char char-yun">韵</div>
+            
+            <div class="ph-seal placeholder">[Seal]</div>
+            
+            <div class="title-char char-se">色</div>
+            <div class="ph-lady placeholder">[Lady]</div>
+        </div>
+
+        <!-- Top Right Exhibition Header -->
+        <div class="top-right-header">
+            <div class="exhib-title-zh">2020高雄文化展区</div>
+            <div class="exhib-title-en">KAOSIUNG TEA<br>CULTURE EXHIBTION</div>
+        </div>
+
+        <!-- Top Right Intro Text -->
+        <div class="intro-text">
+            茶的味道，<br>
+            除了茶叶本身的形、香、色味外，<br>
+            也源于它背后的历史、文化。<br>
+            这些属于茶，<br>
+            又超乎茶的茶外之味，<br>
+            难以言语来形容，<br>
+            我们只能先简单的称之为【茶韵】。
+        </div>
+
+        <!-- Middle Left Dates -->
+        <div class="date-section">
+            <div class="date-year">2020年</div>
+            <div class="date-row">
+                02/28 <span class="date-day">FRI.</span>
+            </div>
+            <div class="date-triangle">▼</div>
+            <div class="date-row">
+                03/02 <span class="date-day">TUE.</span>
+            </div>
+        </div>
+
+        <!-- Middle Left Location -->
+        <div class="location-section">
+            <div class="loc-title-row">
+                <span class="pin-icon"></span> 高雄展览馆806
+            </div>
+            <div class="loc-address">高雄市前镇区成功二路39号</div>
+        </div>
+
+        <!-- Middle Right Ticket Info -->
+        <div class="ticket-info">
+            <div class="ticket-row">
+                <div class="ticket-circle">全</div>
+                <div class="ticket-desc">一般民众现场购票</div>
+                <div class="ticket-price">100<span class="ticket-currency">元</span></div>
+            </div>
+            <div class="ticket-row">
+                <div class="ticket-circle">优</div>
+                <div class="ticket-desc">学生持本人有效学生证购票</div>
+                <div class="ticket-price">50<span class="ticket-currency">元</span></div>
+            </div>
+            <div class="ticket-row">
+                <div class="ticket-circle">免</div>
+                <div class="ticket-desc">65岁以上持本人身份证购票</div>
+                <div class="ticket-price">0<span class="ticket-currency">元</span></div>
+            </div>
+        </div>
+
+        <!-- Bottom Left Footer -->
+        <div class="footer-left">
+            <div class="ph-logo placeholder">
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <span style="font-weight: bold; font-size: 18px; margin-bottom: 2px;">高雄展覽館</span>
+                    <span style="font-size: 7px; font-family: sans-serif;">Kaohsiung Exhibition Center</span>
+                </div>
+            </div>
+            <div class="footer-contact">
+                Tel:+886 7 213 1188<br>
+                Email:info@kecc.com.tw<br>
+                主办单位-大通国际展览有限公司<br>
+                执行单位-上联国际展览有限公司
+            </div>
+        </div>
+
+        <!-- Bottom Right Footer -->
+        <div class="footer-right">
+            CHAYAN<br>YUNSE
+        </div>
+
+    </div>
+
+</body>
+</html>

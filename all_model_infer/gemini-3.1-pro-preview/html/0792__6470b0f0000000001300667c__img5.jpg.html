@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>成都旅游攻略</title>
+<style>
+    :root {
+        --bg-color: #3b4668;
+        --text-white: #ffffff;
+        --text-yellow: #fce255;
+        --text-green: #e5f356;
+        --text-pink: #ff85a2;
+        --text-blue: #6ee5ff;
+        --stroke-color: #000000;
+    }
+
+    body {
+        margin: 0;
+        padding: 20px 10px;
+        background-color: var(--bg-color);
+        font-family: 'Helvetica Neue', Helvetica, 'Microsoft YaHei', Arial, sans-serif;
+        color: var(--text-white);
+        display: flex;
+        justify-content: center;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 500px;
+        background-color: var(--bg-color);
+    }
+
+    /* Header Styles */
+    header {
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    .title-line-1 {
+        font-size: 38px;
+        font-weight: 900;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+        line-height: 1.1;
+    }
+
+    .t-white {
+        color: var(--text-white);
+        text-shadow: 
+            -2px -2px 0 var(--stroke-color),  
+             2px -2px 0 var(--stroke-color),
+            -2px  2px 0 var(--stroke-color),
+             2px  2px 0 var(--stroke-color),
+             3px  3px 0 rgba(0,0,0,0.5);
+    }
+
+    .t-pink {
+        color: var(--text-pink);
+        text-shadow: 
+            -2px -2px 0 var(--text-white),  
+             2px -2px 0 var(--text-white),
+            -2px  2px 0 var(--text-white),
+             2px  2px 0 var(--text-white),
+             3px  4px 0 rgba(0,0,0,0.4);
+    }
+
+    .title-line-2 {
+        font-size: 32px;
+        font-weight: 900;
+        margin-top: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: baseline;
+        gap: 15px;
+    }
+
+    .t-blue {
+        font-size: 58px;
+        color: var(--text-blue);
+        line-height: 0.8;
+        text-shadow: 
+            -2px -2px 0 var(--text-white),  
+             2px -2px 0 var(--text-white),
+            -2px  2px 0 var(--text-white),
+             2px  2px 0 var(--text-white),
+             4px  5px 0 rgba(0,0,0,0.4);
+    }
+
+    .divider {
+        border-top: 3px dashed rgba(255, 255, 255, 0.6);
+        margin: 15px 10px 25px 10px;
+    }
+
+    /* Timeline Layout */
+    .timeline-container {
+        display: grid;
+        grid-template-columns: 80px 1fr;
+        gap: 25px 10px;
+        position: relative;
+    }
+
+    /* Continuous Dashed Line */
+    .timeline-container::before {
+        content: '';
+        position: absolute;
+        top: 25px;
+        bottom: 50px;
+        left: 40px; /* Center of the 80px column */
+        width: 0;
+        border-left: 3px dashed var(--text-white);
+        z-index: 1;
+        transform: translateX(-50%);
+    }
+
+    .tl-left {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        position: relative;
+        z-index: 2;
+    }
+
+    /* Timeline Markers */
+    .marker {
+        position: relative;
+        z-index: 2;
+        background-color: var(--text-white);
+        border: 2px solid var(--stroke-color);
+        box-shadow: 2px 2px 0 rgba(0,0,0,0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+    }
+
+    .marker.cloud {
+        color: #a32222;
+        border-radius: 25px;
+        padding: 5px 12px;
+        font-size: 14px;
+        margin-top: 5px;
+    }
+
+    .marker.oval {
+        color: #000;
+        border-radius: 50%;
+        width: 65px;
+        height: 65px;
+        font-size: 22px;
+        font-weight: 900;
+    }
+
+    /* Arrows on the timeline */
+    .with-arrow::before {
+        content: '↓';
+        position: absolute;
+        top: -28px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: var(--text-white);
+        font-size: 22px;
+        font-weight: bold;
+        background-color: var(--bg-color); /* Hides the dashed line behind it */
+        padding: 4px 0;
+        z-index: 3;
+    }
+
+    /* Right Column Content */
+    .tl-right {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .summary-box {
+        font-size: 14.5px;
+        line-height: 1.5;
+        font-weight: bold;
+        padding-top: 5px;
+    }
+
+    .summary-box p {
+        margin: 0 0 4px 0;
+    }
+
+    .cost-text {
+        color: var(--text-green);
+    }
+
+    /* Card Details */
+    .card {
+        display: flex;
+        flex-direction: row;
+        gap: 12px;
+    }
+
+    .placeholder {
+        width: 105px;
+        height: 105px;
+        background-color: #2a334e;
+        border: 2px solid var(--text-white);
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #8fa3cc;
+        font-size: 12px;
+        text-align: center;
+        padding: 5px;
+        box-sizing: border-box;
+        object-fit: cover;
+    }
+
+    .card-info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .card-title {
+        color: var(--text-yellow);
+        font-size: 22px;
+        font-weight: 900;
+        letter-spacing: 1px;
+        text-shadow: 
+            -1px -1px 0 var(--stroke-color),  
+             1px -1px 0 var(--stroke-color),
+            -1px  1px 0 var(--stroke-color),
+             1px  1px 0 var(--stroke-color),
+             2px  2px 0 rgba(0,0,0,0.5);
+        margin-bottom: 2px;
+    }
+
+    .info-row {
+        font-size: 13px;
+        line-height: 1.4;
+        display: flex;
+        align-items: flex-start;
+        gap: 4px;
+    }
+
+    .icon {
+        font-size: 14px;
+        line-height: 1.4;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="title-line-1">
+            <span class="t-white">来成都旅游的</span>
+            <span class="t-pink">正确玩法</span>
+        </div>
+        <div class="title-line-2">
+            三天两夜人均 <span class="t-blue">900</span>
+        </div>
+    </header>
+
+    <div class="divider"></div>
+
+    <div class="timeline-container">
+        
+        <!-- Summary Section -->
+        <div class="tl-left">
+            <div class="marker cloud">第二天</div>
+        </div>
+        <div class="tl-right summary-box">
+            <p>行程: 大熊猫基地→文殊院→望平街→东郊记忆</p>
+            <p class="cost-text">人均消费: 门票55/27元+吃饭150元+交通25元+住宿100元=300左右</p>
+        </div>
+
+        <!-- Stop 1: Pandas -->
+        <div class="tl-left">
+            <div class="marker oval with-arrow">上午</div>
+        </div>
+        <div class="tl-right card">
+            <div class="placeholder">[Photo: Pandas in trees]</div>
+            <div class="card-info">
+                <div class="card-title">大熊猫基地</div>
+                <div class="info-row"><span class="icon">💰</span>门票: 全票55, 半票27</div>
+                <div class="info-row"><span class="icon">🚗</span>交通: 地铁3号线, 熊猫大道站</div>
+                <div class="info-row"><span class="icon">💬</span>简介: 成都旅游必打卡国宝熊猫, 里面有许多可爱的熊猫可以近距离观察</div>
+            </div>
+        </div>
+
+        <!-- Stop 2: Temple -->
+        <div class="tl-left">
+            <!-- Empty left column, timeline dashed line passes through -->
+        </div>
+        <div class="tl-right card">
+            <div class="placeholder">[Photo: Yellow temple wall]</div>
+            <div class="card-info">
+                <div class="card-title">文殊院</div>
+                <div class="info-row"><span class="icon">💰</span>门票: 免费开放</div>
+                <div class="info-row"><span class="icon">🚗</span>交通: 地铁1号线直达文殊院站</div>
+                <div class="info-row"><span class="icon">💬</span>简介: 位于成都市中区, 既有香火气又有烟火气, 可以烧香拜佛</div>
+            </div>
+        </div>
+
+        <!-- Stop 3: Street -->
+        <div class="tl-left">
+            <div class="marker oval with-arrow">下午</div>
+        </div>
+        <div class="tl-right card">
+            <div class="placeholder">[Photo: Neon street sign]</div>
+            <div class="card-info">
+                <div class="card-title">望平街</div>
+                <div class="info-row"><span class="icon">💰</span>门票: 免费开放</div>
+                <div class="info-row"><span class="icon">🚗</span>交通: 地铁2号线</div>
+                <div class="info-row"><span class="icon">💬</span>简介: 街上有咖啡馆、小酒吧、面包店等, 是一条文艺浪漫的街区</div>
+            </div>
+        </div>
+
+        <!-- Stop 4: Park -->
+        <div class="tl-left">
+            <div class="marker oval with-arrow">晚上</div>
+        </div>
+        <div class="tl-right card">
+            <div class="placeholder">[Photo: Train in park]</div>
+            <div class="card-info">
+                <div class="card-title">东郊记忆</div>
+                <div class="info-row"><span class="icon">💰</span>门票: 免费开放</div>
+                <div class="info-row"><span class="icon">🚗</span>交通: 地铁8号线东郊记忆站</div>
+                <div class="info-row"><span class="icon">💬</span>简介: 集合音乐、美术、戏剧、摄影等文化形态的多元文化园区</div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

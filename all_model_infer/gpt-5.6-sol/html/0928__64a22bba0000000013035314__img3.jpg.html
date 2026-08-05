@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>11.1 与三角形有关的线段</title>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']]
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  html, body {
+    margin: 0;
+    min-height: 100%;
+    background: #ededed;
+  }
+
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    font-family: "SimSun", "Songti SC", "STSong", serif;
+    color: #646464;
+  }
+
+  .page {
+    position: relative;
+    width: 540px;
+    height: 763px;
+    overflow: hidden;
+    background:
+      linear-gradient(90deg, rgba(240,240,240,.35), transparent 8%, transparent 92%, rgba(239,239,239,.3)),
+      #fdfdfd;
+  }
+
+  .chapter-title {
+    position: absolute;
+    top: 56px;
+    left: 46px;
+    margin: 0;
+    font-size: 21px;
+    line-height: 28px;
+    font-weight: 400;
+    letter-spacing: 1.8px;
+    color: #555;
+    white-space: nowrap;
+  }
+
+  .watermark {
+    position: absolute;
+    top: 110px;
+    left: 205px;
+    color: #232323;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    font-size: 20px;
+    line-height: 25px;
+    white-space: nowrap;
+  }
+
+  .section-title {
+    position: absolute;
+    top: 150px;
+    left: 73px;
+    margin: 0;
+    font-size: 15px;
+    line-height: 20px;
+    font-weight: 700;
+    letter-spacing: .7px;
+    color: #525252;
+  }
+
+  .text {
+    position: absolute;
+    left: 44px;
+    right: 38px;
+    font-size: 13px;
+    line-height: 20px;
+    letter-spacing: .1px;
+    color: #707070;
+  }
+
+  .paragraph {
+    margin: 0;
+    text-indent: 2em;
+  }
+
+  .intro-one {
+    top: 181px;
+    width: 318px;
+  }
+
+  .intro-two {
+    top: 241px;
+    width: 320px;
+  }
+
+  .definition {
+    top: 320px;
+  }
+
+  .notation {
+    top: 360px;
+  }
+
+  .classification {
+    top: 400px;
+  }
+
+  .classification-last {
+    top: 420px;
+  }
+
+  .placeholder {
+    position: absolute;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .main-diagram {
+    top: 201px;
+    left: 373px;
+    width: 124px;
+    height: 105px;
+  }
+
+  .diagram-set {
+    top: 440px;
+    left: 102px;
+    width: 352px;
+    height: 99px;
+  }
+
+  svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .diagram-line {
+    fill: none;
+    stroke: #777;
+    stroke-width: 1.15;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .diagram-text {
+    fill: #666;
+    font-family: "Times New Roman", "SimSun", serif;
+    font-size: 9px;
+    font-style: italic;
+  }
+
+  .diagram-caption {
+    fill: #777;
+    font-family: "SimSun", "Songti SC", serif;
+    font-size: 9px;
+    font-style: normal;
+    letter-spacing: .4px;
+  }
+
+  .thought-box {
+    position: absolute;
+    top: 550px;
+    left: 44px;
+    width: 472px;
+    height: 104px;
+    padding: 12px 16px 8px 29px;
+    background:
+      radial-gradient(circle at 80% 35%, rgba(255,255,255,.75), transparent 45%),
+      linear-gradient(100deg, #eef9fa, #f7fbfb);
+  }
+
+  .thought-icon {
+    position: absolute;
+    top: 6px;
+    left: 12px;
+    width: 29px;
+    height: 29px;
+    border-radius: 50%;
+    background: #4aa0c5;
+  }
+
+  .thought-icon::before,
+  .thought-icon::after {
+    content: "";
+    position: absolute;
+    left: 13px;
+    top: 2px;
+    width: 4px;
+    height: 25px;
+    border-radius: 3px;
+    background: rgba(255,255,255,.85);
+    transform-origin: center;
+  }
+
+  .thought-icon::before {
+    transform: rotate(42deg);
+  }
+
+  .thought-icon::after {
+    transform: rotate(-42deg);
+  }
+
+  .thought-heading {
+    position: absolute;
+    top: 13px;
+    left: 49px;
+    margin: 0;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    font-size: 13px;
+    line-height: 18px;
+    font-weight: 700;
+    color: #59666a;
+  }
+
+  .thought-text {
+    position: absolute;
+    top: 39px;
+    left: 29px;
+    right: 13px;
+    margin: 0;
+    text-indent: 2em;
+    font-size: 12.5px;
+    line-height: 20px;
+    color: #7a8588;
+  }
+
+  .answer {
+    position: absolute;
+    top: 662px;
+    left: 44px;
+    width: 472px;
+    margin: 0;
+    text-indent: 2em;
+    font-size: 13px;
+    line-height: 20px;
+    letter-spacing: .1px;
+    color: #707070;
+  }
+
+  .footer {
+    position: absolute;
+    left: 44px;
+    bottom: 33px;
+    display: flex;
+    align-items: baseline;
+    gap: 17px;
+    font-size: 11px;
+    line-height: 15px;
+    color: #737373;
+  }
+
+  .page-number {
+    font-family: Arial, sans-serif;
+  }
+
+  @media (max-width: 540px) {
+    body {
+      justify-content: flex-start;
+    }
+
+    .page {
+      transform-origin: top left;
+    }
+  }
+</style>
+</head>
+<body>
+<main class="page">
+  <h1 class="chapter-title">11.1&nbsp;&nbsp;与三角形有关的线段</h1>
+
+  <div class="watermark">@🌚港城宝藏女孩😊</div>
+
+  <h2 class="section-title">11.1.1　三角形的边</h2>
+
+  <div class="text intro-one">
+    <p class="paragraph">在本章引言中，我们提到许多三角形的实际例子<br>
+    由不在同一条直线上的三条线段首尾顺次相<br>
+    接所组成的图形叫做三角形（triangle）。</p>
+  </div>
+
+  <div class="text intro-two">
+    <p class="paragraph">在图 11.1-1 中，线段 AB、BC、CA 是三角<br>
+    形的边，点 A、B、C 是三角形的顶点，∠A、<br>
+    ∠B、∠C 是相邻两边组成的角，叫做三角形的内<br>
+    角，简称三角形的角。</p>
+  </div>
+
+  <figure class="placeholder main-diagram" aria-label="图11.1-1 三角形ABC">
+    <span class="visually-hidden">[Diagram: upper-right]</span>
+    <svg viewBox="0 0 124 105" role="img" aria-label="三角形ABC，三边分别标为a、b、c">
+      <path class="diagram-line" d="M76 8 L24 65 L111 65 Z"/>
+      <text class="diagram-text" x="76" y="7">A</text>
+      <text class="diagram-text" x="17" y="69">B</text>
+      <text class="diagram-text" x="113" y="69">C</text>
+      <text class="diagram-text" x="64" y="80">a</text>
+      <text class="diagram-text" x="95" y="39">b</text>
+      <text class="diagram-text" x="43" y="39">c</text>
+      <text class="diagram-caption" x="60" y="94">图 11.1-1</text>
+    </svg>
+  </figure>
+
+  <div class="text definition">
+    <p class="paragraph">顶点是 A、B、C 的三角形，记作△ABC，读作“三角形 ABC”。</p>
+  </div>
+
+  <div class="text notation">
+    <p class="paragraph">△ABC 的三边，有时也用 a，b，c 来表示。如图 11.1-1，顶点 A 所对的边 BC<br>
+    用 a 表示，顶点 B 所对的边 AC 用 b 表示，顶点 C 所对的边 AB 用 c 表示。</p>
+  </div>
+
+  <div class="text classification">
+    <p class="paragraph">我们知道：三边都相等的三角形叫做等边三角形（图 11.1-2（1））；有<br>
+    两条边相等的三角形叫做等腰三角形（图 11.1-2（2））。</p>
+  </div>
+
+  <div class="text classification-last">
+    <p class="paragraph">图 11.1-2（3）中的三角形是三边都不相等的三角形。</p>
+  </div>
+
+  <figure class="placeholder diagram-set" aria-label="图11.1-2 三种三角形">
+    <span class="visually-hidden">[Diagram: three triangles centered]</span>
+    <svg viewBox="0 0 352 99" role="img" aria-label="三个分别标为1、2、3的三角形">
+      <path class="diagram-line" d="M64 5 L28 67 L101 67 Z"/>
+      <text class="diagram-text" x="62" y="7">A</text>
+      <text class="diagram-text" x="20" y="70">B</text>
+      <text class="diagram-text" x="103" y="70">C</text>
+      <text class="diagram-caption" x="56" y="84">（1）</text>
+
+      <path class="diagram-line" d="M173 19 L132 67 L215 67 Z"/>
+      <text class="diagram-text" x="171" y="20">A</text>
+      <text class="diagram-text" x="124" y="70">B</text>
+      <text class="diagram-text" x="217" y="70">C</text>
+      <text class="diagram-caption" x="165" y="84">（2）</text>
+
+      <path class="diagram-line" d="M307 20 L248 67 L333 67 Z"/>
+      <text class="diagram-text" x="305" y="21">A</text>
+      <text class="diagram-text" x="240" y="70">B</text>
+      <text class="diagram-text" x="335" y="70">C</text>
+      <text class="diagram-caption" x="299" y="84">（3）</text>
+
+      <text class="diagram-caption" x="158" y="97">图 11.1-2</text>
+    </svg>
+  </figure>
+
+  <section class="thought-box">
+    <div class="thought-icon" aria-hidden="true"></div>
+    <h3 class="thought-heading">思考</h3>
+    <p class="thought-text">我们知道，按照三个内角的大小，可以将三角形分为锐角三角形、直<br>
+    角三角形和钝角三角形。如何按照边的关系对三角形进行分类呢？说说你<br>
+    的想法，并与同学交流。</p>
+  </section>
+
+  <p class="answer">以“是否有边相等”，可以将三角形分为两类：三边都不相等的三角形和<br>
+  等腰三角形。</p>
+
+  <footer class="footer">
+    <span class="page-number">2</span>
+    <span>第十一章　三角形</span>
+  </footer>
+</main>
+</body>
+</html>

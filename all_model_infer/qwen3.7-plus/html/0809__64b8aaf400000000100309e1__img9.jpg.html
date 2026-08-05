@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>祥除帖 昨表帖</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    background-color: #f5f0e8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    font-family: "KaiTi", "STKaiti", "BiauKai", "DFKai-SB", serif;
+  }
+
+  .scroll-container {
+    background-color: #ede8dc;
+    border: 1px solid #c8bfa8;
+    padding: 40px 50px 60px 50px;
+    max-width: 900px;
+    width: 100%;
+    position: relative;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+
+  .calligraphy-wrapper {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+    gap: 0;
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    height: 700px;
+    position: relative;
+  }
+
+  .col {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    font-size: 28px;
+    line-height: 1.8;
+    letter-spacing: 4px;
+    color: #1a1a1a;
+    padding: 0 8px;
+    white-space: nowrap;
+  }
+
+  .col-title {
+    font-size: 22px;
+    color: #333;
+    padding: 0 12px;
+    letter-spacing: 6px;
+  }
+
+  .col-signature {
+    font-size: 22px;
+    color: #333;
+    padding: 0 12px;
+    letter-spacing: 4px;
+  }
+
+  .seal-area {
+    position: absolute;
+    bottom: 20px;
+    left: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .seal {
+    width: 36px;
+    height: 36px;
+    border: 2px solid #c0392b;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #c0392b;
+    background: rgba(192, 57, 43, 0.08);
+  }
+
+  .seal-square {
+    width: 40px;
+    height: 40px;
+    border: 2px solid #c0392b;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: #c0392b;
+    background: rgba(192, 57, 43, 0.08);
+  }
+
+  .main-content {
+    display: flex;
+    flex-direction: row-reverse;
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    height: 680px;
+    align-items: flex-start;
+  }
+
+  .text-column {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    font-size: 26px;
+    line-height: 2;
+    letter-spacing: 3px;
+    color: #1a1a1a;
+    padding: 0 6px;
+    white-space: nowrap;
+    font-family: "KaiTi", "STKaiti", "BiauKai", "DFKai-SB", serif;
+  }
+
+  .title-column {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    font-size: 20px;
+    line-height: 2;
+    letter-spacing: 5px;
+    color: #444;
+    padding: 0 10px;
+    white-space: nowrap;
+    font-family: "KaiTi", "STKaiti", "BiauKai", "DFKai-SB", serif;
+  }
+
+  .sig-column {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    font-size: 20px;
+    line-height: 2;
+    letter-spacing: 4px;
+    color: #444;
+    padding: 0 10px;
+    white-space: nowrap;
+    font-family: "KaiTi", "STKaiti", "BiauKai", "DFKai-SB", serif;
+  }
+
+  .bottom-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 10px;
+  }
+
+  .seals-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .seal-mark {
+    width: 32px;
+    height: 32px;
+    border: 2px solid #c0392b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: #c0392b;
+    background: rgba(192, 57, 43, 0.06);
+  }
+
+  .seal-mark2 {
+    width: 36px;
+    height: 36px;
+    border: 2px solid #c0392b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: #c0392b;
+    background: rgba(192, 57, 43, 0.06);
+  }
+
+  .layout-grid {
+    display: grid;
+    grid-template-columns: repeat(8, auto);
+    grid-auto-flow: column;
+    direction: rtl;
+    height: 680px;
+    align-items: start;
+  }
+
+  .grid-cell {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    font-size: 26px;
+    line-height: 1.9;
+    letter-spacing: 2px;
+    color: #1a1a1a;
+    padding: 0 5px;
+    white-space: nowrap;
+    font-family: "KaiTi", "STKaiti", "BiauKai", "DFKai-SB", serif;
+  }
+
+  .grid-cell-title {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    font-size: 20px;
+    line-height: 1.9;
+    letter-spacing: 4px;
+    color: #555;
+    padding: 0 8px;
+    white-space: nowrap;
+    font-family: "KaiTi", "STKaiti", "BiauKai", "DFKai-SB", serif;
+  }
+
+  .grid-cell-sig {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    font-size: 20px;
+    line-height: 1.9;
+    letter-spacing: 3px;
+    color: #555;
+    padding: 0 8px;
+    white-space: nowrap;
+    font-family: "KaiTi", "STKaiti", "BiauKai", "DFKai-SB", serif;
+  }
+
+  .full-layout {
+    display: flex;
+    flex-direction: row-reverse;
+    height: 700px;
+    position: relative;
+  }
+
+  .v-text {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    font-size: 27px;
+    line-height: 1.85;
+    letter-spacing: 2px;
+    color: #1a1a1a;
+    padding: 0 7px;
+    white-space: nowrap;
+    font-family: "KaiTi", "STKaiti", "BiauKai", "DFKai-SB", serif;
+  }
+
+  .v-title {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    font-size: 21px;
+    line-height: 1.85;
+    letter-spacing: 5px;
+    color: #555;
+    padding: 0 10px;
+    white-space: nowrap;
+    font-family: "KaiTi", "STKaiti", "BiauKai", "DFKai-SB", serif;
+  }
+
+  .v-sig {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    font-size: 21px;
+    line-height: 1.85;
+    letter-spacing: 3px;
+    color: #555;
+    padding: 0 10px;
+    white-space: nowrap;
+    font-family: "KaiTi", "STKaiti", "BiauKai", "DFKai-SB", serif;
+  }
+
+  .seal-block {
+    position: absolute;
+    bottom: 30px;
+    left: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .seal-icon {
+    width: 34px;
+    height: 34px;
+    border: 2.5px solid #c0392b;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: #c0392b;
+    background: rgba(192, 57, 43, 0.05);
+  }
+
+  .seal-icon2 {
+    width: 38px;
+    height: 38px;
+    border: 2.5px solid #c0392b;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: #c0392b;
+    background: rgba(192, 57, 43, 0.05);
+  }
+</style>
+</head>
+<body>
+
+<div class="scroll-container">
+  <div class="full-layout">
+
+    <div class="v-title">祥除帖 昨表帖</div>
+
+    <div class="v-text">臣廙言臣祥除以復五日窮思永遠肝心寸截甘雪應時嚴寒奉被</div>
+
+    <div class="v-text">手詔伏承聖體御膳勝常以慰下情臣故患匈滿氣上頓乏勿勿慈</div>
+
+    <div class="v-text">恩垂愍每見慰問感戴屏營不勝銜遇謹表陳聞臣廙誠惶頓首</div>
+
+    <div class="v-text">頓首死罪死罪 臣廙言昨表不宣奉賜手詔伏承聖體勝常以</div>
+
+    <div class="v-text">慰下情不審宿昔復何如承鄭夫人乃尔委頓今復增損伏惟哀亡</div>
+
+    <div class="v-text">愍存益勞聖心謹附承動靜臣廙言</div>
+
+    <div class="v-sig">歲在癸卯春耀陽書於未央雲舍</div>
+
+    <div class="seal-block">
+      <div class="seal-icon">印</div>
+      <div class="seal-icon2">耀陽</div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

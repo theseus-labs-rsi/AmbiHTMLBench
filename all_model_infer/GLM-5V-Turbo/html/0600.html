@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>矩阵运算笔记</title>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <style>
+        body {
+            font-family: "KaiTi", "楷体", "STKaiti", serif;
+            background-color: #f5f5f0;
+            color: #1a1a1a;
+            line-height: 1.8;
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 40px;
+            background-image: linear-gradient(#e8e8e8 1px, transparent 1px);
+            background-size: 100% 28px;
+        }
+        .notebook-page {
+            background-color: #fffef8;
+            padding: 50px 60px;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+            border-radius: 2px;
+            min-height: 1000px;
+        }
+        h2 {
+            color: #2c5aa0;
+            font-size: 22px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        h3 {
+            color: #d35400;
+            font-size: 18px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .definition {
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
+        .formula-block {
+            margin: 15px 0;
+            padding: 10px 0;
+        }
+        .side-note {
+            color: #2980b9;
+            display: inline-block;
+            margin-left: 20px;
+            font-style: italic;
+        }
+        .highlight-box {
+            background-color: #fff9c4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            display: inline-block;
+        }
+        .matrix-display {
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        .property-row {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 10px 0;
+        }
+        ul.rules {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+        ul.rules li {
+            margin: 8px 0;
+        }
+        .note-text {
+            color: #555;
+            margin-top: 10px;
+            margin-left: 20px;
+        }
+        .footer-brand {
+            color: #3498db;
+            font-family: Arial, sans-serif;
+            margin-top: 40px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="notebook-page">
+        
+        <div class="section-title">二、数与矩阵相乘</div>
+        
+        <div class="definition">
+            <strong>1. 定义：</strong>数$\lambda$与矩阵$A$的乘积，记作$\lambda A$或$A\lambda$，规定为
+            <div class="formula-block" style="text-align: center; position: relative;">
+                $$\lambda A = A\lambda = \begin{pmatrix} 
+                \lambda a_{11} & \lambda a_{12} & \cdots & \lambda a_{1n} \\
+                \lambda a_{21} & \lambda a_{22} & \cdots & \lambda a_{2n} \\
+                \vdots & \vdots & \ddots & \vdots \\
+                \lambda a_{m1} & \lambda a_{m2} & \cdots & \lambda a_{mn}
+                \end{pmatrix}$$
+                <span class="side-note">数×矩阵有迹</span>
+            </div>
+        </div>
+
+        <h3>2. 数乘矩阵的运算规律</h3>
+        <ul class="rules">
+            <li>(1) $(\lambda\mu)A = \lambda(\mu A)$</li>
+            <li>(2) $(\lambda+\mu)A = \lambda A + \mu A$</li>
+            <li>(3) $\lambda(A+B) = \lambda A + \lambda B$</li>
+        </ul>
+        <div class="note-text">矩阵加法与数乘矩阵统称为矩阵的<span style="color:#c0392b;">线性运算</span></div>
+
+        <h3>3. 性质 提公因子</h3>
+        <div class="definition">
+            <span class="highlight-box">行列式：</span><span class="highlight-box">一行(列)提一次，阶有无素均有则外提$n$次</span>
+            
+            <div class="matrix-display property-row">
+                $\lambda \begin{vmatrix} a_{11} & a_{12} & a_{13} \\ a_{21} & a_{22} & a_{23} \\ a_{31} & a_{32} & a_{33} \end{vmatrix}
+                = \begin{vmatrix} \lambda a_{11} & \lambda a_{12} & \lambda a_{13} \\ a_{21} & a_{22} & a_{23} \\ a_{31} & a_{32} & a_{33} \end{vmatrix}
+                = \begin{vmatrix} a_{11} & a_{12} & a_{13} \\ \lambda a_{21} & \lambda a_{22} & \lambda a_{23} \\ a_{31} & a_{32} & a_{33} \end{vmatrix}$
+            </div>
+
+            <br>
+            <span class="highlight-box">矩阵：</span><span class="highlight-box">阶有无素均有公因子外提一次</span>
+            
+            <div class="matrix-display formula-block" style="text-align: center;">
+                $$\lambda \begin{pmatrix} a_{11} & a_{12} & a_{13} \\ a_{21} & a_{22} & a_{23} \\ a_{31} & a_{32} & a_{33} \end{pmatrix} = \begin{pmatrix} \lambda a_{11} & \lambda a_{12} & \lambda a_{13} \\ \lambda a_{21} & \lambda a_{22} & \lambda a_{23} \\ \lambda a_{31} & \lambda a_{32} & \lambda a_{33} \end{pmatrix}$$
+            </div>
+        </div>
+
+        <div class="section-title" style="margin-top: 35px;">三、矩阵与矩阵相乘</div>
+        
+        <div class="definition">
+            <strong>1. 定义：</strong>设$A=(a_{ij})$是一个$m\times s$矩阵，$B=(b_{ij})$是一个$s\times n$矩阵，
+            <br>那么规定矩阵$A$与矩阵$B$的乘积是一个$m\times n$矩阵$C=(c_{ij})$
+            <div style="margin-left: 40px; margin-top: 8px;">
+                其中 $c_{ij}=a_{i1}b_{1j}+a_{i2}b_{2j}+\cdots+a_{is}b_{sj}=\displaystyle\sum_{k=1}^{s}a_{ik}b_{kj}$
+            </div>
+            <div style="margin-left: 40px; margin-top: 8px;">
+                并把此乘积记作 $C=AB$
+            </div>
+        </div>
+
+        <div class="footer-brand">Campus</div>
+    </div>
+</body>
+</html>

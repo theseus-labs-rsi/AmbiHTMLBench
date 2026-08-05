@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>座次礼仪与点餐礼仪</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      background: #e8e8e8;
+      color: #202020;
+      font-family: "SimSun", "Songti SC", serif;
+    }
+
+    .document {
+      width: 1080px;
+      margin: 0 auto;
+      background: #fff;
+    }
+
+    .page {
+      position: relative;
+      width: 1080px;
+      height: 604px;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid #d8d8d8;
+    }
+
+    .page + .page {
+      margin-top: 8px;
+    }
+
+    .page-header {
+      height: 72px;
+      padding: 24px 0 0 66px;
+    }
+
+    .page-title {
+      margin: 0;
+      font-family: "KaiTi", "STKaiti", "SimSun", serif;
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 24px;
+      letter-spacing: 1px;
+    }
+
+    .header-rule {
+      position: absolute;
+      top: 69px;
+      left: 11px;
+      width: 1058px;
+      height: 1px;
+      background: #5c9788;
+    }
+
+    .page-number {
+      position: absolute;
+      right: 80px;
+      bottom: 18px;
+      color: #666;
+      font-family: Arial, sans-serif;
+      font-size: 10px;
+    }
+
+    /* Page 1 */
+    .seating-content {
+      display: grid;
+      grid-template-columns: 480px 1fr;
+      column-gap: 76px;
+      padding: 52px 66px 0 58px;
+    }
+
+    .seating-diagram {
+      position: relative;
+      width: 430px;
+      height: 360px;
+    }
+
+    .oval {
+      position: absolute;
+      left: 79px;
+      top: 41px;
+      width: 225px;
+      height: 226px;
+      border: 1.5px solid #91ad65;
+      border-radius: 50%;
+    }
+
+    .clock {
+      position: absolute;
+      left: 124px;
+      top: 81px;
+      width: 137px;
+      height: 137px;
+      border: 5px solid #111;
+      border-radius: 50%;
+      background: #fff;
+      z-index: 3;
+    }
+
+    .clock::after {
+      content: "";
+      position: absolute;
+      left: 62px;
+      top: 62px;
+      width: 8px;
+      height: 8px;
+      margin: -4px 0 0 -4px;
+      border-radius: 50%;
+      background: #111;
+    }
+
+    .clock-number {
+      position: absolute;
+      width: 18px;
+      height: 16px;
+      margin-left: -9px;
+      margin-top: -8px;
+      text-align: center;
+      font-family: "Times New Roman", serif;
+      font-size: 13px;
+      line-height: 16px;
+    }
+
+    .n12 { left: 66px; top: 13px; }
+    .n1  { left: 91px; top: 20px; }
+    .n2  { left: 109px; top: 38px; }
+    .n3  { left: 116px; top: 64px; }
+    .n4  { left: 109px; top: 90px; }
+    .n5  { left: 91px; top: 109px; }
+    .n6  { left: 66px; top: 116px; }
+    .n7  { left: 41px; top: 109px; }
+    .n8  { left: 22px; top: 90px; }
+    .n9  { left: 15px; top: 64px; }
+    .n10 { left: 22px; top: 38px; }
+    .n11 { left: 41px; top: 20px; }
+
+    .hand-hour,
+    .hand-minute {
+      position: absolute;
+      left: 62px;
+      top: 62px;
+      z-index: 2;
+      background: #111;
+      transform-origin: bottom center;
+    }
+
+    .hand-hour {
+      width: 3px;
+      height: 33px;
+      transform: translate(-1.5px, -33px) rotate(0deg);
+    }
+
+    .hand-minute {
+      width: 2px;
+      height: 45px;
+      transform: translate(-1px, -45px) rotate(180deg);
+    }
+
+    .red-arc {
+      position: absolute;
+      left: 142px;
+      top: 175px;
+      width: 102px;
+      height: 39px;
+      border-bottom: 3px solid #b82831;
+      border-radius: 0 0 55px 55px;
+      z-index: 5;
+    }
+
+    .seat-label {
+      position: absolute;
+      min-width: 54px;
+      text-align: center;
+      font-size: 13px;
+      line-height: 17px;
+      white-space: nowrap;
+    }
+
+    .top-marker {
+      position: absolute;
+      left: 177px;
+      top: 2px;
+      width: 45px;
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .seat-1 { left: 86px; top: 17px; }
+    .seat-2 { left: 253px; top: 17px; }
+    .seat-3 { left: 21px; top: 70px; }
+    .seat-4 { left: 326px; top: 70px; }
+    .seat-5 { left: 0; top: 135px; }
+    .seat-6 { left: 342px; top: 135px; }
+    .seat-7 { left: 12px; top: 206px; }
+    .seat-8 { left: 320px; top: 206px; }
+    .seat-9 { left: 89px; top: 271px; }
+    .seat-10 { left: 250px; top: 271px; }
+
+    .guide-line {
+      position: absolute;
+      left: 58px;
+      top: 184px;
+      width: 287px;
+      border-top: 2px dashed #b3283a;
+      z-index: 4;
+    }
+
+    .host-zone {
+      position: absolute;
+      left: 0;
+      top: 184px;
+      width: 384px;
+      height: 115px;
+      border: 3px dashed #b3283a;
+      border-top: 0;
+      border-radius: 0 0 8px 8px;
+    }
+
+    .serving-position {
+      position: absolute;
+      left: 140px;
+      top: 316px;
+      width: 104px;
+      height: 31px;
+      border: 1px solid #93ad78;
+      color: #333;
+      text-align: center;
+      font-size: 14px;
+      line-height: 29px;
+    }
+
+    .principles {
+      padding-top: 5px;
+      font-family: "KaiTi", "STKaiti", "SimSun", serif;
+      font-size: 17px;
+      line-height: 1.65;
+    }
+
+    .principles h2 {
+      margin: 0 0 0 0;
+      font-size: 18px;
+      font-weight: 400;
+    }
+
+    .principles ol {
+      margin: 0 0 55px 24px;
+      padding-left: 12px;
+    }
+
+    .principles li {
+      padding-left: 4px;
+    }
+
+    .principles p {
+      margin: 0;
+    }
+
+    /* Page 2 */
+    .meal-content {
+      position: relative;
+      padding: 47px 100px 0 145px;
+      font-family: "KaiTi", "STKaiti", "SimSun", serif;
+      font-size: 15px;
+      line-height: 1.38;
+    }
+
+    .green-arrow {
+      position: absolute;
+      left: 84px;
+      top: 49px;
+      width: 18px;
+      height: 411px;
+      background: #82c67d;
+    }
+
+    .green-arrow::after {
+      content: "";
+      position: absolute;
+      left: -10px;
+      bottom: -18px;
+      width: 0;
+      height: 0;
+      border-left: 19px solid transparent;
+      border-right: 19px solid transparent;
+      border-top: 20px solid #82c67d;
+    }
+
+    .meal-block {
+      margin-bottom: 15px;
+    }
+
+    .meal-block h2 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.2;
+      font-weight: 700;
+    }
+
+    .meal-block p {
+      margin: 0;
+    }
+
+    .note {
+      margin-top: 11px;
+    }
+
+    .note-title {
+      margin: 0 0 1px 0;
+    }
+
+    .note ul {
+      margin: 0;
+      padding-left: 23px;
+    }
+
+    .note li {
+      margin: 0;
+      padding-left: 2px;
+    }
+
+    @media (max-width: 1080px) {
+      .document {
+        transform-origin: top left;
+      }
+    }
+  </style>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+  <main class="document">
+    <section class="page">
+      <header class="page-header">
+        <h1 class="page-title">座次礼仪</h1>
+      </header>
+      <div class="header-rule"></div>
+
+      <div class="seating-content">
+        <figure class="seating-diagram placeholder" aria-label="圆桌座次示意图">
+          <div class="oval"></div>
+          <div class="top-marker">上位</div>
+
+          <div class="clock">
+            <span class="clock-number n12">12</span>
+            <span class="clock-number n1">1</span>
+            <span class="clock-number n2">2</span>
+            <span class="clock-number n3">3</span>
+            <span class="clock-number n4">4</span>
+            <span class="clock-number n5">5</span>
+            <span class="clock-number n6">6</span>
+            <span class="clock-number n7">7</span>
+            <span class="clock-number n8">8</span>
+            <span class="clock-number n9">9</span>
+            <span class="clock-number n10">10</span>
+            <span class="clock-number n11">11</span>
+            <span class="hand-hour"></span>
+            <span class="hand-minute"></span>
+          </div>
+
+          <div class="red-arc"></div>
+          <div class="guide-line"></div>
+          <div class="host-zone"></div>
+
+          <div class="seat-label seat-1">1号位<br>主位</div>
+          <div class="seat-label seat-2">2号位<br>第二主位</div>
+          <div class="seat-label seat-3">3号位</div>
+          <div class="seat-label seat-4">4号位</div>
+          <div class="seat-label seat-5">5号位</div>
+          <div class="seat-label seat-6">6号位</div>
+          <div class="seat-label seat-7">7号位<br>主陪</div>
+          <div class="seat-label seat-8">8号位<br>主陪</div>
+          <div class="seat-label seat-9">9号位<br>副主陪</div>
+          <div class="seat-label seat-10">10号位<br>副主陪</div>
+
+          <div class="serving-position">上菜位</div>
+        </figure>
+
+        <section class="principles">
+          <h2>最基本的原则</h2>
+          <ol>
+            <li>以右为上（遵循国际惯例）</li>
+            <li>以远为上（远离房门为上）</li>
+            <li>面门为上（良好视野为上）</li>
+          </ol>
+
+          <p>如果面对门的12点钟是“上位”，</p>
+          <p>领导在场：选择9号位或10号位</p>
+          <p>领导不在场：选择7号位或8号位</p>
+        </section>
+      </div>
+
+      <div class="page-number">2</div>
+    </section>
+
+    <section class="page">
+      <header class="page-header">
+        <h1 class="page-title">点餐礼仪</h1>
+      </header>
+      <div class="header-rule"></div>
+
+      <div class="meal-content">
+        <div class="green-arrow"></div>
+
+        <section class="meal-block">
+          <h2>餐前了解3个问题：</h2>
+          <p>这顿饭为何吃？这顿饭的钱算？来宾的口味和禁忌？</p>
+        </section>
+
+        <section class="meal-block">
+          <h2>提前1小时到达：</h2>
+          <p>放置指引牌等物料，最好拍摄餐厅入口及到餐牌中作为导航指引</p>
+          <p>布置饭局场地，清点座椅数量，调好空调温度</p>
+          <p>领取各类宴会菜单，一份给老板及客户沟通，一份自己用于点单</p>
+        </section>
+
+        <section class="meal-block">
+          <h2>提前30分钟选餐：</h2>
+          <p>假如到了n个客人，菜品分为前菜（凉菜）、热菜（煎炸、炖煮、素菜）、主食</p>
+          <p>聚会总共点（n+2）道菜，其中前菜（n/3）道，热菜（n/2）道，以及数为佳</p>
+          <p>假如今晚一共10个人吃饭，共点12道菜，其中3道前菜、热菜5道、1道汤、主食2道、甜品1道</p>
+        </section>
+
+        <section class="note">
+          <p class="note-title">注：</p>
+          <ul>
+            <li>荤素、冷盘搭配：荤素6:4，冷荤1:2为佳</li>
+            <li>8道菜以上的宴请最好有一道完整的鱼类</li>
+            <li>尽量不要点龙虾、鹅掌等需要用手抓食、吃者不雅的菜品</li>
+            <li>饭店有特色菜，或当地有出名特产菜可以点，增加和客人介绍的话题</li>
+          </ul>
+        </section>
+      </div>
+
+      <div class="page-number">3</div>
+    </section>
+  </main>
+</body>
+</html>

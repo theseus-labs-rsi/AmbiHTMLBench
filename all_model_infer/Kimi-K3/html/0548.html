@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FGER-Net Architecture (Fig. 2) and Algorithm 1</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$']] },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+  html, body { margin:0; padding:0; background:#ffffff; }
+  .sheet{
+    width:1120px;
+    margin:0 auto;
+    padding:18px 24px 28px 24px;
+    box-sizing:border-box;
+    font-family:"Times New Roman", Times, serif;
+    color:#111;
+    font-size:15px;
+    line-height:1.34;
+  }
+  .placeholder{
+    box-sizing:border-box;
+    border:1px solid #c9c9c9;
+    background:#fcfcfc;
+    color:#8a8a8a;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    font-size:13px;
+    line-height:1.4;
+    padding:10px;
+  }
+  .fig-diagram{ width:100%; height:272px; margin:2px 0 6px 0; }
+  .caption{
+    font-size:12.6px;
+    line-height:1.26;
+    text-align:justify;
+    margin:2px 0 16px 0;
+  }
+  .cols{ display:flex; align-items:flex-start; gap:30px; }
+  .col{ flex:1 1 0; min-width:0; text-align:justify; }
+  .col p{ margin:0 0 11px 0; }
+  .col p:last-child{ margin-bottom:0; }
+  .algo{
+    border-top:1.7px solid #000;
+    border-bottom:1.3px solid #000;
+    padding:5px 0 8px 0;
+    font-size:13.8px;
+    line-height:1.5;
+    text-align:left;
+  }
+  .algo .title{ font-weight:bold; margin:0 0 2px 0; }
+  .algo .sec{ font-style:italic; margin:4px 0 0 0; }
+  .algo .line{ margin:0; }
+  .algo .ind{ margin:0 0 0 1.7em; }
+  b{ font-weight:bold; }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <figure class="placeholder fig-diagram">[Diagram: full-width FGER-Net architecture — biological mechanoreceptor inspiration (left), Event Stream Recurrent Network and Frame-Guided Network with LSTM/MLP fusion (center), and dynamic/static force perception plots (right)]</figure>
+
+  <div class="caption"><b>Fig. 2.</b>&nbsp; The architecture of the proposed FGER-Net is presented, alongside its conceptual underpinnings. The left portion illustrates the biological inspiration for the network: the synergistic function of fast and slow adapting mechanoreceptors in perceiving dynamic and static forces, respectively. These biological principles are emulated by the FGER-Net. In the network itself (center), event streams and image frames are synergistically fused for robust force estimation. In this architecture, frames are used to periodically correct for drift during training and to continuously stabilize the high frequency force predictions derived from the event stream during inference. The resulting force estimation is thereby made accurate and robust against drift, successfully capturing both dynamic and static tactile information, mirroring the perceptual capabilities shown on the right side of the diagram.</div>
+
+  <div class="cols">
+    <div class="col">
+      <p>dual rate architecture mirrors biological perception: a high frequency recurrent pathway integrates transient force increments from the event stream, while a low frequency pathway extracts absolute spatial references from single image frames for periodic training corrections.</p>
+      <p>During inference, we maximize estimation stability via a continuous correction strategy. By persistently fusing the most recent frame feature with incoming events, this absolute spatial anchor effectively eliminates integration drift.</p>
+      <p>The architecture utilizes dual parallel pathways optimized for each modality's distinct characteristics. To circumvent the extreme sparsity typical of standard convolutions on event data, individual events are normalized and processed by a pointwise MLP, followed by max-pooling to generate an aggregated feature vector for each packet. Conversely, dense spatial information from image frames is extracted into a compact feature vector using a residual CNN backbone coupled with average pooling.</p>
+      <p><b>a) Data Stream Segmentation:</b> The algorithm's processing cycle is driven by the arrival of new frames. A cycle is</p>
+    </div>
+    <div class="col">
+      <div class="algo">
+        <p class="title">Algorithm 1 FGER-Net</p>
+        <p class="line"><b>Input:</b> $I_{\text{guide}}$, $\{P_m\}_{m=1}^{M}$, $f_{\text{prev\_cycle}}$, $(h_{\text{prev\_cycle}}, C_{\text{prev\_cycle}})$</p>
+        <p class="line"><b>Output:</b> $\hat{f}_{\text{final}}$, $(h_M, C_M)$</p>
+        <p class="sec">Guiding Frame Feature Extraction</p>
+        <p class="line">$\mathbf{f}_{\text{frame}} \leftarrow \Phi_f(I_{\text{guide}})$</p>
+        <p class="sec">Recurrent Processing Loop</p>
+        <p class="line">$\hat{f}_0 \leftarrow f_{\text{prev\_cycle}}$; $(h_0, C_0) \leftarrow (h_{\text{prev\_cycle}}, C_{\text{prev\_cycle}})$</p>
+        <p class="line"><b>for</b> $m \leftarrow 1$ <b>to</b> $M$ <b>do</b></p>
+        <p class="ind">$\mathbf{f}_{e,m} \leftarrow \Phi_e(P_m)$</p>
+        <p class="ind">$\mathbf{x}_m \leftarrow \text{concatenate}(\mathbf{f}_{e,m}, \hat{f}_{m-1})$</p>
+        <p class="ind">$(h_m, C_m) \leftarrow \text{LSTM}(\mathbf{x}_m, (h_{m-1}, C_{m-1}))$</p>
+        <p class="ind">$\Delta\hat{f}_m \leftarrow \text{MLP}_{\Delta f}(h_m)$</p>
+        <p class="ind">$\hat{f}_m \leftarrow \hat{f}_{m-1} + \Delta\hat{f}_m$</p>
+        <p class="line"><b>end for</b></p>
+        <p class="sec">Fusion and Correction</p>
+        <p class="line">$\mathbf{f}_{\text{fusion}} \leftarrow \text{concatenate}(\hat{f}_M, \mathbf{f}_{\text{frame}})$</p>
+        <p class="line">$\Delta f_{\text{corr}} \leftarrow \text{MLP}_{\text{corr}}(\mathbf{f}_{\text{fusion}})$</p>
+        <p class="line">$\hat{f}_{\text{final}} \leftarrow \hat{f}_M + \Delta f_{\text{corr}}$</p>
+        <p class="line"><b>return</b> $\hat{f}_{\text{final}}$, $(h_M, C_M)$</p>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

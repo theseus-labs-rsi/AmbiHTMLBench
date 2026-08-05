@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bombs Rockets Chart</title>
+  <script>
+    window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #d8d8d8;
+      color: #4b4b4b;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    .sheet {
+      width: 540px;
+      min-height: 681px;
+      margin: 0 auto;
+      padding: 8px 36px 15px;
+      border: 1px solid #a6a6a6;
+      background: #dfdfdf;
+    }
+    h1 {
+      margin: 0 0 4px;
+      border-top: 1px solid #8b8b8b;
+      border-bottom: 2px solid #616161;
+      padding: 0 0 5px;
+      color: #404040;
+      font-size: 41px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      line-height: 1.05;
+      text-align: center;
+    }
+    .source {
+      margin: 4px 0 9px;
+      font-size: 10px;
+      text-align: center;
+    }
+    .columns {
+      display: grid;
+      grid-template-columns: 1fr 1.18fr 1.18fr;
+      column-gap: 14px;
+      align-items: start;
+    }
+    .item {
+      height: 37px;
+      margin-bottom: 1px;
+      white-space: nowrap;
+    }
+    .item.tall { height: 48px; }
+    .item.xl { height: 66px; }
+    .weapon {
+      position: relative;
+      height: 17px;
+      margin: 0 0 1px 2px;
+    }
+    .bomb {
+      position: absolute;
+      top: 4px;
+      left: 0;
+      width: 62px;
+      height: 9px;
+      border: 1px solid #556052;
+      border-radius: 8px 4px 4px 8px;
+      background: linear-gradient(90deg, #45523f 0%, #7c8b67 44%, #b1b99b 66%, #4d5847 100%);
+    }
+    .bomb:before {
+      content: "";
+      position: absolute;
+      left: -7px;
+      top: 2px;
+      width: 9px;
+      height: 3px;
+      background: #495345;
+      clip-path: polygon(0 50%, 100% 0, 100% 100%);
+    }
+    .bomb:after {
+      content: "";
+      position: absolute;
+      right: -8px;
+      top: -3px;
+      width: 10px;
+      height: 13px;
+      border-left: 2px solid #475142;
+      background: repeating-linear-gradient(0deg, transparent 0 3px, #6e765f 3px 4px);
+    }
+    .small .bomb { width: 45px; height: 7px; top: 5px; }
+    .long .bomb { width: 109px; height: 10px; top: 3px; }
+    .large .bomb { width: 120px; height: 16px; top: 0; }
+    .silver .bomb {
+      background: linear-gradient(90deg, #7a8585, #e3eceb 53%, #718487);
+      border-color: #778685;
+    }
+    .yellow .bomb {
+      background: linear-gradient(90deg, #697653, #c9d372 48%, #687654);
+    }
+    .dark .bomb {
+      background: linear-gradient(90deg, #313634, #717872 44%, #252b29);
+    }
+    .rocket .bomb {
+      border-radius: 7px 3px 3px 7px;
+      background: linear-gradient(90deg, #35403a, #66765d 52%, #303a35);
+    }
+    .rocket .bomb:after {
+      width: 17px;
+      right: -15px;
+      height: 17px;
+      top: -4px;
+      background: #4f5e57;
+      border-left: 1px solid #354039;
+      clip-path: polygon(0 28%, 100% 0, 100% 100%, 0 72%);
+    }
+    .orange-tip .bomb:before { background: #d4a52a; }
+    .label {
+      font-size: 10.5px;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: .05px;
+    }
+    .flag {
+      display: inline-block;
+      width: 10px;
+      height: 7px;
+      margin-left: 3px;
+      vertical-align: 1px;
+      border: .4px solid rgba(0,0,0,.25);
+    }
+    .us { background: repeating-linear-gradient(to bottom, #be3e4e 0 1px, #f5f5f5 1px 2px); }
+    .uk { background: linear-gradient(35deg, #193c71 42%, #fff 43% 51%, #c53b49 52% 58%, #193c71 59%); }
+    .de { background: linear-gradient(#202020 0 33%, #bc3430 33% 66%, #d9b33a 66%); }
+    .fr { background: linear-gradient(90deg, #294d95 0 33%, #eee 33% 66%, #c4474d 66%); }
+    .ru { background: linear-gradient(#fff 0 33%, #29549a 33% 66%, #c63c42 66%); }
+    .jp { background: radial-gradient(circle, #bf3e47 0 31%, #f4f4f0 32%); }
+    .china { background: #bd3940; }
+    .watermark {
+      height: 55px;
+      padding-top: 12px;
+      color: #aaa;
+      font-size: 19px;
+      font-weight: bold;
+      text-align: center;
+    }
+    .atomic {
+      position: relative;
+      width: 128px;
+      height: 65px;
+      margin: 3px auto 2px;
+    }
+    .atomic .body {
+      position: absolute;
+      left: 3px;
+      top: 8px;
+      width: 91px;
+      height: 48px;
+      border: 1px solid #9b7017;
+      border-radius: 48% 42% 42% 48%;
+      background: radial-gradient(circle at 31% 50%, #ffe749 0 15%, #f1bf0c 39%, #d79208 77%);
+    }
+    .atomic .tail {
+      position: absolute;
+      left: 88px;
+      top: 4px;
+      width: 38px;
+      height: 56px;
+      border: 1px solid #9b7017;
+      background: #e8ae07;
+    }
+    .atomic .tail:before, .atomic .tail:after {
+      content: "";
+      position: absolute;
+      left: -11px;
+      width: 18px;
+      height: 16px;
+      border: 1px solid #9b7017;
+      background: #f0bd0d;
+    }
+    .atomic .tail:before { top: 0; }
+    .atomic .tail:after { bottom: 0; }
+    .atomic .mark {
+      position: absolute;
+      left: 57px;
+      top: 11px;
+      width: 8px;
+      height: 39px;
+      border-radius: 50%;
+      background: repeating-linear-gradient(#414141 0 4px, transparent 4px 7px);
+      opacity: .9;
+    }
+    @media (max-width: 540px) {
+      .sheet { width: 100%; min-height: 100vh; padding-left: 7%; padding-right: 7%; }
+      .columns { column-gap: 2.5%; }
+      h1 { font-size: 7.5vw; }
+      .label { font-size: 2vw; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <h1>BOMBS ROCKETS</h1>
+    <div class="source">XIAOHONGSHU:5433348754</div>
+
+    <section class="columns">
+      <div>
+        <div class="item small"><div class="weapon"><span class="bomb"></span></div><div class="label">20LB GENERAL&nbsp; 普通 <span class="flag uk"></span></div></div>
+        <div class="item small"><div class="weapon"><span class="bomb"></span></div><div class="label">40LB GENERAL&nbsp; 普通</div></div>
+        <div class="item small"><div class="weapon"><span class="bomb"></span></div><div class="label">100LB GENERAL&nbsp; 普通 <span class="flag uk"></span></div></div>
+        <div class="item small orange-tip"><div class="weapon"><span class="bomb"></span></div><div class="label">120LB HIGH EXPLOSIVE&nbsp; 高爆</div></div>
+        <div class="item small orange-tip"><div class="weapon"><span class="bomb"></span></div><div class="label">120LB HIGH EXPLOSIVE&nbsp; 高爆</div></div>
+        <div class="item small"><div class="weapon"><span class="bomb"></span></div><div class="label">120LB GENERAL&nbsp; 普通</div></div>
+        <div class="item small"><div class="weapon"><span class="bomb"></span></div><div class="label">220LB GENERAL&nbsp; 普通 <span class="flag uk"></span></div></div>
+        <div class="item small"><div class="weapon"><span class="bomb"></span></div><div class="label">250LB GENERAL&nbsp; 普通</div></div>
+        <div class="item small"><div class="weapon"><span class="bomb"></span></div><div class="label">250LB TARGET INDICATOR&nbsp; 目标指示 <span class="flag uk"></span></div></div>
+        <div class="item small yellow"><div class="weapon"><span class="bomb"></span></div><div class="label">250LB SEMI ARMOUR PIERCING&nbsp; 半穿甲</div></div>
+        <div class="item small"><div class="weapon"><span class="bomb"></span></div><div class="label">250LB GENERAL&nbsp; 普通 <span class="flag uk"></span></div></div>
+        <div class="item small"><div class="weapon"><span class="bomb"></span></div><div class="label">250LB MEDIUM CAPACITY&nbsp; 中等</div></div>
+        <div class="item small orange-tip"><div class="weapon"><span class="bomb"></span></div><div class="label">250LB GENERAL&nbsp; 普通 <span class="flag us"></span></div></div>
+        <div class="item small orange-tip"><div class="weapon"><span class="bomb"></span></div><div class="label">250LB GENERAL&nbsp; 普通 <span class="flag us"></span></div></div>
+        <div class="item small"><div class="weapon"><span class="bomb"></span></div><div class="label">350LB DEPTH&nbsp; 深爆</div></div>
+        <div class="item small rocket"><div class="weapon"><span class="bomb"></span></div><div class="label">3 INCH ROCKET&nbsp; 火箭 <span class="flag uk"></span></div></div>
+      </div>
+
+      <div>
+        <div class="item"><div class="weapon"><span class="bomb"></span></div><div class="label">500LB SEMI ARMOUR PIERCING&nbsp; 半穿甲 <span class="flag uk"></span></div></div>
+        <div class="item"><div class="weapon"><span class="bomb"></span></div><div class="label">500LB MEDIUM CAPACITY&nbsp; 中等</div></div>
+        <div class="item"><div class="weapon"><span class="bomb"></span></div><div class="label">500LB GENERAL&nbsp; 普通</div></div>
+        <div class="item"><div class="weapon"><span class="bomb"></span></div><div class="label">500LB GENERAL&nbsp; 普通 <span class="flag uk"></span></div></div>
+        <div class="item long rocket"><div class="weapon"><span class="bomb"></span></div><div class="label">14 INCH ROCKET&nbsp; 火箭 <span class="flag uk"></span></div></div>
+        <div class="item"><div class="weapon"><span class="bomb"></span></div><div class="label">500LB GENERAL&nbsp; 普通 <span class="flag uk"></span></div></div>
+        <div class="item tall silver large"><div class="weapon"><span class="bomb"></span></div><div class="label">1100LB GENERAL&nbsp; 普通 <span class="flag fr"></span></div></div>
+        <div class="item long dark rocket"><div class="weapon"><span class="bomb"></span></div><div class="label">1000LB GENERAL&nbsp; 普通 <span class="flag us"></span></div></div>
+        <div class="watermark">⑤ 炸3爷<br><span style="font-size:8px;">XIAOHONGSHU</span></div>
+        <div class="item long dark rocket"><div class="weapon"><span class="bomb"></span></div><div class="label">1000LB GENERAL&nbsp; 普通 <span class="flag us"></span></div></div>
+        <div class="item tall yellow large"><div class="weapon"><span class="bomb"></span></div><div class="label">1100LB HIGH EXPLOSIVE&nbsp; 高爆 <span class="flag de"></span></div></div>
+        <div class="item tall yellow"><div class="weapon"><span class="bomb"></span></div><div class="label">1900LB GENERAL&nbsp; 普通 <span class="flag uk"></span></div></div>
+      </div>
+
+      <div>
+        <div class="item tall silver large rocket"><div class="weapon"><span class="bomb"></span></div><div class="label">1100LB GUIDE BOMB&nbsp; 制导 <span class="flag de"></span></div></div>
+        <div class="item"><div class="weapon"><span class="bomb"></span></div><div class="label">1600LB ARMOUR PIERCING&nbsp; 穿甲</div></div>
+        <div class="item yellow"><div class="weapon"><span class="bomb"></span></div><div class="label">2400LB ARMOUR PIERCING&nbsp; 穿甲</div></div>
+        <div class="item long dark rocket"><div class="weapon"><span class="bomb"></span></div><div class="label">2000LB GENERAL&nbsp; 普通 <span class="flag us"></span></div></div>
+        <div class="item long dark rocket"><div class="weapon"><span class="bomb"></span></div><div class="label">2000LB LASER GUIDED 激光制导 <span class="flag us"></span></div></div>
+        <div class="item tall silver large rocket"><div class="weapon"><span class="bomb"></span></div><div class="label">2200LBHIGH EXPLOSIVE&nbsp; 高爆</div></div>
+        <div class="item tall silver large rocket"><div class="weapon"><span class="bomb"></span></div><div class="label">3080LB GUIDE BOMB 制导 <span class="flag de"></span></div></div>
+        <div class="item tall dark large rocket"><div class="weapon"><span class="bomb"></span></div><div class="label">ATOMIC MK1 LITTLE BOY&nbsp; 小男孩 <span class="flag us"></span></div></div>
+        <div class="item xl">
+          <div class="atomic"><span class="body"></span><span class="tail"></span><span class="mark"></span></div>
+          <div class="label">ATOMIC MK3 FAT MAN 胖子 <span class="flag us"></span></div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

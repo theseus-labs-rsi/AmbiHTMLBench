@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>window.MathJax={tex:{inlineMath:[["$","$"]],displayMath:[["$$","$$"]]}};</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microsoft Digital Defense Report 2024</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            background-color: #130524;
+            color: #ffffff;
+            overflow-x: hidden;
+            position: relative;
+            height: 100vh;
+        }
+        
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            background-color: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.4);
+            position: relative;
+            z-index: 10;
+            height: 48px;
+        }
+        
+        .menu-icon {
+            margin-right: 12px;
+            cursor: pointer;
+            font-size: 18px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+        }
+        
+        .report-title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-right: 16px;
+            white-space: nowrap;
+            letter-spacing: -0.01em;
+        }
+        
+        .nav-items {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            gap: 2px;
+        }
+        
+        .nav-item {
+            padding: 6px 12px;
+            font-size: 13px;
+            cursor: pointer;
+            color: #e0e0e0;
+            white-space: nowrap;
+            transition: background-color 0.2s;
+        }
+        
+        .nav-item.active {
+            background-color: rgba(88, 68, 130, 0.6);
+            color: #ffffff;
+        }
+        
+        .page-number {
+            background-color: #f4c430;
+            color: #000;
+            width: 26px;
+            height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 13px;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+        
+        .main-container {
+            display: flex;
+            height: calc(100vh - 48px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .bg-visual {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        .gradient-base {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 60%;
+            height: 50%;
+            background: linear-gradient(135deg, rgba(20, 10, 60, 0.8) 0%, rgba(40, 20, 100, 0.4) 50%, transparent 100%);
+        }
+        
+        .particle-arc {
+            position: absolute;
+            right: -5%;
+            top: 5%;
+            width: 75%;
+            height: 90%;
+            background: 
+                radial-gradient(ellipse 60% 50% at 65% 45%, rgba(255, 200, 50, 0.6) 0%, transparent 50%),
+                radial-gradient(ellipse 50% 60% at 55% 55%, rgba(255, 120, 50, 0.5) 0%, transparent 50%),
+                radial-gradient(ellipse 40% 70% at 45% 65%, rgba(200, 50, 100, 0.4) 0%, transparent 50%);
+            filter: blur(30px);
+            transform: rotate(-15deg);
+            opacity: 0.9;
+        }
+        
+        .dots-layer {
+            position: absolute;
+            right: 10%;
+            top: 10%;
+            width: 550px;
+            height: 650px;
+            background-image: 
+                radial-gradient(1.5px 1.5px at 15% 25%, rgba(255, 220, 100, 0.9) 100%, transparent),
+                radial-gradient(2px 2px at 25% 15%, rgba(255, 210, 80, 0.8) 100%, transparent),
+                radial-gradient(1px 1px at 35% 30%, rgba(255, 230, 120, 0.95) 100%, transparent),
+                radial-gradient(1.5px 1.5px at 45% 22%, rgba(255, 190, 60, 0.85) 100%, transparent),
+                radial-gradient(2px 2px at 55% 35%, rgba(255, 170, 40, 0.8) 100%, transparent),
+                radial-gradient(1px 1px at 65% 28%, rgba(255, 225, 110, 0.9) 100%, transparent),
+                radial-gradient(1.5px 1.5px at 40% 45%, rgba(255, 150, 30, 0.75) 100%, transparent),
+                radial-gradient(2px 2px at 52% 52%, rgba(255, 130, 20, 0.7) 100%, transparent),
+                radial-gradient(1px 1px at 62% 48%, rgba(255, 200, 90, 0.85) 100%, transparent),
+                radial-gradient(1.5px 1.5px at 72% 58%, rgba(255, 165, 35, 0.8) 100%, transparent),
+                radial-gradient(1px 1px at 48% 68%, rgba(255, 140, 25, 0.7) 100%, transparent),
+                radial-gradient(2px 2px at 58% 72%, rgba(255, 120, 15, 0.65) 100%, transparent),
+                radial-gradient(1px 1px at 68% 78%, rgba(255, 185, 75, 0.8) 100%, transparent),
+                radial-gradient(1.5px 1.5px at 38% 82%, rgba(255, 205, 95, 0.85) 100%, transparent),
+                radial-gradient(1px 1px at 55% 88%, rgba(255, 155, 45, 0.75) 100%, transparent),
+                radial-gradient(2px 2px at 70% 92%, rgba(255, 235, 130, 0.9) 100%, transparent);
+            mask-image: radial-gradient(ellipse 70% 80% at 50% 50%, black 20%, transparent 70%);
+            -webkit-mask-image: radial-gradient(ellipse 70% 80% at 50% 50%, black 20%, transparent 70%);
+            opacity: 0.95;
+        }
+        
+        .left-column {
+            width: 41%;
+            padding: 45px 35px;
+            z-index: 5;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+        
+        .chapter-label {
+            color: #f4c430;
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 22px;
+            letter-spacing: 0.02em;
+        }
+        
+        .main-title {
+            font-size: 44px;
+            line-height: 1.1;
+            font-weight: 400;
+            margin-bottom: 28px;
+            max-width: 380px;
+            letter-spacing: -0.02em;
+        }
+        
+        .subtitle {
+            font-size: 27px;
+            line-height: 1.25;
+            font-weight: 300;
+            color: #f5f5f5;
+            max-width: 360px;
+            letter-spacing: -0.01em;
+        }
+        
+        .right-column {
+            width: 59%;
+            padding: 45px 40px 45px 10px;
+            z-index: 5;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+        
+        .toc-list {
+            list-style: none;
+            width: 100%;
+            max-width: 480px;
+            margin-left: auto;
+        }
+        
+        .toc-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 11px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+            font-size: 15px;
+            line-height: 1.4;
+            gap: 20px;
+        }
+        
+        .toc-item:last-child {
+            border-bottom: none;
+        }
+        
+        .toc-text {
+            color: #f0f0f0;
+            flex-shrink: 1;
+        }
+        
+        .toc-page {
+            color: #ffffff;
+            font-weight: 500;
+            flex-shrink: 0;
+            text-align: right;
+            min-width: 18px;
+        }
+        
+        .side-accent {
+            position: absolute;
+            left: 0;
+            top: 145px;
+            width: 32px;
+            height: 32px;
+            background-color: #f4c430;
+            opacity: 0.85;
+            clip-path: polygon(0 0, 100% 0, 0 100%);
+            z-index: 6;
+        }
+        
+        .side-border {
+            position: absolute;
+            left: 0;
+            top: 177px;
+            width: 1px;
+            height: calc(100% - 177px);
+            background: linear-gradient(to bottom, rgba(212, 175, 55, 0.6) 0%, rgba(212, 175, 55, 0.1) 50%, transparent 100%);
+            z-index: 6;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="menu-icon">☰</div>
+        <div class="report-title">Microsoft Digital Defense Report 2024</div>
+        <nav class="nav-items">
+            <div class="nav-item">Overview</div>
+            <div class="nav-item active">The evolving cyber threat landscape</div>
+            <div class="nav-item">Centering our organizations on security</div>
+            <div class="nav-item">Early insights: AI's impact on cybersecurity</div>
+            <div class="nav-item">Appendix</div>
+        </nav>
+        <div class="page-number">8</div>
+    </div>
+
+    <div class="main-container">
+        <div class="bg-visual">
+            <div class="gradient-base"></div>
+            <div class="particle-arc"></div>
+            <div class="dots-layer"></div>
+        </div>
+
+        <div class="left-column">
+            <div class="chapter-label">Chapter 1</div>
+            <h1 class="main-title">The evolving cyber threat landscape</h1>
+            <p class="subtitle">How have trends and tactics changed?</p>
+        </div>
+
+        <div class="right-column">
+            <ul class="toc-list">
+                <li class="toc-item">
+                    <span class="toc-text">Key developments</span>
+                    <span class="toc-page">9</span>
+                </li>
+                <li class="toc-item">
+                    <span class="toc-text">Introduction</span>
+                    <span class="toc-page">10</span>
+                </li>
+                <li class="toc-item">
+                    <span class="toc-text">Threat actors and motivations</span>
+                    <span class="toc-page">11</span>
+                </li>
+                <li class="toc-item">
+                    <span class="toc-text">Nation-state threats</span>
+                    <span class="toc-page">12</span>
+                </li>
+                <li class="toc-item">
+                    <span class="toc-text">Ransomware</span>
+                    <span class="toc-page">27</span>
+                </li>
+                <li class="toc-item">
+                    <span class="toc-text">Fraud</span>
+                    <span class="toc-page">31</span>
+                </li>
+                <li class="toc-item">
+                    <span class="toc-text">Identity and social engineering</span>
+                    <span class="toc-page">39</span>
+                </li>
+                <li class="toc-item">
+                    <span class="toc-text">Distributed denial of service (DDoS) attacks</span>
+                    <span class="toc-page">50</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="side-accent"></div>
+        <div class="side-border"></div>
+    </div>
+</body>
+</html>

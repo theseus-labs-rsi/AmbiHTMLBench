@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script>window.MathJax={tex:{inlineMath:[["$","$"]],displayMath:[["$$","$$"]]}};</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>精酿、原浆、鲜啤、生啤、扎啤、干啤、冰啤的区别</title>
+    <style>
+        :root {
+            --bg-color: #f0f4f8;
+            --text-color: #333;
+            --node-black: #2c3e50;
+            --node-red: #e74c3c;
+            --node-orange: #e67e22;
+            --node-yellow: #f1c40f;
+            --node-green: #27ae60;
+            --node-blue: #3498db;
+            --line-color: #bdc3c7;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "Heiti SC", sans-serif;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at 10% 90%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 20%),
+                              radial-gradient(circle at 90% 10%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 20%);
+            margin: 0;
+            padding: 20px;
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--node-black);
+            font-size: 28px;
+            margin-bottom: 40px;
+            line-height: 1.4;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        /* Tree Structure Base */
+        .tree-section {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .node-main {
+            background-color: var(--node-black);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 18px;
+            white-space: nowrap;
+            z-index: 2;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            margin-right: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 100px;
+        }
+
+        .branches-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            position: relative;
+        }
+
+        /* Connecting Lines Logic */
+        .branch-row {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        /* The vertical spine line */
+        .spine {
+            position: absolute;
+            left: -10px; /* Adjust based on node width */
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: var(--line-color);
+            z-index: 0;
+        }
+        
+        /* Specific spine positioning for top section */
+        .top-section .spine {
+             left: 45px; 
+        }
+        
+        /* Specific spine positioning for bottom section */
+        .bottom-section .spine {
+            left: 45px;
+        }
+
+        .branch-content {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            margin-left: 20px; /* Space for the spine */
+            position: relative;
+            z-index: 1;
+        }
+
+        .process-text {
+            font-size: 14px;
+            color: #555;
+            margin-right: 15px;
+            text-align: right;
+            min-width: 180px;
+            font-weight: 500;
+        }
+
+        .result-box {
+            padding: 8px 15px;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            font-size: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            min-width: 80px;
+            text-align: center;
+        }
+
+        /* Color Classes */
+        .bg-red { background-color: var(--node-red); }
+        .bg-orange { background-color: var(--node-orange); }
+        .bg-yellow { background-color: var(--node-yellow); color: #333; }
+        .bg-green { background-color: var(--node-green); }
+        .bg-blue { background-color: var(--node-blue); }
+
+        /* Bottom Section Specifics */
+        .bottom-label {
+            background-color: var(--node-blue);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-right: 15px;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        .description-text {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+            margin-top: 5px;
+            text-align: left;
+            background: rgba(255,255,255,0.5);
+            padding: 5px;
+            border-radius: 4px;
+        }
+
+        /* SVG Lines for precise connection */
+        svg.connector {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        path {
+            fill: none;
+            stroke: #bdc3c7;
+            stroke-width: 2;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .tree-section {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .node-main, .bottom-label {
+                margin-bottom: 15px;
+                writing-mode: horizontal-tb;
+                height: auto;
+            }
+            .branches-container {
+                margin-left: 20px;
+            }
+            .process-text {
+                text-align: left;
+                min-width: auto;
+                margin-right: 10px;
+            }
+            .spine {
+                display: none; /* Hide complex spines on mobile for simplicity */
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>精酿、原浆、鲜啤、生啤、<br>扎啤、干啤、冰啤的区别</h1>
+
+    <!-- Top Section: Beer Raw Pulp -->
+    <div class="tree-section top-section">
+        <div class="node-main">啤酒原浆</div>
+        
+        <div class="branches-container">
+            <!-- SVG Connector for Top Section -->
+            <svg class="connector" viewBox="0 0 400 200" preserveAspectRatio="none">
+                <!-- Main horizontal line from node -->
+                <path d="M 100 40 L 150 40" />
+                <!-- Vertical spine -->
+                <path d="M 150 20 L 150 180" />
+                <!-- Branches -->
+                <path d="M 150 30 Q 160 30 170 30 L 220 30" /> <!-- To Raw -->
+                <path d="M 150 60 Q 160 60 170 60 L 220 60" /> <!-- To Fresh -->
+                <path d="M 150 90 Q 160 90 170 90 L 220 90" /> <!-- To Draft -->
+                <path d="M 150 120 Q 160 120 170 120 L 220 120" /> <!-- To Keg -->
+                <path d="M 150 150 Q 160 150 170 150 L 220 150" /> <!-- To Cooked -->
+            </svg>
+
+            <!-- Branch 1 -->
+            <div class="branch-row">
+                <div class="branch-content">
+                    <span class="process-text">不杀菌+不滤清</span>
+                    <div class="result-box bg-red">原浆啤酒</div>
+                </div>
+            </div>
+
+            <!-- Branch 2 -->
+            <div class="branch-row">
+                <div class="branch-content">
+                    <span class="process-text">不杀菌+滤清</span>
+                    <div class="result-box bg-orange">鲜啤</div>
+                </div>
+            </div>
+
+            <!-- Branch 3 -->
+            <div class="branch-row">
+                <div class="branch-content">
+                    <span class="process-text">不杀菌+滤清+膜过滤除菌(非高温)</span>
+                    <div class="result-box bg-yellow">生啤</div>
+                </div>
+            </div>
+
+            <!-- Branch 4 -->
+            <div class="branch-row">
+                <div class="branch-content">
+                    <span class="process-text">桶装鲜啤+二氧化碳+冰镇</span>
+                    <div class="result-box bg-green">扎啤</div>
+                </div>
+            </div>
+
+            <!-- Branch 5 -->
+            <div class="branch-row">
+                <div class="branch-content">
+                    <span class="process-text">滤清+巴氏杀菌或瞬时高温杀菌</span>
+                    <div class="result-box bg-blue">熟啤</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Section: Beer Classification -->
+    <div class="tree-section bottom-section">
+        <div class="bottom-label">按工艺区分</div>
+        <div class="node-main">啤酒</div>
+
+        <div class="branches-container">
+             <!-- SVG Connector for Bottom Section -->
+             <svg class="connector" viewBox="0 0 500 250" preserveAspectRatio="none">
+                <!-- Main horizontal line from node -->
+                <path d="M 100 40 L 150 40" />
+                <!-- Vertical spine -->
+                <path d="M 150 20 L 150 220" />
+                <!-- Branches -->
+                <path d="M 150 50 Q 160 50 170 50 L 220 50" /> <!-- Craft -->
+                <path d="M 150 90 Q 160 90 170 90 L 220 90" /> <!-- Industrial -->
+                <path d="M 150 140 Q 160 140 170 140 L 220 140" /> <!-- Ice -->
+                <path d="M 150 190 Q 160 190 170 190 L 220 190" /> <!-- Dry -->
+            </svg>
+
+            <!-- Branch 1 -->
+            <div class="branch-row">
+                <div class="branch-content">
+                    <div class="result-box bg-orange">精酿啤酒</div>
+                    <span class="process-text" style="margin-left: 15px; min-width: 150px;">追求独特的口味</span>
+                </div>
+            </div>
+
+            <!-- Branch 2 -->
+            <div class="branch-row">
+                <div class="branch-content">
+                    <div class="result-box bg-blue">工业啤酒</div>
+                    <span class="process-text" style="margin-left: 15px; min-width: 150px;">追求工业标准化</span>
+                </div>
+            </div>
+
+            <!-- Branch 3 -->
+            <div class="branch-row">
+                <div class="branch-content">
+                    <div class="result-box bg-orange">冰啤</div>
+                </div>
+                <div class="description-text">
+                    先把啤酒的温度降到冰点，使啤酒因低温而产生冷浑浊，然后再进行过滤使啤酒变清，和普通啤酒最大的不同之处在于降温的冰晶化处理，使酒色更亮丽，口感更清爽醇厚，酒精度数也有一定提高。
+                </div>
+            </div>
+
+            <!-- Branch 4 -->
+            <div class="branch-row">
+                <div class="branch-content">
+                    <div class="result-box bg-orange">干啤</div>
+                </div>
+                <div class="description-text">
+                    干啤采用了特殊的酵母进行发酵酿制，使啤酒中所含的糖分完全转化为酒精，比普通啤酒要低，让干啤喝起来的口感干爽而不甜，清爽而无余味。
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

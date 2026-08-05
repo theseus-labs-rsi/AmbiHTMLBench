@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Short Form Registration Statement</title>
+<script>
+window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: #f4f4f2;
+    color: #050505;
+    font-family: "Times New Roman", Times, serif;
+  }
+  .page {
+    width: 1400px;
+    min-height: 2000px;
+    margin: 0 auto;
+    padding: 46px 48px 34px;
+    background: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  .received {
+    text-align: center;
+    font-size: 31px;
+    line-height: 1;
+    margin: 0 0 2px;
+    letter-spacing: .2px;
+  }
+  .header {
+    display: grid;
+    grid-template-columns: 46% 54%;
+    min-height: 147px;
+    padding: 2px 5px 11px;
+  }
+  .agency {
+    font-size: 21px;
+    font-weight: bold;
+    line-height: 1.9;
+    padding-top: 15px;
+  }
+  .title-block {
+    text-align: left;
+    padding-left: 12px;
+  }
+  .omb {
+    text-align: center;
+    font-size: 18px;
+    line-height: 1.1;
+  }
+  .document-title {
+    font-size: 33px;
+    font-weight: bold;
+    line-height: 1.22;
+    margin-top: 4px;
+  }
+  .rule {
+    border-top: 14px double #000;
+    border-bottom: 2px solid #000;
+    height: 22px;
+    margin: 0 0 16px;
+  }
+  .intro {
+    font-size: 20px;
+    line-height: 1.2;
+    padding: 0 5px;
+  }
+  .intro p { margin: 0 0 21px; }
+  .intro strong { font-weight: bold; }
+  .form {
+    border-top: 3px solid #000;
+    margin-top: 29px;
+    font-size: 24px;
+    line-height: 1.12;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 49% 51%;
+    border-bottom: 3px solid #000;
+  }
+  .cell {
+    min-height: 100px;
+    padding: 9px 12px;
+  }
+  .cell + .cell { border-left: 3px solid #000; }
+  .label {
+    font-size: 24px;
+    margin-bottom: 17px;
+  }
+  .value {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 24px;
+    padding-left: 28px;
+    line-height: 1.22;
+  }
+  .name-row .cell { min-height: 117px; }
+  .address-row .cell { min-height: 147px; }
+  .birth-row .cell { min-height: 177px; }
+  .birth-row .label { margin-bottom: 30px; }
+  .birth-info {
+    padding-left: 30px;
+    line-height: 2.55;
+  }
+  .occupation {
+    min-height: 74px;
+    border-bottom: 3px solid #000;
+    padding: 10px 0 0;
+  }
+  .occupation .value {
+    display: inline;
+    padding-left: 18px;
+  }
+  .registrant {
+    min-height: 117px;
+    border-bottom: 3px solid #000;
+    padding: 8px 0;
+  }
+  .registrant-title { font-size: 23px; }
+  .registrant-grid {
+    display: grid;
+    grid-template-columns: 48% 52%;
+    margin: 3px 0 0 34px;
+  }
+  .registrant-grid .sub-label {
+    font-size: 22px;
+  }
+  .registrant-grid .value {
+    padding-left: 70px;
+    font-size: 24px;
+  }
+  .registrant-grid .address-value {
+    padding-left: 98px;
+    margin-top: -26px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 24px;
+    line-height: 1.14;
+  }
+  .connections {
+    min-height: 174px;
+    border-bottom: 3px solid #000;
+    padding-top: 7px;
+  }
+  .connections-title { font-size: 23px; }
+  .checks {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px 50px;
+    margin: 9px 80px 0 96px;
+    font-size: 24px;
+  }
+  .check {
+    white-space: nowrap;
+    font-size: 24px;
+  }
+  .box {
+    display: inline-block;
+    width: 21px;
+    height: 21px;
+    border: 2px solid #000;
+    vertical-align: -2px;
+    margin-right: 16px;
+    position: relative;
+  }
+  .checked:before, .checked:after {
+    content: "";
+    position: absolute;
+    background: #000;
+    height: 3px;
+    top: 8px;
+  }
+  .checked:before { width: 8px; transform: rotate(45deg); left: 2px; }
+  .checked:after { width: 14px; transform: rotate(-45deg); left: 5px; }
+  .other {
+    grid-column: 1 / span 2;
+  }
+  .line {
+    display: inline-block;
+    width: 410px;
+    border-bottom: 2px solid #000;
+    vertical-align: 4px;
+    margin-left: 0;
+  }
+  .item {
+    border-bottom: 3px solid #000;
+    padding: 6px 0 8px;
+    font-size: 23px;
+    line-height: 1.18;
+  }
+  .item-value {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 24px;
+    padding: 10px 0 0 44px;
+  }
+  .services {
+    min-height: 245px;
+    padding: 7px 0 0;
+    border-bottom: 8px double #000;
+  }
+  .services-title {
+    font-size: 23px;
+    line-height: 1.18;
+    padding-left: 0;
+  }
+  .services-text {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 24px;
+    line-height: 1.25;
+    padding: 14px 38px 0 45px;
+    height: 134px;
+    overflow: hidden;
+  }
+  .footer {
+    display: flex;
+    justify-content: flex-end;
+    font-size: 19px;
+    line-height: 1.15;
+    padding-top: 7px;
+    text-align: left;
+  }
+  .footer-received {
+    text-align: center;
+    font-size: 31px;
+    margin-top: 32px;
+    white-space: nowrap;
+  }
+  .page-mark {
+    position: absolute;
+    right: 53px;
+    bottom: 162px;
+    width: 20px;
+    height: 20px;
+    background: #000;
+    color: white;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    text-align: center;
+    line-height: 20px;
+    font-size: 14px;
+  }
+  @media (max-width: 1450px) {
+    .page {
+      transform-origin: top left;
+      transform: scale(calc(100vw / 1400));
+      margin-bottom: calc(-2000px + 100vw * 2000 / 1400);
+    }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="received">Received by NSD/FARA Registration Unit&nbsp;&nbsp; 02/09/2018&nbsp;&nbsp; 3:51:40 PM</div>
+
+  <header class="header">
+    <div class="agency">U.S. Department of Justice<br>Washington, DC 20530</div>
+    <div class="title-block">
+      <div class="omb">OMB No. 1124-0005; Expires May 31, 2020</div>
+      <div class="document-title">Short Form Registration Statement<br>Pursuant to the Foreign Agents Registration Act of<br>1938, as amended</div>
+    </div>
+  </header>
+
+  <div class="rule"></div>
+
+  <section class="intro">
+    <p><strong>INSTRUCTIONS.</strong> Each partner, officer, director, associate, employee, and agent of a registrant is required to file a short form registration statement unless he engages in no activities in furtherance of the interests of the registrant's foreign principal or unless the services he renders to the registrant are in a secretarial, clerical, or in a related or similar capacity. Compliance is accomplished by filing an electronic short form registration statement at <u>https://www.fara.gov</u>.</p>
+
+    <p><strong>Privacy Act Statement.</strong> The filing of this document is required for the Foreign Agents Registration Act of 1938, as amended, 22 U.S.C. § 611 <i>et seq.</i>, for the purposes of registration under the Act and public disclosure. Provision of the information requested is mandatory, and failure to provide the information is subject to the penalty and enforcement provisions established in Section 8 of the Act. Every registration statement, short form registration statement, supplemental statement, exhibit, amendment, copy of informational materials or other document or information filed with the Attorney General under this Act is a public record open to public examination, inspection and copying during the posted business hours of the Registration Unit in Washington, DC. Statements are also available online at the Registration Unit's webpage: <u>https://www.fara.gov</u>. One copy of every such document, other than informational materials, is automatically provided to the Secretary of State pursuant to Section 6(b) of the Act, and copies of any and all documents are routinely made available to other agencies, departments and Congress pursuant to Section 6(c) of the Act. The Attorney General also transmits a semi-annual report to Congress on the administration of the Act which lists the names of all agents registered under the Act and the foreign principals they represent. This report is available to the public and online at: <u>https://www.fara.gov</u>.</p>
+
+    <p><strong>Public Reporting Burden.</strong> Public reporting burden for this collection of information is estimated to average .429 hours per response, including the time for reviewing instructions, searching existing data sources, gathering and maintaining the data needed, and completing and reviewing the collection of information. Send comments regarding this burden estimate or any other aspect of this collection of information, including suggestions for reducing this burden to Chief, Registration Unit, Counterintelligence and Export Control Section, National Security Division, U.S. Department of Justice, Washington, DC 20530; and to the Office of Information and Regulatory Affairs, Office of Management and Budget, Washington, DC 20503.</p>
+  </section>
+
+  <main class="form">
+    <div class="row name-row">
+      <div class="cell">
+        <div class="label">1.&nbsp; Name</div>
+        <div class="value">Katharine Braha</div>
+      </div>
+      <div class="cell">
+        <div class="label">2.&nbsp; Registration No.</div>
+        <div class="value">6371</div>
+      </div>
+    </div>
+
+    <div class="row address-row">
+      <div class="cell">
+        <div class="label">3.&nbsp; Residence Address(es)</div>
+        <div class="value">8190 Strawberry Lane, Apt 121<br>Falls Church, VA 22042</div>
+      </div>
+      <div class="cell">
+        <div class="label">4.&nbsp; Business Address(es)</div>
+        <div class="value">601 13th St, NW, Suite 290N<br>Washington, DC 20005</div>
+      </div>
+    </div>
+
+    <div class="row birth-row">
+      <div class="cell">
+        <div class="label">5.&nbsp; Year of Birth&nbsp;&nbsp;&nbsp; 1955</div>
+        <div class="birth-info">Nationality&nbsp;&nbsp;&nbsp; US<br>Present Citizenship&nbsp;&nbsp; US</div>
+      </div>
+      <div class="cell">
+        <div class="label">6.&nbsp; If present citizenship was not acquired by birth,<br>&nbsp;&nbsp;&nbsp;&nbsp; indicate when, and how acquired.</div>
+      </div>
+    </div>
+
+    <div class="occupation">7.&nbsp; Occupation <span class="value">Vice President</span></div>
+
+    <section class="registrant">
+      <div class="registrant-title">8.&nbsp; What is the name and address of the primary registrant?</div>
+      <div class="registrant-grid">
+        <div>
+          <div class="sub-label">Name</div>
+          <div class="value">Andreae &amp; Associates</div>
+        </div>
+        <div>
+          <div class="sub-label">Address</div>
+          <div class="address-value">601 13th St, NW Suite 290N<br>Washington, DC 20005</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="connections">
+      <div class="connections-title">9.&nbsp; Indicate your connection with the primary registrant:</div>
+      <div class="checks">
+        <div class="check"><span class="box"></span>partner</div>
+        <div class="check"><span class="box"></span>director</div>
+        <div class="check"><span class="box"></span>employee</div>
+        <div class="check"><span class="box"></span>consultant</div>
+        <div class="check"><span class="box"></span>officer</div>
+        <div class="check"><span class="box checked"></span>associate</div>
+        <div class="check"><span class="box"></span>agent</div>
+        <div class="check"><span class="box"></span>subcontractor</div>
+        <div class="check other"><span class="box"></span>other <i>(specify)</i><span class="line"></span></div>
+      </div>
+    </section>
+
+    <section class="item">
+      10.&nbsp; List every foreign principal to whom you will render services in support of the primary registrant.
+      <div class="item-value">SCL Social, For Iraq United</div>
+    </section>
+
+    <section class="services">
+      <div class="services-title">11.&nbsp; Describe separately and in detail all services which you will render to the foreign principal(s) listed in Item 10 either directly, or<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;through the primary registrant listed in Item 8, and the date(s) of such services. <i>(If space is insufficient, a full insert page must be<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;used.)</i></div>
+      <div class="services-text">SCL Social: Registrant will advise and represent SCL Social on government relations and public affairs matters<br>before Congress, the media, and the Executive Branch.<br>For Iraq United: Registrant will advise and provide government relations services for For Iraq United before<br>Congress, the media, and the Executive Branch.</div>
+    </section>
+  </main>
+
+  <div class="page-mark">+</div>
+  <div class="footer">FORM NSD-6<br>Revised 05/17</div>
+  <div class="footer-received">Received by NSD/FARA Registration Unit&nbsp;&nbsp; 02/09/2018&nbsp;&nbsp; 3:51:40 PM</div>
+</div>
+</body>
+</html>

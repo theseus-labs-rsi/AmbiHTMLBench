@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script>window.MathJax={tex:{inlineMath:[["$","$"]],displayMath:[["$$","$$"]]}};</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NavigationDestination: getState() 方法 - Web API | MDN</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #333;
+            line-height: 1.5;
+            margin: 0;
+            padding: 20px;
+            background-color: #fff;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 14px;
+            font-weight: normal;
+            margin: 0;
+        }
+
+        .code-block {
+            background-color: #f6f8fa;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            padding: 16px;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 13px;
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+
+        .code-header {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 400;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .spec-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #d0d7de;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .spec-table td {
+            padding: 10px;
+            border-bottom: 1px solid #d0d7de;
+        }
+
+        .spec-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .spec-label {
+            font-weight: bold;
+            width: 100px;
+        }
+
+        a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .compat-links {
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .compat-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #d0d7de;
+            font-size: 13px;
+            margin-bottom: 30px;
+        }
+
+        .compat-table th, .compat-table td {
+            border: 1px solid #d0d7de;
+            padding: 8px 4px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .compat-table th {
+            background-color: #f6f8fa;
+            font-weight: normal;
+        }
+
+        .browser-name {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            transform: rotate(180deg);
+            white-space: nowrap;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #333;
+        }
+        
+        .browser-icon {
+            font-size: 16px;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .check-mark {
+            color: #008000;
+            font-size: 16px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .version {
+            color: #008000;
+            font-weight: 500;
+        }
+
+        .legend {
+            font-size: 13px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .legend-icon {
+            color: #008000;
+            margin-right: 5px;
+        }
+
+        ul.see-also {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+
+        ul.see-also li {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .footer {
+            margin-top: 50px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+            color: #666;
+            font-size: 13px;
+        }
+
+        .mdn-logo {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 28px;
+            font-weight: bold;
+            font-style: italic;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .mdn-logo span {
+            font-style: normal;
+            font-weight: normal;
+            font-size: 20px;
+            vertical-align: super;
+        }
+
+        .page-url {
+            margin-top: 20px;
+            font-size: 11px;
+            color: #999;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Utility for icons */
+        .icon-desktop::before { content: "🖥️"; font-size: 14px; }
+        .icon-mobile::before { content: "📱"; font-size: 14px; }
+        .icon-chrome::before { content: "🌐"; font-size: 12px; }
+        .icon-edge::before { content: "e"; font-size: 12px; font-weight: bold; font-style: italic; }
+        .icon-firefox::before { content: "🦊"; font-size: 12px; }
+        .icon-opera::before { content: "O"; font-size: 12px; font-weight: bold; }
+        .icon-safari::before { content: "🧭"; font-size: 12px; }
+        .icon-android::before { content: "🤖"; font-size: 12px; }
+        .icon-ios::before { content: "🍎"; font-size: 12px; }
+        .icon-samsung::before { content: "📱"; font-size: 12px; }
+        .icon-webview::before { content: "🌐"; font-size: 12px; }
+
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <span>2026/6/29 02:28</span>
+        <h1>NavigationDestination: getState() 方法 - Web API | MDN</h1>
+    </div>
+
+    <div class="code-block">
+        <span class="code-header">JS</span>
+        <pre>navigation.addEventListener("navigate", (event) => {
+  console.log(event.destination.getState());
+});</pre>
+    </div>
+
+    <h2>规范</h2>
+    <table class="spec-table">
+        <tr>
+            <td class="spec-label">规范</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td class="spec-label"></td>
+            <td>
+                <a href="#">HTML</a><br>
+                # the-navigationdestination-interface:dom-navigationdestination-getstate-2
+            </td>
+        </tr>
+    </table>
+
+    <h2>浏览器兼容性</h2>
+    <div class="compat-links">
+        <a href="#">报告此兼容性数据的问题</a> • <a href="#">在 GitHub 上查看数据</a>
+    </div>
+
+    <table class="compat-table">
+        <thead>
+            <tr>
+                <th style="width: 100px;"></th>
+                <th style="width: 40px;"><span class="icon-desktop"></span></th>
+                <th style="width: 40px;"><span class="icon-mobile"></span></th>
+            </tr>
+            <tr>
+                <th></th>
+                <th>
+                    <span class="browser-name">
+                        <span class="browser-icon icon-chrome"></span> Chrome
+                    </span>
+                </th>
+                <th>
+                    <span class="browser-name">
+                        <span class="browser-icon icon-edge"></span> Edge
+                    </span>
+                </th>
+                <th>
+                    <span class="browser-name">
+                        <span class="browser-icon icon-firefox"></span> Firefox
+                    </span>
+                </th>
+                <th>
+                    <span class="browser-name">
+                        <span class="browser-icon icon-opera"></span> Opera
+                    </span>
+                </th>
+                <th>
+                    <span class="browser-name">
+                        <span class="browser-icon icon-safari"></span> Safari
+                    </span>
+                </th>
+                <th>
+                    <span class="browser-name">
+                        <span class="browser-icon icon-chrome"></span> Chrome Android
+                    </span>
+                </th>
+                <th>
+                    <span class="browser-name">
+                        <span class="browser-icon icon-firefox"></span> Firefox for Android
+                    </span>
+                </th>
+                <th>
+                    <span class="browser-name">
+                        <span class="browser-icon icon-opera"></span> Opera Android
+                    </span>
+                </th>
+                <th>
+                    <span class="browser-name">
+                        <span class="browser-icon icon-safari"></span> Safari on iOS
+                    </span>
+                </th>
+                <th>
+                    <span class="browser-name">
+                        <span class="browser-icon icon-samsung"></span> Samsung Internet
+                    </span>
+                </th>
+                <th>
+                    <span class="browser-name">
+                        <span class="browser-icon icon-webview"></span> WebView Android
+                    </span>
+                </th>
+                <th>
+                    <span class="browser-name">
+                        <span class="browser-icon icon-webview"></span> WebView on iOS
+                    </span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="text-align: left; padding-left: 10px;">getState</td>
+                <td>
+                    <span class="check-mark">✓</span>
+                    <span class="version">102</span>
+                </td>
+                <td>
+                    <span class="check-mark">✓</span>
+                    <span class="version">102</span>
+                </td>
+                <td>
+                    <span class="check-mark">✓</span>
+                    <span class="version">147</span>
+                </td>
+                <td>
+                    <span class="check-mark">✓</span>
+                    <span class="version">88</span>
+                </td>
+                <td>
+                    <span class="check-mark">✓</span>
+                    <span class="version">26.2</span>
+                </td>
+                <td>
+                    <span class="check-mark">✓</span>
+                    <span class="version">102</span>
+                </td>
+                <td>
+                    <span class="check-mark">✓</span>
+                    <span class="version">147</span>
+                </td>
+                <td>
+                    <span class="check-mark">✓</span>
+                    <span class="version">70</span>
+                </td>
+                <td>
+                    <span class="check-mark">✓</span>
+                    <span class="version">26.2</span>
+                </td>
+                <td>
+                    <span class="check-mark">✓</span>
+                    <span class="version">19</span>
+                </td>
+                <td>
+                    <span class="check-mark">✓</span>
+                    <span class="version">102</span>
+                </td
+                <td>
+                    <span class="check-mark">✓</span>
+                    <span class="version">26.2</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="legend">
+        <span class="legend-icon">✓</span> 完全支持
+    </div>
+
+    <h2>参见</h2>
+    <ul class="see-also">
+        <li><a href="#">现代客户端路由：导航 API</a></li>
+        <li><a href="#">导航 API 说明</a></li>
+        <li><a href="#">Domenic Denicola 的导航 API 在线演示</a></li>
+        <li>允许更新状态的方法——<code>Navigation.navigate()</code>、<code>Navigation.reload()</code> 和 <code>Navigation.updateCurrentEntry()</code></li>
+    </ul>
+
+    <div class="footer">
+        <span class="mdn-logo">M mdn<span>_</span></span>
+        <div>构建更美好互联网的蓝图。</div>
+        <div class="page-url">
+            <span>https://developer.mozilla.org/zh-CN/docs/Web/API/NavigationDestination/getState</span>
+            <span>2/2</span>
+        </div>
+    </div>
+
+</body>
+</html>

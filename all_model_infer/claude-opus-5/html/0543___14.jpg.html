@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>半导体 / AI 价值链全景图</title>
+<script>
+window.MathJax = {
+  tex: {inlineMath: [['$','$']], displayMath: [['$$','$$']]}
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 18px 14px 10px;
+    background: #ffffff;
+    font-family: "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
+    color: #1a2540;
+  }
+  .page { max-width: 1024px; margin: 0 auto; }
+
+  h1.main-title {
+    text-align: center;
+    font-size: 47px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin: 6px 0 4px;
+    color: #0e1b3d;
+  }
+  h1.main-title .accent { color: #1c86d6; }
+  .subtitle {
+    text-align: center;
+    font-size: 21px;
+    font-weight: 700;
+    color: #2b3a5c;
+    margin: 0 0 16px;
+  }
+
+  table.chain {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border: 1px solid #d7dce6;
+  }
+  table.chain thead th {
+    background: #10214a;
+    color: #ffffff;
+    font-size: 17px;
+    font-weight: 700;
+    padding: 12px 6px;
+    text-align: center;
+    border-right: 1px solid #2b3a63;
+  }
+  table.chain thead th:last-child { border-right: none; }
+
+  col.c1 { width: 24%; }
+  col.c2 { width: 19%; }
+  col.c3 { width: 33%; }
+  col.c4 { width: 24%; }
+
+  table.chain td {
+    border-top: 1px solid #dfe3ec;
+    border-right: 1px solid #dfe3ec;
+    padding: 14px 12px;
+    vertical-align: middle;
+    font-size: 15.5px;
+    line-height: 1.7;
+  }
+  table.chain td:last-child { border-right: none; }
+
+  /* 层级单元格 */
+  .layer-cell { padding: 12px 10px; }
+  .layer-head { display: flex; align-items: center; gap: 10px; }
+  .num {
+    display: inline-block;
+    width: 30px; height: 30px; line-height: 30px;
+    text-align: center;
+    border-radius: 6px;
+    font-weight: 800;
+    font-size: 17px;
+    color: #ffffff;
+    flex: 0 0 auto;
+  }
+  .layer-name { font-weight: 700; font-size: 16.5px; line-height: 1.45; }
+
+  .placeholder {
+    border: 1px dashed #b9c2d4;
+    background: #f7f9fc;
+    color: #6b7793;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2px;
+  }
+  .icon-ph {
+    width: 62px; height: 58px;
+    margin: 6px 0 0 44px;
+  }
+  .role, .duty { text-align: center; }
+  .logos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 8px 18px;
+    font-weight: 700;
+  }
+  .logos span { white-space: nowrap; font-size: 17px; }
+  .logos .sm { font-size: 13px; }
+
+  /* 行主题色 */
+  .r1 { background:#faf7fd; } .r1 .num { background:#7b3fa0; } .r1 .layer-name { color:#7b3fa0; }
+  .r2 { background:#f4f8fd; } .r2 .num { background:#1e6fb8; } .r2 .layer-name { color:#1e6fb8; }
+  .r3 { background:#f3fafa; } .r3 .num { background:#0f7d78; } .r3 .layer-name { color:#0f7d78; }
+  .r4 { background:#f5faf5; } .r4 .num { background:#3d8b45; } .r4 .layer-name { color:#3d8b45; }
+  .r5 { background:#fdfaf1; } .r5 .num { background:#c8992a; } .r5 .layer-name { color:#c8992a; }
+  .r6 { background:#faf7fd; } .r6 .num { background:#5b3fa0; } .r6 .layer-name { color:#5b3fa0; }
+  .r7 { background:#fdf6f0; } .r7 .num { background:#e0761c; } .r7 .layer-name { color:#e0761c; }
+  .r8 { background:#f4f8fd; } .r8 .num { background:#1e6fb8; } .r8 .layer-name { color:#1e6fb8; }
+  .r9 { background:#f4f8fd; } .r9 .num { background:#1c5ea8; } .r9 .layer-name { color:#1c5ea8; }
+  .r10 { background:#ffffff; } .r10 .num { background:#6b3fa0; } .r10 .layer-name { color:#6b3fa0; }
+
+  /* 关键要点 */
+  .keypoints {
+    margin-top: 16px;
+    border: 1px solid #cfd6e4;
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .kp-left { display: flex; align-items: flex-start; gap: 12px; flex: 0 0 42%; }
+  .kp-icon { width: 52px; height: 52px; flex: 0 0 auto; border-radius: 50%; }
+  .kp-title { font-weight: 800; font-size: 16px; color: #10214a; margin-bottom: 4px; }
+  .kp-text { font-size: 12.5px; line-height: 1.8; color: #2b3a5c; }
+
+  .flow {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 2px;
+  }
+  .flow-item { text-align: center; width: 66px; }
+  .flow-logo {
+    height: 26px;
+    margin-bottom: 4px;
+    font-size: 11px;
+  }
+  .flow-label { font-size: 11.5px; color: #2b3a5c; white-space: nowrap; }
+  .arrow { color: #4a5878; font-size: 14px; padding-top: 8px; }
+
+  .footnote {
+    margin-top: 10px;
+    font-size: 11px;
+    color: #7a8398;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <h1 class="main-title">半导体 / AI <span class="accent">价值链全景图</span></h1>
+  <div class="subtitle">从设计到智能：端到端生态体系</div>
+
+  <table class="chain">
+    <colgroup>
+      <col class="c1"><col class="c2"><col class="c3"><col class="c4">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>层级</th>
+        <th>主要作用</th>
+        <th>代表企业（示例）</th>
+        <th>在AI生态中的角色</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr class="r1">
+        <td class="layer-cell">
+          <div class="layer-head"><span class="num">1</span><span class="layer-name">架构设计 / IP层</span></div>
+          <div class="placeholder icon-ph">[图标: 芯片]</div>
+        </td>
+        <td class="duty">创建基础IP<br>和芯片架构</td>
+        <td>
+          <div class="logos">
+            <span>arm</span><span>cadence</span>
+            <span>SIEMENS</span><span>Allegro <span class="sm">MicroSystems</span></span>
+          </div>
+        </td>
+        <td class="role">定义芯片如何设计，<br>是关键的第一步</td>
+      </tr>
+
+      <tr class="r2">
+        <td class="layer-cell">
+          <div class="layer-head"><span class="num">2</span><span class="layer-name">芯片设计<br>（无晶圆厂）</span></div>
+          <div class="placeholder icon-ph">[图标: 显示器芯片]</div>
+        </td>
+        <td class="duty">使用IP设计芯片，<br>但不生产</td>
+        <td>
+          <div class="logos">
+            <span>NVIDIA</span><span>AMD</span>
+            <span>BROADCOM</span><span>Qualcomm</span>
+            <span>MARVELL</span><span>MACOM</span><span>NXP</span>
+          </div>
+        </td>
+        <td class="role">打造高性能芯片<br>（GPU、CPU、ASIC、<br>SoC、网络芯片等）</td>
+      </tr>
+
+      <tr class="r3">
+        <td class="layer-cell">
+          <div class="layer-head"><span class="num">3</span><span class="layer-name">晶圆制造<br>（代工）</span></div>
+          <div class="placeholder icon-ph">[图标: 工厂]</div>
+        </td>
+        <td class="duty">在晶圆上制造芯片，<br>使用先进制程</td>
+        <td>
+          <div class="logos">
+            <span>tsmc</span><span>UMC</span>
+            <span>GlobalFoundries</span><span>intel</span>
+          </div>
+        </td>
+        <td class="role">最资本密集的环节，<br>将设计变为现实</td>
+      </tr>
+
+      <tr class="r4">
+        <td class="layer-cell">
+          <div class="layer-head"><span class="num">4</span><span class="layer-name">设备<br>（生产设备）</span></div>
+          <div class="placeholder icon-ph">[图标: 设备]</div>
+        </td>
+        <td class="duty">提供制造芯片所需<br>的机器和工具</td>
+        <td>
+          <div class="logos">
+            <span>ASML</span><span>APPLIED MATERIALS</span>
+            <span>Lam <span class="sm">RESEARCH</span></span><span>KLA</span><span>Onto innovation</span>
+          </div>
+        </td>
+        <td class="role">支撑芯片制造的<br>每一步，是进入<br>的高门槛环节</td>
+      </tr>
+
+      <tr class="r5">
+        <td class="layer-cell">
+          <div class="layer-head"><span class="num">5</span><span class="layer-name">封装与测试<br>（OSAT）</span></div>
+          <div class="placeholder icon-ph">[图标: 封装芯片]</div>
+        </td>
+        <td class="duty">封装、打包并测试<br>芯片以确保可用</td>
+        <td>
+          <div class="logos">
+            <span>Amkor <span class="sm">Technology</span></span><span>ASE</span>
+            <span>FormFactor</span>
+          </div>
+        </td>
+        <td class="role">先进封装是AI芯片<br>（HBM、2.5D/3D等）<br>的关键瓶颈</td>
+      </tr>
+
+      <tr class="r6">
+        <td class="layer-cell">
+          <div class="layer-head"><span class="num">6</span><span class="layer-name">内存</span></div>
+          <div class="placeholder icon-ph">[图标: 内存条]</div>
+        </td>
+        <td class="duty">提供内存芯片<br>（DRAM、HBM、<br>NAND），为AI<br>提供存储与带宽</td>
+        <td>
+          <div class="logos">
+            <span>Micron</span><span>WD Western Digital</span>
+            <span>SanDisk</span><span>SEAGATE</span><span>DRAM</span>
+          </div>
+        </td>
+        <td class="role">内存带宽是AI<br>工作负载的关键<br>瓶颈之一</td>
+      </tr>
+
+      <tr class="r7">
+        <td class="layer-cell">
+          <div class="layer-head"><span class="num">7</span><span class="layer-name">电源芯片与<br>电力管理</span></div>
+          <div class="placeholder icon-ph">[图标: 闪电]</div>
+        </td>
+        <td class="duty">高效交付与管理<br>芯片和系统所需<br>的电力</td>
+        <td>
+          <div class="logos">
+            <span>MPS <span class="sm">MONOLITHIC POWER SYSTEMS</span></span><span>TEXAS INSTRUMENTS</span>
+            <span>ST</span><span>NXP</span><span>ON <span class="sm">ON Semiconductor</span></span>
+          </div>
+        </td>
+        <td class="role">对AI服务器、GPU、<br>电动车等电力效率<br>至关重要</td>
+      </tr>
+
+      <tr class="r8">
+        <td class="layer-cell">
+          <div class="layer-head"><span class="num">8</span><span class="layer-name">连接与网络</span></div>
+          <div class="placeholder icon-ph">[图标: 网络节点]</div>
+        </td>
+        <td class="duty">在芯片、系统和<br>数据中心之间<br>高速传输数据</td>
+        <td>
+          <div class="logos">
+            <span>LUMENTUM</span><span>MARVELL</span>
+            <span>ciena</span><span>COHERENT</span><span>CREDO <span class="sm">we Connect.</span></span>
+          </div>
+        </td>
+        <td class="role">高速连接是AI<br>基础设施的<br>关键骨干</td>
+      </tr>
+
+      <tr class="r9">
+        <td class="layer-cell">
+          <div class="layer-head"><span class="num">9</span><span class="layer-name">系统与基础设施</span></div>
+          <div class="placeholder icon-ph">[图标: 服务器机柜]</div>
+        </td>
+        <td class="duty">将芯片集成到服务器、<br>系统和硬件解决方案</td>
+        <td>
+          <div class="logos">
+            <span>DELL <span class="sm">Technologies</span></span><span>Hewlett Packard Enterprise</span><span>TTM <span class="sm">Technologies</span></span>
+            <span>NOKIA</span><span>CELESTICA <span class="sm">ACIO</span></span><span>SMCI</span>
+          </div>
+        </td>
+        <td class="role">将芯片变为可部署<br>的企业、云和AI<br>基础设施</td>
+      </tr>
+
+      <tr class="r10">
+        <td class="layer-cell">
+          <div class="layer-head"><span class="num">10</span><span class="layer-name">云计算 / 超大规模<br>（终端用户）</span></div>
+          <div class="placeholder icon-ph">[图标: 云]</div>
+        </td>
+        <td class="duty">部署大规模计算<br>基础设施并运行<br>AI应用</td>
+        <td>
+          <div class="logos">
+            <span>aws</span><span>Microsoft Azure</span><span>Google Cloud</span>
+            <span>Meta</span><span>@equitydd</span><span>ORACLE</span>
+          </div>
+        </td>
+        <td class="role">推动整个AI<br>产业的计算需求</td>
+      </tr>
+
+    </tbody>
+  </table>
+
+  <div class="keypoints">
+    <div class="kp-left">
+      <div class="placeholder kp-icon">[图标: 靶心]</div>
+      <div>
+        <div class="kp-title">关键要点</div>
+        <div class="kp-text">
+          AI不只是芯片，而是一个完整的生态系统。<br>
+          每一层都至关重要，任何一个环节的瓶颈，<br>
+          都会影响到大规模AI的落地。
+        </div>
+      </div>
+    </div>
+    <div class="flow">
+      <div class="flow-item">
+        <div class="placeholder flow-logo">arm</div>
+        <div class="flow-label">IP</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="flow-item">
+        <div class="placeholder flow-logo">NVIDIA</div>
+        <div class="flow-label">芯片设计</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="flow-item">
+        <div class="placeholder flow-logo">tsmc</div>
+        <div class="flow-label">晶圆制造</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="flow-item">
+        <div class="placeholder flow-logo">Amkor</div>
+        <div class="flow-label">封装测试</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="flow-item">
+        <div class="placeholder flow-logo">Micron</div>
+        <div class="flow-label">内存</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="flow-item">
+        <div class="placeholder flow-logo">MPS</div>
+        <div class="flow-label">电源管理</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="flow-item">
+        <div class="placeholder flow-logo">MARVELL</div>
+        <div class="flow-label">连接网络</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="flow-item">
+        <div class="placeholder flow-logo">SUPERMICRO</div>
+        <div class="flow-label">系统集成</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="flow-item">
+        <div class="placeholder flow-logo">aws</div>
+        <div class="flow-label">云部署</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footnote">注：不构成任何投资建议。图中企业为各层级代表性公司，非完整名单。</div>
+
+</div>
+</body>
+</html>

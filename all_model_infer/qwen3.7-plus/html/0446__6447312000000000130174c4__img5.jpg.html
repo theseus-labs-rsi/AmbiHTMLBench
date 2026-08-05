@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>找工作就要像海王一样</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    background: #f5f0f0;
+    font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+  }
+  .container {
+    max-width: 780px;
+    width: 100%;
+    background: #fff;
+    border: 4px solid #c45a7a;
+    border-radius: 12px;
+    padding: 30px 35px 40px;
+  }
+  .main-title {
+    background: #c45a7a;
+    color: #fff;
+    text-align: center;
+    font-size: 26px;
+    font-weight: bold;
+    padding: 16px 20px;
+    border-radius: 30px;
+    margin-bottom: 18px;
+    letter-spacing: 2px;
+  }
+  .subtitle {
+    font-size: 13px;
+    color: #c45a7a;
+    margin-bottom: 22px;
+    padding-left: 5px;
+  }
+  .section-header {
+    background: #f4a460;
+    color: #fff;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 12px 20px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    letter-spacing: 2px;
+  }
+  .section-body {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 28px;
+    gap: 12px;
+  }
+  .left-label {
+    background: #f9e8ec;
+    border: 1.5px solid #e8b4c0;
+    border-radius: 8px;
+    padding: 14px 10px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #555;
+    text-align: center;
+    min-width: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.6;
+    flex-shrink: 0;
+  }
+  .right-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .row-label {
+    background: #f9e8ec;
+    border: 1.5px solid #e8b4c0;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 13px;
+    font-weight: bold;
+    color: #555;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    min-width: 120px;
+    justify-content: center;
+  }
+  .row-label .icon-x {
+    color: #e74c6f;
+    font-size: 16px;
+  }
+  .row-label .icon-check {
+    color: #4caf50;
+    font-size: 16px;
+  }
+  .row-content {
+    background: #fdf0f3;
+    border: 1.5px solid #f0c8d0;
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 13px;
+    color: #444;
+    line-height: 1.7;
+    flex: 1;
+  }
+  .row-content .highlight {
+    color: #c45a7a;
+    font-weight: bold;
+  }
+  .connector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    flex-shrink: 0;
+  }
+  .connector-line {
+    width: 100%;
+    height: 2px;
+    background: #e8b4c0;
+  }
+  .section-wrapper {
+    margin-bottom: 10px;
+  }
+  .section-wrapper:last-child {
+    margin-bottom: 0;
+  }
+  .tree-connector {
+    display: flex;
+    align-items: stretch;
+  }
+  .tree-left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    position: relative;
+  }
+  .tree-branch {
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+  .branch-line-h {
+    width: 16px;
+    height: 2px;
+    background: #e8b4c0;
+    flex-shrink: 0;
+  }
+  .branch-line-v {
+    width: 2px;
+    background: #e8b4c0;
+    position: absolute;
+    left: 0;
+  }
+  .section-body-inner {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+  }
+  .left-box-wrapper {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .left-box {
+    background: #f9e8ec;
+    border: 1.5px solid #e8b4c0;
+    border-radius: 8px;
+    padding: 14px 10px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #555;
+    text-align: center;
+    min-width: 110px;
+    line-height: 1.6;
+  }
+  .right-rows {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-left: 10px;
+  }
+  .right-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .right-row-label {
+    background: #f9e8ec;
+    border: 1.5px solid #e8b4c0;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 13px;
+    font-weight: bold;
+    color: #555;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    min-width: 120px;
+    justify-content: center;
+  }
+  .right-row-content {
+    background: #fdf0f3;
+    border: 1.5px solid #f0c8d0;
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 13px;
+    color: #444;
+    line-height: 1.7;
+    flex: 1;
+  }
+  .tree-structure {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+  }
+  .tree-label-col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    position: relative;
+    padding-right: 0;
+  }
+  .tree-label-box {
+    background: #f9e8ec;
+    border: 1.5px solid #e8b4c0;
+    border-radius: 8px;
+    padding: 14px 10px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #555;
+    text-align: center;
+    min-width: 110px;
+    line-height: 1.6;
+  }
+  .tree-connector-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 20px;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .tree-connector-col::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #e8b4c0;
+  }
+  .tree-rows-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .tree-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .tree-row-label {
+    background: #f9e8ec;
+    border: 1.5px solid #e8b4c0;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 13px;
+    font-weight: bold;
+    color: #555;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    min-width: 120px;
+    justify-content: center;
+  }
+  .tree-row-content {
+    background: #fdf0f3;
+    border: 1.5px solid #f0c8d0;
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 13px;
+    color: #444;
+    line-height: 1.7;
+    flex: 1;
+  }
+  .section-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    margin-bottom: 28px;
+  }
+  .section-left-label {
+    background: #f9e8ec;
+    border: 1.5px solid #e8b4c0;
+    border-radius: 8px;
+    padding: 14px 10px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #555;
+    text-align: center;
+    min-width: 110px;
+    line-height: 1.6;
+    flex-shrink: 0;
+    margin-right: 10px;
+  }
+  .section-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .section-right-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .section-right-label {
+    background: #f9e8ec;
+    border: 1.5px solid #e8b4c0;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 13px;
+    font-weight: bold;
+    color: #555;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    min-width: 120px;
+    justify-content: center;
+  }
+  .section-right-content {
+    background: #fdf0f3;
+    border: 1.5px solid #f0c8d0;
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 13px;
+    color: #444;
+    line-height: 1.7;
+    flex: 1;
+  }
+  .emoji-icon {
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="main-title">找工作就要像海王一样</div>
+  <div class="subtitle">🤩 找工作真的不要太老实容易吃亏 说话就要像海王一样圆滑多变 什么好听说什么就对了！</div>
+
+  <!-- Section 1 -->
+  <div class="section-wrapper">
+    <div class="section-header">万能打招呼话术</div>
+    <div class="section-layout">
+      <div class="section-left-label">适用于各大<br>招聘软件</div>
+      <div class="section-right">
+        <div class="section-right-row">
+          <div class="section-right-label"><span class="icon-x">❌</span> 要注意的点</div>
+          <div class="section-right-content">
+            铁汁萌招聘软件自带的打招呼话术真的很拉胯，全部都是千篇一律的，一点不能突出你的特色，打招呼的时候一定要让HR知道你跟岗位贴合度是非常高的
+          </div>
+        </div>
+        <div class="section-right-row">
+          <div class="section-right-label"><span class="icon-check">✅</span> 参考话术</div>
+          <div class="section-right-content">
+            XX经理您好！<br>
+            我有X年XX工作/实习经验，负责过XX项目、XX项目，给公司带来了XX价值，感知贵公司的岗位要求蛮匹配的，希望能进一步沟通一下。<br>
+            详情请看我的简历，谢谢您！
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 2 -->
+  <div class="section-wrapper">
+    <div class="section-header">已读不回话术</div>
+    <div class="section-layout">
+      <div class="section-left-label">已读不回<br>这样问</div>
+      <div class="section-right">
+        <div class="section-right-row">
+          <div class="section-right-label"><span class="icon-x">❌</span> 要注意的点</div>
+          <div class="section-right-content">
+            已读不回真的很不礼貌，但是想想你每天收到几百份简历，一个一个回复真的没那么多时间，所以家人们一定要主动，有时候不是你不合适，是太多简历看不过来，所以可以主动问原因。
+          </div>
+        </div>
+        <div class="section-right-row">
+          <div class="section-right-label"><span class="icon-check">✅</span> 参考话术</div>
+          <div class="section-right-content">
+            您好！<br>
+            看您已经读过我的消息，如有疑问，我这边随时给您解答，如果不合适，烦请告知下原因，我好及时调整，如果觉得还不错，是否可以约时间面试一下呢？
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 3 -->
+  <div class="section-wrapper">
+    <div class="section-header">收到offer回复话术</div>
+    <div class="section-layout">
+      <div class="section-left-label">确认offer<br>这样说</div>
+      <div class="section-right">
+        <div class="section-right-row">
+          <div class="section-right-label"><span class="icon-x">❌</span> 要注意的点</div>
+          <div class="section-right-content">
+            确定offer后回复一下是基本的礼貌，也是给公司一个明确的答复，通知他们不要再找人面试了，这个回复很有必要哦。
+          </div>
+        </div>
+        <div class="section-right-row">
+          <div class="section-right-label"><span class="icon-check">✅</span> 参考话术</div>
+          <div class="section-right-content">
+            您发送的邮jian offer我已收到，感谢贵公司对我的认可，我周一早上会携带入职材料按时报道，如有其它要求，请随时与我联系，祝您生活愉快！
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

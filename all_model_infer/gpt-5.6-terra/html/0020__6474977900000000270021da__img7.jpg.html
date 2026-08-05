@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>视觉作业</title>
+  <script>
+    window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: #77572d;
+    }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 18px;
+      font-family: "KaiTi", "STKaiti", "FangSong", serif;
+      color: #173c3a;
+    }
+    .photo {
+      position: relative;
+      width: 540px;
+      height: 720px;
+      overflow: hidden;
+      background:
+        linear-gradient(rgba(119, 159, 152, .18) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(119, 159, 152, .18) 1px, transparent 1px),
+        linear-gradient(rgba(119, 159, 152, .1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(119, 159, 152, .1) 1px, transparent 1px),
+        #f2f2e8;
+      background-size: 22px 22px, 22px 22px, 5.5px 5.5px, 5.5px 5.5px;
+      border-radius: 0 0 20px 0;
+      box-shadow: 0 7px 18px rgba(25, 16, 7, .55);
+    }
+    .paper {
+      position: absolute;
+      inset: 8px 28px 8px 0;
+      border-right: 2px solid #75ada5;
+      padding: 8px 17px 12px 48px;
+    }
+    .rings {
+      position: absolute;
+      z-index: 4;
+      left: 1px;
+      top: 0;
+      width: 42px;
+      height: 100%;
+      background: linear-gradient(90deg, rgba(255,255,255,.15), transparent);
+    }
+    .hole {
+      position: absolute;
+      left: 21px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #3a2a13;
+      box-shadow: inset 2px 2px 3px rgba(0,0,0,.6), 1px 1px 1px rgba(255,255,255,.7);
+    }
+    .ring {
+      position: absolute;
+      left: -12px;
+      width: 35px;
+      height: 30px;
+      border: 6px solid #c8b68d;
+      border-left-color: #5d4b29;
+      border-bottom-color: #76633d;
+      border-radius: 18px;
+      box-shadow: 2px 2px 3px rgba(0,0,0,.45);
+    }
+    .h1 { top: 48px; } .h2 { top: 101px; } .h3 { top: 154px; } .h4 { top: 207px; }
+    .h5 { top: 260px; } .h6 { top: 313px; } .h7 { top: 366px; } .h8 { top: 419px; }
+    .h9 { top: 472px; } .h10 { top: 525px; } .h11 { top: 578px; } .h12 { top: 631px; }
+    .r1 { top: 7px; } .r2 { top: 61px; } .r3 { top: 115px; } .r4 { top: 169px; }
+    .r5 { top: 223px; } .r6 { top: 277px; } .r7 { top: 331px; } .r8 { top: 385px; }
+    .r9 { top: 439px; } .r10 { top: 493px; } .r11 { top: 547px; } .r12 { top: 601px; } .r13 { top: 655px; }
+
+    .title {
+      position: absolute;
+      top: 7px;
+      right: 7px;
+      writing-mode: vertical-rl;
+      font-size: 25px;
+      line-height: 1;
+      letter-spacing: 2px;
+      font-weight: 600;
+    }
+    .side-label {
+      position: absolute;
+      top: 83px;
+      right: 49px;
+      writing-mode: vertical-rl;
+      font-size: 17px;
+      line-height: 1.2;
+    }
+    .tree {
+      position: absolute;
+      top: 141px;
+      left: 72px;
+      right: 49px;
+      bottom: 52px;
+      font-size: 16px;
+      line-height: 1.22;
+    }
+    .root {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 34px;
+      writing-mode: vertical-rl;
+      border-left: 2px solid #64a79e;
+      padding-left: 6px;
+    }
+    .branch {
+      position: absolute;
+      border-top: 2px solid #64a79e;
+    }
+    .branch::before {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: -2px;
+      height: 31px;
+      border-right: 2px solid #64a79e;
+    }
+    .group {
+      position: absolute;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+    }
+    .g1line { top: 37px; right: 31px; width: 76px; }
+    .g1 { top: 38px; right: 40px; height: 214px; }
+    .g2line { top: 37px; right: 128px; width: 74px; }
+    .g2 { top: 38px; right: 137px; height: 225px; }
+    .g3line { top: 37px; right: 221px; width: 72px; }
+    .g3 { top: 38px; right: 230px; height: 205px; }
+    .g4line { top: 37px; right: 311px; width: 74px; }
+    .g4 { top: 38px; right: 320px; height: 220px; }
+    .g5line { top: 280px; right: 103px; width: 198px; }
+    .g5 { top: 290px; right: 112px; height: 309px; }
+    .g6line { top: 280px; right: 321px; width: 159px; }
+    .g6 { top: 290px; right: 330px; height: 292px; }
+    .g7line { top: 490px; right: 33px; width: 147px; }
+    .g7 { top: 500px; right: 42px; height: 170px; }
+    .g8line { top: 490px; right: 200px; width: 135px; }
+    .g8 { top: 500px; right: 209px; height: 168px; }
+
+    .root-text { font-weight: 600; }
+    .minor { font-size: 15px; }
+  </style>
+</head>
+<body>
+  <main class="photo" aria-label="方格笔记纸上的手写视觉作业">
+    <div class="rings" aria-hidden="true">
+      <i class="hole h1"></i><i class="hole h2"></i><i class="hole h3"></i><i class="hole h4"></i>
+      <i class="hole h5"></i><i class="hole h6"></i><i class="hole h7"></i><i class="hole h8"></i>
+      <i class="hole h9"></i><i class="hole h10"></i><i class="hole h11"></i><i class="hole h12"></i>
+      <i class="ring r1"></i><i class="ring r2"></i><i class="ring r3"></i><i class="ring r4"></i>
+      <i class="ring r5"></i><i class="ring r6"></i><i class="ring r7"></i><i class="ring r8"></i>
+      <i class="ring r9"></i><i class="ring r10"></i><i class="ring r11"></i><i class="ring r12"></i><i class="ring r13"></i>
+    </div>
+
+    <section class="paper">
+      <div class="title">视觉作业</div>
+      <div class="side-label">不良作业</div>
+
+      <div class="tree">
+        <div class="root"><span class="root-text">不良作业</span></div>
+
+        <div class="branch g1line"></div>
+        <div class="group g1">
+          <b>字体同</b><br>
+          字体同不良作业使人阅读不方便<br>
+          字号太小，字距太密，字体不清晰<br>
+          字体颜色太淡，字形不统一
+        </div>
+
+        <div class="branch g2line"></div>
+        <div class="group g2">
+          <b>听说稿</b><br>
+          听说稿效果不好<br>
+          字太密集<br>
+          文字模糊
+        </div>
+
+        <div class="branch g3line"></div>
+        <div class="group g3">
+          <b>书写排版</b><br>
+          字体排版没有规律<br>
+          段落排列不整齐<br>
+          文字大小不一
+        </div>
+
+        <div class="branch g4line"></div>
+        <div class="group g4">
+          <b>文字排版</b><br>
+          文字排列混乱<br>
+          行距不合适<br>
+          标题和正文没有区分
+        </div>
+
+        <div class="branch g5line"></div>
+        <div class="group g5 minor">
+          <b>排版不齐</b><br>
+          文字排列没有规律，段落没有对齐<br>
+          字体大小不一致，行距不统一<br>
+          文字密集，阅读困难<br>
+          [illegible]没有层次<br>
+          重点不突出
+        </div>
+
+        <div class="branch g6line"></div>
+        <div class="group g6 minor">
+          <b>花边不齐</b><br>
+          花边和文字之间距离不合适<br>
+          花边太多，影响阅读<br>
+          花边颜色太重<br>
+          图案排列不整齐
+        </div>
+
+        <div class="branch g7line"></div>
+        <div class="group g7 minor">
+          <b>图片素材</b><br>
+          图片不清晰<br>
+          图片和文字没有联系<br>
+          图片太多或太少<br>
+          图片大小不合适
+        </div>
+
+        <div class="branch g8line"></div>
+        <div class="group g8 minor">
+          <b>色彩不好</b><br>
+          色彩搭配不协调<br>
+          色彩太多，太杂乱<br>
+          背景颜色和文字颜色相近<br>
+          阅读困难
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

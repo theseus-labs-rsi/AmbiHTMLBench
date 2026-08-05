@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parameters Choice of the Control Framework Used for Simulations</title>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']]
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    color: #111;
+    font-family: "Times New Roman", Times, serif;
+  }
+  .page {
+    width: 1268px;
+    min-height: 1196px;
+    margin: 0 auto;
+    padding: 4px 58px 0;
+    overflow: hidden;
+  }
+  .table-number {
+    text-align: center;
+    font-size: 18px;
+    line-height: 20px;
+    font-variant: small-caps;
+  }
+  .table-title {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 18px;
+    font-size: 17px;
+    line-height: 20px;
+    font-variant: small-caps;
+    letter-spacing: .45px;
+  }
+  .parameter-table {
+    width: 1078px;
+    margin: 0 auto;
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-size: 18px;
+    line-height: 1.25;
+  }
+  .parameter-table th,
+  .parameter-table td {
+    border-left: 1px solid #444;
+    border-right: 1px solid #444;
+  }
+  .parameter-table th {
+    padding: 2px 7px 1px;
+    text-align: center;
+    font-size: 18px;
+    line-height: 21px;
+    font-weight: bold;
+    border-top: 1px solid #444;
+    border-bottom: 1px solid #444;
+  }
+  .parameter-table td {
+    vertical-align: top;
+    padding: 1px 13px 0;
+    height: 126px;
+    border-bottom: 1px solid #444;
+    white-space: nowrap;
+  }
+  .parameter-table col:nth-child(1) { width: 38.3%; }
+  .parameter-table col:nth-child(2) { width: 38.2%; }
+  .parameter-table col:nth-child(3) { width: 23.5%; }
+
+  .figures-grid {
+    display: grid;
+    grid-template-columns: 570px 570px;
+    column-gap: 24px;
+    margin-top: 49px;
+  }
+  figure {
+    margin: 0;
+    padding: 0;
+  }
+  .plot-stack {
+    width: 100%;
+  }
+  .plot-block {
+    width: 100%;
+    position: relative;
+  }
+  .plot-block.top-left { height: 197px; }
+  .plot-block.bottom-left { height: 206px; margin-top: 6px; }
+  .plot-block.top-right { height: 178px; }
+  .plot-block.bottom-right { height: 208px; margin-top: 0; }
+
+  .placeholder {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+  }
+  .placeholder svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .subfigure-label {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    text-align: center;
+    font-size: 15px;
+    line-height: 18px;
+  }
+  .figure-caption {
+    margin-top: 1px;
+    font-size: 18px;
+    line-height: 21px;
+  }
+  .figure-caption .blue,
+  .article-text .blue {
+    color: #0000cc;
+  }
+  .right-figure .figure-caption {
+    margin-top: 0;
+  }
+
+  .article-columns {
+    display: grid;
+    grid-template-columns: 570px 570px;
+    column-gap: 24px;
+    margin-top: 54px;
+    align-items: start;
+  }
+  .article-text {
+    margin: 0;
+    font-size: 22px;
+    line-height: 1.22;
+    text-align: justify;
+    hyphens: none;
+  }
+  .article-text + .article-text {
+    margin-top: 0;
+    text-indent: 23px;
+  }
+  .right-column {
+    margin-top: -31px;
+  }
+  .right-column .second-paragraph {
+    margin-top: 0;
+    text-indent: 24px;
+  }
+  .section-heading {
+    margin: 28px 0 0;
+    text-align: center;
+    font-size: 22px;
+    line-height: 28px;
+    font-weight: normal;
+    font-variant: small-caps;
+  }
+
+  svg .axis {
+    stroke: #222;
+    stroke-width: 1.15;
+    fill: none;
+  }
+  svg .grid {
+    stroke: #bdbdbd;
+    stroke-width: .65;
+    opacity: .7;
+  }
+  svg .curve {
+    fill: none;
+    stroke: #333;
+    stroke-width: 1.7;
+  }
+  svg .curve-light {
+    fill: none;
+    stroke: #c4c4c4;
+    stroke-width: 1.6;
+  }
+  svg .curve-dash {
+    fill: none;
+    stroke: #858585;
+    stroke-width: 1.5;
+    stroke-dasharray: 6 5;
+  }
+  svg .shade {
+    fill: #dedede;
+    opacity: .78;
+  }
+  svg text {
+    font-family: "Times New Roman", Times, serif;
+    fill: #111;
+    font-size: 16px;
+  }
+  svg .small { font-size: 14px; }
+  svg .label { font-size: 19px; font-style: italic; }
+  svg .legendbox {
+    fill: rgba(255,255,255,.88);
+    stroke: #444;
+    stroke-width: 1;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="table-number">TABLE I</div>
+  <div class="table-title">Parameters choice of the control framework used for simulations.</div>
+
+  <table class="parameter-table">
+    <colgroup><col><col><col></colgroup>
+    <thead>
+      <tr>
+        <th>MPC</th>
+        <th>Robot</th>
+        <th>Passivity filter</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          $x_0=[0,0.6,\frac{\pi}{4},\pi,-\frac{l}{2},0,0,0]$<br>
+          $w_x=[1\mathrm{e}6,1\mathrm{e}6,1.5\mathrm{e}6,0,0,0,1\mathrm{e}{-2},0.1]$<br>
+          $w_u=[1\mathrm{e}{-3},1\mathrm{e}{-3},1\mathrm{e}{-2},1,10]$<br>
+          $W_x=\operatorname{diag}\{w_x\},\ W_y=\operatorname{diag}\{10w_x,w_u\}$<br>
+          $\nu_s=1\mathrm{e}3\ \mathrm{Hz},\ N=5$
+        </td>
+        <td>
+          $K_d=\operatorname{diag}\{3\mathrm{e}2,3\mathrm{e}2,3\mathrm{e}2,90,90,90\}$<br>
+          $D_d=\operatorname{diag}\{50,50,50,15,15,15\}$<br>
+          $K_n=I_{n_q}$<br>
+          $D_n=0.1I_{n_q}$<br>
+          $q_n=[0.85,1.50,1.57,-1.65,-1.50,1.57,2.50]$
+        </td>
+        <td>
+          $T_0=1\mathrm{e}{-2}$<br>
+          $z_0=\sqrt{2T_0}$<br>
+          $\overline{T}=1\mathrm{e}{-2}$<br>
+          $T_\epsilon=5\mathrm{e}{-4}$<br>
+          $\Lambda=\operatorname{diag}\{50,50,0,0,0,0\}$
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="figures-grid">
+    <figure class="left-figure">
+      <div class="plot-stack">
+        <div class="plot-block top-left">
+          <div class="placeholder" role="img" aria-label="Tank energy time-history chart">
+            <svg viewBox="0 0 570 197" preserveAspectRatio="none">
+              <rect x="80" y="24" width="458" height="120" fill="#fff"/>
+              <rect class="shade" x="197" y="24" width="38" height="120"/>
+              <line class="grid" x1="80" y1="24" x2="538" y2="24"/>
+              <line class="grid" x1="80" y1="84" x2="538" y2="84"/>
+              <line class="grid" x1="197" y1="24" x2="197" y2="144"/>
+              <line class="grid" x1="385" y1="24" x2="385" y2="144"/>
+              <rect class="axis" x="80" y="24" width="458" height="120"/>
+              <line class="axis" x1="80" y1="24" x2="75" y2="24"/>
+              <line class="axis" x1="80" y1="84" x2="75" y2="84"/>
+              <line class="axis" x1="538" y1="84" x2="543" y2="84"/>
+              <line class="axis" x1="197" y1="144" x2="197" y2="139"/>
+              <line class="axis" x1="385" y1="144" x2="385" y2="139"/>
+              <path class="curve" d="M80,25
+                C96,24 108,24 115,29
+                C127,38 135,65 145,95
+                C150,106 161,108 177,109
+                L196,110 L199,144 L234,144
+                C236,136 238,61 245,44
+                C251,30 261,29 275,27
+                L281,25
+                C301,24 320,25 340,25
+                C355,25 365,23 374,25
+                C384,27 391,43 402,52
+                C413,61 424,64 434,61
+                L438,29
+                C441,20 444,30 447,39
+                C450,35 452,26 455,26
+                C463,27 472,25 480,25
+                L538,25"/>
+              <path d="M281,25 l3,2 l3,-2 l3,2 l4,-2 l3,2 l3,-2 l3,2 l4,-2
+                       M336,25 l3,4 l3,-4 l3,2
+                       M404,55 l3,-2 l4,3 l4,-1"
+                    fill="none" stroke="#333" stroke-width="1.2"/>
+              <text x="80" y="17">×10<tspan dy="-5" font-size="12">−3</tspan></text>
+              <text x="56" y="29">10</text>
+              <text x="67" y="88">5</text>
+              <text class="label" transform="translate(45 91) rotate(-90)">T</text>
+            </svg>
+            <div class="subfigure-label">(a)</div>
+          </div>
+        </div>
+
+        <div class="plot-block bottom-left">
+          <div class="placeholder" role="img" aria-label="Tank activation parameter time-history chart">
+            <svg viewBox="0 0 570 206" preserveAspectRatio="none">
+              <rect x="80" y="25" width="458" height="120" fill="#fff"/>
+              <rect class="shade" x="197" y="25" width="38" height="120"/>
+              <line class="grid" x1="80" y1="25" x2="538" y2="25"/>
+              <line class="grid" x1="80" y1="85" x2="538" y2="85"/>
+              <line class="grid" x1="80" y1="145" x2="538" y2="145"/>
+              <line class="grid" x1="197" y1="25" x2="197" y2="145"/>
+              <line class="grid" x1="385" y1="25" x2="385" y2="145"/>
+              <rect class="axis" x="80" y="25" width="458" height="120"/>
+              <path d="M80,25 L199,25 L199,145 L233,145 L233,25 L538,25"
+                    fill="none" stroke="#333" stroke-width="3"/>
+              <line class="axis" x1="80" y1="25" x2="75" y2="25"/>
+              <line class="axis" x1="80" y1="85" x2="75" y2="85"/>
+              <line class="axis" x1="80" y1="145" x2="75" y2="145"/>
+              <line class="axis" x1="538" y1="85" x2="543" y2="85"/>
+              <line class="axis" x1="197" y1="145" x2="197" y2="140"/>
+              <line class="axis" x1="385" y1="145" x2="385" y2="140"/>
+              <text x="65" y="30">1</text>
+              <text x="58" y="90">0.5</text>
+              <text x="65" y="150">0</text>
+              <text x="76" y="165">0</text>
+              <text x="227" y="165">5</text>
+              <text x="376" y="165">10</text>
+              <text x="529" y="165">15</text>
+              <text class="label" transform="translate(42 91) rotate(-90)">α</text>
+              <text class="label" x="291" y="188">t</text>
+              <text x="308" y="188">[s]</text>
+            </svg>
+            <div class="subfigure-label">(b)</div>
+          </div>
+        </div>
+      </div>
+      <figcaption class="figure-caption">
+        Fig. 9.&nbsp;&nbsp; Time history of the tank energy <span class="blue">(a)</span> and tank activation parameter <span class="blue">(b)</span><br>
+        during the <i>passive case</i> simulation.
+      </figcaption>
+    </figure>
+
+    <figure class="right-figure">
+      <div class="plot-stack">
+        <div class="plot-block top-right">
+          <div class="placeholder" role="img" aria-label="Object tracking error time-history chart">
+            <svg viewBox="0 0 570 178" preserveAspectRatio="none">
+              <rect x="80" y="10" width="458" height="120" fill="#fff"/>
+              <rect class="shade" x="197" y="10" width="38" height="120"/>
+              <line class="grid" x1="80" y1="25" x2="538" y2="25"/>
+              <line class="grid" x1="80" y1="42" x2="538" y2="42"/>
+              <line class="grid" x1="80" y1="59" x2="538" y2="59"/>
+              <line class="grid" x1="80" y1="76" x2="538" y2="76"/>
+              <line class="grid" x1="80" y1="93" x2="538" y2="93"/>
+              <line class="grid" x1="80" y1="110" x2="538" y2="110"/>
+              <line class="grid" x1="80" y1="127" x2="538" y2="127"/>
+              <line class="grid" x1="233" y1="10" x2="233" y2="130"/>
+              <line class="grid" x1="385" y1="10" x2="385" y2="130"/>
+              <rect class="axis" x="80" y="10" width="458" height="120"/>
+              <line class="axis" x1="80" y1="93" x2="538" y2="93"/>
+              <path class="curve" d="M80,92 C123,92 155,91 196,90
+                C209,83 223,76 232,67
+                C235,88 238,97 243,100
+                C259,99 276,95 294,93
+                C307,91 318,96 330,95
+                C344,97 357,94 370,94
+                C388,94 405,91 421,92
+                C437,94 452,103 468,103
+                C491,102 510,97 538,96"/>
+              <path class="curve-light" d="M80,93 L197,93
+                C208,94 220,111 232,126
+                C238,112 240,77 245,46
+                C248,78 250,108 258,112
+                C267,112 274,89 282,88
+                C292,91 297,101 304,97
+                C312,91 317,68 325,79
+                C336,97 348,95 360,94
+                C389,93 406,94 421,94
+                C432,94 437,99 444,95
+                C448,88 451,96 457,96
+                C479,96 500,95 538,96"/>
+              <path class="curve-dash" d="M80,93 L211,93
+                C224,92 236,89 249,88
+                C262,87 274,88 287,90
+                C300,94 313,99 327,101
+                C349,102 370,101 392,100
+                C414,99 430,101 445,105
+                C463,106 484,104 501,101
+                C516,98 528,98 538,99"/>
+              <rect class="legendbox" x="85" y="15" width="141" height="25"/>
+              <line class="curve" x1="90" y1="27" x2="116" y2="27"/>
+              <text class="small" x="119" y="31" font-style="italic">e<tspan dy="3" font-size="11">x</tspan><tspan dy="-3"> −</tspan></text>
+              <line class="curve-dash" x1="153" y1="27" x2="176" y2="27"/>
+              <text class="small" x="180" y="31" font-style="italic">e<tspan dy="3" font-size="11">y</tspan></text>
+              <line class="curve-light" x1="198" y1="27" x2="215" y2="27"/>
+              <text class="small" x="216" y="31" font-style="italic">e<tspan dy="3" font-size="11">θ</tspan></text>
+              <text x="43" y="30">0.08</text>
+              <text x="43" y="47">0.06</text>
+              <text x="43" y="64">0.04</text>
+              <text x="43" y="81">0.02</text>
+              <text x="67" y="98">0</text>
+              <text x="37" y="115">−0.02</text>
+              <text x="37" y="132">−0.04</text>
+              <text class="label" transform="translate(28 122) rotate(-90)">ℰ [m or rad]</text>
+            </svg>
+            <div class="subfigure-label">(a)</div>
+          </div>
+        </div>
+
+        <div class="plot-block bottom-right">
+          <div class="placeholder" role="img" aria-label="Predicted forces time-history chart">
+            <svg viewBox="0 0 570 208" preserveAspectRatio="none">
+              <rect x="80" y="10" width="458" height="120" fill="#fff"/>
+              <rect class="shade" x="197" y="10" width="38" height="120"/>
+              <line class="grid" x1="80" y1="22" x2="538" y2="22"/>
+              <line class="grid" x1="80" y1="54" x2="538" y2="54"/>
+              <line class="grid" x1="80" y1="88" x2="538" y2="88"/>
+              <line class="grid" x1="80" y1="122" x2="538" y2="122"/>
+              <line class="grid" x1="233" y1="10" x2="233" y2="130"/>
+              <line class="grid" x1="385" y1="10" x2="385" y2="130"/>
+              <rect class="axis" x="80" y="10" width="458" height="120"/>
+              <path class="curve" d="M80,122
+                C99,122 111,117 125,109
+                C137,101 145,97 154,97
+                L197,97
+                C209,82 221,51 233,10
+                C235,34 237,77 242,94
+                C247,108 257,113 270,114
+                C286,114 300,105 314,105
+                C326,104 331,112 341,112
+                C353,113 357,106 368,107
+                C377,109 384,108 392,107
+                C409,107 422,106 437,107
+                L538,107"/>
+              <path class="curve-dash" d="M80,122 L194,122
+                C208,122 220,118 231,115
+                C238,120 246,124 257,125
+                C272,125 287,122 302,123
+                C325,124 348,125 370,124
+                C392,123 405,120 419,122
+                C435,126 449,124 466,124
+                C489,123 512,123 538,122"/>
+              <rect class="legendbox" x="429" y="16" width="104" height="25"/>
+              <line class="curve" x1="434" y1="28" x2="458" y2="28"/>
+              <text class="small" x="461" y="31" font-style="italic">f<tspan dy="-5" font-size="10">b</tspan><tspan dy="8" font-size="10">cₓ</tspan></text>
+              <text class="small" x="483" y="31">−</text>
+              <line class="curve-dash" x1="494" y1="28" x2="513" y2="28"/>
+              <text class="small" x="516" y="31" font-style="italic">f<tspan dy="-5" font-size="10">b</tspan><tspan dy="8" font-size="10">cᵧ</tspan></text>
+              <text x="57" y="26">15</text>
+              <text x="57" y="59">10</text>
+              <text x="67" y="93">5</text>
+              <text x="67" y="127">0</text>
+              <text x="76" y="149">0</text>
+              <text x="228" y="149">5</text>
+              <text x="376" y="149">10</text>
+              <text x="527" y="149">15</text>
+              <text class="label" transform="translate(43 105) rotate(-90)">fᵇ [N]</text>
+              <text class="label" x="292" y="174">t</text>
+              <text x="309" y="174">[s]</text>
+            </svg>
+            <div class="subfigure-label">(b)</div>
+          </div>
+        </div>
+      </div>
+      <figcaption class="figure-caption">
+        Fig. 10.&nbsp; Time history of the object tracking error <span class="blue">(a)</span> and predicted forces <span class="blue">(b)</span><br>
+        during the <i>non-passive case</i> simulation.
+      </figcaption>
+    </figure>
+  </div>
+
+  <div class="article-columns">
+    <div class="left-column">
+      <p class="article-text">
+        We report the results up to $t=15$ s to analyze the system behavior during and after the occurrence of the unexpected interaction; the performance along the whole trajectory is shown in the video accompanying this paper. Results are shown in Figs. <span class="blue">8</span> and <span class="blue">9</span>. In all the plots, the time interval during which the external interaction occurs is highlighted with a shaded gray area. The obstacle, which hinders the motion, causes an increase of the tracking error (Fig. <span class="blue">8a</span>), which consequently generates an increase of the pushing force (Fig. <span class="blue">8b</span>). This causes a reduction of the tank energy (Fig. <span class="blue">9a</span>) starting at time $t=3.83$ s when the collision happens, until the lower bound is reached at time $t=3.91$ s. At this point, the tank deactivates changes in the manipulator velocity set-point generated by MPC via the activation parameter $\alpha$ (Fig. <span class="blue">9b</span>),
+      </p>
+    </div>
+
+    <div class="right-column">
+      <p class="article-text">
+        tracking error begins to increase (Fig. <span class="blue">10a</span>) and the pushing force correspondingly rises in a potentially dangerous manner until the obstacle is removed (Fig. <span class="blue">10b</span>). After the obstacle is removed, the tracking error returns to its nominal values.
+      </p>
+      <p class="article-text second-paragraph">
+        The sharp increase in force results from the controller’s attempt to reduce the growing tracking error. In the absence of a passivity filter, no mechanism prevents the controller from continuously increasing the pushing force. Such behavior is clearly undesirable, as physical interactions that hinder motion are not intended to be treated as disturbances to be rejected within the proposed framework. Therefore, integrating a passivity filter into non-prehensile pushing is essential to prevent unsafe system responses.
+      </p>
+      <h2 class="section-heading">V.&nbsp; Experimental Evaluation</h2>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>线性代数笔记 - 数与矩阵相乘</title>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: "KaiTi", "STKaiti", "SimSun", serif;
+            background-color: #f0f0f0;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .page {
+            background-color: #fff;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            min-height: 1000px;
+        }
+        h2 {
+            color: #0056b3;
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #0056b3;
+            margin-top: 20px;
+            font-size: 1.1em;
+        }
+        .highlight {
+            background-color: #ffff00;
+            padding: 2px 4px;
+        }
+        .math-container {
+            margin: 15px 0;
+            text-align: center;
+            overflow-x: auto;
+        }
+        .side-note {
+            font-size: 0.9em;
+            color: #555;
+            margin-left: 10px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .matrix-table {
+            display: inline-table;
+            vertical-align: middle;
+            border-collapse: collapse;
+            margin: 0 10px;
+        }
+        .matrix-table td {
+            padding: 4px 8px;
+            text-align: center;
+        }
+        .det-table {
+            display: inline-table;
+            vertical-align: middle;
+            border-collapse: collapse;
+            margin: 0 5px;
+        }
+        .det-table td {
+            padding: 4px 6px;
+            text-align: center;
+        }
+        .det-left {
+            border-left: 2px solid #333;
+        }
+        .det-right {
+            border-right: 2px solid #333;
+        }
+        ul {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+        ul li::before {
+            content: "(" counter(list-item, lower-roman) ") ";
+            color: #0056b3;
+            font-weight: bold;
+        }
+        .comparison-section {
+            margin-top: 20px;
+            border-top: 1px dashed #ccc;
+            padding-top: 10px;
+        }
+        .comparison-title {
+            font-weight: bold;
+            color: #0056b3;
+            margin-bottom: 10px;
+        }
+        .comparison-row {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        .comparison-label {
+            width: 60px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        .comparison-content {
+            flex-grow: 1;
+        }
+        .formula-text {
+            font-size: 0.95em;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="page">
+    <h2>二、数与矩阵相乘</h2>
+
+    <h3>1. 定义：数入与矩阵A的乘积记作 $\lambda A$ 或 $A\lambda$，规定为</h3>
+    <div class="math-container">
+        <span style="display:inline-block; vertical-align:middle;">
+            $\lambda A = A\lambda =$
+        </span>
+        <table class="matrix-table">
+            <tr>
+                <td>$\lambda a_{11}$</td>
+                <td>$\lambda a_{12}$</td>
+                <td>$\cdots$</td>
+                <td>$\lambda a_{1n}$</td>
+            </tr>
+            <tr>
+                <td>$\lambda a_{21}$</td>
+                <td>$\lambda a_{22}$</td>
+                <td>$\cdots$</td>
+                <td>$\lambda a_{2n}$</td>
+            </tr>
+            <tr>
+                <td>$\cdots$</td>
+                <td>$\cdots$</td>
+                <td>$\cdots$</td>
+                <td>$\cdots$</td>
+            </tr>
+            <tr>
+                <td>$\lambda a_{m1}$</td>
+                <td>$\lambda a_{m2}$</td>
+                <td>$\cdots$</td>
+                <td>$\lambda a_{mn}$</td>
+            </tr>
+        </table>
+        <span class="side-note">数 $\times$ 矩阵所有元素</span>
+    </div>
+
+    <h3>2. 数乘矩阵的运算规律</h3>
+    <ul style="list-style-type: decimal; padding-left: 20px;">
+        <li style="margin-bottom: 5px;">$(\lambda \mu)A = \lambda(\mu A)$</li>
+        <li style="margin-bottom: 5px;">$(\lambda + \mu)A = \lambda A + \mu A$</li>
+        <li style="margin-bottom: 5px;">$\lambda(A+B) = \lambda A + \lambda B$</li>
+    </ul>
+    <p style="font-size: 0.9em; margin-top: 5px;">矩阵加法与数乘矩阵统称为矩阵的线性运算</p>
+
+    <div class="comparison-section">
+        <div class="comparison-title">3. 比较：提公因子</div>
+        
+        <div class="comparison-row">
+            <div class="comparison-label">行列式：</div>
+            <div class="comparison-content">
+                <div class="formula-text">一行(列)提一次，所有元素均有则外提n次</div>
+                <div class="math-container" style="text-align: left; display: inline-block;">
+                    $\lambda$
+                    <table class="det-table">
+                        <tr><td class="det-left">$a_{11}$</td><td>$a_{12}$</td><td>$a_{13}$</td></tr>
+                        <tr><td class="det-left">$a_{21}$</td><td>$a_{22}$</td><td>$a_{23}$</td></tr>
+                        <tr><td class="det-left">$a_{31}$</td><td>$a_{32}$</td><td>$a_{33}$</td></tr>
+                    </table>
+                    $=$
+                    <table class="det-table">
+                        <tr><td class="det-left">$\lambda a_{11}$</td><td>$\lambda a_{12}$</td><td>$\lambda a_{13}$</td></tr>
+                        <tr><td class="det-left">$a_{21}$</td><td>$a_{22}$</td><td>$a_{23}$</td></tr>
+                        <tr><td class="det-left">$a_{31}$</td><td>$a_{32}$</td><td>$a_{33}$</td></tr>
+                    </table>
+                    $=$
+                    <table class="det-table">
+                        <tr><td class="det-left">$a_{11}$</td><td>$a_{12}$</td><td>$a_{13}$</td></tr>
+                        <tr><td class="det-left">$\lambda a_{21}$</td><td>$\lambda a_{22}$</td><td>$\lambda a_{23}$</td></tr>
+                        <tr><td class="det-left">$a_{31}$</td><td>$a_{32}$</td><td>$a_{33}$</td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="comparison-row">
+            <div class="comparison-label">矩阵：</div>
+            <div class="comparison-content">
+                <div class="formula-text highlight">所有元素均有公因子，外提一次</div>
+                <div class="math-container" style="text-align: left; display: inline-block;">
+                    $\lambda$
+                    <table class="matrix-table">
+                        <tr><td>$a_{11}$</td><td>$a_{12}$</td><td>$a_{13}$</td></tr>
+                        <tr><td>$a_{21}$</td><td>$a_{22}$</td><td>$a_{23}$</td></tr>
+                        <tr><td>$a_{31}$</td><td>$a_{32}$</td><td>$a_{33}$</td></tr>
+                    </table>
+                    $=$
+                    <table class="matrix-table">
+                        <tr><td>$\lambda a_{11}$</td><td>$\lambda a_{12}$</td><td>$\lambda a_{13}$</td></tr>
+                        <tr><td>$\lambda a_{21}$</td><td>$\lambda a_{22}$</td><td>$\lambda a_{23}$</td></tr>
+                        <tr><td>$\lambda a_{31}$</td><td>$\lambda a_{32}$</td><td>$\lambda a_{33}$</td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2>三、矩阵与矩阵相乘</h2>
+    <h3>1. 定义：设 $A=(a_{ij})$ 是一个 $m \times s$ 矩阵， $B=(b_{ij})$ 是一个 $s \times n$ 矩阵，</h3>
+    <p>那么规定矩阵A与矩阵B的乘积是一个 $m \times n$ 矩阵 $C=(c_{ij})$</p>
+    <p>其中 $c_{ij} = a_{i1}b_{1j} + a_{i2}b_{2j} + \cdots + a_{is}b_{sj} = \sum_{k=1}^{s} a_{ik}b_{kj}$</p>
+    <p>并把此乘积记作 $C=AB$</p>
+
+</div>
+
+</body>
+</html>

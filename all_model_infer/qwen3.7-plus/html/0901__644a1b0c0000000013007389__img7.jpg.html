@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>井上雄彦 - 灌篮高手</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: "SimSun", "Songti SC", "STSong", serif;
+    background: #f5f0e8;
+    padding: 20px;
+    color: #222;
+  }
+
+  .container {
+    display: flex;
+    gap: 10px;
+    max-width: 1100px;
+    margin: 0 auto;
+    background: #f5f0e8;
+  }
+
+  .column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 15px;
+  }
+
+  .film-strip {
+    width: 160px;
+    height: 200px;
+    background: #1a1a1a;
+    border-radius: 4px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-bottom: 12px;
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+  }
+
+  .film-strip::before,
+  .film-strip::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 18px;
+    background: #1a1a1a;
+    z-index: 2;
+  }
+
+  .film-strip::before {
+    left: 0;
+    border-right: 1px solid #333;
+  }
+
+  .film-strip::after {
+    right: 0;
+    border-left: 1px solid #333;
+  }
+
+  .film-strip .sprockets {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 8px 0;
+    z-index: 3;
+  }
+
+  .film-strip .sprockets.left {
+    left: 2px;
+  }
+
+  .film-strip .sprockets.right {
+    right: 2px;
+  }
+
+  .sprocket-hole {
+    width: 10px;
+    height: 7px;
+    background: #f5f0e8;
+    border-radius: 2px;
+  }
+
+  .film-content {
+    width: 120px;
+    height: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .film-content.photos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 4px;
+    padding: 8px;
+    width: 120px;
+    height: 180px;
+  }
+
+  .photo-cell {
+    background: #3a5a7a;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: #ccc;
+  }
+
+  .film-content.cartoon {
+    background: #fff;
+    border-radius: 2px;
+  }
+
+  .film-content.illustration {
+    background: #2a6a4a;
+    border-radius: 2px;
+  }
+
+  .cartoon-face {
+    width: 80px;
+    height: 100px;
+    position: relative;
+  }
+
+  .cartoon-face .head {
+    width: 70px;
+    height: 70px;
+    border: 3px solid #c0392b;
+    border-radius: 50% 50% 45% 45%;
+    position: relative;
+    margin: 0 auto;
+  }
+
+  .cartoon-face .cap {
+    width: 75px;
+    height: 25px;
+    background: #c0392b;
+    border-radius: 10px 10px 0 0;
+    position: absolute;
+    top: -10px;
+    left: -2px;
+  }
+
+  .cartoon-face .eye {
+    width: 8px;
+    height: 8px;
+    background: #c0392b;
+    border-radius: 50%;
+    position: absolute;
+    top: 30px;
+  }
+
+  .cartoon-face .eye.left { left: 18px; }
+  .cartoon-face .eye.right { right: 18px; }
+
+  .cartoon-face .mouth {
+    width: 20px;
+    height: 10px;
+    border: 2px solid #c0392b;
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    position: absolute;
+    bottom: 15px;
+    left: 25px;
+  }
+
+  .illustration-face {
+    width: 100px;
+    height: 140px;
+    background: linear-gradient(180deg, #e8734a 0%, #d4623a 30%, #c4956a 50%, #d4a574 70%, #c4956a 100%);
+    border-radius: 50% 50% 45% 45%;
+    position: relative;
+  }
+
+  .illustration-face .hair {
+    width: 110px;
+    height: 60px;
+    background: #c0392b;
+    border-radius: 50% 50% 0 0;
+    position: absolute;
+    top: -10px;
+    left: -5px;
+  }
+
+  .illustration-face .eye {
+    width: 10px;
+    height: 6px;
+    background: #222;
+    border-radius: 50%;
+    position: absolute;
+    top: 55px;
+  }
+
+  .illustration-face .eye.left { left: 28px; }
+  .illustration-face .eye.right { right: 28px; }
+
+  .illustration-face .nose {
+    width: 8px;
+    height: 12px;
+    background: #b8845a;
+    border-radius: 50%;
+    position: absolute;
+    top: 65px;
+    left: 46px;
+  }
+
+  .illustration-face .mouth {
+    width: 16px;
+    height: 4px;
+    background: #8b4513;
+    border-radius: 2px;
+    position: absolute;
+    top: 85px;
+    left: 42px;
+  }
+
+  .author-name {
+    font-size: 22px;
+    font-weight: bold;
+    letter-spacing: 8px;
+    margin-bottom: 15px;
+    text-align: center;
+    color: #111;
+  }
+
+  .body-text {
+    font-size: 14px;
+    line-height: 2;
+    text-align: justify;
+    text-indent: 2em;
+    color: #333;
+    width: 100%;
+  }
+
+  .body-text p {
+    margin-bottom: 0;
+    text-indent: 2em;
+  }
+
+  .column-divider {
+    width: 1px;
+    background: #ccc;
+    align-self: stretch;
+  }
+
+  .film-label {
+    position: absolute;
+    font-size: 7px;
+    color: #aaa;
+    writing-mode: vertical-rl;
+    z-index: 4;
+  }
+
+  .film-label.left-label {
+    left: 20px;
+    top: 10px;
+  }
+
+  .film-label.right-label {
+    right: 20px;
+    top: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Column 1 -->
+  <div class="column">
+    <div class="film-strip">
+      <div class="sprockets left">
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+      </div>
+      <div class="sprockets right">
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+      </div>
+      <div class="film-content photos">
+        <div class="photo-cell" style="background:#4a6a8a;">
+          <div style="width:40px;height:50px;background:#5a7a9a;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:8px;color:#ddd;">[Photo]</div>
+        </div>
+        <div class="photo-cell" style="background:#3a5a7a;">
+          <div style="width:40px;height:50px;background:#4a6a8a;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:8px;color:#ddd;">[Photo]</div>
+        </div>
+        <div class="photo-cell" style="background:#3a5a7a;">
+          <div style="width:40px;height:50px;background:#4a6a8a;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:8px;color:#ddd;">[Photo]</div>
+        </div>
+        <div class="photo-cell" style="background:#4a6a8a;">
+          <div style="width:40px;height:50px;background:#5a7a9a;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:8px;color:#ddd;">[Photo]</div>
+        </div>
+      </div>
+    </div>
+    <div class="author-name">井 上 雄 彦</div>
+    <div class="body-text">
+      <p>最近，我突然想养只狗。</p>
+      <p>小时候，我非常喜欢猫、狗之类的动物，记得自己曾经给邻家的狗随便取名叫"卡洛"，跟它一起玩。</p>
+      <p>我现在的街坊也养着一只大狗，名字叫"银次"。当我从隔壁家不多跟我一般高的驼鹿外喊"银次"的时候，它就会伸出大大的脑袋，并把两只大大的前爪搭在院墙上，一直盯着我。每当这时，我就想如果自己养一只大狗该多好呀。</p>
+    </div>
+  </div>
+
+  <div class="column-divider"></div>
+
+  <!-- Column 2 -->
+  <div class="column">
+    <div class="film-strip">
+      <div class="sprockets left">
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+      </div>
+      <div class="sprockets right">
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+      </div>
+      <div class="film-content cartoon">
+        <div class="cartoon-face">
+          <div class="cap"></div>
+          <div class="head">
+            <div class="eye left"></div>
+            <div class="eye right"></div>
+            <div class="mouth"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="author-name">井 上 雄 彦</div>
+    <div class="body-text">
+      <p>刚开始画"灌篮高手"时的愿望，如今已经实现了两个。</p>
+      <p>一个是以采访为名前往美国观看NBA的决赛。另一个也是以采访为名前往巴塞罗那现场观看奥运会。真要感谢上帝。</p>
+      <p>下一个愿望是希望能看到日本篮球队获得奥运会的出场权。那些少年读者曾经在来信中写到："自从连载了《灌篮高手》后就开始打篮球了"。如果这些孩子们长大之后能实现我的梦想的话……我一定会激动得放声大哭</p>
+    </div>
+  </div>
+
+  <div class="column-divider"></div>
+
+  <!-- Column 3 -->
+  <div class="column">
+    <div class="film-strip" style="background:#1a3a2a;">
+      <div class="sprockets left">
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+      </div>
+      <div class="sprockets right">
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+        <div class="sprocket-hole"></div>
+      </div>
+      <div class="film-content illustration">
+        <div class="illustration-face">
+          <div class="hair"></div>
+          <div class="eye left"></div>
+          <div class="eye right"></div>
+          <div class="nose"></div>
+          <div class="mouth"></div>
+        </div>
+      </div>
+    </div>
+    <div class="author-name">井 上 雄 彦</div>
+    <div class="body-text">
+      <p>多亏大家的支持，《灌篮高手》才能出版第10卷，衷心感谢各位读者朋友。</p>
+      <p>自开始连载已经过去了两年，然而故事中才刚过两个月。如果连载了两年才过两个月的话，那樱木他们升高二的时候岂不是还要等12年，到他们毕业的话，还要等36年……</p>
+      <p>我想不会的……</p>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

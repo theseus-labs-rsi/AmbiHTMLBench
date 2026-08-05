@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Make or Buy Decision</title>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    min-height:100vh;
+    background:#7c4c13;
+    background-image:
+      repeating-linear-gradient(to bottom,
+        rgba(0,0,0,.20) 0px, rgba(0,0,0,.20) 1px,
+        rgba(255,255,255,.06) 1px, rgba(255,255,255,.06) 3px,
+        rgba(0,0,0,0) 3px, rgba(0,0,0,0) 11px),
+      repeating-linear-gradient(to bottom,#89551a 0px,#89551a 12px,#76480f 12px,#76480f 13px);
+    font-family:"Palatino Linotype","Book Antiqua",Georgia,"Times New Roman",serif;
+  }
+  .stage{position:relative;width:1020px;margin:0 auto;padding:0 0 40px 0;}
+  h1.title{
+    margin:0;padding:58px 0 18px 0;text-align:center;
+    font-family:"Times New Roman",Times,serif;font-weight:bold;
+    font-size:50px;color:#d9b63c;letter-spacing:1px;
+    -webkit-text-stroke:1.2px #1a1a1a;
+    text-shadow:3px 3px 0 #3a2a05, 5px 5px 6px rgba(0,0,0,.55);
+  }
+  .panel{
+    position:relative;background:#ffffff;border:4px solid #161616;
+    width:978px;margin:0 auto;padding:26px 26px 34px 26px;
+    box-shadow:0 3px 8px rgba(0,0,0,.35);
+  }
+  table.decision{border-collapse:collapse;width:100%;table-layout:fixed;}
+  table.decision col.c-label{width:46%;}
+  table.decision col.c-unit{width:20%;}
+  table.decision col.c-make{width:17%;}
+  table.decision col.c-buy{width:17%;}
+  table.decision th,table.decision td{
+    font-weight:bold;font-size:26px;line-height:1.22;
+    padding:5px 6px;color:#17106f;vertical-align:bottom;
+  }
+  .purple{color:#5c0a60;}
+  .green{color:#0a7e05;}
+  th.cp{text-align:center;border-bottom:4px solid #151515;padding-bottom:2px;}
+  th.c20{text-align:center;border-bottom:4px solid #151515;padding-bottom:2px;}
+  th.sub{text-align:center;border-bottom:4px solid #151515;padding:9px 6px 2px 6px;font-size:27px;}
+  td.lbl{text-align:left;}
+  td.unit{text-align:center;}
+  td.make{text-align:right;white-space:nowrap;}
+  td.buy{text-align:left;white-space:nowrap;}
+  tr.gap td{padding-top:34px;}
+  tr.under25 td.unit{border-bottom:4px solid #151515;padding-bottom:3px;}
+  tr.total td.unit,tr.total td.make,tr.total td.buy{
+    border-top:3px solid #151515;border-bottom:7px double #151515;
+    padding-top:7px;padding-bottom:4px;font-size:30px;
+  }
+  tr.total td.lbl{font-size:27px;padding-top:7px;}
+  .arrow{
+    position:absolute;left:660px;top:357px;width:5px;height:308px;
+    background:#c90000;border-radius:3px;z-index:6;
+    transform:rotate(31deg);transform-origin:top center;
+    box-shadow:0 0 1px rgba(0,0,0,.4);
+  }
+  .arrow::before{
+    content:"";position:absolute;top:-15px;left:50%;
+    transform:translateX(-50%);
+    border-left:10px solid transparent;border-right:10px solid transparent;
+    border-bottom:17px solid #c90000;
+  }
+  .formula{
+    position:relative;z-index:4;display:table;margin:150px auto 0 auto;
+    background:#f4f4f4;border:3px solid #222;padding:9px 22px;
+    color:#1710b8;font-weight:bold;font-size:31px;white-space:nowrap;
+    box-shadow:2px 3px 4px rgba(0,0,0,.4);
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+  <h1 class="title">The Make or Buy Decision</h1>
+
+  <div class="panel">
+    <table class="decision">
+      <colgroup>
+        <col class="c-label"><col class="c-unit"><col class="c-make"><col class="c-buy">
+      </colgroup>
+      <thead>
+        <tr>
+          <th></th>
+          <th class="cp purple">Cost<br>Per Unit</th>
+          <th class="c20 purple" colspan="2">Cost of 20,000 Units</th>
+        </tr>
+        <tr>
+          <th></th>
+          <th></th>
+          <th class="sub purple">Make</th>
+          <th class="sub green">Buy</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="gap under25">
+          <td class="lbl green">Outside purchase price</td>
+          <td class="unit green">$ 25</td>
+          <td class="make"></td>
+          <td class="buy green" style="padding-top:34px;">$ 500,000</td>
+        </tr>
+        <tr><td class="lbl">Direct materials</td><td class="unit">$ 9</td><td class="make">180,000</td><td class="buy"></td></tr>
+        <tr><td class="lbl">Direct labor</td><td class="unit">5</td><td class="make">100,000</td><td class="buy"></td></tr>
+        <tr><td class="lbl">Variable overhead</td><td class="unit">1</td><td class="make">20,000</td><td class="buy"></td></tr>
+        <tr><td class="lbl">Depreciation of equip.</td><td class="unit">3</td><td class="make">-</td><td class="buy"></td></tr>
+        <tr><td class="lbl">Supervisor's salary</td><td class="unit">2</td><td class="make">40,000</td><td class="buy"></td></tr>
+        <tr><td class="lbl">General factory overhead</td><td class="unit">10</td><td class="make">-</td><td class="buy"></td></tr>
+        <tr class="total">
+          <td class="lbl">Total cost</td>
+          <td class="unit">$ 30</td>
+          <td class="make">$ 340,000</td>
+          <td class="buy green">$ 500,000</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="arrow" aria-hidden="true"><!-- red pointer line from the formula up to the Direct materials 20,000-unit total --></div>
+
+  <div class="formula">20,000 &nbsp;&times;&nbsp; $9 per unit &nbsp;=&nbsp; $180,000</div>
+</div>
+</body>
+</html>

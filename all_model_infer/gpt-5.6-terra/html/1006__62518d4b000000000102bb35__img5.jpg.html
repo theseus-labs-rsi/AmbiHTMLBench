@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>习惯型目标</title>
+  <script>
+    window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      width: 540px;
+      height: 720px;
+      overflow: hidden;
+      font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif;
+      color: #171717;
+      background-color: #fff;
+      background-image:
+        linear-gradient(rgba(185,185,185,.22) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(185,185,185,.22) 1px, transparent 1px);
+      background-size: 12px 12px;
+    }
+    .page {
+      position: relative;
+      width: 540px;
+      height: 720px;
+    }
+    .title {
+      position: absolute;
+      top: 3px;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      color: #a94835;
+      font-size: 29px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      line-height: 36px;
+    }
+    .subtitle {
+      position: absolute;
+      top: 47px;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      color: #15507f;
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: .2px;
+      white-space: nowrap;
+    }
+    .notes {
+      position: absolute;
+      top: 127px;
+      left: 14px;
+      width: 126px;
+      font-size: 16px;
+      line-height: 22px;
+    }
+    .note { margin-bottom: 24px; }
+    .note b {
+      color: #145483;
+      font-weight: 700;
+    }
+    .note.last { margin-bottom: 0; }
+
+    .form-area {
+      position: absolute;
+      top: 89px;
+      left: 156px;
+      width: 367px;
+      font-family: SimSun, "Songti SC", serif;
+      font-size: 8px;
+      color: #262626;
+    }
+    .form-title {
+      height: 24px;
+      text-align: center;
+      font-family: "Microsoft YaHei", Arial, sans-serif;
+      font-size: 15px;
+      line-height: 23px;
+    }
+    .box {
+      width: 367px;
+      border: 1px solid #666;
+      background: rgba(255,255,255,.4);
+      position: relative;
+      overflow: hidden;
+    }
+    .target { height: 71px; }
+    .target .label {
+      height: 19px;
+      padding: 3px 2px;
+      border-bottom: 1px solid #777;
+      font-weight: 700;
+    }
+    .target .blank { height: 20px; border-bottom: 1px solid #777; }
+    .target .fields {
+      display: grid;
+      grid-template-columns: 91px 92px 92px 90px;
+      height: 30px;
+    }
+    .fields div {
+      text-align: center;
+      padding-top: 2px;
+      border-right: 1px dashed #999;
+    }
+    .fields div:last-child { border-right: 0; }
+
+    .types {
+      height: 44px;
+      display: flex;
+      align-items: center;
+      padding-top: 3px;
+    }
+    .type-label {
+      width: 36px;
+      align-self: flex-start;
+      padding-top: 7px;
+    }
+    .type-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: 18px 18px;
+      font-size: 8px;
+      align-items: center;
+    }
+    .check {
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .square {
+      display: inline-block;
+      width: 18px;
+      height: 10px;
+      border: 1px solid #555;
+      background: rgba(255,255,255,.55);
+    }
+
+    .section {
+      width: 367px;
+      border: 1px solid #666;
+      background-color: rgba(255,255,255,.35);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 11px;
+    }
+    .section-head {
+      position: relative;
+      height: 14px;
+      padding: 2px 2px 0;
+      border-bottom: 1px solid #888;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .ruled {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 14px;
+      bottom: 0;
+      background-image: repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 15px,
+        rgba(95,95,95,.45) 16px,
+        transparent 17px
+      );
+    }
+    .tracking { height: 69px; margin-bottom: 10px; }
+    .tracking .days {
+      position: absolute;
+      top: 17px;
+      left: 2px;
+      right: 2px;
+      height: 51px;
+      display: grid;
+      grid-template-columns: repeat(20, 1fr);
+      grid-template-rows: repeat(5, 1fr);
+      z-index: 2;
+    }
+    .day {
+      border-right: 1px solid #aaa;
+      border-bottom: 1px solid #aaa;
+      text-align: center;
+      font-size: 5px;
+      line-height: 10px;
+      color: #555;
+    }
+    .day:nth-child(20n) { border-right: 0; }
+    .motivation { height: 68px; margin-bottom: 11px; }
+    .next { height: 181px; margin-bottom: 10px; }
+    .reward-box { height: 65px; margin-bottom: 0; }
+
+    .watermark {
+      position: absolute;
+      top: 76px;
+      left: 140px;
+      transform: rotate(-23deg);
+      transform-origin: left top;
+      font-family: "Microsoft YaHei", Arial, sans-serif;
+      font-size: 12px;
+      color: rgba(90,90,90,.62);
+      white-space: nowrap;
+      z-index: 3;
+    }
+
+    .reward-text {
+      position: absolute;
+      left: 149px;
+      top: 668px;
+      width: 382px;
+      color: #1d1d1d;
+      font-size: 16px;
+      line-height: 22px;
+    }
+    .reward-text b {
+      color: #145483;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="title">习惯型目标</div>
+    <div class="subtitle">重点：明确自己要进行什么活动、以什么频率进行</div>
+
+    <div class="notes">
+      <div class="note"><b>开始时间：</b>何时<br>开始培养习惯</div>
+      <div class="note"><b>频率：</b>多久做一<br>次-每天、每周</div>
+      <div class="note"><b>定时任务：</b>在固<br>定时间点执行某<br>项任务，习惯更<br>容易养成</div>
+      <div class="note"><b>习惯养成点：</b>连<br>续做一件事多少<br>次，可以认为习<br>惯已经养成</div>
+      <div class="note"><b>习惯追踪：</b>罗列<br>了100次用于打勾</div>
+      <div class="note last"><b>主要动机：</b>你可<br>能会写出不少，<br>给动力排个序，<br>识别出最强烈的3<br>个动机</div>
+    </div>
+
+    <div class="form-area">
+      <div class="form-title">习惯型目标</div>
+
+      <div class="box target">
+        <div class="label">写下你的目标</div>
+        <div class="blank"></div>
+        <div class="fields">
+          <div>开始时间</div>
+          <div>频率</div>
+          <div>定时任务</div>
+          <div>习惯养成点</div>
+        </div>
+      </div>
+
+      <div class="types">
+        <div class="type-label">类型</div>
+        <div class="type-grid">
+          <div class="check"><span class="square"></span>精神</div>
+          <div class="check"><span class="square"></span>智力</div>
+          <div class="check"><span class="square"></span>情感</div>
+          <div class="check"><span class="square"></span>生理</div>
+          <div class="check"><span class="square"></span>物质</div>
+          <div class="check"><span class="square"></span>亲子</div>
+          <div class="check"><span class="square"></span>社交</div>
+          <div class="check"><span class="square"></span>职业</div>
+          <div class="check"><span class="square"></span>娱乐</div>
+          <div class="check"><span class="square"></span>服务</div>
+        </div>
+      </div>
+
+      <div class="section tracking">
+        <div class="section-head">习惯追踪</div>
+        <div class="days">
+          <span class="day">1</span><span class="day">2</span><span class="day">3</span><span class="day">4</span><span class="day">5</span><span class="day">6</span><span class="day">7</span><span class="day">8</span><span class="day">9</span><span class="day">10</span><span class="day">11</span><span class="day">12</span><span class="day">13</span><span class="day">14</span><span class="day">15</span><span class="day">16</span><span class="day">17</span><span class="day">18</span><span class="day">19</span><span class="day">20</span>
+          <span class="day">21</span><span class="day">22</span><span class="day">23</span><span class="day">24</span><span class="day">25</span><span class="day">26</span><span class="day">27</span><span class="day">28</span><span class="day">29</span><span class="day">30</span><span class="day">31</span><span class="day">32</span><span class="day">33</span><span class="day">34</span><span class="day">35</span><span class="day">36</span><span class="day">37</span><span class="day">38</span><span class="day">39</span><span class="day">40</span>
+          <span class="day">41</span><span class="day">42</span><span class="day">43</span><span class="day">44</span><span class="day">45</span><span class="day">46</span><span class="day">47</span><span class="day">48</span><span class="day">49</span><span class="day">50</span><span class="day">51</span><span class="day">52</span><span class="day">53</span><span class="day">54</span><span class="day">55</span><span class="day">56</span><span class="day">57</span><span class="day">58</span><span class="day">59</span><span class="day">60</span>
+          <span class="day">61</span><span class="day">62</span><span class="day">63</span><span class="day">64</span><span class="day">65</span><span class="day">66</span><span class="day">67</span><span class="day">68</span><span class="day">69</span><span class="day">70</span><span class="day">71</span><span class="day">72</span><span class="day">73</span><span class="day">74</span><span class="day">75</span><span class="day">76</span><span class="day">77</span><span class="day">78</span><span class="day">79</span><span class="day">80</span>
+          <span class="day">81</span><span class="day">82</span><span class="day">83</span><span class="day">84</span><span class="day">85</span><span class="day">86</span><span class="day">87</span><span class="day">88</span><span class="day">89</span><span class="day">90</span><span class="day">91</span><span class="day">92</span><span class="day">93</span><span class="day">94</span><span class="day">95</span><span class="day">96</span><span class="day">97</span><span class="day">98</span><span class="day">99</span><span class="day">100</span>
+        </div>
+      </div>
+
+      <div class="section motivation">
+        <div class="section-head">主要动机（写下3个主要动机进行排序）</div>
+        <div class="ruled"></div>
+      </div>
+
+      <div class="section next">
+        <div class="section-head">下一步（明确目标，写下实现目标需要做的事情）</div>
+        <div class="ruled"></div>
+        <div class="watermark">整理by 小红书@[illegible]</div>
+      </div>
+
+      <div class="section reward-box">
+        <div class="section-head">奖励（给予不同阶段，实现不同阶段的奖励）</div>
+        <div class="ruled"></div>
+      </div>
+    </div>
+
+    <div class="reward-text">
+      <b>奖励：</b>可设置不同阶段奖励。庆祝是对努力的认可，让<br>
+      胜利带来的愉悦渗透进紧张的神经，给你继续前进的力量
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026 破晓艺术 跨界展览</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: "Microsoft YaHei", "PingFang SC", "Heiti SC", sans-serif;
+      overflow-x: hidden;
+    }
+
+    .poster {
+      width: 480px;
+      height: 860px;
+      background-color: #fcfdfe;
+      position: relative;
+      overflow: hidden;
+      padding: 50px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      /* Subtle grid background mirroring the original */
+      background-image: 
+        linear-gradient(to right, #eaf0f6 1px, transparent 1px),
+        linear-gradient(to bottom, #eaf0f6 1px, transparent 1px);
+      background-size: 120px 120px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Background Watermarks & Shapes */
+    .watermark-new {
+      position: absolute;
+      top: 10px;
+      left: 30px;
+      font-size: 110px;
+      font-weight: 900;
+      color: #eff3f8;
+      font-family: "Arial Black", sans-serif;
+      line-height: 1;
+      z-index: 1;
+      user-select: none;
+    }
+
+    .watermark-year {
+      position: absolute;
+      bottom: 110px;
+      right: 20px;
+      font-size: 110px;
+      font-weight: 900;
+      color: #eff3f8;
+      font-family: "Arial Black", sans-serif;
+      line-height: 1;
+      z-index: 1;
+      user-select: none;
+    }
+
+    .circle-bg {
+      position: absolute;
+      top: 130px;
+      right: -60px;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      border: 1px solid #eaf0f6;
+      z-index: 1;
+    }
+    .circle-bg::after {
+      content: "";
+      position: absolute;
+      top: 30px;
+      left: 30px;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      border: 1px solid #eaf0f6;
+    }
+
+    /* Content Layer */
+    .content-layer {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      justify-content: space-between;
+    }
+
+    /* Top Section */
+    .top-bar {
+      width: 36px;
+      height: 5px;
+      background-color: #18257e;
+      margin-top: 25px;
+      margin-bottom: 12px;
+    }
+
+    .year-title {
+      font-size: 64px;
+      font-weight: 900;
+      color: #18257e;
+      line-height: 0.95;
+      font-family: "Arial Black", sans-serif;
+      letter-spacing: 1px;
+      margin-bottom: 15px;
+    }
+
+    .sub-title {
+      font-size: 42px;
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: 2px;
+      display: inline-block;
+      background: linear-gradient(to bottom, #18257e 55%, #ff0c55 55%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+    }
+
+    /* Main Headline "跨界展览" and Date Column */
+    .main-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: -10px;
+    }
+
+    .main-title-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .main-title-top {
+      font-size: 110px;
+      font-weight: 900;
+      color: #18257e;
+      line-height: 0.95;
+      letter-spacing: -2px;
+    }
+
+    .main-title-bottom-wrapper {
+      position: relative;
+      display: inline-block;
+      margin-top: 5px;
+    }
+
+    .main-title-bottom {
+      font-size: 110px;
+      font-weight: 900;
+      color: #18257e;
+      line-height: 0.95;
+      letter-spacing: -2px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .pink-accent-bar {
+      position: absolute;
+      bottom: 8px;
+      left: 0;
+      width: 100%;
+      height: 32px;
+      background-color: #ff0c55;
+      z-index: 1;
+    }
+
+    .date-column {
+      text-align: right;
+      padding-bottom: 15px;
+    }
+
+    .date-label {
+      font-size: 16px;
+      color: #222;
+      margin-bottom: 4px;
+    }
+
+    .date-value {
+      font-size: 34px;
+      font-weight: 900;
+      color: #ff0c55;
+      font-family: "Arial Black", sans-serif;
+      line-height: 1.1;
+    }
+
+    .date-divider {
+      width: 18px;
+      height: 4px;
+      background-color: #ff0c55;
+      margin: 6px 0 6px auto;
+    }
+
+    /* Middle Section: Price & Location */
+    .middle-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 25px;
+      padding-bottom: 25px;
+    }
+
+    .price-box {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .price-main {
+      color: #ff0c55;
+      font-weight: 900;
+      display: flex;
+      align-items: baseline;
+    }
+
+    .price-symbol {
+      font-size: 22px;
+      margin-right: 2px;
+    }
+
+    .price-number {
+      font-size: 42px;
+      font-family: "Arial Black", sans-serif;
+      line-height: 1;
+    }
+
+    .price-suffix {
+      font-size: 20px;
+      margin-left: 4px;
+    }
+
+    .price-label {
+      font-size: 15px;
+      color: #333;
+      margin-top: 8px;
+    }
+
+    .location-box {
+      text-align: right;
+    }
+
+    .location-bar {
+      width: 18px;
+      height: 3px;
+      background-color: #18257e;
+      margin: 0 0 8px auto;
+    }
+
+    .location-label {
+      font-size: 15px;
+      color: #333;
+      margin-bottom: 6px;
+    }
+
+    .location-value {
+      font-size: 22px;
+      font-weight: 800;
+      color: #18257e;
+    }
+
+    /* Bottom Section: Sponsor & Contact */
+    .bottom-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 40px;
+      padding-top: 10px;
+    }
+
+    .sponsor-box {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sponsor-label {
+      font-size: 16px;
+      color: #333;
+      margin-bottom: 6px;
+    }
+
+    .sponsor-value {
+      font-size: 22px;
+      font-weight: 800;
+      color: #18257e;
+    }
+
+    .bottom-left-bar {
+      width: 24px;
+      height: 5px;
+      background-color: #18257e;
+      margin-top: 28px;
+    }
+
+    .contact-box {
+      text-align: right;
+    }
+
+    .contact-label {
+      font-size: 16px;
+      color: #333;
+      margin-bottom: 6px;
+    }
+
+    .contact-phone {
+      font-size: 24px;
+      font-weight: 900;
+      color: #18257e;
+      font-family: "Arial Black", sans-serif;
+      letter-spacing: 0.5px;
+    }
+
+    .bottom-right-bar {
+      width: 20px;
+      height: 5px;
+      background-color: #18257e;
+      margin: 8px 0 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="poster">
+    <!-- Background Watermarks and Graphics -->
+    <div class="watermark-new">NEW</div>
+    <div class="watermark-year">YEAR</div>
+    <div class="circle-bg"></div>
+
+    <!-- Content Layer -->
+    <div class="content-layer">
+      <div>
+        <div class="top-bar"></div>
+        <div class="year-title">2026</div>
+        <div class="sub-title">破晓艺术</div>
+
+        <div class="main-section">
+          <div class="main-title-group">
+            <div class="main-title-top">跨界</div>
+            <div class="main-title-bottom-wrapper">
+              <div class="main-title-bottom">展览</div>
+              <div class="pink-accent-bar"></div>
+            </div>
+          </div>
+
+          <div class="date-column">
+            <div class="date-label">活动时间</div>
+            <div class="date-value">01/01</div>
+            <div class="date-divider"></div>
+            <div class="date-value">01/03</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="middle-section">
+          <div class="price-box">
+            <div class="price-main">
+              <span class="price-symbol">￥</span>
+              <span class="price-number">60</span>
+              <span class="price-suffix">起</span>
+            </div>
+            <div class="price-label">单人票价</div>
+          </div>
+
+          <div class="location-box">
+            <div class="location-bar"></div>
+            <div class="location-label">活动地点</div>
+            <div class="location-value">厦门湖里区稿定艺术馆</div>
+          </div>
+        </div>
+
+        <div class="bottom-section">
+          <div class="sponsor-box">
+            <div class="sponsor-label">主办方：</div>
+            <div class="sponsor-value">稿定集团</div>
+            <div class="bottom-left-bar"></div>
+          </div>
+
+          <div class="contact-box">
+            <div class="contact-label">联系电话</div>
+            <div class="contact-phone">0592-88888888</div>
+            <div class="bottom-right-bar"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

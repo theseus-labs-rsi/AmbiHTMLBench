@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>docker buildx rm | Docker Docs</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #1c2b33;
+    background: #fff;
+    font-size: 15px;
+  }
+  code, .mono { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace; }
+
+  /* ---------- Announcement bar ---------- */
+  .announce {
+    background: #0b0f19;
+    color: #fff;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    font-size: 14px;
+  }
+  .announce .sparkle { color: #b6c2ff; margin-right: 4px; }
+  .announce .new { font-weight: 700; font-size: 17px; margin-right: 8px; }
+  .announce .msg { font-weight: 600; }
+  .announce .close {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: #cfd6dd;
+  }
+
+  /* ---------- Top nav ---------- */
+  .topnav {
+    background: #1c4bff;
+    color: #fff;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    padding: 0 22px;
+    gap: 26px;
+  }
+  .brand { display: flex; align-items: center; gap: 8px; font-size: 21px; font-weight: 700; }
+  .brand .whale {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: #fff; color: #1c4bff;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 15px;
+  }
+  .brand .docs { font-weight: 400; }
+  .topnav .links { display: flex; gap: 24px; align-items: center; margin-left: 18px; font-size: 15px; }
+  .topnav .links span { padding-bottom: 6px; }
+  .topnav .links .active { border-bottom: 2px solid #fff; }
+  .topnav .right { margin-left: auto; display: flex; gap: 12px; align-items: center; }
+  .btn-pill {
+    background: #3a63ff;
+    border: 1px solid #6d8bff;
+    border-radius: 8px;
+    padding: 8px 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+  }
+  .btn-square {
+    background: #3a63ff;
+    border: 1px solid #6d8bff;
+    border-radius: 8px;
+    width: 38px; height: 38px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+
+  /* ---------- Page frame ---------- */
+  .frame { display: flex; align-items: flex-start; }
+
+  /* ---------- Sidebar ---------- */
+  .sidebar {
+    width: 320px;
+    flex: 0 0 320px;
+    border-right: 1px solid #e6ebf0;
+    padding: 14px 18px 40px 14px;
+    font-size: 15px;
+  }
+  .sidebar .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 10px;
+    border-radius: 6px;
+  }
+  .sidebar .row.selected { background: #e7ecf3; }
+  .sidebar .caret { color: #6b7785; font-size: 12px; }
+  .lvl1 { padding-left: 20px !important; }
+  .lvl2 { padding-left: 34px !important; }
+
+  /* ---------- Main content ---------- */
+  main { flex: 1 1 auto; padding: 22px 30px 60px 30px; max-width: 720px; }
+  .breadcrumb { font-size: 14px; color: #6b7785; margin-bottom: 18px; }
+  .breadcrumb a { color: #1c4bff; text-decoration: none; }
+  .breadcrumb .sep { margin: 0 6px; color: #97a3af; }
+  h1 { font-size: 33px; margin: 0 0 14px 0; font-weight: 600; }
+  .actions { display: flex; gap: 26px; font-size: 14px; color: #2c3b47; align-items: center; }
+  .actions .item { display: inline-flex; align-items: center; gap: 6px; }
+  .rule { border: 0; border-top: 1px solid #e6ebf0; margin: 22px 0 0 0; }
+
+  table.meta { width: 100%; border-collapse: collapse; margin-top: 22px; }
+  table.meta th {
+    text-align: left;
+    width: 135px;
+    font-weight: 600;
+    padding: 12px 0;
+    vertical-align: top;
+    border-bottom: 1px solid #e6ebf0;
+  }
+  table.meta td { padding: 12px 0; border-bottom: 1px solid #e6ebf0; }
+  code.inline {
+    background: #f1f3f6;
+    border-radius: 4px;
+    padding: 3px 6px;
+    font-size: 13.5px;
+  }
+  code.opt {
+    background: #eef1f8;
+    border-radius: 4px;
+    padding: 3px 6px;
+    font-size: 13.5px;
+    color: #23303c;
+  }
+
+  h2 { font-size: 27px; font-weight: 600; margin: 46px 0 16px 0; }
+  h3 { font-size: 21px; font-weight: 600; margin: 34px 0 14px 0; }
+  p { line-height: 1.6; margin: 0 0 12px 0; }
+
+  table.options { width: 100%; border-collapse: collapse; margin-top: 24px; font-size: 15px; }
+  table.options thead th {
+    background: #edf0f4;
+    text-align: left;
+    padding: 12px 14px;
+    font-weight: 600;
+    font-size: 14px;
+  }
+  table.options tbody td {
+    padding: 11px 14px;
+    border-bottom: 1px solid #e6ebf0;
+  }
+  table.options tbody tr:last-child td { border-bottom: 1px solid #e6ebf0; }
+  table.options col.c1 { width: 200px; }
+  table.options col.c2 { width: 80px; }
+
+  pre.term {
+    background: #f6f8fa;
+    border: 1px solid #e2e8ee;
+    border-radius: 8px;
+    padding: 14px 18px;
+    overflow: hidden;
+    font-size: 13.5px;
+    line-height: 1.7;
+    margin: 20px 0;
+    white-space: pre;
+  }
+  pre.term .prompt { color: #2e9e5b; }
+
+  /* ---------- Table of contents ---------- */
+  .toc {
+    width: 400px;
+    flex: 0 0 400px;
+    padding: 22px 24px 40px 24px;
+    font-size: 14.5px;
+  }
+  .toc h4 { font-size: 17px; font-weight: 600; margin: 0 0 14px 0; }
+  .toc .item { padding: 6px 0 6px 14px; color: #35424e; }
+  .toc .item.active { border-left: 3px solid #1c2b33; padding-left: 11px; font-weight: 500; }
+  .toc .sub { padding-left: 34px; }
+
+  /* ---------- Feedback button ---------- */
+  .feedback {
+    position: fixed;
+    right: 26px;
+    bottom: 18px;
+    background: #1c4bff;
+    color: #fff;
+    padding: 14px 20px;
+    border-radius: 8px 8px 0 0;
+    font-size: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .placeholder {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed #b9c3cd;
+    color: #6b7785;
+    font-size: 11px;
+  }
+</style>
+</head>
+<body>
+
+<div class="announce">
+  <span class="sparkle">✦</span><span class="new">New</span>
+  <span class="msg">Insights on the state of AI agents from 800+ builders and leaders. Download your copy →</span>
+  <span class="close">✕</span>
+</div>
+
+<div class="topnav">
+  <div class="brand"><span class="whale">🐳</span>docker<span class="docs">docs</span></div>
+  <div class="links">
+    <span>Get started</span>
+    <span>Guides</span>
+    <span>Manuals</span>
+    <span class="active">Reference</span>
+  </div>
+  <div class="right">
+    <span class="btn-pill">🤖 Gordon</span>
+    <span class="btn-pill">🔍 Search</span>
+    <span class="btn-square">🌓</span>
+  </div>
+</div>
+
+<div class="frame">
+
+  <!-- ======= Sidebar ======= -->
+  <nav class="sidebar">
+    <div class="row"><span>CLI reference</span><span class="caret">⌃</span></div>
+    <div class="row lvl1"><span>docker</span><span class="caret">⌃</span></div>
+    <div class="row lvl2"><span>docker build</span></div>
+    <div class="row lvl2"><span>docker builder</span><span class="caret">⌄</span></div>
+    <div class="row lvl2"><span>docker buildx</span><span class="caret">⌃</span></div>
+    <div class="row" style="padding-left:48px"><span>docker buildx bake</span></div>
+    <div class="row" style="padding-left:48px"><span>docker buildx build</span></div>
+    <div class="row" style="padding-left:48px"><span>docker buildx create</span></div>
+    <div class="row" style="padding-left:48px"><span>docker buildx dap</span><span class="caret">⌄</span></div>
+    <div class="row" style="padding-left:48px"><span>docker buildx debug</span><span class="caret">⌄</span></div>
+    <div class="row" style="padding-left:48px"><span>docker buildx dial-stdio</span></div>
+    <div class="row" style="padding-left:48px"><span>docker buildx du</span></div>
+    <div class="row" style="padding-left:48px"><span>docker buildx history</span><span class="caret">⌄</span></div>
+    <div class="row" style="padding-left:48px"><span>docker buildx imagetools</span><span class="caret">⌄</span></div>
+    <div class="row" style="padding-left:48px"><span>docker buildx inspect</span></div>
+    <div class="row" style="padding-left:48px"><span>docker buildx ls</span></div>
+    <div class="row" style="padding-left:48px"><span>docker buildx policy</span><span class="caret">⌄</span></div>
+    <div class="row" style="padding-left:48px"><span>docker buildx prune</span></div>
+    <div class="row selected" style="padding-left:48px"><span>docker buildx rm</span></div>
+    <div class="row" style="padding-left:48px"><span>docker buildx stop</span></div>
+    <div class="row" style="padding-left:48px"><span>docker buildx use</span></div>
+    <div class="row" style="padding-left:48px"><span>docker buildx version</span></div>
+    <div class="row lvl2"><span>docker checkpoint</span><span class="caret">⌄</span></div>
+    <div class="row lvl2"><span>docker compose</span><span class="caret">⌄</span></div>
+    <div class="row lvl2"><span>docker config</span><span class="caret">⌄</span></div>
+    <div class="row lvl2"><span>docker container</span><span class="caret">⌄</span></div>
+    <div class="row lvl2"><span>docker context</span><span class="caret">⌄</span></div>
+    <div class="row lvl2"><span>docker debug</span></div>
+    <div class="row lvl2"><span>docker desktop</span><span class="caret">⌄</span></div>
+    <div class="row lvl2"><span>docker dhi</span><span class="caret">⌄</span></div>
+    <div class="row lvl2"><span>docker exec</span></div>
+    <div class="row lvl2"><span>docker image</span><span class="caret">⌄</span></div>
+    <div class="row lvl2"><span>docker images</span></div>
+    <div class="row lvl2"><span>docker info</span></div>
+    <div class="row lvl2"><span>docker init</span></div>
+    <div class="row lvl2"><span>docker inspect</span></div>
+    <div class="row lvl2"><span>docker login</span></div>
+    <div class="row lvl2"><span>docker logout</span></div>
+    <div class="row lvl2"><span>docker manifest</span><span class="caret">⌄</span></div>
+    <div class="row lvl2"><span>docker mcp</span><span class="caret">⌄</span></div>
+    <div class="row lvl2"><span>docker model</span><span class="caret">⌄</span></div>
+    <div class="row lvl2"><span>docker network</span><span class="caret">⌄</span></div>
+    <div class="row lvl2"><span>docker node</span><span class="caret">⌄</span></div>
+    <div class="row lvl2"><span>docker offload</span><span class="caret">⌄</span></div>
+    <div class="row lvl2"><span>docker pass</span><span class="caret">⌄</span></div>
+    <div class="row lvl2"><span>docker plugin</span><span class="caret">⌄</span></div>
+    <div class="row lvl2"><span>docker ps</span></div>
+    <div class="row lvl2"><span>docker pull</span></div>
+    <div class="row lvl2"><span>docker push</span></div>
+  </nav>
+
+  <!-- ======= Main ======= -->
+  <main>
+    <div class="breadcrumb">
+      <a href="#">Home</a><span class="sep">/</span>
+      <a href="#">Reference</a><span class="sep">/</span>
+      <a href="#">CLI reference</a><span class="sep">/</span>
+      <a href="#">docker</a><span class="sep">/</span>
+      <a href="#">docker buildx</a><span class="sep">/</span>
+      <span>docker buildx rm</span>
+    </div>
+
+    <h1>docker buildx rm</h1>
+
+    <div class="actions">
+      <span class="item">🤖 Ask Gordon</span>
+      <span class="item">📄 Copy Markdown</span>
+      <span class="item">↗ View Markdown</span>
+    </div>
+
+    <hr class="rule">
+
+    <table class="meta">
+      <tr>
+        <th>Description</th>
+        <td>Remove one or more builder instances</td>
+      </tr>
+      <tr>
+        <th>Usage</th>
+        <td><code class="inline">docker buildx rm [OPTIONS] [NAME...]</code></td>
+      </tr>
+    </table>
+
+    <h2>Description</h2>
+    <p>Removes the specified or current builder. It is a no-op attempting to remove the default builder.</p>
+
+    <h2>Options</h2>
+
+    <table class="options">
+      <colgroup>
+        <col class="c1"><col class="c2"><col>
+      </colgroup>
+      <thead>
+        <tr><th>Option</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code class="opt">--all-inactive</code></td>
+          <td></td>
+          <td>Remove all inactive builders</td>
+        </tr>
+        <tr>
+          <td><code class="opt">-f, --force</code></td>
+          <td></td>
+          <td>Do not prompt for confirmation</td>
+        </tr>
+        <tr>
+          <td><code class="opt">--keep-daemon</code></td>
+          <td></td>
+          <td>Keep the BuildKit daemon running</td>
+        </tr>
+        <tr>
+          <td><code class="opt">--keep-state</code></td>
+          <td></td>
+          <td>Keep BuildKit state</td>
+        </tr>
+        <tr>
+          <td><code class="inline">--timeout</code></td>
+          <td><code class="inline">20s</code></td>
+          <td>Override the default timeout for loading builder status</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Examples</h2>
+
+    <h3>Remove all inactive builders (--all-inactive)</h3>
+    <p>Remove builders that are not in running state.</p>
+<pre class="term"><span class="prompt">$</span> docker buildx rm --all-inactive
+WARNING! This will remove all builders that are not in running state. Are you</pre>
+
+    <h3>Override the configured builder instance (--builder)</h3>
+    <p>Same as <code class="inline">buildx --builder</code>.</p>
+
+    <h3>Do not prompt for confirmation (--force)</h3>
+    <p>Do not prompt for confirmation before removing inactive builders.</p>
+<pre class="term"><span class="prompt">$</span> docker buildx rm --all-inactive --force</pre>
+
+    <h3>Keep the BuildKit daemon running (--keep-daemon)</h3>
+    <p>Keep the BuildKit daemon running after the buildx context is removed. This is useful when you manage BuildKit daemons and buildx contexts independently. Only supported by the <code class="inline">docker-container</code> and <code class="inline">kubernetes</code> drivers.</p>
+  </main>
+
+  <!-- ======= Table of contents ======= -->
+  <aside class="toc">
+    <h4>Table of contents</h4>
+    <div class="item active">Description</div>
+    <div class="item">Options</div>
+    <div class="item">Examples</div>
+    <div class="item sub">Remove all inactive builders (--all-inactive)</div>
+    <div class="item sub">Override the configured builder instance (--builder)</div>
+    <div class="item sub">Do not prompt for confirmation (--force)</div>
+    <div class="item sub">Keep the BuildKit daemon running (--keep-daem...</div>
+    <div class="item sub">Keep BuildKit state (--keep-state)</div>
+  </aside>
+
+</div>
+
+<div class="feedback">💬 Give feedback</div>
+
+</body>
+</html>

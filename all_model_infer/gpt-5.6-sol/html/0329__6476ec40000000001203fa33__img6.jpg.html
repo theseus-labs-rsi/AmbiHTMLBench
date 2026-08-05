@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>光夜备忘录</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    width: 100%;
+    min-height: 100%;
+    background: #fff;
+    color: #3f3f3f;
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+  }
+
+  .phone {
+    position: relative;
+    width: 100%;
+    max-width: 540px;
+    height: 1170px;
+    margin: 0 auto;
+    overflow: hidden;
+    background: #fff;
+  }
+
+  .status-bar {
+    height: 63px;
+    position: relative;
+    color: #050505;
+    font-size: 22px;
+    font-weight: 650;
+  }
+
+  .time {
+    position: absolute;
+    top: 22px;
+    left: 61px;
+    letter-spacing: -0.5px;
+  }
+
+  .heart {
+    position: absolute;
+    top: 25px;
+    left: 122px;
+    font-size: 19px;
+    line-height: 20px;
+  }
+
+  .status-icons {
+    position: absolute;
+    top: 25px;
+    right: 47px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .signal {
+    height: 18px;
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+  }
+
+  .signal span {
+    display: block;
+    width: 4px;
+    border-radius: 1px;
+    background: #050505;
+  }
+
+  .signal span:nth-child(1) { height: 6px; }
+  .signal span:nth-child(2) { height: 10px; }
+  .signal span:nth-child(3) { height: 14px; }
+  .signal span:nth-child(4) { height: 18px; }
+
+  .wifi {
+    position: relative;
+    width: 24px;
+    height: 18px;
+    overflow: hidden;
+  }
+
+  .wifi::before,
+  .wifi::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    border: 3px solid #050505;
+    border-color: #050505 transparent transparent transparent;
+    border-radius: 50%;
+    transform: translateX(-50%);
+  }
+
+  .wifi::before {
+    top: 1px;
+    width: 24px;
+    height: 24px;
+  }
+
+  .wifi::after {
+    top: 8px;
+    width: 12px;
+    height: 12px;
+  }
+
+  .wifi-dot {
+    position: absolute;
+    left: 10px;
+    bottom: 0;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #050505;
+  }
+
+  .battery {
+    position: relative;
+    width: 34px;
+    height: 19px;
+    border-radius: 5px;
+    background: #111;
+    color: #fff;
+    font-size: 15px;
+    line-height: 19px;
+    text-align: center;
+    font-weight: 700;
+  }
+
+  .battery::after {
+    content: "";
+    position: absolute;
+    right: -3px;
+    top: 6px;
+    width: 2px;
+    height: 7px;
+    border-radius: 0 2px 2px 0;
+    background: #888;
+  }
+
+  .header {
+    position: relative;
+    height: 52px;
+    color: #d5ae00;
+  }
+
+  .back {
+    position: absolute;
+    left: 18px;
+    top: 15px;
+    width: 17px;
+    height: 17px;
+    border-left: 3px solid #d4ad00;
+    border-bottom: 3px solid #d4ad00;
+    transform: rotate(45deg);
+  }
+
+  .section-title {
+    position: absolute;
+    left: 45px;
+    top: 9px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 21px;
+    font-weight: 400;
+  }
+
+  .moon {
+    position: relative;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #d5ae00;
+  }
+
+  .moon::after {
+    content: "";
+    position: absolute;
+    left: 7px;
+    top: -2px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: white;
+  }
+
+  .header-actions {
+    position: absolute;
+    top: 7px;
+    right: 27px;
+    display: flex;
+    align-items: center;
+    gap: 31px;
+  }
+
+  .circle-action {
+    width: 28px;
+    height: 28px;
+    border: 2px solid #d5ae00;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 23px;
+    font-size: 22px;
+    font-weight: 400;
+  }
+
+  .circle-action.disabled {
+    color: #bfc0c0;
+    border-color: #bfc0c0;
+  }
+
+  .undo {
+    transform: rotate(-12deg);
+  }
+
+  .share {
+    position: relative;
+    width: 29px;
+    height: 30px;
+    border: 2px solid #d5ae00;
+    border-top: none;
+    border-radius: 3px;
+    margin-left: 5px;
+  }
+
+  .share::before {
+    content: "↑";
+    position: absolute;
+    left: 5px;
+    top: -13px;
+    width: 16px;
+    height: 21px;
+    background: white;
+    color: #d5ae00;
+    font-size: 28px;
+    line-height: 24px;
+    text-align: center;
+  }
+
+  .more {
+    font-size: 20px;
+    letter-spacing: -1px;
+    line-height: 20px;
+  }
+
+  .note {
+    padding: 0 27px 100px 36px;
+    font-size: 21px;
+    line-height: 36.5px;
+    letter-spacing: -0.15px;
+    font-weight: 400;
+  }
+
+  .line {
+    height: 36.5px;
+    white-space: nowrap;
+  }
+
+  .option {
+    display: flex;
+    height: 36.5px;
+    align-items: center;
+  }
+
+  .check {
+    flex: 0 0 auto;
+    width: 27px;
+    height: 27px;
+    border: 1.5px solid #b5b5b5;
+    border-radius: 50%;
+    margin-right: 16px;
+  }
+
+  .underline {
+    display: inline-block;
+    border-bottom: 1px solid #555;
+    line-height: 25px;
+  }
+
+  .bottom-bar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 24px;
+    height: 72px;
+    background: rgba(255,255,255,0.97);
+    color: #d5ae00;
+  }
+
+  .bottom-item {
+    position: absolute;
+    top: 14px;
+    height: 38px;
+  }
+
+  .checklist-icon {
+    left: 28px;
+    width: 34px;
+  }
+
+  .checklist-icon .small-check {
+    position: absolute;
+    left: 0;
+    width: 10px;
+    height: 10px;
+    border: 2px solid #d5ae00;
+    border-radius: 50%;
+  }
+
+  .checklist-icon .small-check:first-child { top: 3px; }
+  .checklist-icon .small-check:nth-child(2) { top: 18px; }
+
+  .checklist-icon .small-check::after {
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 0;
+    width: 5px;
+    height: 3px;
+    border-left: 2px solid #d5ae00;
+    border-bottom: 2px solid #d5ae00;
+    transform: rotate(-45deg);
+  }
+
+  .checklist-icon .rule {
+    position: absolute;
+    left: 15px;
+    width: 17px;
+    height: 1.5px;
+    background: #d5ae00;
+  }
+
+  .checklist-icon .rule.one { top: 8px; }
+  .checklist-icon .rule.two { top: 23px; }
+
+  .camera-icon {
+    left: 181px;
+    width: 33px;
+    height: 24px;
+    top: 17px;
+    border: 2px solid #d5ae00;
+    border-radius: 3px;
+  }
+
+  .camera-icon::before {
+    content: "";
+    position: absolute;
+    left: 9px;
+    top: 5px;
+    width: 10px;
+    height: 10px;
+    border: 2px solid #d5ae00;
+    border-radius: 50%;
+  }
+
+  .camera-icon::after {
+    content: "";
+    position: absolute;
+    left: 6px;
+    top: -5px;
+    width: 11px;
+    height: 5px;
+    border: 2px solid #d5ae00;
+    border-bottom: none;
+    border-radius: 3px 3px 0 0;
+  }
+
+  .pen-circle {
+    left: 335px;
+    width: 28px;
+    height: 28px;
+    border: 2px solid #d5ae00;
+    border-radius: 50%;
+    font-size: 23px;
+    line-height: 24px;
+    text-align: center;
+  }
+
+  .compose {
+    right: 28px;
+    width: 25px;
+    height: 25px;
+    border: 2px solid #d5ae00;
+    border-radius: 2px;
+  }
+
+  .compose::after {
+    content: "";
+    position: absolute;
+    right: -2px;
+    top: -3px;
+    width: 18px;
+    height: 3px;
+    background: #d5ae00;
+    border: 2px solid white;
+    transform: rotate(-43deg);
+    transform-origin: right center;
+  }
+
+  .home-indicator {
+    position: absolute;
+    left: 50%;
+    bottom: 8px;
+    width: 160px;
+    height: 5px;
+    border-radius: 5px;
+    background: #000;
+    transform: translateX(-50%);
+  }
+</style>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] }
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<div class="phone">
+  <div class="status-bar">
+    <div class="time">15:19</div>
+    <div class="heart">♥</div>
+    <div class="status-icons">
+      <div class="signal"><span></span><span></span><span></span><span></span></div>
+      <div class="wifi"><span class="wifi-dot"></span></div>
+      <div class="battery">72</div>
+    </div>
+  </div>
+
+  <div class="header">
+    <div class="back"></div>
+    <div class="section-title"><span class="moon"></span><span>光夜</span></div>
+    <div class="header-actions">
+      <div class="circle-action undo">↶</div>
+      <div class="circle-action disabled">↷</div>
+      <div class="share"></div>
+      <div class="circle-action more">•••</div>
+    </div>
+  </div>
+
+  <main class="note">
+    <div class="line">11专栏 1.0 2.26-4.12</div>
+    <div class="option"><span class="check"></span><span>萧逸：拾光秘密</span></div>
+
+    <div class="line">主线复刻 3.5-3.7</div>
+    <div class="option"><span class="check"></span><span>六星陆沉：幻光</span></div>
+    <div class="option"><span class="check"></span><span>五星齐司礼：遥月心灯</span></div>
+
+    <div class="line">11春活 22年 <span class="underline">3.8-3.16</span></div>
+    <div class="option"><span class="check"></span><span>萧逸：春色撩人</span></div>
+
+    <div class="line">00 春活 22年 <span class="underline">3.16-3.24</span></div>
+    <div class="option"><span class="check"></span><span>夏鸣星：香颂絮语</span></div>
+
+    <div class="line">55 肝活 1.0 <span class="underline">3.24-3.31</span></div>
+    <div class="option"><span class="check"></span><span>查理苏：是日悠悠</span></div>
+
+    <div class="line">主线复刻 3.26-3.28</div>
+    <div class="option"><span class="check"></span><span>六星 查理苏：我心降落</span></div>
+    <div class="option"><span class="check"></span><span>五星 夏鸣星：掠空星芒</span></div>
+
+    <div class="line">00 转盘 1.0 <span class="underline">3.31-4.8</span></div>
+    <div class="option"><span class="check"></span><span>夏鸣星：低温记忆</span></div>
+
+    <div class="line">新主线 4.10-4.16</div>
+    <div class="option"><span class="check"></span><span>六星 萧逸：四百击</span></div>
+    <div class="option"><span class="check"></span><span>五星 齐司礼：碎梦浮金</span></div>
+
+    <div class="line">新主线 4.16-4.22</div>
+    <div class="option"><span class="check"></span><span>六星 查理苏：共犯</span></div>
+    <div class="option"><span class="check"></span><span>五星 陆沉：心灵博弈</span></div>
+
+    <div class="line">66 春活 22年 4.22-4.30</div>
+    <div class="option"><span class="check"></span><span>陆沉：奇诞破晓</span></div>
+
+    <div class="line">55 春活 22年 <span class="underline">4.30-5.8</span></div>
+    <div class="option"><span class="check"></span><span>查理苏：夜幕缭绕</span></div>
+  </main>
+
+  <div class="bottom-bar">
+    <div class="bottom-item checklist-icon">
+      <span class="small-check"></span><span class="small-check"></span>
+      <span class="rule one"></span><span class="rule two"></span>
+    </div>
+    <div class="bottom-item camera-icon"></div>
+    <div class="bottom-item pen-circle">A</div>
+    <div class="bottom-item compose"></div>
+  </div>
+  <div class="home-indicator"></div>
+</div>
+</body>
+</html>

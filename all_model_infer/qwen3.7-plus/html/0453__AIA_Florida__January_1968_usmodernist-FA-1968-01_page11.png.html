@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Organizational Chart</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 13px;
+    background: #fff;
+    padding: 20px;
+    color: #000;
+  }
+
+  .chart-container {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .top-line {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0;
+  }
+
+  .top-line .horizontal-bar {
+    width: 80%;
+    height: 2px;
+    background: #000;
+    position: relative;
+  }
+
+  .top-line .horizontal-bar::before {
+    content: '';
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    width: 2px;
+    height: 30px;
+    background: #000;
+  }
+
+  .commissions-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    position: relative;
+  }
+
+  .commissions-row::before {
+    content: '';
+    position: absolute;
+    top: -30px;
+    left: 10%;
+    right: 10%;
+    height: 2px;
+    background: #000;
+  }
+
+  .commission-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .commission-col::before {
+    content: '';
+    width: 2px;
+    height: 30px;
+    background: #000;
+  }
+
+  .commission-box {
+    border: 2px solid #000;
+    padding: 12px 10px;
+    text-align: center;
+    width: 100%;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: #fff;
+  }
+
+  .commission-box .title {
+    font-size: 13px;
+    font-weight: normal;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .commission-box .name {
+    font-size: 13px;
+    margin-bottom: 2px;
+  }
+
+  .commission-box .role {
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+
+  .sub-committees {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 0;
+  }
+
+  .sub-committees::before {
+    content: '';
+    width: 2px;
+    height: 20px;
+    background: #000;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .sub-box {
+    border: 2px solid #000;
+    padding: 10px 8px;
+    text-align: center;
+    width: 100%;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: #fff;
+  }
+
+  .sub-box .title {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+
+  .sub-box .name {
+    font-size: 13px;
+    margin-bottom: 2px;
+  }
+
+  .sub-box .role {
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+
+  .sub-box .sub-items {
+    text-align: left;
+    font-size: 12px;
+    margin-top: 4px;
+    padding-left: 10px;
+  }
+
+  .sub-box .sub-items div {
+    margin-bottom: 2px;
+  }
+
+  .col-1 .sub-committees {
+    gap: 0;
+  }
+
+  .col-1 .sub-box {
+    min-height: 90px;
+  }
+
+  .col-2 .sub-committees {
+    gap: 0;
+  }
+
+  .col-3 .sub-committees {
+    gap: 0;
+  }
+
+  .col-4 .sub-committees {
+    gap: 0;
+  }
+
+  .col-5 .sub-committees {
+    gap: 0;
+  }
+
+  .connector-line {
+    width: 2px;
+    height: 20px;
+    background: #000;
+    margin: 0 auto;
+  }
+
+  .columns-wrapper {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .column .v-line {
+    width: 2px;
+    height: 20px;
+    background: #000;
+  }
+
+  .column .sub-box {
+    width: 100%;
+  }
+
+  .top-horizontal {
+    position: relative;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .top-horizontal::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 10%;
+    right: 10%;
+    height: 2px;
+    background: #000;
+  }
+
+  .top-horizontal::before {
+    content: '';
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    width: 2px;
+    height: 30px;
+    background: #000;
+  }
+
+  .v-connectors {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 10%;
+    margin-top: -2px;
+  }
+
+  .v-connectors .v-line {
+    width: 2px;
+    height: 30px;
+    background: #000;
+  }
+
+  .sub-v-connectors {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 10%;
+  }
+
+  .sub-v-connectors .v-line {
+    width: 2px;
+    height: 20px;
+    background: #000;
+  }
+
+  .full-chart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .top-bar-container {
+    width: 100%;
+    position: relative;
+    height: 30px;
+  }
+
+  .top-bar-container .bar {
+    position: absolute;
+    top: 0;
+    left: 10%;
+    right: 10%;
+    height: 2px;
+    background: #000;
+  }
+
+  .top-bar-container .center-line {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    width: 2px;
+    height: 30px;
+    background: #000;
+  }
+
+  .five-cols {
+    display: flex;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .five-cols .col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .five-cols .col .drop-line {
+    width: 2px;
+    height: 30px;
+    background: #000;
+  }
+
+  .sub-section {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+  }
+
+  .sub-section .drop-line {
+    width: 2px;
+    height: 20px;
+    background: #000;
+  }
+
+  .sub-section .sub-box {
+    width: 100%;
+  }
+
+  .sub-section .sub-box + .sub-box {
+    margin-top: -2px;
+  }
+
+  .col1-subs .sub-box {
+    min-height: 100px;
+  }
+
+  .col2-subs .sub-box {
+    min-height: 100px;
+  }
+
+  .col3-subs .sub-box {
+    min-height: 100px;
+  }
+
+  .col4-subs .sub-box {
+    min-height: 100px;
+  }
+
+  .col5-subs .sub-box {
+    min-height: 100px;
+  }
+
+  .sub-box + .sub-box {
+    border-top: none;
+  }
+
+  .sub-box.standalone {
+    border-top: 2px solid #000;
+  }
+</style>
+</head>
+<body>
+
+<div class="chart-container">
+  <div class="full-chart">
+
+    <!-- Top horizontal bar with center line -->
+    <div class="top-bar-container">
+      <div class="center-line"></div>
+      <div class="bar"></div>
+    </div>
+
+    <!-- Five commission columns -->
+    <div class="five-cols">
+      <!-- Column 1 -->
+      <div class="col">
+        <div class="drop-line"></div>
+        <div class="commission-box">
+          <div class="title">COMMISSION ON THE<br>PROFESSIONAL SOCIETY</div>
+          <div class="name">Thomas H. Daniels</div>
+          <div class="role">Chairman</div>
+          <div class="name">Robert J. Boerema</div>
+          <div class="role">Vice Chairman</div>
+        </div>
+        <div class="sub-section col1-subs">
+          <div class="drop-line"></div>
+          <div class="sub-box">
+            <div class="title">COORDINATION</div>
+            <div class="name">Richard E. Pryor</div>
+            <div class="role">Chairman</div>
+            <div class="sub-items">
+              <div>a. Chapter Affairs</div>
+              <div>b. Student Affairs</div>
+              <div>c. Membership</div>
+            </div>
+          </div>
+          <div class="sub-box">
+            <div class="title">RULES AND REGULATIONS</div>
+            <div class="name">Jack West</div>
+            <div class="role">Chairman</div>
+            <div class="sub-items">
+              <div>a. Credentials Committee</div>
+              <div>b. Resolutions Committee</div>
+              <div>c. Nominating Committee</div>
+            </div>
+          </div>
+          <div class="sub-box">
+            <div class="title">HONORS AND AWARDS</div>
+            <div class="name">John B. Marion</div>
+            <div class="role">Chairman</div>
+            <div class="sub-items">
+              <div>a. Craftsman Awards</div>
+              <div>b. Student Awards</div>
+              <div>c. Honor Awards</div>
+            </div>
+          </div>
+          <div class="sub-box">
+            <div class="title">REGIONAL JUDICIARY</div>
+            <div class="name">Walter B. Schultz</div>
+            <div class="role">Chairman</div>
+          </div>
+          <div class="sub-box">
+            <div class="title">CONVENTION</div>
+            <div class="name">Frank Folsom Smith</div>
+            <div class="role">Chairman</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Column 2 -->
+      <div class="col">
+        <div class="drop-line"></div>
+        <div class="commission-box">
+          <div class="title">COMMISSION ON<br>EDUCATION AND<br>RESEARCH</div>
+          <div class="name">James E. Garland</div>
+          <div class="role">Chairman</div>
+          <div class="name">John E. Sweet</div>
+          <div class="role">Vice Chairman</div>
+        </div>
+        <div class="sub-section col2-subs">
+          <div class="drop-line"></div>
+          <div class="sub-box">
+            <div class="title">TRAINING</div>
+            <div class="name">John E. Sweet</div>
+            <div class="role">Chairman</div>
+          </div>
+          <div class="sub-box">
+            <div class="title">PROFESSIONAL<br>EDUCATION</div>
+            <div class="name">James J. Jennewein</div>
+            <div class="role">Chairman</div>
+          </div>
+          <div class="sub-box">
+            <div class="title">RESEARCH AND<br>ARCHITECTURE</div>
+            <div class="name">William G. Wagner</div>
+            <div class="role">Chairman</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Column 3 -->
+      <div class="col">
+        <div class="drop-line"></div>
+        <div class="commission-box">
+          <div class="title">COMMISSION ON<br>PROFESSIONAL PRACTICE</div>
+          <div class="name">Ivan H. Smith</div>
+          <div class="role">Chairman</div>
+          <div class="name">Charles E. Pattillo, III</div>
+          <div class="role">Vice Chairman</div>
+        </div>
+        <div class="sub-section col3-subs">
+          <div class="drop-line"></div>
+          <div class="sub-box">
+            <div class="title">PRACTICE<br>STANDARDS</div>
+            <div class="name">Jack Moore</div>
+            <div class="role">Chairman</div>
+          </div>
+          <div class="sub-box">
+            <div class="title">PRACTICE AIDS</div>
+            <div class="name">J. Arthur Wohlberg</div>
+            <div class="role">Chairman</div>
+          </div>
+          <div class="sub-box">
+            <div class="title">CONSTRUCTION<br>INDUSTRY</div>
+            <div class="name">Roy M. Pooley, Jr.</div>
+            <div class="role">Chairman</div>
+          </div>
+          <div class="sub-box">
+            <div class="title">CONSULTANTS</div>
+            <div class="name">Robert H. Levison, FAIA</div>
+            <div class="role">Chairman</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Column 4 -->
+      <div class="col">
+        <div class="drop-line"></div>
+        <div class="commission-box">
+          <div class="title">COMMISSION ON<br>ARCHITECTURAL DESIGN</div>
+          <div class="name">Paul Robin John</div>
+          <div class="role">Chairman</div>
+          <div class="name">Kenneth R. Miller</div>
+          <div class="role">Vice Chairman</div>
+        </div>
+        <div class="sub-section col4-subs">
+          <div class="drop-line"></div>
+          <div class="sub-box">
+            <div class="title">DESIGN</div>
+            <div class="name">Paul Robin John</div>
+            <div class="role">Chairman</div>
+          </div>
+          <div class="sub-box">
+            <div class="title">PRESERVATION</div>
+            <div class="name">F. Blair Reeves</div>
+            <div class="role">Chairman</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Column 5 -->
+      <div class="col">
+        <div class="drop-line"></div>
+        <div class="commission-box">
+          <div class="title">COMMISSION ON<br>PUBLIC AFFAIRS</div>
+          <div class="name">Arthur H. Rude</div>
+          <div class="role">Chairman</div>
+          <div class="name">John P. Stevens</div>
+          <div class="role">Vice Chairman</div>
+        </div>
+        <div class="sub-section col5-subs">
+          <div class="drop-line"></div>
+          <div class="sub-box">
+            <div class="title">PUBLIC RELATIONS</div>
+            <div class="name">John R. Howey</div>
+            <div class="role">Chairman</div>
+          </div>
+          <div class="sub-box">
+            <div class="title">GOVERNMENT<br>AFFAIRS</div>
+            <div class="name">Roy L. Ricks</div>
+            <div class="role">Chairman</div>
+          </div>
+          <div class="sub-box">
+            <div class="title">INTERNATIONAL<br>RELATIONS</div>
+            <div class="name">Lemuel Ramos</div>
+            <div class="role">Chairman</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

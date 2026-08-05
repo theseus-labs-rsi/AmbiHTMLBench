@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Well Calibrated Simulation Study of a Novel Adaptive Parallelised Bayesian Inference of the Multispecies Coalescent Model</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 11px;
+    line-height: 1.4;
+    color: #000;
+    background: #fff;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 10px;
+  }
+  .title {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    line-height: 1.3;
+  }
+  .title-bar {
+    height: 6px;
+    background: #1a5276;
+    margin: 8px 0;
+  }
+  .header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 5px;
+  }
+  .logo-left {
+    width: 180px;
+    height: 70px;
+    background: #1a5276;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 10px;
+    font-weight: bold;
+    text-align: center;
+    padding: 5px;
+    border-radius: 3px;
+  }
+  .logo-left .uni-name { font-size: 14px; }
+  .logo-left .uni-sub { font-size: 8px; font-style: italic; }
+  .logo-left .uni-country { font-size: 10px; letter-spacing: 2px; }
+  .authors-info {
+    text-align: center;
+    flex: 1;
+    padding: 0 20px;
+  }
+  .authors-info .authors {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
+  .authors-info .affiliations {
+    font-size: 11px;
+  }
+  .logo-right {
+    width: 120px;
+    text-align: right;
+  }
+  .beast2-logo {
+    font-size: 28px;
+    font-weight: bold;
+    color: #2980b9;
+    font-family: Arial, sans-serif;
+  }
+  .beast2-icon {
+    width: 60px;
+    height: 60px;
+    margin-left: auto;
+  }
+  .main-content {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+  }
+  .left-column {
+    width: 38%;
+    min-width: 380px;
+  }
+  .right-column {
+    width: 62%;
+    min-width: 580px;
+  }
+  .section-header {
+    background: #5b9bd5;
+    color: #fff;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 6px 10px;
+    margin-bottom: 10px;
+    border-radius: 3px;
+  }
+  .section-header-dark {
+    background: #1a5276;
+  }
+  .intro-text {
+    text-align: justify;
+    margin-bottom: 10px;
+    font-size: 11px;
+  }
+  .goal-text {
+    font-size: 11px;
+    margin-bottom: 8px;
+  }
+  .keywords {
+    font-size: 10px;
+    margin-bottom: 10px;
+  }
+  .methods-text {
+    text-align: justify;
+    margin-bottom: 8px;
+    font-size: 11px;
+  }
+  .figure-box {
+    border: 1px solid #ccc;
+    padding: 8px;
+    margin: 8px 0;
+    background: #fafafa;
+  }
+  .figure-caption {
+    font-size: 10px;
+    margin-top: 5px;
+    text-align: justify;
+  }
+  .figure-caption strong { font-weight: bold; }
+  .pipeline-diagram {
+    width: 100%;
+    height: 200px;
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: #666;
+    margin: 5px 0;
+  }
+  .tree-diagram {
+    width: 100%;
+    height: 220px;
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: #666;
+    margin: 5px 0;
+  }
+  .operators-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin: 10px 0;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .operator-box {
+    border: 1px solid #333;
+    padding: 6px 10px;
+    text-align: center;
+    font-size: 10px;
+    background: #fff;
+    min-width: 100px;
+  }
+  .operator-arrow {
+    font-size: 16px;
+    color: #333;
+  }
+  .starbeast3-box {
+    background: #5b9bd5;
+    color: #fff;
+    padding: 8px 12px;
+    font-weight: bold;
+    font-size: 12px;
+    border-radius: 3px;
+  }
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin: 10px 0;
+  }
+  .plot-box {
+    border: 1px solid #ddd;
+    padding: 4px;
+    text-align: center;
+    background: #fff;
+  }
+  .plot-title {
+    font-size: 9px;
+    font-weight: bold;
+    margin-bottom: 2px;
+  }
+  .plot-coverage {
+    font-size: 8px;
+    color: #555;
+    margin-bottom: 3px;
+  }
+  .plot-area {
+    width: 100%;
+    height: 120px;
+    background: #f9f9f9;
+    border: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    color: #999;
+  }
+  .results-text {
+    text-align: justify;
+    font-size: 11px;
+    margin: 10px 0;
+  }
+  .conclusion-text {
+    text-align: justify;
+    font-size: 11px;
+    margin: 10px 0;
+  }
+  .footer-section {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+    font-size: 10px;
+  }
+  .footer-left {
+    flex: 1;
+  }
+  .footer-right {
+    width: 120px;
+    text-align: center;
+  }
+  .qr-placeholder {
+    width: 100px;
+    height: 100px;
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    margin: 5px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    color: #999;
+  }
+  .software-text {
+    font-size: 10px;
+    text-align: justify;
+    margin-bottom: 8px;
+  }
+  .ack-text {
+    font-size: 10px;
+    text-align: justify;
+  }
+  .bold { font-weight: bold; }
+  .italic { font-style: italic; }
+  .underline { text-decoration: underline; }
+  .source-link {
+    font-size: 10px;
+    color: #1a5276;
+    text-decoration: underline;
+  }
+  .novel-text {
+    font-size: 11px;
+    margin-bottom: 8px;
+  }
+  .eval-text {
+    text-align: justify;
+    font-size: 11px;
+    margin: 10px 0;
+  }
+  .relative-clock-label {
+    font-size: 9px;
+    text-align: center;
+    margin: 3px 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="title">
+  WELL CALIBRATED SIMULATION STUDY OF A NOVEL ADAPTIVE<br>
+  PARALLELISED BAYESIAN INFERENCE OF THE MULTISPECIES COALESCENT<br>
+  MODEL TESTING A DIFFERENT NUMBER OF TAXA AND GENES.
+</div>
+
+<div class="title-bar"></div>
+
+<div class="header-row">
+  <div class="logo-left">
+    <div>
+      <div class="uni-name">THE UNIVERSITY OF<br>AUCKLAND</div>
+      <div class="uni-sub">Te Whare Wānanga o Tāmaki Makaurau</div>
+      <div class="uni-country">NEW ZEALAND</div>
+    </div>
+  </div>
+  <div class="authors-info">
+    <div class="authors">Hu Ge<sup>1</sup>, Jordan Douglas<sup>2</sup>, Remco Bouckaert<sup>2</sup></div>
+    <div class="affiliations">
+      (1) School of Biological Sciences, University of Auckland, Auckland 1010, New Zealand<br>
+      (2) School of Computer Science, University of Auckland, Auckland, 1010, New Zealand
+    </div>
+  </div>
+  <div class="logo-right">
+    <div style="text-align:right;">
+      <div style="font-size:40px; line-height:1;">🦎</div>
+      <div class="beast2-logo">Beast2</div>
+    </div>
+  </div>
+</div>
+
+<div class="main-content">
+  <!-- LEFT COLUMN -->
+  <div class="left-column">
+    <div class="section-header">Introduction</div>
+    <div class="intro-text">
+      A novel Parallelised Bayesian Inference of the Multispecies Coalescent with <strong>new MCMC proposals</strong> has been implemented in the open-source BEAST 2 platform as the StarBeast3 package. This new approach avoids biases, such as being an inconsistent estimator of the tree topology. Furthermore, it explores the state space much more efficiently, allowing the handle of data sets one and a half orders of magnitude larger than StarBeast2 and more than two orders faster than *BEAST.
+    </div>
+    <div class="goal-text">
+      <strong>Our goal</strong> was to establish the correct implementation of StarBeast3 by testing different numbers of taxa and genes.
+    </div>
+    <div class="keywords">
+      <strong>Key words:</strong> multispecies coalescent; BEAST 2; phylogenetics; bayesian inference; high performance; adaptive; parallelisation.
+    </div>
+
+    <div class="section-header">Methods</div>
+    <div class="methods-text">
+      We performed well calibration studies by simulating alignments using parameters directly sampled from the prior distribution, and then we inferred the posterior estimates of these parameters using StarBeast3 (<strong>Figure 1</strong>).
+    </div>
+
+    <div class="pipeline-diagram">
+      <div style="text-align:center; font-size:9px;">
+        [Pipeline Diagram: 5 steps]<br>
+        prior.xml → 1. BEAST → tree.log, XML.template, trace.log<br>
+        → 2. CoverageTestXMLGenerator<br>
+        beast.xml → 3. BEAST → trace.log, tree.log, N times<br>
+        → 4. loganalyser<br>
+        summary → 5. CoverageCalculator → coverage.stats
+      </div>
+    </div>
+
+    <div class="figure-caption">
+      <strong>Figure 1.</strong> Pipeline of 5 steps implemented by Experimenter package in BEAST 2 that assists in simulation studies to verify correctness of the implementation. (1) Set up XML for desired model and sample from prior. (2) Generate (MCMC) analysis for each of the samples (support for multiple alignments). (3) Run the analyses using StarBeast3 package in BEAST2. (4) Use loganalyser to summarise trace files. (5) Run CoverageCalculator to summarise coverage of parameters. <strong>Source:</strong> <span class="source-link">https://github.com/rbouckaert/DeveloperManual.git</span>
+    </div>
+
+    <div class="eval-text">
+      We evaluated a strict and relaxed clock model, across varying tree sizes (4 species; 12 taxa; 16 species; 48 taxa), and multiple genes (10, 50, 100, and 200). With 100 independent runs, we estimated the coverage of the true value by the 95% highest probability density (HPD) estimates for various parameters in the model (<strong>Figure 2</strong>) and its newly developed efficient MCMC operators.
+    </div>
+
+    <div class="relative-clock-label">Relative clock rates v1, ..., vk</div>
+
+    <div class="tree-diagram">
+      <div style="text-align:center; font-size:9px;">
+        [Simulated Species Tree Diagram]<br>
+        Branch rates r1, ..., r2k-1 (optional)<br>
+        Species tree S<br>
+        Site models v1, ..., vk<br>
+        Gene trees g1, ..., gk<br>
+        Population sizes Ne1, ..., Ne2n-1<br>
+        Alignments D1, ..., Dk<br>
+        Time (y-axis), effective population sizes (x-axis)
+      </div>
+    </div>
+
+    <div class="figure-caption">
+      <strong>Figure 2.</strong> Simulated species trees S with n = 16 species with k = 100 gene trees embedded. Parameters in the multispecies coalescent model are indicated in the figure: Node heights (time) are shown on the y-axis, and effective population sizes are on the x-axis. Species tree branch rates are indicated by line thickness. Colors show Gen trees. The tree was built from a Direct simulator in BEAST2 and visualized using UglyTrees (Douglas, 2020).
+    </div>
+  </div>
+
+  <!-- RIGHT COLUMN -->
+  <div class="right-column">
+    <div class="novel-text">
+      <strong>Novel MCMC operators</strong> which generate proposals that explore the state space more efficiently implementing in Starbeast3:
+    </div>
+
+    <div class="operators-row">
+      <div class="operator-box"><strong>Effective Population Size<br>Gibbs Operator</strong></div>
+      <div class="operator-arrow">→</div>
+      <div class="operator-box"><strong>Bactrian Operators for<br>Trees</strong></div>
+      <div class="operator-arrow">→</div>
+      <div class="operator-box"><strong>Adaptive variance<br>multivariate normal (AVMN)<br>operator</strong></div>
+      <div class="operator-arrow">→</div>
+      <div class="operator-box"><strong>Parallel Gene Tree<br>Operator</strong></div>
+      <div class="operator-arrow">→</div>
+      <div class="operator-box"><strong>Species Tree<br>Relaxed Clock<br>Model Operators</strong></div>
+      <div class="operator-arrow">→</div>
+      <div class="starbeast3-box">StarBeast3</div>
+    </div>
+
+    <div class="section-header">Results</div>
+
+    <div class="results-grid">
+      <div class="plot-box">
+        <div class="plot-title">Species tree height</div>
+        <div class="plot-coverage">Coverage: 96%</div>
+        <div class="plot-area">[Scatter plot: Posterior estimate vs True value, 0.0–0.6]</div>
+      </div>
+      <div class="plot-box">
+        <div class="plot-title">Species tree birth rate</div>
+        <div class="plot-coverage">Coverage: 94%</div>
+        <div class="plot-area">[Scatter plot: Posterior estimate vs True value, 0–50]</div>
+      </div>
+      <div class="plot-box">
+        <div class="plot-title">Gene tree height</div>
+        <div class="plot-coverage">Coverage: 91%</div>
+        <div class="plot-area">[Scatter plot: Posterior estimate vs True value, 0.0–1.5]</div>
+      </div>
+      <div class="plot-box">
+        <div class="plot-title">Clock model standard deviation</div>
+        <div class="plot-coverage">Coverage: 97%</div>
+        <div class="plot-area">[Scatter plot: Posterior estimate vs True value, 0.0–2.5]</div>
+      </div>
+      <div class="plot-box">
+        <div class="plot-title">Branch rate mean</div>
+        <div class="plot-coverage">Coverage: 92%</div>
+        <div class="plot-area">[Scatter plot: Posterior estimate vs True value, 0–3]</div>
+      </div>
+      <div class="plot-box">
+        <div class="plot-title">Branch rate variance</div>
+        <div class="plot-coverage">Coverage: 97%</div>
+        <div class="plot-area">[Scatter plot: Posterior estimate vs True value, 0–6]</div>
+      </div>
+      <div class="plot-box">
+        <div class="plot-title">Transition–transversion ratio</div>
+        <div class="plot-coverage">Coverage: 99%</div>
+        <div class="plot-area">[Scatter plot: Posterior estimate vs True value, 0–150]</div>
+      </div>
+      <div class="plot-box">
+        <div class="plot-title">Gene tree substitution rate</div>
+        <div class="plot-coverage">Coverage: 94%</div>
+        <div class="plot-area">[Scatter plot: Posterior estimate vs True value, 0–20]</div>
+      </div>
+      <div class="plot-box">
+        <div class="plot-title">Gene tree frequency</div>
+        <div class="plot-coverage">Coverage: 94%</div>
+        <div class="plot-area">[Scatter plot: Posterior estimate vs True value, 0.0–1.2]</div>
+      </div>
+      <div class="plot-box">
+        <div class="plot-title">Effective population size</div>
+        <div class="plot-coverage">Coverage: 92%</div>
+        <div class="plot-area">[Scatter plot: Posterior estimate vs True value, 0.00–0.08]</div>
+      </div>
+      <div class="plot-box">
+        <div class="plot-title">Mean effective population size</div>
+        <div class="plot-coverage">Coverage: 95%</div>
+        <div class="plot-area">[Scatter plot: Posterior estimate vs True value, 0.000–0.025]</div>
+      </div>
+    </div>
+
+    <div class="results-text">
+      Well-calibrated simulation study analysing nS = 16 species, nG = 48 taxa, and k = 50 genes. One hundred simulations were performed to recover the coverage between "true" simulated values and their estimates under the posterior distribution. Vertical lines represent 95% highest posterior density (HPD) intervals of parameters. Each line represents a single simulation and is colored blue when the true value was contained within the 95% interval, or red otherwise. The top of each plot shows the coverage of each parameter (i.e., the number of MCMC simulations for which the "true" parameter value was contained within the 95% HPD). This result was coherent when we tested 100 and 200 genes, respectively.
+    </div>
+
+    <div class="section-header">Conclusion</div>
+    <div class="conclusion-text">
+      Our results show all coverage observed is in the expected range, from 90 to 99 inclusive, suggesting the correct implementation of StarBeast3 for all experiments performed. Furthermore, these experiments evidence that starbeast3 is suitable for multispecies coalescent inference on large datasets (100+ genes).
+    </div>
+
+    <div class="footer-section">
+      <div class="footer-left">
+        <div class="software-text">
+          <strong>Software Availability:</strong> StarBeast3 is available as an open-source BEAST 2 package with an easy-to-use graphical user interface. Instructions for downloading and running StarBeast3 can be found at <span class="source-link">https://github.com/rbouckaert/starbeast3</span>
+        </div>
+        <div class="ack-text">
+          <strong>Acknowledgments:</strong> The study was supported by a Marsden grant 18-UOA-096 from the Royal Society of New Zealand. Software packages were benchmarked using the New Zealand Science Infrastructure (NeSI) cluster, funded by the New Zealand Ministry of Business, Innovation, and Employment.
+        </div>
+      </div>
+      <div class="footer-right">
+        <div style="font-size:10px; font-weight:bold; margin-bottom:3px;">StarBeast3<br>preprint:</div>
+        <div class="qr-placeholder">[QR Code]</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

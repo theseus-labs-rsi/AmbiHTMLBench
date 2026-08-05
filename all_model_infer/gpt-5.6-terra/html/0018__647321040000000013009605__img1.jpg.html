@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DAY3 3.特色路线</title>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+    }
+
+    body {
+      width: 540px;
+      min-height: 720px;
+      overflow-x: hidden;
+      font-family: "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+      color: #222;
+    }
+
+    .page {
+      position: relative;
+      width: 540px;
+      height: 720px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .day-mark {
+      position: absolute;
+      left: 39px;
+      top: 37px;
+      color: #fff4e9;
+      font-family: Arial, sans-serif;
+      font-size: 47px;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -3px;
+      -webkit-text-stroke: 3px #ef965a;
+      text-shadow: 2px 2px 0 #f5a36d;
+      transform: rotate(-3deg);
+      white-space: nowrap;
+    }
+
+    .day-mark::before,
+    .day-mark::after {
+      content: "";
+      position: absolute;
+      height: 5px;
+      border-radius: 8px;
+      background: #f2a06a;
+      transform-origin: left center;
+    }
+
+    .day-mark::before {
+      width: 20px;
+      left: -29px;
+      top: 13px;
+      transform: rotate(20deg);
+    }
+
+    .day-mark::after {
+      width: 14px;
+      left: -19px;
+      top: -2px;
+      transform: rotate(-36deg);
+    }
+
+    .route-title {
+      position: absolute;
+      left: 209px;
+      top: 32px;
+      width: 319px;
+      height: 59px;
+      padding: 1px 24px;
+      border-radius: 18px;
+      background: #a9f000;
+      color: #050505;
+      font-size: 49px;
+      font-weight: 900;
+      line-height: 57px;
+      white-space: nowrap;
+    }
+
+    .photo {
+      position: absolute;
+      overflow: hidden;
+      border: 1px solid #d6d6d6;
+      background-color: #89b8c7;
+    }
+
+    .photo::after {
+      content: "[Photo]";
+      position: absolute;
+      right: 4px;
+      bottom: 3px;
+      padding: 1px 3px;
+      color: rgba(255,255,255,.78);
+      background: rgba(0,0,0,.18);
+      font: 9px Arial, sans-serif;
+    }
+
+    .beach {
+      left: 31px;
+      top: 179px;
+      width: 193px;
+      height: 130px;
+      background:
+        linear-gradient(to bottom, #7ca9c8 0 39%, #208ca4 40% 54%, #d4ae73 55% 100%);
+    }
+
+    .sunset {
+      left: 300px;
+      top: 124px;
+      width: 204px;
+      height: 137px;
+      background:
+        radial-gradient(circle at 29% 47%, #fb756b 0 3px, transparent 4px),
+        linear-gradient(to bottom, #dc887e 0%, #edaaa1 39%, #d2938a 57%, #887d7d 58%, #4a5857 100%);
+    }
+
+    .island {
+      left: 10px;
+      top: 363px;
+      width: 200px;
+      height: 137px;
+      background:
+        linear-gradient(to bottom, #4f9be4 0 57%, #347d9e 58% 71%, #3e6470 72% 100%);
+    }
+
+    .cliff {
+      left: 318px;
+      top: 326px;
+      width: 201px;
+      height: 137px;
+      background:
+        linear-gradient(145deg, transparent 0 43%, #bdb28d 44% 53%, #4d929c 54% 100%),
+        linear-gradient(to bottom, #67b5d2 0 54%, #246b84 55% 100%);
+    }
+
+    .windfarm {
+      left: 159px;
+      top: 518px;
+      width: 233px;
+      height: 144px;
+      background:
+        linear-gradient(to bottom, #a6c9e3 0 48%, #6597ae 49% 57%, #639b62 58% 100%);
+    }
+
+    .label {
+      position: absolute;
+      z-index: 3;
+      padding: 2px 12px 4px 25px;
+      color: #181818;
+      background: #ffd5c4;
+      font-family: "KaiTi", "STKaiti", serif;
+      font-size: 23px;
+      line-height: 29px;
+      white-space: nowrap;
+      border-radius: 42% 52% 45% 50%;
+    }
+
+    .label::before {
+      content: "";
+      position: absolute;
+      left: 2px;
+      top: 2px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #d44739;
+      box-shadow: inset 0 2px 3px rgba(255,255,255,.7);
+    }
+
+    .label::after {
+      content: "";
+      position: absolute;
+      left: 8px;
+      top: 14px;
+      width: 2px;
+      height: 18px;
+      background: #9a5348;
+    }
+
+    .label-beach {
+      left: 63px;
+      top: 307px;
+    }
+
+    .label-sunset {
+      left: 302px;
+      top: 262px;
+    }
+
+    .label-island {
+      left: 45px;
+      top: 500px;
+    }
+
+    .label-cliff {
+      left: 338px;
+      top: 463px;
+    }
+
+    .label-windfarm {
+      left: 204px;
+      top: 661px;
+    }
+
+    .text {
+      position: absolute;
+      z-index: 2;
+      font-family: "KaiTi", "STKaiti", serif;
+      font-weight: 700;
+      line-height: 1.15;
+    }
+
+    .intro {
+      left: 219px;
+      top: 112px;
+      width: 80px;
+      color: #685b83;
+      font-size: 18px;
+    }
+
+    .cliff-copy {
+      left: 400px;
+      top: 581px;
+      width: 125px;
+      color: #685b83;
+      font-size: 18px;
+      line-height: 1.27;
+    }
+
+    .island-copy {
+      left: 15px;
+      top: 635px;
+      width: 145px;
+      color: #685b83;
+      font-size: 17px;
+      line-height: 1.25;
+    }
+
+    .arrow {
+      position: absolute;
+      z-index: 1;
+      border-color: #d55020;
+      border-style: solid;
+      border-width: 0;
+    }
+
+    .arrow-down {
+      left: 217px;
+      top: 271px;
+      width: 41px;
+      height: 115px;
+      border-right-width: 5px;
+      border-bottom-width: 5px;
+      border-radius: 0 0 0 55px;
+      transform: rotate(12deg);
+    }
+
+    .arrow-down::after {
+      content: "";
+      position: absolute;
+      left: -5px;
+      bottom: -8px;
+      width: 18px;
+      height: 18px;
+      border-left: 5px solid #d55020;
+      border-bottom: 5px solid #d55020;
+      transform: rotate(28deg);
+    }
+
+    .arrow-left {
+      left: 49px;
+      top: 505px;
+      width: 102px;
+      height: 94px;
+      border-left-width: 5px;
+      border-bottom-width: 5px;
+      border-radius: 0 0 0 85px;
+      transform: rotate(-7deg);
+    }
+
+    .arrow-left::after {
+      content: "";
+      position: absolute;
+      right: -10px;
+      bottom: -8px;
+      width: 18px;
+      height: 18px;
+      border-right: 5px solid #d55020;
+      border-bottom: 5px solid #d55020;
+      transform: rotate(-34deg);
+    }
+
+    .arrow-right {
+      left: 397px;
+      top: 468px;
+      width: 89px;
+      height: 78px;
+      border-right-width: 5px;
+      border-top-width: 5px;
+      border-radius: 0 70px 0 0;
+      transform: rotate(-8deg);
+    }
+
+    .arrow-right::after {
+      content: "";
+      position: absolute;
+      left: -7px;
+      top: -8px;
+      width: 18px;
+      height: 18px;
+      border-left: 5px solid #d55020;
+      border-top: 5px solid #d55020;
+      transform: rotate(29deg);
+    }
+
+    .arrow-up {
+      left: 481px;
+      top: 225px;
+      width: 34px;
+      height: 96px;
+      border-right-width: 5px;
+      border-top-width: 5px;
+      border-radius: 0 48px 0 0;
+      transform: rotate(9deg);
+    }
+
+    .arrow-up::after {
+      content: "";
+      position: absolute;
+      left: -7px;
+      top: -8px;
+      width: 18px;
+      height: 18px;
+      border-left: 5px solid #d55020;
+      border-top: 5px solid #d55020;
+      transform: rotate(29deg);
+    }
+
+    .travel-time {
+      position: absolute;
+      color: #ce3d1b;
+      font-family: "KaiTi", "STKaiti", serif;
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    .time-11 {
+      left: 261px;
+      top: 307px;
+    }
+
+    .time-33 {
+      left: 407px;
+      top: 298px;
+    }
+
+    .time-5 {
+      left: 23px;
+      top: 581px;
+    }
+
+    .time-20 {
+      left: 493px;
+      top: 527px;
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="day-mark">DAY3</div>
+    <div class="route-title">3.特色路线</div>
+
+    <div class="text intro">艺术感满<br>满，适合<br>出片</div>
+
+    <div class="photo beach" aria-label="照片占位区域"></div>
+    <div class="photo sunset" aria-label="照片占位区域"></div>
+    <div class="photo island" aria-label="照片占位区域"></div>
+    <div class="photo cliff" aria-label="照片占位区域"></div>
+    <div class="photo windfarm" aria-label="照片占位区域"></div>
+
+    <div class="label label-beach">那香海</div>
+    <div class="label label-sunset">那香海落日</div>
+    <div class="label label-island">鸡鸣岛</div>
+    <div class="label label-cliff">摩天岭索道</div>
+    <div class="label label-windfarm">小五队抱海驿站</div>
+
+    <div class="arrow arrow-down"></div>
+    <div class="arrow arrow-left"></div>
+    <div class="arrow arrow-right"></div>
+    <div class="arrow arrow-up"></div>
+
+    <div class="travel-time time-11">打车11<br>分钟</div>
+    <div class="travel-time time-33">打车33分钟</div>
+    <div class="travel-time time-5">打车5<br>分钟</div>
+    <div class="travel-time time-20">打车20<br>分钟</div>
+
+    <div class="text island-copy">威海绝美海岸线<br>私藏童话般露营地</div>
+    <div class="text cliff-copy">荡漾在山海间<br>看风景、吹海<br>风、享受时光</div>
+    <div class="text" style="left:225px;top:395px;width:112px;color:#685b83;font-size:18px;">悬崖书吧<br>、婚礼教<br>堂、悬崖<br>咖啡厅</div>
+  </main>
+</body>
+</html>

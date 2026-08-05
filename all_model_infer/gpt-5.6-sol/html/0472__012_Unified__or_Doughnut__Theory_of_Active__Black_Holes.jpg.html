@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anatomy of an Active Black Hole</title>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] }
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  html, body {
+    margin: 0;
+    min-height: 100%;
+    background: #111;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  body {
+    display: flex;
+    justify-content: center;
+  }
+
+  .page {
+    position: relative;
+    width: 593px;
+    height: 1280px;
+    overflow: hidden;
+    color: #fff;
+    background: #071e2a;
+  }
+
+  .masthead {
+    position: relative;
+    height: 44px;
+    background: #030303;
+  }
+
+  .nasa-logo {
+    position: absolute;
+    top: 6px;
+    left: 20px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid #6483a2;
+    background:
+      linear-gradient(154deg, transparent 45%, #ec4436 46%, #ec4436 49%, transparent 50%),
+      radial-gradient(circle at 35% 30%, #2a6aa0 0 8%, transparent 9%),
+      radial-gradient(circle at center, #164d81 0 65%, #092845 66% 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 700;
+    font-style: italic;
+    font-size: 9px;
+    letter-spacing: .3px;
+  }
+
+  .brand {
+    position: absolute;
+    left: 58px;
+    top: 12px;
+    font-size: 9px;
+    line-height: 10px;
+    font-weight: 700;
+  }
+
+  .brand small {
+    display: block;
+    font-size: 6px;
+    font-weight: 400;
+    color: #ddd;
+  }
+
+  section {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  h1, h2 {
+    position: absolute;
+    z-index: 10;
+    margin: 0;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -.35px;
+    text-shadow: 0 1px 1px rgba(0,0,0,.7);
+  }
+
+  h1 {
+    top: 9px;
+    left: 19px;
+    font-size: 22px;
+    line-height: 27px;
+  }
+
+  h2 {
+    top: 8px;
+    left: 19px;
+    font-size: 22px;
+    line-height: 27px;
+  }
+
+  .placeholder {
+    position: absolute;
+    overflow: hidden;
+  }
+
+  .ph-caption {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .circle {
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,.96);
+    box-shadow: inset 0 0 20px rgba(0,0,0,.45);
+  }
+
+  .inside-label {
+    position: absolute;
+    z-index: 4;
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    font-size: 10px;
+    line-height: 12px;
+    font-weight: 700;
+    text-shadow: 0 1px 2px #000;
+  }
+
+  .inside-label em {
+    font-size: 9px;
+    font-weight: 400;
+  }
+
+  .small-copy {
+    position: absolute;
+    z-index: 8;
+    margin: 0;
+    font-size: 10px;
+    line-height: 12px;
+    font-weight: 700;
+    text-align: center;
+    text-shadow: 0 1px 2px #000;
+  }
+
+  /* Section 1 */
+  .anatomy {
+    height: 341px;
+    background: #30003f;
+  }
+
+  .beam {
+    position: absolute;
+    z-index: 1;
+    left: 181px;
+    top: 92px;
+    width: 305px;
+    height: 145px;
+    background: linear-gradient(100deg, rgba(225,220,222,.33), rgba(220,220,220,.04));
+    clip-path: polygon(0 0, 100% 22%, 100% 65%, 10% 100%);
+  }
+
+  .black-hole {
+    z-index: 3;
+    left: 19px;
+    top: 50px;
+    width: 197px;
+    height: 197px;
+    background:
+      radial-gradient(ellipse at 50% 59%, #030406 0 10%, transparent 11%),
+      radial-gradient(ellipse at 50% 59%, rgba(255,247,201,.95) 0 14%, transparent 25%),
+      repeating-linear-gradient(158deg,
+        rgba(255,244,199,.9) 0 7px,
+        rgba(191,70,25,.85) 8px 17px,
+        rgba(248,203,116,.9) 18px 25px,
+        rgba(107,34,20,.8) 26px 34px);
+    transform: rotate(-8deg);
+  }
+
+  .black-hole .inside-label {
+    top: 37px;
+    transform: rotate(8deg);
+  }
+
+  .host-galaxy {
+    z-index: 2;
+    left: 380px;
+    top: 8px;
+    width: 197px;
+    height: 197px;
+    background:
+      radial-gradient(circle at 51% 50%, #fff 0 2%, #c8d3d5 3%, rgba(210,220,221,.28) 7%, transparent 20%),
+      radial-gradient(circle at center, #303536 0, #202525 38%, #111 68%, #050505 100%);
+  }
+
+  .host-galaxy::after {
+    content: "";
+    position: absolute;
+    left: 12px;
+    top: 88px;
+    width: 180px;
+    height: 48px;
+    background: linear-gradient(100deg, rgba(255,255,255,.42), transparent 75%);
+    clip-path: polygon(0 42%, 100% 0, 100% 100%);
+  }
+
+  .host-galaxy .inside-label {
+    top: 31px;
+  }
+
+  .dust-ring {
+    z-index: 5;
+    left: 209px;
+    top: 132px;
+    width: 197px;
+    height: 197px;
+    background:
+      radial-gradient(ellipse at 53% 53%, #fff 0 2%, #69a7fa 3% 7%, transparent 15%),
+      radial-gradient(ellipse at center, transparent 0 18%, #081434 20% 25%, #04102e 27% 32%, transparent 34%),
+      linear-gradient(165deg, transparent 30%, #c05143 39%, #f19b78 45%, #141231 51%, #121337 58%, #0f0c27 70%),
+      radial-gradient(circle at 50% 50%, #422d4f, #06091f 72%);
+  }
+
+  .dust-ring::before {
+    content: "";
+    position: absolute;
+    left: 21px;
+    top: 79px;
+    width: 160px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(#c95a49, #080a25 39%, #02030f 55%, #19386e 80%);
+    transform: rotate(-7deg);
+    box-shadow: 0 -7px 11px rgba(255,111,80,.65);
+  }
+
+  .dust-ring .inside-label {
+    top: 142px;
+  }
+
+  .anatomy-left-copy {
+    left: 23px;
+    top: 277px;
+    width: 181px;
+  }
+
+  .anatomy-right-copy {
+    left: 423px;
+    top: 267px;
+    width: 150px;
+  }
+
+  /* Section 2 */
+  .different {
+    height: 301px;
+    background: #4a2300;
+  }
+
+  .different h2 {
+    top: 8px;
+  }
+
+  .face-on {
+    left: 29px;
+    top: 47px;
+    width: 199px;
+    height: 199px;
+    background:
+      radial-gradient(circle at 50% 46%, #fff 0 2%, #ffe2aa 3% 8%, rgba(233,178,111,.8) 13%, rgba(126,87,57,.72) 29%, transparent 51%),
+      repeating-radial-gradient(circle at 50% 46%, rgba(115,85,61,.85) 0 4px, rgba(137,104,71,.66) 5px 8px, rgba(80,64,52,.7) 9px 13px),
+      #304958;
+  }
+
+  .face-on::after {
+    content: "";
+    position: absolute;
+    inset: 20px;
+    border-radius: 50%;
+    background: repeating-conic-gradient(from 15deg, rgba(230,193,146,.12) 0 8deg, transparent 9deg 15deg);
+    filter: blur(3px);
+  }
+
+  .edge-on {
+    left: 365px;
+    top: 47px;
+    width: 199px;
+    height: 199px;
+    background: #173c52;
+  }
+
+  .edge-on::before {
+    content: "";
+    position: absolute;
+    left: 14px;
+    top: 70px;
+    width: 171px;
+    height: 65px;
+    border-radius: 50%;
+    transform: rotate(5deg);
+    background:
+      radial-gradient(ellipse, #160c08 0 32%, transparent 70%),
+      repeating-linear-gradient(8deg, #100907 0 7px, #2b170f 8px 14px, #0a0807 15px 21px);
+    box-shadow: 0 4px 8px #000;
+  }
+
+  .unified-copy {
+    position: absolute;
+    z-index: 6;
+    left: 232px;
+    top: 75px;
+    width: 130px;
+    text-align: center;
+    color: #fff;
+    font-size: 10px;
+    line-height: 13px;
+    font-weight: 700;
+  }
+
+  .unified-copy p {
+    margin: 0 0 10px;
+  }
+
+  .unified-copy em {
+    font-size: 11px;
+  }
+
+  .face-caption {
+    left: 25px;
+    top: 256px;
+    width: 205px;
+  }
+
+  .edge-caption {
+    left: 353px;
+    top: 256px;
+    width: 220px;
+  }
+
+  /* Section 3 */
+  .expect {
+    height: 301px;
+    background: #062d42;
+  }
+
+  .galaxy {
+    border: 0;
+    background:
+      radial-gradient(circle at center, #fff4d6 0 3%, #f2ad5b 4% 10%, #78543a 17%, #32271f 35%, transparent 63%),
+      repeating-radial-gradient(ellipse, rgba(132,99,61,.9) 0 4px, rgba(45,30,22,.95) 5px 10px);
+    filter: drop-shadow(0 2px 2px rgba(0,0,0,.75));
+  }
+
+  .galaxy.face {
+    border-radius: 50%;
+  }
+
+  .galaxy.edge {
+    border-radius: 50%;
+    background:
+      radial-gradient(ellipse, #8a522b 0 4%, #422414 20%, #130d09 48%, transparent 69%),
+      repeating-linear-gradient(12deg, #0b0907 0 6px, #2a160d 7px 12px, #100b08 13px 19px);
+  }
+
+  .g1 { left: 14px; top: 52px; width: 79px; height: 69px; transform: rotate(43deg); }
+  .g2 { left: 235px; top: 14px; width: 48px; height: 91px; transform: rotate(18deg); }
+  .g3 { left: 480px; top: 10px; width: 49px; height: 91px; transform: rotate(-37deg); }
+  .g4 { left: 99px; top: 101px; width: 89px; height: 81px; }
+  .g5 { left: 354px; top: 21px; width: 90px; height: 79px; }
+  .g6 { left: 467px; top: 127px; width: 87px; height: 69px; }
+  .g7 { left: 11px; top: 224px; width: 82px; height: 45px; transform: rotate(-45deg); }
+  .g8 { left: 115px; top: 214px; width: 93px; height: 43px; transform: rotate(-25deg); }
+  .g9 { left: 223px; top: 229px; width: 91px; height: 57px; transform: rotate(7deg); }
+  .g10 { left: 371px; top: 192px; width: 81px; height: 81px; }
+  .g11 { left: 484px; top: 250px; width: 99px; height: 37px; transform: rotate(8deg); }
+
+  .expect-copy {
+    position: absolute;
+    z-index: 10;
+    left: 174px;
+    top: 119px;
+    width: 255px;
+    color: #fff;
+    text-align: center;
+    font-size: 10px;
+    line-height: 12px;
+    font-weight: 700;
+    text-shadow: 0 1px 2px #000;
+  }
+
+  .expect-copy p {
+    margin: 0 0 11px;
+  }
+
+  /* Section 4 */
+  .wise {
+    height: 293px;
+    background: #00533f;
+  }
+
+  .wise h2 {
+    top: 9px;
+    font-size: 22px;
+  }
+
+  .wise-spacecraft {
+    left: 19px;
+    top: 54px;
+    width: 151px;
+    height: 85px;
+    border: 1px solid rgba(255,255,255,.18);
+    background:
+      radial-gradient(circle at 18% 18%, #fff 0 2%, #e4d477 3% 7%, transparent 18%),
+      radial-gradient(ellipse at 15% 100%, #325f8a 0 29%, transparent 30%),
+      radial-gradient(circle at 72% 24%, rgba(180,214,255,.75), transparent 28%),
+      linear-gradient(145deg, #244a62, #202644 58%, #090f27);
+  }
+
+  .wise-spacecraft::before {
+    content: "";
+    position: absolute;
+    left: 69px;
+    top: 34px;
+    width: 49px;
+    height: 16px;
+    background: linear-gradient(90deg, #776b54 0 40%, #b8d8dc 42% 64%, #456f94 66%);
+    border: 1px solid #c9d1d2;
+    transform: rotate(-35deg);
+  }
+
+  .wise-spacecraft::after {
+    content: "";
+    position: absolute;
+    left: 91px;
+    top: 31px;
+    width: 22px;
+    height: 26px;
+    background: #a8c9db;
+    border: 1px solid white;
+    transform: rotate(-35deg);
+  }
+
+  .cluster {
+    left: 181px;
+    top: 46px;
+    width: 391px;
+    height: 201px;
+    border: 1px solid rgba(255,255,255,.2);
+    background:
+      radial-gradient(circle at 54% 51%, rgba(255,255,255,.95) 0 1px, transparent 2px),
+      radial-gradient(circle at 68% 39%, rgba(194,107,255,.9) 0 2px, transparent 3px),
+      radial-gradient(circle at 42% 58%, rgba(140,200,255,.85) 0 2px, transparent 3px),
+      radial-gradient(ellipse at 53% 54%, rgba(143,38,204,.8), rgba(62,28,119,.5) 27%, transparent 56%),
+      radial-gradient(ellipse at 28% 58%, rgba(105,31,162,.65), transparent 37%),
+      radial-gradient(ellipse at 77% 60%, rgba(94,36,151,.55), transparent 34%),
+      #020813;
+  }
+
+  .cluster::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: .85;
+    background-image:
+      radial-gradient(circle, #fff 0 1px, transparent 1.4px),
+      radial-gradient(circle, #9ec9ff 0 1px, transparent 1.4px),
+      radial-gradient(circle, #fff 0 .8px, transparent 1.2px);
+    background-size: 29px 31px, 43px 37px, 17px 23px;
+    background-position: 7px 9px, 12px 18px, 2px 4px;
+  }
+
+  .wise-left-copy {
+    position: absolute;
+    left: 19px;
+    top: 145px;
+    width: 151px;
+    color: white;
+    font-size: 10px;
+    line-height: 12px;
+    font-weight: 700;
+  }
+
+  .wise-left-copy p {
+    margin: 0 0 11px;
+  }
+
+  .cluster-caption {
+    position: absolute;
+    z-index: 7;
+    left: 184px;
+    top: 251px;
+    width: 390px;
+    margin: 0;
+    color: #fff;
+    font-size: 10px;
+    line-height: 12px;
+    font-weight: 700;
+  }
+</style>
+</head>
+<body>
+<main class="page">
+  <header class="masthead">
+    <div class="placeholder nasa-logo">
+      NASA
+      <span class="ph-caption">[Logo: NASA]</span>
+    </div>
+    <div class="brand">
+      Jet Propulsion Laboratory
+      <small>California Institute of Technology</small>
+    </div>
+  </header>
+
+  <section class="anatomy">
+    <h1>Anatomy of an Active Black Hole</h1>
+
+    <div class="beam" aria-hidden="true"></div>
+
+    <div class="placeholder circle black-hole">
+      <span class="ph-caption">[Illustration: Supermassive black hole]</span>
+      <div class="inside-label">
+        Supermassive Black Hole<br>
+        <em>Size: as big as Mercury’s orbit</em>
+      </div>
+    </div>
+
+    <div class="placeholder circle host-galaxy">
+      <span class="ph-caption">[Illustration: Host galaxy]</span>
+      <div class="inside-label">
+        Host Galaxy<br>
+        <em>Size: about 100,000 light-years</em>
+      </div>
+    </div>
+
+    <div class="placeholder circle dust-ring">
+      <span class="ph-caption">[Illustration: Doughnut ring of dust and gas]</span>
+      <div class="inside-label">
+        “Doughnut” Ring of Dust &amp; Gas<br>
+        <em>Size: around 1 light-year</em>
+      </div>
+    </div>
+
+    <p class="small-copy anatomy-left-copy">
+      Astronomers call supermassive black<br>
+      holes and their surrounding disks<br>
+      “Active Galactic Nuclei” or “AGN”
+    </p>
+
+    <p class="small-copy anatomy-right-copy">
+      Black holes emit no light, but<br>
+      the glow from the bright<br>
+      material swirling around them<br>
+      can be seen by telescopes.
+    </p>
+  </section>
+
+  <section class="different">
+    <h2>Why Do Active Black Holes Look Different?</h2>
+
+    <div class="placeholder circle face-on">
+      <span class="ph-caption">[Illustration: Face-on active black hole]</span>
+    </div>
+
+    <div class="unified-copy">
+      <p>
+        In some galaxies the<br>
+        black hole regions are<br>
+        <em>incredibly bright</em>, while in<br>
+        other galaxies they<br>
+        appear <em>much darker</em>.
+      </p>
+      <p>
+        A <em>“unified model”</em><br>
+        suggests the angle at<br>
+        which we view them can<br>
+        explain the differences.
+      </p>
+    </div>
+
+    <div class="placeholder circle edge-on">
+      <span class="ph-caption">[Illustration: Edge-on dusty doughnut]</span>
+    </div>
+
+    <p class="small-copy face-caption">
+      Seen face-on, we detect the light from the<br>
+      hot material surrounding the black hole.
+    </p>
+
+    <p class="small-copy edge-caption">
+      When viewed through the edge of the dusty<br>
+      doughnut, the black hole is hidden.
+    </p>
+  </section>
+
+  <section class="expect">
+    <h2>What We Expect to See</h2>
+
+    <div class="placeholder galaxy edge g1"><span class="ph-caption">[Galaxy: edge-on]</span></div>
+    <div class="placeholder galaxy edge g2"><span class="ph-caption">[Galaxy: edge-on]</span></div>
+    <div class="placeholder galaxy edge g3"><span class="ph-caption">[Galaxy: edge-on]</span></div>
+    <div class="placeholder galaxy face g4"><span class="ph-caption">[Galaxy: face-on]</span></div>
+    <div class="placeholder galaxy face g5"><span class="ph-caption">[Galaxy: face-on]</span></div>
+    <div class="placeholder galaxy face g6"><span class="ph-caption">[Galaxy: face-on]</span></div>
+    <div class="placeholder galaxy edge g7"><span class="ph-caption">[Galaxy: edge-on]</span></div>
+    <div class="placeholder galaxy edge g8"><span class="ph-caption">[Galaxy: edge-on]</span></div>
+    <div class="placeholder galaxy face g9"><span class="ph-caption">[Galaxy: tilted]</span></div>
+    <div class="placeholder galaxy face g10"><span class="ph-caption">[Galaxy: face-on]</span></div>
+    <div class="placeholder galaxy edge g11"><span class="ph-caption">[Galaxy: edge-on]</span></div>
+
+    <div class="expect-copy">
+      <p>
+        Galaxies are oriented randomly in the sky so the disks<br>
+        in their centers should be oriented randomly as well.
+      </p>
+      <p>
+        Thus we expect to see a random mix of exposed and<br>
+        hidden black holes <em>everywhere we look.</em>
+      </p>
+    </div>
+  </section>
+
+  <section class="wise">
+    <h2>WISE Observations Challenge “Unified Model”</h2>
+
+    <div class="placeholder wise-spacecraft">
+      <span class="ph-caption">[Illustration: NASA Wide-field Infrared Survey Explorer spacecraft]</span>
+    </div>
+
+    <div class="placeholder cluster">
+      <span class="ph-caption">[Illustration: Strongly clumped galaxies and purple dark matter halos]</span>
+    </div>
+
+    <div class="wise-left-copy">
+      <p>
+        Observations with NASA’s Wide-<br>
+        field Infrared Survey Explorer<br>
+        reveal that hidden black holes<br>
+        tend to be <em>more clumped<br>
+        together</em> than exposed ones.
+      </p>
+      <p>
+        This violates the “unified model,”<br>
+        which predicts we should see<br>
+        the same random distribution of<br>
+        dusty doughnuts regardless of<br>
+        how clumped the objects are.
+      </p>
+    </div>
+
+    <p class="cluster-caption">
+      Strongly clumped galaxies are likely to have larger halos of dark matter (shown<br>
+      artistically here in purple), which might provide a clue about what else besides the<br>
+      doughnuts could be hiding the black holes.
+    </p>
+  </section>
+</main>
+</body>
+</html>

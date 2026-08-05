@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>习惯型目标</title>
+<style>
+    body {
+        background-color: #fdfdfd;
+        background-image: 
+            linear-gradient(#e8f0f8 1px, transparent 1px),
+            linear-gradient(90deg, #e8f0f8 1px, transparent 1px);
+        background-size: 15px 15px;
+        margin: 0;
+        padding: 40px 20px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Microsoft YaHei", sans-serif;
+        color: #333;
+    }
+    .header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    .header h1 {
+        color: #a33b3b;
+        font-size: 36px;
+        margin: 0 0 15px 0;
+        letter-spacing: 2px;
+    }
+    .header .subtitle {
+        color: #1a4b8c;
+        font-size: 18px;
+        font-weight: bold;
+        background-color: #eef4fa;
+        display: inline-block;
+        padding: 6px 18px;
+        border-radius: 4px;
+    }
+    .container {
+        display: flex;
+        flex-wrap: wrap;
+        max-width: 850px;
+        margin: 0 auto;
+        gap: 20px 40px;
+    }
+    .left-col {
+        width: calc(30% - 20px);
+        display: flex;
+        flex-direction: column;
+        gap: 45px;
+        padding-top: 30px;
+    }
+    .left-item {
+        font-size: 15px;
+        line-height: 1.6;
+    }
+    .term {
+        color: #1a4b8c;
+        font-weight: bold;
+        font-size: 16px;
+    }
+    .right-col {
+        width: calc(70% - 20px);
+    }
+    .form-header {
+        text-align: center;
+        font-weight: bold;
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+    .box {
+        border: 1px solid #333;
+        background: #fff;
+        margin-bottom: 15px;
+    }
+    .box-title {
+        font-size: 12px;
+        font-weight: bold;
+        padding: 6px 10px;
+        border-bottom: 1px solid #333;
+    }
+    .box-subtitle {
+        font-weight: normal;
+        color: #888;
+        font-size: 10px;
+        margin-left: 5px;
+    }
+    
+    /* Table 1 */
+    .target-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .target-table td {
+        border: 1px solid #333;
+    }
+    .target-cell {
+        padding: 5px 10px;
+        height: 40px;
+        vertical-align: top;
+        border-bottom: 1px solid #333;
+    }
+    .target-label {
+        font-size: 12px;
+        font-weight: bold;
+    }
+    .attr-row td {
+        text-align: center;
+        font-size: 12px;
+        color: #666;
+        padding: 8px 0;
+        border-bottom: 1px dashed #999;
+        border-right: 1px dashed #999;
+        width: 25%;
+    }
+    .attr-row td:last-child {
+        border-right: none;
+    }
+    .input-row td {
+        height: 35px;
+        border-right: 1px dashed #999;
+    }
+    .input-row td:last-child {
+        border-right: none;
+    }
+
+    /* Checkboxes */
+    .checkbox-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        font-size: 13px;
+        padding: 0 10px;
+    }
+    .cb-label {
+        width: 40px;
+        color: #666;
+    }
+    .cb-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 10px 20px;
+        flex-grow: 1;
+    }
+    .cb-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    .cb-item input {
+        appearance: none;
+        width: 14px;
+        height: 14px;
+        border: 1px solid #333;
+        background: #fff;
+        border-radius: 0;
+        margin: 0;
+    }
+
+    /* Tracker */
+    .tracker-grid {
+        display: grid;
+        grid-template-columns: repeat(20, 1fr);
+    }
+    .tracker-cell {
+        border-right: 1px dashed #ccc;
+        border-bottom: 1px dashed #ccc;
+        text-align: center;
+        font-size: 11px;
+        color: #ddd;
+        padding: 3px 0;
+    }
+    .tracker-cell:nth-child(20n) {
+        border-right: none;
+    }
+    .tracker-cell:nth-child(n+81) {
+        border-bottom: none;
+    }
+
+    /* Motive */
+    .motive-row {
+        display: flex;
+        height: 35px;
+        border-bottom: 1px dashed #ccc;
+    }
+    .motive-row:last-child {
+        border-bottom: none;
+    }
+    .motive-num {
+        width: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        color: #ccc;
+        border-right: 1px dashed #ccc;
+    }
+
+    /* Next Step & Reward */
+    .relative-box {
+        position: relative;
+        overflow: hidden;
+    }
+    .step-row {
+        height: 35px;
+        border-bottom: 1px dashed #ccc;
+    }
+    .step-row:last-child {
+        border-bottom: none;
+    }
+    .watermark {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-15deg);
+        color: rgba(150, 150, 150, 0.3);
+        font-size: 16px;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    /* Bottom Text */
+    .bottom-text {
+        width: 100%;
+        margin-top: 10px;
+        font-size: 15px;
+        line-height: 1.6;
+    }
+</style>
+</head>
+<body>
+
+<div class="header">
+    <h1>习惯型目标</h1>
+    <div class="subtitle">重点：明确自己要进行什么活动、以什么频率进行</div>
+</div>
+
+<div class="container">
+    <div class="left-col">
+        <div class="left-item"><span class="term">开始时间：</span>何时开始培养习惯</div>
+        <div class="left-item"><span class="term">频率：</span>多久做一次-每天、每周</div>
+        <div class="left-item"><span class="term">定时任务：</span>在固定时间点执行某项任务，习惯更容易养成</div>
+        <div class="left-item"><span class="term">习惯养成点：</span>连续做一件事多少次，可以认为习惯已经养成</div>
+        <div class="left-item"><span class="term">习惯追踪：</span>罗列了100次用于打勾</div>
+        <div class="left-item"><span class="term">主要动机：</span>你可能会写出不少，给动机排个序，识别出最强烈的3个动机</div>
+    </div>
+    
+    <div class="right-col">
+        <div class="form-header">习惯型目标</div>
+        
+        <div class="box" style="border: none; background: transparent;">
+            <table class="target-table" style="background: #fff;">
+                <tr>
+                    <td colspan="4" class="target-cell">
+                        <div class="target-label">写下你的目标</div>
+                    </td>
+                </tr>
+                <tr class="attr-row">
+                    <td>开始时间</td>
+                    <td>频率</td>
+                    <td>定时任务</td>
+                    <td>习惯养成点</td>
+                </tr>
+                <tr class="input-row">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="checkbox-container">
+            <div class="cb-label">类型</div>
+            <div class="cb-grid">
+                <label class="cb-item"><input type="checkbox"> 精神</label>
+                <label class="cb-item"><input type="checkbox"> 智力</label>
+                <label class="cb-item"><input type="checkbox"> 情感</label>
+                <label class="cb-item"><input type="checkbox"> 生理</label>
+                <label class="cb-item"><input type="checkbox"> 婚姻</label>
+                <label class="cb-item"><input type="checkbox"> 亲子</label>
+                <label class="cb-item"><input type="checkbox"> 社交</label>
+                <label class="cb-item"><input type="checkbox"> 职业</label>
+                <label class="cb-item"><input type="checkbox"> 娱乐</label>
+                <label class="cb-item"><input type="checkbox"> 财务</label>
+            </div>
+        </div>
+
+        <div class="box">
+            <div class="box-title">习惯追踪</div>
+            <div class="tracker-grid">
+                <div class="tracker-cell">1</div><div class="tracker-cell">2</div><div class="tracker-cell">3</div><div class="tracker-cell">4</div><div class="tracker-cell">5</div><div class="tracker-cell">6</div><div class="tracker-cell">7</div><div class="tracker-cell">8</div><div class="tracker-cell">9</div><div class="tracker-cell">10</div><div class="tracker-cell">11</div><div class="tracker-cell">12</div><div class="tracker-cell">13</div><div class="tracker-cell">14</div><div class="tracker-cell">15</div><div class="tracker-cell">16</div><div class="tracker-cell">17</div><div class="tracker-cell">18</div><div class="tracker-cell">19</div><div class="tracker-cell">20</div>
+                <div class="tracker-cell">21</div><div class="tracker-cell">22</div><div class="tracker-cell">23</div><div class="tracker-cell">24</div><div class="tracker-cell">25</div><div class="tracker-cell">26</div><div class="tracker-cell">27</div><div class="tracker-cell">28</div><div class="tracker-cell">29</div><div class="tracker-cell">30</div><div class="tracker-cell">31</div><div class="tracker-cell">32</div><div class="tracker-cell">33</div><div class="tracker-cell">34</div><div class="tracker-cell">35</div><div class="tracker-cell">36</div><div class="tracker-cell">37</div><div class="tracker-cell">38</div><div class="tracker-cell">39</div><div class="tracker-cell">40</div>
+                <div class="tracker-cell">41</div><div class="tracker-cell">42</div><div class="tracker-cell">43</div><div class="tracker-cell">44</div><div class="tracker-cell">45</div><div class="tracker-cell">46</div><div class="tracker-cell">47</div><div class="tracker-cell">48</div><div class="tracker-cell">49</div><div class="tracker-cell">50</div><div class="tracker-cell">51</div><div class="tracker-cell">52</div><div class="tracker-cell">53</div><div class="tracker-cell">54</div><div class="tracker-cell">55</div><div class="tracker-cell">56</div><div class="tracker-cell">57</div><div class="tracker-cell">58</div><div class="tracker-cell">59</div><div class="tracker-cell">60</div>
+                <div class="tracker-cell">61</div><div class="tracker-cell">62</div><div class="tracker-cell">63</div><div class="tracker-cell">64</div><div class="tracker-cell">65</div><div class="tracker-cell">66</div><div class="tracker-cell">67</div><div class="tracker-cell">68</div><div class="tracker-cell">69</div><div class="tracker-cell">70</div><div class="tracker-cell">71</div><div class="tracker-cell">72</div><div class="tracker-cell">73</div><div class="tracker-cell">74</div><div class="tracker-cell">75</div><div class="tracker-cell">76</div><div class="tracker-cell">77</div><div class="tracker-cell">78</div><div class="tracker-cell">79</div><div class="tracker-cell">80</div>
+                <div class="tracker-cell">81</div><div class="tracker-cell">82</div><div class="tracker-cell">83</div><div class="tracker-cell">84</div><div class="tracker-cell">85</div><div class="tracker-cell">86</div><div class="tracker-cell">87</div><div class="tracker-cell">88</div><div class="tracker-cell">89</div><div class="tracker-cell">90</div><div class="tracker-cell">91</div><div class="tracker-cell">92</div><div class="tracker-cell">93</div><div class="tracker-cell">94</div><div class="tracker-cell">95</div><div class="tracker-cell">96</div><div class="tracker-cell">97</div><div class="tracker-cell">98</div><div class="tracker-cell">99</div><div class="tracker-cell">100</div>
+            </div>
+        </div>
+
+        <div class="box">
+            <div class="box-title">主要动机 <span class="box-subtitle">[写下3个主要动机并进行排序]</span></div>
+            <div>
+                <div class="motive-row"><div class="motive-num">1</div></div>
+                <div class="motive-row"><div class="motive-num">2</div></div>
+                <div class="motive-row"><div class="motive-num">3</div></div>
+            </div>
+        </div>
+
+        <div class="box relative-box">
+            <div class="box-title">下一步 <span class="box-subtitle">[拆解目标，写下实现目标需要做的事情]</span></div>
+            <div>
+                <div class="step-row"></div>
+                <div class="step-row"></div>
+                <div class="step-row"></div>
+                <div class="step-row"></div>
+                <div class="step-row"></div>
+                <div class="step-row"></div>
+            </div>
+            <div class="watermark">整理by 小红书 @杰西西的时间胶囊</div>
+        </div>
+
+        <div class="box">
+            <div class="box-title">奖励 <span class="box-subtitle">[你打算如何庆祝，可设置不同阶段的奖励]</span></div>
+            <div>
+                <div class="step-row"></div>
+                <div class="step-row"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-text">
+        <span class="term">奖励：</span>可设置不同阶段奖励。庆祝是对努力的认可，让胜利带来的愉悦渗透进紧张的神经，给你继续前进的力量
+    </div>
+</div>
+
+</body>
+</html>

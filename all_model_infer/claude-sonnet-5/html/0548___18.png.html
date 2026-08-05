@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FGER-Net Architecture Figure</title>
+<script>
+window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+  body {
+    font-family: "Times New Roman", Times, serif;
+    margin: 20px 40px;
+    color: #111;
+    font-size: 15px;
+  }
+  /* ---------- Figure area ---------- */
+  .figure-wrap {
+    display: flex;
+    align-items: stretch;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .box {
+    border: 2px dashed #999;
+    border-radius: 6px;
+    padding: 6px;
+    position: relative;
+  }
+  .box-title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 12px;
+    margin-bottom: 4px;
+  }
+
+  /* Left: receptors */
+  .receptors {
+    border-color: #7a9e7a;
+    background: #f4faf4;
+    width: 210px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .receptor-block { text-align:center; font-size:11px; font-weight:bold; }
+  .skin-placeholder {
+    width: 90px; height: 65px;
+    border: 1px solid #bbb;
+    background: repeating-linear-gradient(45deg, #fde9c8, #fde9c8 4px, #fff3df 4px, #fff3df 8px);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    color: #555;
+    margin: 2px;
+  }
+  .skin-row { display:flex; justify-content:center; }
+
+  /* Common perceptual mechanism */
+  .common-mech {
+    border-color: #7a86c7;
+    background: #f2f3fb;
+    width: 130px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    text-align: center;
+    font-size: 12px;
+  }
+  .common-mech .item { font-weight: bold; }
+
+  /* Time series arrow */
+  .timeseries {
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-style: italic;
+    transform: rotate(-20deg);
+    color:#333;
+  }
+
+  /* Center network area */
+  .network-area {
+    border-color: #8fbf8f;
+    background: #f4fbf4;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px;
+  }
+  .sub-net {
+    border: 1px dashed #7fae7f;
+    border-radius: 5px;
+    padding: 6px;
+    background: rgba(255,255,255,0.5);
+  }
+  .sub-net.frame {
+    border-color: #8f8fbf;
+  }
+  .net-title { font-weight: bold; font-size: 12px; margin-bottom: 4px; }
+  .net-flow {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: nowrap;
+    font-size: 10px;
+  }
+  .flow-item {
+    display:flex; flex-direction:column; align-items:center; gap:2px;
+  }
+  .placeholder-small {
+    border: 1px solid #999;
+    background: #eee;
+    display:flex; align-items:center; justify-content:center;
+    color:#666; font-size: 9px;
+    text-align:center;
+  }
+  .arrow { font-size: 14px; }
+  .lstm-box {
+    border: 1px solid #333;
+    background: #fff;
+    padding: 3px 8px;
+    font-weight: bold;
+    font-size: 11px;
+  }
+  .step-label { font-weight: bold; font-size: 11px; margin-top: 4px; }
+  .plus-circle {
+    width: 16px; height:16px; border-radius:50%;
+    border:1px solid #333; display:flex; align-items:center; justify-content:center;
+    font-size:11px;
+  }
+
+  /* Right: perceiving */
+  .perceiving {
+    border-color: #999;
+    background: #fbfbfb;
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+  }
+  .perceive-box {
+    border: 2px dashed #d9a441;
+    border-radius: 6px;
+    padding: 6px;
+    text-align: center;
+    background: #fdf6e6;
+  }
+  .perceive-box.static {
+    border-color: #7a7ac1;
+    background: #eeeefb;
+  }
+  .perceive-title { font-weight: bold; margin-bottom: 4px; font-size: 12px; }
+  .graph-placeholder {
+    width: 100%; height: 45px;
+    border: 1px solid #ccc;
+    background: #fff;
+    display:flex; align-items:center; justify-content:center;
+    color:#888; font-size:9px;
+  }
+
+  figcaption {
+    font-size: 13.5px;
+    text-align: justify;
+    margin-top: 6px;
+    line-height: 1.45;
+  }
+  figcaption b { font-weight: bold; }
+
+  /* ---------- Two column body ---------- */
+  .body-columns {
+    display: flex;
+    gap: 30px;
+    margin-top: 20px;
+    align-items: flex-start;
+  }
+  .col-left {
+    flex: 1;
+    text-align: justify;
+    line-height: 1.5;
+    font-size: 15px;
+  }
+  .col-left p {
+    text-indent: 1.5em;
+    margin: 0 0 10px 0;
+  }
+  .col-right {
+    flex: 1;
+    font-size: 14.5px;
+    border-top: 2px solid #000;
+    border-bottom: 2px solid #000;
+    padding: 8px 4px 10px 4px;
+  }
+  .alg-title {
+    font-weight: bold;
+    margin-bottom: 6px;
+  }
+  .alg-line {
+    margin: 3px 0;
+  }
+  .alg-indent1 { margin-left: 1.5em; }
+  .alg-indent2 { margin-left: 3em; }
+  .italic { font-style: italic; }
+  .bold { font-weight: bold; }
+</style>
+</head>
+<body>
+
+<div class="figure-wrap">
+
+  <!-- Receptors -->
+  <div class="box receptors">
+    <div class="receptor-block">Rapidly Adapting Receptors</div>
+    <div class="skin-row">
+      <div class="skin-placeholder">[Diagram: skin layer<br>Meissner's corpuscle,<br>Ruffini endings]</div>
+    </div>
+    <div class="receptor-block">Slowly Adapting Receptors</div>
+    <div class="skin-row">
+      <div class="skin-placeholder">[Diagram: skin layer<br>Merkel's disk,<br>Pacinian corpuscle]</div>
+    </div>
+  </div>
+
+  <!-- Common perceptual mechanism -->
+  <div class="box common-mech">
+    <div class="item">Common perceptual mechanism</div>
+    <div>Perceiving<br>dynamic<br>force</div>
+    <div>Perceiving<br>static<br>force</div>
+  </div>
+
+  <!-- Time series label -->
+  <div class="timeseries">Time Series</div>
+
+  <!-- Network area -->
+  <div class="box network-area">
+    <div class="sub-net">
+      <div class="net-title">Event Stream Recurrent Network</div>
+      <div class="net-flow">
+        <div class="flow-item">
+          <div class="placeholder-small" style="width:45px;height:45px;">[Event<br>points]</div>
+        </div>
+        <span class="arrow">→</span>
+        <div class="flow-item">
+          <div class="placeholder-small" style="width:14px;height:45px;">MLP</div>
+        </div>
+        <span class="arrow">→</span>
+        <div class="flow-item">
+          <div class="placeholder-small" style="width:45px;height:45px;">[Feature<br>volume]</div>
+          <span>Pooling</span>
+        </div>
+        <span class="arrow">→</span>
+        <div class="flow-item">
+          <div class="placeholder-small" style="width:14px;height:45px;">Δf</div>
+        </div>
+        <span class="arrow">→</span>
+        <div class="flow-item">
+          <span style="font-size:9px;">$F_t$</span>
+          <span style="font-size:9px;">$(h_{t-1},c_{t-1})$</span>
+          <div class="lstm-box">LSTM</div>
+          <span style="font-size:9px;">$(h_t,c_t)$</span>
+        </div>
+        <span class="arrow">→</span>
+        <div class="flow-item">
+          <div class="placeholder-small" style="width:45px;height:45px;">[MLP<br>net]</div>
+          <span>MLP</span>
+        </div>
+        <span class="arrow">→</span>
+        <div class="flow-item">
+          <div class="placeholder-small" style="width:14px;height:45px;">Δf</div>
+        </div>
+        <span class="arrow">→</span>
+        <div class="plus-circle">+</div>
+      </div>
+      <div class="step-label">At time step t+1</div>
+    </div>
+
+    <div class="sub-net frame">
+      <div class="net-title">Frame-Guided Network</div>
+      <div class="net-flow">
+        <div class="flow-item">
+          <div class="placeholder-small" style="width:45px;height:45px;">[Image<br>frame]</div>
+        </div>
+        <span class="arrow">→</span>
+        <div class="flow-item">
+          <div class="placeholder-small" style="width:45px;height:30px;">CNN</div>
+        </div>
+        <span class="arrow">→</span>
+        <div class="flow-item">
+          <div class="placeholder-small" style="width:14px;height:45px;">[feat]</div>
+        </div>
+        <span class="arrow">→</span>
+        <div class="flow-item">
+          <div class="placeholder-small" style="width:45px;height:45px;">[MLP<br>net]</div>
+          <span>MLP</span>
+        </div>
+        <span class="arrow">→</span>
+        <div class="flow-item">
+          <div class="placeholder-small" style="width:14px;height:45px;">Δf</div>
+        </div>
+      </div>
+      <div class="step-label">At time step t+1</div>
+    </div>
+  </div>
+
+  <!-- output arrow to perceiving, small placeholder -->
+  <div style="display:flex; align-items:center;">
+    <div class="placeholder-small" style="width:12px;height:60px;">F<sub>out</sub></div>
+  </div>
+
+  <!-- Perceiving -->
+  <div class="box perceiving">
+    <div class="box-title" style="font-size:13px;">Perceiving</div>
+    <div class="perceive-box">
+      <div class="perceive-title">Dynamic</div>
+      <div class="graph-placeholder">[Chart: F vs t, damped oscillation]</div>
+    </div>
+    <div class="perceive-box static">
+      <div class="perceive-title">Static</div>
+      <div class="graph-placeholder">[Chart: F vs t, step response]</div>
+    </div>
+  </div>
+
+</div>
+
+<figure style="margin:0;">
+<figcaption>
+<b>Fig. 2.</b> The architecture of the proposed FGER-Net is presented, alongside its conceptual underpinnings. The left portion illustrates the biological inspiration for the network: the synergistic function of fast and slow adapting mechanoreceptors in perceiving dynamic and static forces, respectively. These biological principles are emulated by the FGER-Net. In the network itself (center), event streams and image frames are synergistically fused for robust force estimation. In this architecture, frames are used to periodically correct for drift during training and to continuously stabilize the high frequency force predictions derived from the event stream during inference. The resulting force estimation is thereby made accurate and robust against drift, successfully capturing both dynamic and static tactile information, mirroring the perceptual capabilities shown on the right side of the diagram.
+</figcaption>
+</figure>
+
+<div class="body-columns">
+  <div class="col-left">
+    <p>dual rate architecture mirrors biological perception: a high frequency recurrent pathway integrates transient force increments from the event stream, while a low frequency pathway extracts absolute spatial references from single image frames for periodic training corrections.</p>
+    <p>During inference, we maximize estimation stability via a continuous correction strategy. By persistently fusing the most recent frame feature with incoming events, this absolute spatial anchor effectively eliminates integration drift.</p>
+    <p>The architecture utilizes dual parallel pathways optimized for each modality's distinct characteristics. To circumvent the extreme sparsity typical of standard convolutions on event data, individual events are normalized and processed by a pointwise MLP, followed by max-pooling to generate an aggregated feature vector for each packet. Conversely, dense spatial information from image frames is extracted into a compact feature vector using a residual CNN backbone coupled with average pooling.</p>
+    <p><i>a) Data Stream Segmentation:</i> The algorithm's processing cycle is driven by the arrival of new frames. A cycle is defined as the time elapsed between two consecutive frame [illegible]</p>
+  </div>
+
+  <div class="col-right">
+    <div class="alg-line"><span class="bold">Algorithm 1</span> FGER-Net</div>
+    <div class="alg-line"><span class="bold">Input:</span> $I_{\text{guide}}, \{P_m\}_{m=1}^{M}, f_{\text{prev\_cycle}}, (h_{\text{prev\_cycle}}, C_{\text{prev\_cycle}})$</div>
+    <div class="alg-line"><span class="bold">Output:</span> $\hat{f}_{\text{final}}, (h_M, C_M)$</div>
+    <div class="alg-line italic">Guiding Frame Feature Extraction</div>
+    <div class="alg-line">$\mathbf{f}_{\text{frame}} \leftarrow \Phi_f(I_{\text{guide}})$</div>
+    <div class="alg-line italic">Recurrent Processing Loop</div>
+    <div class="alg-line">$\hat{f}_0 \leftarrow f_{\text{prev\_cycle}}; (h_0, C_0) \leftarrow (h_{\text{prev\_cycle}}, C_{\text{prev\_cycle}})$</div>
+    <div class="alg-line"><span class="bold">for</span> $m \leftarrow 1$ <span class="bold">to</span> $M$ <span class="bold">do</span></div>
+    <div class="alg-line alg-indent1">$\mathbf{f}_{e,m} \leftarrow \Phi_e(P_m)$</div>
+    <div class="alg-line alg-indent1">$\mathbf{x}_m \leftarrow \text{concatenate}(\mathbf{f}_{e,m}, \hat{f}_{m-1})$</div>
+    <div class="alg-line alg-indent1">$(h_m, C_m) \leftarrow \text{LSTM}(\mathbf{x}_m, (h_{m-1}, C_{m-1}))$</div>
+    <div class="alg-line alg-indent1">$\Delta \hat{f}_m \leftarrow \text{MLP}_{\Delta f}(h_m)$</div>
+    <div class="alg-line alg-indent1">$\hat{f}_m \leftarrow \hat{f}_{m-1} + \Delta \hat{f}_m$</div>
+    <div class="alg-line bold">end for</div>
+    <div class="alg-line italic">Fusion and Correction</div>
+    <div class="alg-line">$\mathbf{f}_{\text{fusion}} \leftarrow \text{concatenate}(\hat{f}_M, \mathbf{f}_{\text{frame}})$</div>
+    <div class="alg-line">$\Delta f_{\text{corr}} \leftarrow \text{MLP}_{\text{corr}}(\mathbf{f}_{\text{fusion}})$</div>
+    <div class="alg-line">$\hat{f}_{\text{final}} \leftarrow \hat{f}_M + \Delta f_{\text{corr}}$</div>
+    <div class="alg-line bold">return $\hat{f}_{\text{final}}, (h_M, C_M)$</div>
+  </div>
+</div>
+
+</body>
+</html>

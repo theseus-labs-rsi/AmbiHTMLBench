@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>模型 63 多个函数的综合问题（1）</title>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']]
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    margin: 0;
+    min-height: 100%;
+    background: #f1dfc6;
+  }
+
+  body {
+    color: #181510;
+    font-family: "SimSun", "Songti SC", "Noto Serif CJK SC", serif;
+  }
+
+  .page {
+    width: 540px;
+    height: 719px;
+    margin: 0 auto;
+    padding-top: 71px;
+    background: #f1dfc6;
+    overflow: hidden;
+  }
+
+  .content {
+    width: 348px;
+    margin-left: 94px;
+  }
+
+  .page-title {
+    margin: 0 0 8px;
+    text-align: center;
+    font-size: 14px;
+    line-height: 19px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+  }
+
+  .section-title {
+    margin: 0 0 4px 3px;
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 700;
+  }
+
+  .analysis-table {
+    width: 342px;
+    margin-left: 5px;
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-size: 10px;
+    line-height: 1.65;
+    color: #2a251e;
+  }
+
+  .analysis-table col.label {
+    width: 64px;
+  }
+
+  .analysis-table col.item {
+    width: 139px;
+  }
+
+  .analysis-table td {
+    border: 1px solid #756b5c;
+    padding: 0;
+    vertical-align: middle;
+  }
+
+  .analysis-table .function-row {
+    height: 40px;
+  }
+
+  .analysis-table .sign-row {
+    height: 21px;
+  }
+
+  .analysis-table .image-row {
+    height: 110px;
+  }
+
+  .analysis-table .property-row {
+    height: 100px;
+  }
+
+  .analysis-table .label-cell {
+    padding-left: 7px;
+    text-align: left;
+  }
+
+  .analysis-table .center {
+    text-align: center;
+  }
+
+  .formula {
+    font-size: 12px;
+  }
+
+  .sign {
+    font-size: 10px;
+    font-style: italic;
+  }
+
+  .diagram-cell {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .placeholder {
+    position: relative;
+  }
+
+  .curve-diagram {
+    width: 137px;
+    height: 108px;
+    margin: 0 auto;
+  }
+
+  .curve-diagram svg,
+  .coordinate-graph svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .property-label {
+    text-align: center;
+  }
+
+  .property-text {
+    padding: 2px 5px 1px 6px !important;
+    vertical-align: top !important;
+    font-size: 9.5px;
+    line-height: 1.75;
+  }
+
+  .classic-title {
+    margin-top: 5px;
+    margin-bottom: 7px;
+  }
+
+  .example {
+    width: 348px;
+    margin: 0;
+    font-size: 9.5px;
+    line-height: 2.15;
+    white-space: normal;
+  }
+
+  .example-number {
+    font-weight: 700;
+  }
+
+  .coordinate-graph {
+    width: 111px;
+    height: 112px;
+    margin: 3px auto 0;
+  }
+
+  .answers {
+    width: 348px;
+    margin-top: 2px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    align-items: center;
+    font-size: 10px;
+    font-style: italic;
+  }
+
+  .answers div:nth-child(1) {
+    text-align: left;
+  }
+
+  .answers div:nth-child(2),
+  .answers div:nth-child(3) {
+    text-align: center;
+  }
+
+  .answers div:nth-child(4) {
+    text-align: right;
+  }
+
+  .option-symbols {
+    margin-left: 6px;
+    font-style: normal;
+  }
+
+  .page-number {
+    margin-top: 17px;
+    text-align: center;
+    font-size: 8px;
+  }
+
+  mjx-container {
+    margin: 0 !important;
+  }
+</style>
+</head>
+<body>
+<main class="page">
+  <div class="content">
+    <h1 class="page-title">模型 63　多个函数的综合问题（1）</h1>
+
+    <h2 class="section-title">【模型分析】</h2>
+
+    <table class="analysis-table">
+      <colgroup>
+        <col class="label">
+        <col class="item">
+        <col class="item">
+      </colgroup>
+      <tr class="function-row">
+        <td class="label-cell">反比例函数</td>
+        <td colspan="2" class="center formula">$y=\dfrac{k}{x}\quad(k\ne0)$</td>
+      </tr>
+      <tr class="sign-row">
+        <td class="label-cell">$k$ 的符号</td>
+        <td class="center sign">$k&gt;0$</td>
+        <td class="center sign">$k&lt;0$</td>
+      </tr>
+      <tr class="image-row">
+        <td class="property-label">图像</td>
+        <td class="diagram-cell">
+          <div class="placeholder curve-diagram">
+            <span class="visually-hidden">[Diagram: first- and third-quadrant branches of a reciprocal function]</span>
+            <svg viewBox="0 0 137 108" aria-hidden="true">
+              <defs>
+                <marker id="arrow-positive-x" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto">
+                  <path d="M0,0 L8,4 L0,8 Z" fill="#111"/>
+                </marker>
+                <marker id="arrow-positive-y" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto">
+                  <path d="M0,0 L8,4 L0,8 Z" fill="#111"/>
+                </marker>
+              </defs>
+              <line x1="17" y1="55" x2="105" y2="55" stroke="#111" stroke-width="2" marker-end="url(#arrow-positive-x)"/>
+              <line x1="54" y1="96" x2="54" y2="9" stroke="#111" stroke-width="2" marker-end="url(#arrow-positive-y)"/>
+              <path d="M60 47 C67 46, 76 42, 82 36 C88 30, 91 23, 93 15" fill="none" stroke="#111" stroke-width="1.8"/>
+              <path d="M48 62 C43 65, 38 70, 34 76 C30 82, 28 89, 27 96" fill="none" stroke="#111" stroke-width="1.8"/>
+              <text x="109" y="63" font-size="14" font-style="italic" font-weight="700">x</text>
+              <text x="61" y="19" font-size="14" font-style="italic" font-weight="700">y</text>
+              <text x="58" y="72" font-size="13" font-style="italic">O</text>
+            </svg>
+          </div>
+        </td>
+        <td class="diagram-cell">
+          <div class="placeholder curve-diagram">
+            <span class="visually-hidden">[Diagram: second- and fourth-quadrant branches of a reciprocal function]</span>
+            <svg viewBox="0 0 137 108" aria-hidden="true">
+              <defs>
+                <marker id="arrow-negative-x" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto">
+                  <path d="M0,0 L8,4 L0,8 Z" fill="#111"/>
+                </marker>
+                <marker id="arrow-negative-y" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto">
+                  <path d="M0,0 L8,4 L0,8 Z" fill="#111"/>
+                </marker>
+              </defs>
+              <line x1="17" y1="55" x2="105" y2="55" stroke="#111" stroke-width="2" marker-end="url(#arrow-negative-x)"/>
+              <line x1="54" y1="96" x2="54" y2="9" stroke="#111" stroke-width="2" marker-end="url(#arrow-negative-y)"/>
+              <path d="M23 49 C30 47, 37 43, 42 37 C47 31, 49 24, 50 15" fill="none" stroke="#111" stroke-width="1.8"/>
+              <path d="M60 93 C62 84, 66 76, 72 70 C78 64, 85 61, 94 59" fill="none" stroke="#111" stroke-width="1.8"/>
+              <text x="109" y="63" font-size="14" font-style="italic" font-weight="700">x</text>
+              <text x="61" y="19" font-size="14" font-style="italic" font-weight="700">y</text>
+              <text x="58" y="72" font-size="13" font-style="italic">O</text>
+            </svg>
+          </div>
+        </td>
+      </tr>
+      <tr class="property-row">
+        <td class="property-label">性质</td>
+        <td class="property-text">
+          ①$x$ 的取值范围是 $x\ne0$，$y$ 的取值范围是 $y\ne0$<br>
+          ②当 $k&gt;0$ 时，函数图像两个分支分别在一、三象限，在每个象限内，$y$ 随着 $x$ 增大而减小
+        </td>
+        <td class="property-text">
+          ①$x$ 的取值范围是 $x\ne0$，$y$ 的取值范围是 $y\ne0$<br>
+          ②当 $k&lt;0$ 时，函数图像两个分支分别在二、四象限，在每个象限内，$y$ 随着 $x$ 增大而增大
+        </td>
+      </tr>
+    </table>
+
+    <h2 class="section-title classic-title">【经典例题】</h2>
+
+    <p class="example">
+      <span class="example-number">例1.</span>（2020·浙江九年级一模）有下列四个函数：①$y=2x$；②$y=\dfrac{2}{3}x+4$；③$y=\dfrac{4}{x}$；<br>
+      ④$y=-\left(x-\dfrac{8}{3}\right)^2+\dfrac{31}{9}$，其中图象经过如图所示阴影部分（包括边界）的函数有（　　）
+    </p>
+
+    <figure class="placeholder coordinate-graph">
+      <figcaption class="visually-hidden">[Diagram: coordinate grid with a shaded triangular region]</figcaption>
+      <svg viewBox="0 0 111 112" aria-hidden="true">
+        <defs>
+          <marker id="axis-arrow-x" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="4.5" markerHeight="4.5" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="#111"/>
+          </marker>
+          <marker id="axis-arrow-y" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="4.5" markerHeight="4.5" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="#111"/>
+          </marker>
+        </defs>
+
+        <line x1="14" y1="90" x2="108" y2="90" stroke="#111" stroke-width="1.2" marker-end="url(#axis-arrow-x)"/>
+        <line x1="30" y1="101" x2="30" y2="7" stroke="#111" stroke-width="1.2" marker-end="url(#axis-arrow-y)"/>
+
+        <g stroke="#776f62" stroke-width="0.7" fill="none">
+          <rect x="30" y="18" width="72" height="72"/>
+          <line x1="48" y1="18" x2="48" y2="90"/>
+          <line x1="66" y1="18" x2="66" y2="90"/>
+          <line x1="84" y1="18" x2="84" y2="90"/>
+          <line x1="30" y1="36" x2="102" y2="36"/>
+          <line x1="30" y1="54" x2="102" y2="54"/>
+          <line x1="30" y1="72" x2="102" y2="72"/>
+        </g>
+
+        <polygon points="66,36 84,36 84,72" fill="#8e877b" fill-opacity="0.42" stroke="#111" stroke-width="1.2"/>
+        <line x1="66" y1="36" x2="84" y2="72" stroke="#111" stroke-width="1.2"/>
+
+        <g font-family="Times New Roman, serif" font-size="7.5" fill="#111">
+          <text x="45.5" y="100">1</text>
+          <text x="63.5" y="100">2</text>
+          <text x="81.5" y="100">3</text>
+          <text x="99.5" y="100">4</text>
+
+          <text x="21" y="75">1</text>
+          <text x="21" y="57">2</text>
+          <text x="21" y="39">3</text>
+          <text x="21" y="21">4</text>
+
+          <text x="17" y="100" font-style="italic">O</text>
+          <text x="107" y="104" font-style="italic">x</text>
+          <text x="17" y="9" font-style="italic">y</text>
+        </g>
+      </svg>
+    </figure>
+
+    <div class="answers">
+      <div>A.<span class="option-symbols">①②</span></div>
+      <div>B.<span class="option-symbols">①③</span></div>
+      <div>C.<span class="option-symbols">②③</span></div>
+      <div>D.<span class="option-symbols">②③④</span></div>
+    </div>
+
+    <div class="page-number">36</div>
+  </div>
+</main>
+</body>
+</html>

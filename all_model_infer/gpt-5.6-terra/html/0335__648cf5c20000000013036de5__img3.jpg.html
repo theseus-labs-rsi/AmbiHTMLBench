@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>题目列表</title>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      min-height: 100%;
+      background: #f5f6f8;
+      color: #27333d;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+    }
+
+    body {
+      width: 540px;
+      min-height: 1180px;
+      overflow: hidden;
+      margin: 0 auto;
+    }
+
+    .status-bar {
+      height: 62px;
+      padding: 23px 27px 0 48px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      background: #fff;
+      color: #050505;
+    }
+
+    .time {
+      font-size: 21px;
+      line-height: 24px;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    .status-icons {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      height: 21px;
+    }
+
+    .signal {
+      width: 24px;
+      height: 18px;
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+    }
+
+    .signal i {
+      display: block;
+      width: 4px;
+      background: #050505;
+      border-radius: 1px;
+    }
+
+    .signal i:nth-child(1) { height: 6px; }
+    .signal i:nth-child(2) { height: 10px; }
+    .signal i:nth-child(3) { height: 14px; }
+    .signal i:nth-child(4) { height: 18px; }
+
+    .wifi {
+      position: relative;
+      width: 23px;
+      height: 18px;
+      border-top: 3px solid #050505;
+      border-radius: 50% 50% 0 0;
+      transform: scaleX(1.05);
+    }
+
+    .wifi:before {
+      content: "";
+      position: absolute;
+      left: 3px;
+      top: 4px;
+      width: 15px;
+      height: 10px;
+      border-top: 3px solid #050505;
+      border-radius: 50% 50% 0 0;
+    }
+
+    .wifi:after {
+      content: "";
+      position: absolute;
+      left: 9px;
+      top: 12px;
+      width: 5px;
+      height: 5px;
+      background: #050505;
+      border-radius: 50%;
+    }
+
+    .battery {
+      width: 32px;
+      height: 17px;
+      border: 2px solid #050505;
+      border-radius: 4px;
+      position: relative;
+    }
+
+    .battery:after {
+      content: "";
+      position: absolute;
+      right: -5px;
+      top: 4px;
+      width: 3px;
+      height: 7px;
+      border-radius: 0 2px 2px 0;
+      background: #050505;
+    }
+
+    .toolbar {
+      height: 69px;
+      padding: 11px 10px 12px 25px;
+      display: flex;
+      align-items: center;
+      gap: 0;
+      background: #fff;
+      border-bottom: 1px solid #e8ebee;
+    }
+
+    .back {
+      width: 36px;
+      height: 42px;
+      position: relative;
+      flex: 0 0 36px;
+    }
+
+    .back:before,
+    .back:after {
+      content: "";
+      position: absolute;
+      left: 5px;
+      width: 20px;
+      height: 3px;
+      background: #344957;
+      border-radius: 2px;
+      transform-origin: left center;
+    }
+
+    .back:before {
+      top: 14px;
+      transform: rotate(-48deg);
+    }
+
+    .back:after {
+      top: 28px;
+      transform: rotate(48deg);
+    }
+
+    .search {
+      margin-left: 96px;
+      width: 228px;
+      height: 43px;
+      border-radius: 24px;
+      background: #f4f5f8;
+      color: #c7ccd2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      position: relative;
+    }
+
+    .search:after {
+      content: "";
+      width: 13px;
+      height: 13px;
+      border: 2px solid #c9ced4;
+      border-radius: 50%;
+      position: absolute;
+      right: 16px;
+      top: 12px;
+    }
+
+    .search:before {
+      content: "";
+      width: 7px;
+      height: 2px;
+      background: #c9ced4;
+      position: absolute;
+      right: 10px;
+      top: 27px;
+      transform: rotate(45deg);
+      border-radius: 2px;
+    }
+
+    .more {
+      margin-left: 21px;
+      width: 122px;
+      height: 45px;
+      border: 1px solid #f1f2f4;
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 0 12px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, .025);
+    }
+
+    .dots {
+      display: flex;
+      gap: 5px;
+    }
+
+    .dots i {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #050505;
+    }
+
+    .circle-icon {
+      width: 23px;
+      height: 23px;
+      border: 3px solid #050505;
+      border-radius: 50%;
+      position: relative;
+    }
+
+    .circle-icon:after {
+      content: "";
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      left: 5px;
+      top: 5px;
+      border-radius: 50%;
+      background: #050505;
+    }
+
+    .content {
+      padding: 0 14px 30px;
+    }
+
+    .question-card {
+      width: 100%;
+      margin: 0 0 16px;
+      padding: 0 14px;
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .question {
+      padding-top: 0;
+      font-size: 18px;
+      line-height: 34px;
+      letter-spacing: 0;
+      color: #2d3943;
+      min-height: 91px;
+    }
+
+    .meta {
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 17px;
+      line-height: 24px;
+      white-space: nowrap;
+    }
+
+    .date {
+      color: #34414a;
+    }
+
+    .stats {
+      color: #d3d6da;
+    }
+
+    .card-one {
+      height: 155px;
+    }
+
+    .card-one .question {
+      padding-top: 0;
+      min-height: 91px;
+    }
+
+    .card-two,
+    .card-three,
+    .card-five {
+      height: 173px;
+    }
+
+    .card-two .question,
+    .card-three .question,
+    .card-five .question {
+      padding-top: 13px;
+      min-height: 109px;
+    }
+
+    .card-four {
+      height: 136px;
+    }
+
+    .card-four .question {
+      padding-top: 13px;
+      min-height: 72px;
+    }
+
+    .card-six {
+      height: 173px;
+    }
+
+    .card-six .question {
+      padding-top: 13px;
+      min-height: 109px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="status-bar">
+      <div class="time">7:08</div>
+      <div class="status-icons">
+        <span class="signal"><i></i><i></i><i></i><i></i></span>
+        <span class="wifi"></span>
+        <span class="battery"></span>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="back" aria-label="返回"></div>
+      <div class="search">输入关键词</div>
+      <div class="more">
+        <span class="dots"><i></i><i></i><i></i></span>
+        <span class="circle-icon"></span>
+      </div>
+    </div>
+  </header>
+
+  <main class="content">
+    <article class="question-card card-one">
+      <div class="question">[单选题] 近年来，各地积极探索妇幼健康综合服务举措，<br>全国新生儿遗传代谢病和听力障碍筛查率均达到( )以...</div>
+      <div class="meta">
+        <span class="date">2023年05月</span>
+        <span class="stats">正确率 75% | 评论 0 | 点击 0</span>
+      </div>
+    </article>
+
+    <article class="question-card card-two">
+      <div class="question">[多选题] 我国积极推进三级预防措施，加强妇幼健康综合服务，其中三级预防是( )。</div>
+      <div class="meta">
+        <span class="date">2023年05月</span>
+        <span class="stats">正确率 0% | 评论 0 | 点击 0</span>
+      </div>
+    </article>
+
+    <article class="question-card card-three">
+      <div class="question">[单选题] 5月28日，国产大飞机( )大型客机成功完成商业载客首飞，这标志着C919的“研发、制造、取证、投运...</div>
+      <div class="meta">
+        <span class="date">2023年05月</span>
+        <span class="stats">正确率 100% | 评论 0 | 点击 0</span>
+      </div>
+    </article>
+
+    <article class="question-card card-four">
+      <div class="question">[单选题] ( )是国家强盛之基、安全之要。</div>
+      <div class="meta">
+        <span class="date">2023年05月</span>
+        <span class="stats">正确率 100% | 评论 0 | 点击 1</span>
+      </div>
+    </article>
+
+    <article class="question-card card-five">
+      <div class="question">[单选题] 2023中国国际大数据产业博览会以“（ ）”为年度主题。</div>
+      <div class="meta">
+        <span class="date">2023年05月</span>
+        <span class="stats">正确率 100% | 评论 0 | 点击 0</span>
+      </div>
+    </article>
+
+    <article class="question-card card-six">
+      <div class="question">[单选题] 从严整治“自媒体‘乱象’专项行动，截至2023年5月22日，累计清理处置违规账号（ ）万余个。</div>
+      <div class="meta">
+        <span class="date">2023年05月</span>
+        <span class="stats">正确率 0% | 评论 0 | 点击 0</span>
+      </div>
+    </article>
+  </main>
+</body>
+</html>

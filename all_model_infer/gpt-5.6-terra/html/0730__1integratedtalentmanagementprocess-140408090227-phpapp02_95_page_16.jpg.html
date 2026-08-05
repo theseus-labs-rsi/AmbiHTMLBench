@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Defining Potential</title>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      min-height: 100%;
+      background: #ffffff;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .page {
+      position: relative;
+      width: 1024px;
+      height: 768px;
+      overflow: hidden;
+      background: #ffffff;
+    }
+
+    .left-accent {
+      position: absolute;
+      top: 44px;
+      left: 0;
+      width: 32px;
+      height: 109px;
+      background: #ed1c24;
+    }
+
+    h1 {
+      position: absolute;
+      top: 76px;
+      left: 63px;
+      margin: 0;
+      color: #302733;
+      font-size: 40px;
+      font-weight: 400;
+      line-height: 1.1;
+    }
+
+    .catalyst-logo {
+      position: absolute;
+      top: 58px;
+      left: 772px;
+      width: 197px;
+      height: 82px;
+      color: #222222;
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 72px;
+      text-align: left;
+    }
+
+    .catalyst-logo .mark {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 91px;
+      height: 58px;
+    }
+
+    .catalyst-logo .mark::before,
+    .catalyst-logo .mark::after {
+      content: "";
+      position: absolute;
+      display: block;
+      background: #bd1d2d;
+      transform-origin: left center;
+    }
+
+    .catalyst-logo .mark::before {
+      top: 34px;
+      left: 0;
+      width: 43px;
+      height: 6px;
+      transform: rotate(-49deg);
+      box-shadow: 23px 0 0 #bd1d2d, 46px 0 0 #bd1d2d;
+    }
+
+    .catalyst-logo .mark::after {
+      top: 34px;
+      left: 22px;
+      width: 40px;
+      height: 6px;
+      transform: rotate(49deg);
+      box-shadow: 22px 0 0 #bd1d2d;
+    }
+
+    .grid {
+      position: absolute;
+      top: 198px;
+      left: 18px;
+      display: grid;
+      grid-template-columns: 241px 251px 252px;
+      grid-template-rows: 198px 202px;
+      column-gap: 19px;
+      row-gap: 35px;
+    }
+
+    .panel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 24px 16px 12px;
+      border: 1px solid #333333;
+      border-radius: 33px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .panel h2 {
+      margin: 0 0 3px;
+      font-size: 25px;
+      font-weight: 400;
+      line-height: 1.12;
+    }
+
+    .panel p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 17px;
+      white-space: nowrap;
+    }
+
+    .ability {
+      background: #ddd2dc;
+      color: #34428e;
+    }
+
+    .ability h2 {
+      color: #34428e;
+    }
+
+    .track {
+      background: #adadad;
+      color: #ffffff;
+      padding-top: 15px;
+    }
+
+    .track h2 {
+      font-size: 24px;
+    }
+
+    .track p {
+      line-height: 17px;
+    }
+
+    .engagement {
+      background: #aa8da4;
+      color: #ffffff;
+      padding-top: 55px;
+    }
+
+    .attributes {
+      background: #3977a7;
+      color: #ffffff;
+      padding-top: 26px;
+    }
+
+    .behaviour {
+      background: #b2cc57;
+      color: #ffffff;
+      border: 2px solid #8ea63d;
+      padding-top: 25px;
+    }
+
+    .aspiration {
+      background: #d6332f;
+      color: #ffffff;
+      border: 2px solid #a52827;
+      padding-top: 49px;
+    }
+
+    .placeholder {
+      position: absolute;
+      color: #555555;
+      text-align: center;
+    }
+
+    .person-image {
+      top: 264px;
+      left: 814px;
+      width: 194px;
+      height: 304px;
+      color: transparent;
+      background:
+        linear-gradient(145deg, transparent 0 32%, rgba(224, 224, 224, .8) 33% 35%, transparent 36% 100%),
+        linear-gradient(35deg, transparent 0 53%, rgba(232, 232, 232, .85) 54% 57%, transparent 58% 100%);
+    }
+
+    .person-image::before {
+      content: "";
+      position: absolute;
+      top: 78px;
+      left: 70px;
+      width: 49px;
+      height: 60px;
+      border-radius: 48% 48% 42% 42%;
+      background: #c99d82;
+      border: 6px solid #6d503f;
+      box-shadow: 0 -9px 0 4px #735144;
+    }
+
+    .person-image::after {
+      content: "";
+      position: absolute;
+      top: 126px;
+      left: 50px;
+      width: 92px;
+      height: 124px;
+      border-radius: 44% 44% 30% 30%;
+      background: #222222;
+      box-shadow:
+        -45px -69px 0 -25px #1f1f1f,
+        45px -69px 0 -25px #1f1f1f,
+        0 112px 0 -17px #111111;
+    }
+
+    .laptop {
+      position: absolute;
+      top: 236px;
+      left: 51px;
+      width: 94px;
+      height: 59px;
+      border: 5px solid #888888;
+      border-radius: 3px;
+      background: #eeeeee;
+      box-shadow: 0 53px 0 -22px #777777;
+    }
+
+    .bottom-rule {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 7px;
+      background: #ed1c24;
+    }
+
+    @media (max-width: 1024px) {
+      .page {
+        transform-origin: top left;
+        transform: scale(calc(100vw / 1024));
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="left-accent"></div>
+    <h1>Defining Potential</h1>
+
+    <div class="catalyst-logo" aria-label="Catalyst">
+      Catalyst
+      <span class="mark" aria-hidden="true"></span>
+    </div>
+
+    <section class="grid">
+      <article class="panel ability">
+        <h2>ABILITY</h2>
+        <p>
+          Mental/cognitive ability<br>
+          Emotional intelligence<br>
+          Technical/functional skills,<br>
+          Interpersonal skills, ability to<br>
+          stretch and progress quickly
+        </p>
+      </article>
+
+      <article class="panel track">
+        <h2>TRACK RECORD</h2>
+        <p>
+          Consistent history of good to<br>
+          exceptional performance and<br>
+          results<br>
+          Good relationships<br>
+          and reputation
+        </p>
+      </article>
+
+      <article class="panel engagement">
+        <h2>ENGAGEMENT</h2>
+        <p>
+          Emotional commitment<br>
+          Rational commitment<br>
+          Intent to stay
+        </p>
+      </article>
+
+      <article class="panel attributes">
+        <h2>ATTRIBUTES</h2>
+        <p>
+          Innate characteristics<br>
+          Energy, drive, passion<br>
+          Curiosity, willingness to learn &amp;<br>
+          change, Resilience
+        </p>
+      </article>
+
+      <article class="panel behaviour">
+        <h2>BEHAVIOUR</h2>
+        <p>
+          Leadership behaviour<br>
+          Team player<br>
+          Relationship builder<br>
+          Contributor<br>
+          Values alignment<br>
+          Positive Attitude
+        </p>
+      </article>
+
+      <article class="panel aspiration">
+        <h2>ASPIRATION</h2>
+        <p>
+          Desire for advancement,<br>
+          influence, financial rewards<br>
+          Work-life balance<br>
+          Overall job satisfaction
+        </p>
+      </article>
+    </section>
+
+    <figure class="placeholder person-image" aria-label="[Image: person jumping with laptop]">
+      <div class="laptop" aria-hidden="true"></div>
+    </figure>
+
+    <div class="bottom-rule"></div>
+  </main>
+</body>
+</html>

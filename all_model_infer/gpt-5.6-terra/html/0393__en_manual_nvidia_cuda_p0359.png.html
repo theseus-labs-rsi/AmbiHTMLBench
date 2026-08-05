@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CUDA C++ Programming Guide, Release 13.3</title>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: #fff;
+    color: #111;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  .page {
+    width: 1170px;
+    min-height: 1980px;
+    margin: 0 auto;
+    padding-top: 85px;
+    position: relative;
+  }
+  .header {
+    height: 35px;
+    border-bottom: 1px solid #111;
+    text-align: right;
+    font-size: 25px;
+    font-weight: 700;
+    line-height: 29px;
+  }
+  main {
+    padding-top: 61px;
+    font-size: 25px;
+    line-height: 1.22;
+  }
+  h2 {
+    color: #67b500;
+    font-size: 25px;
+    line-height: 1.2;
+    font-weight: 700;
+    margin: 0;
+  }
+  .section-one { margin-bottom: 56px; }
+  .section-two { margin-bottom: 56px; }
+  .section-three { margin-bottom: 37px; }
+  p {
+    margin: 0;
+    letter-spacing: .05px;
+  }
+  .section-one p { margin-top: 34px; }
+  .section-one p + p { margin-top: 14px; }
+  .section-two p { margin-top: 39px; }
+  .section-three .see { margin-top: 39px; }
+  .section-three .description { margin-top: 15px; }
+  .green-italic {
+    color: #67b500;
+    font-style: italic;
+  }
+  .warning {
+    margin-top: 37px;
+    border: 2px solid #171717;
+    padding: 11px 16px 14px 16px;
+    font-size: 25px;
+    line-height: 1.19;
+  }
+  .warning strong {
+    display: inline-block;
+    min-width: 133px;
+    font-weight: 700;
+  }
+  .after-warning { margin-top: 33px; }
+  .example { margin-top: 16px; }
+  code, pre {
+    font-family: "Courier New", Courier, monospace;
+  }
+  .codeblock {
+    height: 426px;
+    margin-top: 15px;
+    margin-left: -7px;
+    width: calc(100% + 14px);
+    background: #f1f1f1;
+    padding: 7px 8px;
+    overflow: hidden;
+  }
+  pre {
+    margin: 0;
+    font-size: 24px;
+    line-height: 1.14;
+    white-space: pre;
+  }
+  .kw { color: #8f240b; font-weight: 700; }
+  .num { color: #09813d; }
+  .op { color: #666; }
+  .cont {
+    text-align: right;
+    font-size: 19px;
+    margin-top: -1px;
+  }
+  footer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 98px;
+    border-top: 1px solid #111;
+    padding-top: 7px;
+    font-size: 25px;
+    font-weight: 700;
+  }
+  footer .left { float: left; }
+  footer .right { float: right; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">CUDA C++ Programming Guide, Release 13.3</div>
+
+  <main>
+    <section class="section-one">
+      <h2>13.6.1.2&nbsp;&nbsp; Memory Model (CDP1)</h2>
+      <p>See <span class="green-italic">Memory Model</span>, above, for CDP2 version of document.</p>
+      <p>Parent and child grids share the same global and constant memory storage, but have distinct local and<br>shared memory.</p>
+    </section>
+
+    <section class="section-two">
+      <h2>13.6.1.2.1&nbsp;&nbsp; Coherence and Consistency (CDP1)</h2>
+      <p>See <span class="green-italic">Coherence and Consistency</span>, above, for CDP2 version of document.</p>
+    </section>
+
+    <section class="section-three">
+      <h2>13.6.1.2.1.1&nbsp;&nbsp; Global Memory (CDP1)</h2>
+      <p class="see">See <span class="green-italic">Global Memory</span>, above, for CDP2 version of document.</p>
+      <p class="description">Parent and child grids have coherent access to global memory, with weak consistency guarantees<br>between child and parent. There are two points in the execution of a child grid when its view of memory<br>is fully consistent with the parent thread: when the child grid is invoked by the parent, and when the<br>child grid completes as signaled by a synchronization API invocation in the parent thread.</p>
+    </section>
+
+    <div class="warning">
+      <strong>Warning:</strong> Explicit synchronization with child kernels from a parent block (i.e. using cudaDe-<br>viceSynchronize() in device code) is deprecated in CUDA 11.6, removed for compute_90+ com-<br>pilation, and is slated for full removal in a future CUDA release.
+    </div>
+
+    <p class="after-warning">All global memory operations in the parent thread prior to the child grid’s invocation are visible to<br>the child grid. All memory operations of the child grid are visible to the parent after the parent has<br>synchronized on the child grid’s completion.</p>
+
+    <p class="example">In the following example, the child grid executing <code>child_launch</code> is only guaranteed to see the modi-<br>fications to <code>data</code> made before the child grid was launched. Since thread 0 of the parent is performing<br>the launch, the child will be consistent with the memory seen by thread 0 of the parent. Due to the<br>first <code>__syncthreads()</code> call, the child will see <code>data[0]=0, data[1]=1, …, data[255]=255</code> (without<br>the <code>__syncthreads()</code> call, only <code>data[0]</code> would be guaranteed to be seen by the child). When the<br>child grid returns, thread 0 is guaranteed to see modifications made by the threads in its child grid.<br>Those modifications become available to the other threads of the parent grid only after the second<br><code>__syncthreads()</code> call:</p>
+
+    <div class="codeblock">
+<pre>__global__ <span class="kw">void</span> child_launch(<span class="kw">int</span> *data) {
+   data[threadIdx.x] <span class="op">=</span> data[threadIdx.x]<span class="op">+</span><span class="num">1</span>;
+}
+
+__global__ <span class="kw">void</span> parent_launch(<span class="kw">int</span> *data) {
+   data[threadIdx.x] <span class="op">=</span> threadIdx.x;
+
+   __syncthreads();
+
+   <span class="num">if</span> (threadIdx.x <span class="op">==</span> <span class="num">0</span>) {
+      child_launch&lt;&lt;&lt; <span class="num">1</span>, <span class="num">256</span> &gt;&gt;&gt;(data);
+      cudaDeviceSynchronize();
+   }
+
+   __syncthreads();</pre>
+    </div>
+    <div class="cont">(continues on next page)</div>
+  </main>
+
+  <footer>
+    <div class="left">13.6.&nbsp; Legacy CUDA Dynamic Parallelism (CDP1)</div>
+    <div class="right">343</div>
+  </footer>
+</div>
+</body>
+</html>

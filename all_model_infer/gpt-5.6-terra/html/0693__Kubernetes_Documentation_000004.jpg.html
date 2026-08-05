@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Volume | Dokumentasi Kubernetes</title>
+  <script>
+    window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: #292c30;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 16px;
+      line-height: 1.48;
+      background: #fff;
+    }
+    a { color: #326cc4; text-decoration: none; }
+    .top {
+      height: 64px;
+      display: flex;
+      align-items: center;
+      padding: 0 15px;
+      color: white;
+      background: linear-gradient(105deg, #efb61c 0%, #f3c252 43%, #f3d9a7 100%);
+      font-size: 14px;
+      font-weight: bold;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      width: 36%;
+      gap: 9px;
+      font-size: 18px;
+    }
+    .kmark {
+      width: 30px;
+      height: 30px;
+      border: 2px solid white;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      transform: rotate(18deg);
+    }
+    .nav {
+      flex: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      white-space: nowrap;
+    }
+    .banner {
+      height: 187px;
+      display: flex;
+      align-items: center;
+      padding: 0 calc((100% - 1075px) / 2);
+      background: linear-gradient(105deg, #f2b51c 0%, #f5ca6d 60%, #f4d7a3 100%);
+    }
+    .banner-copy {
+      flex: 1;
+      color: #111;
+      padding-top: 2px;
+    }
+    .banner-copy h2 {
+      margin: 0 0 3px;
+      font-size: 22px;
+      line-height: 1.2;
+      font-weight: normal;
+      text-decoration: underline;
+    }
+    .banner-copy p {
+      margin: 0;
+      font-size: 15px;
+    }
+    .banner-copy a { color: #111; text-decoration: underline; }
+    .event {
+      width: 224px;
+      height: 110px;
+      color: #070707;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      font-weight: bold;
+    }
+    .event-item {
+      text-align: center;
+      line-height: 1.15;
+      font-size: 15px;
+    }
+    .event-symbol {
+      height: 54px;
+      font-size: 43px;
+      line-height: 50px;
+    }
+    .event-divider { height: 74px; border-left: 1px solid #38301e; }
+    .layout {
+      min-height: calc(100vh - 251px);
+      display: grid;
+      grid-template-columns: 248px minmax(500px, 944px) 248px;
+    }
+    .left {
+      background: #f7f7f7;
+      border-right: 1px solid #ddd;
+      padding: 80px 20px 30px 24px;
+      overflow: hidden;
+    }
+    .search {
+      height: 39px;
+      width: 203px;
+      border: 1px solid #d4d4d4;
+      border-radius: 6px;
+      background: white;
+      display: flex;
+      align-items: center;
+      padding: 0 11px;
+      margin-bottom: 17px;
+      color: #222;
+    }
+    .search b { margin-right: 8px; font-size: 23px; font-weight: normal; line-height: 1; }
+    .tree { width: 230px; color: #303237; line-height: 1.5; }
+    .tree div { margin: 4px 0; }
+    .tree .indent1 { padding-left: 19px; }
+    .tree .indent2 { padding-left: 42px; }
+    .tree .selected { color: #3172ca; }
+    .tree .current { font-weight: bold; }
+    .arrow { font-size: 13px; margin-right: 5px; }
+    .content {
+      padding: 34px 44px 60px 47px;
+      max-width: 944px;
+    }
+    .breadcrumbs {
+      margin: 0 0 31px;
+      color: #3572c7;
+      font-size: 16px;
+    }
+    .breadcrumbs .muted { color: #6c7074; }
+    .notice {
+      min-height: 166px;
+      border: 3px solid #3977d4;
+      background: #fbfcff;
+      padding: 23px 24px;
+      margin: 0 0 29px 32px;
+      width: calc(100% - 32px);
+    }
+    .notice strong { display: block; margin-bottom: 15px; }
+    .notice p { margin: 0; }
+    h1 {
+      margin: 0 0 19px;
+      font-size: 42px;
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+    h2 {
+      margin: 45px 0 14px;
+      font-size: 32px;
+      font-weight: normal;
+      line-height: 1.2;
+    }
+    .content p {
+      max-width: 680px;
+      margin: 0 0 16px;
+    }
+    code {
+      padding: 2px 5px;
+      border-radius: 3px;
+      background: #ececec;
+      font-family: "Courier New", monospace;
+      font-size: 14px;
+    }
+    .right {
+      border-left: 1px solid #ddd;
+      padding: 20px 13px 30px;
+      color: #777b7f;
+      overflow: hidden;
+    }
+    .tools {
+      margin-bottom: 20px;
+      color: #3671c5;
+      line-height: 1.65;
+    }
+    .tools div::first-letter { font-weight: bold; }
+    .toc { line-height: 1.7; }
+    .toc div { margin: 0; }
+    .toc .toc-heading { margin-top: 4px; }
+    .toc .sub { padding-left: 7px; }
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 210px minmax(0, 1fr); }
+      .right { display: none; }
+      .banner { padding: 0 24px; }
+      .content { padding-left: 28px; padding-right: 28px; }
+      .top .nav { gap: 16px; }
+      .brand { width: 220px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="brand"><span class="kmark">✥</span><span>kubernetes</span></div>
+    <nav class="nav">
+      <span>Dokumentasi</span>
+      <span>Blog</span>
+      <span>Komunitas</span>
+      <span>Studi Kasus</span>
+      <span>Versi⌄</span>
+      <span>Bahasa Indonesia (Indonesian)⌄</span>
+    </nav>
+  </header>
+
+  <section class="banner">
+    <div class="banner-copy">
+      <h2>KubeCon + CloudNativeCon India 2026</h2>
+      <p>Join us for two days of incredible opportunities to collaborate, learn and share with the cloud native community.</p>
+      <p><a href="#">Buy your ticket now! 18 - 19 June | Mumbai, India</a></p>
+    </div>
+    <div class="event">
+      <div class="event-item">
+        <div class="event-symbol">♙</div>
+        <div>KubeCon</div>
+      </div>
+      <div class="event-divider"></div>
+      <div class="event-item">
+        <div class="event-symbol">▣</div>
+        <div>CloudNativeCon</div>
+        <div>India 2026</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="layout">
+    <aside class="left">
+      <div class="search"><b>⌕</b> Cari</div>
+      <div class="tree">
+        <div><span class="arrow">▶</span>Dokumentasi</div>
+        <div><span class="arrow">▶</span>Persiapan</div>
+        <div class="selected"><span class="arrow">▼</span>Konsep</div>
+        <div class="indent1"><span class="arrow">▶</span>Ikhtisar</div>
+        <div class="indent1"><span class="arrow">▶</span>Arsitektur</div>
+        <div class="indent2">Kubernetes</div>
+        <div class="indent1"><span class="arrow">▶</span>Kontainer</div>
+        <div class="indent1"><span class="arrow">▶</span>Workloads</div>
+        <div class="indent1"><span class="arrow">▶</span>Services, Load<br>&nbsp;&nbsp;&nbsp;&nbsp;Balancing, dan<br>&nbsp;&nbsp;&nbsp;&nbsp;Jaringan</div>
+        <div class="indent1 selected"><span class="arrow">▼</span>Storage</div>
+        <div class="indent2 current">Volume</div>
+        <div class="indent2">Persistent<br>Volume</div>
+        <div class="indent2">VolumeSnapshot</div>
+        <div class="indent2">Projected<br>Volumes (EN)</div>
+        <div class="indent2">Ephemeral<br>Volumes (EN)</div>
+        <div class="indent2">Pengklolaan<br>Volume CSI</div>
+        <div class="indent2">StorageClass</div>
+        <div class="indent2">VolumeSnapshotCla</div>
+        <div class="indent2">Penyediaan<br>Volume Dinamis</div>
+        <div class="indent2">Volume<br>Attributes<br>Classes (EN)</div>
+        <div class="indent2">Storage<br>Capacity (EN)</div>
+        <div class="indent2">Local<br>ephemeral<br>storage (EN)</div>
+        <div class="indent2">Volume Health<br>Monitoring (EN)</div>
+        <div class="indent2">Windows<br>Storage (EN)</div>
+        <div class="indent2">Limit Volume<br>yang Spesifik<br>terhadap Node</div>
+        <div class="indent1"><span class="arrow">▶</span>Konfigurasi</div>
+        <div class="indent1"><span class="arrow">▶</span>Keamanan</div>
+        <div class="indent1"><span class="arrow">▶</span>Penjadwalan dan</div>
+      </div>
+    </aside>
+
+    <main class="content">
+      <div class="breadcrumbs">
+        Dokumentasi Kubernetes&nbsp; / &nbsp;Konsep&nbsp; / &nbsp;Storage&nbsp; / &nbsp;<span class="muted">Volume</span>
+      </div>
+
+      <section class="notice">
+        <strong>Information in this document may be out of date</strong>
+        <p>This document has an older update date than the original, so the information it contains may be out of date. If you're able to read English, see the English version for the most up-to-date information:<br><a href="#">Volumes</a></p>
+      </section>
+
+      <h1>Volume</h1>
+
+      <p>Berkas-berkas yang disimpan di <em>disk</em> di dalam Container bersifat tidak permanen (akan terhapus seiring dengan dihapusnya Container/Pod), yang menimbulkan beberapa masalah untuk aplikasi biasa saat berjalan di dalam Container. Pertama, saat sebuah Container mengalami kegagalan, Kubelet akan memulai kembali Container tersebut, tetapi semua berkas di dalamnya akan hilang - Container berjalan dalam kondisi yang bersih. Kedua, saat menjalankan banyak Container bersamaan di dalam sebuah <code>Pod</code>, biasanya diperlukan untuk saling berbagi berkas-berkas di antara Container-container tersebut. Kedua masalah tersebut dipecahkan dengan abstraksi <code>Volume</code> pada Kubernetes.</p>
+
+      <p>Pengetahuan tentang <a href="#">Pod</a> disarankan.</p>
+
+      <h2>Latar Belakang</h2>
+
+      <p>Docker juga memiliki konsep <a href="#"><em>volume</em></a>, walaupun konsepnya Docker agak lebih fleksibel dan kurang dikelola. Pada Docker, sebuah volume adalah sesederhana sebuah direktori pada <em>disk</em> atau di dalam Container lainnya. <em>Lifetime</em> tidak dikelola dan hingga baru-baru ini hanya ada volume yang didukung <em>disk</em> lokal. Docker sekarang menyediakan <em>driver</em> untuk volume, namun fungsionalitasnya masih sangat terbatas (misalnya hingga Docker 1.7 hanya ada satu <em>driver</em> volume yang diizinkan untuk setiap Container, dan tidak ada cara untuk menyampaikan parameter kepada volume).</p>
+
+      <p>Sebaliknya, sebuah Volume Kubernetes memiliki <em>lifetime</em> yang gamblang - sama dengan <em>lifetime</em> Pod yang berisi Volume tersebut. Oleh karena itu, sebuah Volume bertahan lebih lama dari Container-container yang berjalan di dalam Pod tersebut, dan data di Volume tersebut juga dipertahankan melewati diulangnya Container. Tentu saja, saat sebuah Pod berakhir, Volume tersebut juga akan berakhir/terhapus. Dan mungkin lebih penting lagi, Kubernetes mendukung banyak jenis Volume, dan sebuah Pod dapat menggunakan sebanyak apapun Volume secara bersamaan.</p>
+
+      <p>Pada intinya, sebuah volume hanyalah sebuah direktori, dan mungkin berisi data, yang dapat diakses oleh Container-container di dalam Pod. Bagaimana direktori tersebut dibuat, medium yang menyokongnya, dan isinya ditentukan oleh jenis volume yang digunakan.</p>
+
+      <p>Untuk menggunakan sebuah volume, sebuah Pod memerinci volume-volume yang akan disediakan untuk Pod tersebut (kolom <code>.spec.volumes</code>) dan di mana volume-volume tersebut akan ditambahkan (<em>di-mount</em>) di dalam Container-container di Pod (kolom <code>.spec.containers.volumeMounts</code>).</p>
+
+      <p>Sebuah proses di dalam Container memiliki sudut pandang <em>filesystem</em> yang disusun dari <em>image</em> dan volume Dockernya. <a href="#">Docker Image</a> berada pada bagian teratas hierarki <em>filesystem</em>, dan volume manapun yang ditambahkan pada <em>path</em> yang diperinci di dalam Image tersebut.</p>
+    </main>
+
+    <aside class="right">
+      <div class="tools">
+        <div>↗ Edit this page</div>
+        <div>↗ Create child page</div>
+        <div>◉ Buat isu</div>
+        <div>▣ Print entire section</div>
+      </div>
+      <div class="toc">
+        <div class="toc-heading">Latar Belakang</div>
+        <div>Jenis-jenis Volume</div>
+        <div class="sub">awsElasticBlockStore</div>
+        <div class="sub">azureDisk</div>
+        <div class="sub">azureFile</div>
+        <div class="sub">cephfs</div>
+        <div class="sub">cinder</div>
+        <div class="sub">configMap</div>
+        <div class="sub">downwardAPI</div>
+        <div class="sub">emptyDir</div>
+        <div class="sub">fc (fibre channel)</div>
+        <div class="sub">flocker</div>
+        <div class="sub">gcePersistentDisk</div>
+        <div class="sub">gitRepo (kedaluwarsa)</div>
+        <div class="sub">glusterfs</div>
+        <div class="sub">hostPath</div>
+        <div class="sub">iscsi</div>
+        <div class="sub">local</div>
+        <div class="sub">nfs</div>
+        <div class="sub">persistentVolumeClaim</div>
+        <div class="sub">projected</div>
+        <div class="sub">portworxVolume</div>
+        <div class="sub">quobyte</div>
+        <div class="sub">rbd</div>
+        <div class="sub">scaleIO</div>
+        <div class="sub">secret</div>
+        <div class="sub">storageOS</div>
+        <div class="sub">vsphereVolume</div>
+        <div>Menggunakan subPath</div>
+        <div class="sub">Menggunakan subPath<br>dengan <em>environment<br>variable</em> yang diekspansi</div>
+        <div>Sumber-sumber</div>
+        <div><em>Plugin</em> Volume yang Out-of-<br>Tree</div>
+        <div class="sub">CSI</div>
+        <div class="sub">Flexvolume</div>
+        <div><em>Mount Propagation</em></div>
+        <div>Konfigurasi</div>
+        <div>Selanjutnya</div>
+      </div>
+    </aside>
+  </div>
+</body>
+</html>

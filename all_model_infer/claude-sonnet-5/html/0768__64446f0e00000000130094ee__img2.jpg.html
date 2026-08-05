@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>25 爱的分类</title>
+<script>
+window.MathJax = { tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+    background: #e8e6e3;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+  }
+  .page {
+    position: relative;
+    width: 540px;
+    background: #d6d4d1;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  }
+  /* corner accents */
+  .corner-tr, .corner-bl {
+    position: absolute;
+    width: 0; height: 0;
+    z-index: 5;
+  }
+  .corner-tr {
+    top: 0; right: 0;
+    border-top: 16px solid #e07b39;
+    border-left: 16px solid transparent;
+  }
+  .corner-bl {
+    bottom: 0; left: 0;
+    border-bottom: 16px solid #e07b39;
+    border-right: 16px solid transparent;
+  }
+
+  /* Top dark header bar */
+  .topbar {
+    background: #2b2b2b;
+    color: #fff;
+    padding: 10px 16px 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .avatar-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 60px;
+  }
+  .avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #999;
+    border: 1px solid #e07b39;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    color: #ddd;
+    overflow: hidden;
+  }
+  .avatar-label {
+    font-size: 10px;
+    margin-top: 2px;
+    color: #ddd;
+  }
+  .brand {
+    text-align: center;
+    flex: 1;
+  }
+  .brand-title {
+    font-size: 15px;
+    font-weight: bold;
+    letter-spacing: 1px;
+  }
+  .brand-title .accent {
+    color: #e07b39;
+  }
+  .brand-sub {
+    font-size: 9px;
+    color: #bbb;
+    font-style: italic;
+    margin-top: 2px;
+    letter-spacing: 0.5px;
+  }
+  .ratings {
+    font-size: 9px;
+    color: #ddd;
+    line-height: 1.6;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .ratings .stars {
+    color: #e07b39;
+    margin-left: 4px;
+  }
+
+  /* Title section */
+  .title-section {
+    background: #2b2b2b;
+    color: #fff;
+    padding: 10px 24px 20px 24px;
+  }
+  .title-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .title-number {
+    font-size: 42px;
+    font-weight: bold;
+    color: #fff;
+  }
+  .title-main {
+    font-size: 34px;
+    font-weight: bold;
+    color: #fff;
+  }
+  .quote {
+    margin-top: 8px;
+    font-size: 12px;
+    color: #ddd;
+  }
+
+  /* Model label bar */
+  .model-label-wrap {
+    display: flex;
+    justify-content: center;
+    margin: 14px 0 10px 0;
+  }
+  .model-label {
+    background: #3a3a3a;
+    color: #fff;
+    font-size: 12px;
+    padding: 3px 20px;
+    border-radius: 2px;
+  }
+
+  /* Grid of items */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    row-gap: 26px;
+    column-gap: 6px;
+    padding: 6px 20px 26px 20px;
+  }
+  .item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .icon-wrap {
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    margin-bottom: 6px;
+  }
+  .heart {
+    font-size: 30px;
+    line-height: 1;
+  }
+  .heart.outline {
+    color: transparent;
+    -webkit-text-stroke: 1.5px currentColor;
+  }
+  .heart.dotted {
+    color: transparent;
+    -webkit-text-stroke: 1.5px currentColor;
+    opacity: 0.8;
+  }
+  .heart.small {
+    font-size: 20px;
+  }
+  .overlay {
+    position: relative;
+  }
+  .overlay .badge {
+    position: absolute;
+    top: -6px;
+    right: -8px;
+    font-size: 13px;
+  }
+  .label {
+    font-size: 12px;
+    color: #333;
+    font-weight: 500;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="corner-tr"></div>
+  <div class="corner-bl"></div>
+
+  <div class="topbar">
+    <div class="avatar-block">
+      <div class="avatar">照片</div>
+      <div class="avatar-label">模型</div>
+    </div>
+    <div class="brand">
+      <div class="brand-title">打造<span class="accent">超级</span>学习个体</div>
+      <div class="brand-sub">- To build Super charged individual -</div>
+    </div>
+    <div class="ratings">
+      <div>学习难易 <span class="stars">★★★</span></div>
+      <div>理解难易 <span class="stars">★★★</span></div>
+      <div>应用难易 <span class="stars">★★★</span></div>
+    </div>
+  </div>
+
+  <div class="title-section">
+    <div class="title-row">
+      <div class="title-number">25</div>
+      <div class="title-main">爱的分类</div>
+    </div>
+    <div class="quote">为爱而爱，是神；为被爱而爱，是人。拜伦</div>
+  </div>
+
+  <div class="model-label-wrap">
+    <div class="model-label">模型</div>
+  </div>
+
+  <div class="grid">
+
+    <div class="item">
+      <div class="icon-wrap">
+        <span class="heart" style="color:#6f9bc4;">♥</span>
+        <span class="heart" style="color:#bcd3e6;">♥</span>
+      </div>
+      <div class="label">基于伦理的爱</div>
+    </div>
+
+    <div class="item">
+      <div class="icon-wrap">
+        <span class="heart" style="color:#a9c8e3;">♥</span>
+      </div>
+      <div class="label">理想化的爱</div>
+    </div>
+
+    <div class="item">
+      <div class="icon-wrap overlay">
+        <span class="heart outline" style="color:#8a8a8a;">♥</span>
+        <span class="badge" style="color:#8a8a8a;">＋</span>
+      </div>
+      <div class="label">基于逻辑的爱</div>
+    </div>
+
+    <div class="item">
+      <div class="icon-wrap overlay">
+        <span class="heart" style="color:#d94f4f;">♥</span>
+        <span class="badge" style="top:-14px;color:#e07b39;">◠</span>
+      </div>
+      <div class="label">真挚的爱</div>
+    </div>
+
+    <div class="item">
+      <div class="icon-wrap">
+        <span class="heart" style="color:#b5424a;">♥</span>
+        <span class="heart outline" style="color:#cfcfcf;">♥</span>
+        <span class="heart" style="color:#e8b4c0;">♥</span>
+      </div>
+      <div class="label">方法论的爱</div>
+    </div>
+
+    <div class="item">
+      <div class="icon-wrap">
+        <span class="heart outline" style="color:#cfcfcf; font-size:34px;">●</span>
+      </div>
+      <div class="label">可爱的爱</div>
+    </div>
+
+    <div class="item">
+      <div class="icon-wrap">
+        <span class="heart" style="color:#3a3a3a;">♥</span>
+        <span class="heart" style="color:#1a1a1a; margin-left:-14px;">♥</span>
+      </div>
+      <div class="label">基于归纳的爱</div>
+    </div>
+
+    <div class="item">
+      <div class="icon-wrap overlay">
+        <span class="heart" style="color:#e8c94a;">♥</span>
+        <span class="badge" style="top:14px; color:#333;">◉</span>
+      </div>
+      <div class="label">感性的爱</div>
+    </div>
+
+    <div class="item">
+      <div class="icon-wrap">
+        <span class="heart" style="color:#2a2a2a;">♥</span>
+        <span class="heart" style="color:#6f9bc4;">♥</span>
+      </div>
+      <div class="label">基于伦理的爱</div>
+    </div>
+
+    <div class="item">
+      <div class="icon-wrap overlay">
+        <span class="heart" style="color:#c0392b;">♥</span>
+        <span class="badge" style="top:-12px; color:#d4a017;">♛</span>
+      </div>
+      <div class="label">暴政式的爱</div>
+    </div>
+
+    <div class="item">
+      <div class="icon-wrap">
+        <span class="heart outline" style="color:#7fa8d9;">♥</span>
+        <span class="heart outline" style="color:#7fa8d9; margin-left:-10px;">♥</span>
+      </div>
+      <div class="label">自由主义的爱</div>
+    </div>
+
+    <div class="item">
+      <div class="icon-wrap">
+        <span class="heart outline" style="color:#4a7a4a;">♥</span>
+      </div>
+      <div class="label">自然主义的爱</div>
+    </div>
+
+    <div class="item">
+      <div class="icon-wrap">
+        <span class="heart" style="color:#4a4a4a;">♥</span>
+      </div>
+      <div class="label">超体验的爱</div>
+    </div>
+
+    <div class="item">
+      <div class="icon-wrap">
+        <span class="heart dotted" style="color:#e08a9e;">♥</span>
+      </div>
+      <div class="label">易感受的爱</div>
+    </div>
+
+    <div class="item">
+      <div class="icon-wrap">
+        <span class="heart outline" style="color:#e8b4c0;">♥</span>
+      </div>
+      <div class="label">有意志的爱</div>
+    </div>
+
+    <div class="item">
+      <div class="icon-wrap">
+        <span class="heart" style="color:#c0392b; clip-path: inset(0 50% 0 0);">♥</span>
+        <span class="heart" style="color:#4a7ab5; clip-path: inset(0 0 0 50%); margin-left:-30px;">♥</span>
+      </div>
+      <div class="label">辩证的爱</div>
+    </div>
+
+    <div class="item">
+      <div class="icon-wrap">
+        <span class="heart dotted" style="color:#2a2a2a;">♥</span>
+      </div>
+      <div class="label">革命式的爱</div>
+    </div>
+
+    <div class="item">
+      <div class="icon-wrap">
+        <span class="heart dotted" style="color:#999999;">♥</span>
+      </div>
+      <div class="label">令人疯狂的爱</div>
+    </div>
+
+    <div class="item">
+      <div class="icon-wrap overlay">
+        <span class="heart" style="color:#4a7ab5;">♥</span>
+        <span class="badge" style="color:#4a7ab5;">＋</span>
+      </div>
+      <div class="label">积极的爱</div>
+    </div>
+
+    <div class="item">
+      <div class="icon-wrap">
+        <span class="heart dotted" style="color:#e8d98a;">♥</span>
+      </div>
+      <div class="label">非理性的爱</div>
+    </div>
+
+    <div class="item">
+      <div class="icon-wrap">
+        <span class="heart" style="color:#e8b4c0;">♥</span>
+        <span class="heart" style="color:#c0392b; margin-left:-14px;">♥</span>
+      </div>
+      <div class="label">相对的爱</div>
+    </div>
+
+    <div class="item">
+      <div class="icon-wrap">
+        <span class="heart dotted" style="color:#a0a0a0;">♥</span>
+      </div>
+      <div class="label">现象主义的爱</div>
+    </div>
+
+    <div class="item">
+      <div class="icon-wrap">
+        <span class="heart outline" style="color:#c0392b;">♥</span>
+      </div>
+      <div class="label">存在主义的爱</div>
+    </div>
+
+    <div class="item">
+      <div class="icon-wrap">
+        <span class="heart dotted" style="color:#d0d0d0;">♥</span>
+      </div>
+      <div class="label">超越善恶的爱</div>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

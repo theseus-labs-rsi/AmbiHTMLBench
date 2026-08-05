@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>三、直播后</title>
+  <script>
+    window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      width: 100%;
+      min-height: 100%;
+      font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+    }
+    body {
+      background: #aab7ca;
+      color: #404040;
+    }
+    .page {
+      position: relative;
+      width: 540px;
+      height: 720px;
+      margin: 0 auto;
+      overflow: hidden;
+      background: #fff;
+    }
+    .top {
+      height: 68px;
+      background: #aab7ca;
+      position: relative;
+      color: #4e5968;
+    }
+    .title {
+      position: absolute;
+      left: 198px;
+      top: 22px;
+      font-size: 28px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      white-space: nowrap;
+    }
+    .title::before {
+      content: "";
+      position: absolute;
+      left: 5px;
+      top: 8px;
+      width: 24px;
+      height: 2px;
+      background: #4e5968;
+      box-shadow: 0 9px 0 #4e5968, 0 18px 0 #4e5968;
+      transform: translateX(-2px);
+    }
+    .title span { margin-left: 56px; }
+    .watermark {
+      position: absolute;
+      right: 30px;
+      top: 28px;
+      color: rgba(255,255,255,.92);
+      font-size: 11px;
+      font-weight: bold;
+    }
+    .watermark small {
+      display: block;
+      text-align: center;
+      font-size: 5px;
+      margin-top: 1px;
+      font-family: cursive;
+    }
+    .yellow-note {
+      height: 111px;
+      background: #ffe898;
+      padding: 4px 8px;
+      color: #555;
+      font-size: 14px;
+      line-height: 17px;
+    }
+    .yellow-note .heading {
+      font-size: 16px;
+      line-height: 19px;
+    }
+    .yellow-note ul {
+      padding: 0;
+      margin: 0 0 0 19px;
+      list-style: disc;
+    }
+    .content {
+      position: relative;
+      height: 469px;
+      background: #fff;
+    }
+    .section-label {
+      position: absolute;
+      left: 0;
+      top: 247px;
+      width: 127px;
+      height: 31px;
+      border-radius: 0 5px 5px 0;
+      background: #f1f1f1;
+      color: #111;
+      padding: 5px 0 0 7px;
+      font-size: 20px;
+      line-height: 25px;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+    .connector {
+      position: absolute;
+      left: 126px;
+      top: 83px;
+      width: 49px;
+      height: 352px;
+      border-left: 2px solid #171717;
+    }
+    .connector .horizontal {
+      position: absolute;
+      left: 0;
+      height: 2px;
+      width: 32px;
+      background: #171717;
+    }
+    .connector .h1 { top: 0; }
+    .connector .h2 { top: 117px; }
+    .connector .h3 { top: 234px; }
+    .connector .h4 { top: 352px; }
+    .connector .stem {
+      position: absolute;
+      left: 31px;
+      width: 17px;
+      border-top: 2px solid #171717;
+    }
+    .connector .s1 { top: 0; }
+    .connector .s2 { top: 117px; }
+    .connector .s3 { top: 234px; }
+    .connector .s4 { top: 352px; }
+
+    .flow {
+      position: absolute;
+      left: 156px;
+      top: 3px;
+      width: 365px;
+    }
+    .item {
+      position: relative;
+      height: 117px;
+    }
+    .blue-note {
+      position: absolute;
+      left: 18px;
+      top: 0;
+      width: 322px;
+      min-height: 57px;
+      padding: 7px 11px 6px;
+      border-radius: 8px 8px 0 0;
+      background: #4055af;
+      color: #fff;
+      font-size: 16px;
+      line-height: 20px;
+      font-weight: 500;
+    }
+    .blue-note.note2 {
+      top: 0;
+      min-height: 57px;
+    }
+    .blue-note.note3 {
+      top: 0;
+      min-height: 51px;
+    }
+    .blue-note.note4 {
+      top: 0;
+      min-height: 57px;
+    }
+    .metric {
+      position: absolute;
+      left: 0;
+      top: 51px;
+      width: 350px;
+      height: 58px;
+      border: 2px dashed #273a91;
+      border-radius: 13px;
+      background: #f1f1f1;
+      padding: 14px 13px;
+      color: #3f3f3f;
+      font-size: 17px;
+      line-height: 23px;
+      white-space: nowrap;
+    }
+    .metric::before {
+      content: "";
+      position: absolute;
+      left: 10px;
+      top: 9px;
+      width: 326px;
+      height: 38px;
+      border-radius: 8px;
+      background: rgba(255,255,255,.3);
+      z-index: 0;
+    }
+    .metric span {
+      position: relative;
+      z-index: 1;
+    }
+    .item:nth-child(2) .metric { top: 51px; }
+    .item:nth-child(3) .metric { top: 51px; }
+    .item:nth-child(4) .metric { top: 51px; }
+    .num {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      margin-right: 5px;
+      border: 1px solid #757575;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 18px;
+      font-size: 13px;
+      vertical-align: 1px;
+    }
+    .bottom-band {
+      height: 72px;
+      background: #aab7ca;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="top">
+      <div class="title"><span>三、直播后</span></div>
+      <div class="watermark">@君锦经营学院Renita<small>Focus on data</small></div>
+    </header>
+
+    <section class="yellow-note">
+      <div class="heading">2、数据复盘</div>
+      <div>进行直播数据复盘的时候，重点关注4个关键数据:</div>
+      <ul>
+        <li>人气峰值和在线</li>
+        <li>观众平均停留时长</li>
+        <li>带货转化率</li>
+        <li>UV价值</li>
+      </ul>
+    </section>
+
+    <main class="content">
+      <div class="section-label">2、数据复盘</div>
+
+      <div class="connector" aria-hidden="true">
+        <div class="horizontal h1"></div><div class="stem s1"></div>
+        <div class="horizontal h2"></div><div class="stem s2"></div>
+        <div class="horizontal h3"></div><div class="stem s3"></div>
+        <div class="horizontal h4"></div><div class="stem s4"></div>
+      </div>
+
+      <div class="flow">
+        <div class="item">
+          <div class="blue-note">一般平均在线能稳定在50人左右直播就有<br>基本的带货能力，能够赚到钱</div>
+          <div class="metric"><span><b class="num">①</b>人气峰值和平均在线人数</span></div>
+        </div>
+
+        <div class="item">
+          <div class="blue-note note2">通常停留时长超过2分钟算不错的数据，超<br>过30s是一个及格线</div>
+          <div class="metric"><span><b class="num">②</b>观众平均停留时长</span></div>
+        </div>
+
+        <div class="item">
+          <div class="blue-note note3">一般带货转化率达到1%以上算合格，优秀的<br>3%以上</div>
+          <div class="metric"><span><b class="num">③</b>带货转化率</span></div>
+        </div>
+
+        <div class="item">
+          <div class="blue-note note4">单个用户给直播间贡献的价值，这个数值越<br>高，说明用户在这个直播间的付费意愿更强</div>
+          <div class="metric"><span><b class="num">④</b>UV价值</span></div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="bottom-band"></footer>
+  </div>
+</body>
+</html>

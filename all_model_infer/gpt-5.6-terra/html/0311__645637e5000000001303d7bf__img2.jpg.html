@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>高效背书</title>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      min-height: 100%;
+      background: #487a62;
+      font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif;
+      color: #222;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .page {
+      position: relative;
+      width: min(540px, 100vw);
+      height: min(720px, 133.333vw);
+      min-height: 600px;
+      max-height: 720px;
+      overflow: hidden;
+      background: #487a62;
+    }
+
+    .card {
+      position: absolute;
+      top: 31px;
+      left: 24px;
+      right: 24px;
+      bottom: 30px;
+      overflow: hidden;
+      background: #fff;
+      border-radius: 43px 43px 38px 38px;
+    }
+
+    .title {
+      position: absolute;
+      top: 8px;
+      left: 71px;
+      right: 71px;
+      height: 43px;
+      border-radius: 6px;
+      background: #487a62;
+      color: #fff;
+      text-align: center;
+      font-size: 23px;
+      font-weight: 700;
+      line-height: 43px;
+    }
+
+    .top-rule {
+      position: absolute;
+      top: 59px;
+      left: 0;
+      right: 0;
+      border-top: 1px solid #777;
+    }
+
+    .content {
+      position: absolute;
+      top: 70px;
+      left: 10px;
+      right: 10px;
+      font-size: 18px;
+      line-height: 1.34;
+    }
+
+    .section {
+      margin: 0 0 22px;
+    }
+
+    .section-title {
+      color: #527768;
+      font-size: 19px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 2px;
+    }
+
+    .section p {
+      margin: 0;
+      letter-spacing: 0;
+    }
+
+    .example {
+      margin-top: 2px;
+      margin-bottom: 25px;
+      font-size: 16px;
+      line-height: 1.48;
+    }
+
+    .example-line {
+      white-space: nowrap;
+    }
+
+    .example-label {
+      display: inline-block;
+      width: 57px;
+      color: #111;
+      font-weight: 700;
+      background: #fff45a;
+    }
+
+    .example-text {
+      font-weight: 700;
+    }
+
+    .footer-area {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 62px;
+      border-top: 1px solid #777;
+      background: #fff;
+    }
+
+    .illustration {
+      position: absolute;
+      left: 22px;
+      top: 9px;
+      width: 50px;
+      height: 51px;
+      border: 1px solid #aaa;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #777;
+      font-size: 7px;
+      line-height: 1.05;
+    }
+
+    .illustration::before {
+      content: "✿";
+      color: #d8b35d;
+      font-size: 21px;
+      position: absolute;
+      top: 3px;
+    }
+
+    .illustration::after {
+      content: "♨";
+      color: #587c68;
+      font-size: 26px;
+      position: absolute;
+      bottom: 2px;
+    }
+
+    .placeholder-caption {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+    }
+
+    .speech {
+      position: absolute;
+      top: 12px;
+      left: 88px;
+      width: 314px;
+      height: 44px;
+      border: 1px solid #aaa;
+      background: #fff;
+      padding: 9px 12px 7px 21px;
+      font-size: 16px;
+      line-height: 24px;
+      white-space: nowrap;
+    }
+
+    .speech::before {
+      content: "";
+      position: absolute;
+      left: -1px;
+      top: 12px;
+      width: 0;
+      height: 0;
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+      border-right: 13px solid #aaa;
+      transform: translateX(-100%);
+    }
+
+    .speech::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 13px;
+      width: 0;
+      height: 0;
+      border-top: 9px solid transparent;
+      border-bottom: 9px solid transparent;
+      border-right: 12px solid #fff;
+      transform: translateX(-100%);
+    }
+
+    .play {
+      position: absolute;
+      top: 16px;
+      right: 33px;
+      width: 0;
+      height: 0;
+      border-top: 18px solid transparent;
+      border-bottom: 18px solid transparent;
+      border-left: 35px solid #487a62;
+    }
+
+    .play-caption {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+    }
+
+    .account {
+      position: absolute;
+      right: 1px;
+      bottom: -22px;
+      color: #fff;
+      font-size: 14px;
+      line-height: 20px;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 420px) {
+      .card {
+        top: 24px;
+        left: 18px;
+        right: 18px;
+        bottom: 22px;
+        border-radius: 34px 34px 30px 30px;
+      }
+
+      .title {
+        left: 52px;
+        right: 52px;
+        font-size: 20px;
+      }
+
+      .content {
+        left: 9px;
+        right: 9px;
+        font-size: 14px;
+      }
+
+      .section-title {
+        font-size: 15px;
+      }
+
+      .example {
+        font-size: 12.5px;
+      }
+
+      .speech {
+        left: 76px;
+        width: 245px;
+        font-size: 12px;
+      }
+
+      .illustration {
+        left: 16px;
+      }
+
+      .play {
+        right: 24px;
+      }
+
+      .account {
+        font-size: 11px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <article class="card">
+      <header class="title">高效背书</header>
+      <div class="top-rule"></div>
+
+      <section class="content">
+        <div class="section">
+          <div class="section-title">01.理解背诵</div>
+          <p>还有几天考试，很多东西还没背。不要慌张，先理<br>解再背诵，考试运用得心应手</p>
+        </div>
+
+        <div class="section">
+          <div class="section-title">02.关键复述</div>
+          <p>边读边画关键词，再把关键词抄在草稿纸上。把内<br>容都遮住，然后就看自己写在草稿纸上的关键词，<br>进行复述</p>
+        </div>
+
+        <div class="example">
+          <div class="example-line"><span class="example-label">原文：</span><span class="example-text">德思礼夫妇总是得意地说他们是非常规矩的人家</span></div>
+          <div class="example-line"><span class="example-label">关键：</span><span class="example-text">德思礼夫妇 + 得意 + 非常规矩</span></div>
+          <div class="example-line"><span class="example-label">复述：</span><span class="example-text">德思礼夫妇得意地说他们是非常规矩的一家</span></div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">03.关键背诵</div>
+          <p>这样就背关键词，考试的时候也能顺利展开内容</p>
+        </div>
+
+        <div class="section">
+          <div class="section-title">04.睡觉记忆</div>
+          <p>睡前30分钟再复习背诵的内容。睡醒后10分钟，再<br>看关键词进行复述，并默写出来</p>
+        </div>
+      </section>
+
+      <footer class="footer-area">
+        <div class="illustration">
+          <span class="placeholder-caption">[Illustration: bottom-left]</span>
+        </div>
+        <div class="speech">这样背书，就像用了魔法，过目不忘</div>
+        <div class="play">
+          <span class="play-caption">[Triangle: right]</span>
+        </div>
+      </footer>
+    </article>
+
+    <div class="account">小红书号: 4141895475</div>
+  </main>
+</body>
+</html>

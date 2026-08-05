@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RFC 9086 - Segment Routing EPE BGP-LS Extensions</title>
+  <script>
+    window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: #ffffff;
+      color: #262626;
+      font-family: "Times New Roman", Times, serif;
+    }
+    .page {
+      width: 768px;
+      height: 1086px;
+      margin: 0 auto;
+      position: relative;
+      padding: 46px 72px 0 72px;
+      background: #fff;
+    }
+    .header {
+      height: 28px;
+      border-bottom: 1px solid #cfcfcf;
+      font-size: 12.5px;
+      line-height: 16px;
+      position: relative;
+    }
+    .header .left { position: absolute; left: 0; top: 0; }
+    .header .center { position: absolute; left: 0; right: 0; top: 0; text-align: center; }
+    .header .right { position: absolute; right: 1px; top: 0; }
+    .content {
+      margin: 18px 12px 0 12px;
+      font-size: 15px;
+      line-height: 18px;
+    }
+    p {
+      margin: 0 0 13px 0;
+    }
+    .intro {
+      margin-bottom: 22px;
+    }
+    h1, h2 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 24px;
+      font-weight: bold;
+    }
+    h1 { margin-bottom: 9px; }
+    h2 {
+      font-size: 17px;
+      line-height: 21px;
+      margin-top: 18px;
+      margin-bottom: 7px;
+    }
+    .section-number {
+      display: inline-block;
+      margin-right: 13px;
+    }
+    ul {
+      margin: 0 0 16px 17px;
+      padding: 0;
+      list-style-position: outside;
+    }
+    li {
+      margin: 0;
+      padding: 0;
+    }
+    .table-wrap {
+      width: max-content;
+      margin: 10px auto 18px auto;
+    }
+    table {
+      border-collapse: collapse;
+      font-size: 14px;
+      line-height: 18px;
+    }
+    th {
+      background: #e8e8e8;
+      font-weight: bold;
+      text-align: left;
+      padding: 6px 10px 5px 10px;
+      border: 1px solid #dddddd;
+      white-space: nowrap;
+    }
+    td {
+      background: #fafafa;
+      padding: 6px 10px 5px 10px;
+      border: 1px solid #dddddd;
+      white-space: nowrap;
+    }
+    .protocol-table th:nth-child(1) { width: 94px; }
+    .protocol-table th:nth-child(2) { width: 242px; }
+    .protocol-table th:nth-child(3) { width: 91px; }
+    .descriptor-table th:nth-child(1) { width: 118px; }
+    .descriptor-table th:nth-child(2) { width: 192px; }
+    .descriptor-table th:nth-child(3) { width: 86px; }
+    caption {
+      caption-side: bottom;
+      text-align: left;
+      padding-top: 1px;
+      font-size: 14px;
+      font-style: italic;
+      line-height: 17px;
+    }
+    .after-list {
+      margin-top: 1px;
+      margin-bottom: 13px;
+    }
+    .following {
+      margin-top: -1px;
+    }
+    .footer {
+      position: absolute;
+      left: 72px;
+      right: 72px;
+      bottom: 136px;
+      height: 29px;
+      border-top: 1px solid #cfcfcf;
+      font-size: 12.5px;
+      line-height: 18px;
+      padding-top: 11px;
+    }
+    .footer .left { position: absolute; left: 0; }
+    .footer .center { position: absolute; left: 0; right: 0; text-align: center; }
+    .footer .right { position: absolute; right: 1px; }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="header">
+      <span class="left">RFC 9086</span>
+      <span class="center">Segment Routing EPE BGP-LS Extensions</span>
+      <span class="right">August 2021</span>
+    </div>
+
+    <main class="content">
+      <p class="intro">The PeerSet SID TLV containing the same SID value (encoded as defined in <span style="color:#3434b7;">Figure 2</span>) is included<br>in the BGP-LS Attribute for all of the BGP-LS Link NLRI corresponding to the PeerNode or<br>PeerAdj segments associated with the peer set.</p>
+
+      <h1><span class="section-number">6.</span>IANA Considerations</h1>
+      <p>This document defines:</p>
+      <ul>
+        <li>A new Protocol-ID: BGP. The code point is from the "BGP-LS Protocol-IDs" registry.</li>
+        <li>Two new TLVs: BGP-Router-ID and BGP Confederation Member. The code points are in the<br>"BGP-LS Node Descriptor, Link Descriptor, Prefix Descriptor, and Attribute TLVs" registry.</li>
+        <li>Three new BGP-LS Attribute TLVs: PeerNode SID, PeerAdj SID, and PeerSet SID. The code<br>points are in the "BGP-LS Node Descriptor, Link Descriptor, Prefix Descriptor, and Attribute<br>TLVs" registry.</li>
+      </ul>
+
+      <h2><span class="section-number">6.1.</span>New BGP-LS Protocol-ID</h2>
+      <p>This document defines a new value in the registry "BGP-LS Protocol-IDs":</p>
+
+      <div class="table-wrap">
+        <table class="protocol-table">
+          <caption>Table 3: BGP-LS Protocol-ID</caption>
+          <thead>
+            <tr>
+              <th>Protocol-ID</th>
+              <th>NLRI information source protocol</th>
+              <th>Reference</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>7</td>
+              <td>BGP</td>
+              <td>RFC 9086</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2><span class="section-number">6.2.</span>Node Descriptors and Link Attribute TLVs</h2>
+      <p>This document defines five new TLVs in the registry "BGP-LS Node Descriptor, Link Descriptor,<br>Prefix Descriptor, and Attribute TLVs":</p>
+      <ul>
+        <li>Two new Node Descriptor TLVs</li>
+        <li>Three new Link Attribute TLVs</li>
+      </ul>
+
+      <p class="after-list">All five of the new code points are in the same registry: "BGP-LS Node Descriptor, Link<br>Descriptor, Prefix Descriptor, and Attribute TLVs".</p>
+      <p>The following new Node Descriptor TLVs are defined:</p>
+
+      <div class="table-wrap" style="margin-top:10px; margin-bottom:14px;">
+        <table class="descriptor-table">
+          <caption>Table 4: BGP-LS Descriptor TLV Code Points</caption>
+          <thead>
+            <tr>
+              <th>TLV Code Point</th>
+              <th>Description</th>
+              <th>Reference</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>516</td>
+              <td>BGP Router-ID</td>
+              <td>RFC 9086</td>
+            </tr>
+            <tr>
+              <td>517</td>
+              <td>BGP Confederation Member</td>
+              <td>RFC 9086</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="following">The following new Link Attribute TLVs are defined:</p>
+    </main>
+
+    <footer class="footer">
+      <span class="left">Previdi, et al.</span>
+      <span class="center">Standards Track</span>
+      <span class="right">Page 11</span>
+    </footer>
+  </div>
+</body>
+</html>

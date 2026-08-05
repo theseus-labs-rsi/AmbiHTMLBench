@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alteryx overview</title>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;background:#ffffff;font-family:"Helvetica Neue",Arial,Helvetica,sans-serif;color:#222;}
+  .slide{position:relative;width:1000px;margin:0 auto;background:#fff;padding:0 30px 34px 76px;}
+
+  /* top-right category menu */
+  .navbox{position:absolute;top:2px;right:0;width:170px;font-size:10px;line-height:1.1;color:#9a9a9a;text-align:right;}
+  .navbox div{padding:5px 9px 5px 4px;border-bottom:1px solid #ececec;white-space:nowrap;}
+  .navbox div.active{background:#547fa6;color:#fff;}
+
+  .headrow{display:flex;justify-content:space-between;align-items:flex-end;margin-top:82px;}
+  h1{margin:0;font-size:31px;font-weight:700;color:#5e97c2;letter-spacing:.2px;}
+  .logo{font-size:36px;font-weight:800;color:#1e9db2;letter-spacing:-1.5px;line-height:1;padding-right:4px;}
+  .logo .x{position:relative;}
+  .logo .x::after{content:"";position:absolute;right:-7px;top:9px;width:8px;height:8px;border-radius:50%;border:2px solid #1e9db2;}
+
+  .cols{display:flex;gap:26px;margin-top:8px;}
+  .col-left{flex:0 0 424px;}
+  .col-right{flex:1;}
+
+  .bar{background:#4e7ca6;color:#fff;font-weight:700;font-size:14.5px;padding:5px 10px;margin:0 0 4px 0;}
+  .col-left .bar{margin-top:18px;}
+  .col-left .bar.first{margin-top:0;}
+  .col-right .bar{margin-top:0;}
+
+  ul.sq{list-style:none;margin:5px 0 0 0;padding:0 0 0 4px;font-size:11.3px;line-height:1.34;}
+  ul.sq li{position:relative;padding-left:13px;margin:0 0 8px 0;}
+  ul.sq li::before{content:"";position:absolute;left:0;top:4px;width:6px;height:6px;background:#3f3f3f;}
+  ul.sq li.sub{margin:2px 0 8px 26px;font-size:11px;}
+  ul.sq li.sub::before{left:-13px;width:5px;height:5px;background:#3f3f3f;}
+
+  /* Management table */
+  table.mgmt{width:100%;border-collapse:collapse;font-size:11px;line-height:1.25;margin-top:2px;}
+  table.mgmt th{font-weight:400;text-align:left;color:#222;padding:5px 4px 4px 0;border-bottom:1px solid #b9b9b9;font-size:11.5px;}
+  table.mgmt td{vertical-align:top;padding:6px 6px 6px 0;border-bottom:1px solid #cfcfcf;}
+  table.mgmt th:nth-child(1),table.mgmt td:nth-child(1){width:23%;}
+  table.mgmt th:nth-child(2),table.mgmt td:nth-child(2){width:31%;}
+  table.mgmt th:nth-child(3),table.mgmt td:nth-child(3){width:46%;}
+
+  /* Investors */
+  .invlogo{text-align:center;color:#1f6fa8;font-weight:800;font-size:15px;letter-spacing:1px;margin:8px 0 8px 0;}
+  table.inv{width:100%;border-collapse:collapse;font-size:11px;margin-top:6px;}
+  table.inv td{padding:7px 2px;border-bottom:1px solid #c6c6c6;}
+  table.inv td:first-child{border-top:1px solid #c6c6c6;}
+  table.inv td:last-child{border-top:1px solid #c6c6c6;text-align:left;}
+  .src{font-size:9.5px;color:#333;margin-top:2px;}
+
+  /* Products */
+  .prod{display:flex;align-items:stretch;margin-top:10px;}
+  .prod.first{margin-top:0;}
+  .tab{flex:0 0 34px;background:#3d6f99;color:#fff;font-weight:700;font-size:12px;border-radius:2px;display:flex;align-items:center;justify-content:center;}
+  .tab span{writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap;letter-spacing:.3px;}
+  .pcontent{flex:1;padding:0 0 8px 16px;border-bottom:1px solid #d3d3d3;}
+  .prod.last .pcontent{border-bottom:none;padding-bottom:0;}
+  .pcontent ul{list-style:none;margin:2px 0 0 0;padding:0;font-size:10.4px;line-height:1.3;}
+  .pcontent li{position:relative;padding-left:13px;margin:0 0 6px 0;}
+  .pcontent li::before{content:"";position:absolute;left:0;top:4px;width:6px;height:6px;background:#3f3f3f;}
+  .pcontent li:last-child{margin-bottom:2px;}
+
+  /* Key customers */
+  .cust{padding:22px 6px 6px 6px;}
+  .crow{display:flex;justify-content:space-between;align-items:center;}
+  .crow2{display:flex;align-items:center;margin-top:26px;}
+  .att{display:flex;align-items:center;font-size:21px;font-weight:700;color:#111;letter-spacing:-.5px;}
+  .att .globe{width:26px;height:26px;border-radius:50%;border:2px solid #2aa7c9;margin-right:6px;position:relative;}
+  .att .globe::before{content:"";position:absolute;left:4px;right:4px;top:11px;height:2px;background:#2aa7c9;}
+  .att .globe::after{content:"";position:absolute;top:3px;bottom:3px;left:11px;width:2px;background:#2aa7c9;}
+  .comcast{text-align:center;line-height:1;}
+  .comcast .c1{font-size:22px;font-weight:800;color:#3a3a3a;}
+  .comcast .c1 em{font-style:normal;color:#c2222b;}
+  .comcast .c2{font-size:13px;font-weight:800;color:#111;letter-spacing:3px;margin-top:2px;}
+  .nhs{text-align:right;line-height:1.05;}
+  .nhs .n1{font-size:15px;font-weight:700;color:#222;}
+  .nhs .n1 .nhsbox{background:#1f6fa8;color:#fff;font-weight:800;padding:1px 4px;font-size:14px;}
+  .nhs .n2{font-size:8px;color:#555;}
+  .experian{display:flex;align-items:center;margin-left:150px;}
+  .experian .dots{width:30px;height:26px;margin-right:5px;position:relative;}
+  .experian .dots i{position:absolute;width:5px;height:5px;border-radius:50%;}
+  .experian .dots i:nth-child(1){left:0;top:11px;background:#c21f2c;}
+  .experian .dots i:nth-child(2){left:7px;top:3px;background:#8a1f7a;}
+  .experian .dots i:nth-child(3){left:16px;top:0;background:#3a3a8f;}
+  .experian .dots i:nth-child(4){left:23px;top:6px;background:#1f6fa8;}
+  .experian .dots i:nth-child(5){left:24px;top:16px;background:#2aa7c9;}
+  .experian .dots i:nth-child(6){left:14px;top:20px;background:#3aa64a;}
+  .experian .et{font-size:20px;color:#444;letter-spacing:-.5px;}
+  .experian .et b{font-weight:800;color:#222;}
+  .teradata{margin-left:150px;font-size:23px;font-weight:800;color:#d9a521;letter-spacing:1px;}
+
+  .pagenum{text-align:center;font-size:12px;color:#222;margin-top:34px;}
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="navbox">
+    <div class="active">Analytics and Visualization</div>
+    <div>Machine data</div>
+    <div>Marketing &amp; e-commerce</div>
+    <div>Social</div>
+    <div>Market places</div>
+    <div>Location/events</div>
+    <div>Statistical</div>
+  </div>
+
+  <div class="headrow">
+    <h1>Alteryx overview</h1>
+    <div class="logo">altery<span class="x">x</span></div>
+  </div>
+
+  <div class="cols">
+    <div class="col-left">
+      <div class="bar first">Business overview</div>
+      <ul class="sq">
+        <li>Provides an easy-to-use analytics platform for enterprise companies making critical decisions that drive their business strategy and growth</li>
+        <li>Humanizes Big Data by enabling business analysts and Data Artisans to combine Big Data with market knowledge, location insight and business intelligence</li>
+        <li>Performs predictive and spatial analytics and produces analytic apps that can be shared via the private cloud or the Alteryx Analytics Gallery public cloud</li>
+        <li>End markets: Automotive, commercial real estate, restaurants and entertainment, fast moving consumer goods, retail franchising and telecommunications</li>
+        <li>Has 250+ customers and 200,000+ users worldwide</li>
+        <li>Founded in 1997</li>
+        <li>Headquartered in Irvine, CA</li>
+        <li class="sub">Also has offices in Boulder and Silicon Valley</li>
+      </ul>
+
+      <div class="bar">Management</div>
+      <table class="mgmt">
+        <tr><th>Name</th><th>Title</th><th>Affiliations/experience</th></tr>
+        <tr><td>Dean Stoecker</td><td>Chairman &amp; CEO</td><td>Integration Technologies, Donnelly Marketing Information Services</td></tr>
+        <tr><td>George Mathew</td><td>President &amp; Chief Operating Officer</td><td>SAP, salesforce.com, Fort Point Partners</td></tr>
+        <tr><td>Gary Acord</td><td>CFO</td><td>KPMG, KACE</td></tr>
+      </table>
+
+      <div class="bar">Investors</div>
+      <div class="invlogo">SAP&nbsp;VENTURES</div>
+      <table class="inv">
+        <tr><td>Total capital raised:</td><td>$6.0mm</td></tr>
+        <tr><td>Last round:</td><td>Series A, $6.0mm</td></tr>
+      </table>
+      <div class="src">Source: Company information, Capital IQ</div>
+    </div>
+
+    <div class="col-right">
+      <div class="bar">Products overview</div>
+
+      <div class="prod first">
+        <div class="tab"><span>Designer desktop</span></div>
+        <div class="pcontent">
+          <ul>
+            <li>Point-and-click UI: Builds analytics with no coding</li>
+            <li>Personal ETL: Pulls data from internal, Big Data, or cloud</li>
+            <li>Data quality tools: Builds clean and credible data sets for analysis</li>
+            <li>Predictive Analytics: Pre-built R tool makes predictive accessible to all</li>
+            <li>Agile database: Takes on structured, un-structured and spatial data</li>
+            <li>Single-click publishing: Shares analytic apps iPrivate Cloud or Alteryx Analytic Gallery</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="prod">
+        <div class="tab"><span>Analytic apps</span></div>
+        <div class="pcontent">
+          <ul>
+            <li>Ad hoc analysis in minutes: Designs and redesign scenarios on the fly</li>
+            <li>Provides interactive charts and maps</li>
+            <li>Offers spatial analysis</li>
+            <li>Apps builder: Creates and shares analytic apps with a drag-and-drop wizard</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="prod">
+        <div class="tab"><span>Cloud server</span></div>
+        <div class="pcontent">
+          <ul>
+            <li>Integrates Alteryx data, insights and applications into other systems with open API and SDK</li>
+            <li>Publishes and shares analytic applications with full control over access, visibility and sharing</li>
+            <li>Enables scheduled, event-triggered and ad-hoc analysis to support critical decisions across companies</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="prod last">
+        <div class="tab"><span>API</span></div>
+        <div class="pcontent">
+          <ul>
+            <li>Provides consumerization of Big Data Analytics</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bar" style="margin-top:16px;">Key customers</div>
+      <div class="cust">
+        <div class="crow">
+          <div class="att"><span class="globe"></span>at&amp;t</div>
+          <div class="comcast">
+            <div class="c1"><em>Comcast</em></div>
+            <div class="c2">SPOTLIGHT.</div>
+          </div>
+          <div class="nhs">
+            <div class="n1">Newham University Hospital <span class="nhsbox">NHS</span></div>
+            <div class="n2">NHS Trust</div>
+          </div>
+        </div>
+        <div class="crow2">
+          <div class="experian"><span class="dots"><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="et"><b>Experian</b></span></div>
+          <div class="teradata">TERADATA</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pagenum">14</div>
+</div>
+</body>
+</html>

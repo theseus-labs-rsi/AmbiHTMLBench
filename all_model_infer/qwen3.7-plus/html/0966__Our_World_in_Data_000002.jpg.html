@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our World in Data</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Georgia', 'Times New Roman', serif; color: #1a1a2e; background: #fff; }
+  
+  /* Header */
+  .header { background: #0d1b3e; color: #fff; padding: 12px 40px; display: flex; align-items: center; justify-content: space-between; }
+  .header-left { display: flex; align-items: center; gap: 30px; }
+  .logo { font-size: 20px; font-weight: bold; line-height: 1.2; }
+  .logo span { display: block; font-size: 14px; font-weight: normal; }
+  .nav-links { display: flex; gap: 20px; font-size: 14px; font-family: Arial, sans-serif; }
+  .nav-links a { color: #fff; text-decoration: none; }
+  .nav-links a:hover { text-decoration: underline; }
+  .header-right { display: flex; gap: 10px; }
+  .btn-subscribe { background: transparent; border: 1px solid #fff; color: #fff; padding: 8px 20px; font-size: 14px; cursor: pointer; font-family: Arial, sans-serif; }
+  .btn-donate { background: #c0392b; border: none; color: #fff; padding: 8px 20px; font-size: 14px; cursor: pointer; font-family: Arial, sans-serif; }
+
+  /* Popular Pages */
+  .popular-bar { background: #e8edf3; padding: 10px 40px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; border-bottom: 1px solid #ccc; }
+  .popular-label { font-size: 11px; font-weight: bold; color: #555; font-family: Arial, sans-serif; text-transform: uppercase; letter-spacing: 1px; }
+  .popular-tag { background: #fff; border: 1px solid #ccc; padding: 5px 14px; border-radius: 20px; font-size: 13px; font-family: Arial, sans-serif; cursor: pointer; }
+  .popular-tag:hover { background: #f0f0f0; }
+
+  /* Hero */
+  .hero { background: #0d1b3e; color: #fff; text-align: center; padding: 50px 40px 40px; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400"><path d="M100,200 Q200,150 300,180 Q400,210 500,170 Q600,130 700,160 Q800,190 900,150 Q1000,110 1100,140" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="2"/></svg>'); opacity: 0.3; }
+  .hero h1 { color: #f0c040; font-size: 32px; max-width: 700px; margin: 0 auto 15px; line-height: 1.3; position: relative; }
+  .hero-mission { font-size: 14px; margin-bottom: 25px; position: relative; }
+  .hero-mission a { color: #fff; text-decoration: none; }
+  .hero-mission a:hover { text-decoration: underline; }
+  .search-bar { max-width: 560px; margin: 0 auto 20px; position: relative; }
+  .search-bar input { width: 100%; padding: 14px 50px 14px 18px; border: none; border-radius: 4px; font-size: 15px; font-family: Arial, sans-serif; }
+  .search-bar .search-icon { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); font-size: 18px; color: #888; }
+  .hero-stats { display: flex; justify-content: center; gap: 15px; position: relative; }
+  .stat-badge { border: 1px solid rgba(255,255,255,0.4); padding: 6px 16px; border-radius: 20px; font-size: 13px; font-family: Arial, sans-serif; }
+  .hero-license { font-size: 13px; margin-top: 15px; color: rgba(255,255,255,0.7); position: relative; font-family: Arial, sans-serif; }
+
+  /* Main Grid */
+  .main-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 20px; padding: 30px 40px; max-width: 1400px; margin: 0 auto; }
+
+  /* Cards */
+  .card { border: 1px solid #e0e0e0; padding: 20px; background: #fff; }
+  .card-chart { width: 100%; height: 160px; background: #f8f8f8; margin-bottom: 15px; position: relative; overflow: hidden; }
+  .card-chart svg { width: 100%; height: 100%; }
+  .card-label { font-size: 10px; font-weight: bold; font-family: Arial, sans-serif; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+  .card-label.new { color: #c0392b; }
+  .card-label.interactive { color: #2980b9; }
+  .card-label.classics { color: #2c3e50; }
+  .card-label.announcement { color: #2c3e50; }
+  .card-meta { font-size: 11px; color: #888; font-family: Arial, sans-serif; margin-bottom: 8px; }
+  .card h2 { font-size: 18px; line-height: 1.35; margin-bottom: 10px; color: #1a1a2e; }
+  .card p { font-size: 14px; line-height: 1.5; color: #444; font-family: Arial, sans-serif; margin-bottom: 10px; }
+  .card .authors { font-size: 13px; color: #2980b9; font-style: italic; }
+
+  /* Updates Column */
+  .updates-col { background: #f5f7fa; padding: 20px; }
+  .updates-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+  .updates-icon { width: 45px; height: 45px; background: #e0e5ec; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+  .updates-header h3 { font-size: 18px; color: #1a1a2e; }
+  .update-item { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #ddd; }
+  .update-item:last-of-type { border-bottom: none; }
+  .update-label { font-size: 10px; font-weight: bold; font-family: Arial, sans-serif; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 5px; }
+  .update-item h4 { font-size: 15px; line-height: 1.35; margin-bottom: 8px; color: #1a1a2e; }
+  .update-item p { font-size: 13px; line-height: 1.5; color: #555; font-family: Arial, sans-serif; margin-bottom: 5px; }
+  .update-item .read-more { font-size: 13px; color: #1a1a2e; text-decoration: none; font-family: Arial, sans-serif; }
+  .update-item .read-more:hover { text-decoration: underline; }
+  .see-all-btn { display: block; text-align: center; border: 1px solid #c0392b; color: #c0392b; padding: 10px; font-size: 14px; font-family: Arial, sans-serif; text-decoration: none; margin-top: 10px; }
+  .see-all-btn:hover { background: #c0392b; color: #fff; }
+
+  /* Newsletter Column */
+  .newsletter-col { background: #e8f0fe; padding: 20px; }
+  .newsletter-header { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
+  .newsletter-icon { width: 45px; height: 45px; background: #d0dce8; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+  .newsletter-header h3 { font-size: 18px; color: #1a1a2e; }
+  .newsletter-col > p { font-size: 14px; font-family: Arial, sans-serif; margin-bottom: 15px; }
+  .newsletter-option { display: flex; gap: 10px; margin-bottom: 15px; align-items: flex-start; }
+  .newsletter-option input[type="checkbox"] { margin-top: 3px; }
+  .newsletter-option .opt-title { font-size: 14px; font-weight: bold; font-family: Arial, sans-serif; }
+  .newsletter-option .opt-desc { font-size: 13px; color: #555; font-family: Arial, sans-serif; line-height: 1.4; }
+  .email-input { width: 100%; padding: 10px 14px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; font-family: Arial, sans-serif; margin-bottom: 10px; }
+  .subscribe-btn { width: 100%; background: #c0392b; color: #fff; border: none; padding: 12px; font-size: 15px; font-family: Arial, sans-serif; cursor: pointer; margin-bottom: 15px; }
+  .subscribe-btn:hover { background: #a93226; }
+  .privacy-text { font-size: 12px; color: #555; font-family: Arial, sans-serif; line-height: 1.4; margin-bottom: 20px; }
+  .privacy-text a { color: #2980b9; }
+  .follow-us h4 { font-size: 16px; margin-bottom: 10px; }
+  .social-icons { display: flex; gap: 12px; margin-bottom: 20px; }
+  .social-icons a { font-size: 18px; color: #555; text-decoration: none; }
+  .donate-box { background: #fff; padding: 15px; border-radius: 4px; display: flex; align-items: center; gap: 12px; }
+  .donate-heart { width: 40px; height: 40px; background: #f0e0e0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .donate-box p { font-size: 13px; font-family: Arial, sans-serif; line-height: 1.4; }
+  .donate-box a { color: #c0392b; font-weight: bold; font-size: 13px; font-family: Arial, sans-serif; }
+
+  /* Data Insights Section */
+  .data-insights { background: #eef2f7; padding: 40px; }
+  .data-insights-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px; max-width: 1400px; margin-left: auto; margin-right: auto; }
+  .data-insights-header h2 { font-size: 28px; color: #1a1a2e; margin-bottom: 5px; }
+  .data-insights-header p { font-size: 14px; color: #555; font-family: Arial, sans-serif; }
+  .see-all-insights { border: 1px solid #c0392b; color: #c0392b; padding: 10px 20px; font-size: 14px; font-family: Arial, sans-serif; text-decoration: none; white-space: nowrap; }
+  .see-all-insights:hover { background: #c0392b; color: #fff; }
+
+  .insights-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; max-width: 1400px; margin: 0 auto; }
+  .insight-card { background: #fff; padding: 20px; border: 1px solid #e0e0e0; }
+  .insight-card.featured { grid-column: 1 / 3; display: grid; grid-template-columns: 1fr 1.5fr; gap: 20px; }
+  .insight-chart { width: 100%; height: 200px; background: #f8f8f8; position: relative; }
+  .insight-chart svg { width: 100%; height: 100%; }
+  .insight-date { font-size: 11px; font-weight: bold; font-family: Arial, sans-serif; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 8px; }
+  .insight-card h3 { font-size: 20px; line-height: 1.3; margin-bottom: 12px; color: #1a1a2e; }
+  .insight-card p { font-size: 14px; line-height: 1.6; color: #444; font-family: Arial, sans-serif; margin-bottom: 10px; }
+
+  /* Floating buttons */
+  .floating-btns { position: fixed; bottom: 20px; right: 20px; display: flex; gap: 10px; z-index: 100; }
+  .float-btn { background: #1a1a2e; color: #fff; border: none; padding: 10px 18px; font-size: 13px; font-family: Arial, sans-serif; cursor: pointer; display: flex; align-items: center; gap: 6px; border-radius: 4px; }
+  .float-btn:hover { background: #2c3e50; }
+
+  /* Chart placeholders */
+  .chart-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #aaa; font-size: 12px; font-family: Arial, sans-serif; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <div class="header-left">
+    <div class="logo">Our World<br><span>in Data</span></div>
+    <nav class="nav-links">
+      <a href="#">☰ Browse by topic</a>
+      <a href="#">Data</a>
+      <a href="#">Insights</a>
+      <a href="#">Resources ▾</a>
+      <a href="#">About ▾</a>
+    </nav>
+  </div>
+  <div class="header-right">
+    <button class="btn-subscribe">Subscribe</button>
+    <button class="btn-donate">Donate</button>
+  </div>
+</header>
+
+<!-- Popular Pages -->
+<div class="popular-bar">
+  <span class="popular-label">Popular Pages</span>
+  <span class="popular-tag">Poverty</span>
+  <span class="popular-tag">Child Mortality</span>
+  <span class="popular-tag">Global Education</span>
+  <span class="popular-tag">CO₂ Emissions</span>
+  <span class="popular-tag">Migration</span>
+  <span class="popular-tag">War &amp; Peace</span>
+  <span class="popular-tag">Life Expectancy</span>
+  <span class="popular-tag">Population Growth</span>
+  <span class="popular-tag">Artificial Intelligence</span>
+</div>
+
+<!-- Hero -->
+<section class="hero">
+  <h1>Research and data to make progress against the world's largest problems.</h1>
+  <p class="hero-mission"><a href="#">Read about our mission →</a></p>
+  <div class="search-bar">
+    <input type="text" placeholder='Try "Life expectancy", "Poverty Nigeria Vietnam", "CO2 France"...'>
+    <span class="search-icon">🔍</span>
+  </div>
+  <div class="hero-stats">
+    <span class="stat-badge">📈 13,989 charts</span>
+    <span class="stat-badge">📋 126 topic pages</span>
+    <span class="stat-badge">🔍 32 data explorers</span>
+  </div>
+  <p class="hero-license">All free: open access and openly licensed</p>
+</section>
+
+<!-- Main Grid -->
+<div class="main-grid">
+  <!-- Column 1 -->
+  <div>
+    <div class="card">
+      <div class="card-chart">
+        <svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20,130 Q60,120 100,80 Q140,40 180,30 Q220,25 260,50 Q280,60 290,70" fill="none" stroke="#c0392b" stroke-width="2"/>
+          <path d="M20,130 Q60,120 100,80 Q140,40 180,30 Q220,25 260,50 Q280,60 290,70 L290,160 L20,160 Z" fill="rgba(192,57,43,0.08)"/>
+        </svg>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:5px;">
+        <span class="card-label new" style="background:#c0392b;color:#fff;padding:2px 8px;border-radius:3px;font-size:10px;">NEW</span>
+        <span class="card-meta">ARTICLE · 11 MIN READ</span>
+      </div>
+      <h2>South Korea's population is set to shrink: what would it take to stop the decline?</h2>
+      <p>How much would fertility rates, life expectancy, or migration rates need to change to stop the population from shrinking?</p>
+      <p class="authors">Hannah Ritchie, Sophia Mersmann, and Daniel Bachler</p>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+      <div class="card-chart">
+        <svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20,100 Q40,90 60,95 Q80,100 100,85 Q120,70 140,80 Q160,90 180,75 Q200,60 220,70 Q240,80 260,50 Q270,40 280,30" fill="none" stroke="#2c3e50" stroke-width="1.5"/>
+          <path d="M20,110 Q50,105 80,115 Q110,125 140,120 Q170,115 200,130 Q230,145 260,140 Q275,138 285,135" fill="none" stroke="#c0392b" stroke-width="1.5"/>
+          <path d="M200,30 Q220,25 240,20 Q260,15 275,10 Q285,8 290,5" fill="none" stroke="#27ae60" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="card-label classics">FROM OUR CLASSICS</div>
+      <h2>Breaking out of the Malthusian trap: How pandemics allow us to understand why our ancestors were stuck in poverty</h2>
+      <p class="authors">Max Roser</p>
+    </div>
+  </div>
+
+  <!-- Column 2 -->
+  <div>
+    <div class="card">
+      <div class="card-chart" style="background:#dce6f0;">
+        <svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg">
+          <rect x="10" y="10" width="80" height="60" rx="3" fill="#b0c4de" stroke="#8fa8c8" stroke-width="1"/>
+          <rect x="15" y="15" width="70" height="10" rx="2" fill="#8fa8c8"/>
+          <rect x="15" y="30" width="50" height="8" rx="2" fill="#c8d8e8"/>
+          <rect x="15" y="42" width="60" height="8" rx="2" fill="#c8d8e8"/>
+          <rect x="15" y="54" width="40" height="8" rx="2" fill="#c8d8e8"/>
+          <rect x="100" y="10" width="90" height="100" rx="3" fill="#b0c4de" stroke="#8fa8c8" stroke-width="1"/>
+          <path d="M110,80 Q130,70 150,60 Q170,50 180,55" fill="none" stroke="#5a7a9a" stroke-width="1.5"/>
+          <circle cx="150" cy="60" r="3" fill="#5a7a9a"/>
+          <rect x="200" y="10" width="90" height="100" rx="3" fill="#b0c4de" stroke="#8fa8c8" stroke-width="1"/>
+          <rect x="210" y="20" width="15" height="80" rx="2" fill="#8fa8c8"/>
+          <rect x="230" y="30" width="15" height="70" rx="2" fill="#8fa8c8"/>
+          <rect x="250" y="40" width="15" height="60" rx="2" fill="#8fa8c8"/>
+          <rect x="270" y="50" width="15" height="50" rx="2" fill="#8fa8c8"/>
+        </svg>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:5px;">
+        <span class="card-label new" style="background:#c0392b;color:#fff;padding:2px 8px;border-radius:3px;font-size:10px;">NEW</span>
+        <span class="card-label interactive">INTERACTIVE TOOL</span>
+      </div>
+      <h2>Population tool: how will populations across the world change in the 21st century?</h2>
+      <p>We created an interactive tool that lets you test how changes in fertility rates, life expectancy, and migration rates will change future populations.</p>
+      <p class="authors">Sophia Mersmann, Daniel Bachler, and Hannah Ritchie</p>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+      <div class="card-chart" style="background:#1a2a4a; display:flex; align-items:center; justify-content:center; position:relative;">
+        <div style="position:absolute;left:15px;top:15px;color:#fff;font-size:14px;font-family:Arial,sans-serif;line-height:1.4;">We're hiring a Writer<br>to join our team</div>
+        <div style="position:absolute;right:10px;top:10px;bottom:10px;width:120px;background:#2a3a5a;border-radius:4px;overflow:hidden;">
+          <div style="display:flex;flex-wrap:wrap;padding:5px;gap:3px;">
+            <div style="width:25px;height:30px;background:#3a4a6a;border-radius:2px;"></div>
+            <div style="width:25px;height:30px;background:#4a5a7a;border-radius:2px;"></div>
+            <div style="width:25px;height:30px;background:#3a4a6a;border-radius:2px;"></div>
+            <div style="width:25px;height:30px;background:#4a5a7a;border-radius:2px;"></div>
+            <div style="width:25px;height:30px;background:#3a4a6a;border-radius:2px;"></div>
+            <div style="width:25px;height:30px;background:#4a5a7a;border-radius:2px;"></div>
+          </div>
+        </div>
+        <div style="position:absolute;bottom:10px;left:15px;color:#fff;font-size:10px;font-family:Arial,sans-serif;">Our World<br>in Data</div>
+      </div>
+      <div class="card-label announcement">ANNOUNCEMENT</div>
+      <h2>We're looking for a writer</h2>
+      <p class="authors">Hannah Ritchie</p>
+    </div>
+  </div>
+
+  <!-- Column 3: Updates -->
+  <div class="updates-col">
+    <div class="updates-header">
+      <div class="updates-icon">📰</div>
+      <h3>Updates and announcements</h3>
+    </div>
+
+    <div class="update-item">
+      <div class="update-label">DATA UPDATE · YESTERDAY</div>
+      <h4>How much do countries reduce income inequality through taxes and transfers?</h4>
+      <p>Explore updated data from the OECD Income Distribution Database.</p>
+      <a href="#" class="read-more">Read more →</a>
+    </div>
+
+    <div class="update-item">
+      <div class="update-label">DATA UPDATE · 8 DAYS AGO</div>
+      <h4>How fast is the global economy growing, and where might it be headed next?</h4>
+      <p>Explore updated projections from the IMF's World Economic Outlook.</p>
+      <a href="#" class="read-more">Read more →</a>
+    </div>
+
+    <div class="update-item">
+      <div class="update-label">DATA UPDATE · 10 DAYS AGO</div>
+      <h4>How quickly has global air travel recovered from the COVID-19 pandemic?</h4>
+      <p>Explore updated data on global passenger air traffic since 1950.</p>
+      <a href="#" class="read-more">Read more →</a>
+    </div>
+
+    <a href="#" class="see-all-btn">See all updates →</a>
+  </div>
+
+  <!-- Column 4: Newsletter -->
+  <div class="newsletter-col">
+    <div class="newsletter-header">
+      <div class="newsletter-icon">✉️</div>
+      <h3>Subscribe to our newsletters</h3>
+    </div>
+    <p>Receive our latest work by email</p>
+
+    <div class="newsletter-option">
+      <input type="checkbox" checked>
+      <div>
+        <div class="opt-title">The OWID Brief <span style="font-weight:normal;color:#888;">Twice a month</span></div>
+        <div class="opt-desc">Stay up to date with our latest work plus curated highlights from across Our World in Data, twice a month.</div>
+      </div>
+    </div>
+
+    <div class="newsletter-option">
+      <input type="checkbox" checked>
+      <div>
+        <div class="opt-title">Data Insights <span style="font-weight:normal;color:#888;">Every few days</span></div>
+        <div class="opt-desc">Receive our bite-sized insights on how the world is changing, every few days.</div>
+      </div>
+    </div>
+
+    <input type="email" class="email-input" placeholder="Your email address">
+    <button class="subscribe-btn">Subscribe</button>
+    <p class="privacy-text">By subscribing you are agreeing to the terms of our <a href="#">privacy policy</a>.</p>
+
+    <div class="follow-us">
+      <h4>Follow us</h4>
+      <div class="social-icons">
+        <a href="#">𝕏</a>
+        <a href="#">📷</a>
+        <a href="#"></a>
+        <a href="#">📘</a>
+        <a href="#">💼</a>
+        <a href="#">🦋</a>
+        <a href="#">🐙</a>
+      </div>
+    </div>
+
+    <div class="donate-box">
+      <div class="donate-heart">❤️</div>
+      <div>
+        <p>We are a non-profit — all our work is free to use and openly licensed.</p>
+        <a href="#">Donate to support us</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Data Insights Section -->
+<section class="data-insights">
+  <div class="data-insights-header">
+    <div>
+      <h2>Data Insights</h2>
+      <p>Bite-sized insights on how the world is changing, published every few days.</p>
+    </div>
+    <a href="#" class="see-all-insights">See all Data Insights →</a>
+  </div>
+
+  <div class="insights-grid">
+    <div class="insight-card featured">
+      <div class="insight-chart">
+        <svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">
+          <text x="10" y="15" font-size="11" font-family="Arial" fill="#333">Global sales of combustion engine</text>
+          <text x="10" y="28" font-size="11" font-family="Arial" fill="#333">cars peaked in 2017</text>
+          <text x="340" y="15" font-size="8" font-family="Arial" fill="#fff" fill-opacity="0.8">Our World</text>
+          <text x="340" y="25" font-size="8" font-family="Arial" fill="#fff" fill-opacity="0.8">in Data</text>
+          <rect x="335" y="5" width="55" height="25" rx="3" fill="#1a2a4a"/>
+          
+          <!-- Y axis labels -->
+          <text x="5" y="60" font-size="8" font-family="Arial" fill="#888">80 million cars</text>
+          <text x="5" y="100" font-size="8" font-family="Arial" fill="#888">60 million cars</text>
+          <text x="5" y="140" font-size="8" font-family="Arial" fill="#888">40 million cars</text>
+          <text x="5" y="180" font-size="8" font-family="Arial" fill="#888">20 million cars</text>
+          
+          <!-- Grid lines -->
+          <line x1="60" y1="55" x2="390" y2="55" stroke="#eee" stroke-width="1"/>
+          <line x1="60" y1="95" x2="390" y2="95" stroke="#eee" stroke-width="1"/>
+          <line x1="60" y1="135" x2="390" y2="135" stroke="#eee" stroke-width="1"/>
+          <line x1="60" y1="175" x2="390" y2="175" stroke="#eee" stroke-width="1"/>
+          
+          <!-- Bars -->
+          <rect x="70" y="155" width="18" height="40" fill="#8B6F8B"/>
+          <rect x="92" y="140" width="18" height="55" fill="#8B6F8B"/>
+          <rect x="114" y="120" width="18" height="75" fill="#8B6F8B"/>
+          <rect x="136" y="100" width="18" height="95" fill="#8B6F8B"/>
+          <rect x="158" y="80" width="18" height="115" fill="#8B6F8B"/>
+          <rect x="180" y="65" width="18" height="130" fill="#8B6F8B"/>
+          <rect x="202" y="55" width="18" height="140" fill="#8B6F8B"/>
+          <rect x="224" y="60" width="18" height="135" fill="#8B6F8B"/>
+          <rect x="246" y="70" width="18" height="125" fill="#8B6F8B"/>
+          <rect x="268" y="75" width="18" height="120" fill="#8B6F8B"/>
+          <rect x="290" y="80" width="18" height="115" fill="#8B6F8B"/>
+          <rect x="312" y="85" width="18" height="110" fill="#8B6F8B"/>
+          <rect x="334" y="90" width="18" height="105" fill="#8B6F8B"/>
+          <rect x="356" y="95" width="18" height="100" fill="#8B6F8B"/>
+          
+          <!-- Electric cars portion (green top) -->
+          <rect x="290" y="75" width="18" height="5" fill="#27ae60"/>
+          <rect x="312" y="70" width="18" height="15" fill="#27ae60"/>
+          <rect x="334" y="65" width="18" height="25" fill="#27ae60"/>
+          <rect x="356" y="55" width="18" height="40" fill="#27ae60"/>
+          
+          <text x="310" y="50" font-size="9" font-family="Arial" fill="#27ae60">Electric cars</text>
+          <text x="130" y="115" font-size="9" font-family="Arial" fill="#8B6F8B">Non-electric</text>
+        </svg>
+      </div>
+      <div>
+        <div class="insight-date">📅 YESTERDAY</div>
+        <h3>Global sales of combustion engine cars peaked in 2017</h3>
+        <p>To decarbonize road transport, the world must move away from petrol and diesel cars towards electric vehicles and other forms of low-carbon transport.</p>
+        <p>This transition has already started. In fact, global sales of combustion engine cars are well past their peak and are now falling.</p>
+        <p>As you can see in the chart, global sales peaked in 2017. This is calculated based on data from the International Energy Agency. Bloomberg New Energy Finance also estimated this peak occurred around that time.</p>
+      </div>
+    </div>
+
+    <div class="insight-card">
+      <div class="insight-chart">
+        <svg viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg">
+          <text x="10" y="15" font-size="10" font-family="Arial" fill="#333">Money sent or brought back by</text>
+          <text x="10" y="27" font-size="10" font-family="Arial" fill="#333">migrants as a share of GDP</text>
+          <text x="240" y="15" font-size="7" font-family="Arial" fill="#fff">Our World</text>
+          <text x="240" y="23" font-size="7" font-family="Arial" fill="#fff">in Data</text>
+          <rect x="235" y="5" width="55" height="22" rx="3" fill="#1a2a4a"/>
+          <text x="10" y="40" font-size="7" font-family="Arial" fill="#888">Remittances received by each country in 2024,</text>
+          <text x="10" y="50" font-size="7" font-family="Arial" fill="#888">as a percentage of gross domestic product.</text>
+          
+          <!-- Legend -->
+          <rect x="10" y="58" width="8" height="8" fill="#c0392b"/><text x="22" y="65" font-size="7" font-family="Arial" fill="#666">N. America</text>
+          <rect x="70" y="58" width="8" height="8" fill="#e67e22"/><text x="82" y="65" font-size="7" font-family="Arial" fill="#666">S. America</text>
+          <rect x="130" y="58" width="8" height="8" fill="#27ae60"/><text x="142" y="65" font-size="7" font-family="Arial" fill="#666">Africa</text>
+          <rect x="175" y="58" width="8" height="8" fill="#2980b9"/><text x="187" y="65" font-size="7" font-family="Arial" fill="#666">Europe</text>
+          <rect x="220" y="58" width="8" height="8" fill="#8e44ad"/><text x="232" y="65" font-size="7" font-family="Arial" fill="#666">Asia</text>
+          <rect x="255" y="58" width="8" height="8" fill="#1abc9c"/><text x="267" y="65" font-size="7" font-family="Arial" fill="#666">Oceania</text>
+          
+          <!-- Y axis -->
+          <text x="5" y="85" font-size="7" font-family="Arial" fill="#888">50%</text>
+          <text x="5" y="110" font-size="7" font-family="Arial" fill="#888">40%</text>
+          <text x="5" y="135" font-size="7" font-family="Arial" fill="#888">30%</text>
+          <text x="5" y="160" font-size="7" font-family="Arial" fill="#888">20%</text>
+          <text x="5" y="185" font-size="7" font-family="Arial" fill="#888">10%</text>
+          <text x="10" y="210" font-size="7" font-family="Arial" fill="#888">0%</text>
+          
+          <!-- Bars -->
+          <rect x="30" y="75" width="12" height="130" fill="#c0392b" opacity="0.7"/>
+          <rect x="45" y="90" width="12" height="115" fill="#e67e22" opacity="0.7"/>
+          <rect x="60" y="100" width="12" height="105" fill="#27ae60" opacity="0.7"/>
+          <rect x="75" y="110" width="12" height="95" fill="#2980b9" opacity="0.7"/>
+          <rect x="90" y="115" width="12" height="90" fill="#8e44ad" opacity="0.7"/>
+          <rect x="105" y="120" width="12" height="85" fill="#1abc9c" opacity="0.7"/>
+          <rect x="120" y="125" width="12" height="80" fill="#c0392b" opacity="0.5"/>
+          <rect x="135" y="130" width="12" height="75" fill="#e67e22" opacity="0.5"/>
+          <rect x="150" y="135" width="12" height="70" fill="#27ae60" opacity="0.5"/>
+          <rect x="165" y="140" width="12" height="65" fill="#2980b9" opacity="0.5"/>
+          <rect x="180" y="145" width="12" height="60" fill="#8e44ad" opacity="0.5"/>
+          <rect x="195" y="150" width="12" height="55" fill="#1abc9c" opacity="0.5"/>
+          <rect x="210" y="155" width="12" height="50" fill="#c0392b" opacity="0.3"/>
+          <rect x="225" y="160" width="12" height="45" fill="#e67e22" opacity="0.3"/>
+          <rect x="240" y="165" width="12" height="40" fill="#27ae60" opacity="0.3"/>
+          <rect x="255" y="170" width="12" height="35" fill="#2980b9" opacity="0.3"/>
+          <rect x="270" y="175" width="12" height="30" fill="#8e44ad" opacity="0.3"/>
+          
+          <!-- Labels -->
+          <text x="30" y="72" font-size="6" font-family="Arial" fill="#c0392b">1. Tajikistan 48%</text>
+          <text x="60" y="97" font-size="6" font-family="Arial" fill="#27ae60">2. Nicaragua 27%</text>
+          <text x="90" y="112" font-size="6" font-family="Arial" fill="#8e44ad">3. Nepal 26%</text>
+          <text x="120" y="122" font-size="6" font-family="Arial" fill="#c0392b">4. Honduras 26%</text>
+          <text x="150" y="132" font-size="6" font-family="Arial" fill="#e67e22">5. Bermuda 25%</text>
+        </svg>
+      </div>
+      <div class="insight-date">📅 MAY 19</div>
+      <h3>Tajikistan is the country's...</h3>
+      <p>In Tajikistan, remittances amounted to... compared to... Nicaragua an...</p>
+    </div>
+  </div>
+</section>
+
+<!-- Floating Buttons -->
+<div class="floating-btns">
+  <button class="float-btn">📧 Subscribe</button>
+  <button class="float-btn">💬 Feedback</button>
+</div>
+
+</body>
+</html>

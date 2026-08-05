@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>听评课记录</title>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$']],
+    displayMath: [['$$', '$$']]
+  }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    margin: 0;
+    min-height: 100%;
+    background: #d8d8d4;
+  }
+
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    font-family: "KaiTi", "STKaiti", "Kaiti SC", "Noto Serif CJK SC", serif;
+    color: #222;
+  }
+
+  .sheet {
+    position: relative;
+    width: 530px;
+    height: 751px;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 47% 36%, rgba(255,255,255,.45), transparent 45%),
+      linear-gradient(90deg, #e9ebe8 0%, #f5f6f2 12%, #f2f3ef 89%, #e5e5e0 100%);
+    box-shadow: 0 0 12px rgba(0, 0, 0, .24);
+  }
+
+  .timestamp {
+    position: absolute;
+    top: 1px;
+    left: 8px;
+    color: rgba(255,255,255,.9);
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    text-shadow: 0 0 2px #555;
+    writing-mode: vertical-rl;
+    letter-spacing: .3px;
+    z-index: 3;
+  }
+
+  h1 {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    width: 100%;
+    margin: 0;
+    text-align: center;
+    font-family: "SimHei", "Microsoft YaHei", sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 8px;
+  }
+
+  table {
+    border-collapse: collapse;
+  }
+
+  .meta {
+    position: absolute;
+    top: 39px;
+    left: 46px;
+    width: 417px;
+    height: 70px;
+    table-layout: fixed;
+    transform: rotate(.2deg);
+    background: rgba(255,255,255,.08);
+    font-size: 12px;
+  }
+
+  .meta td {
+    height: 31px;
+    border: 1px solid #252525;
+    padding: 1px 4px;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+
+  .meta .label {
+    font-family: "SimSun", "Noto Serif CJK SC", serif;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .meta .hand {
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  .meta .topic {
+    padding-left: 13px;
+    text-align: left;
+    font-size: 19px;
+  }
+
+  .redacted {
+    position: relative;
+    overflow: hidden;
+    color: #202722;
+    font-size: 10px;
+    background:
+      repeating-linear-gradient(
+        5deg,
+        rgba(31,43,37,.85) 0,
+        rgba(31,43,37,.85) 2px,
+        rgba(90,101,95,.55) 3px,
+        rgba(90,101,95,.55) 5px
+      );
+  }
+
+  .redacted::after {
+    content: "";
+    position: absolute;
+    inset: 4px -2px;
+    background:
+      repeating-linear-gradient(
+        -4deg,
+        transparent 0,
+        transparent 3px,
+        rgba(27,33,30,.7) 4px,
+        rgba(27,33,30,.7) 6px
+      );
+  }
+
+  .redacted span {
+    position: relative;
+    z-index: 2;
+    padding: 1px 3px;
+    background: rgba(235,235,229,.75);
+  }
+
+  .record {
+    position: absolute;
+    top: 108px;
+    left: 28px;
+    width: 444px;
+    height: 551px;
+    table-layout: fixed;
+    transform: rotate(.15deg);
+  }
+
+  .record th,
+  .record td {
+    border: 1px solid #262626;
+  }
+
+  .record thead th {
+    height: 37px;
+    padding: 0;
+    text-align: center;
+    vertical-align: middle;
+    font-family: "SimSun", "Noto Serif CJK SC", serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 7px;
+  }
+
+  .record thead th:last-child {
+    letter-spacing: 8px;
+  }
+
+  .record tbody td {
+    height: 513px;
+    vertical-align: top;
+  }
+
+  .lesson {
+    padding: 3px 8px 4px 54px;
+    font-size: 20px;
+    line-height: 1.58;
+    font-weight: 400;
+  }
+
+  .lesson p {
+    margin: 0;
+  }
+
+  .lesson .section {
+    margin-left: 1px;
+  }
+
+  .lesson .numbered {
+    margin-left: 0;
+    white-space: nowrap;
+  }
+
+  .lesson .continuation {
+    margin-left: -42px;
+  }
+
+  .lesson .report {
+    margin-left: 2px;
+  }
+
+  .lesson .subitem {
+    margin-left: 2px;
+  }
+
+  .lesson .subitem-deep {
+    margin-left: 27px;
+  }
+
+  .lesson .nav-two {
+    margin-top: 0;
+  }
+
+  .comments {
+    position: relative;
+    padding: 0;
+    color: #a82d42;
+    font-size: 17px;
+    line-height: 1.55;
+  }
+
+  .comment {
+    position: absolute;
+    left: 7px;
+    width: 95px;
+  }
+
+  .comment-one {
+    top: 31px;
+    transform: rotate(-2deg);
+  }
+
+  .comment-two {
+    top: 333px;
+    transform: rotate(-1deg);
+  }
+</style>
+</head>
+<body>
+  <main class="sheet">
+    <div class="timestamp">03/06/12 15:48</div>
+
+    <h1>听评课记录</h1>
+
+    <table class="meta" aria-label="课程基本信息">
+      <colgroup>
+        <col style="width:34px">
+        <col style="width:49px">
+        <col style="width:42px">
+        <col style="width:62px">
+        <col style="width:60px">
+        <col style="width:94px">
+        <col style="width:40px">
+        <col style="width:36px">
+      </colgroup>
+      <tr>
+        <td class="label">科目</td>
+        <td class="hand">语文</td>
+        <td class="label">班级</td>
+        <td class="hand">二年级</td>
+        <td class="label">授课者</td>
+        <td class="redacted"><span>[illegible]</span></td>
+        <td class="label">时间</td>
+        <td class="hand">3.6</td>
+      </tr>
+      <tr>
+        <td class="label">课题</td>
+        <td class="topic" colspan="3">寻找春天</td>
+        <td class="label">授课类型</td>
+        <td class="hand">公开课</td>
+        <td class="label">课时</td>
+        <td class="label">第　课时</td>
+      </tr>
+    </table>
+
+    <table class="record" aria-label="教学活动过程与点评">
+      <colgroup>
+        <col style="width:336px">
+        <col style="width:108px">
+      </colgroup>
+      <thead>
+        <tr>
+          <th>教学活动过程</th>
+          <th>点评</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="lesson">
+            <p class="section">一、导入</p>
+            <p class="numbered">1.春天在哪里？找出春天的变化？</p>
+            <p class="numbered">2.出示有关春天的四字成语。</p>
+            <p class="numbered">3.齐读课题《笋芽儿》《小池塘》</p>
+            <p>学生书空课题。</p>
+            <p class="section">二、走进春天</p>
+            <p>自学导航一</p>
+            <p class="numbered">1.自由朗读课文。</p>
+            <p class="numbered">2.标出哪些人物帮助了笋芽？请用“○”圈出来。</p>
+            <p class="numbered">3.他们分别做了什么？对笋芽儿说了什么？请用“﹏”</p>
+            <p class="continuation">把有关的句子画出来。</p>
+            <p class="report">A.学生汇报（个别）</p>
+            <p class="subitem">B.①师带生“读厚”。</p>
+            <p class="subitem-deep">②重音符号</p>
+            <p class="nav-two">自学导航二</p>
+          </td>
+          <td class="comments">
+            <div class="comment comment-one">
+              提问的形式<br>
+              对引导学生走进<br>
+              春天，能贴春天<br>
+              的特性。
+            </div>
+            <div class="comment comment-two">
+              问题紧扣<br>
+              课文，学生能根<br>
+              据问题找出答<br>
+              案，突出重点。
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </main>
+</body>
+</html>

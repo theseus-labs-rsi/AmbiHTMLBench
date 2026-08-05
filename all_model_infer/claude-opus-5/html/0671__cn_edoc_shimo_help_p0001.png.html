@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>快速入门指南_ 企业篇</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+    color: #1f2329;
+    background: #fff;
+    font-size: 14px;
+  }
+  .page {
+    width: 1150px;
+    margin: 0 auto;
+    position: relative;
+    padding: 20px 30px 40px;
+  }
+  /* print header / footer */
+  .print-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: #333;
+    margin-bottom: 24px;
+  }
+  .print-head .center { font-weight: 500; }
+  .print-head .right { width: 120px; }
+  .print-foot {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: #333;
+    margin-top: 30px;
+    padding-top: 8px;
+  }
+
+  /* top nav */
+  .topnav {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 6px 0 22px;
+  }
+  .logo {
+    width: 44px;
+    height: 44px;
+    border: 1px solid #333;
+    font-size: 13px;
+    line-height: 1.35;
+    text-align: center;
+    padding-top: 5px;
+    letter-spacing: 1px;
+    margin-right: 30px;
+    flex: none;
+  }
+  .topnav a.navitem {
+    color: #1f2329;
+    text-decoration: none;
+    font-size: 15px;
+    margin-right: 38px;
+    white-space: nowrap;
+  }
+  .searchbox {
+    width: 210px;
+    height: 34px;
+    border: 1px solid #dcdfe6;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    color: #9aa0a6;
+    font-size: 13px;
+    margin-left: auto;
+    margin-right: 16px;
+  }
+  .searchbox .ico {
+    display: inline-block;
+    width: 13px; height: 13px;
+    border: 1px solid #b6bcc4;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+  .btn-primary {
+    background: #1d72f3;
+    color: #fff;
+    border-radius: 4px;
+    padding: 9px 22px;
+    font-size: 14px;
+    margin-right: 14px;
+    white-space: nowrap;
+  }
+  .btn-ghost {
+    border: 1px solid #dcdfe6;
+    border-radius: 4px;
+    padding: 9px 22px;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  .caret {
+    display: inline-block;
+    width: 0; height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid #86909c;
+    margin-left: -28px;
+  }
+
+  /* main 3 columns */
+  .main {
+    display: flex;
+    border-top: 1px solid #e5e6eb;
+    align-items: stretch;
+  }
+  .sidebar {
+    width: 285px;
+    flex: none;
+    border-right: 1px solid #e5e6eb;
+    padding: 18px 0 0;
+  }
+  .sidebar .all {
+    font-size: 17px;
+    padding: 6px 24px 18px;
+  }
+  .sidebar .grp {
+    display: flex;
+    align-items: center;
+    padding: 12px 24px;
+    font-size: 15px;
+  }
+  .sidebar .grp.active { background: #f2f3f5; }
+  .tri-down {
+    width: 0; height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 8px solid #1f2329;
+    margin-right: 12px;
+  }
+  .tri-right {
+    width: 0; height: 0;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-left: 8px solid #1f2329;
+    margin-right: 12px;
+  }
+  .sidebar .item {
+    display: flex;
+    align-items: center;
+    padding: 10px 24px 10px 44px;
+    font-size: 15px;
+  }
+  .sidebar .item.active { background: #f2f3f5; }
+  .doc-ico {
+    width: 14px;
+    height: 17px;
+    border: 1px solid #b6bcc4;
+    border-radius: 2px;
+    margin-right: 12px;
+    flex: none;
+  }
+
+  /* content */
+  .content {
+    flex: 1;
+    padding: 20px 40px 0 45px;
+    min-width: 0;
+  }
+  .crumbs {
+    font-size: 14px;
+    color: #4e5969;
+    margin-bottom: 30px;
+  }
+  .crumbs a { color: #4e5969; text-decoration: none; }
+  .crumbs .sep { color: #c9cdd4; margin: 0 10px; }
+  h1.title {
+    font-size: 34px;
+    margin: 0 0 22px;
+    padding-bottom: 26px;
+    border-bottom: 1px solid #e5e6eb;
+  }
+  .placeholder {
+    border: 1px solid #dcdfe6;
+    background: #f7f8fa;
+    color: #86909c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 13px;
+    margin: 24px 0 10px;
+  }
+  .content p {
+    line-height: 1.9;
+    margin: 18px 0;
+  }
+  .indent { text-indent: 2em; }
+  h2.sec {
+    font-size: 22px;
+    margin: 42px 0 26px;
+  }
+  h3.sub {
+    font-size: 18px;
+    font-weight: 500;
+    margin: 26px 0 20px;
+  }
+  .tag-blue {
+    background: #1d72f3;
+    color: #fff;
+    font-size: 13px;
+    padding: 2px 6px;
+    margin-left: 6px;
+  }
+  .tag-red {
+    background: #f5847e;
+    color: #fff;
+    font-size: 13px;
+    padding: 2px 6px;
+    margin-left: 4px;
+  }
+  .content ul {
+    margin: 14px 0;
+    padding-left: 24px;
+    line-height: 2.05;
+  }
+
+  /* toc */
+  .toc {
+    width: 380px;
+    flex: none;
+    padding: 20px 20px 0 0;
+  }
+  .toc h4 {
+    font-size: 17px;
+    font-weight: 500;
+    margin: 0 0 18px;
+  }
+  .toc .lv1 {
+    border-left: 3px solid #1d72f3;
+    color: #1d72f3;
+    padding: 4px 0 4px 14px;
+    font-size: 15px;
+  }
+  .toc .lv2 {
+    border-left: 3px solid #e5e6eb;
+    color: #1d72f3;
+    padding: 4px 0 4px 34px;
+    font-size: 15px;
+  }
+  .toc .lv1b {
+    border-left: 3px solid #e5e6eb;
+    color: #1f2329;
+    padding: 4px 0 4px 14px;
+    font-size: 15px;
+  }
+  .helpful {
+    margin-top: 60px;
+  }
+  .helpful .q { font-size: 17px; margin-bottom: 18px; }
+  .helpful .btns { display: flex; gap: 14px; }
+  .helpful .b {
+    background: #f2f3f5;
+    border-radius: 4px;
+    padding: 14px 0;
+    width: 168px;
+    text-align: center;
+    font-size: 15px;
+  }
+  .url { word-break: break-all; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="print-head">
+    <div class="left">2026/6/29 02:27</div>
+    <div class="center">快速入门指南_ 企业篇</div>
+    <div class="right"></div>
+  </div>
+
+  <div class="topnav">
+    <div class="logo">石 墨<br>文 档</div>
+    <a class="navitem" href="#">石墨办公</a>
+    <a class="navitem" href="#">个人版</a>
+    <a class="navitem" href="#">模版库</a>
+    <a class="navitem" href="#">解决方案</a>
+    <a class="navitem" href="#">私有化部署</a>
+    <a class="navitem" href="#">定价</a>
+    <a class="navitem" href="#">下载</a>
+    <a class="navitem" href="#">支持</a>
+    <span class="caret"></span>
+    <div class="searchbox"><span class="ico"></span>应用表格</div>
+    <div class="btn-primary">免费使用</div>
+    <div class="btn-ghost">立即登录</div>
+  </div>
+
+  <div class="main">
+
+    <!-- LEFT SIDEBAR -->
+    <div class="sidebar">
+      <div class="all">所有文章</div>
+      <div class="grp active"><span class="tri-down"></span>快速上手</div>
+      <div class="item"><span class="doc-ico"></span>石墨文档_快速入门指南</div>
+      <div class="item"><span class="doc-ico"></span>石墨文档_进阶教程指南</div>
+      <div class="item active"><span class="doc-ico"></span>快速入门指南_企业篇</div>
+      <div class="item"><span class="doc-ico"></span>石墨文档新手引导</div>
+      <div class="item"><span class="doc-ico"></span>石墨传统文档新手引导</div>
+      <div class="item"><span class="doc-ico"></span>石墨表格新手引导</div>
+      <div class="item"><span class="doc-ico"></span>石墨应用表格新手引导</div>
+      <div class="item"><span class="doc-ico"></span>石墨表单新手引导</div>
+      <div class="item"><span class="doc-ico"></span>石墨团队空间新手引导</div>
+      <div class="grp"><span class="tri-right"></span>常见问题</div>
+      <div class="grp"><span class="tri-right"></span>文档</div>
+      <div class="grp"><span class="tri-right"></span>表格</div>
+      <div class="grp"><span class="tri-right"></span>应用表格</div>
+      <div class="grp"><span class="tri-right"></span>表单</div>
+      <div class="grp"><span class="tri-right"></span>幻灯片</div>
+      <div class="grp"><span class="tri-right"></span>思维导图</div>
+      <div class="grp"><span class="tri-right"></span>白板</div>
+      <div class="grp"><span class="tri-right"></span>石墨APP</div>
+      <div class="grp"><span class="tri-right"></span>钉钉及其他</div>
+      <div class="grp"><span class="tri-right"></span>付费版本</div>
+      <div class="grp"><span class="tri-right"></span>分享与协作</div>
+      <div class="grp"><span class="tri-right"></span>石墨小程序</div>
+      <div class="grp"><span class="tri-right"></span>账号与安全</div>
+      <div class="grp"><span class="tri-right"></span>华为云企业版</div>
+    </div>
+
+    <!-- CENTER CONTENT -->
+    <div class="content">
+      <div class="crumbs">
+        <a href="#">首页</a><span class="sep">/</span><a href="#">帮助中心</a><span class="sep">/</span><a href="#">快速上手</a><span class="sep">/</span><a href="#">快速入门指南_企业篇</a>
+      </div>
+
+      <h1 class="title">快速入门指南_企业篇</h1>
+
+      <figure class="placeholder" style="width:510px;height:265px;margin-left:0;">
+        [图片：石墨文档宣传图，居中偏左 —「全新一代云端 Office　面向未来的办公软件」「文档实时协同 · 知识沉淀管理 · 数据安全可控」，下方为产品界面截图与「石墨品牌介绍」文档预览]
+      </figure>
+
+      <p>Hi！欢迎你使用「石墨文档」开启敏捷、高效的云端办公体验。</p>
+
+      <p class="indent">这篇文档将为你展示石墨文档<strong>面向企业创建者 &amp; 企业管理员</strong>的核心功能，你可以跟随动图进行操作，也可以点击左侧的目录跳转查看，如遇任何问题，可以点击网页右下角的「帮助中心」或是「智能客服」，快速找到解决方法。</p>
+
+      <p class="indent">现在就使用「石墨文档」开始工作吧!</p>
+
+      <h2 class="sec">面向企业创建者 &amp; 企业管理员</h2>
+
+      <h3 class="sub">一、通讯录管理（企业组织架构）<span class="tag-blue">企业版</span></h3>
+
+      <p>企业创建者和企业管理员能够进行各种成员管理操作，包括：</p>
+
+      <ul>
+        <li>添加新成员</li>
+        <li>移除成员</li>
+        <li>设置成员所在部门</li>
+        <li>添加子部门</li>
+        <li>搜索成员</li>
+        <li>查看企业组织架构目录树</li>
+        <li>禁用成员账户</li>
+      </ul>
+
+      <figure class="placeholder" style="width:510px;height:255px;margin-top:40px;">
+        [截图：石墨文档通讯录管理界面，居中 —「石墨的合作伙伴 (30)」成员列表，含「添加成员邀请」「设置所在部门」按钮及成员角色列]
+      </figure>
+
+      <h3 class="sub" style="margin-top:48px;">二、禁用账号与离职员工管理<span class="tag-red">企业高级版</span></h3>
+
+      <p>支持离职员工账号内容冻结与交接</p>
+    </div>
+
+    <!-- RIGHT TOC -->
+    <div class="toc">
+      <h4>目录</h4>
+      <div class="lv1">面向企业创建者 &amp; 企业管理员</div>
+      <div class="lv2">一、通讯录管理（企业组织架构）</div>
+      <div class="lv2">二、禁用账号与离职员工管理</div>
+      <div class="lv2">三、查看操作日志</div>
+      <div class="lv2">四、企业安全管控</div>
+      <div class="lv2">五、内容外泄预防与管控</div>
+      <div class="lv2">六、文件安全预警</div>
+      <div class="lv2">七、效能看板</div>
+      <div class="lv1b">《石墨文档「进阶教程指南」》</div>
+
+      <div class="helpful">
+        <div class="q">你觉得本文档有帮助吗?</div>
+        <div class="btns">
+          <div class="b">👍 有帮助</div>
+          <div class="b">👎 无帮助</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="print-foot">
+    <div class="url">https://shimo.im/help/articles/AZ7ZL2KFACFIK.html</div>
+    <div>1/4</div>
+  </div>
+
+</div>
+</body>
+</html>

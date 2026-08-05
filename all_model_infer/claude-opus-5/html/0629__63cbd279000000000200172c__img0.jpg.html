@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Q3：股票涨跌幅为什么有的是10%，有的是20%呢?</title>
+<script>
+window.MathJax = {
+  tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]}
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: #1b7fd4;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    color: #222;
+  }
+  .page {
+    position: relative;
+    width: 540px;
+    margin: 0 auto;
+    background: #1b7fd4;
+    overflow: hidden;
+  }
+
+  /* ---------- Header bar ---------- */
+  .header {
+    background: #ffffff;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    font-size: 11px;
+  }
+  .header .logo-mark {
+    width: 26px; height: 20px;
+    background: #c8102e;
+    border-radius: 50% 10% 50% 10%;
+    margin-right: 6px;
+  }
+  .header .brand {
+    color: #c8102e;
+    font-size: 15px;
+    font-weight: bold;
+    letter-spacing: 1px;
+  }
+  .header .cgs {
+    color: #1a1a5e;
+    font-size: 16px;
+    font-weight: bold;
+    margin-left: 8px;
+    letter-spacing: 1px;
+  }
+  .header .cert {
+    margin-left: auto;
+    color: #333;
+    font-size: 11px;
+  }
+
+  /* ---------- Decorative dots band ---------- */
+  .dots {
+    position: relative;
+    height: 40px;
+  }
+  .dot { position: absolute; border-radius: 50%; }
+
+  /* ---------- Notebook card ---------- */
+  .card {
+    position: relative;
+    margin: -14px 18px 0 18px;
+    background: #fdf9ef;
+    border-radius: 14px;
+    padding: 44px 20px 16px 20px;
+    background-image:
+      linear-gradient(rgba(200,200,180,.25) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(200,200,180,.25) 1px, transparent 1px);
+    background-size: 18px 18px, 18px 18px;
+  }
+  .rings {
+    position: absolute;
+    top: -18px; left: 0; right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 34px;
+  }
+  .ring {
+    width: 16px; height: 34px;
+    border: 3px solid #2b2b2b;
+    border-radius: 8px;
+    background: transparent;
+  }
+
+  /* ---------- Title ---------- */
+  .title-box {
+    background: #f6c765;
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin: 0 6px 22px 6px;
+  }
+  .title-box h1 {
+    margin: 0;
+    font-size: 25px;
+    line-height: 1.35;
+    font-weight: 900;
+    letter-spacing: 1px;
+    color: #1b1b1b;
+  }
+
+  /* ---------- Lead line ---------- */
+  .lead {
+    display: flex;
+    align-items: flex-start;
+    font-size: 15px;
+    font-weight: bold;
+    color: #1b1b1b;
+    margin: 0 6px 14px 6px;
+  }
+  .lead .star {
+    color: #f6c765;
+    font-size: 17px;
+    margin-right: 6px;
+    line-height: 1.2;
+  }
+
+  /* ---------- Table ---------- */
+  table {
+    width: 96%;
+    margin: 0 auto 18px auto;
+    border-collapse: collapse;
+    background: #fdf9ef;
+  }
+  th, td {
+    border: 1px solid #3c3c3c;
+    padding: 10px 8px;
+    font-size: 14px;
+    text-align: center;
+    line-height: 1.55;
+  }
+  th { font-weight: bold; }
+  td.desc { text-align: left; }
+  col.c1 { width: 22%; }
+  col.c2 { width: 56%; }
+  col.c3 { width: 22%; }
+
+  /* ---------- Disclaimer ---------- */
+  .disclaimer {
+    position: relative;
+    font-size: 8.5px;
+    line-height: 1.7;
+    color: #333;
+    text-align: justify;
+    padding: 10px 8px 6px 8px;
+    border-top: 1px solid #cfcab8;
+    margin: 0 4px;
+  }
+
+  /* ---------- Astronaut placeholder ---------- */
+  .placeholder {
+    border: 1px dashed #b9b2a0;
+    color: #8a8474;
+    font-size: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: rgba(255,255,255,.35);
+  }
+  .astronaut {
+    position: absolute;
+    right: 8px;
+    bottom: 46px;
+    width: 78px;
+    height: 92px;
+    z-index: 5;
+  }
+
+  /* ---------- Footer ---------- */
+  .footer {
+    text-align: center;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    padding: 12px 0 14px 0;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="logo-mark"></div>
+    <span class="brand">中国银河证券</span>
+    <span class="cgs">CGS</span>
+    <span class="cert">常红艳 投顾编号：S0130618110013</span>
+  </div>
+
+  <div class="dots">
+    <span class="dot" style="width:14px;height:14px;background:#f6c765;left:24px;top:6px;"></span>
+    <span class="dot" style="width:10px;height:10px;background:#ffffff;left:70px;top:20px;"></span>
+    <span class="dot" style="width:16px;height:16px;background:#e8f0a8;left:120px;top:4px;"></span>
+    <span class="dot" style="width:12px;height:12px;background:#f28a8a;left:180px;top:18px;"></span>
+    <span class="dot" style="width:18px;height:18px;background:#8fd0f0;left:240px;top:2px;"></span>
+    <span class="dot" style="width:11px;height:11px;background:#ffffff;left:300px;top:20px;"></span>
+    <span class="dot" style="width:15px;height:15px;background:#f6c765;left:350px;top:6px;"></span>
+    <span class="dot" style="width:12px;height:12px;background:#c9e39b;left:410px;top:18px;"></span>
+    <span class="dot" style="width:16px;height:16px;background:#f28a8a;left:462px;top:4px;"></span>
+    <span class="dot" style="width:10px;height:10px;background:#ffffff;left:510px;top:20px;"></span>
+  </div>
+
+  <div class="card">
+    <div class="rings">
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+    </div>
+
+    <div class="title-box">
+      <h1>Q3：股票涨跌幅为什么有的是<br>10%，有的是20%呢?</h1>
+    </div>
+
+    <div class="lead">
+      <span class="star">✦</span>
+      <span>下表是在不同板块炒股的单日涨跌幅规定：</span>
+    </div>
+
+    <table>
+      <colgroup>
+        <col class="c1"><col class="c2"><col class="c3">
+      </colgroup>
+      <thead>
+        <tr>
+          <th>板块</th>
+          <th>含义</th>
+          <th>涨跌幅</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>st类股票</td>
+          <td class="desc">财务状况有问题的公司居多，不要轻易买!</td>
+          <td>5%</td>
+        </tr>
+        <tr>
+          <td>主板</td>
+          <td class="desc">最常见，以传统行业为主的股票交易市场。</td>
+          <td>10%</td>
+        </tr>
+        <tr>
+          <td>创业板</td>
+          <td class="desc">主要是无法在主板上市的高成长的中小企业。</td>
+          <td>20%</td>
+        </tr>
+        <tr>
+          <td>科创板</td>
+          <td class="desc">主要是有核心技术的创新型和科技型中小企业。</td>
+          <td>20%</td>
+        </tr>
+        <tr>
+          <td>北交所</td>
+          <td class="desc">主要是“专精特新”“小巨人”中小企业。</td>
+          <td>30%</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="placeholder astronaut">[Illustration: cartoon astronaut, bottom-right]</div>
+
+    <div class="disclaimer">
+      免责声明：本资料仅为投资者教育之目的而发布，不构成投资建议。投资者据此操作，风险自担。银河证券力求所涉信息资料准确可靠，但据可证券不对该信息的准确性、完整性或可得性、及时性作任何担保。银河证券亦不对因使用此资料的信息而引致的损失承担任何责任。投资有风险，入市需谨慎。
+    </div>
+  </div>
+
+  <div class="footer">投资有风险，入市需谨慎</div>
+
+</div>
+</body>
+</html>

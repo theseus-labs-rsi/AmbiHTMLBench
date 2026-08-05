@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Django 4.1.12 release notes | Django documentation | Django</title>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  :root{
+    --header:#0c4b33;
+    --band:#44b78b;
+    --survey:#a2e2c2;
+    --btn:#38b283;
+    --link:#1c9a72;
+    --text:#333;
+    --muted:#555;
+    --line:#e2e2e2;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:#fff;color:var(--text);
+    font-family:"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;font-size:16px;line-height:1.6;}
+  a{color:var(--link);text-decoration:none;}
+  .wrap{max-width:1320px;margin:0 auto;}
+
+  /* ===== top header ===== */
+  .topbar{background:var(--header);height:66px;display:flex;align-items:center;}
+  .topbar .wrap{display:flex;align-items:center;width:100%;}
+  .logo{color:#fff;font-weight:800;font-size:30px;letter-spacing:.5px;line-height:1;
+    font-family:"Palatino Linotype","Book Antiqua",Georgia,serif;font-style:normal;}
+  .nav{display:flex;align-items:center;gap:27px;margin-left:188px;}
+  .nav a{color:#fff;font-size:14px;font-weight:600;letter-spacing:.2px;white-space:nowrap;}
+  .nav a.active{color:var(--band);}
+  .nav .heart{font-size:13px;margin-right:4px;}
+  .searchbox{margin-left:auto;display:flex;align-items:center;gap:14px;}
+  .search{position:relative;width:212px;height:46px;}
+  .search input{width:100%;height:100%;border:0;border-radius:5px;padding:0 40px 0 16px;font-size:15px;color:#333;outline:none;}
+  .search input::placeholder{color:#7a7a7a;}
+  .search .mag{position:absolute;right:13px;top:50%;transform:translateY(-50%);display:flex;}
+  .theme{width:20px;height:20px;display:flex;align-items:center;justify-content:center;}
+
+  /* ===== documentation band ===== */
+  .band{background:var(--band);}
+  .band h1{margin:0;color:#eafff4;font-weight:400;font-size:36px;padding:22px 0 24px;}
+
+  /* ===== survey banner ===== */
+  .survey{background:var(--survey);text-align:center;padding:34px 20px 42px;color:#202020;}
+  .survey h2{margin:0 0 26px;font-size:26px;font-weight:500;color:#1d1d1d;}
+  .survey p{max-width:1250px;margin:0 auto 22px;font-size:17px;line-height:1.55;color:#222;}
+  .survey p.spread{margin-bottom:34px;}
+  .survey a.dark{color:#111;font-weight:700;}
+  .takebtn{display:block;width:455px;max-width:90%;margin:0 auto;background:var(--btn);color:#1c1c1c;
+    font-weight:700;font-size:17px;text-align:center;padding:20px 0;border-radius:6px;}
+  .takebtn:hover{text-decoration:none;}
+
+  /* ===== main two columns ===== */
+  .main{display:flex;justify-content:space-between;padding:28px 0 60px;}
+  .content{width:820px;}
+  .content h1.doc{margin:6px 0 2px;font-size:38px;font-weight:500;color:#222;letter-spacing:.2px;}
+  .pilcrow{color:var(--band);font-size:.55em;vertical-align:super;margin-left:5px;font-weight:700;}
+  .date{font-style:italic;color:#444;font-size:15px;margin:14px 0 8px;}
+  .content p{margin:14px 0;font-size:16.5px;color:#2b2b2b;}
+  .content h2{margin:26px 0 14px;font-size:27px;font-weight:500;color:#222;line-height:1.35;}
+  code{font-family:Consolas,"Liberation Mono",Menlo,monospace;font-size:.93em;color:#1c1c1c;}
+  .content hr{border:0;border-top:1px solid var(--line);margin:26px 0;}
+  .prevnext{display:flex;justify-content:space-between;font-size:16.5px;}
+  .prevnext a{font-weight:500;}
+
+  /* ===== sidebar ===== */
+  .sidebar{width:398px;flex-shrink:0;font-size:15px;color:#3a3a3a;}
+  .sidebar h3{margin:26px 0 0;font-size:23px;font-weight:500;color:#222;padding-bottom:13px;border-bottom:1px solid var(--line);}
+  .sidebar h3:first-child{margin-top:4px;}
+  .donate{display:flex;gap:16px;margin-top:20px;align-items:flex-start;}
+  .donate .txt{font-size:15px;line-height:1.5;padding-top:2px;}
+  .placeholder{background:#f3f3f3;border:1px solid #e0e0e0;display:flex;align-items:center;justify-content:center;
+    color:#9a9a9a;font-size:10px;text-align:center;flex-shrink:0;}
+  .heart{width:66px;height:72px;border:0;background:transparent;}
+  .sidebar ul{margin:16px 0 0;padding-left:22px;}
+  .sidebar li{margin:7px 0;line-height:1.45;}
+  .sidebar li ul{margin-top:6px;}
+  .sidebar .plain{color:#3a3a3a;}
+  .helpsec p{margin:6px 0 0;line-height:1.5;}
+  .helpsec .sub{margin-top:16px;}
+  .helpsec .sub a{font-weight:500;}
+
+  /* ===== floating right widgets ===== */
+  .floaty{position:fixed;right:16px;z-index:50;font-size:13px;}
+  .f-gethelp{bottom:170px;background:#e9f7ef;border:1px solid #bfe6cf;color:#2e9d6a;border-radius:5px;padding:9px 13px;font-weight:600;}
+  .f-lang{bottom:112px;background:#fff;border:1px solid #cfcfcf;border-radius:5px;color:#333;padding:9px 13px;box-shadow:0 1px 2px rgba(0,0,0,.06);}
+  .f-ver{bottom:60px;background:#fff;border:1px solid #cfcfcf;border-radius:5px;color:#333;padding:9px 13px;box-shadow:0 1px 2px rgba(0,0,0,.06);}
+  .f-top{bottom:14px;width:42px;height:36px;background:#fff;border:1px solid #cfcfcf;border-radius:5px;color:#2e9d6a;
+    display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 1px 2px rgba(0,0,0,.08);}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <div class="logo">django</div>
+    <nav class="nav">
+      <a href="#">OVERVIEW</a>
+      <a href="#">DOWNLOAD</a>
+      <a href="#" class="active">DOCUMENTATION</a>
+      <a href="#">NEWS</a>
+      <a href="#">CODE</a>
+      <a href="#">ISSUES</a>
+      <a href="#">COMMUNITY</a>
+      <a href="#">FOUNDATION</a>
+      <a href="#"><span class="heart">&#9829;</span>DONATE</a>
+    </nav>
+    <div class="searchbox">
+      <div class="search">
+        <input type="text" placeholder="Search (&#8984; K)">
+        <span class="mag">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#37a87c" stroke-width="2.4" stroke-linecap="round">
+            <circle cx="10.5" cy="10.5" r="6.5"></circle>
+            <line x1="15.6" y1="15.6" x2="21" y2="21"></line>
+          </svg>
+        </span>
+      </div>
+      <span class="theme">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#cfe9dd" stroke-width="1.8">
+          <circle cx="12" cy="12" r="9"></circle>
+        </svg>
+      </span>
+    </div>
+  </div>
+</header>
+
+<div class="band">
+  <div class="wrap"><h1>Documentation</h1></div>
+</div>
+
+<section class="survey">
+  <h2>Django Developer Survey</h2>
+  <p>The Django Software Foundation is once again partnering with JetBrains to run the 2026 Django Developer Survey &#128202; Help us better<br>
+  understand how Django is being used around the world and guide future technical and community decisions. <a href="#" class="dark">Read more on the Django<br>
+  blog</a>.</p>
+  <p class="spread">Please help us spread the word by sharing the survey with your communities and on social media &#128227; The more diverse the responses,<br>
+  the better the results for everyone.</p>
+  <a href="#" class="takebtn">Take the survey &#10024;</a>
+</section>
+
+<div class="wrap">
+  <div class="main">
+
+    <article class="content">
+      <h1 class="doc">Django 4.1.12 release notes <a href="#" class="pilcrow">&#182;</a></h1>
+      <div class="date">October 4, 2023</div>
+      <p>Django 4.1.12 fixes a security issue with severity &ldquo;moderate&rdquo; in 4.1.11.</p>
+
+      <h2>CVE-2023-43665: Denial-of-service possibility in<br><code>django.utils.text.Truncator</code> <a href="#" class="pilcrow">&#182;</a></h2>
+
+      <p>Following the fix for <a href="#">CVE 2019-14232</a>, the regular expressions used in the implementation of <code>django.utils.text.Truncator</code>&rsquo;s
+      <strong><code>chars()</code></strong> and <strong><code>words()</code></strong> methods (with <strong><code>html=True</code></strong>) were revised and improved. However, these regular expressions still exhibited
+      linear backtracking complexity, so when given a very long, potentially malformed HTML input, the evaluation would still be slow,
+      leading to a potential denial of service vulnerability.</p>
+
+      <p>The <strong><code>chars()</code></strong> and <strong><code>words()</code></strong> methods are used to implement the <code>truncatechars_html</code> and <code>truncatewords_html</code> template
+      filters, which were thus also vulnerable.</p>
+
+      <p>The input processed by <strong>Truncator</strong>, when operating in HTML mode, has been limited to the first five million characters in order to
+      avoid potential performance and memory issues.</p>
+
+      <hr>
+      <div class="prevnext">
+        <a href="#">&larr; Django 4.1.13 release notes</a>
+        <a href="#">Django 4.1.11 release notes &rarr;</a>
+      </div>
+      <hr>
+    </article>
+
+    <aside class="sidebar">
+      <h3>Support Django!</h3>
+      <div class="donate">
+        <div class="placeholder heart">[Image: pink pixel heart]</div>
+        <div class="txt"><a href="#">Agence Debord donated to the Django Software Foundation</a> to support Django development. <a href="#">Donate today!</a></div>
+      </div>
+
+      <h3>Contents</h3>
+      <ul>
+        <li><a href="#">Django 4.1.12 release notes</a>
+          <ul>
+            <li><a href="#">CVE-2023-43665: Denial-of-service possibility in <code>django.utils.text.Truncator</code></a></li>
+          </ul>
+        </li>
+      </ul>
+
+      <h3>Browse</h3>
+      <ul>
+        <li>Prev: <a href="#">Django 4.1.13 release notes</a></li>
+        <li>Next: <a href="#">Django 4.1.11 release notes</a></li>
+        <li><a href="#">Table of contents</a></li>
+        <li><a href="#">General Index</a></li>
+        <li><a href="#">Python Module Index</a></li>
+      </ul>
+
+      <h3>You are here:</h3>
+      <ul>
+        <li><a href="#">Django 5.2 documentation</a>
+          <ul>
+            <li><a href="#">Release notes</a>
+              <ul>
+                <li class="plain">Django 4.1.12 release notes</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+
+      <h3>Getting help</h3>
+      <div class="helpsec">
+        <p class="sub"><a href="#">FAQ</a></p>
+        <p>Try the FAQ &mdash; it&rsquo;s got answers to many common questions.</p>
+        <p class="sub"><a href="#">Index</a>, <a href="#">Module Index</a>, or <a href="#">Table of Contents</a></p>
+        <p>Handy when looking for specific information.</p>
+        <p class="sub"><a href="#">Django Discord Server</a></p>
+        <p>Join the Django Discord Community.</p>
+      </div>
+    </aside>
+
+  </div>
+</div>
+
+<a href="#" class="floaty f-gethelp">Getting Help</a>
+<div class="floaty f-lang">Language: <strong>en</strong></div>
+<div class="floaty f-ver">Documentation version: <strong>5.2</strong></div>
+<a href="#" class="floaty f-top">&#8593;</a>
+
+</body>
+</html>

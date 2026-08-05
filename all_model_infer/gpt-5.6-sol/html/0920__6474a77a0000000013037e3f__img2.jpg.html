@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>行列式、转置矩阵与可逆矩阵笔记</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 24px;
+      background: #d4d2cb;
+      color: #262823;
+      font-family: "KaiTi", "STKaiti", "Kaiti SC", serif;
+    }
+
+    .page {
+      position: relative;
+      width: min(760px, 100%);
+      min-height: 1050px;
+      margin: 0 auto;
+      padding: 31px 39px 36px 72px;
+      overflow: hidden;
+      border: 1px solid #aaa99f;
+      box-shadow: 0 5px 18px rgba(0, 0, 0, 0.28);
+      background-color: #efefe9;
+      background-image:
+        linear-gradient(
+          to right,
+          transparent 0,
+          transparent 50px,
+          rgba(151, 98, 98, 0.23) 51px,
+          transparent 52px
+        ),
+        repeating-linear-gradient(
+          to bottom,
+          transparent 0,
+          transparent 30px,
+          rgba(92, 115, 123, 0.25) 31px,
+          transparent 32px
+        );
+    }
+
+    .page::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(
+        90deg,
+        rgba(0, 0, 0, 0.025),
+        transparent 8%,
+        transparent 91%,
+        rgba(0, 0, 0, 0.035)
+      );
+    }
+
+    .section {
+      position: relative;
+      z-index: 1;
+      margin-bottom: 11px;
+      font-size: 17px;
+      line-height: 31px;
+    }
+
+    .heading {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      min-height: 31px;
+    }
+
+    .number {
+      flex: 0 0 auto;
+      font-size: 18px;
+    }
+
+    .text {
+      flex: 1;
+    }
+
+    .formula {
+      min-height: 31px;
+      margin-left: 41px;
+      white-space: nowrap;
+    }
+
+    .formula.center {
+      margin-left: 81px;
+    }
+
+    .formula.deep {
+      margin-left: 120px;
+    }
+
+    .note {
+      margin-left: 19px;
+    }
+
+    .star-row {
+      display: grid;
+      grid-template-columns: 24px 1fr 1fr 0.8fr;
+      column-gap: 18px;
+      align-items: center;
+      min-height: 31px;
+      white-space: nowrap;
+    }
+
+    .star-row.three {
+      grid-template-columns: 24px 1fr 1fr;
+    }
+
+    .star {
+      font-size: 20px;
+      text-align: center;
+    }
+
+    .definition {
+      padding-left: 18px;
+      text-indent: 2em;
+    }
+
+    .proof {
+      margin-left: 40px;
+    }
+
+    .inverse-layout {
+      display: grid;
+      grid-template-columns: minmax(330px, 1fr) 160px;
+      gap: 17px;
+      align-items: start;
+      margin-top: 1px;
+    }
+
+    .adjugate {
+      min-height: 126px;
+    }
+
+    .matrix-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      min-height: 94px;
+      white-space: nowrap;
+    }
+
+    .matrix-note {
+      margin-top: -4px;
+      padding-left: 92px;
+      font-size: 15px;
+      line-height: 22px;
+      white-space: nowrap;
+    }
+
+    .example {
+      padding-top: 1px;
+      font-size: 15px;
+      line-height: 26px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .example-matrices {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 9px;
+      font-size: 16px;
+    }
+
+    .side-note {
+      margin-top: 2px;
+      line-height: 21px;
+      transform: rotate(-3deg);
+    }
+
+    .derivation {
+      margin-top: 1px;
+      margin-left: 39px;
+    }
+
+    .properties {
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      column-gap: 65px;
+      margin-left: 9px;
+    }
+
+    .properties > div {
+      min-height: 31px;
+      white-space: nowrap;
+    }
+
+    .spacer {
+      height: 4px;
+    }
+
+    mjx-container {
+      margin: 0 !important;
+    }
+
+    @media (max-width: 680px) {
+      body {
+        padding: 0;
+        background: #efefe9;
+      }
+
+      .page {
+        width: 100%;
+        min-width: 620px;
+        margin: 0;
+        border: 0;
+        box-shadow: none;
+      }
+    }
+  </style>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [["$", "$"], ["\\(", "\\)"]],
+        displayMath: [["$$", "$$"], ["\\[", "\\]"]]
+      },
+      svg: {
+        fontCache: "global"
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+  <main class="page">
+    <section class="section">
+      <div class="heading">
+        <span class="number">4.</span>
+        <span class="text">两个 $n$ 阶方阵乘积的行列式等于行列式的乘积</span>
+      </div>
+
+      <div class="formula">$|AB|=|A||B|$</div>
+
+      <div class="note">
+        ❧　设 $A_1,A_2,\cdots,A_m$ 为 $n$ 阶方阵，则
+        $\left|A_1A_2\cdots A_m\right|=|A_1||A_2|\cdots|A_m|$
+      </div>
+
+      <div class="note">
+        推论：若 $A$ 为 $n$ 阶方阵，则 $|kA|=k^n|A|$
+      </div>
+
+      <div class="formula center">
+        例：$A,B$ 均为 $n$ 阶方阵，$|A|=a\ne0$，若 $AB+2E=0$，求 $|B|$
+      </div>
+
+      <div class="formula center">
+        $|AB|=|A||B|=a|B|=|-2E|=(-2)^n$
+      </div>
+
+      <div class="formula deep">
+        $\therefore\ |B|=(-2)^n\cdot\dfrac{1}{a}$
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="heading">
+        <span class="number">5.</span>
+        <span class="text">转置矩阵记为 $A^T$</span>
+      </div>
+
+      <div class="star-row">
+        <span class="star">☆</span>
+        <span>定理　$(A^T)^T=A$</span>
+        <span>$(A+B)^T=A^T+B^T$</span>
+        <span>$|A|=|A^T|$</span>
+      </div>
+
+      <div class="star-row three">
+        <span></span>
+        <span>$(kA)^T=kA^T$</span>
+        <span>$(AB)^T=B^TA^T$</span>
+      </div>
+
+      <div class="definition">
+        若 $A^T=A$，则 $A$ 为对称矩阵；若 $A^T=-A$，则 $A$ 为反对称矩阵
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="heading">
+        <span class="number">6.</span>
+        <span class="text">可逆矩阵　有 $n$ 阶方阵 $A,B$，使 $AB=E=BA$，则称 $A$ 为可逆矩阵，$B$ 为 $A$ 的逆矩阵</span>
+      </div>
+
+      <div class="definition">
+        逆矩阵是唯一的，$A$ 的逆矩阵记为 $A^{-1}$
+      </div>
+
+      <div class="proof">
+        证明：$\because\quad AB=E=BA\qquad AC=E=CA$
+      </div>
+
+      <div class="formula center">
+        $B=BE=B(AC)=(BA)C=EC=C$
+        <span style="margin-left:55px;">$=$ 所有矩阵</span>
+      </div>
+
+      <div class="inverse-layout">
+        <div class="adjugate">
+          <div class="matrix-row">
+            <span class="star">☆</span>
+            <span>$A^{-1}=\dfrac{1}{|A|}A^*$</span>
+            <span>
+              $A^*=
+              \begin{bmatrix}
+                A_{11} & A_{21} & \cdots & A_{n1}\\
+                A_{12} & A_{22} & \cdots & A_{n2}\\
+                \vdots & \vdots & \ddots & \vdots\\
+                A_{1n} & A_{2n} & \cdots & A_{nn}
+              \end{bmatrix}$
+            </span>
+          </div>
+          <div class="matrix-note">伴随矩阵　每个位置放代数余子式再转置</div>
+        </div>
+
+        <aside class="example">
+          <div class="example-matrices">
+            <span>$A=\begin{bmatrix}a&b\\c&d\end{bmatrix}$</span>
+          </div>
+          <div class="example-matrices">
+            <span>$A^*=\begin{bmatrix}d&-b\\-c&a\end{bmatrix}$</span>
+          </div>
+          <div class="side-note">对角线，交换位置<br>其余变号</div>
+        </aside>
+      </div>
+
+      <div class="star-row three">
+        <span class="star">☆</span>
+        <span>$A\cdot A^*=|A|\cdot E=A^*\cdot A$</span>
+        <span></span>
+      </div>
+
+      <div class="derivation">
+        推：$\dfrac{1}{|A|}A^*A=E$
+      </div>
+
+      <div class="star-row three">
+        <span class="star">#</span>
+        <span>$|A|\ne0$，则 $|A^*|\ne0$</span>
+        <span>$|A^*|=|A|^{\,n-1}$</span>
+      </div>
+
+      <div class="note">
+        $A$ 可逆　$\Longleftrightarrow\ |A|\ne0$
+      </div>
+
+      <div class="heading">
+        <span class="text">性质：</span>
+      </div>
+
+      <div class="properties">
+        <div>$|A^{-1}|=|A|^{-1}$</div>
+        <div>$(A^T)^{-1}=(A^{-1})^T$</div>
+
+        <div>$(A^{-1})^{-1}=A$</div>
+        <div>$(AB)^{-1}=B^{-1}A^{-1}$</div>
+
+        <div></div>
+        <div>$(kA)^{-1}=\dfrac{1}{k}A^{-1}$</div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

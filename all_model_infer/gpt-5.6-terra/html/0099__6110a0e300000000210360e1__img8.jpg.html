@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Luxury Brand Information</title>
+  <script>
+    window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      width: 100%;
+      min-height: 100%;
+      font-family: Arial, "Microsoft YaHei", sans-serif;
+    }
+    body {
+      display: flex;
+      justify-content: center;
+      background: #6d5c46;
+    }
+    .page {
+      position: relative;
+      width: 540px;
+      height: 720px;
+      overflow: hidden;
+      background:
+        linear-gradient(90deg, rgba(72,57,43,.34), rgba(211,195,160,.13) 49%, rgba(79,60,45,.4)),
+        linear-gradient(180deg, #786853 0%, #b4a888 22%, #dfd8c4 52%, #9b8768 100%);
+    }
+    .interior {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+    .interior:before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 378px;
+      background:
+        radial-gradient(ellipse at 13% 12%, #d4c59e 0 4%, transparent 4.5%),
+        radial-gradient(ellipse at 67% 14%, #b9a77b 0 6%, transparent 6.5%),
+        linear-gradient(90deg, rgba(65,53,39,.8) 0 2%, transparent 2% 49%, rgba(228,218,191,.65) 49% 52%, transparent 52% 100%);
+      opacity: .7;
+    }
+    .interior:after {
+      content: "";
+      position: absolute;
+      left: -8px;
+      bottom: -14px;
+      width: 556px;
+      height: 345px;
+      background:
+        radial-gradient(ellipse at 49% 72%, #c9b092 0 24%, transparent 24.5%),
+        linear-gradient(90deg, transparent 0 16%, #8a7256 16% 18%, transparent 18% 77%, #846d51 77% 80%, transparent 80%),
+        repeating-linear-gradient(140deg, rgba(116,85,62,.5) 0 2px, transparent 2px 32px),
+        linear-gradient(#c2b69d 0 20%, #958168 20% 100%);
+      opacity: .82;
+    }
+    .placeholder {
+      position: absolute;
+      color: transparent;
+      font-size: 0;
+    }
+    .cards {
+      position: absolute;
+      inset: 0;
+    }
+    .card {
+      position: absolute;
+      background: rgba(255,255,255,.965);
+      overflow: hidden;
+      padding: 0 13px;
+      color: #080808;
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1.58;
+    }
+    .card:after {
+      content: "YOUSHEY  YOUSHEY  YOUSHEY";
+      position: absolute;
+      left: -18px;
+      top: 53px;
+      width: 300px;
+      color: rgba(125,125,125,.055);
+      font-size: 25px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      transform: rotate(-21deg);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .omega { left: 29px; top: 43px; width: 231px; height: 301px; }
+    .chaumet { left: 287px; top: 28px; width: 235px; height: 321px; }
+    .vca { left: 26px; top: 375px; width: 234px; height: 303px; }
+    .cartier { left: 288px; top: 374px; width: 234px; height: 328px; }
+
+    .logo {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      height: 154px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .info {
+      position: relative;
+      z-index: 1;
+      white-space: nowrap;
+    }
+    .omega-logo {
+      color: #be002b;
+      font-family: Arial, sans-serif;
+      flex-direction: column;
+      padding-top: 17px;
+      line-height: .9;
+    }
+    .omega-logo .symbol {
+      font-family: Georgia, serif;
+      font-size: 66px;
+      height: 59px;
+      font-weight: normal;
+    }
+    .omega-logo .word {
+      font-size: 43px;
+      letter-spacing: -2px;
+      font-weight: 400;
+    }
+    .chaumet .logo { height: 174px; }
+    .chaumet-logo {
+      color: #09255c;
+      flex-direction: column;
+      padding-top: 18px;
+      font-family: "Times New Roman", serif;
+      line-height: .9;
+    }
+    .chaumet-logo .crown {
+      font-family: Georgia, serif;
+      font-size: 42px;
+      height: 47px;
+      letter-spacing: 2px;
+      transform: scaleX(1.35);
+    }
+    .chaumet-logo .word {
+      font-size: 31px;
+      letter-spacing: 1px;
+      font-weight: bold;
+    }
+    .chaumet-logo .paris {
+      margin-top: 4px;
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      letter-spacing: 4px;
+    }
+    .vca .logo { height: 145px; }
+    .vca-logo {
+      flex-direction: column;
+      padding-top: 24px;
+      font-family: "Times New Roman", serif;
+      line-height: 1;
+    }
+    .vca-logo .diamond {
+      position: relative;
+      height: 37px;
+      width: 49px;
+      font-family: Georgia, serif;
+      font-size: 12px;
+      transform: rotate(45deg);
+      border: 1px solid #222;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .vca-logo .diamond span { transform: rotate(-45deg); }
+    .vca-logo .name {
+      font-size: 27px;
+      letter-spacing: -.8px;
+      white-space: nowrap;
+    }
+    .cartier .logo { height: 177px; }
+    .cartier-logo {
+      flex-direction: column;
+      font-family: "Times New Roman", serif;
+      padding-top: 18px;
+      line-height: 1;
+    }
+    .cartier-logo .crest {
+      border: 2px solid #111;
+      width: 55px;
+      height: 81px;
+      border-radius: 50%;
+      font-size: 50px;
+      font-style: italic;
+      line-height: 75px;
+      font-family: "Times New Roman", serif;
+    }
+    .cartier-logo .name {
+      font-size: 52px;
+      font-style: italic;
+      letter-spacing: -3px;
+      margin-top: 1px;
+    }
+    .chaumet .info { padding-left: 7px; }
+    .vca .info { padding-left: 0; }
+    .cartier .info { padding-left: 0; }
+    .center-line { text-align: center; }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="interior placeholder" aria-label="[Interior room photograph background]"></div>
+
+    <section class="cards">
+      <article class="card omega">
+        <div class="logo omega-logo">
+          <div class="symbol">Ω</div>
+          <div class="word">OMEGA</div>
+        </div>
+        <div class="info">
+          品牌创始人： Louis Brandt<br>
+          成立年份： 1848<br>
+          发源地： 瑞士<br>
+          隶属集团： 斯沃琪集团
+        </div>
+      </article>
+
+      <article class="card chaumet">
+        <div class="logo chaumet-logo">
+          <div class="crown">⌁C⌁</div>
+          <div class="word">CHAUMET</div>
+          <div class="paris">PARIS</div>
+        </div>
+        <div class="info">
+          品牌创始人： Marie-Etienne<br>
+          <span class="center-line">Nitot</span><br>
+          成立年份： 1780年<br>
+          发源地： 法国<br>
+          隶属集团： LVMH
+        </div>
+      </article>
+
+      <article class="card vca">
+        <div class="logo vca-logo">
+          <div class="diamond"><span>VC&nbsp;A</span></div>
+          <div class="name">Van Cleef &amp; Arpels</div>
+        </div>
+        <div class="info">
+          品牌创始人： Alfred Van Cleef<br>
+          <span class="center-line">和 Charles Arpels</span><br>
+          成立年份： 1906年<br>
+          发源地： 法国<br>
+          隶属集团： Richemont
+        </div>
+      </article>
+
+      <article class="card cartier">
+        <div class="logo cartier-logo">
+          <div class="crest">C</div>
+          <div class="name">Cartier</div>
+        </div>
+        <div class="info">
+          品牌创始人： Louis-François<br>
+          <span class="center-line">Cartier</span><br>
+          成立年份： 1847年<br>
+          发源地： 法国<br>
+          隶属集团： Richemont
+        </div>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

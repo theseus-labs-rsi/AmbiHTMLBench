@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Performance Materials - 2Q Sales and Operating Earnings</title>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Calibri', 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #222;
+  }
+  .top-banner {
+    height: 45px;
+    background: linear-gradient(to right, #a30000 0%, #d92b2b 40%, #e05a5a 60%, #c9c9c9 85%, #8e8e8e 95%, #6e6e6e 100%);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 20px;
+  }
+  .dupont-logo {
+    background: #e4002b;
+    color: white;
+    font-weight: bold;
+    font-style: italic;
+    font-size: 18px;
+    border-radius: 50%;
+    width: 60px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid white;
+  }
+  h1.title {
+    text-align: center;
+    font-size: 26px;
+    margin: 12px 0 2px 0;
+    font-weight: bold;
+  }
+  h2.subtitle {
+    text-align: center;
+    font-size: 17px;
+    font-style: italic;
+    font-weight: normal;
+    margin: 0 0 15px 0;
+  }
+  .container {
+    display: flex;
+    padding: 0 30px;
+    gap: 20px;
+  }
+  .left-col {
+    width: 48%;
+  }
+  .right-col {
+    width: 52%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .section-header {
+    background-color: #1f3864;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 6px 0;
+    margin-bottom: 15px;
+    border-radius: 2px;
+  }
+  .comment-box {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 15px 20px;
+    box-shadow: 1px 1px 4px rgba(0,0,0,0.1);
+  }
+  .comment-box h3 {
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
+    margin: 0 0 12px 0;
+  }
+  .comment-box ul {
+    margin: 0;
+    padding-left: 5px;
+    list-style: none;
+  }
+  .comment-box li {
+    position: relative;
+    padding-left: 22px;
+    margin-bottom: 10px;
+    font-size: 13.5px;
+    line-height: 1.35;
+  }
+  .comment-box li::before {
+    content: "\2751";
+    position: absolute;
+    left: 0;
+    top: 1px;
+    font-size: 12px;
+  }
+
+  /* Chart 1: 2Q Sales */
+  .chart1 {
+    display: flex;
+    margin-left: 40px;
+  }
+  .y-axis-label {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    margin-right: 5px;
+  }
+  .chart1-area {
+    display: flex;
+    flex: 1;
+  }
+  .chart1-scale {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: space-between;
+    font-size: 12px;
+    padding-bottom: 22px;
+    margin-right: 5px;
+    height: 220px;
+  }
+  .chart1-plot {
+    flex: 1;
+    height: 220px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    border-left: 1px solid #999;
+    border-bottom: 1px solid #999;
+    position: relative;
+  }
+  .chart1-plot::before,
+  .chart1-plot::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    border-top: 1px solid #ddd;
+  }
+  .bar-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 25%;
+  }
+  .bar1 {
+    width: 55px;
+    background-color: #4472c4;
+    border: 1px solid #2f4f8f;
+  }
+  .bar-label {
+    margin-top: 6px;
+    font-size: 13px;
+  }
+  .grid-lines {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: space-between;
+    z-index: 0;
+  }
+  .grid-lines div {
+    border-top: 1px solid #e0e0e0;
+    width: 100%;
+    height: 0;
+  }
+
+  /* Chart 2: Operating Earnings */
+  .chart2-wrapper {
+    margin-top: 10px;
+  }
+  .chart2 {
+    display: flex;
+    margin-left: 40px;
+    position: relative;
+  }
+  .chart2-scale-left {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: space-between;
+    font-size: 12px;
+    padding-bottom: 22px;
+    margin-right: 5px;
+    height: 240px;
+  }
+  .chart2-plot {
+    flex: 1;
+    height: 240px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    border-left: 1px solid #999;
+    border-bottom: 1px solid #999;
+    position: relative;
+  }
+  .bar2 {
+    width: 55px;
+    background-color: #1f3864;
+    border: 1px solid #10233f;
+  }
+  .chart2-scale-right {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: space-between;
+    font-size: 12px;
+    padding-bottom: 22px;
+    margin-left: 5px;
+    height: 240px;
+  }
+  .margin-label {
+    writing-mode: vertical-rl;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    margin-left: 3px;
+  }
+  .red-line-marker {
+    position: absolute;
+    background: red;
+    height: 2px;
+    width: 90%;
+  }
+  .legend {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-left: 45px;
+    margin-top: 5px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+  }
+  .legend-swatch-blue {
+    width: 16px;
+    height: 16px;
+    background-color: #1f3864;
+  }
+  .legend-swatch-red {
+    width: 20px;
+    height: 3px;
+    background-color: red;
+  }
+
+  .footnotes {
+    font-size: 11px;
+    padding: 15px 30px 5px 30px;
+    line-height: 1.5;
+  }
+  .footnotes .marker {
+    display: inline-block;
+    width: 25px;
+  }
+  .page-number {
+    text-align: right;
+    padding-right: 30px;
+    font-size: 14px;
+    color: #333;
+  }
+</style>
+</head>
+<body>
+
+<div class="top-banner">
+  <div class="dupont-logo">DU PONT</div>
+</div>
+
+<h1 class="title">Performance Materials***</h1>
+<h2 class="subtitle">Performance Polymers (DPP), Packaging &amp; Industrial Polymers (P&amp;IP)</h2>
+
+<div class="container">
+  <div class="left-col">
+    <div class="section-header">2Q Sales *</div>
+    <div class="chart1">
+      <div class="y-axis-label">$ in Billions</div>
+      <div class="chart1-scale">
+        <span>0.0</span>
+        <span>0.4</span>
+        <span>0.8</span>
+        <span>1.2</span>
+        <span>1.6</span>
+        <span>2.0</span>
+      </div>
+      <div class="chart1-plot">
+        <div class="grid-lines">
+          <div></div><div></div><div></div><div></div><div></div><div></div>
+        </div>
+        <div class="bar-group">
+          <div class="bar1" style="height:176px;"></div>
+          <div class="bar-label">2Q12</div>
+        </div>
+        <div class="bar-group">
+          <div class="bar1" style="height:176px;"></div>
+          <div class="bar-label">2Q13</div>
+        </div>
+        <div class="bar-group">
+          <div class="bar1" style="height:172px;"></div>
+          <div class="bar-label">2Q14</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart2-wrapper">
+      <div class="section-header">2Q Operating Earnings **</div>
+      <div class="chart2">
+        <div class="y-axis-label">$ in Millions</div>
+        <div class="chart2-scale-left">
+          <span>0</span>
+          <span>75</span>
+          <span>150</span>
+          <span>225</span>
+          <span>300</span>
+          <span>375</span>
+        </div>
+        <div class="chart2-plot">
+          <div class="grid-lines">
+            <div></div><div></div><div></div><div></div><div></div><div></div>
+          </div>
+          <div class="bar-group">
+            <div class="bar2" style="height:206px;"></div>
+            <div class="bar-label">2Q12</div>
+          </div>
+          <div class="bar-group">
+            <div class="bar2" style="height:216px;"></div>
+            <div class="bar-label">2Q13</div>
+          </div>
+          <div class="bar-group">
+            <div class="bar2" style="height:194px;"></div>
+            <div class="bar-label">2Q14</div>
+          </div>
+        </div>
+        <div class="chart2-scale-right">
+          <span>0%</span>
+          <span>5%</span>
+          <span>10%</span>
+          <span>15%</span>
+          <span>20%</span>
+          <span>25%</span>
+        </div>
+        <div class="margin-label">Margin</div>
+      </div>
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-swatch-blue"></div>
+        </div>
+        <div class="legend-item">
+          <div class="legend-swatch-red"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="right-col">
+    <div class="comment-box">
+      <h3>2Q Comments</h3>
+      <ul>
+        <li>Sales down 2% due to lower volumes resulting from the scheduled ethylene outage and portfolio impact of the GLS/Vinyls sale</li>
+        <li>Demand for Performance Polymers up mid-single digits due to strengthening automotive market</li>
+        <li>Demand environment in consumer, construction, and food packaging markets remains stable</li>
+        <li>Operating earnings down 9% as higher sales in automotive were more than offset by reduced supply of ethylene and the portfolio impact of the GLS/Vinyls sale</li>
+      </ul>
+    </div>
+
+    <div class="comment-box">
+      <h3>3Q Outlook</h3>
+      <ul>
+        <li>3Q sales essentially flat due to the GLS/Vinyls sale</li>
+        <li>Consumer, construction, and food packaging volumes forecasted to remain stable</li>
+        <li>Automotive volumes anticipated to remain strong led by China and Europe</li>
+        <li>3Q operating earnings up modestly versus prior year which included a $30 million benefit related to a JV equity position</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="footnotes">
+  <div><span class="marker">*</span>Segment sales include transfers.</div>
+  <div><span class="marker">**</span>See appendix for reconciliation of non-GAAP measures.</div>
+  <div><span class="marker">***</span>Prior periods reflect reclassification of Viton&reg; fluoroelastomers from Performance Materials to Performance Chemicals</div>
+</div>
+
+<div class="page-number">13</div>
+
+</body>
+</html>

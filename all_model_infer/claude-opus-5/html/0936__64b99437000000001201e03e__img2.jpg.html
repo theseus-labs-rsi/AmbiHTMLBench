@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>拆解美国上市公司年报（以 Apple 10-K 为例）</title>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$']],
+    displayMath: [['$$', '$$']]
+  }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 0;
+    background: #e9edf2;
+    font-family: Arial, Helvetica, "Microsoft YaHei", sans-serif;
+  }
+  .page {
+    position: relative;
+    width: 540px;
+    min-height: 760px;
+    margin: 0 auto;
+    background: linear-gradient(180deg, #f2f5f8 0%, #e6ebf1 45%, #dfe5ec 100%);
+    overflow: hidden;
+  }
+
+  /* ---------- Header zone (blue title) ---------- */
+  .header {
+    padding: 60px 20px 20px;
+    text-align: center;
+  }
+  .header .main-title {
+    color: #1a237e;
+    font-family: "SimHei", "Microsoft YaHei", sans-serif;
+    font-weight: bold;
+    font-size: 40px;
+    letter-spacing: 3px;
+    margin: 0 0 22px 0;
+  }
+  .header .sub-title {
+    color: #1a237e;
+    font-size: 20px;
+    margin: 0;
+    letter-spacing: 1px;
+  }
+
+  /* ---------- White document card ---------- */
+  .doc {
+    background: #ffffff;
+    width: 470px;
+    margin: 22px auto 0;
+    padding: 22px 26px 26px;
+    text-align: center;
+    color: #000;
+    font-size: 8.5px;
+    line-height: 1.5;
+  }
+  .doc .agency {
+    font-weight: bold;
+    font-size: 10.5px;
+    letter-spacing: 0.3px;
+  }
+  .doc .agency .city {
+    font-size: 8.5px;
+  }
+  .rule {
+    border: 0;
+    border-top: 1px solid #000;
+    width: 210px;
+    margin: 12px auto 10px;
+  }
+  .form-title {
+    font-weight: bold;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    margin: 4px 0;
+  }
+  .checkline {
+    font-weight: bold;
+    font-size: 7.6px;
+    letter-spacing: 0.2px;
+    margin-top: 10px;
+  }
+  .fiscal {
+    font-size: 7.6px;
+    margin: 3px 0 6px;
+  }
+  .or {
+    font-size: 7.6px;
+    margin: 2px 0 6px;
+  }
+  .commission {
+    font-size: 7.6px;
+    font-weight: bold;
+    margin-top: 6px;
+  }
+  .transition-period {
+    font-size: 7.6px;
+    margin-top: 5px;
+  }
+
+  /* ---------- Logo placeholder ---------- */
+  .placeholder {
+    display: block;
+    border: 0;
+    margin: 0 auto;
+    color: #555;
+    font-size: 7px;
+    text-align: center;
+  }
+  .logo-apple {
+    width: 26px;
+    height: 32px;
+    margin: 16px auto 6px;
+    background: #000;
+    -webkit-mask: radial-gradient(circle at 50% 62%, #000 42%, transparent 43%) no-repeat;
+    mask: radial-gradient(circle at 50% 62%, #000 42%, transparent 43%) no-repeat;
+  }
+  .company-name {
+    font-weight: bold;
+    font-size: 17px;
+    margin: 2px 0 4px;
+  }
+  .exact-name {
+    font-size: 7.6px;
+    margin-bottom: 8px;
+  }
+
+  /* ---------- Two-column registrant info ---------- */
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 10px;
+  }
+  .info-col {
+    width: 48%;
+    font-size: 7.6px;
+    line-height: 1.45;
+  }
+  .info-col.left { text-align: center; }
+  .info-col.right { text-align: center; }
+  .info-col .bold { font-weight: bold; }
+  .short-rule {
+    border: 0;
+    border-top: 1px solid #000;
+    width: 150px;
+    margin: 0 auto 4px;
+  }
+  .phone {
+    font-weight: bold;
+    font-size: 8px;
+    margin-top: 16px;
+  }
+  .phone-note {
+    font-size: 7.6px;
+    margin-top: 3px;
+  }
+
+  /* ---------- Seal placeholder ---------- */
+  .seal {
+    width: 74px;
+    height: 74px;
+    margin: 26px auto 0;
+    border-radius: 50%;
+    border: 1px solid #b9c0ca;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 6px;
+    color: #5a6472;
+    line-height: 1.2;
+    padding: 4px;
+  }
+
+  /* ---------- Watermark / handle ---------- */
+  .handle {
+    text-align: center;
+    color: #d81b60;
+    font-weight: bold;
+    font-style: italic;
+    font-size: 26px;
+    margin: 18px 0 0;
+  }
+
+  /* ---------- Footer disclaimer ---------- */
+  .disclaimer {
+    position: absolute;
+    left: 26px;
+    bottom: 30px;
+    font-size: 10px;
+    color: #7a8390;
+  }
+  .disclaimer .label {
+    color: #8d95a1;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <p class="main-title">拆解美国上市公司年报</p>
+    <p class="sub-title">（以 Apple 10-K 为例）</p>
+  </div>
+
+  <div class="doc">
+    <div class="agency">
+      UNITED STATES<br>
+      SECURITIES AND EXCHANGE COMMISSION<br>
+      <span class="city">Washington, D.C. 20549</span>
+    </div>
+
+    <hr class="rule">
+
+    <div class="form-title">FORM 10-K</div>
+
+    <hr class="rule">
+
+    <div class="checkline">&#9746; ANNUAL REPORT PURSUANT TO SECTION 13 OR 15(d) OF THE SECURITIES EXCHANGE ACT OF 1934</div>
+    <div class="fiscal">For the fiscal year ended September 24, 2022</div>
+    <div class="or">or</div>
+    <div class="checkline">&#9744; TRANSITION REPORT PURSUANT TO SECTION 13 OR 15(d) OF THE SECURITIES EXCHANGE ACT OF 1934</div>
+    <div class="transition-period">For the transition period from ________ to ________.</div>
+    <div class="commission">Commission File Number: 001-36743</div>
+
+    <figure class="placeholder logo-apple" title="[Logo: Apple, centered]"></figure>
+
+    <div class="company-name">Apple Inc.</div>
+    <div class="exact-name">(Exact name of Registrant as specified in its charter)</div>
+
+    <div class="info-row">
+      <div class="info-col left">
+        <hr class="short-rule">
+        <span class="bold">California</span><br>
+        (State or other jurisdiction<br>
+        of incorporation or organization)
+      </div>
+      <div class="info-col right">
+        <hr class="short-rule">
+        94-2404110<br>
+        (I.R.S. Employer Identification No.)
+      </div>
+    </div>
+
+    <div class="info-row">
+      <div class="info-col left">
+        <span class="bold">One Apple Park Way<br>Cupertino, California</span><br>
+        (Address of principal executive offices)
+      </div>
+      <div class="info-col right">
+        95014<br>
+        (Zip Code)
+      </div>
+    </div>
+
+    <div class="phone">(408) 996-1010</div>
+    <div class="phone-note">(Registrant's telephone number, including area code)</div>
+
+    <figure class="placeholder seal">[Seal: U.S. Securities and Exchange Commission, centered]</figure>
+
+    <div class="handle">小红书@jerrygong</div>
+  </div>
+
+  <div class="disclaimer"><span class="label">DisClaimers：</span>文中所述皆来自公开市场信息梳理</div>
+
+</div>
+</body>
+</html>

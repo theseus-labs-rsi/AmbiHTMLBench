@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>什么是审计？</title>
+<script>
+window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background: #f7c948;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    display: flex;
+    justify-content: center;
+  }
+
+  .page {
+    position: relative;
+    width: 540px;
+    min-height: 700px;
+    background: #f7c948;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+
+  /* watermark repeated text */
+  .watermark {
+    position: absolute;
+    color: rgba(255,255,255,0.55);
+    font-size: 10px;
+    transform: rotate(-15deg);
+    white-space: nowrap;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* binder clips */
+  .clip {
+    position: absolute;
+    top: 0px;
+    width: 34px;
+    height: 55px;
+    z-index: 5;
+  }
+  .clip .ring {
+    width: 34px;
+    height: 34px;
+    border: 6px solid #2b2b2b;
+    border-radius: 50%;
+    box-sizing: border-box;
+  }
+  .clip .body {
+    width: 26px;
+    height: 30px;
+    background: #2b2b2b;
+    margin: -4px auto 0 auto;
+    border-radius: 3px;
+  }
+  .clip1 { left: 100px; }
+  .clip2 { left: 380px; }
+
+  /* notebook card */
+  .card {
+    position: absolute;
+    top: 40px;
+    left: 15px;
+    width: 510px;
+    min-height: 630px;
+    background: #fffdf5;
+    border: 3px solid #2b2b2b;
+    border-radius: 18px;
+    box-sizing: border-box;
+    z-index: 3;
+    padding: 25px 30px 40px 55px;
+  }
+
+  /* spiral holes */
+  .hole {
+    position: absolute;
+    left: -12px;
+    width: 34px;
+    height: 34px;
+    border: 5px solid #2b2b2b;
+    border-radius: 50%;
+    background: #f7c948;
+    z-index: 4;
+  }
+  .hole::after {
+    content: "";
+    position: absolute;
+    left: 32px;
+    top: 14px;
+    width: 20px;
+    height: 4px;
+    background: #2b2b2b;
+  }
+
+  .title {
+    font-size: 34px;
+    font-weight: 900;
+    color: #1a1a1a;
+    margin: 15px 0 25px 0;
+    letter-spacing: 1px;
+  }
+
+  .section-title {
+    font-size: 19px;
+    font-weight: 800;
+    color: #1a1a1a;
+    margin: 10px 0 10px 0;
+    display: flex;
+    align-items: center;
+  }
+  .section-title .star {
+    margin-right: 6px;
+  }
+
+  .body-text {
+    font-size: 14px;
+    color: #333;
+    line-height: 1.9;
+    margin: 0 0 20px 0;
+  }
+
+  .term {
+    color: #3a4bb5;
+    font-weight: 700;
+  }
+
+  .plus-icon {
+    position: absolute;
+    left: -14px;
+    width: 30px;
+    height: 30px;
+    background: #f28b3c;
+    border-radius: 50%;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    line-height: 30px;
+    font-size: 18px;
+    z-index: 4;
+  }
+
+  /* pencils decoration on right */
+  .pencil {
+    position: absolute;
+    width: 18px;
+    height: 100px;
+    z-index: 6;
+  }
+  .pencil .tip {
+    width: 0;
+    height: 0;
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-top: 16px solid #f4a2b0;
+  }
+  .pencil .shaft {
+    width: 18px;
+    height: 84px;
+    background: repeating-linear-gradient(
+      45deg,
+      #4a6fd8,
+      #4a6fd8 6px,
+      #3a5bc0 6px,
+      #3a5bc0 12px
+    );
+  }
+
+  .curl {
+    position: absolute;
+    top: 55px;
+    right: 30px;
+    width: 40px;
+    height: 40px;
+    border-bottom: 5px solid #fffdf5;
+    border-left: 5px solid #fffdf5;
+    border-radius: 0 0 0 40px;
+    z-index: 4;
+    transform: rotate(-20deg);
+  }
+
+  .placeholder {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #555;
+    font-size: 11px;
+    border: 1px dashed rgba(0,0,0,0.3);
+    background: rgba(255,255,255,0.2);
+  }
+
+  .plane {
+    bottom: 15px;
+    left: 15px;
+    width: 55px;
+    height: 45px;
+  }
+
+  .pencil-right {
+    bottom: 30px;
+    right: -5px;
+    width: 70px;
+    height: 120px;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- watermarks scattered -->
+  <div class="watermark" style="top:30px; left:10px;">@小小才睡面</div>
+  <div class="watermark" style="top:110px; left:250px;">@小小才睡面</div>
+  <div class="watermark" style="top:200px; left:20px;">@小小才睡面</div>
+  <div class="watermark" style="top:200px; left:400px;">@小小才睡面</div>
+  <div class="watermark" style="top:330px; left:250px;">@小小才睡面</div>
+  <div class="watermark" style="top:400px; left:20px;">@小小才睡面</div>
+  <div class="watermark" style="top:400px; left:420px;">@小小才睡面</div>
+  <div class="watermark" style="top:480px; left:250px;">@小小才睡面</div>
+  <div class="watermark" style="top:560px; left:20px;">@小小才睡面</div>
+  <div class="watermark" style="top:560px; left:420px;">@小小才睡面</div>
+  <div class="watermark" style="top:640px; left:250px;">@小小才睡面</div>
+
+  <!-- binder clips -->
+  <div class="clip clip1">
+    <div class="ring"></div>
+    <div class="body"></div>
+  </div>
+  <div class="clip clip2">
+    <div class="ring"></div>
+    <div class="body"></div>
+  </div>
+
+  <!-- notebook card -->
+  <div class="card">
+
+    <!-- spiral holes -->
+    <div class="hole" style="top:60px;"></div>
+    <div class="hole" style="top:180px;"></div>
+    <div class="hole" style="top:300px;"></div>
+    <div class="hole" style="top:420px;"></div>
+    <div class="hole" style="top:540px;"></div>
+    <div class="plus-icon" style="top:530px;">+</div>
+
+    <div class="title">什么是审计？</div>
+
+    <div class="section-title"><span class="star">🌟</span>审计定义</div>
+    <div class="body-text">
+      审计是对资料作出证据搜集及分析，以评估企业财务状况，然后就资料及一般公认准则之间的相关程度作出结论及报告。
+    </div>
+
+    <div class="section-title"><span class="star">🌟</span>审计的基本要素</div>
+    <div class="body-text">
+      任何审计都具有三个基本要素，即审计主体、审计客体和审计授权或委托人。<br><br>
+      <span class="term">审计主体：</span>指审计行为的执行者，即审计机构和审计人员，为审计第一关系人；<br><br>
+      <span class="term">审计客体：</span>指审计行为的接受者，即指被审计的资产代管或经营者，为审计第二关系人；<br><br>
+      <span class="term">审计授权或委托人：</span>指依法授权或委托审计主体行使审计职责的单位或人员，为审计第三关系人。
+    </div>
+
+    <div class="section-title"><span class="star">🌟</span>审计本质</div>
+    <div class="body-text">
+      审计本质是一项具有独立性的经济监督活动。
+    </div>
+
+  </div>
+
+  <!-- decorative curl -->
+  <div class="curl"></div>
+
+  <!-- paper plane placeholder -->
+  <div class="placeholder plane">[Icon: paper airplane, bottom-left]</div>
+
+  <!-- pencils decoration bottom-right -->
+  <div class="placeholder pencil-right">[Illustration: crossed pencils, bottom-right]</div>
+
+</div>
+</body>
+</html>

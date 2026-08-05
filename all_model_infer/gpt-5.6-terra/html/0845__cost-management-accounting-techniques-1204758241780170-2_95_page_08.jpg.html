@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Make or Buy Decision</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        repeating-linear-gradient(
+          0deg,
+          #6a3504 0px,
+          #6a3504 5px,
+          #9a5b11 6px,
+          #9a5b11 7px,
+          #743a05 8px,
+          #743a05 16px
+        );
+      overflow-x: hidden;
+    }
+    .slide {
+      width: 1024px;
+      min-height: 768px;
+      margin: 0 auto;
+      position: relative;
+      padding-top: 62px;
+      background:
+        radial-gradient(ellipse at 83% 88%, rgba(187,126,45,.18) 0 7%, transparent 7.5%),
+        radial-gradient(ellipse at 55% 92%, rgba(211,155,75,.16) 0 10%, transparent 10.5%),
+        repeating-linear-gradient(
+          0deg,
+          #6a3504 0px,
+          #6a3504 5px,
+          #9a5b11 6px,
+          #9a5b11 7px,
+          #743a05 8px,
+          #743a05 16px
+        );
+    }
+    .slide:after {
+      content: "";
+      position: absolute;
+      right: 239px;
+      bottom: 2px;
+      width: 30px;
+      height: 160px;
+      background: linear-gradient(90deg, rgba(45,20,2,.25), rgba(189,113,31,.32), rgba(42,19,1,.25));
+      border-radius: 2px;
+      opacity: .75;
+    }
+    h1 {
+      color: #dbc18b;
+      font-size: 64px;
+      font-weight: 400;
+      line-height: 1;
+      text-align: center;
+      margin: 0 0 13px;
+      letter-spacing: -2px;
+      text-shadow: 4px 4px 2px #251604, 1px 1px 0 #fff0b4;
+    }
+    .board {
+      position: relative;
+      width: 980px;
+      height: 466px;
+      margin: 0 auto;
+      background: #efffff;
+      border: 3px solid #101010;
+      padding: 94px 42px 27px;
+    }
+    .head-cost {
+      position: absolute;
+      top: -2px;
+      left: 446px;
+      width: 102px;
+      text-align: center;
+      color: #53006b;
+      font-size: 21px;
+      font-weight: bold;
+      line-height: 1.4;
+    }
+    .cost-total {
+      position: absolute;
+      top: 24px;
+      left: 580px;
+      width: 358px;
+      text-align: center;
+      color: #53006b;
+      font-size: 27px;
+      font-weight: bold;
+      border-bottom: 4px solid #090909;
+      padding-bottom: 1px;
+    }
+    .make-head, .buy-head {
+      position: absolute;
+      top: 62px;
+      color: #080875;
+      font-size: 27px;
+      font-weight: bold;
+      text-align: center;
+      border-bottom: 5px solid #090909;
+      line-height: 30px;
+    }
+    .make-head { left: 581px; width: 156px; }
+    .buy-head { left: 776px; width: 163px; color: #007c0b; }
+
+    .rows {
+      position: relative;
+      color: #060574;
+      font-size: 28px;
+      font-weight: bold;
+      line-height: 1.285;
+    }
+    .row {
+      height: 36px;
+      position: relative;
+      white-space: nowrap;
+    }
+    .label { display: inline-block; width: 405px; }
+    .dollar {
+      display: inline-block;
+      width: 36px;
+      text-align: center;
+    }
+    .unit {
+      display: inline-block;
+      width: 52px;
+      text-align: right;
+    }
+    .make {
+      display: inline-block;
+      width: 165px;
+      text-align: center;
+      margin-left: 47px;
+    }
+    .buy {
+      display: inline-block;
+      width: 161px;
+      text-align: center;
+      margin-left: 29px;
+    }
+    .outside {
+      position: absolute;
+      top: 96px;
+      left: 42px;
+      color: #00820a;
+      font-size: 29px;
+      font-weight: bold;
+    }
+    .outside .green-cost {
+      position: absolute;
+      left: 407px;
+      top: -5px;
+      width: 98px;
+      border-bottom: 7px solid #050505;
+      padding: 0 10px 2px;
+      white-space: nowrap;
+      color: #00820a;
+    }
+    .outside .outside-buy {
+      position: absolute;
+      left: 731px;
+      top: -5px;
+      width: 164px;
+      border-bottom: 7px solid #050505;
+      padding-bottom: 2px;
+      text-align: center;
+      white-space: nowrap;
+      color: #00820a;
+    }
+    .data { margin-top: 80px; }
+    .total {
+      margin-top: 0;
+      height: 43px;
+    }
+    .total .unit-total,
+    .total .make-total,
+    .total .buy-total {
+      position: absolute;
+      top: -7px;
+      border-bottom: 7px solid #050505;
+      padding: 2px 13px 0;
+      height: 43px;
+    }
+    .total .unit-total {
+      left: 405px;
+      width: 98px;
+      text-align: center;
+    }
+    .total .make-total {
+      left: 538px;
+      width: 156px;
+      text-align: center;
+    }
+    .total .buy-total {
+      left: 733px;
+      width: 163px;
+      text-align: center;
+      color: #00820a;
+    }
+    .buy-green { color: #00820a; }
+    .arrow {
+      position: absolute;
+      left: 520px;
+      top: 205px;
+      width: 7px;
+      height: 329px;
+      background: #e50036;
+      transform: rotate(31deg);
+      transform-origin: bottom center;
+      border: 1px solid #090909;
+      z-index: 4;
+    }
+    .arrow:before {
+      content: "";
+      position: absolute;
+      top: -6px;
+      left: -7px;
+      width: 0;
+      height: 0;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-bottom: 15px solid #e50036;
+      transform: rotate(-31deg);
+    }
+    .callout {
+      position: relative;
+      z-index: 5;
+      width: 536px;
+      height: 55px;
+      margin: 22px auto 0;
+      background: #fff;
+      border: 2px solid #111;
+      box-shadow: 2px 2px 2px rgba(0,0,0,.55);
+      color: #050579;
+      font-size: 36px;
+      font-weight: bold;
+      line-height: 51px;
+      text-align: center;
+      white-space: nowrap;
+      text-shadow: 1px 1px 1px #777;
+    }
+  </style>
+</head>
+<body>
+  <main class="slide">
+    <h1>The Make or Buy Decision</h1>
+
+    <section class="board">
+      <div class="head-cost">Cost<br>Per Unit</div>
+      <div class="cost-total">Cost of 20,000 Units</div>
+      <div class="make-head">Make</div>
+      <div class="buy-head">Buy</div>
+
+      <div class="outside">
+        Outside purchase price
+        <span class="green-cost">$&nbsp; 25</span>
+        <span class="outside-buy">$&nbsp; 500,000</span>
+      </div>
+
+      <div class="rows data">
+        <div class="row">
+          <span class="label">Direct materials</span><span class="dollar">$</span><span class="unit">9</span><span class="make">180,000</span>
+        </div>
+        <div class="row">
+          <span class="label">Direct labor</span><span class="dollar"></span><span class="unit">5</span><span class="make">100,000</span>
+        </div>
+        <div class="row">
+          <span class="label">Variable overhead</span><span class="dollar"></span><span class="unit">1</span><span class="make">20,000</span>
+        </div>
+        <div class="row">
+          <span class="label">Depreciation of equip.</span><span class="dollar"></span><span class="unit">3</span><span class="make">-</span>
+        </div>
+        <div class="row">
+          <span class="label">Supervisor's salary</span><span class="dollar"></span><span class="unit">2</span><span class="make">40,000</span>
+        </div>
+        <div class="row">
+          <span class="label">General factory overhead</span><span class="dollar"></span><span class="unit">10</span><span class="make">-</span>
+        </div>
+        <div class="row total">
+          <span class="label">Total cost</span>
+          <span class="unit-total">$&nbsp; 30</span>
+          <span class="make-total">$&nbsp; 340,000</span>
+          <span class="buy-total">$&nbsp; 500,000</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="arrow"></div>
+    <div class="callout">20,000&nbsp; × &nbsp;$9 per unit&nbsp; = &nbsp;$180,000</div>
+  </main>
+</body>
+</html>

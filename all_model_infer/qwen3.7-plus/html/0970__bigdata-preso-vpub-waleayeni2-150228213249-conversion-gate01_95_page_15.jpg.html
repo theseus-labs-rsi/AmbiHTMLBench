@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alteryx Overview</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    color: #333;
+    background: #fff;
+    padding: 20px 30px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .top-nav {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: #4a7fb5;
+    color: #fff;
+    font-size: 10px;
+    padding: 4px 10px;
+    border-radius: 3px 3px 0 0;
+  }
+  .top-nav-items {
+    position: absolute;
+    top: 22px;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .top-nav-items span {
+    background: #e8e8e8;
+    color: #666;
+    font-size: 9px;
+    padding: 3px 10px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    margin-top: 30px;
+  }
+  .header h1 {
+    font-size: 28px;
+    color: #4a7fb5;
+    font-weight: bold;
+  }
+  .header .logo {
+    font-size: 28px;
+    color: #4a7fb5;
+    font-weight: bold;
+    font-style: italic;
+  }
+  .main-content {
+    display: flex;
+    gap: 20px;
+  }
+  .left-column {
+    flex: 1;
+    min-width: 0;
+  }
+  .right-column {
+    flex: 1;
+    min-width: 0;
+  }
+  .section-header {
+    background: #4a7fb5;
+    color: #fff;
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  .section-header-dark {
+    background: #3a6a9e;
+  }
+  .bullet-list {
+    list-style: none;
+    padding: 0 10px;
+    margin-bottom: 15px;
+  }
+  .bullet-list li {
+    position: relative;
+    padding-left: 14px;
+    margin-bottom: 8px;
+    line-height: 1.5;
+    font-size: 11px;
+  }
+  .bullet-list li::before {
+    content: "■";
+    color: #4a7fb5;
+    position: absolute;
+    left: 0;
+    font-size: 8px;
+    top: 3px;
+  }
+  .sub-bullet-list {
+    list-style: none;
+    padding: 0 10px 0 24px;
+    margin-bottom: 10px;
+  }
+  .sub-bullet-list li {
+    position: relative;
+    padding-left: 14px;
+    margin-bottom: 6px;
+    line-height: 1.5;
+    font-size: 11px;
+  }
+  .sub-bullet-list li::before {
+    content: "■";
+    color: #4a7fb5;
+    position: absolute;
+    left: 0;
+    font-size: 8px;
+    top: 3px;
+  }
+  .management-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+  }
+  .management-table th {
+    background: #e8e8e8;
+    padding: 5px 8px;
+    text-align: left;
+    font-size: 11px;
+    border-bottom: 1px solid #ccc;
+  }
+  .management-table td {
+    padding: 5px 8px;
+    font-size: 11px;
+    border-bottom: 1px solid #ddd;
+    vertical-align: top;
+  }
+  .investors-section {
+    margin-bottom: 15px;
+  }
+  .investors-logo {
+    text-align: center;
+    padding: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #1a5276;
+  }
+  .investors-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .investors-table td {
+    padding: 4px 8px;
+    font-size: 11px;
+    border-bottom: 1px solid #ddd;
+  }
+  .source-text {
+    font-size: 9px;
+    color: #666;
+    margin-top: 4px;
+  }
+  .product-row {
+    display: flex;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+  }
+  .product-label {
+    background: #3a6a9e;
+    color: #fff;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    padding: 8px 6px;
+    font-size: 11px;
+    font-weight: bold;
+    min-width: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .product-content {
+    flex: 1;
+    padding: 5px 10px;
+  }
+  .product-content ul {
+    list-style: none;
+    padding: 0;
+  }
+  .product-content ul li {
+    position: relative;
+    padding-left: 14px;
+    margin-bottom: 6px;
+    line-height: 1.5;
+    font-size: 11px;
+  }
+  .product-content ul li::before {
+    content: "■";
+    color: #4a7fb5;
+    position: absolute;
+    left: 0;
+    font-size: 8px;
+    top: 3px;
+  }
+  .key-customers {
+    margin-top: 10px;
+  }
+  .customers-logos {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px;
+    padding: 10px;
+  }
+  .customer-logo {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: bold;
+  }
+  .placeholder {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0f0f0;
+    border: 1px dashed #ccc;
+    color: #999;
+    font-size: 10px;
+  }
+  .page-number {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 12px;
+    color: #666;
+  }
+  .api-row {
+    display: flex;
+    margin-bottom: 10px;
+  }
+  .api-label {
+    background: #3a6a9e;
+    color: #fff;
+    padding: 8px 6px;
+    font-size: 11px;
+    font-weight: bold;
+    min-width: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .api-content {
+    flex: 1;
+    padding: 5px 10px;
+  }
+  .api-content ul {
+    list-style: none;
+    padding: 0;
+  }
+  .api-content ul li {
+    position: relative;
+    padding-left: 14px;
+    margin-bottom: 6px;
+    line-height: 1.5;
+    font-size: 11px;
+  }
+  .api-content ul li::before {
+    content: "■";
+    color: #4a7fb5;
+    position: absolute;
+    left: 0;
+    font-size: 8px;
+    top: 3px;
+  }
+  .nav-container {
+    position: relative;
+    float: right;
+    margin-top: -10px;
+  }
+  .nav-title {
+    background: #4a7fb5;
+    color: #fff;
+    font-size: 10px;
+    padding: 4px 12px;
+    border-radius: 3px 3px 0 0;
+    text-align: center;
+  }
+  .nav-items {
+    display: flex;
+    flex-direction: column;
+  }
+  .nav-items span {
+    background: #e8e8e8;
+    color: #888;
+    font-size: 9px;
+    padding: 3px 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+  }
+  .nav-items span:last-child {
+    border-radius: 0 0 3px 3px;
+  }
+  .at-t-logo {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+  }
+  .comcast-logo {
+    font-size: 12px;
+    font-weight: bold;
+    color: #333;
+  }
+  .comcast-logo span {
+    color: #e60000;
+  }
+  .nhs-logo {
+    background: #005eb8;
+    color: #fff;
+    padding: 2px 6px;
+    font-weight: bold;
+    font-size: 12px;
+  }
+  .experian-logo {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+  }
+  .teradata-logo {
+    font-size: 16px;
+    font-weight: bold;
+    color: #e87722;
+  }
+  .sap-ventures {
+    font-size: 16px;
+    font-weight: bold;
+    color: #1a5276;
+    text-align: center;
+    padding: 8px;
+  }
+</style>
+</head>
+<body>
+
+<div class="nav-container">
+  <div class="nav-title">Analytics and Visualization</div>
+  <div class="nav-items">
+    <span>Machine data</span>
+    <span>Marketing &amp; e-commerce</span>
+    <span>Social</span>
+    <span>Market places</span>
+    <span>Location/events</span>
+    <span>Statistical</span>
+  </div>
+</div>
+
+<div class="header">
+  <h1>Alteryx overview</h1>
+  <div class="logo">alteryx</div>
+</div>
+
+<div class="main-content">
+  <div class="left-column">
+    <div class="section-header">Business overview</div>
+    <ul class="bullet-list">
+      <li>Provides an easy-to-use analytics platform for enterprise companies making critical decisions that drive their business strategy and growth</li>
+      <li>Humanizes Big Data by enabling business analysts and Data Artisans to combine Big Data with market knowledge, location insight and business intelligence</li>
+      <li>Performs predictive and spatial analytics and produces analytic apps that can be shared via the private cloud or the Alteryx Analytics Gallery public cloud</li>
+      <li>End markets: Automotive, commercial real estate, restaurants and entertainment, fast moving consumer goods, retail franchising and telecommunications</li>
+      <li>Has 250+ customers and 200,000+ users worldwide</li>
+      <li>Founded in 1997</li>
+      <li>Headquartered in Irvine, CA</li>
+    </ul>
+    <ul class="sub-bullet-list">
+      <li>Also has offices in Boulder and Silicon Valley</li>
+    </ul>
+
+    <div class="section-header">Management</div>
+    <table class="management-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Title</th>
+          <th>Affiliations/experience</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Dean Stoecker</td>
+          <td>Chairman &amp; CEO</td>
+          <td>Integration Technologies, Donnelly Marketing Information Services</td>
+        </tr>
+        <tr>
+          <td>George Mathew</td>
+          <td>President &amp; Chief Operating Officer</td>
+          <td>SAP, salesforce.com, Fort Point Partners</td>
+        </tr>
+        <tr>
+          <td>Gary Acord</td>
+          <td>CFO</td>
+          <td>KPMG, KACE</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="section-header">Investors</div>
+    <div class="investors-section">
+      <div class="sap-ventures">SAP VENTURES</div>
+      <table class="investors-table">
+        <tr>
+          <td>Total capital raised:</td>
+          <td>$6.0mn</td>
+        </tr>
+        <tr>
+          <td>Last round:</td>
+          <td>Series A, $6.0mn</td>
+        </tr>
+      </table>
+      <div class="source-text">Source: Company information, Capital IQ</div>
+    </div>
+  </div>
+
+  <div class="right-column">
+    <div class="section-header">Products overview</div>
+
+    <div class="product-row">
+      <div class="product-label">Designer desktop</div>
+      <div class="product-content">
+        <ul>
+          <li>Point-and-click UI: Builds analytics with no coding</li>
+          <li>Personal ETL: Pulls data from internal, Big Data, or cloud</li>
+          <li>Data quality tools: Builds clean and credible data sets for analysis</li>
+          <li>Predictive Analytics: Pre-built R tool makes predictive accessible to all</li>
+          <li>Agile database: Takes on structured, un-structured and spatial data</li>
+          <li>Single-click publishing: Shares analytic apps iPrivate Cloud or Alteryx Analytic Gallery</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="product-row">
+      <div class="product-label">Analytic apps</div>
+      <div class="product-content">
+        <ul>
+          <li>Ad hoc analysis in minutes: Designs and redesign scenarios on the fly</li>
+          <li>Provides interactive charts and maps</li>
+          <li>Offers spatial analysis</li>
+          <li>Apps builder: Creates and shares analytic apps with a drag-and-drop wizard</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="product-row">
+      <div class="product-label">Cloud server</div>
+      <div class="product-content">
+        <ul>
+          <li>Integrates Alteryx data, insights and applications into other systems with open API and SDK</li>
+          <li>Publishes and shares analytic applications with full control over access, visibility and sharing</li>
+          <li>Enables scheduled, event-triggered and ad-hoc analysis to support critical decisions across companies</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="api-row">
+      <div class="api-label">API</div>
+      <div class="api-content">
+        <ul>
+          <li>Provides consumerization of Big Data Analytics</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="key-customers">
+      <div class="section-header">Key customers</div>
+      <div class="customers-logos">
+        <div class="customer-logo">
+          <div class="placeholder" style="width:40px;height:40px;border-radius:50%;">[AT&amp;T logo]</div>
+          <span class="at-t-logo">at&amp;t</span>
+        </div>
+        <div class="customer-logo">
+          <span class="comcast-logo"><span>Comcast</span> SPOTLIGHT</span>
+        </div>
+        <div class="customer-logo">
+          <span>Newham University Hospital</span>
+          <span class="nhs-logo">NHS</span>
+          <span style="font-size:8px;color:#666;">NHS Trust</span>
+        </div>
+        <div class="customer-logo">
+          <div class="placeholder" style="width:30px;height:30px;">[grid]</div>
+          <span class="experian-logo">Experian</span>
+        </div>
+        <div class="customer-logo">
+          <span class="teradata-logo">TERADATA</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="page-number">14</div>
+
+</body>
+</html>

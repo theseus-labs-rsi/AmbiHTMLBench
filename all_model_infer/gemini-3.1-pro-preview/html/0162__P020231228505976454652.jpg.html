@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Needle is an Outlier in a Haystack</title>
+<style>
+  body {
+    font-family: 'Times New Roman', Times, serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+    color: #000;
+  }
+  .header-img-container {
+    width: 100%;
+    height: 150px;
+    background: linear-gradient(to right, #e87b22, #f59f27);
+    position: relative;
+  }
+  .header-img-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  .title-section {
+    text-align: center;
+    padding: 20px;
+  }
+  .title-main {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  .title-sub {
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 15px;
+  }
+  .title-chinese {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    font-family: 'SimHei', sans-serif;
+  }
+  .authors {
+    font-size: 16px;
+    margin-bottom: 5px;
+  }
+  .conference {
+    font-size: 16px;
+    margin-bottom: 5px;
+  }
+  .contact {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+  
+  .section-container {
+    padding: 0 40px;
+    margin-bottom: 20px;
+  }
+  
+  .section-title {
+    background-color: #ffd700;
+    padding: 5px 15px;
+    font-weight: bold;
+    font-size: 18px;
+    display: inline-block;
+    clip-path: polygon(0 0, 90% 0, 100% 50%, 90% 100%, 0 100%);
+    margin-bottom: 10px;
+  }
+
+  .content-list {
+    margin: 0;
+    padding-left: 20px;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .content-list li {
+    margin-bottom: 10px;
+  }
+
+  .content-text {
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 15px;
+  }
+
+  .methodology-diagram {
+    width: 100%;
+    height: 400px;
+    border: 1px dashed #ccc;
+    background-color: #f9f9f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+    color: #666;
+  }
+
+  .columns-container {
+    display: flex;
+    padding: 0 40px;
+    gap: 40px;
+  }
+  
+  .column {
+    flex: 1;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0 20px 0;
+    font-size: 12px;
+    text-align: center;
+  }
+  th, td {
+    border: 1px solid #000;
+    padding: 4px;
+  }
+  th {
+    background-color: #f0f0f0;
+  }
+  .table-caption {
+    text-align: center;
+    font-size: 16px;
+    margin-bottom: 5px;
+  }
+
+  .footer-img-container {
+    width: 100%;
+    height: 100px;
+    background: linear-gradient(to right, #e87b22, #f59f27);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    position: relative;
+    margin-top: 20px;
+  }
+
+  .footer-img-placeholder {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0; left: 0;
+    z-index: 0;
+  }
+  .footer-text {
+    position: relative;
+    z-index: 1;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+  }
+
+</style>
+</head>
+<body>
+
+<div class="header-img-container placeholder">
+    <div class="header-img-placeholder">[Header Banner: ISCAS Logos and Chinese text with abstract background]</div>
+</div>
+
+<div class="title-section">
+    <div class="title-main">A Needle is an Outlier in a Haystack:</div>
+    <div class="title-sub">Hunting Malicious PyPI Packages with Code Clustering</div>
+    <div class="title-chinese">基于代码聚类的PyPI软件仓库恶意软件包检测方法</div>
+    <div class="authors">梁文韬 凌祥 吴敬征 罗天悦 武延军</div>
+    <div class="conference">The 38th IEEE/ACM International Conference on Automated Software Engineering (ASE2023)</div>
+    <div class="contact">联系人：梁文韬，13146538991，liangwentao@iscas.ac.cn</div>
+</div>
+
+<div class="section-container">
+    <div class="section-title">Background</div>
+    <ul class="content-list">
+        <li>The Python Package Index (PyPI), the official third-party software repository for Python, is becoming an increasingly vital resource for developers. Regrettably, the open nature of PyPI exposes end-users to substantial security risks stemming from malicious packages. Consequently, the timely and effective identification of malware within the vast number of newly-uploaded PyPI packages has emerged as a pressing concern.</li>
+        <li>Existing detection methods are dependent on difficult-to-obtain explicit knowledge, such as taint sources, sinks, and malicious code patterns, rendering them susceptible to overlooking emergent malicious packages.</li>
+    </ul>
+</div>
+
+<div class="section-container">
+    <div class="section-title">Methodology</div>
+    <div class="content-text">
+        We introduce a novel method called <strong>MPHunter</strong> (<strong>M</strong>alicious <strong>P</strong>ackages <strong>H</strong>unter) based on code clustering to detect malicious PyPI packages without requiring explicit kownledge. MPHunter is composed of four steps. First, it builds an API encoding model APIEM for canonical sequence extraction (❶). Second, it trains a code embedding model CCEM with the extracted API sequence (❷). Third, the installation scripts to be detected are encoded into vectors using CCEM, and then clustered in the vector space (❸). Finally, identified outliers are ranked to highlight the suspects for auditing (❹).
+    </div>
+    
+    <div class="methodology-diagram placeholder">
+        [Diagram: Flowchart of MPHunter methodology showing steps 1 to 4 with components like PyPI, API Sequences, APIEM, CCEM, Clustering, Ranking, etc.]
+    </div>
+</div>
+
+<div class="columns-container">
+    <!-- Left Column -->
+    <div class="column">
+        <div class="section-title" style="margin-left: -40px; padding-left: 55px;">Evaluation</div>
+        
+        <div class="table-caption">Table I: The Recall on Known Malicious Samples</div>
+        <table>
+            <tr>
+                <th>Set No.</th>
+                <td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td>
+                <th>Total</th>
+            </tr>
+            <tr>
+                <th>Detected</th>
+                <td>10</td><td>10</td><td>9</td><td>9</td><td>8</td><td>9</td><td>8</td><td>10</td><td>10</td><td>9</td>
+                <th>92</th>
+            </tr>
+        </table>
+        
+        <ul class="content-list">
+            <li>We also evaluated the recall rate of MPHunter using known malicious samples. As result, 92 of 100 malicious samples were ranked in the top ten by MPHunter (recall of 92%).</li>
+            <li>We also conduct controlled experiments detecting malicious packages with only benign set or known malicious set, of which recall decline to 30% and 40% respectively.</li>
+        </ul>
+
+        <div class="table-caption">Table II: The Time Cost of the Offline Stage</div>
+        <table>
+            <tr>
+                <th>Offline Task</th>
+                <th>Preprocessing</th>
+                <th>Training</th>
+                <th>Embedding</th>
+                <th>Sum</th>
+            </tr>
+            <tr>
+                <td>Building APIEM</td>
+                <td>1,409s</td>
+                <td>320s</td>
+                <td>–</td>
+                <td>1,729s</td>
+            </tr>
+            <tr>
+                <td>Building CCEM</td>
+                <td>5,157s</td>
+                <td>572s</td>
+                <td>–</td>
+                <td>5,729s</td>
+            </tr>
+            <tr>
+                <td>Encoding Benign Samples</td>
+                <td>541s</td>
+                <td>–</td>
+                <td>1,101s</td>
+                <td>1,642s</td>
+            </tr>
+            <tr>
+                <td>Encoding Malicious Samples</td>
+                <td>191s</td>
+                <td>–</td>
+                <td>51s</td>
+                <td>242s</td>
+            </tr>
+            <tr>
+                <th>Total</th>
+                <th>7,298s</th>
+                <th>892s</th>
+                <th>1,152s</th>
+                <th>9,342s</th>
+            </tr>
+        </table>
+
+        <div class="table-caption" style="text-align: left;">Table III: The Time Cost of the Online Stage</div>
+        <table>
+            <tr>
+                <th>Batch</th>
+                <th>#Pkgs</th>
+                <th>Preprocessing</th>
+                <th>Embedding</th>
+                <th>Merging</th>
+                <th>Clustering<br>& Ranking</th>
+                <th>Sum</th>
+            </tr>
+            <tr>
+                <td>#1</td>
+                <td>4,435</td>
+                <td>178s</td>
+                <td>346s</td>
+                <td>155s</td>
+                <td>2.5s</td>
+                <th>681.5s</th>
+            </tr>
+            <tr>
+                <td>#3</td>
+                <td>1,278</td>
+                <td>218s</td>
+                <td>82s</td>
+                <td>35s</td>
+                <td>1.5s</td>
+                <th>336.5s</th>
+            </tr>
+            <tr>
+                <td>#6</td>
+                <td>533</td>
+                <td>42s</td>
+                <td>31s</td>
+                <td>14s</td>
+                <td>1.2s</td>
+                <th>88.2s</th>
+            </tr>
+            <tr>
+                <td>#7</td>
+                <td>737</td>
+                <td>48s</td>
+                <td>62s</td>
+                <td>26s</td>
+                <td>1.3s</td>
+                <th>137.3s</th>
+            </tr>
+            <tr>
+                <td>#10</td>
+                <td>974</td>
+                <td>243s</td>
+                <td>110s</td>
+                <td>47s</td>
+                <td>1.4s</td>
+                <th>401.4s</th>
+            </tr>
+            <tr>
+                <td>#13</td>
+                <td>1,392</td>
+                <td>251s</td>
+                <td>115s</td>
+                <td>45s</td>
+                <td>1.6s</td>
+                <th>412.6s</th>
+            </tr>
+            <tr>
+                <td>#16</td>
+                <td>1,334</td>
+                <td>353s</td>
+                <td>110s</td>
+                <td>49s</td>
+                <td>1.5s</td>
+                <th>513.5s</th>
+            </tr>
+            <tr>
+                <td>#17</td>
+                <td>3,226</td>
+                <td>834s</td>
+                <td>309s</td>
+                <td>131s</td>
+                <td>2.4s</td>
+                <th>1276.4s</th>
+            </tr>
+            <tr>
+                <td>#20</td>
+                <td>682</td>
+                <td>83s</td>
+                <td>59s</td>
+                <td>28s</td>
+                <td>1.5s</td>
+                <th>171.5s</th>
+            </tr>
+            <tr>
+                <td>#24</td>
+                <td>762</td>
+                <td>101s</td>
+                <td>66s</td>
+                <td>27s</td>
+                <td>1.2s</td>
+                <th>195.2s</th>
+            </tr>
+            <tr>
+                <td>#26</td>
+                <td>907</td>
+                <td>105s</td>
+                <td>93s</td>
+                <td>43s</td>
+                <td>1.5s</td>
+                <th>242.5s</th>
+            </tr>
+            <tr>
+                <td>#27</td>
+                <td>484</td>
+                <td>61s</td>
+                <td>37s</td>
+                <td>19s</td>
+                <td>1.3s</td>
+                <th>118.3s</th>
+            </tr>
+            <tr>
+                <td>#28</td>
+                <td>389</td>
+                <td>45s</td>
+                <td>39s</td>
+                <td>19s</td>
+                <td>1.3s</td>
+                <th>104.3s</th>
+            </tr>
+            <tr>
+                <td>#29</td>
+                <td>305</td>
+                <td>32s</td>
+                <td>25s</td>
+                <td>10s</td>
+                <td>1.0s</td>
+                <th>68.0s</th>
+            </tr>
+            <tr>
+                <td>#30</td>
+                <td>1,177</td>
+                <td>124s</td>
+                <td>80s</td>
+                <td>40s</td>
+                <td>1.4s</td>
+                <th>245.4s</th>
+            </tr>
+            <tr>
+                <th>Total</th>
+                <th>18,615</th>
+                <th>2,718s</th>
+                <th>1,564s</th>
+                <th>688s</th>
+                <th>22.6s</th>
+                <th>4,992.6s</th>
+            </tr>
+        </table>
+        
+        <ul class="content-list">
+            <li>The time cost experiment shows that MPHunter is a light-weight tool which can even be deployed on a laptop.</li>
+        </ul>
+    </div>
+
+    <!-- Right Column -->
+    <div class="column">
+        <div class="section-title">Result</div>
+        <ul class="content-list">
+            <li>In total, we successfully discovered 60 malicious packages in 15 batches (50%) out of the 30. All 60 suspects were confirmed to be truly malicious packages.</li>
+            <li>All the 60 detected packages have been confirmed as real malware and removed by PyPI.</li>
+            <li>Note that most of them (53 out of 60, 88%) rank in the top three, and 15 even rank first.</li>
+            <li>To accurately evaluate the recall of MPHunter, we manually analyzed all installation scripts of the 15 batches and manual analysis showed that the recall rate of MPHunter for target batches is <u>100%</u></li>
+            <li>Surprisingly, The state-of-art malware detection tool, MalOSS, cannot discover any of these malwares.</li>
+        </ul>
+        
+        <div style="margin-top: 30px;">
+            <div class="section-title">Conclusion</div>
+            <ul class="content-list">
+                <li>We employed MPHunter to detect 30 batches of PyPI software packages, totaling 31,329 packages. From 15 of these batches, we detected 60 previously unknown malicious packages.</li>
+                <li>The experiments also demonstrate that MPHunter's recall is perfect (100%) for detecting malicious setup.py in the target. For a detection method that does not require explicit knowledge, this result is very encouraging.</li>
+                <li>Moreover, MPHunter has proven to be scalable, requiring only a few minutes to complete its analysis for most batches.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="footer-img-container placeholder">
+    <div class="footer-img-placeholder">[Footer Banner: Orange gradient with abstract patterns]</div>
+    <div class="footer-text">This paper is supported by Open Source Map</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confidence-Gated Robot Autonomy: When Does Uncertainty Actually Help?</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+            font-size: 10pt;
+            line-height: 1.3;
+            color: #000;
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 0.5in;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .title {
+            font-size: 14pt;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .authors {
+            font-size: 10pt;
+            margin-bottom: 10px;
+        }
+        .columns {
+            display: flex;
+            gap: 0.25in;
+        }
+        .column {
+            flex: 1;
+            text-align: justify;
+        }
+        .abstract {
+            font-size: 9pt;
+            text-align: justify;
+            margin-bottom: 10px;
+        }
+        .abstract-title {
+            font-weight: bold;
+            font-size: 9pt;
+        }
+        h1 {
+            font-size: 10pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-align: center;
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+        h2 {
+            font-size: 10pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+        p {
+            margin: 0 0 5px 0;
+            text-indent: 0;
+        }
+        .figure {
+            float: right;
+            width: 45%;
+            margin: 0 0 10px 10px;
+            border: 1px solid #000;
+            padding: 5px;
+            font-size: 8pt;
+            text-align: center;
+        }
+        .figure-caption {
+            font-size: 8pt;
+            text-align: left;
+            margin-top: 5px;
+        }
+        .footnote {
+            font-size: 8pt;
+            vertical-align: super;
+        }
+        .sidebar-text {
+            position: absolute;
+            left: -0.4in;
+            top: 50%;
+            transform: rotate(-90deg) translateX(-50%);
+            transform-origin: center;
+            font-size: 8pt;
+            white-space: nowrap;
+        }
+        ul {
+            margin: 5px 0;
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 3px;
+        }
+        .contributions {
+            font-size: 9pt;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="title">Confidence-Gated Robot Autonomy:<br>When Does Uncertainty Actually Help?</div>
+        <div class="authors">Johannes A. Gaus<sup>1</sup>, Jhon P.F. Charaja<sup>1</sup>, and Daniel Haefle<sup>1</sup></div>
+    </div>
+
+    <div class="columns">
+        <div class="column">
+            <div class="abstract">
+                <span class="abstract-title">Abstract</span>— Robotic systems often use predictive uncertainty to decide whether to act autonomously or defer to a fallback policy. In threshold-gated autonomy, uncertainty matters mainly through its ability to rank likely errors. Standard metrics such as expected calibration error and AUROC do not directly test whether uncertainty changes act/defer decisions. We therefore evaluate uncertainty using Spearman rank correlation, paired bootstrap equivalence testing, and act/defer agreement. Across three temporal activity-recognition benchmarks, we find a dataset-dependent competence regime below which uncertainty provides a weak and unstable error ranking. Above this regime, softmax heuristics, MC Dropout, and ensembles produce similar gating behavior, while threshold choice has a much larger effect on execution outcomes. A multi-seed embodied simulation shows the same pattern for collision rate and cost once realized autonomy is matched. Under temporal covariate shift, ranking quality remains stable, but fine-grained semantic OOD detection remains near chance. These results suggest that simple uncertainty proxies can suffice for selective gating once the base model is competent, but not for semantic novelty detection.
+            </div>
+
+            <div class="figure" style="float: right; width: 48%; margin: 0 0 8px 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 7pt;">
+                    <div style="border: 1px solid #000; padding: 3px; text-align: center;">Temporal input:<br>sensor / video</div>
+                    <div style="border: 1px solid #000; padding: 3px; text-align: center;">Classifier<br>\(p(x)\)</div>
+                    <div style="border: 1px solid #000; padding: 3px; text-align: center;">Softmax /<br>entropy / margin<br>MC Dropout<br>or ensemble</div>
+                    <div style="border: 1px solid #000; padding: 3px; text-align: center;">Uncertainty<br>score \(u(x)\)</div>
+                    <div style="border: 1px solid #000; padding: 3px; text-align: center;">Threshold gating<br>\(u(x) \leq \tau\)</div>
+                </div>
+                <div class="figure-caption">
+                    <strong>Fig. 1:</strong> Confidence-gated autonomy: a classifier produces an uncertainty score \(u(x)\), and threshold \(\tau\) determines whether the robot executes autonomously or defers to fallback. In our experiments, varying \(\tau\) changes behavior far more than switching uncertainty estimators.
+                </div>
+            </div>
+
+            <p>Figure 1 summarizes the setting.</p>
+
+            <div class="contributions">
+                <strong>Contributions.</strong>
+                <ul>
+                    <li>We introduce a decision-centric evaluation protocol for confidence-gated autonomy based on rank correlation, paired bootstrap equivalence testing, and act/defer agreement.</li>
+                    <li>We identify dataset-dependent competence regimes below which uncertainty does not reliably rank prediction errors for gating.</li>
+                    <li>We show that threshold choice has a substantially larger effect on execution outcomes than estimator choice, both offline and in a minimal embodied simulation, while fine-grained semantic OOD detection remains near chance.</li>
+                </ul>
+            </div>
+
+            <h1>I. Introduction</h1>
+            <p>Robotic systems must estimate not only the most likely state of the world, but also whether that estimate is reliable enough for autonomous execution [1]. A common mechanism is confidence-gated autonomy: a perception model predicts an action or activity label, and an uncertainty score determines whether the robot acts autonomously or defers to a fallback policy. This is closely related to selective prediction and reject-option decision making, which formalize the risk–coverage trade-off induced by abstention [2], [3].</p>
+
+            <p>In practice, uncertainty is often derived from softmax probabilities using entropy, margin, or least confidence, although Bayesian approximations and ensembles are also common. This raises a practical question: how should uncertainty be evaluated when its role is to gate execution rather than provide calibrated probabilities? Standard metrics such as expected calibration error (ECE) and area under the receiver operating characteristic curve (AUROC) do not directly answer whether two estimators induce materially different act/defer decisions.</p>
+
+            <p>We study this question in threshold-gated temporal activity recognition along two axes: model competence and distribution shift. Across three benchmarks, we find that uncertainty becomes decision-useful only after the base model enters a dataset-dependent competence regime. Above this regime, softmax heuristics, MC Dropout, and ensembles induce similar gating behavior, while threshold choice has a much larger effect on execution outcomes. Under temporal covariate shift, ranking quality remains stable, whereas fine-grained semantic OOD detection remains weak.</p>
+
+        </div>
+        <div class="column">
+            <h1>II. Related Work</h1>
+
+            <p><strong>Uncertainty Quantification and Calibration.</strong> Predictive uncertainty methods include MC Dropout [4] and deep ensembles [5], [6]. However, improved calibration does not necessarily improve error ranking for selective prediction [7].</p>
+
+            <p><strong>Autonomy Adjustment and Risk-Aware Robotics.</strong> In robotics, uncertainty is used for selective execution, shared autonomy, and introspection [8], [1], [9], [10], as well as risk-sensitive control through chance constraints or CVaR [11]. Our focus is narrower: when uncertainty is useful for threshold-gated autonomy and when common proxies are effectively interchangeable.</p>
+
+            <p><strong>Task-Driven Shift Detection.</strong> Related work detects distribution shift through task-level performance violations rather than input novelty alone [12]. This helps explain why temporal covariate shift and semantic held-out-class detection behave differently in our experiments.</p>
+
+            <p><strong>Selective Prediction and Evaluation Pitfalls.</strong> Selective prediction formalizes the coverage–risk trade-off [3], [2]. Common evaluations use risk–coverage curves, SelectiveNet, or AUROC [13], [14], but global metrics such as ECE or AUROC may fail to reflect decision-level utility in structured robotic tasks [7]. Recent work has also highlighted pitfalls</p>
+
+        </div>
+    </div>
+
+    <div style="font-size: 8pt; margin-top: 10px;">
+        <sup>1</sup> Hertie Institute for Clinical Brain Research & Center for Integrative Neuroscience, University of Tübingen, Germany
+    </div>
+
+</body>
+</html>

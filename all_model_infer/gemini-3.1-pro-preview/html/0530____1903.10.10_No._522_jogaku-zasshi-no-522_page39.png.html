@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Untitled Document</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: serif;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  .container {
+    position: relative;
+    width: 600px;
+    height: 850px;
+    border: 1px solid transparent; /* Container bounds */
+  }
+  .main-box {
+    position: absolute;
+    top: 130px;
+    left: 80px;
+    width: 480px;
+    height: 640px;
+    border: 2px solid #5a8e4a;
+    box-sizing: border-box;
+    writing-mode: vertical-rl;
+  }
+  
+  /* Outer text elements */
+  .right-outer-text {
+    position: absolute;
+    top: 130px;
+    right: 20px;
+    writing-mode: vertical-rl;
+    font-size: 14px;
+    color: #5a8e4a;
+    letter-spacing: 2px;
+  }
+  .left-outer-text {
+    position: absolute;
+    top: 160px;
+    left: 45px;
+    writing-mode: vertical-rl;
+    font-size: 11px;
+    color: #5a8e4a;
+    letter-spacing: 1px;
+  }
+  
+  /* Inside the main box */
+  .top-right-inner {
+    position: absolute;
+    top: 10px;
+    right: -25px; /* Adjusting relative to writing mode inside the box might be tricky, let's use absolute positioning relative to main-box */
+    writing-mode: vertical-rl;
+    font-size: 11px;
+    color: #5a8e4a;
+  }
+
+  .content-wrapper {
+    display: flex;
+    flex-direction: row-reverse;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  .upper-section {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+    align-items: center;
+    margin-right: 20px;
+  }
+
+  .title-group {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    color: #5a8e4a;
+  }
+
+  .title-main {
+    font-size: 42px;
+    font-weight: bold;
+    margin-left: 20px;
+    letter-spacing: 10px;
+  }
+
+  .title-sub1 {
+    font-size: 42px;
+    font-weight: bold;
+    margin-left: 20px;
+    letter-spacing: 10px;
+  }
+  
+  .title-sub2 {
+    font-size: 42px;
+    font-weight: bold;
+    margin-left: 10px;
+    letter-spacing: 10px;
+  }
+  
+  .title-sub3 {
+    font-size: 42px;
+    font-weight: bold;
+    margin-left: 30px;
+    letter-spacing: 10px;
+    position: relative;
+  }
+
+  ruby {
+    ruby-position: over;
+  }
+  rt {
+    font-size: 12px;
+    color: #5a8e4a;
+    letter-spacing: 0;
+  }
+
+  .wavy-line {
+    position: absolute;
+    top: 48%;
+    right: 40px;
+    width: 250px;
+    height: 10px;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="10" viewBox="0 0 20 10"><path d="M0 5 Q 5 0, 10 5 T 20 5" fill="none" stroke="%235a8e4a" stroke-width="1.5"/></svg>') repeat-x;
+    transform: rotate(90deg);
+    transform-origin: right top;
+  }
+
+  .lower-section {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: flex-start;
+    margin-top: 350px; /* Push down to bottom half */
+    margin-right: -150px; /* overlap adjustment */
+  }
+
+  .poem-text {
+    font-size: 20px;
+    color: #cc4433;
+    line-height: 2.2;
+    letter-spacing: 4px;
+    height: 280px;
+  }
+  
+  .poem-text rt {
+    color: #cc4433;
+    font-size: 10px;
+  }
+
+  .brand-logo-top {
+    font-size: 22px;
+    color: #cc4433;
+    font-weight: bold;
+    letter-spacing: 3px;
+    position: absolute;
+    top: 40px;
+    left: 80px;
+  }
+
+  .brand-logo-bottom {
+    font-size: 24px;
+    color: #cc4433;
+    font-weight: bold;
+    letter-spacing: 4px;
+    position: absolute;
+    bottom: 40px;
+    left: 40px;
+  }
+
+  .divider-line {
+     width: 1px;
+     height: 100px;
+     background-color: #cc4433;
+     margin-left: 10px;
+     margin-right: 10px;
+     position: relative;
+  }
+  .divider-line::after {
+    content: "◇";
+    position: absolute;
+    top: 50%;
+    left: -5px;
+    transform: translateY(-50%);
+    color: #cc4433;
+    font-size: 10px;
+    background: #fff;
+  }
+
+  .bottom-left-number {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    writing-mode: vertical-rl;
+    font-size: 16px;
+    color: #5a8e4a;
+    letter-spacing: 2px;
+  }
+
+  .google-watermark {
+    position: absolute;
+    bottom: 10px;
+    left: 100px;
+    font-size: 12px;
+    color: #888;
+    display: flex;
+    align-items: center;
+    font-family: sans-serif;
+  }
+  .google-watermark span { margin-right: 5px; }
+  .google-watermark b { font-size: 18px; color: #555;}
+  
+  .cornell-watermark {
+    position: absolute;
+    bottom: 10px;
+    right: 120px;
+    font-size: 10px;
+    color: #888;
+    text-align: center;
+    font-family: sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  
+  <!-- Right outer text -->
+  <div class="right-outer-text">
+    女學雜誌第五百二十二號
+  </div>
+  
+  <!-- Left outer text -->
+  <div class="left-outer-text">
+    (明治三十六年六月十七日第三種郵便物認可)
+  </div>
+
+  <div class="main-box">
+    
+    <!-- Top Right Inner text -->
+    <div style="position: absolute; top: 15px; right: 15px; font-size: 11px; color: #5a8e4a; letter-spacing: 1px;">
+      (明治卅六年十月十日發行)(毎月一回十五日)
+    </div>
+
+    <!-- Upper Section (Green Text) -->
+    <div style="position: absolute; top: 30px; right: 80px; display: flex; flex-direction: row-reverse;">
+       <div class="title-main">市川團</div>
+       <div class="title-sub1">十郎の</div>
+       <div class="title-sub2"><ruby>石<rt>しゃく</rt></ruby><ruby>橋<rt>きょう</rt></ruby></div>
+       <div class="title-sub3">（<ruby>獅<rt>ライ</rt></ruby><ruby>子<rt>オン</rt></ruby>）</div>
+    </div>
+    
+    <!-- Wavy line -->
+    <div class="wavy-line"></div>
+
+    <!-- Lower Section (Red Text) -->
+    <div style="position: absolute; bottom: 30px; right: 70px; display: flex; flex-direction: row-reverse;">
+        <div class="poem-text">
+            花にたはぶれ、杖に伏しまろび、<br>
+            げにも上なき獅子王のいきほ<br>
+            ひ、なびかぬ草木もなき時なれ<br>
+            や。萬歳千秋と舞ひをさめ、萬<br>
+            歳千秋と舞ひをさめ <ruby>獅<rt>ライ</rt></ruby><ruby>子<rt>オン</rt></ruby>の座<br>
+            にこそなほりけれ。
+        </div>
+    </div>
+    
+    <!-- Brand Logo Top Right (Red) -->
+    <div style="position: absolute; top: 50px; right: 290px; writing-mode: vertical-rl;">
+        <div class="brand-logo-top">ライオン齒磨</div>
+        <div class="divider-line" style="margin-top: 150px; margin-right: 12px; height: 120px;"></div>
+    </div>
+
+    <!-- Brand Logo Bottom Left (Red) -->
+    <div style="position: absolute; bottom: 50px; left: 60px; writing-mode: vertical-rl;">
+        <div class="divider-line" style="margin-bottom: 250px; margin-right: 12px; height: 120px;"></div>
+        <div class="brand-logo-bottom">ライオン齒磨</div>
+    </div>
+
+    <!-- Bottom Left Number -->
+    <div class="bottom-left-number">
+      （五二一）
+    </div>
+    
+  </div>
+
+  <!-- Watermarks -->
+  <div class="google-watermark">
+    <span>Digitized by</span> <b>Google</b>
+  </div>
+  
+  <div class="cornell-watermark">
+    Original from<br>CORNELL UNIVERSITY
+  </div>
+
+</div>
+
+</body>
+</html>

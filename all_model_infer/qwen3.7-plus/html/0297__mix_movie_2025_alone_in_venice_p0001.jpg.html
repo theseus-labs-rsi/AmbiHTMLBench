@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alone in Venice - A Film by Jules East</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: 'Arial', 'Helvetica Neue', sans-serif;
+  }
+
+  .poster {
+    position: relative;
+    width: 600px;
+    height: 900px;
+    overflow: hidden;
+    background: linear-gradient(180deg, #c44a1a 0%, #d4652a 15%, #e88040 25%, #f0a060 35%, #f5c080 45%, #f0d0a0 55%, #c8a880 65%, #8a9aaa 75%, #5a7a8a 85%, #3a5a6a 100%);
+  }
+
+  .sky {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 65%;
+    background: linear-gradient(180deg, #b83a10 0%, #d45520 10%, #e87030 20%, #f09050 30%, #f5b070 40%, #f8d090 50%, #f0e0b0 60%, #d8c8a0 70%, #b0a890 80%, #909898 90%, #708890 100%);
+  }
+
+  .water {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 38%;
+    background: linear-gradient(180deg, #6a8a9a 0%, #4a6a7a 20%, #3a5a6a 40%, #2a4a5a 60%, #1a3a4a 80%, #0a2a3a 100%);
+  }
+
+  .water::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      rgba(255,255,255,0.03) 3px,
+      rgba(255,255,255,0.03) 4px
+    );
+  }
+
+  .skyline {
+    position: absolute;
+    bottom: 35%;
+    left: 0;
+    right: 0;
+    height: 8%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .skyline-buildings {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    opacity: 0.7;
+  }
+
+  .building {
+    background: #2a3a3a;
+    display: inline-block;
+  }
+
+  .tower {
+    width: 8px;
+    height: 50px;
+    background: #2a3a3a;
+    position: relative;
+  }
+
+  .tower::before {
+    content: '';
+    position: absolute;
+    top: -15px;
+    left: 1px;
+    width: 6px;
+    height: 15px;
+    background: #2a3a3a;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  }
+
+  .dome {
+    width: 20px;
+    height: 15px;
+    background: #2a3a3a;
+    border-radius: 50% 50% 0 0;
+  }
+
+  .flowers-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 22%;
+    z-index: 5;
+  }
+
+  .flower-placeholder {
+    position: absolute;
+    background: rgba(255,255,255,0.9);
+    border-radius: 50%;
+  }
+
+  .flower1 { width: 80px; height: 70px; top: 5px; left: 10px; }
+  .flower2 { width: 90px; height: 75px; top: 0; left: 80px; }
+  .flower3 { width: 70px; height: 60px; top: 10px; left: 170px; }
+  .flower4 { width: 100px; height: 80px; top: 0; left: 250px; }
+  .flower5 { width: 85px; height: 70px; top: 5px; left: 350px; }
+  .flower6 { width: 95px; height: 75px; top: 0; left: 440px; }
+  .flower7 { width: 75px; height: 65px; top: 15px; left: 520px; }
+  .flower8 { width: 60px; height: 55px; top: 30px; left: 50px; }
+  .flower9 { width: 70px; height: 60px; top: 25px; left: 150px; }
+  .flower10 { width: 80px; height: 65px; top: 20px; left: 300px; }
+  .flower11 { width: 65px; height: 55px; top: 35px; left: 400px; }
+
+  .stem {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 22%;
+    z-index: 4;
+  }
+
+  .stem-line {
+    position: absolute;
+    height: 3px;
+    background: #4a6a3a;
+    border-radius: 2px;
+  }
+
+  .stem1 { width: 200px; top: 60px; left: 100px; transform: rotate(-15deg); }
+  .stem2 { width: 250px; top: 40px; left: 200px; transform: rotate(-5deg); }
+  .stem3 { width: 180px; top: 50px; left: 350px; transform: rotate(10deg); }
+
+  .bud {
+    position: absolute;
+    width: 12px;
+    height: 18px;
+    background: #c8d8b8;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    z-index: 5;
+  }
+
+  .bud1 { top: 75px; left: 280px; }
+  .bud2 { top: 80px; left: 310px; }
+  .bud3 { top: 70px; left: 340px; }
+
+  .face {
+    position: absolute;
+    left: 0;
+    top: 15%;
+    width: 55%;
+    height: 75%;
+    z-index: 3;
+  }
+
+  .face-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #d4a878 0%, #c89868 20%, #b88858 40%, #a87848 60%, #986838 80%, #885828 100%);
+    clip-path: polygon(0% 0%, 60% 0%, 75% 5%, 85% 10%, 90% 15%, 92% 20%, 90% 25%, 88% 30%, 92% 35%, 95% 40%, 93% 45%, 90% 48%, 88% 50%, 90% 52%, 92% 55%, 90% 58%, 85% 60%, 80% 62%, 78% 65%, 80% 68%, 82% 72%, 80% 75%, 75% 78%, 70% 80%, 65% 82%, 60% 85%, 55% 88%, 50% 90%, 45% 92%, 40% 95%, 35% 97%, 30% 100%, 0% 100%);
+  }
+
+  .hair {
+    position: absolute;
+    left: 0;
+    top: 12%;
+    width: 50%;
+    height: 50%;
+    z-index: 4;
+    background: linear-gradient(135deg, #c8a868 0%, #b89858 20%, #a88848 40%, #987838 60%, #886828 80%, #785818 100%);
+    clip-path: polygon(0% 0%, 55% 0%, 65% 5%, 70% 10%, 72% 15%, 70% 20%, 68% 25%, 65% 30%, 60% 35%, 55% 40%, 50% 45%, 45% 50%, 40% 55%, 35% 60%, 30% 65%, 25% 70%, 20% 75%, 15% 80%, 10% 85%, 5% 90%, 0% 95%, 0% 100%);
+  }
+
+  .eye-area {
+    position: absolute;
+    top: 38%;
+    left: 30%;
+    width: 15%;
+    height: 8%;
+    z-index: 5;
+  }
+
+  .eye {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, #e8d8c8 0%, #d8c8b8 30%, #c8b8a8 50%, #b8a898 70%, #a89888 100%);
+    border-radius: 50%;
+    position: relative;
+  }
+
+  .eye::after {
+    content: '';
+    position: absolute;
+    top: 30%;
+    left: 40%;
+    width: 30%;
+    height: 40%;
+    background: #4a6a5a;
+    border-radius: 50%;
+  }
+
+  .nose-area {
+    position: absolute;
+    top: 42%;
+    left: 42%;
+    width: 12%;
+    height: 15%;
+    z-index: 5;
+  }
+
+  .nose {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #c89868 0%, #d4a878 50%, #c89868 100%);
+    clip-path: polygon(0% 0%, 60% 0%, 80% 20%, 100% 50%, 90% 70%, 70% 80%, 50% 90%, 30% 100%, 0% 100%);
+  }
+
+  .lips-area {
+    position: absolute;
+    top: 58%;
+    left: 35%;
+    width: 15%;
+    height: 6%;
+    z-index: 5;
+  }
+
+  .lips {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, #c88878 0%, #b87868 50%, #a86858 100%);
+    border-radius: 3px;
+  }
+
+  .flower-bottom-left {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 30%;
+    height: 25%;
+    z-index: 6;
+  }
+
+  .flower-bl-1 {
+    position: absolute;
+    width: 120px;
+    height: 100px;
+    background: rgba(220, 225, 230, 0.85);
+    border-radius: 50%;
+    bottom: 20px;
+    left: 10px;
+  }
+
+  .flower-bl-2 {
+    position: absolute;
+    width: 90px;
+    height: 80px;
+    background: rgba(200, 210, 220, 0.8);
+    border-radius: 50%;
+    bottom: 60px;
+    left: 60px;
+  }
+
+  .flower-bl-3 {
+    position: absolute;
+    width: 70px;
+    height: 60px;
+    background: rgba(230, 235, 240, 0.75);
+    border-radius: 50%;
+    bottom: 10px;
+    left: 80px;
+  }
+
+  .title-section {
+    position: absolute;
+    right: 5%;
+    top: 28%;
+    z-index: 10;
+    text-align: right;
+  }
+
+  .film-by {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+  }
+
+  .title {
+    color: #fff;
+    font-size: 72px;
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.4);
+  }
+
+  .tagline-section {
+    position: absolute;
+    right: 5%;
+    bottom: 22%;
+    z-index: 10;
+    text-align: right;
+  }
+
+  .tagline {
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.4;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
+  }
+
+  .credits {
+    position: absolute;
+    right: 5%;
+    bottom: 3%;
+    z-index: 10;
+    text-align: right;
+    color: rgba(255,255,255,0.7);
+    font-size: 8px;
+    line-height: 1.6;
+    letter-spacing: 0.5px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    max-width: 280px;
+  }
+
+  .credits .present {
+    font-size: 9px;
+    margin-bottom: 4px;
+  }
+
+  .credits .cast {
+    font-size: 10px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: rgba(255,255,255,0.8);
+  }
+
+  .credits .crew {
+    font-size: 8px;
+    margin-bottom: 2px;
+  }
+
+  .credits .director {
+    font-size: 9px;
+    margin-top: 4px;
+    color: rgba(255,255,255,0.8);
+  }
+
+  .je-logo {
+    display: inline-block;
+    border: 1px solid rgba(255,255,255,0.6);
+    padding: 1px 4px;
+    font-size: 10px;
+    font-weight: 700;
+    margin-left: 4px;
+    vertical-align: middle;
+  }
+
+  .boat {
+    position: absolute;
+    bottom: 36%;
+    right: 25%;
+    width: 30px;
+    height: 8px;
+    background: rgba(200,200,200,0.5);
+    border-radius: 2px 2px 0 0;
+    z-index: 2;
+  }
+
+  .boat::after {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 12px;
+    width: 2px;
+    height: 6px;
+    background: rgba(200,200,200,0.4);
+  }
+</style>
+</head>
+<body>
+
+<div class="poster">
+  <!-- Sky background -->
+  <div class="sky"></div>
+
+  <!-- Water -->
+  <div class="water"></div>
+
+  <!-- Skyline -->
+  <div class="skyline">
+    <div class="skyline-buildings">
+      <div class="building" style="width:15px;height:12px;"></div>
+      <div class="building" style="width:10px;height:18px;"></div>
+      <div class="building" style="width:20px;height:10px;"></div>
+      <div class="building" style="width:8px;height:22px;"></div>
+      <div class="building" style="width:25px;height:14px;"></div>
+      <div class="building" style="width:12px;height:16px;"></div>
+      <div class="building" style="width:18px;height:11px;"></div>
+      <div class="tower"></div>
+      <div class="building" style="width:22px;height:13px;"></div>
+      <div class="dome"></div>
+      <div class="building" style="width:30px;height:15px;"></div>
+      <div class="building" style="width:15px;height:12px;"></div>
+      <div class="building" style="width:20px;height:10px;"></div>
+      <div class="building" style="width:12px;height:14px;"></div>
+      <div class="building" style="width:25px;height:11px;"></div>
+      <div class="building" style="width:18px;height:13px;"></div>
+      <div class="building" style="width:10px;height:16px;"></div>
+      <div class="building" style="width:22px;height:12px;"></div>
+    </div>
+  </div>
+
+  <!-- Boat -->
+  <div class="boat"></div>
+
+  <!-- Flowers at top -->
+  <div class="flowers-top">
+    <div class="flower-placeholder flower1"></div>
+    <div class="flower-placeholder flower2"></div>
+    <div class="flower-placeholder flower3"></div>
+    <div class="flower-placeholder flower4"></div>
+    <div class="flower-placeholder flower5"></div>
+    <div class="flower-placeholder flower6"></div>
+    <div class="flower-placeholder flower7"></div>
+    <div class="flower-placeholder flower8"></div>
+    <div class="flower-placeholder flower9"></div>
+    <div class="flower-placeholder flower10"></div>
+    <div class="flower-placeholder flower11"></div>
+  </div>
+
+  <!-- Stems -->
+  <div class="stem">
+    <div class="stem-line stem1"></div>
+    <div class="stem-line stem2"></div>
+    <div class="stem-line stem3"></div>
+    <div class="bud bud1"></div>
+    <div class="bud bud2"></div>
+    <div class="bud bud3"></div>
+  </div>
+
+  <!-- Face profile -->
+  <div class="face">
+    <div class="face-placeholder"></div>
+  </div>
+
+  <!-- Hair -->
+  <div class="hair"></div>
+
+  <!-- Flower bottom left -->
+  <div class="flower-bottom-left">
+    <div class="flower-bl-1"></div>
+    <div class="flower-bl-2"></div>
+    <div class="flower-bl-3"></div>
+  </div>
+
+  <!-- Title -->
+  <div class="title-section">
+    <div class="film-by">A FILM BY JULES EAST</div>
+    <div class="title">ALONE IN<br>VENICE</div>
+  </div>
+
+  <!-- Tagline -->
+  <div class="tagline-section">
+    <div class="tagline">WHAT IS MORE IMPORTANT<br>THAN LOVE IN LIFE?</div>
+  </div>
+
+  <!-- Credits -->
+  <div class="credits">
+    <div class="present">JULES EAST PRODUCTIONS PRESENTS "ALONE IN VENICE"</div>
+    <div class="cast">PAUL OPADECYK LISA JACQUELINE STADDELL AND LILIA RAKINI</div>
+    <div class="crew">KEVIN STURCKSON EDITED BY FRANCESCO FRAZZA</div>
+    <div class="crew">MUSIC BY GABRIELE FABRIZIO PRODUCED BY ANDREA ORTAN</div>
+    <div class="director">WRITTEN AND DIRECTED BY JULES EAST <span class="je-logo">JE</span></div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cached Architecture</title>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$']],
+    displayMath: [['$$', '$$']]
+  }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #000000;
+  }
+
+  .page {
+    position: relative;
+    width: 1024px;
+    height: 768px;
+    margin: 0 auto;
+    overflow: hidden;
+    background: #ffffff;
+  }
+
+  h1 {
+    position: absolute;
+    top: 62px;
+    left: 229px;
+    margin: 0;
+    font-size: 62px;
+    line-height: 1;
+    font-weight: 400;
+    letter-spacing: -1.5px;
+    white-space: nowrap;
+  }
+
+  .main-list,
+  .main-list ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .main-item {
+    position: absolute;
+    left: 60px;
+    width: 920px;
+  }
+
+  .main-item.first {
+    top: 187px;
+  }
+
+  .main-item.second {
+    top: 359px;
+  }
+
+  .main-line {
+    display: flex;
+    align-items: flex-start;
+    font-size: 46px;
+    line-height: 1.14;
+    font-weight: 400;
+  }
+
+  .main-bullet {
+    flex: 0 0 40px;
+    padding-top: 1px;
+    font-size: 41px;
+    line-height: 1;
+  }
+
+  .main-text {
+    white-space: nowrap;
+  }
+
+  .sub-list {
+    margin-top: 11px !important;
+    margin-left: 50px !important;
+  }
+
+  .sub-line {
+    display: flex;
+    align-items: flex-start;
+    font-size: 40px;
+    line-height: 1.15;
+    font-weight: 400;
+  }
+
+  .dash {
+    flex: 0 0 34px;
+    line-height: 1;
+  }
+
+  .sub-text {
+    width: 800px;
+  }
+
+  .detail-list {
+    margin-top: 10px !important;
+    margin-left: 50px !important;
+  }
+
+  .detail-line {
+    display: flex;
+    align-items: flex-start;
+    font-size: 34px;
+    line-height: 1.2;
+    font-weight: 400;
+  }
+
+  .detail-bullet {
+    flex: 0 0 28px;
+    font-size: 28px;
+    line-height: 1.15;
+  }
+
+  .detail-text {
+    width: 790px;
+  }
+
+  .presenter {
+    position: absolute;
+    left: 9px;
+    bottom: 47px;
+    margin: 0;
+    font-size: 27px;
+    line-height: 1;
+    font-weight: 400;
+  }
+
+  .date {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    margin: 0;
+    font-size: 25px;
+    line-height: 1;
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  .date sup {
+    position: relative;
+    top: -0.12em;
+    font-size: 58%;
+  }
+
+  .placeholder.logo {
+    position: absolute;
+    left: 674px;
+    top: 681px;
+    width: 350px;
+    height: 87px;
+    margin: 0;
+    overflow: hidden;
+    border: 0;
+    background: transparent;
+  }
+
+  .logo-symbol {
+    position: absolute;
+    left: 0;
+    top: 2px;
+    width: 96px;
+    height: 81px;
+  }
+
+  .wave {
+    position: absolute;
+    border: 8px solid #2f75bb;
+    border-left-color: transparent;
+    border-top-color: transparent;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    transform: rotate(-2deg);
+  }
+
+  .wave.one {
+    right: 1px;
+    top: 1px;
+    width: 72px;
+    height: 77px;
+  }
+
+  .wave.two {
+    right: 13px;
+    top: 10px;
+    width: 53px;
+    height: 61px;
+  }
+
+  .wave.three {
+    right: 24px;
+    top: 18px;
+    width: 35px;
+    height: 44px;
+  }
+
+  .wave.four {
+    right: 34px;
+    top: 26px;
+    width: 18px;
+    height: 28px;
+    border-width: 6px;
+  }
+
+  .logo-symbol::before,
+  .logo-symbol::after {
+    content: "";
+    position: absolute;
+    left: 1px;
+    z-index: 2;
+    width: 60px;
+    height: 22px;
+    background: #ffffff;
+    border-radius: 50%;
+  }
+
+  .logo-symbol::before {
+    top: 12px;
+    transform: rotate(12deg);
+  }
+
+  .logo-symbol::after {
+    bottom: 10px;
+    transform: rotate(-12deg);
+  }
+
+  .logo-fill {
+    position: absolute;
+    left: 16px;
+    top: 5px;
+    width: 65px;
+    height: 70px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #76c8df 10%, #4d99cd 46%, #315fac 100%);
+  }
+
+  .logo-text {
+    position: absolute;
+    left: 99px;
+    top: 14px;
+    margin: 0;
+    white-space: nowrap;
+    font-size: 48px;
+    line-height: 1;
+    font-weight: 600;
+    letter-spacing: -3px;
+  }
+
+  .logo-text .bar {
+    color: #2765aa;
+  }
+
+  .logo-text .camp {
+    color: #a31e2d;
+    font-weight: 400;
+  }
+
+  .logo-subtitle {
+    position: absolute;
+    left: 101px;
+    top: 68px;
+    margin: 0;
+    white-space: nowrap;
+    color: #4d88aa;
+    font-size: 19px;
+    line-height: 1;
+    letter-spacing: -0.4px;
+  }
+</style>
+</head>
+<body>
+<main class="page">
+  <h1>Cached Architecture</h1>
+
+  <ul class="main-list">
+    <li class="main-item first">
+      <div class="main-line">
+        <span class="main-bullet">•</span>
+        <span class="main-text">Introduce Squid</span>
+      </div>
+      <ul class="sub-list">
+        <li class="sub-line">
+          <span class="dash">–</span>
+          <span class="sub-text">Acts as load balancer (note there are higher<br>peforming load balancers)</span>
+        </li>
+      </ul>
+    </li>
+
+    <li class="main-item second">
+      <div class="main-line">
+        <span class="main-bullet">•</span>
+        <span class="main-text">Introduce memcached</span>
+      </div>
+      <ul class="sub-list">
+        <li class="sub-line">
+          <span class="dash">–</span>
+          <span class="sub-text">Can go on every machine that has spare<br>memory</span>
+        </li>
+      </ul>
+      <ul class="detail-list">
+        <li class="detail-line">
+          <span class="detail-bullet">•</span>
+          <span class="detail-text">Best suited to application servers which have high<br>CPU usage but low memory requirements</span>
+        </li>
+      </ul>
+    </li>
+  </ul>
+
+  <p class="presenter">George Palmer</p>
+  <p class="date">17<sup>th</sup> February 2007</p>
+
+  <figure class="placeholder logo" aria-label="barcamp London logo">
+    <div class="logo-symbol">
+      <div class="logo-fill"></div>
+      <div class="wave one"></div>
+      <div class="wave two"></div>
+      <div class="wave three"></div>
+      <div class="wave four"></div>
+    </div>
+    <figcaption class="logo-text"><span class="bar">bar</span><span class="camp">camp</span></figcaption>
+    <div class="logo-subtitle">London 17-18th Feb 07</div>
+  </figure>
+</main>
+</body>
+</html>

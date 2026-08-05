@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>kubeadm init phase bootstrap-token - Kubernetes</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; font-size: 14px; color: #333; background: #fff; }
+
+  /* Header */
+  .header { display: flex; align-items: center; padding: 0 20px; height: 50px; border-bottom: 1px solid #ddd; background: #fff; position: sticky; top: 0; z-index: 100; }
+  .header-logo { display: flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 700; color: #326ce5; text-decoration: none; margin-right: 40px; }
+  .header-logo svg { width: 30px; height: 30px; }
+  .header-nav { display: flex; align-items: center; gap: 0; flex: 1; }
+  .header-nav a { text-decoration: none; color: #333; padding: 14px 16px; font-size: 14px; font-weight: 500; }
+  .header-nav a:hover { color: #326ce5; }
+  .header-nav .dropdown { position: relative; cursor: pointer; padding: 14px 16px; font-size: 14px; font-weight: 500; }
+
+  /* Layout */
+  .layout { display: flex; min-height: calc(100vh - 50px); }
+
+  /* Left Sidebar */
+  .sidebar-left { width: 260px; min-width: 260px; border-right: 1px solid #e0e0e0; padding: 16px 0; overflow-y: auto; background: #fafafa; }
+  .search-box { margin: 0 16px 16px; position: relative; }
+  .search-box input { width: 100%; padding: 8px 12px 8px 32px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
+  .search-box::before { content: "🔍"; position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 12px; }
+  .nav-tree { list-style: none; padding: 0 16px; }
+  .nav-tree li { margin: 2px 0; }
+  .nav-tree a { text-decoration: none; color: #333; font-size: 13px; display: block; padding: 3px 0; }
+  .nav-tree a:hover { color: #326ce5; }
+  .nav-tree .expanded > a { font-weight: 600; }
+  .nav-tree .sub-nav { list-style: none; padding-left: 16px; }
+  .nav-tree .sub-nav a { font-size: 13px; color: #555; }
+  .nav-tree .sub-nav .sub-nav { padding-left: 16px; }
+  .nav-tree .sub-nav .sub-nav a { font-size: 12px; }
+  .nav-tree .active > a { color: #326ce5; font-weight: 700; }
+  .nav-toggle { cursor: pointer; margin-right: 4px; font-size: 10px; }
+
+  /* Main Content */
+  .main-content { flex: 1; padding: 24px 40px; max-width: 800px; overflow-x: auto; }
+  .main-content h2 { font-size: 24px; font-weight: 400; margin: 32px 0 16px; color: #222; }
+  .main-content h3 { font-size: 20px; font-weight: 400; margin: 24px 0 12px; color: #222; }
+  .main-content p { margin: 12px 0; line-height: 1.6; }
+
+  /* Options Table */
+  .options-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  .options-table tr { border-bottom: 1px solid #e0e0e0; }
+  .options-table td { padding: 12px 16px; vertical-align: top; }
+  .options-table .opt-name { background: #f5f5f5; font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace; font-size: 13px; width: 40%; border: 1px solid #e0e0e0; border-bottom: none; }
+  .options-table .opt-desc { padding: 12px 16px; font-size: 14px; line-height: 1.5; }
+
+  /* Code block */
+  .code-block { background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 4px; padding: 16px; font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace; font-size: 13px; line-height: 1.6; margin: 16px 0; white-space: pre-wrap; overflow-x: auto; }
+
+  /* Tabs */
+  .tabs { display: flex; border-bottom: 1px solid #e0e0e0; margin-bottom: 16px; }
+  .tab { padding: 8px 16px; border: 1px solid #e0e0e0; border-bottom: none; background: #fff; cursor: pointer; font-size: 14px; margin-right: 4px; border-radius: 4px 4px 0 0; }
+  .tab.active { background: #f5f5f5; border-bottom: 1px solid #f5f5f5; margin-bottom: -1px; }
+  .tab-content { border: 1px solid #e0e0e0; padding: 16px; border-radius: 0 4px 4px 4px; }
+
+  /* Right Sidebar */
+  .sidebar-right { width: 260px; min-width: 260px; padding: 16px 20px; border-left: 1px solid #e0e0e0; overflow-y: auto; }
+  .sidebar-right a { display: block; color: #326ce5; text-decoration: none; font-size: 13px; padding: 4px 0; }
+  .sidebar-right a:hover { text-decoration: underline; }
+  .sidebar-right .toc-list { list-style: none; margin-top: 16px; }
+  .sidebar-right .toc-list li { margin: 4px 0; }
+  .sidebar-right .toc-list a { color: #666; font-size: 13px; }
+  .sidebar-right .toc-list a:hover { color: #326ce5; }
+  .sidebar-right .edit-links { margin-bottom: 16px; }
+  .sidebar-right .edit-links a { display: flex; align-items: center; gap: 6px; }
+
+  .section-divider { border: none; border-top: 1px solid #e0e0e0; margin: 24px 0; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <a href="#" class="header-logo">
+    <svg viewBox="0 0 100 100" fill="#326ce5"><polygon points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5" fill="none" stroke="#326ce5" stroke-width="3"/><polygon points="50,20 75,35 75,65 50,80 25,65 25,35" fill="#326ce5" opacity="0.3"/></svg>
+    kubernetes
+  </a>
+  <nav class="header-nav">
+    <a href="#">Documentation</a>
+    <a href="#">Kubernetes Blog</a>
+    <a href="#">Training</a>
+    <a href="#">Careers</a>
+    <a href="#">Partners</a>
+    <a href="#">Community</a>
+    <span class="dropdown">Versions ▾</span>
+    <span class="dropdown">English ▾</span>
+  </nav>
+</header>
+
+<div class="layout">
+  <!-- Left Sidebar -->
+  <aside class="sidebar-left">
+    <div class="search-box">
+      <input type="text" placeholder="Search this site">
+    </div>
+    <ul class="nav-tree">
+      <li><span class="nav-toggle">▶</span> <a href="#">Documentation</a></li>
+      <li><span class="nav-toggle">▶</span> <a href="#">Getting started</a></li>
+      <li><span class="nav-toggle">▶</span> <a href="#">Concepts</a></li>
+      <li><span class="nav-toggle">▶</span> <a href="#">Tasks</a></li>
+      <li><span class="nav-toggle">▶</span> <a href="#">Tutorials</a></li>
+      <li class="expanded">
+        <span class="nav-toggle">▼</span> <a href="#">Reference</a>
+        <ul class="sub-nav">
+          <li><a href="#">Glossary</a></li>
+          <li><span class="nav-toggle">▶</span> <a href="#">API Overview</a></li>
+          <li><span class="nav-toggle">▶</span> <a href="#">API Access Control</a></li>
+          <li><span class="nav-toggle">▶</span> <a href="#">Well-Known Labels, Annotations and Taints</a></li>
+          <li><span class="nav-toggle">▶</span> <a href="#">Kubernetes API</a></li>
+          <li><span class="nav-toggle">▶</span> <a href="#">Instrumentation</a></li>
+          <li><span class="nav-toggle">▶</span> <a href="#">Kubernetes Issues and Security</a></li>
+          <li><span class="nav-toggle">▶</span> <a href="#">Node Reference Information</a></li>
+          <li><span class="nav-toggle">▶</span> <a href="#">Networking Reference</a></li>
+        </ul>
+      </li>
+      <li class="expanded">
+        <span class="nav-toggle">▼</span> <a href="#">Setup tools</a>
+        <ul class="sub-nav">
+          <li class="expanded">
+            <span class="nav-toggle">▼</span> <a href="#">Kubeadm</a>
+            <ul class="sub-nav">
+              <li><a href="#">kubeadm</a></li>
+              <li><a href="#">kubeadm init</a></li>
+              <li><a href="#">kubeadm join</a></li>
+              <li><a href="#">kubeadm upgrade</a></li>
+              <li><a href="#">kubeadm upgrade phases</a></li>
+              <li><a href="#">kubeadm config</a></li>
+              <li><a href="#">kubeadm reset</a></li>
+              <li><a href="#">kubeadm token</a></li>
+              <li><a href="#">kubeadm version</a></li>
+              <li><a href="#">kubeadm alpha</a></li>
+              <li><a href="#">kubeadm certs</a></li>
+              <li class="active"><a href="#"><strong>kubeadm init phase</strong></a></li>
+              <li><a href="#">kubeadm join phase</a></li>
+              <li><a href="#">kubeadm kubeconfig</a></li>
+              <li><a href="#">kubeadm reset phase</a></li>
+              <li><a href="#">Implementation</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <table class="options-table">
+      <tr>
+        <td class="opt-name">--dry-run</td>
+      </tr>
+      <tr>
+        <td class="opt-desc">Don't apply any changes; just output what would be done.</td>
+      </tr>
+      <tr>
+        <td class="opt-name">-h, --help</td>
+      </tr>
+      <tr>
+        <td class="opt-desc">help for mark-control-plane</td>
+      </tr>
+      <tr>
+        <td class="opt-name">--node-name string</td>
+      </tr>
+      <tr>
+        <td class="opt-desc">Specify the node name.</td>
+      </tr>
+    </table>
+
+    <hr class="section-divider">
+
+    <h2>Options inherited from parent commands</h2>
+    <table class="options-table">
+      <tr>
+        <td class="opt-name">--rootfs string</td>
+      </tr>
+      <tr>
+        <td class="opt-desc">The path to the 'real' host root filesystem. This will cause kubeadm to chroot into the provided path.</td>
+      </tr>
+    </table>
+
+    <hr class="section-divider">
+
+    <h2>kubeadm init phase bootstrap-token</h2>
+    <p>Use the following phase to configure bootstrap tokens.</p>
+
+    <div class="tabs">
+      <div class="tab active">bootstrap-token</div>
+    </div>
+    <div class="tab-content">
+      <p>Generates bootstrap tokens used to join a node to a cluster</p>
+
+      <h3>Synopsis</h3>
+      <p>Bootstrap tokens are used for establishing bidirectional trust between a node joining the cluster and a control-plane node.</p>
+      <p>This command makes all the configurations required to make bootstrap tokens works and then creates an initial token.</p>
+
+      <div class="code-block">kubeadm init phase bootstrap-token [flags]</div>
+
+      <h3>Examples</h3>
+      <div class="code-block"># Make all the bootstrap token configurations and create an initial token, f
+# equivalent to what generated by kubeadm init.
+kubeadm init phase bootstrap-token</div>
+
+      <h3>Options</h3>
+      <table class="options-table">
+        <tr>
+          <td class="opt-name">--config string</td>
+        </tr>
+        <tr>
+          <td class="opt-desc">Path to a kubeadm configuration file.</td>
+        </tr>
+        <tr>
+          <td class="opt-name">--dry-run</td>
+        </tr>
+        <tr>
+          <td class="opt-desc">Don't apply any changes; just output what would be done.</td>
+        </tr>
+        <tr>
+          <td class="opt-name">-h, --help</td>
+        </tr>
+        <tr>
+          <td class="opt-desc">help for bootstrap-token</td>
+        </tr>
+      </table>
+    </div>
+  </main>
+
+  <!-- Right Sidebar -->
+  <aside class="sidebar-right">
+    <div class="edit-links">
+      <a href="#">✎ Edit this page</a>
+      <a href="#">✎ Create child page</a>
+      <a href="#">⊕ Create an issue</a>
+      <a href="#">🖨 Print entire section</a>
+    </div>
+    <ul class="toc-list">
+      <li><a href="#">kubeadm init phase preflight</a></li>
+      <li><a href="#">kubeadm init phase certs</a></li>
+      <li><a href="#">kubeadm init phase kubeconfig</a></li>
+      <li><a href="#">kubeadm init phase etcd</a></li>
+      <li><a href="#">kubeadm init phase control-plane</a></li>
+      <li><a href="#">kubeadm init phase kubelet-start</a></li>
+      <li><a href="#">kubeadm init phase wait-control-plane</a></li>
+      <li><a href="#">kubeadm init phase upload-config</a></li>
+      <li><a href="#">kubeadm init phase upload-certs</a></li>
+      <li><a href="#">kubeadm init phase mark-control-plane</a></li>
+      <li><a href="#">kubeadm init phase bootstrap-token</a></li>
+      <li><a href="#">kubeadm init phase kubelet-finalize</a></li>
+      <li><a href="#">kubeadm init phase bootstrap-token</a></li>
+      <li><a href="#">kubeadm init phase addon</a></li>
+      <li><a href="#">kubeadm init phase show-join-command</a></li>
+      <li><a href="#">What's next</a></li>
+    </ul>
+  </aside>
+</div>
+
+</body>
+</html>

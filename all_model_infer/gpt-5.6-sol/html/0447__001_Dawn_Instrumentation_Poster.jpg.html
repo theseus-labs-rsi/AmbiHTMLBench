@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dawn — A journey to the beginning of the solar system</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    margin: 0;
+    min-width: 1800px;
+    min-height: 720px;
+    background: #000;
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  body {
+    overflow: auto;
+  }
+
+  .poster {
+    position: relative;
+    width: 1800px;
+    height: 720px;
+    overflow: hidden;
+    background: #000;
+  }
+
+  .top-rule {
+    position: absolute;
+    top: 0;
+    left: 770px;
+    width: 1025px;
+    height: 2px;
+    background: #fff;
+  }
+
+  .cyan {
+    color: #3db9cf;
+  }
+
+  .title-block {
+    position: absolute;
+    z-index: 8;
+    top: 68px;
+    left: 507px;
+    width: 780px;
+    text-align: left;
+    font-style: italic;
+    font-weight: 700;
+  }
+
+  .title-block h1 {
+    margin: 0;
+    font-size: 51px;
+    line-height: 1;
+    letter-spacing: -2px;
+  }
+
+  .title-block .subtitle {
+    margin: 11px 0 0 14px;
+    font-size: 21px;
+    line-height: 1.15;
+    white-space: nowrap;
+  }
+
+  .instrument {
+    position: absolute;
+    z-index: 9;
+    font-style: italic;
+    font-weight: 700;
+  }
+
+  .instrument h2 {
+    margin: 0;
+    color: #3db9cf;
+    font-size: 25px;
+    line-height: 1.05;
+    white-space: nowrap;
+    letter-spacing: -0.7px;
+  }
+
+  .instrument p {
+    margin: 8px 0 0;
+    font-size: 13px;
+    line-height: 1.28;
+  }
+
+  .flag {
+    display: inline-grid;
+    vertical-align: middle;
+    width: 28px;
+    height: 17px;
+    margin-left: 8px;
+    border: 1px solid rgba(255,255,255,.4);
+    font-style: normal;
+    overflow: hidden;
+  }
+
+  .flag-de {
+    background: linear-gradient(to bottom, #161616 0 33.33%, #dd1e2f 33.33% 66.66%, #ffd21c 66.66%);
+  }
+
+  .flag-us {
+    position: relative;
+    background: repeating-linear-gradient(
+      to bottom,
+      #b22234 0 1.3px,
+      #b22234 1.3px 2.6px,
+      #fff 2.6px 3.9px,
+      #fff 3.9px 5.2px
+    );
+  }
+
+  .flag-us::before {
+    content: "✦";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 11px;
+    height: 9px;
+    overflow: hidden;
+    color: #fff;
+    background: #3c3b6e;
+    font-size: 6px;
+    line-height: 8px;
+    text-align: center;
+  }
+
+  .flag-it {
+    background: linear-gradient(to right, #159447 0 33.33%, #fff 33.33% 66.66%, #d82332 66.66%);
+  }
+
+  .framing {
+    top: 181px;
+    left: 91px;
+    width: 235px;
+  }
+
+  .framing p {
+    width: 225px;
+    text-align: left;
+  }
+
+  .gravity {
+    top: 181px;
+    left: 1263px;
+    width: 315px;
+  }
+
+  .gravity p {
+    width: 288px;
+    margin-left: 12px;
+  }
+
+  .grand {
+    top: 483px;
+    left: 94px;
+    width: 455px;
+  }
+
+  .grand p {
+    position: absolute;
+    top: 33px;
+    left: 204px;
+    width: 196px;
+  }
+
+  .vir {
+    top: 496px;
+    left: 1341px;
+    width: 420px;
+  }
+
+  .vir p {
+    width: 244px;
+    margin: 24px 0 0 98px;
+  }
+
+  .placeholder {
+    position: absolute;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    color: rgba(255,255,255,.52);
+    border: 1px solid rgba(255,255,255,.19);
+    background:
+      linear-gradient(145deg, rgba(255,255,255,.12), rgba(255,255,255,.025)),
+      #111;
+    font-size: 10px;
+    font-style: italic;
+    text-align: center;
+  }
+
+  .asteroid {
+    z-index: 3;
+    top: 267px;
+    left: 629px;
+    width: 260px;
+    height: 250px;
+    border: 0;
+    border-radius: 47% 53% 50% 50%;
+    color: rgba(255,255,255,.38);
+    background:
+      radial-gradient(circle at 31% 32%, #8c8577 0 3%, transparent 4%),
+      radial-gradient(circle at 65% 48%, #787166 0 4%, transparent 5%),
+      radial-gradient(circle at 39% 72%, #5c574f 0 3%, transparent 4%),
+      radial-gradient(circle at 71% 74%, #918879 0 2%, transparent 3%),
+      radial-gradient(circle at 52% 50%, #a39a8b 0, #625d55 50%, #292826 82%, #080808 100%);
+    box-shadow: inset -37px -22px 50px #050505;
+    transform: rotate(-6deg);
+  }
+
+  .orbit {
+    position: absolute;
+    z-index: 1;
+    top: 153px;
+    left: 633px;
+    width: 394px;
+    height: 557px;
+    border: 2px solid #e00000;
+    border-left-color: transparent;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    transform: rotate(11deg);
+  }
+
+  .center-spacecraft {
+    z-index: 4;
+    top: 220px;
+    left: 769px;
+    width: 355px;
+    height: 102px;
+    border: 0;
+    background: transparent;
+    overflow: visible;
+  }
+
+  .center-spacecraft .array {
+    position: absolute;
+    top: 16px;
+    width: 127px;
+    height: 46px;
+    border: 1px solid #536282;
+    background:
+      repeating-linear-gradient(to right, transparent 0 15px, rgba(255,255,255,.17) 15px 16px),
+      repeating-linear-gradient(to bottom, transparent 0 12px, rgba(255,255,255,.14) 12px 13px),
+      #152139;
+    transform: skewY(12deg);
+  }
+
+  .center-spacecraft .array.left {
+    left: 0;
+  }
+
+  .center-spacecraft .array.right {
+    right: 0;
+  }
+
+  .center-spacecraft .core {
+    position: absolute;
+    top: 31px;
+    left: 147px;
+    width: 58px;
+    height: 42px;
+    background: #b59345;
+    clip-path: polygon(12% 0, 87% 0, 100% 36%, 86% 100%, 14% 100%, 0 36%);
+  }
+
+  .center-spacecraft .caption {
+    position: absolute;
+    top: 78px;
+    left: 124px;
+    width: 110px;
+    color: rgba(255,255,255,.52);
+    font-size: 9px;
+  }
+
+  .left-spacecraft {
+    z-index: 4;
+    top: 195px;
+    left: 257px;
+    width: 270px;
+    height: 267px;
+    border: 0;
+    background: transparent;
+  }
+
+  .left-spacecraft::before {
+    content: "";
+    position: absolute;
+    left: 42px;
+    top: 80px;
+    width: 179px;
+    height: 87px;
+    background: #aa8943;
+    clip-path: polygon(18% 0, 58% 9%, 100% 35%, 91% 87%, 34% 100%, 0 61%);
+    box-shadow: inset -15px -17px 24px rgba(0,0,0,.5);
+  }
+
+  .left-spacecraft::after {
+    content: "";
+    position: absolute;
+    left: 117px;
+    top: 26px;
+    width: 28px;
+    height: 181px;
+    background: linear-gradient(to right, #b89852, #ded1a3, #806425);
+    border-radius: 12px 12px 2px 2px;
+  }
+
+  .left-spacecraft span {
+    position: absolute;
+    left: 75px;
+    top: 224px;
+    width: 120px;
+  }
+
+  .right-spacecraft {
+    z-index: 4;
+    top: 178px;
+    left: 1397px;
+    width: 370px;
+    height: 270px;
+    border: 0;
+    background: transparent;
+    overflow: visible;
+  }
+
+  .right-spacecraft .dish {
+    position: absolute;
+    left: 12px;
+    top: 23px;
+    width: 112px;
+    height: 135px;
+    border-radius: 50%;
+    border: 9px solid #b9b9b9;
+    border-left-width: 20px;
+    background: #555;
+    transform: rotate(-15deg);
+  }
+
+  .right-spacecraft .bus {
+    position: absolute;
+    left: 112px;
+    top: 76px;
+    width: 75px;
+    height: 83px;
+    background: #876d36;
+  }
+
+  .right-spacecraft .solar {
+    position: absolute;
+    left: 165px;
+    top: 4px;
+    width: 185px;
+    height: 210px;
+    border: 2px solid #4e4e4e;
+    background:
+      repeating-linear-gradient(to right, transparent 0 20px, rgba(255,255,255,.2) 20px 22px),
+      repeating-linear-gradient(to bottom, transparent 0 21px, rgba(255,255,255,.2) 21px 23px),
+      #18202f;
+    transform: skewY(10deg);
+  }
+
+  .right-spacecraft .caption {
+    position: absolute;
+    top: 227px;
+    left: 119px;
+    width: 125px;
+    font-size: 9px;
+  }
+
+  .camera-hardware {
+    top: 197px;
+    left: 272px;
+    width: 176px;
+    height: 258px;
+    opacity: .8;
+    transform: translateX(62px);
+    background:
+      linear-gradient(90deg, transparent 0 43%, #958047 43% 60%, transparent 60%),
+      linear-gradient(145deg, rgba(198,161,73,.8), rgba(76,58,24,.7));
+    clip-path: polygon(29% 0, 70% 0, 77% 32%, 95% 35%, 91% 100%, 13% 100%, 4% 43%, 25% 30%);
+  }
+
+  .grand-hardware {
+    z-index: 3;
+    top: 535px;
+    left: 80px;
+    width: 452px;
+    height: 210px;
+    border: 0;
+    background:
+      linear-gradient(150deg, #8f9198 0 30%, #36383e 31% 57%, #a99d3f 58% 100%);
+    clip-path: polygon(7% 21%, 33% 1%, 66% 18%, 100% 52%, 92% 100%, 19% 100%, 0 77%);
+  }
+
+  .vir-hardware {
+    z-index: 3;
+    top: 536px;
+    left: 1268px;
+    width: 458px;
+    height: 187px;
+    border: 0;
+    background:
+      linear-gradient(165deg, #e7e3cc 0 34%, #8f8569 35% 44%, #38332a 45% 59%, #c7c2aa 60% 100%);
+    clip-path: polygon(13% 12%, 93% 0, 100% 67%, 84% 100%, 19% 94%, 0 53%);
+  }
+
+  .person {
+    position: absolute;
+    z-index: 10;
+    text-align: center;
+    color: #fff;
+    font-style: italic;
+    font-weight: 700;
+  }
+
+  .portrait {
+    position: relative;
+    width: 86px;
+    height: 86px;
+    margin: 0 auto;
+    border: 1px solid rgba(255,255,255,.35);
+    border-radius: 50%;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 50% 34%, #d0a184 0 17%, transparent 18%),
+      radial-gradient(ellipse at 50% 62%, #c89778 0 28%, transparent 29%),
+      linear-gradient(145deg, #666, #222);
+  }
+
+  .portrait::after {
+    content: "[Portrait]";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 8px;
+    color: rgba(255,255,255,.5);
+    font-size: 8px;
+    font-weight: 400;
+  }
+
+  .person .name {
+    margin-top: 6px;
+    font-size: 9px;
+    line-height: 1.2;
+  }
+
+  .person .role {
+    margin-top: 2px;
+    font-size: 8px;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .holger {
+    top: 311px;
+    left: 287px;
+    width: 168px;
+  }
+
+  .sami {
+    top: 362px;
+    left: 1465px;
+    width: 158px;
+  }
+
+  .tom {
+    top: 640px;
+    left: 300px;
+    width: 150px;
+  }
+
+  .tom .portrait,
+  .angi .portrait {
+    width: 85px;
+    height: 85px;
+  }
+
+  .angi {
+    top: 603px;
+    left: 1579px;
+    width: 170px;
+  }
+
+  .center-copy {
+    position: absolute;
+    z-index: 11;
+    top: 611px;
+    left: 633px;
+    width: 551px;
+    color: #fff;
+    text-align: center;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 1.28;
+  }
+
+  .url {
+    position: absolute;
+    z-index: 12;
+    left: 553px;
+    bottom: 25px;
+    width: 600px;
+    color: #3db9cf;
+    font-size: 34px;
+    line-height: 1;
+    font-style: italic;
+    font-weight: 700;
+    text-align: center;
+    white-space: nowrap;
+  }
+</style>
+</head>
+<body>
+<main class="poster" aria-label="Dawn spacecraft scientific instruments poster">
+  <div class="top-rule"></div>
+
+  <header class="title-block cyan">
+    <h1>Dawn</h1>
+    <div class="subtitle">A journey to the beginning of the solar system</div>
+  </header>
+
+  <div class="orbit" aria-hidden="true"></div>
+
+  <div class="placeholder asteroid">[Image: asteroid]</div>
+
+  <div class="placeholder center-spacecraft" aria-label="Dawn spacecraft near asteroid">
+    <div class="array left"></div>
+    <div class="core"></div>
+    <div class="array right"></div>
+    <div class="caption">[Image: Dawn spacecraft]</div>
+  </div>
+
+  <div class="placeholder left-spacecraft">
+    <span>[Image: framing camera assembly]</span>
+  </div>
+
+  <div class="placeholder camera-hardware">[Image: framing camera hardware]</div>
+
+  <div class="placeholder right-spacecraft">
+    <div class="dish"></div>
+    <div class="bus"></div>
+    <div class="solar"></div>
+    <div class="caption">[Image: spacecraft]</div>
+  </div>
+
+  <div class="placeholder grand-hardware">[Image: Gamma Ray Neutron Detector]</div>
+  <div class="placeholder vir-hardware">[Image: Visible &amp; Infrared Spectrometer]</div>
+
+  <section class="instrument framing">
+    <h2>Framing Cameras <span class="flag flag-de" aria-label="German flag"></span></h2>
+    <p>
+      By imaging the surfaces of Vesta<br>
+      and Ceres, the framing cameras<br>
+      will enable scientists to map the<br>
+      topography, albedo and color, and<br>
+      to determine their shapes, volumes,<br>
+      and spin rates.
+    </p>
+  </section>
+
+  <div class="person holger">
+    <div class="portrait"></div>
+    <div class="name">Holger Sierks</div>
+    <div class="role">Framing Camera Lead, MPS</div>
+  </div>
+
+  <section class="instrument gravity">
+    <h2>Gravity Science <span class="flag flag-us" aria-label="United States flag"></span></h2>
+    <p>
+      Gravity science: the spacecraft<br>
+      transmits a radio signal to Earth<br>
+      through its high gain antenna<br>
+      that changes in frequency as the<br>
+      spacecraft’s speed changes when<br>
+      flying over areas of different<br>
+      densities. The collective set of<br>
+      information on the mass variations<br>
+      or concentrations is called<br>
+      the gravitational field<br>
+      of the body/planet.
+    </p>
+  </section>
+
+  <div class="person sami">
+    <div class="portrait"></div>
+    <div class="name">Sami Asmar</div>
+    <div class="role">Gravity Science Lead, JPL</div>
+  </div>
+
+  <section class="instrument grand">
+    <h2>Gamma Ray Neutron Detector <span class="flag flag-us" aria-label="United States flag"></span></h2>
+    <p>
+      GRaND measures<br>
+      elemental abundances<br>
+      on the surfaces<br>
+      of Vesta and Ceres,<br>
+      offering insight into their<br>
+      respective formation<br>
+      and evolution
+    </p>
+  </section>
+
+  <div class="person tom">
+    <div class="portrait"></div>
+    <div class="name">Tom Prettyman</div>
+    <div class="role">GRaND Team Lead, PSI</div>
+  </div>
+
+  <section class="instrument vir">
+    <h2>Visible &amp; Infrared Spectrometer <span class="flag flag-it" aria-label="Italian flag"></span></h2>
+    <p>
+      VIR measures reflected<br>
+      sunlight and emitted thermal<br>
+      radiation from the surfaces of<br>
+      the targets. Scientists extract<br>
+      and then map mineralogical<br>
+      signatures and thermal<br>
+      properties. These properties<br>
+      hold clues to the history<br>
+      and formation mechanisms<br>
+      of Vesta and Ceres.
+    </p>
+  </section>
+
+  <div class="person angi">
+    <div class="portrait"></div>
+    <div class="name">Angioletta Coradini,</div>
+    <div class="role">VIR Team Leader, INAF</div>
+  </div>
+
+  <div class="center-copy">
+    In its journey to the main asteroid belt to orbit two diverse<br>
+    protoplanets, Vesta and Ceres, Dawn is carrying a suite of<br>
+    sophisticated scientific instruments to collect data that will<br>
+    inform us about the early formation of our solar system.
+  </div>
+
+  <div class="url">http://dawn.jpl.nasa.gov</div>
+</main>
+</body>
+</html>

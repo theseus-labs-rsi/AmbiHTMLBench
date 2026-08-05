@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analyzing Healthcare in the US</title>
+  <script>
+    window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      width: 100%;
+      min-width: 900px;
+      font-family: "Arial", "Helvetica Neue", sans-serif;
+      color: #5f5b68;
+      background: #f7f7f7;
+    }
+
+    .page { width: 100%; overflow: hidden; }
+
+    .hero {
+      height: 485px;
+      background: linear-gradient(110deg, #4f3268 0%, #3a1c5b 100%);
+      text-align: center;
+      padding-top: 128px;
+    }
+    .hero .analyzing {
+      color: #10c6ca;
+      font-size: 78px;
+      line-height: 1;
+      font-weight: 300;
+      letter-spacing: -3px;
+      margin-bottom: 34px;
+    }
+    .hero h1 {
+      margin: 0;
+      color: white;
+      font-size: 79px;
+      font-weight: 700;
+      letter-spacing: -3px;
+      line-height: 1.05;
+    }
+
+    .color-strip {
+      height: 44px;
+      display: flex;
+      background: #13c4c7;
+    }
+    .color-strip .dark { width: 28.45%; background: #211138; }
+    .color-strip .teal { flex: 1; background: linear-gradient(90deg, #0aa6a7, #13c9cb); }
+
+    .upper {
+      height: 1172px;
+      display: grid;
+      grid-template-columns: 43.1% 56.9%;
+      background: #fff;
+    }
+
+    .photo {
+      height: 1172px;
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(120deg, rgba(0,202,207,.62), rgba(42,38,151,.36)),
+        linear-gradient(155deg, #d5d7d4 0 13%, #eee 13% 42%, #bec2c0 42% 100%);
+    }
+    .photo::before {
+      content: "";
+      position: absolute;
+      width: 370px;
+      height: 370px;
+      border-radius: 50%;
+      left: 73px;
+      top: 50px;
+      background:
+        radial-gradient(ellipse at 58% 37%, #193d47 0 11%, transparent 12%),
+        radial-gradient(ellipse at 55% 63%, #26858a 0 16%, transparent 17%),
+        repeating-radial-gradient(ellipse at 50% 50%, rgba(0,255,255,.55) 0 6px, rgba(3,76,86,.35) 8px 13px);
+      opacity: .95;
+      transform: rotate(-13deg);
+    }
+    .photo::after {
+      content: "[Photo: surgeon wearing surgical mask in operating room]";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 435px;
+      padding: 360px 22px 18px;
+      color: transparent;
+      background:
+        radial-gradient(ellipse at 55% 20%, rgba(18,196,201,.65) 0 21%, transparent 22%),
+        linear-gradient(145deg, rgba(37,38,176,.9), rgba(0,189,195,.24));
+      font-size: 14px;
+    }
+
+    .content {
+      padding: 101px 8% 70px 8%;
+      background: #fff;
+    }
+
+    .section {
+      position: relative;
+      padding-left: 8px;
+      margin-left: 0;
+    }
+    .section + .section { margin-top: 291px; }
+
+    .section-icon,
+    .statistics-icon {
+      position: absolute;
+      border-radius: 50%;
+      background: #533174;
+      width: 84px;
+      height: 84px;
+    }
+    .section-icon { left: -149px; top: 3px; }
+
+    .check {
+      position: absolute;
+      width: 43px;
+      height: 22px;
+      border-left: 12px solid #fff;
+      border-bottom: 12px solid #fff;
+      transform: rotate(-45deg);
+      left: 18px;
+      top: 25px;
+      border-radius: 2px;
+    }
+
+    h2 {
+      color: #52306f;
+      font-size: 40px;
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      margin: 0 0 32px 0;
+      font-weight: 700;
+    }
+    p {
+      font-size: 28px;
+      font-weight: 300;
+      line-height: 1.55;
+      letter-spacing: -.6px;
+      margin: 0;
+    }
+    .market p:first-of-type { max-width: 710px; }
+    .market p + p { margin-top: 43px; max-width: 750px; }
+
+    .coverage h2 { margin-bottom: 31px; }
+    .coverage p {
+      max-width: 710px;
+      line-height: 1.48;
+    }
+    .coverage ul {
+      list-style: none;
+      margin: 8px 0 0 0;
+      padding: 0 0 0 30px;
+      font-size: 28px;
+      font-weight: 300;
+      line-height: 1.6;
+      letter-spacing: -.5px;
+    }
+    .coverage li { position: relative; }
+    .coverage li::before {
+      content: "•";
+      color: #12c8cb;
+      font-size: 31px;
+      position: absolute;
+      left: -23px;
+      top: -1px;
+    }
+
+    .statistics {
+      min-height: 603px;
+      background: #f7f7f7;
+      padding: 108px 8.2% 80px 13.8%;
+      position: relative;
+    }
+    .statistics-icon {
+      left: 4.65%;
+      top: 87px;
+    }
+    .statistics h2 {
+      margin: 0 0 48px 0;
+      font-size: 40px;
+    }
+    .chart-title {
+      margin-left: 0;
+      font-size: 28px;
+      font-weight: 300;
+      color: #5d5967;
+      margin-bottom: 26px;
+    }
+
+    .chart {
+      width: 100%;
+      height: 292px;
+      border-left: 1px solid #757575;
+      border-bottom: 1px solid #757575;
+      position: relative;
+      background-image:
+        repeating-linear-gradient(to right, transparent 0, transparent 117px, rgba(120,120,120,.18) 118px, transparent 119px),
+        repeating-linear-gradient(to bottom, transparent 0, transparent 72px, rgba(120,120,120,.21) 73px, transparent 74px);
+    }
+    .bar {
+      height: 48px;
+      background: #10c5c9;
+      border-radius: 0 11px 11px 0;
+      position: absolute;
+      left: 0;
+    }
+    .bar span {
+      position: absolute;
+      left: calc(100% + 7px);
+      top: 2px;
+      color: #51306f;
+      font-size: 39px;
+      line-height: 1;
+      font-weight: 700;
+      letter-spacing: -1px;
+    }
+    .bar.one { top: 13px; width: 87%; }
+    .bar.two { top: 85px; width: 69.5%; }
+    .bar.three { top: 157px; width: 52.2%; }
+    .bar.four { top: 229px; width: 17.5%; }
+
+    @media (max-width: 1100px) {
+      .hero .analyzing { font-size: 54px; }
+      .hero h1 { font-size: 58px; }
+      .content { padding-left: 17%; }
+      h2 { font-size: 32px; }
+      p, .coverage ul, .chart-title { font-size: 22px; }
+      .section-icon { left: -110px; transform: scale(.78); transform-origin: top left; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <div class="analyzing">Analyzing</div>
+      <h1>Healthcare in the US</h1>
+    </header>
+
+    <div class="color-strip" aria-hidden="true">
+      <div class="dark"></div>
+      <div class="teal"></div>
+    </div>
+
+    <section class="upper">
+      <div class="photo placeholder" aria-label="Photo of surgeon wearing surgical mask in operating room"></div>
+
+      <div class="content">
+        <section class="section market">
+          <div class="section-icon" aria-hidden="true"><span class="check"></span></div>
+          <h2>The Market Fundamentals</h2>
+          <p>The healthcare market is fundamentally different from<br>
+            any other commodity market. The fundamental difference<br>
+            is one cannot predict when demand will rise and fall.<br>
+            COVID-19 did away with all underlying presumptions<br>
+            about how the market behaves.</p>
+          <p>If patients are customers, the customers themselves cannot<br>
+            plan ahead on when to opt for healthcare services. ER/<br>
+            Accident distinguish this market in fundamental ways.</p>
+        </section>
+
+        <section class="section coverage">
+          <div class="section-icon" aria-hidden="true"><span class="check"></span></div>
+          <h2>Healthcare Coverage Across the US</h2>
+          <p>Healthcare coverage has increased in America over the years<br>
+            due to the following reasons.</p>
+          <ul>
+            <li>Government-sponsored Medicaid plans</li>
+            <li>Medicare</li>
+            <li>Liberalization of laws</li>
+            <li>Competition amongst private health insurers</li>
+            <li>State-level health plans</li>
+          </ul>
+        </section>
+      </div>
+    </section>
+
+    <section class="statistics">
+      <div class="statistics-icon" aria-hidden="true"><span class="check"></span></div>
+      <h2>Healthcare Coverage Statistics</h2>
+      <div class="chart-title">Adults Covered</div>
+      <div class="chart placeholder" aria-label="Horizontal bar chart">
+        <div class="bar one"><span>50%</span></div>
+        <div class="bar two"><span>40%</span></div>
+        <div class="bar three"><span>30%</span></div>
+        <div class="bar four"><span>10%</span></div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

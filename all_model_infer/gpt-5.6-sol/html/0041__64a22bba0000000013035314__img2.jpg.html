@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>三角形的稳定性与四边形的不稳定性</title>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$']],
+        displayMath: [['$$', '$$']]
+      }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: #ecebea;
+      color: #77736f;
+      font-family: "SimSun", "Songti SC", serif;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      padding: 0;
+    }
+
+    .page {
+      position: relative;
+      width: 540px;
+      height: 763px;
+      overflow: hidden;
+      background: #fbfaf9;
+      padding: 52px 42px 28px;
+      box-shadow: 0 0 10px rgba(80, 70, 60, 0.08);
+    }
+
+    p {
+      margin: 0;
+    }
+
+    .body-copy {
+      font-size: 13px;
+      line-height: 1.58;
+      text-align: justify;
+      text-indent: 2em;
+    }
+
+    .body-copy + .body-copy {
+      margin-top: 2px;
+    }
+
+    .examples {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 54px;
+      align-items: end;
+      margin: 17px 18px 0;
+    }
+
+    figure {
+      margin: 0;
+      text-align: center;
+    }
+
+    .placeholder {
+      position: relative;
+      overflow: hidden;
+      color: transparent;
+      font-size: 0;
+    }
+
+    .bridge {
+      width: 148px;
+      height: 79px;
+      margin: 0 auto;
+      border-bottom: 4px solid #8d724a;
+      background:
+        linear-gradient(162deg, transparent 47%, #796b4c 48% 51%, transparent 52%) 0 21px / 24px 48px repeat-x,
+        linear-gradient(18deg, transparent 47%, #796b4c 48% 51%, transparent 52%) 0 21px / 24px 48px repeat-x,
+        linear-gradient(to bottom, #765f3e 0 7px, transparent 7px 17px, #9a885f 17px 21px, transparent 21px),
+        linear-gradient(to right, #d2c6a5, #8b987b 45%, #d2b46b);
+      transform: perspective(180px) rotateY(-4deg);
+    }
+
+    .bridge::before {
+      content: "";
+      position: absolute;
+      left: 5px;
+      right: 2px;
+      top: 15px;
+      height: 42px;
+      border-top: 4px solid #655a43;
+      border-bottom: 4px solid #655a43;
+      background:
+        repeating-linear-gradient(90deg, transparent 0 17px, #746c50 18px 21px),
+        repeating-linear-gradient(55deg, transparent 0 17px, #80775a 18px 20px);
+    }
+
+    .bridge::after {
+      content: "";
+      position: absolute;
+      left: 18px;
+      bottom: -9px;
+      width: 49px;
+      height: 39px;
+      border: 6px solid #6d664f;
+      border-right-width: 4px;
+      border-radius: 55% 55% 0 0;
+    }
+
+    .crane {
+      width: 155px;
+      height: 103px;
+      margin: 0 auto;
+    }
+
+    .crane::before {
+      content: "";
+      position: absolute;
+      left: 64px;
+      top: 13px;
+      width: 112px;
+      height: 6px;
+      transform: rotate(-34deg);
+      transform-origin: left center;
+      background: #d6a442;
+      box-shadow: 0 3px 0 #b27c26;
+    }
+
+    .crane::after {
+      content: "";
+      position: absolute;
+      left: 24px;
+      bottom: 17px;
+      width: 64px;
+      height: 25px;
+      background: #d99327;
+      border: 1px solid #9e762d;
+      box-shadow:
+        -15px 9px 0 -4px #d39a35,
+        11px 10px 0 -5px #777;
+    }
+
+    .crane-lines {
+      position: absolute;
+      left: 76px;
+      top: 12px;
+      width: 82px;
+      height: 53px;
+      transform: skewY(-31deg);
+      border-top: 1px solid #a77e34;
+      border-bottom: 1px solid #a77e34;
+      background: repeating-linear-gradient(
+        62deg,
+        transparent 0 12px,
+        #b58a3d 13px 14px,
+        transparent 15px 24px
+      );
+    }
+
+    .crane-hook {
+      position: absolute;
+      right: 7px;
+      top: 14px;
+      width: 1px;
+      height: 41px;
+      background: #777;
+    }
+
+    .crane-hook::after {
+      content: "";
+      position: absolute;
+      left: -2px;
+      bottom: -3px;
+      width: 5px;
+      height: 6px;
+      border-left: 2px solid #777;
+      border-bottom: 2px solid #777;
+      border-radius: 0 0 0 5px;
+    }
+
+    figcaption {
+      margin-top: 7px;
+      color: #7a7772;
+      font-size: 10px;
+    }
+
+    .figure-number {
+      margin-top: 10px;
+      text-align: center;
+      font-size: 10px;
+      color: #77736f;
+    }
+
+    .second-copy {
+      margin-top: 8px;
+    }
+
+    .applications {
+      display: grid;
+      grid-template-columns: 176px 1fr;
+      column-gap: 30px;
+      align-items: center;
+      margin: 6px 11px 0;
+    }
+
+    .rack {
+      width: 169px;
+      height: 106px;
+      margin: 0 auto;
+    }
+
+    .rack::before,
+    .rack::after {
+      content: "";
+      position: absolute;
+      inset: 5px 15px 12px;
+      background:
+        linear-gradient(63deg, transparent 44%, #d89b37 45% 52%, transparent 53%) 0 0 / 59px 82px repeat-x,
+        linear-gradient(117deg, transparent 44%, #d89b37 45% 52%, transparent 53%) 0 0 / 59px 82px repeat-x;
+    }
+
+    .rack::after {
+      inset: 10px 20px 7px;
+      filter: brightness(1.06);
+      opacity: 0.7;
+    }
+
+    .gate {
+      width: 225px;
+      height: 109px;
+      border-bottom: 3px solid #777a72;
+      background:
+        linear-gradient(62deg, transparent 46%, #bfc7c1 47% 50%, transparent 51%) 0 14px / 24px 82px repeat-x,
+        linear-gradient(118deg, transparent 46%, #aab5af 47% 50%, transparent 51%) 0 14px / 24px 82px repeat-x,
+        repeating-linear-gradient(90deg, transparent 0 10px, #8d9893 11px 13px);
+    }
+
+    .gate::before {
+      content: "";
+      position: absolute;
+      right: 2px;
+      top: 2px;
+      width: 29px;
+      height: 103px;
+      border: 3px solid #8c8e88;
+      background: #f0f1ef;
+      box-shadow: inset 0 0 0 3px #ccd0ca;
+    }
+
+    .gate::after {
+      content: "";
+      position: absolute;
+      right: 8px;
+      top: 15px;
+      width: 16px;
+      height: 18px;
+      background: #4d4842;
+      border-radius: 2px;
+      box-shadow:
+        2px 68px 0 -5px #454545,
+        -17px 68px 0 -5px #454545;
+    }
+
+    .practice {
+      position: absolute;
+      left: 19px;
+      right: 45px;
+      bottom: 61px;
+      height: 184px;
+      padding: 23px 20px 10px;
+      border: 1.5px dashed #d8c692;
+      border-radius: 30px;
+    }
+
+    .practice-title {
+      position: absolute;
+      top: -12px;
+      left: 25px;
+      min-width: 55px;
+      height: 23px;
+      padding: 3px 12px 0;
+      border-radius: 14px;
+      background: #d49b39;
+      color: #fff;
+      font-family: "Microsoft YaHei", sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .question {
+      font-size: 12px;
+      color: #74716d;
+    }
+
+    .shape-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, 58px);
+      column-gap: 31px;
+      row-gap: 1px;
+      margin-top: 6px;
+    }
+
+    .shape-item {
+      text-align: center;
+      font-size: 10px;
+    }
+
+    .shape {
+      display: block;
+      width: 78px;
+      height: 44px;
+      margin: 0 auto 1px;
+    }
+
+    .shape polygon,
+    .shape rect,
+    .shape line,
+    .shape polyline {
+      fill: none;
+      stroke: #858585;
+      stroke-width: 1.1;
+      vector-effect: non-scaling-stroke;
+    }
+
+    .item-label {
+      color: #77736f;
+    }
+
+    .footer {
+      position: absolute;
+      right: 43px;
+      bottom: 29px;
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      font-size: 10px;
+      color: #77736f;
+    }
+
+    .page-number {
+      font-size: 12px;
+      color: #5f5d59;
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <p class="body-copy">还可以发现，斜钉一根木条的四边形木架的形状不会改变。这是因为斜钉一根木条后，四边形变成两个三角形，由于三角形有稳定性，斜钉一根木条的篱笆在未安装好之前也不会变形。</p>
+    <p class="body-copy">三角形的稳定性有广泛的应用，图 11.1-8 表示其中一些例子，你能再举一些例子吗？</p>
+
+    <section class="examples">
+      <figure>
+        <div class="placeholder bridge">[图片：钢架桥]</div>
+        <figcaption>钢架桥</figcaption>
+      </figure>
+      <figure>
+        <div class="placeholder crane">
+          [图片：起重机]
+          <span class="crane-lines"></span>
+          <span class="crane-hook"></span>
+        </div>
+        <figcaption>起重机</figcaption>
+      </figure>
+    </section>
+
+    <div class="figure-number">图 11.1-8</div>
+
+    <p class="body-copy second-copy">四边形的不稳定性也有广泛的应用，图 11.1-9 表示其中一些例子。</p>
+
+    <section class="applications">
+      <figure>
+        <div class="placeholder rack">[图片：活动挂架]</div>
+        <figcaption>活动挂架</figcaption>
+      </figure>
+      <figure>
+        <div class="placeholder gate">[图片：伸缩门]</div>
+        <figcaption>伸缩门</figcaption>
+      </figure>
+    </section>
+
+    <div class="figure-number">图 11.1-9</div>
+
+    <section class="practice">
+      <div class="practice-title">练习</div>
+      <p class="question">下列图形中哪些具有稳定性？</p>
+
+      <div class="shape-grid">
+        <div class="shape-item">
+          <svg class="shape" viewBox="0 0 78 44" aria-label="图形1">
+            <polygon points="8,37 31,5 57,37"></polygon>
+            <polygon points="31,5 72,5 57,37"></polygon>
+          </svg>
+          <span class="item-label">（1）</span>
+        </div>
+
+        <div class="shape-item">
+          <svg class="shape" viewBox="0 0 78 44" aria-label="图形2">
+            <rect x="9" y="5" width="61" height="33"></rect>
+            <line x1="39.5" y1="5" x2="39.5" y2="38"></line>
+          </svg>
+          <span class="item-label">（2）</span>
+        </div>
+
+        <div class="shape-item">
+          <svg class="shape" viewBox="0 0 78 44" aria-label="图形3">
+            <rect x="18" y="13" width="42" height="27"></rect>
+            <polyline points="18,13 39,1 60,13"></polyline>
+          </svg>
+          <span class="item-label">（3）</span>
+        </div>
+
+        <div class="shape-item">
+          <svg class="shape" viewBox="0 0 78 44" aria-label="图形4">
+            <polygon points="7,5 66,1 58,41 19,40"></polygon>
+            <line x1="7" y1="5" x2="58" y2="41"></line>
+          </svg>
+          <span class="item-label">（4）</span>
+        </div>
+
+        <div class="shape-item">
+          <svg class="shape" viewBox="0 0 78 44" aria-label="图形5">
+            <polygon points="17,4 53,5 70,21 65,41 28,41 7,20"></polygon>
+          </svg>
+          <span class="item-label">（5）</span>
+        </div>
+
+        <div class="shape-item">
+          <svg class="shape" viewBox="0 0 78 44" aria-label="图形6">
+            <polygon points="20,3 47,3 69,21 61,42 28,42 7,21"></polygon>
+            <line x1="20" y1="3" x2="61" y2="42"></line>
+            <line x1="47" y1="3" x2="28" y2="42"></line>
+            <line x1="7" y1="21" x2="69" y2="21"></line>
+          </svg>
+          <span class="item-label">（6）</span>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>第十一章　三角形</span>
+      <span class="page-number">7</span>
+    </footer>
+  </main>
+</body>
+</html>

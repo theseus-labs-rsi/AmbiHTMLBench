@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Research Paper Page</title>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #fff; }
+  body {
+    font-family: "Times New Roman", Times, serif;
+    color: #000;
+  }
+  .page {
+    width: 1450px;
+    min-height: 1270px;
+    margin: 0 auto;
+    padding: 29px 22px 0 56px;
+    display: grid;
+    grid-template-columns: 670px 1fr;
+    column-gap: 31px;
+    overflow: hidden;
+  }
+  .left { width: 670px; }
+  .right {
+    width: 671px;
+    font-size: 27px;
+    line-height: 1.185;
+    text-align: justify;
+  }
+  .right p { margin: 0; }
+  .figure-one { height: 283px; }
+  .fig1-art {
+    width: 650px;
+    height: 190px;
+    display: flex;
+    align-items: flex-start;
+    gap: 39px;
+    margin-left: 13px;
+  }
+  .matrix {
+    width: 173px;
+    height: 174px;
+    position: relative;
+    border-left: 2px dashed #222;
+    border-right: 2px dashed #222;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    padding: 1px 4px;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    line-height: 21px;
+    text-align: center;
+  }
+  .matrix span:nth-child(3n), .matrix span:nth-child(7n+4) {
+    background: #070707;
+    color: white;
+  }
+  .heatmap {
+    width: 175px;
+    height: 177px;
+    position: relative;
+    border: 1px solid #bbb;
+    background:
+      radial-gradient(ellipse at 49% 49%, rgba(255,255,255,.94) 0 10%, transparent 21%),
+      radial-gradient(ellipse at 77% 45%, rgba(238,36,29,.83) 0 5%, transparent 22%),
+      radial-gradient(ellipse at 27% 58%, rgba(44,83,237,.74) 0 6%, transparent 24%),
+      linear-gradient(90deg, #273bc5 0%, #eef1ff 13%, #f6f6f7 36%, #fff0ef 61%, #e92920 94%);
+  }
+  .heatmap .nums {
+    padding: 0 2px;
+    font-size: 16px;
+    line-height: 43px;
+    white-space: nowrap;
+  }
+  .heatmap:after {
+    content: "";
+    position: absolute;
+    right: -22px;
+    top: 0;
+    width: 9px;
+    height: 176px;
+    background: linear-gradient(#ee1e18, #fff 49%, #1c2daf);
+    border: 1px solid #ccc;
+  }
+  .blob {
+    width: 173px;
+    height: 173px;
+    margin-left: 32px;
+    background:
+      radial-gradient(ellipse at 34% 32%, white 0 16%, transparent 17%),
+      radial-gradient(ellipse at 27% 49%, white 0 13%, transparent 14%),
+      radial-gradient(ellipse at 83% 51%, white 0 17%, transparent 18%),
+      radial-gradient(ellipse at 85% 91%, white 0 7%, transparent 8%),
+      #000;
+    border: 1px solid #777;
+  }
+  .placeholder { position: relative; }
+  .placeholder .hidden-caption {
+    position: absolute;
+    font-size: 1px;
+    color: transparent;
+    overflow: hidden;
+    width: 1px;
+    height: 1px;
+  }
+  .subfig-labels {
+    width: 470px;
+    display: flex;
+    justify-content: space-between;
+    margin: 1px 0 0 84px;
+    font-size: 19px;
+  }
+  .caption {
+    font-size: 21px;
+    line-height: 24px;
+    margin-top: 10px;
+  }
+  .fig2 { height: 246px; }
+  .fig2-title {
+    position: relative;
+    height: 41px;
+    font-size: 15px;
+  }
+  .input-label { position: absolute; left: 61px; top: 4px; }
+  .output-label { position: absolute; left: 409px; top: 4px; }
+  .down-arrow, .up-arrow {
+    position: absolute;
+    top: -10px;
+    font-size: 35px;
+    font-weight: normal;
+  }
+  .down-arrow { left: 25px; }
+  .up-arrow { right: 37px; }
+  .cnn {
+    height: 109px;
+    margin-left: 60px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 34px;
+  }
+  .antenna {
+    width: 94px;
+    height: 61px;
+    border: 1px dashed #111;
+    background:
+      linear-gradient(90deg, transparent 16%, #111 16% 19%, transparent 19% 37%, #111 37% 41%, transparent 41% 58%, #111 58% 62%, transparent 62%),
+      linear-gradient(0deg, transparent 24%, #111 24% 28%, transparent 28% 47%, #111 47% 51%, transparent 51% 71%, #111 71% 75%, transparent 75%);
+  }
+  .stack {
+    width: 75px;
+    height: 63px;
+    border: 1px solid #333;
+    box-shadow: 7px -7px 0 #fff, 7px -7px 0 1px #555, 14px -14px 0 #fff, 14px -14px 0 1px #555;
+    background: #fafafa;
+  }
+  .smallstack {
+    width: 54px;
+    height: 38px;
+    border: 1px solid #333;
+    box-shadow: 5px -5px 0 #fff, 5px -5px 0 1px #555, 10px -10px 0 #fff, 10px -10px 0 1px #555;
+  }
+  .layers {
+    width: 52px;
+    height: 28px;
+    border: 1px solid #111;
+    background: repeating-linear-gradient(135deg, #fff 0 4px, #111 4px 5px);
+  }
+  .outputline {
+    width: 55px;
+    height: 3px;
+    background: #111;
+    transform: rotate(-10deg);
+  }
+  .cnn-labels {
+    font-size: 15px;
+    position: relative;
+    height: 30px;
+  }
+  .cnn-labels span { position: absolute; top: 0; }
+  .lab1 { left: 170px; }
+  .lab2 { left: 370px; }
+  .lab3 { left: 537px; }
+  .fig2cap { margin-top: 1px; }
+  .left-text {
+    font-size: 27px;
+    line-height: 1.18;
+    text-align: justify;
+    margin-top: 23px;
+  }
+  .left-text p { margin: 0 0 14px 0; }
+  .equation {
+    display: grid;
+    grid-template-columns: 1fr 38px;
+    align-items: center;
+    margin: 13px 0 10px;
+    min-height: 170px;
+    font-size: 25px;
+  }
+  .eqnum {
+    text-align: right;
+    font-size: 25px;
+  }
+  .equation.short {
+    min-height: 62px;
+    margin: 7px 0 9px;
+  }
+  .equation.gauss {
+    min-height: 76px;
+    margin: 8px 0 9px;
+  }
+  .indent { text-indent: 0; }
+  mjx-container[display="true"] { margin: 0 !important; }
+</style>
+</head>
+<body>
+<div class="page">
+  <section class="left">
+    <div class="figure-one">
+      <div class="fig1-art">
+        <div class="matrix placeholder">
+          <span>0</span><span>0</span><span>0</span><span>1</span><span>0</span><span>0</span><span>0</span>
+          <span>0</span><span>1</span><span>0</span><span>1</span><span>0</span><span>0</span><span>1</span>
+          <span>0</span><span>0</span><span>1</span><span>0</span><span>1</span><span>0</span><span>0</span>
+          <span>0</span><span>0</span><span>0</span><span>1</span><span>1</span><span>1</span><span>0</span>
+          <span>0</span><span>0</span><span>0</span><span>0</span><span>1</span><span>0</span><span>0</span>
+          <span>0</span><span>1</span><span>0</span><span>0</span><span>1</span><span>0</span><span>0</span>
+          <span>0</span><span>1</span><span>1</span><span>0</span><span>1</span><span>0</span><span>0</span>
+          <span>0</span><span>0</span><span>0</span><span>1</span><span>1</span><span>1</span><span>0</span>
+          <span class="hidden-caption">[Pixelated geometry matrix]</span>
+        </div>
+        <div class="heatmap placeholder">
+          <div class="nums">1.00 -0.82 1.00 0.41 -0.69<br>-0.30 -0.57 0.83 0.69 1.00<br>0.92 -0.35 0.82 -0.74 -0.85<br>0.88 0.04 0.15 1.00 0.86<br>0.83 0.65 1.00 0.39 -0.38</div>
+          <span class="hidden-caption">[Mapped matrix]</span>
+        </div>
+        <div class="blob placeholder"><span class="hidden-caption">[NGnet-generated geometry]</span></div>
+      </div>
+      <div class="subfig-labels"><span>(a)</span><span>(b)</span></div>
+      <div class="caption"><b>Fig. 1.</b>&nbsp;&nbsp; Geometry generation strategies. (a) Pixelated geometry and its mapped<br>matrix. (b) NGnet-generated geometry and its mapped matrix.</div>
+    </div>
+
+    <div class="fig2">
+      <div class="fig2-title">
+        <span class="down-arrow">⇩</span><span class="input-label">Input: Antenna topology</span>
+        <span class="output-label">Output: Antenna performance</span><span class="up-arrow">⇧</span>
+      </div>
+      <div class="cnn placeholder">
+        <div class="antenna"></div><div class="stack"></div><div class="smallstack"></div><div class="stack"></div><div class="layers"></div><div class="outputline"></div>
+        <span class="hidden-caption">[CNN structure diagram]</span>
+      </div>
+      <div class="cnn-labels"><span class="lab1">Convolution+Relu</span><span class="lab2">Convolution+Relu</span><span class="lab3">Fully connected</span></div>
+      <div class="fig2cap caption"><b>Fig. 2.</b>&nbsp;&nbsp;&nbsp; CNN structure used in the ML modeling process.</div>
+    </div>
+
+    <div class="left-text">
+      <p>antenna shape is expressed in terms of the linear combination<br>of normalized Gaussian functions, as shown in Fig. <span style="color:#073bd4;">1(b)</span>. The<br>antenna geometry can be expressed as</p>
+
+      <div class="equation">
+        <div>$$
+          \left\{
+          \begin{array}{ll}
+          \displaystyle \sum_{k=1}^{N}w_i b_i(x)\geq 0,\quad \rho_{\mathrm{topo}}(x)=1\\[7pt]
+          \displaystyle \sum_{k=1}^{N}w_i b_i(x)<0,\quad \rho_{\mathrm{topo}}(x)=0
+          \end{array}
+          \right.
+        $$</div>
+        <div class="eqnum">(4)</div>
+      </div>
+
+      <p>in which \(b_i(x)\) represents the normalized Gaussian function,<br>\(w_i\) is the weighting coefficient, and \(N\) is the number of<br>Gaussian functions. \(b_i(x)\) is calculated using</p>
+
+      <div class="equation short">
+        <div>$$b_i(x)=G_i(x)\big/\sum_{k=1}^{N}G_k(x)$$</div>
+        <div class="eqnum">(5)</div>
+      </div>
+
+      <p>in which \(G_k(x)\) represents the Gaussian function with center<br>\(\mu_k\) and covariance matrix \(\Sigma_k\), expressed as follows:</p>
+
+      <div class="equation gauss">
+        <div>$$G_k(x)=\frac{1}{(2\pi)^{D/2}|\Sigma|^{1/2}}e^{-1/2(x-\mu_k)^T\Sigma_k^{-1}(x-\mu_k)}$$</div>
+        <div class="eqnum">(6)</div>
+      </div>
+
+      <p>in which \(D\) signifies the dimension of input \(x\). In this case,<br>\(\rho_{\mathrm{topo}}(x)\) is mapped into a vector of hyperparameters \(w\quad=\)</p>
+    </div>
+  </section>
+
+  <section class="right">
+    <p>in Fig. <span style="color:#073bd4;">2</span>. The first two layers play roles in feature extraction,<br>and the third layer maps the extracted features into the final<br>output, such as the antenna performance at frequency points of<br>concern. The convolution layer is the fundamental component<br>of the CNN, which typically consists of linear and nonlinear<br>operations, i.e., convolution operation and activation operation.<br>The convolution operation introduces a small array of numbers<br>called a kernel to be applied to the input tensor, which is<br>an array of numbers. The elementwise product between each<br>element of the kernel and the input tensor is calculated at each<br>location of the tensor and then summed to obtain the output<br>value at the corresponding position of the output tensor, which<br>is called a feature map. This procedure is then repeated by<br>applying multiple kernels to form multiple feature maps to<br>represent the characteristics of the input tensors. Two main<br>hyperparameters define the convolution operation: the kernel<br>size \(p \times q\) and kernel number \(n_{\mathrm{kernel}}\). We suggest using a<br>\(3 \times 3\) size kernel in the proposed algorithm.</p>
+    <p style="margin-top:0;">&nbsp;&nbsp;For overlap of the outermost element of the input tensor,<br>zero padding is essential before the convolution operation. The<br>kernels are shared across the entire image positions, which<br>largely increases the modeling efficiency by reducing the<br>number of parameters to learn. The outputs of the convolution<br>are then passed through a nonlinear activation function, which<br>is the rectified linear unit (ReLU) in the presented algorithm.<br>Then, the output is passed through the pooling layer to<br>implement the downsampling operation, which reduces the in-<br>plane dimensionality of the feature maps. Here, max pooling<br>is implemented, in which the maximum values in each patch<br>extracted from the input feature maps are outputted. The<br>used CNN consists of a stack of several convolution layers<br>and pooling layers, followed by one fully connected layer<br>and one regression layer. To achieve a balance between the<br>computational cost and modeling ability, a shallow CNN with<br>a layer number of 2 is recommended. The output feature maps<br>of the final pooling layer are flattened and connected to the<br>fully connected layer, in which every input is connected to<br>every output by a learnable weight.</p>
+  </section>
+</div>
+</body>
+</html>

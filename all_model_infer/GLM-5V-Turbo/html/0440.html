@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script>window.MathJax={tex:{inlineMath:[["$","$"]],displayMath:[["$$","$$"]]}};</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Studio Web Share Vol.07</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #fff;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 20px 20px;
+            border-bottom: 2px solid #000;
+        }
+        
+        .logo {
+            font-size: 32px;
+            font-style: italic;
+            font-weight: 900;
+            letter-spacing: -2px;
+        }
+        
+        .logo-sub {
+            font-size: 20px;
+            font-weight: normal;
+        }
+        
+        .vol-info {
+            font-size: 18px;
+            margin-left: 5px;
+        }
+        
+        .header-btn {
+            border: 2px solid #000;
+            padding: 6px 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: bold;
+            font-size: 16px;
+            background: #fff;
+        }
+        
+        .folder-icon {
+            width: 20px;
+            height: 16px;
+            border: 2px solid #000;
+            position: relative;
+        }
+        
+        .folder-icon::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: 0;
+            width: 8px;
+            height: 4px;
+            border: 2px solid #000;
+            border-bottom: none;
+        }
+        
+        /* Folders Area */
+        .folders-area {
+            position: relative;
+            height: 320px;
+            padding: 40px 20px;
+        }
+        
+        .folder {
+            position: absolute;
+            width: 160px;
+            height: 120px;
+            background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);
+            border: 1px solid #ccc;
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            line-height: 1.2;
+        }
+        
+        .folder::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 10px;
+            right: 10px;
+            height: 20px;
+            background: linear-gradient(to bottom, #ddd, #eee);
+            border-bottom: 1px solid #bbb;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .folder-num {
+            position: absolute;
+            bottom: 8px;
+            right: 10px;
+            width: 24px;
+            height: 24px;
+            background: #ddd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #666;
+            border: 1px solid #bbb;
+        }
+        
+        .folder-1 {
+            top: 60px;
+            left: 30px;
+            transform: rotate(-25deg);
+        }
+        
+        .folder-1 .main-text {
+            font-size: 28px;
+            letter-spacing: 2px;
+        }
+        
+        .folder-1 .sub-text {
+            font-size: 14px;
+            writing-mode: vertical-rl;
+            position: absolute;
+            right: 35px;
+            top: 30px;
+            letter-spacing: 1px;
+        }
+        
+        .folder-2 {
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .folder-2 .chinese {
+            font-size: 26px;
+            margin-bottom: 4px;
+        }
+        
+        .folder-2 .english {
+            font-size: 13px;
+            letter-spacing: 1px;
+        }
+        
+        .folder-3 {
+            top: 70px;
+            right: 30px;
+            transform: rotate(20deg);
+        }
+        
+        .folder-3 .eng-top {
+            font-size: 11px;
+            letter-spacing: 1px;
+            line-height: 1.3;
+        }
+        
+        .folder-3 .chinese-big {
+            font-size: 32px;
+            margin: 4px 0;
+            letter-spacing: 2px;
+        }
+        
+        .folder-4 {
+            top: 200px;
+            left: 180px;
+        }
+        
+        .folder-4 .name-cn {
+            font-size: 28px;
+            margin-bottom: 4px;
+        }
+        
+        .folder-4 .name-en {
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+        
+        .folder-5 {
+            top: 200px;
+            right: 180px;
+        }
+        
+        .folder-5 .nice-text {
+            font-size: 28px;
+            line-height: 1;
+        }
+        
+        .folder-5 .lab-text {
+            font-size: 11px;
+            letter-spacing: 1px;
+            line-height: 1.3;
+        }
+        
+        /* Blue Divider */
+        .blue-divider {
+            height: 45px;
+            background-color: #0000CD;
+        }
+        
+        /* Title Section */
+        .title-section {
+            background-color: #7FFFD4;
+            padding: 30px 20px;
+        }
+        
+        .main-title {
+            font-size: 72px;
+            font-weight: 900;
+            line-height: 1.1;
+            color: #000;
+            letter-spacing: 2px;
+        }
+        
+        .title-line {
+            border-bottom: 3px solid #000;
+            display: inline-block;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+        
+        /* Footer */
+        .footer {
+            background-color: #7FFFD4;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-top: 1px solid #000;
+        }
+        
+        .copyright {
+            font-size: 14px;
+            font-weight: bold;
+            line-height: 1.4;
+        }
+        
+        .official-mark {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .warning-triangle {
+            width: 28px;
+            height: 28px;
+            border: 2px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(0deg);
+            position: relative;
+        }
+        
+        .warning-triangle::after {
+            content: '⚠';
+            font-size: 18px;
+        }
+        
+        .barcode-area {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+        
+        .barcode {
+            height: 50px;
+            width: 180px;
+            background: repeating-linear-gradient(
+                to right,
+                #000 0px,
+                #000 2px,
+                #fff 2px,
+                #fff 4px
+            );
+            border: 1px solid #000;
+        }
+        
+        .barcode-text {
+            font-size: 9px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                M点<span class="logo-sub">(分享)</span><span class="vol-info">Vol.07</span>
+            </div>
+            <div class="header-btn">
+                <div class="folder-icon"></div>
+                Design studio web
+            </div>
+        </div>
+        
+        <!-- Folders Area -->
+        <div class="folders-area">
+            <!-- Folder 1 -->
+            <div class="folder folder-1">
+                <div class="main-text">ABCD</div>
+                <div class="sub-text">A BLACK<br>COVER<br>DESIGN</div>
+                <div class="folder-num">1</div>
+            </div>
+            
+            <!-- Folder 2 -->
+            <div class="folder folder-2">
+                <div class="chinese">条件反射</div>
+                <div class="english">REFLEX<br>DESIGN</div>
+                <div class="folder-num">2</div>
+            </div>
+            
+            <!-- Folder 3 -->
+            <div class="folder folder-3">
+                <div class="eng-top">STUDIO<br>NA<br>EO</div>
+                <div class="chinese-big">立入禁止</div>
+                <div class="folder-num">3</div>
+            </div>
+            
+            <!-- Folder 4 -->
+            <div class="folder folder-4">
+                <div class="name-cn">王志弘</div>
+                <div class="name-en">WANG ZHI HONG</div>
+                <div class="folder-num">4</div>
+            </div>
+            
+            <!-- Folder 5 -->
+            <div class="folder folder-5">
+                <div class="nice-text">NICE</div>
+                <div class="lab-text">NICE LAB<br>STUDIO LAB</div>
+                <div class="folder-num">5</div>
+            </div>
+        </div>
+        
+        <!-- Blue Divider -->
+        <div class="blue-divider"></div>
+        
+        <!-- Title Section -->
+        <div class="title-section">
+            <div class="main-title">
+                <span class="title-line">国内知名设计</span><br>
+                <span class="title-line">工作室的官网</span>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <div class="copyright">
+                Copyright©2023<br>
+                Jidn share all rights reserved.
+            </div>
+            
+            <div class="official-mark">
+                <span>(官网)</span>
+                <div class="warning-triangle"></div>
+            </div>
+            
+            <div class="barcode-area">
+                <div class="barcode"></div>
+                <div class="barcode-text">««« JIDN SHARE@2023 »»»</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

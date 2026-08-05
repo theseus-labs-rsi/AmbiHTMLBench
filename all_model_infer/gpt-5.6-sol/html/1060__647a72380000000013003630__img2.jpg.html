@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>语文阅读知识练习</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    min-height: 100%;
+    background: #b9c9ee;
+  }
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 8px;
+  }
+  .page {
+    position: relative;
+    width: 524px;
+    height: 701px;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #aebde2;
+    box-shadow: inset 0 0 0 1px #edf1fb;
+    color: #242424;
+    font-family: "KaiTi", "STKaiti", "Kaiti SC", "FangSong", "SimSun", serif;
+  }
+  .content {
+    position: absolute;
+    z-index: 2;
+    top: 24px;
+    left: 19px;
+    width: 485px;
+    font-size: 16px;
+    line-height: 27px;
+    letter-spacing: 0.05px;
+  }
+  .line {
+    height: 27px;
+    white-space: nowrap;
+  }
+  .ans {
+    color: #8d659f;
+    border-bottom: 1px solid #a990b3;
+    padding: 0 3px 1px;
+  }
+  .short { padding-left: 9px; padding-right: 9px; }
+  .medium { padding-left: 7px; padding-right: 7px; }
+  .long { padding-left: 5px; padding-right: 5px; }
+
+  .decoration {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Top-left translucent floral strokes */
+  .top-floral {
+    left: 3px;
+    top: 5px;
+    width: 103px;
+    height: 145px;
+    opacity: .34;
+  }
+  .top-floral span {
+    position: absolute;
+    display: block;
+    border-radius: 50%;
+  }
+  .top-floral .stem1 {
+    left: 23px;
+    top: 5px;
+    width: 8px;
+    height: 125px;
+    border-left: 5px solid #f4d667;
+    transform: rotate(18deg);
+    border-radius: 50%;
+  }
+  .top-floral .stem2 {
+    left: 43px;
+    top: 0;
+    width: 8px;
+    height: 128px;
+    border-left: 5px solid #f4aeb7;
+    transform: rotate(28deg);
+    border-radius: 50%;
+  }
+  .top-floral .stem3 {
+    left: 64px;
+    top: 15px;
+    width: 8px;
+    height: 118px;
+    border-left: 5px solid #b9a9e0;
+    transform: rotate(36deg);
+    border-radius: 50%;
+  }
+  .top-floral .leaf1 {
+    left: 9px;
+    top: 43px;
+    width: 30px;
+    height: 10px;
+    background: #f3b74c;
+    transform: rotate(-34deg);
+  }
+  .top-floral .leaf2 {
+    left: 39px;
+    top: 67px;
+    width: 34px;
+    height: 10px;
+    background: #eaa1ae;
+    transform: rotate(-42deg);
+  }
+  .top-floral .leaf3 {
+    left: 56px;
+    top: 89px;
+    width: 38px;
+    height: 9px;
+    background: #a493da;
+    transform: rotate(-37deg);
+  }
+
+  /* Pale decorative curls at the left */
+  .left-curl {
+    left: 3px;
+    top: 92px;
+    width: 92px;
+    height: 305px;
+    opacity: .22;
+  }
+  .left-curl::before,
+  .left-curl::after {
+    content: "";
+    position: absolute;
+    border: 4px solid #c8a6df;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    transform: rotate(-24deg);
+  }
+  .left-curl::before {
+    left: 4px;
+    top: 4px;
+    width: 67px;
+    height: 170px;
+  }
+  .left-curl::after {
+    left: 23px;
+    top: 125px;
+    width: 52px;
+    height: 151px;
+    transform: rotate(28deg);
+  }
+
+  /* Yellow stars */
+  .star {
+    z-index: 3;
+    color: #f2c51d;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    line-height: 1;
+    text-shadow: 0 0 2px #f9df6a;
+  }
+  .star.one {
+    left: 169px;
+    top: 348px;
+    font-size: 26px;
+    transform: rotate(13deg);
+  }
+  .star.two {
+    left: 10px;
+    top: 386px;
+    font-size: 23px;
+    transform: rotate(-11deg);
+  }
+  .star.three {
+    left: 53px;
+    top: 480px;
+    font-size: 18px;
+    transform: rotate(17deg);
+  }
+
+  /* Bicycle illustration */
+  .bicycle {
+    right: 20px;
+    top: 237px;
+    width: 61px;
+    height: 39px;
+    z-index: 4;
+  }
+  .wheel {
+    position: absolute;
+    bottom: 0;
+    width: 18px;
+    height: 18px;
+    border: 4px solid #3840e4;
+    border-radius: 50%;
+    background: rgba(255,255,255,.65);
+    box-shadow: 0 0 0 2px #89de45;
+  }
+  .wheel.left { left: 3px; }
+  .wheel.right { right: 2px; }
+  .bike-frame {
+    position: absolute;
+    left: 14px;
+    top: 12px;
+    width: 31px;
+    height: 17px;
+  }
+  .bike-frame::before {
+    content: "";
+    position: absolute;
+    width: 26px;
+    height: 16px;
+    border-left: 4px solid #e53da1;
+    border-bottom: 4px solid #e53da1;
+    border-right: 4px solid #e53da1;
+    transform: skew(-23deg) rotate(-2deg);
+  }
+  .bike-frame::after {
+    content: "";
+    position: absolute;
+    left: 9px;
+    top: -8px;
+    width: 20px;
+    height: 17px;
+    border-left: 4px solid #e53da1;
+    border-top: 4px solid #e53da1;
+    transform: rotate(18deg);
+  }
+  .handle {
+    position: absolute;
+    right: 7px;
+    top: 3px;
+    width: 14px;
+    height: 10px;
+    border-top: 3px solid #7547d2;
+    border-right: 3px solid #7547d2;
+    transform: rotate(-13deg);
+  }
+  .seat {
+    position: absolute;
+    left: 22px;
+    top: 7px;
+    width: 12px;
+    height: 4px;
+    border-radius: 5px;
+    background: #7547d2;
+  }
+
+  /* Bottom-right translucent green plant */
+  .bottom-plant {
+    right: -19px;
+    bottom: -7px;
+    width: 111px;
+    height: 190px;
+    z-index: 3;
+    opacity: .42;
+  }
+  .bottom-plant .stem {
+    position: absolute;
+    right: 43px;
+    bottom: -4px;
+    width: 45px;
+    height: 176px;
+    border-left: 6px solid #6c8532;
+    border-radius: 50%;
+    transform: rotate(8deg);
+  }
+  .bottom-plant .leaf {
+    position: absolute;
+    width: 77px;
+    height: 38px;
+    background: #91c83f;
+    border-radius: 70% 12% 70% 12%;
+  }
+  .bottom-plant .leaf.a {
+    right: 4px;
+    top: 17px;
+    transform: rotate(17deg);
+  }
+  .bottom-plant .leaf.b {
+    right: 42px;
+    top: 50px;
+    width: 66px;
+    height: 31px;
+    transform: rotate(39deg);
+  }
+  .bottom-plant .leaf.c {
+    right: -3px;
+    top: 81px;
+    width: 70px;
+    height: 32px;
+    transform: rotate(-10deg);
+  }
+
+  /* Bottom-left faint floral accent */
+  .bottom-left {
+    left: -7px;
+    bottom: -5px;
+    width: 92px;
+    height: 46px;
+    opacity: .48;
+    z-index: 3;
+  }
+  .bottom-left::before {
+    content: "✿";
+    position: absolute;
+    left: 3px;
+    bottom: -3px;
+    color: #e869aa;
+    font-family: Arial, sans-serif;
+    font-size: 30px;
+    transform: rotate(-18deg);
+  }
+  .bottom-left::after {
+    content: "";
+    position: absolute;
+    left: 24px;
+    bottom: 13px;
+    width: 67px;
+    border-top: 4px solid #7dbb84;
+    transform: rotate(8deg);
+    border-radius: 50%;
+  }
+</style>
+</head>
+<body>
+<main class="page">
+  <div class="decoration top-floral" aria-hidden="true">
+    <span class="stem1"></span>
+    <span class="stem2"></span>
+    <span class="stem3"></span>
+    <span class="leaf1"></span>
+    <span class="leaf2"></span>
+    <span class="leaf3"></span>
+  </div>
+  <div class="decoration left-curl" aria-hidden="true"></div>
+  <div class="decoration star one" aria-hidden="true">★</div>
+  <div class="decoration star two" aria-hidden="true">★</div>
+  <div class="decoration star three" aria-hidden="true">★</div>
+
+  <div class="decoration bicycle" aria-hidden="true">
+    <span class="wheel left"></span>
+    <span class="wheel right"></span>
+    <span class="bike-frame"></span>
+    <span class="handle"></span>
+    <span class="seat"></span>
+  </div>
+
+  <div class="decoration bottom-plant" aria-hidden="true">
+    <span class="stem"></span>
+    <span class="leaf a"></span>
+    <span class="leaf b"></span>
+    <span class="leaf c"></span>
+  </div>
+  <div class="decoration bottom-left" aria-hidden="true"></div>
+
+  <section class="content">
+    <div class="line">瑞典作家<span class="ans long">塞尔玛·拉格洛芙</span>的童话作品《骑鹅旅行记》，让我们认识</div>
+    <div class="line">了<span class="ans medium">有正义感、智慧勇敢</span>的尼尔斯；而美国作家<span class="ans medium">马克·吐温</span>的</div>
+    <div class="line">儿童历险小说<span class="ans">《汤姆·索亚历险记》</span>，则让我们认识一个<span class="ans">敢于探险、</span></div>
+    <div class="line"><span class="ans">追求自由、有点虚荣心但又讲义气</span>的小男孩汤姆。在“快乐读书吧”</div>
+    <div class="line">中，我们还了解了刘易斯·卡罗尔创作的<span class="ans">《爱丽丝漫游奇境》</span>。</div>
+
+    <div class="line">3．“人生自古谁无死，留取丹心照汗青。”《十六年前的回忆》通过对李</div>
+    <div class="line">大钊被捕前到<span class="ans medium">被害后</span>的回忆，展示了革命先烈<span class="ans">忠于革命事业</span>的伟</div>
+    <div class="line">大精神和面对敌人<span class="ans medium">坚贞不屈</span>的高贵品质，表达了作者对父亲的<span class="ans short">敬仰</span></div>
+    <div class="line">与深切的<span class="ans medium">怀念</span>之情。</div>
+
+    <div class="line">4．《匆匆》这篇课文的作者是<span class="ans medium">朱自清</span>，字<span class="ans medium">佩弦</span>，原名朱</div>
+    <div class="line">自华，中国现代著名<span class="ans medium">散文家</span>、<span class="ans medium">诗人</span>。除《匆匆》外，他</div>
+    <div class="line">的《<span class="ans medium">背影</span>》《<span class="ans medium">荷塘月色</span>》等均是以诗意盎然著称于世的散文</div>
+    <div class="line">名篇。</div>
+
+    <div class="line">5．“我们的同志在困难的时候，要看到<span class="ans medium">成绩</span>，要看到<span class="ans medium">光明</span>，要提高</div>
+    <div class="line">我们的<span class="ans medium">勇气</span>。”这句话出自《<span class="ans">为人民服务</span>》。</div>
+
+    <div class="line">6．科学的发现，不是偶然的机遇。《表里的生物》叙述了作者小时候一</div>
+    <div class="line">段<span class="ans long">对表的声音很好奇</span>的经历，作者童年的发现源于他有强烈的<span class="ans">好</span></div>
+    <div class="line"><span class="ans">奇心和求知欲</span>。《真理诞生于一百个问号之后》通过列举科学发展史上</div>
+    <div class="line">三个有代表性的事例：波义耳发现植物酸碱反应并发明石蕊试纸，<span class="ans">魏</span></div>
+    <div class="line"><span class="ans">格纳通过观察地图提出“大陆漂移学说”</span>，阿瑟林斯基发现脑电波的变化与做</div>
+    <div class="line">梦有关，告诉我们，如果科学领域有什么偶然的机遇的话，那么这种偶</div>
+    <div class="line">然的机遇“只会给那些善于<span class="ans medium">独立思考</span>的人，给那些具有<span class="ans">锲而不舍</span></div>
+    <div class="line">精神的人。”</div>
+
+    <div class="line">7．《学弈》选自<span class="ans long">《孟子·告子上》</span>。告诉我们的道理是：<span class="ans">做事一定要</span></div>
+    <div class="line"><span class="ans long">专心致志，不能三心二意</span>。</div>
+  </section>
+</main>
+</body>
+</html>

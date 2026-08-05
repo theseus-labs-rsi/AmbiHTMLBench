@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IEEE Transactions on Industrial Electronics</title>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: #fff;
+    color: #111;
+    font-family: "Times New Roman", Times, serif;
+  }
+  .page {
+    width: 1390px;
+    margin: 0 auto;
+    padding: 13px 54px 0 54px;
+  }
+  .running-header {
+    height: 72px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    letter-spacing: -0.2px;
+  }
+  .columns {
+    display: grid;
+    grid-template-columns: 670px 670px;
+    column-gap: 30px;
+    align-items: start;
+  }
+  .column {
+    font-size: 27px;
+    line-height: 1.19;
+    text-align: justify;
+  }
+  p {
+    margin: 0 0 12px 0;
+  }
+  .item {
+    margin-bottom: 14px;
+  }
+  .lead {
+    font-weight: bold;
+  }
+  .equation {
+    position: relative;
+    text-align: center;
+    margin: 15px 0 17px 0;
+    min-height: 30px;
+  }
+  .equation .number {
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: 26px;
+  }
+  .indent {
+    padding-left: 34px;
+  }
+  .subsection {
+    margin-top: 14px;
+  }
+  .italic-label {
+    font-style: italic;
+  }
+  .figure-wrap {
+    margin-top: 34px;
+    margin-bottom: 24px;
+  }
+  .placeholder {
+    width: 670px;
+    height: 230px;
+    border: 2px dashed #b7c5d8;
+    border-radius: 9px;
+    background:
+      linear-gradient(90deg, rgba(210,220,239,.45) 0 50%, rgba(220,235,211,.42) 50% 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 17px;
+    text-align: center;
+  }
+  figcaption {
+    margin-top: 58px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 22px;
+    line-height: 1.08;
+    text-align: left;
+  }
+  .right-section {
+    margin-top: 21px;
+  }
+  .right-section h2 {
+    margin: 0 0 10px 0;
+    font-size: 27px;
+    font-weight: normal;
+    font-style: italic;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="running-header">IEEE TRANSACTIONS ON INDUSTRIAL ELECTRONICS</div>
+
+  <main class="columns">
+    <section class="column">
+      <div class="item">
+        <span>3) </span><span class="lead">LSTM Update:</span>
+        The input vector $x_m$ and the previous hidden states $(h_{m-1}, C_{m-1})$ are fed into the LSTM cell to compute the updated states $(h_m, C_m)$:
+        <div class="equation">
+          $(h_m, C_m) = \operatorname{LSTM}(x_m, (h_{m-1}, C_{m-1}))$
+          <span class="number">(7)</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <span>4) </span><span class="lead">Force Increment Prediction:</span>
+        A Multi-Layer Perceptron, denoted as $\mathrm{MLP}_{\Delta f}$, regresses the high-frequency normal force increment $\Delta \hat{f}_m$ for the current time window derived from the hidden state $h_m$:
+        <div class="equation">
+          $\Delta \hat{f}_m = \mathrm{MLP}_{\Delta f}(h_m) \in \mathbb{R}$
+          <span class="number">(8)</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <span>5) </span><span class="lead">Force Accumulation:</span>
+        The current normal force estimate is updated sequentially. This intermediate prediction relies purely on the integration of the fast-adapting event stream:
+        <div class="equation">
+          $\hat{f}_m = \hat{f}_{m-1} + \Delta \hat{f}_m$
+          <span class="number">(9)</span>
+        </div>
+        <p class="indent">
+          After iterating through all $M$ packets within the cycle, an accumulated normal force estimate $\hat{f}_M$, driven purely by the transient event stream, is obtained.
+        </p>
+      </div>
+
+      <div class="item">
+        <span class="italic-label">d) &nbsp;Fusion Feature Construction:</span>
+        To counteract integration drift, we concatenate the final accumulated event driven force, $\hat{f}_M$, with the absolute spatial guide frame feature, $\mathbf{f}_{\mathrm{frame}}$, constructing a unified multimodal fusion vector, $\mathbf{f}_{\mathrm{fusion}}$:
+        <div class="equation">
+          $\mathbf{f}_{\mathrm{fusion}} = [\hat{f}_M;\mathbf{f}_{\mathrm{frame}}] \in \mathbb{R}^{1+D_f}$
+          <span class="number">(10)</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <span class="italic-label">e) &nbsp;Correction Term Prediction:</span>
+        The fusion feature $\mathbf{f}_{\mathrm{fusion}}$ is processed by calibration network ($\mathrm{MLP}_{\mathrm{corr}}$) to predict a 1D force correction term, $\Delta f_{\mathrm{corr}}$. This component explicitly learns to compensate for accumulated drift by anchoring the estimate to the reliable absolute spatial deformation captured by the image frame:
+        <div class="equation">
+          $\Delta f_{\mathrm{corr}} = \mathrm{MLP}_{\mathrm{corr}}(\mathbf{f}_{\mathrm{fusion}}) \in \mathbb{R}$
+          <span class="number">(11)</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <span class="italic-label">f) &nbsp;Final Force Output:</span>
+        The corrective term is seamlessly added to the accumulated force to yield the final, drift compensated normal force estimate for the current temporal cycle, $\hat{f}_{\mathrm{final}}$:
+      </div>
+    </section>
+
+    <section class="column">
+      <p>
+        Following Funk et al. [11], a resonant speaker (Adin S9WiFi) is placed in direct contact with the silicone surface to maximize vibration energy transfer (Fig. 3(a)). Sinusoidal audio stimuli ranging from 50 to 250 Hz are applied. To process the data, raw asynchronous events are binned into 2 ms windows, generating a 500 Hz synchronous event rate signal.
+      </p>
+
+      <figure class="figure-wrap">
+        <div class="placeholder">[Figure: experimental setup and frequency-spectrum results]</div>
+        <figcaption>
+          Fig. 3. Experimental setup and results for high-frequency vibration sensing. (a) A resonant Bluetooth speaker (Adin S9WiFi) is placed directly on the Mixtac sensor to act as a vibration source. (b) Normalized frequency spectrum obtained from Mixtac’s raw event stream under various input tones. The spectrum was generated by applying a Fourier transform to the event count time series. The resulting prominent diagonal pattern indicates a strong linear correlation, confirming that the reconstructed frequency consistently matches the speaker’s input frequency up to the tested maximum of 250 Hz.
+        </figcaption>
+      </figure>
+
+      <div class="right-section">
+        <p>
+          <span class="italic-label">2) &nbsp;Result:</span>
+          The results confirm that Mixtac can reconstruct high frequency vibrations from its raw event stream. The reconstructed dominant frequency remains in close agreement with the speaker input frequency over 50 to 250 Hz in (Fig. 3(b)). This range is close to the Nyquist limit of the 500 Hz acquisition rate.
+        </p>
+      </div>
+
+      <div class="right-section">
+        <h2>B. &nbsp;Stability of Long Term Force Estimation</h2>
+        <p>
+          <span class="italic-label">1) &nbsp;Experimental Setup:</span>
+          This experiment examines whether the model remains stable during sustained contact. To reveal long term drift, the sensor was pressed for about 25 s with an 18 mm hemispherical 3D printed indenter while mounted on a 6 axis force sensor operating at 800 Hz. Stability was quantified by the MAE between the predicted and ground truth
+        </p>
+      </div>
+    </section>
+  </main>
+</div>
+</body>
+</html>

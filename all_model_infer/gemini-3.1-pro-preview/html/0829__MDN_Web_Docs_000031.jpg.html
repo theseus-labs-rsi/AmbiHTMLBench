@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mozilla 欢迎页面 - MDN Web Docs</title>
+    <style>
+        :root {
+            --text-main: #1f2328;
+            --text-muted: #656d76;
+            --link-color: #0969da;
+            --bg-main: #ffffff;
+            --bg-muted: #f6f8fa;
+            --border-color: #d0d7de;
+            --accent-color: #0052cc;
+            --sidebar-active-border: #d97757;
+            --info-bg: #e6f0ff;
+            --font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            color: var(--text-main);
+            background-color: var(--bg-main);
+            line-height: 1.5;
+            font-size: 16px;
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Top Banner */
+        .top-banner {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid var(--border-color);
+            padding: 8px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            position: relative;
+        }
+        .top-banner-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .top-banner-logo {
+            font-weight: bold;
+            color: #116149;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .top-banner-btn {
+            background-color: #00684a;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .top-banner-btn:hover {
+            text-decoration: none;
+        }
+        .ad-label-top {
+            position: absolute;
+            right: 20px;
+            top: 5px;
+            font-size: 12px;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            padding: 0 4px;
+        }
+        .ad-remove-link {
+            position: absolute;
+            right: 20px;
+            bottom: 5px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+            background-color: var(--bg-main);
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-right: 30px;
+            display: flex;
+            align-items: center;
+        }
+        .logo span { color: #0052cc; }
+        .main-nav {
+            display: flex;
+            gap: 20px;
+            flex-grow: 1;
+        }
+        .main-nav a {
+            color: var(--text-main);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .header-actions .icon {
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .search-bar {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 4px 12px;
+            width: 200px;
+        }
+        .search-bar input {
+            border: none;
+            outline: none;
+            width: 100%;
+            margin-left: 8px;
+        }
+
+        /* Breadcrumbs Bar */
+        .breadcrumbs-bar {
+            background-color: var(--bg-muted);
+            padding: 10px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+        }
+        .breadcrumbs {
+            color: var(--text-muted);
+        }
+        .breadcrumbs a {
+            color: var(--text-main);
+        }
+        .breadcrumbs-actions {
+            display: flex;
+            gap: 20px;
+            color: var(--text-main);
+        }
+        .breadcrumbs-actions span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        /* Main Layout */
+        .container {
+            display: grid;
+            grid-template-columns: 260px 1fr 260px;
+            gap: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Left Sidebar */
+        .sidebar-left {
+            font-size: 14px;
+        }
+        .filter-box {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 6px 12px;
+            margin-bottom: 15px;
+        }
+        .filter-box input {
+            border: none;
+            outline: none;
+            width: 100%;
+            margin-left: 8px;
+        }
+        .nav-list {
+            list-style: none;
+        }
+        .nav-list li {
+            margin-bottom: 2px;
+        }
+        .nav-list a {
+            display: block;
+            padding: 8px 12px;
+            color: var(--text-main);
+            border-left: 3px solid transparent;
+        }
+        .nav-list a:hover {
+            background-color: var(--bg-muted);
+        }
+        .nav-list a.active {
+            background-color: #fdf3f0;
+            border-left-color: var(--sidebar-active-border);
+            font-weight: bold;
+        }
+        .nav-list .disabled {
+            color: #8c959f;
+            padding: 8px 12px;
+        }
+        .nav-list .category {
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            padding: 0 12px;
+        }
+        .nav-list .sub-item {
+            padding-left: 24px;
+            color: var(--text-main);
+        }
+
+        /* Center Content */
+        .content-main {
+            min-width: 0;
+        }
+        .info-box {
+            background-color: var(--info-bg);
+            border-left: 4px solid var(--accent-color);
+            padding: 16px;
+            margin-bottom: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .info-box-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .info-box-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-left: 26px;
+            font-size: 14px;
+        }
+        .btn-dark {
+            background-color: #1f2328;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+        .btn-dark:hover { text-decoration: none; }
+        
+        h1 {
+            font-size: 40px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        h2 {
+            font-size: 28px;
+            margin-top: 40px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+        h3 {
+            font-size: 20px;
+            margin-top: 24px;
+            margin-bottom: 12px;
+        }
+        p {
+            margin-bottom: 16px;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 0;
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+        
+        .prereq-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 24px;
+        }
+        .prereq-table td {
+            border: 1px solid var(--border-color);
+            padding: 12px;
+        }
+        .prereq-table td:first-child {
+            width: 80px;
+            font-weight: bold;
+            background-color: var(--bg-muted);
+            text-align: center;
+        }
+
+        code {
+            background-color: var(--bg-muted);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+            font-size: 14px;
+        }
+
+        ul {
+            margin-left: 24px;
+            margin-bottom: 16px;
+        }
+        ul li {
+            margin-bottom: 8px;
+        }
+
+        /* Right Sidebar */
+        .sidebar-right {
+            font-size: 14px;
+        }
+        .toc {
+            margin-bottom: 40px;
+        }
+        .toc h3 {
+            font-size: 16px;
+            margin-top: 0;
+            margin-bottom: 12px;
+            border: none;
+        }
+        .toc ul {
+            list-style: none;
+            margin-left: 0;
+            border-left: 2px solid var(--border-color);
+        }
+        .toc li {
+            margin-bottom: 0;
+        }
+        .toc a {
+            display: block;
+            padding: 6px 0 6px 12px;
+            color: var(--text-muted);
+        }
+        .toc a.active {
+            color: var(--text-main);
+            border-left: 2px solid var(--text-main);
+            margin-left: -2px;
+        }
+
+        .ad-block {
+            background-color: #29235c;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            position: relative;
+        }
+        .ad-block .ad-label {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 10px;
+            border: 1px solid rgba(255,255,255,0.5);
+            padding: 2px 4px;
+            color: rgba(255,255,255,0.8);
+        }
+        .ad-block .placeholder {
+            width: 100%;
+            height: 120px;
+            background-color: #1e1945;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        .ad-block h4 {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .ad-block p {
+            font-size: 12px;
+            color: #d1d5da;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .ad-block button {
+            background-color: transparent;
+            color: white;
+            border: 1px solid white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .ad-block-remove {
+            display: block;
+            margin-top: 10px;
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Banner -->
+    <div class="top-banner">
+        <div class="top-banner-content">
+            <div class="top-banner-logo">
+                <span style="color: #47a248;">🍃</span> MongoDB
+            </div>
+            <span>Build smarter search with MongoDB Atlas — your vector database for AI apps. Start free.</span>
+            <a href="#" class="top-banner-btn">Get started for free</a>
+        </div>
+        <div class="ad-label-top">广告</div>
+        <a href="#" class="ad-remove-link">不想看到广告？</a>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <i>//</i> mdn<span>_</span>
+        </div>
+        <nav class="main-nav">
+            <a href="#">HTML ⌄</a>
+            <a href="#">CSS ⌄</a>
+            <a href="#">JavaScript ⌄</a>
+            <a href="#">Web APIs ⌄</a>
+            <a href="#">All ⌄</a>
+            <a href="#">🎓 Learn ⌄</a>
+            <a href="#">🔧 Tools ⌄</a>
+            <a href="#">About ⌄</a>
+            <a href="#">Blog</a>
+        </nav>
+        <div class="header-actions">
+            <div class="search-bar">
+                <span>🔍</span>
+                <input type="text" placeholder="">
+            </div>
+            <span class="icon">→]</span>
+        </div>
+    </header>
+
+    <!-- Breadcrumbs -->
+    <div class="breadcrumbs-bar">
+        <div class="breadcrumbs">
+            <a href="#">学习 Web 开发</a> > <a href="#">核心学习模块</a> > <a href="#">使用 HTML 构建 Web</a> > Mozilla 欢迎页面
+        </div>
+        <div class="breadcrumbs-actions">
+            <span>◑ 主题</span>
+            <span>文A 中文 (简体)</span>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        
+        <!-- Left Sidebar -->
+        <aside class="sidebar-left">
+            <div class="filter-box">
+                <span>▽</span>
+                <input type="text" placeholder="筛选">
+            </div>
+            <ul class="nav-list">
+                <li class="disabled">挑战：标记信件</li>
+                <li><a href="#">构建文档</a></li>
+                <li><a href="#">创建超链接</a></li>
+                <li><a href="#">Test: Links (英语)</a></li>
+                <li><a href="#">挑战：构建网页内容</a></li>
+                <li><a href="#">HTML 中的图片</a></li>
+                <li><a href="#">Test: Images (英语)</a></li>
+                <li><a href="#">视频和音频内容</a></li>
+                <li><a href="#">Test: Audio and video (英语)</a></li>
+                <li><a href="#" class="active">Mozilla 欢迎页面</a></li>
+                <li><a href="#">HTML 表格基础</a></li>
+                <li><a href="#">HTML 表格进阶特性和无障碍</a></li>
+                <li><a href="#">挑战：构建行星数据表</a></li>
+                <li><a href="#">表单和按钮</a></li>
+                <li><a href="#">Test: Forms and buttons (英语)</a></li>
+                <li><a href="#">Challenge: Feedback form<br>(英语)</a></li>
+                <li><a href="#">HTML 调试</a></li>
+                <li><a href="#">测试你的技能：使用 HTML 构建<br>内容</a></li>
+                <li><a href="#" class="sub-item">> Additional tutorials</a></li>
+                <li><a href="#" class="sub-item">> CSS 样式基础</a></li>
+                <li><a href="#" class="sub-item">> CSS 文本样式</a></li>
+                <li><a href="#" class="sub-item">> CSS 排版</a></li>
+                <li><a href="#" class="sub-item">> 使用 JavaScript 添加脚本交互</a></li>
+                <li><a href="#" class="sub-item">> JavaScript 框架和库</a></li>
+                <li><a href="#" class="sub-item">> 无障碍</a></li>
+                <li><a href="#">给开发者的设计课 (英语)</a></li>
+                <li><a href="#">版本控制</a></li>
+                <li class="category">扩展模块</li>
+                <li><a href="#" class="sub-item">> Advanced JavaScript objects</a></li>
+                <li><a href="#" class="sub-item">> 客户端 Web API</a></li>
+                <li><a href="#" class="sub-item">> 异步 JavaScript</a></li>
+                <li><a href="#" class="sub-item">> Web 表单</a></li>
+                <li><a href="#" class="sub-item">> 理解客户端工具</a></li>
+            </ul>
+        </aside>
+
+        <!-- Center Content -->
+        <main class="content-main">
+            <div class="info-box">
+                <div class="info-box-header">
+                    <span>ⓘ</span>
+                    <span>此页面由社区从英文翻译而来。<a href="#">了解更多并加入 MDN Web Docs 社区。</a></span>
+                </div>
+                <div class="info-box-actions">
+                    <a href="#" class="btn-dark">View in English</a>
+                    <span>Always switch to English</span>
+                </div>
+            </div>
+
+            <h1>Mozilla 欢迎页面</h1>
+
+            <div class="pagination">
+                <a href="#">← 上一页</a>
+                <a href="#">概述: 使用 HTML 构建 Web</a>
+                <a href="#">下一页 →</a>
+            </div>
+
+            <p>在本测验中，我们将测试你对于本模块文章所介绍的技术的掌握程度。你需要将一些有关于 Mozilla 的图片和视频添加到一个漂亮的页面上！</p>
+
+            <table class="prereq-table">
+                <tr>
+                    <td>前提:</td>
+                    <td>在开始这个测验之前，你应该已经学过本模块的其他文章。</td>
+                </tr>
+                <tr>
+                    <td>目标:</td>
+                    <td>测试对这些知识的掌握程度：在页面中嵌入图片和视频、框架，以及 HTML 响应式图片技术。</td>
+                </tr>
+            </table>
+
+            <h2>起点</h2>
+            <p>要开始本测试，你需要获取 <a href="#">mdn-splash-page-start</a> GitHub 目录中的 HTML 文件和所有可用的图片。将 <a href="#">index.html</a> 的内容保存在本地磁盘上的一个名为 <code>index.html</code> 的文件中，并且将其放在一个新目录中。然后将 <a href="#">pattern.png</a> 保存在同一目录中（右键单击图像后选择保存选项）。</p>
+            
+            <p>以同样的方式访问 <a href="#">originals</a> 目录中的多个图片，并将它们保存下来；你需要将它们保存在不同的目录中，因为你需要在使之用前使用图形编辑器对其中一些图片进行处理。</p>
+            
+            <p>或者，你可以使用在线编辑器，如 <a href="#">CodePen</a>、<a href="#">JSFiddle</a> 或 <a href="#">Glitch</a>。</p>
+
+            <div class="info-box">
+                <div class="info-box-header">
+                    <span>ⓘ</span>
+                    <div>
+                        <p><strong>备注：</strong>示例 HTML 文件包含大量 CSS，用于为页面设置样式。你不需要修改 CSS，只需修改 <code>&lt;body&gt;</code> 元素内的 HTML 即可。只要插入正确的标记，样式就会使其显示正确。</p>
+                        <p style="margin-bottom: 0;">如果你遇到困难，可以在我们的<a href="#">沟通渠道</a>中联系我们。</p>
+                    </div>
+                </div>
+            </div>
+
+            <h2>项目概要</h2>
+            <p>在本测试中，我们为你呈现了一个基本完成的 Mozilla 欢迎页面，其旨在积极有趣地描绘 Mozilla 的价值观，同时提供一些更进一步的资源的链接。不幸的是，页面上还没有添加任何图片或视频，这就是你要完成的任务！你需要添加一些媒体元素，使页面更加美观且更容易理解。下面的小节详细说明了你需要做的事情：</p>
+
+            <h3>准备图片</h3>
+            <p>使用你最爱的图片编辑器，创建下面几张图片的 400px 宽和 120px 宽的版本：</p>
+            <ul>
+                <li><code>firefox_logo-only_RGB.png</code></li>
+                <li><code>firefox-addons.jpg</code></li>
+                <li><code>mozilla-dinosaur-head.png</code></li>
+            </ul>
+            <p>给它们取些有意义的名字，例如 <code>firefoxlogo400.png</code> 和 <code>firefoxlogo120.png</code>。</p>
+            
+            <p>这些图片将与 <code>mdn.svg</code> 一起，作为链接到其他资源的图标，放在 <code>further-info</code> 区域内。你还需要在站点头部中链接 Firefox 标志。你应该将所有这些图片的副本保存在与 <code>index.html</code> 相同的目录中。</p>
+            
+            <p>接下来，创建一个宽度为 1200 像素的横向版 <code>red-panda.jpg</code>，以及一个宽度为 600 像素的纵向版，展示更近距离的熊猫照片。再次，给它们取一个合理的名称，以便你能够轻松识别它们。你应该将这两张图片的副本保存在与 <code>index.html</code> 相同的目录中。</p>
+
+        </main>
+
+        <!-- Right Sidebar -->
+        <aside class="sidebar-right">
+            <div class="toc">
+                <h3>本文内容</h3>
+                <ul>
+                    <li><a href="#" class="active">起点</a></li>
+                    <li><a href="#">项目概要</a></li>
+                    <li><a href="#">提示和技巧</a></li>
+                    <li><a href="#">示例</a></li>
+                </ul>
+            </div>
+
+            <div class="ad-block">
+                <div class="ad-label">广告</div>
+                <div class="placeholder">
+                    <span style="font-size: 40px; color: #e24329;">🦊</span>
+                </div>
+                <h4>Start building faster today</h4>
+                <p>Improve collaboration and visibility with one DevSecOps platform. Learn more from our team.</p>
+                <button>Talk to Sales ↗</button>
+            </div>
+            <a href="#" class="ad-block-remove">不想看到广告？</a>
+        </aside>
+
+    </div>
+
+</body>
+</html>

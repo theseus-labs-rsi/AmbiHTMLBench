@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Part 2: 营销策略</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+    background: linear-gradient(180deg, #f5e6f0 0%, #e8d5f0 30%, #d5e8f5 70%, #c8ddf0 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: #333;
+  }
+  .watermark-top {
+    text-align: right;
+    color: rgba(255,255,255,0.7);
+    font-size: 14px;
+    margin-bottom: 5px;
+    padding-right: 10px;
+  }
+  .watermark-left {
+    position: fixed;
+    left: 5px;
+    top: 50%;
+    transform: translateY(-50%) rotate(-90deg);
+    color: rgba(255,255,255,0.5);
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 12px;
+    padding: 30px 35px 20px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+  }
+  .header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f0e6f6;
+  }
+  .smiley-icon {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+  }
+  .smiley-icon .dot {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .smiley-icon .dot-blue1 { background: #4a90d9; }
+  .smiley-icon .dot-pink1 { background: #e87ba8; }
+  .smiley-icon .dot-blue2 { background: #4a90d9; }
+  .smiley-icon .dot-pink2 { background: #f5c6d0; }
+  .smiley-icon .dot-pink3 { background: #f5c6d0; }
+  .smiley-face {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 15px;
+  }
+  .smiley-eyes {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 2px;
+  }
+  .smiley-eyes .eye {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #4a90d9;
+  }
+  .smiley-eyes .eye-pink {
+    background: #e87ba8;
+  }
+  .smiley-mouth {
+    width: 50px;
+    height: 14px;
+    border-bottom: 5px solid #e87ba8;
+    border-radius: 0 0 25px 25px;
+    margin-top: -2px;
+  }
+  .header h1 {
+    font-size: 32px;
+    color: #2c3e6b;
+    font-weight: 700;
+  }
+  .strategy-title {
+    display: flex;
+    align-items: center;
+    margin-bottom: 18px;
+  }
+  .strategy-title .icon {
+    width: 28px;
+    height: 28px;
+    background: #e84040;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 10px;
+    flex-shrink: 0;
+  }
+  .strategy-title h2 {
+    font-size: 20px;
+    color: #2c3e6b;
+    font-weight: 700;
+  }
+  .intro-text {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  .intro-text .text-block {
+    flex: 1;
+    font-size: 15px;
+    line-height: 1.8;
+    color: #333;
+  }
+  .intro-text .text-block .diamond {
+    color: #2c3e6b;
+    font-weight: bold;
+    margin-right: 5px;
+  }
+  .intro-text .image-block {
+    width: 220px;
+    flex-shrink: 0;
+  }
+  .intro-text .image-block .placeholder-img {
+    width: 220px;
+    height: 200px;
+    background: linear-gradient(135deg, #fce4ec, #f3e5f5, #e8eaf6);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: #999;
+    text-align: center;
+    padding: 10px;
+    position: relative;
+    overflow: hidden;
+  }
+  .sanrio-characters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+    padding: 10px;
+  }
+  .sanrio-char {
+    width: 50px;
+    height: 60px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: #fff;
+  }
+  .char-kuromi { background: #9c27b0; }
+  .char-mymelody { background: #e91e63; }
+  .char-cinnamoroll { background: #bbdefb; color: #333; }
+  .char-pompompurin { background: #ffcc02; color: #333; }
+  .char-bear { background: #5d4037; }
+  .char-white { background: #f5f5f5; color: #999; border: 1px solid #ddd; }
+
+  .content-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  .left-column {
+    flex: 1;
+  }
+  .right-column {
+    width: 260px;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #2c3e6b;
+    margin-bottom: 12px;
+  }
+  .action-item {
+    margin-bottom: 14px;
+  }
+  .action-item .item-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .action-item .item-number {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+    color: #fff;
+    margin-right: 8px;
+    flex-shrink: 0;
+  }
+  .num-1 { background: #e84040; }
+  .num-2 { background: #f5a623; }
+  .num-3 { background: #4caf50; }
+  .action-item .item-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #333;
+  }
+  .action-item ul {
+    list-style: none;
+    padding-left: 30px;
+  }
+  .action-item ul li {
+    font-size: 13px;
+    line-height: 1.7;
+    color: #555;
+    position: relative;
+    padding-left: 12px;
+  }
+  .action-item ul li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #e84040;
+    font-weight: bold;
+  }
+  .right-box {
+    background: #faf5ff;
+    border: 1px solid #e8d5f0;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+  .right-box .box-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #7b5ea7;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  .right-box .box-text {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.6;
+    text-align: center;
+  }
+  .activity-box {
+    background: #fff5f5;
+    border: 1px solid #f5d5d5;
+    border-radius: 10px;
+    padding: 15px;
+  }
+  .activity-box .act-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #e84040;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .activity-box .act-title::before {
+    content: "🔴";
+    font-size: 10px;
+  }
+  .activity-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0e0e0;
+    font-size: 12px;
+  }
+  .activity-item:last-child {
+    border-bottom: none;
+  }
+  .activity-item .act-name {
+    color: #555;
+    flex: 1;
+  }
+  .activity-item .act-btn {
+    background: #f8b4c8;
+    color: #fff;
+    padding: 3px 14px;
+    border-radius: 12px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  .bottom-images {
+    margin-top: 15px;
+    margin-bottom: 10px;
+  }
+  .bottom-images .img-row {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+  }
+  .bottom-images .img-placeholder {
+    width: 180px;
+    height: 140px;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: #999;
+  }
+  .img1 { background: linear-gradient(135deg, #e8d5f5, #d5e8f5); }
+  .img2 { background: linear-gradient(135deg, #f5e6d5, #f5d5e6); }
+  .img3 { background: linear-gradient(135deg, #d5f5e6, #d5e8f5); }
+  .img4 { background: linear-gradient(135deg, #f5d5d5, #f5e6d5); }
+  .caption {
+    text-align: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: #2c3e6b;
+    margin-top: 10px;
+    margin-bottom: 5px;
+  }
+  .footer-note {
+    text-align: right;
+    font-size: 12px;
+    color: #999;
+    margin-top: 5px;
+  }
+  .intro-image-caption {
+    font-size: 10px;
+    color: #aaa;
+    text-align: center;
+    margin-top: 5px;
+    line-height: 1.4;
+  }
+</style>
+</head>
+<body>
+
+<div class="watermark-top">（营销学姐Renita）</div>
+<div class="watermark-left">@营销学姐Renita</div>
+
+<div class="container">
+  <!-- Header -->
+  <div class="header">
+    <div class="smiley-face">
+      <div class="smiley-eyes">
+        <div class="eye"></div>
+        <div class="eye eye-pink"></div>
+        <div class="eye"></div>
+      </div>
+      <div class="smiley-mouth"></div>
+    </div>
+    <h1>Part 2：营销策略</h1>
+  </div>
+
+  <!-- Strategy Title -->
+  <div class="strategy-title">
+    <div class="icon">▶</div>
+    <h2>策略一：热门IP产品强势联名，迅速形成破圈效应</h2>
+  </div>
+
+  <!-- Intro Text + Image -->
+  <div class="intro-text">
+    <div class="text-block">
+      <span class="diamond">◆</span> 近日，与全球知名IP品牌三丽鸥的联名，活动涉及的三款产品一经上线便秒售罄！行业地位和品牌调性的高度匹配，让此次联名活动迅速引爆两个圈层！
+    </div>
+    <div class="image-block">
+      <div class="placeholder-img">
+        <div class="sanrio-characters">
+          <div class="sanrio-char char-kuromi">库洛米</div>
+          <div class="sanrio-char char-mymelody">美乐蒂</div>
+          <div class="sanrio-char char-cinnamoroll">玉桂狗</div>
+          <div class="sanrio-char char-pompompurin">布丁狗</div>
+          <div class="sanrio-char char-bear">小熊</div>
+          <div class="sanrio-char char-white">RiCO</div>
+        </div>
+      </div>
+      <div class="intro-image-caption">全球知名IP三丽鸥，旗下拥有众多经典卡通形象<br>可爱、阳光、治愈，与RiCO品牌调性高度契合<br>两大IP携手引爆两个圈层！</div>
+    </div>
+  </div>
+
+  <!-- Content Row: Left actions + Right boxes -->
+  <div class="content-row">
+    <div class="left-column">
+      <div class="section-title">营销动作</div>
+
+      <div class="action-item">
+        <div class="item-header">
+          <div class="item-number num-1">1</div>
+          <div class="item-title">联名合作IP高度契合</div>
+        </div>
+        <ul>
+          <li>RiCO是广受精致女性热爱的生活治愈类IP，"可爱""阳光""治愈"</li>
+          <li>合作方三丽鸥一直希望努力传达出"Small Gift, Big Smile"</li>
+          <li>双方在品牌调性、精神、理念，以及受众群体等方面都有着较高匹配度</li>
+        </ul>
+      </div>
+
+      <div class="action-item">
+        <div class="item-header">
+          <div class="item-number num-2">2</div>
+          <div class="item-title">用心的高水准产品设计</div>
+        </div>
+        <ul>
+          <li>高水准的设计工艺+配色+材质，将两类IP鲜明重要的特点进行深度融合</li>
+          <li>联动"IP+RiCO+RiCO FRIENDS"三个一组的玩具形象搭配</li>
+        </ul>
+      </div>
+
+      <div class="action-item">
+        <div class="item-header">
+          <div class="item-number num-3">3</div>
+          <div class="item-title">趣味性的联名活动玩法</div>
+        </div>
+        <ul>
+          <li>RiCO 伙伴扭蛋机</li>
+          <li>RiCO x 三丽鸥极速三连问</li>
+          <li>RiCO 记忆挑战等趣味小游戏</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="right-column">
+      <div class="right-box">
+        <div class="box-title">「伙伴月游戏」</div>
+        <div class="box-text">
+          3月1日-3月15日，和RiCO一起寻找隐藏<br>
+          的RiCO x 三丽鸥朋友获得大隐藏款 RiCO 隐藏款
+        </div>
+      </div>
+
+      <div class="activity-box">
+        <div class="act-title">活动参与</div>
+        <div class="activity-item">
+          <span class="act-name">RiCO 伙伴扭蛋机</span>
+          <span class="act-btn">参与</span>
+        </div>
+        <div class="activity-item">
+          <span class="act-name">RiCO x 三丽鸥极速三连问</span>
+          <span class="act-btn">参与</span>
+        </div>
+        <div class="activity-item">
+          <span class="act-name">RiCO 记忆挑战等趣味</span>
+          <span class="act-btn">参与</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Images -->
+  <div class="bottom-images">
+    <div class="img-row">
+      <div class="img-placeholder img1">
+        <div style="text-align:center;">
+          <div style="font-size:30px;"></div>
+          <div>RiCO x 库洛米</div>
+        </div>
+      </div>
+      <div class="img-placeholder img2">
+        <div style="text-align:center;">
+          <div style="font-size:30px;">🐱</div>
+          <div>RiCO x 美乐蒂</div>
+        </div>
+      </div>
+      <div class="img-placeholder img3">
+        <div style="text-align:center;">
+          <div style="font-size:30px;">🐶</div>
+          <div>RiCO x 玉桂狗</div>
+        </div>
+      </div>
+      <div class="img-placeholder img4">
+        <div style="text-align:center;">
+          <div style="font-size:30px;"></div>
+          <div>RiCO x 布丁狗</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="caption">RiCO x 三丽鸥联名产品图片</div>
+  <div class="footer-note">图片来自品牌官方媒体</div>
+</div>
+
+</body>
+</html>

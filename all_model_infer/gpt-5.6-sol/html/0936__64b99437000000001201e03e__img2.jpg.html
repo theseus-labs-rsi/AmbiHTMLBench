@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>拆解美国上市公司年报</title>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+<style>
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    min-height: 100%;
+    background: #f2f2f0;
+  }
+
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  .page {
+    position: relative;
+    width: 540px;
+    height: 764px;
+    overflow: hidden;
+    color: #050505;
+    background:
+      linear-gradient(90deg, rgba(238,239,237,.7) 1px, transparent 1px) 0 0 / 61px 100%,
+      linear-gradient(rgba(238,239,237,.6) 1px, transparent 1px) 0 0 / 100% 34px,
+      #fdfdfc;
+  }
+
+  .page::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: .33;
+    background:
+      linear-gradient(60deg, transparent 46%, #f1f2f0 47%, #f1f2f0 53%, transparent 54%) 0 0 / 108px 180px,
+      linear-gradient(-60deg, transparent 46%, #f3f4f2 47%, #f3f4f2 53%, transparent 54%) 0 0 / 108px 180px;
+  }
+
+  .watermarks {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-auto-rows: 136px;
+    opacity: .026;
+    overflow: hidden;
+  }
+
+  .wm {
+    position: relative;
+    border-left: 1px solid #7d8791;
+    border-right: 1px solid #7d8791;
+  }
+
+  .wm::before {
+    content: "";
+    position: absolute;
+    left: 31px;
+    top: 54px;
+    width: 40px;
+    height: 33px;
+    border-radius: 50% 48% 52% 48%;
+    background: #13283a;
+  }
+
+  .wm::after {
+    content: "";
+    position: absolute;
+    left: 59px;
+    top: 45px;
+    width: 13px;
+    height: 7px;
+    border-radius: 100% 0;
+    background: #13283a;
+    transform: rotate(-25deg);
+  }
+
+  .header {
+    position: absolute;
+    top: 91px;
+    left: 0;
+    width: 100%;
+    z-index: 2;
+    text-align: center;
+  }
+
+  h1 {
+    margin: 0;
+    color: #00285d;
+    font-family: "STKaiti", "KaiTi", "Kaiti SC", "FangSong", serif;
+    font-size: 37px;
+    line-height: 1.2;
+    font-weight: 700;
+    letter-spacing: 2px;
+    white-space: nowrap;
+  }
+
+  .subtitle {
+    margin-top: 22px;
+    color: #0a2447;
+    font-family: "STKaiti", "KaiTi", "Kaiti SC", Arial, sans-serif;
+    font-size: 21px;
+    letter-spacing: .4px;
+  }
+
+  .form-sheet {
+    position: absolute;
+    z-index: 2;
+    top: 214px;
+    left: 48px;
+    width: 444px;
+    height: 361px;
+    padding: 3px 20px 0;
+    background: rgba(255,255,255,.96);
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #080808;
+  }
+
+  .agency {
+    margin-top: 0;
+    font-size: 10.5px;
+    line-height: 11.5px;
+    font-weight: 700;
+  }
+
+  .location {
+    font-size: 8.5px;
+    line-height: 10px;
+    font-weight: 600;
+  }
+
+  .rule {
+    width: 112px;
+    height: 1px;
+    margin: 8px auto 8px;
+    background: #161616;
+  }
+
+  .rule.short {
+    width: 111px;
+    margin: 4px auto 16px;
+  }
+
+  .form-title {
+    font-size: 15px;
+    line-height: 17px;
+    font-weight: 700;
+  }
+
+  .report-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    margin-top: 0;
+    white-space: nowrap;
+    font-size: 6.9px;
+    line-height: 9px;
+    font-weight: 700;
+  }
+
+  .box {
+    flex: 0 0 auto;
+    width: 7px;
+    height: 7px;
+    margin: 1px 3px 0 0;
+    border: 1px solid #202020;
+    font-size: 6px;
+    line-height: 5px;
+  }
+
+  .box.checked::after {
+    content: "×";
+    position: relative;
+    left: 0;
+    top: -1px;
+    font-weight: 700;
+  }
+
+  .period {
+    margin-top: 0;
+    font-size: 6.7px;
+    line-height: 8px;
+  }
+
+  .or {
+    margin: 0;
+    font-size: 6.5px;
+    line-height: 8px;
+  }
+
+  .transition {
+    margin-top: 3px;
+  }
+
+  .commission {
+    margin-top: 1px;
+    font-size: 6.8px;
+    line-height: 8px;
+  }
+
+  .commission .blank {
+    display: inline-block;
+    width: 27px;
+    border-bottom: 1px solid #222;
+    transform: translateY(-1px);
+  }
+
+  .commission-rule {
+    width: 111px;
+    height: 1px;
+    margin: 4px auto 6px;
+    background: #222;
+  }
+
+  .apple-logo {
+    position: relative;
+    width: 27px;
+    height: 28px;
+    margin: 0 auto 3px;
+  }
+
+  .apple-logo .fruit {
+    position: absolute;
+    left: 3px;
+    top: 8px;
+    width: 22px;
+    height: 19px;
+    border-radius: 48% 48% 50% 50% / 42% 42% 58% 58%;
+    background: #000;
+  }
+
+  .apple-logo .fruit::after {
+    content: "";
+    position: absolute;
+    right: -2px;
+    top: 3px;
+    width: 7px;
+    height: 8px;
+    border-radius: 50%;
+    background: white;
+  }
+
+  .apple-logo .leaf {
+    position: absolute;
+    left: 14px;
+    top: 1px;
+    width: 10px;
+    height: 6px;
+    border-radius: 100% 0;
+    background: #000;
+    transform: rotate(-31deg);
+  }
+
+  .company {
+    font-size: 17px;
+    line-height: 18px;
+    font-weight: 700;
+  }
+
+  .exact-name {
+    margin-top: 1px;
+    font-size: 6.8px;
+    line-height: 8px;
+  }
+
+  .name-rule {
+    width: 112px;
+    height: 1px;
+    margin: 4px auto 7px;
+    background: #202020;
+  }
+
+  .company-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 65px;
+    align-items: start;
+    font-size: 6.8px;
+    line-height: 8px;
+  }
+
+  .grid-strong {
+    font-weight: 700;
+  }
+
+  .grid-label {
+    min-height: 18px;
+  }
+
+  .address-row {
+    margin-top: 5px;
+  }
+
+  .phone {
+    margin-top: 7px;
+    font-size: 7px;
+    line-height: 8px;
+    font-weight: 700;
+  }
+
+  .phone-label {
+    font-size: 6.7px;
+    line-height: 8px;
+    font-weight: 400;
+  }
+
+  .placeholder-caption {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+
+  .seal {
+    position: absolute;
+    z-index: 4;
+    left: 230px;
+    top: 581px;
+    width: 81px;
+    height: 81px;
+    border: 3px solid #c78b00;
+    border-radius: 50%;
+    background: #e2a925;
+    box-shadow:
+      inset 0 0 0 2px #10191f,
+      inset 0 0 0 5px #e9b92e,
+      inset 0 0 0 7px #152a43;
+  }
+
+  .seal::before {
+    content: "";
+    position: absolute;
+    left: 17px;
+    top: 17px;
+    width: 41px;
+    height: 41px;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 50% 42%, #eee 0 5px, transparent 6px),
+      linear-gradient(90deg, transparent 42%, #d0a034 43% 57%, transparent 58%),
+      #17476a;
+    border: 2px solid #0e2031;
+  }
+
+  .seal::after {
+    content: "SECURITIES AND EXCHANGE COMMISSION";
+    position: absolute;
+    left: 7px;
+    top: 5px;
+    width: 62px;
+    height: 64px;
+    color: #151515;
+    font-family: "Times New Roman", serif;
+    font-size: 5px;
+    line-height: 7px;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: .1px;
+    border-radius: 50%;
+  }
+
+  .author {
+    position: absolute;
+    z-index: 3;
+    top: 678px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: #7e0808;
+    font-family: "STKaiti", "KaiTi", Arial, sans-serif;
+    font-size: 23px;
+    line-height: 28px;
+    font-style: italic;
+    font-weight: 700;
+  }
+
+  .disclaimer {
+    position: absolute;
+    z-index: 3;
+    left: 32px;
+    top: 711px;
+    color: #777;
+    font-family: "STSong", "SimSun", serif;
+    font-size: 8px;
+    line-height: 12px;
+    letter-spacing: .1px;
+  }
+
+  @media (max-width: 540px) {
+    body { display: block; }
+    .page {
+      transform-origin: top left;
+      transform: scale(calc(100vw / 540));
+    }
+  }
+</style>
+</head>
+<body>
+<main class="page">
+  <div class="watermarks" aria-hidden="true">
+    <div class="wm"></div><div class="wm"></div><div class="wm"></div><div class="wm"></div><div class="wm"></div>
+    <div class="wm"></div><div class="wm"></div><div class="wm"></div><div class="wm"></div><div class="wm"></div>
+    <div class="wm"></div><div class="wm"></div><div class="wm"></div><div class="wm"></div><div class="wm"></div>
+    <div class="wm"></div><div class="wm"></div><div class="wm"></div><div class="wm"></div><div class="wm"></div>
+    <div class="wm"></div><div class="wm"></div><div class="wm"></div><div class="wm"></div><div class="wm"></div>
+    <div class="wm"></div><div class="wm"></div><div class="wm"></div><div class="wm"></div><div class="wm"></div>
+  </div>
+
+  <header class="header">
+    <h1>拆解美国上市公司年报</h1>
+    <div class="subtitle">（以 Apple 10-K 为例）</div>
+  </header>
+
+  <section class="form-sheet">
+    <div class="agency">
+      UNITED STATES<br>
+      SECURITIES AND EXCHANGE COMMISSION
+    </div>
+    <div class="location">Washington, D.C. 20549</div>
+
+    <div class="rule"></div>
+    <div class="form-title">FORM 10-K</div>
+    <div class="rule short"></div>
+
+    <div class="report-row">
+      <span class="box checked"></span>
+      <span>ANNUAL REPORT PURSUANT TO SECTION 13 OR 15(d) OF THE SECURITIES EXCHANGE ACT OF 1934</span>
+    </div>
+    <div class="period">For the fiscal year ended September 24, 2022</div>
+    <div class="or">or</div>
+
+    <div class="report-row transition">
+      <span class="box"></span>
+      <span>TRANSITION REPORT PURSUANT TO SECTION 13 OR 15(d) OF THE SECURITIES EXCHANGE ACT OF 1934</span>
+    </div>
+    <div class="period">
+      For the transition period from <span class="commission blank"></span> to <span class="commission blank"></span>
+    </div>
+    <div class="commission">Commission File Number: 001-36743</div>
+    <div class="commission-rule"></div>
+
+    <div class="apple-logo placeholder" role="img" aria-label="Apple logo">
+      <span class="fruit"></span>
+      <span class="leaf"></span>
+      <span class="placeholder-caption">[Apple logo: centered]</span>
+    </div>
+
+    <div class="company">Apple Inc.</div>
+    <div class="exact-name">(Exact name of Registrant as specified in its charter)</div>
+    <div class="name-rule"></div>
+
+    <div class="company-grid">
+      <div>
+        <div class="grid-strong">California</div>
+        <div class="grid-label">(State or other jurisdiction<br>of incorporation or organization)</div>
+      </div>
+      <div>
+        <div class="grid-strong">94-2404110</div>
+        <div class="grid-label">(I.R.S. Employer Identification No.)</div>
+      </div>
+
+      <div class="address-row">
+        <div class="grid-strong">One Apple Park Way<br>Cupertino, California</div>
+        <div>(Address of principal executive offices)</div>
+      </div>
+      <div class="address-row">
+        <div class="grid-strong">95014</div>
+        <div>(Zip Code)</div>
+      </div>
+    </div>
+
+    <div class="phone">(408) 996-1010</div>
+    <div class="phone-label">(Registrant's telephone number, including area code)</div>
+  </section>
+
+  <div class="seal placeholder" role="img" aria-label="United States Securities and Exchange Commission seal">
+    <span class="placeholder-caption">[Seal: centered]</span>
+  </div>
+
+  <div class="author">小红书@jerrygong</div>
+  <div class="disclaimer">DisClaimers：文中所述皆来自公开市场信息梳理</div>
+</main>
+</body>
+</html>

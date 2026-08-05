@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Determination of the Interior Structure of Europa from Gravity and Magnetic Data</title>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$']],
+        displayMath: [['$$', '$$']]
+      }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      background: #d8d8d8;
+      color: #000;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      min-width: 1200px;
+    }
+
+    .poster {
+      width: 1500px;
+      min-height: 1000px;
+      margin: 0 auto;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .agency-header {
+      height: 132px;
+      padding: 28px 75px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #fff;
+      background: #000;
+      border-bottom: 5px solid #fff;
+    }
+
+    .agency-name {
+      font-size: 18px;
+      font-weight: 400;
+    }
+
+    .nasa-logo {
+      position: relative;
+      width: 92px;
+      height: 92px;
+      flex: 0 0 92px;
+      border: 1px solid #fff;
+      border-radius: 50%;
+      color: #fff;
+      font-size: 19px;
+      font-weight: 700;
+      font-style: italic;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .nasa-logo::before,
+    .nasa-logo::after {
+      content: "";
+      position: absolute;
+      left: 3px;
+      width: 88px;
+      height: 2px;
+      background: #aaa;
+      transform: rotate(-34deg);
+    }
+
+    .nasa-logo::after {
+      transform: rotate(48deg);
+    }
+
+    .title-band {
+      height: 350px;
+      padding: 40px 22px 26px;
+      color: #fff;
+      background: #91d04a;
+      text-align: center;
+    }
+
+    .program {
+      margin: 0 0 12px;
+      font-size: 29px;
+      font-weight: 400;
+    }
+
+    .title-band h1 {
+      max-width: 1450px;
+      margin: 0 auto;
+      font-size: 53px;
+      line-height: 1.22;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    .author {
+      margin: 25px 0 10px;
+      font-size: 31px;
+      line-height: 1.2;
+      font-weight: 700;
+    }
+
+    .collaborators {
+      margin: 0;
+      font-size: 27px;
+      line-height: 1.2;
+    }
+
+    .content {
+      padding: 23px 35px 0;
+    }
+
+    h2 {
+      margin: 0 0 9px;
+      font-size: 25px;
+      line-height: 1.1;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    .background {
+      margin-bottom: 25px;
+    }
+
+    .background p {
+      font-size: 18px;
+      line-height: 1.43;
+      text-align: center;
+    }
+
+    .main-columns {
+      display: grid;
+      grid-template-columns: 48% 52%;
+      gap: 26px;
+      align-items: start;
+    }
+
+    .left-column,
+    .right-column {
+      min-width: 0;
+    }
+
+    .section {
+      margin-bottom: 24px;
+    }
+
+    .section-text {
+      font-size: 18px;
+      line-height: 1.43;
+      text-align: center;
+    }
+
+    .objectives-intro {
+      margin-bottom: 5px;
+    }
+
+    ol {
+      margin: 0 auto;
+      padding-left: 54px;
+      font-size: 18px;
+      line-height: 1.43;
+      text-align: left;
+    }
+
+    ol li {
+      margin-bottom: 5px;
+      padding-left: 7px;
+    }
+
+    .results-list {
+      padding-left: 43px;
+    }
+
+    .results-list li {
+      padding-left: 8px;
+    }
+
+    .chart {
+      position: relative;
+      width: 100%;
+      border: 1px solid #999;
+      background:
+        repeating-linear-gradient(to right, transparent 0, transparent 99px, #c7c7c7 100px, transparent 102px),
+        repeating-linear-gradient(to bottom, transparent 0, transparent 44px, #c7c7c7 45px, transparent 47px),
+        #fff;
+      overflow: hidden;
+    }
+
+    .chart-one {
+      height: 208px;
+      margin: 0 auto 10px;
+    }
+
+    .chart-one .distribution {
+      position: absolute;
+      left: 60px;
+      right: 28px;
+      bottom: 23px;
+      height: 145px;
+      opacity: 0.72;
+      background: #779ae8;
+      clip-path: polygon(
+        0 89%, 4% 75%, 10% 73%, 16% 69%, 22% 55%,
+        28% 7%, 34% 0, 39% 10%, 44% 48%, 49% 67%,
+        53% 85%, 57% 97%, 63% 100%, 100% 100%
+      );
+      border-bottom: 2px solid #3565cf;
+    }
+
+    .chart-one .curve {
+      position: absolute;
+      left: 60px;
+      right: 28px;
+      bottom: 23px;
+      height: 145px;
+      border-bottom: 3px solid #3565cf;
+      clip-path: polygon(
+        0 89%, 4% 75%, 10% 73%, 16% 69%, 22% 55%,
+        28% 7%, 34% 0, 39% 10%, 44% 48%, 49% 67%,
+        53% 85%, 57% 97%, 63% 100%, 100% 100%,
+        100% 98%, 64% 98%, 58% 95%, 54% 82%, 50% 64%,
+        45% 45%, 40% 7%, 34% -2%, 27% 4%, 21% 51%,
+        15% 66%, 9% 70%, 3% 72%, 0 86%
+      );
+      background: #3565cf;
+    }
+
+    .credible {
+      position: absolute;
+      top: 4px;
+      bottom: 22px;
+      border-left: 3px dashed #000;
+    }
+
+    .credible.first {
+      left: 31%;
+    }
+
+    .credible.second {
+      left: 47%;
+    }
+
+    .axis-y,
+    .axis-x,
+    .panel-letter,
+    .legend,
+    .tick {
+      position: absolute;
+      font-size: 10px;
+    }
+
+    .axis-y {
+      left: 1px;
+      top: 83px;
+      transform: rotate(-90deg);
+    }
+
+    .axis-x {
+      bottom: 2px;
+      left: 45%;
+    }
+
+    .panel-letter {
+      left: 8px;
+      top: 8px;
+      font-weight: 700;
+    }
+
+    .legend {
+      top: 9px;
+      right: 18px;
+      padding: 4px 7px;
+      border: 1px solid #ddd;
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .legend::before {
+      content: "";
+      display: inline-block;
+      width: 22px;
+      margin-right: 6px;
+      vertical-align: middle;
+      border-top: 2px dashed #000;
+    }
+
+    .panel-a {
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      height: 51%;
+      border-bottom: 4px solid #fff;
+    }
+
+    .panel-b {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      height: 49%;
+    }
+
+    .panel-a .distribution,
+    .panel-b .distribution {
+      position: absolute;
+      left: 24px;
+      right: 10px;
+      bottom: 0;
+      height: 86%;
+      opacity: 0.68;
+      background: #7698e4;
+    }
+
+    .panel-a .distribution {
+      clip-path: polygon(0 84%, 6% 70%, 16% 66%, 24% 48%, 31% 2%, 38% 0, 45% 9%, 51% 51%, 57% 82%, 63% 96%, 70% 100%, 100% 100%);
+    }
+
+    .panel-b .distribution {
+      clip-path: polygon(0 70%, 3% 9%, 9% 1%, 18% 0, 27% 8%, 34% 48%, 41% 84%, 49% 98%, 58% 100%, 100% 100%);
+    }
+
+    .figure-caption {
+      margin: 0 10px 24px;
+      font-size: 16px;
+      line-height: 1.35;
+      text-align: center;
+    }
+
+    .heatmap-chart {
+      width: 100%;
+      height: 267px;
+      margin-top: 5px;
+      padding: 8px 25px 22px 52px;
+      border: 0;
+      background: #fff;
+    }
+
+    .heatmap-stack {
+      height: 100%;
+      display: grid;
+      grid-template-rows: repeat(3, 1fr);
+      gap: 6px;
+    }
+
+    .heatmap {
+      position: relative;
+      border: 1px solid #777;
+      background:
+        linear-gradient(to right, transparent 0 8%, rgba(252, 239, 144, 0.98) 9%, #f47451 16%, #761d84 25%, #120b38 35%, #02020c 48%),
+        #020208;
+      overflow: visible;
+    }
+
+    .heatmap:first-child {
+      background:
+        linear-gradient(169deg, transparent 0 18%, #f8e68d 19%, #f77857 23%, #7c2185 30%, #160d42 39%, #02020b 47%),
+        linear-gradient(158deg, #541466 0 11%, #f27852 14%, #f9e68b 17%, #4e155e 25%, #02020b 34%);
+    }
+
+    .heatmap:nth-child(2) {
+      background:
+        linear-gradient(to right, #f9e58e 0 3%, #f47753 6%, #791f83 11%, #180e3f 17%, #02020b 23%);
+    }
+
+    .heatmap:nth-child(3) {
+      background:
+        radial-gradient(ellipse at 4% 7%, #fff0a3 0 2%, #f57b54 4%, #762084 8%, #160d3e 14%, #02020b 20%);
+    }
+
+    .heatmap::before {
+      content: "Ocean Depth [km]";
+      position: absolute;
+      left: -53px;
+      top: 26px;
+      width: 72px;
+      color: #000;
+      font-size: 9px;
+      transform: rotate(-90deg);
+    }
+
+    .heatmap::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(to right, transparent 0, transparent 74px, rgba(190, 190, 190, 0.7) 75px, transparent 77px),
+        repeating-linear-gradient(to bottom, transparent 0, transparent 31px, rgba(190, 190, 190, 0.7) 32px, transparent 34px);
+    }
+
+    .heatmap-x {
+      position: absolute;
+      right: 0;
+      bottom: -22px;
+      left: 0;
+      color: #000;
+      font-size: 10px;
+      text-align: center;
+    }
+
+    .colorbar {
+      position: absolute;
+      top: 5px;
+      right: -17px;
+      width: 8px;
+      height: calc(100% - 10px);
+      border: 1px solid #555;
+      background: linear-gradient(to top, #05020e, #3b0f70, #971d80, #ee6556, #fff2a5);
+    }
+
+    .colorbar-label {
+      position: absolute;
+      top: 27px;
+      right: -44px;
+      width: 55px;
+      color: #000;
+      font-size: 8px;
+      transform: rotate(-90deg);
+    }
+
+    .future {
+      margin-top: 5px;
+      margin-bottom: 26px;
+    }
+
+    .future p {
+      font-size: 18px;
+      line-height: 1.43;
+      text-align: center;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 34% 66%;
+      gap: 28px;
+      align-items: stretch;
+      margin: 0 -35px;
+    }
+
+    .institution {
+      padding: 22px 35px 18px;
+      font-size: 17px;
+      line-height: 1.45;
+    }
+
+    .institution .agency {
+      margin-bottom: 30px;
+      font-weight: 700;
+    }
+
+    .institution .lab {
+      margin-bottom: 30px;
+    }
+
+    .institution .clearance p {
+      margin-bottom: 17px;
+    }
+
+    .institution strong {
+      font-weight: 700;
+    }
+
+    .acknowledgements {
+      min-height: 220px;
+      padding: 17px 12px 12px;
+      border: 1px solid #000;
+      background: #f4f4f4;
+    }
+
+    .acknowledgements h2 {
+      font-size: 24px;
+      margin-bottom: 12px;
+    }
+
+    .acknowledgements p {
+      font-size: 17px;
+      line-height: 1.35;
+      margin-bottom: 13px;
+    }
+
+    .contact-title {
+      margin-top: 15px;
+    }
+
+    .contact-row {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      color: #7d7979;
+      font-size: 22px;
+      font-weight: 700;
+      font-style: italic;
+      white-space: nowrap;
+    }
+
+    .mail-icon {
+      position: relative;
+      width: 30px;
+      height: 22px;
+      flex: 0 0 30px;
+      border: 2px solid #000;
+      background: #fff;
+    }
+
+    .mail-icon::before,
+    .mail-icon::after {
+      content: "";
+      position: absolute;
+      top: 5px;
+      width: 19px;
+      border-top: 2px solid #000;
+    }
+
+    .mail-icon::before {
+      left: 0;
+      transform: rotate(38deg);
+    }
+
+    .mail-icon::after {
+      right: 0;
+      transform: rotate(-38deg);
+    }
+
+    .phone-icon {
+      width: 18px;
+      height: 31px;
+      flex: 0 0 18px;
+      border: 2px solid #000;
+      border-radius: 2px;
+      background: #fff;
+    }
+
+    strong {
+      font-weight: 700;
+    }
+
+    .placeholder-caption {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+
+    @media (max-width: 1499px) {
+      body {
+        min-width: 0;
+      }
+
+      .poster {
+        transform-origin: top left;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+      }
+
+      .poster {
+        margin: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="poster">
+    <header class="agency-header">
+      <div class="agency-name">National Aeronautics and Space Administration</div>
+      <div class="nasa-logo placeholder" aria-label="NASA insignia">
+        NASA
+        <span class="placeholder-caption">[Logo: NASA insignia, top-right]</span>
+      </div>
+    </header>
+
+    <section class="title-band">
+      <p class="program">Postdoc Research</p>
+      <h1>Determination of the Interior Structure of Europa<br>from Gravity and Magnetic Data</h1>
+      <p class="author">Flavio Petricca (JPL Postdoctoral Fellow, 322)</p>
+      <p class="collaborators">J. Castillo-Rogez (4000), S. Vance (322), M. Melwani Daswani (322), C. Cochrane (322)</p>
+    </section>
+
+    <div class="content">
+      <section class="background">
+        <h2>Background</h2>
+        <p>
+          The Galileo mission provided measurements of <strong>Europa’s gravity and magnetic fields</strong>, indicating that the moon hosts a subsurface ocean and<br>
+          that its interior is mostly made by rocks (90 wt. %). However, the interior structure is still poorly understood, with the <strong>main uncertainties<br>
+          affecting the ice shell thickness and ocean depth, and the size of a putative metallic core</strong> whose existence was inferred from the first analysis<br>
+          of Galileo’s gravity data (Anderson et al., 1998). A recent reanalysis indicated a smaller level of differentiation (Gomez-Casajus et al., 2021),<br>
+          challenging the inference of the existence of the metallic core. Knowledge of the degree of differentiation is crucial to understand the origins<br>
+          and evolution of Europa. Furthermore, <strong>gravity and magnetic data</strong> have only been used separately, and developing methodologies to <strong>jointly<br>
+          analyze</strong> them will be fundamental for <strong>Europa Clipper’s investigations.</strong>
+        </p>
+      </section>
+
+      <div class="main-columns">
+        <div class="left-column">
+          <section class="section">
+            <h2>Objectives</h2>
+            <p class="section-text objectives-intro">
+              We analyze measurements of Europa’s gravity and magnetic fields<br>
+              based on Galileo data with <strong>new generation interior models and<br>
+              techniques</strong> to answer the following questions:
+            </p>
+            <ol>
+              <li>Did Europa differentiate a metallic core? What is the<br>composition of the rocky mantle?</li>
+              <li>How can we combine gravity and magnetic data in an effective<br>way to infer the ice thickness and ocean depth and salinity?</li>
+            </ol>
+          </section>
+
+          <section class="section">
+            <h2>Approach and Results</h2>
+            <p class="section-text">
+              We developed new interior models that use Bayesian inference and<br>
+              Markov-chain Monte Carlo (MCMC) algorithms to combine gravity and<br>
+              magnetic observations with geochemical data on the composition of<br>
+              the ocean and the rocky mantle. Our two main results are:
+            </p>
+            <ol class="results-list">
+              <li>
+                Our models indicate that Europa <strong>did not differentiate a metallic<br>
+                core (Figure 1).</strong> This implies that <strong>Europa’s evolution was colder</strong><br>
+                than previously thought. The resulting structure and composition<br>
+                of the rocky mantle indicates that <strong>Europa and the Jupiter system<br>
+                likely formed from dry CV chondrite-like material.</strong>
+              </li>
+              <li>
+                The combination of gravity and magnetic data can <strong>separately<br>
+                constrain the ice shell and ocean thicknesses</strong>, while separate<br>
+                inversions are degenerate (<strong>Figure 2</strong>).
+              </li>
+            </ol>
+          </section>
+
+          <section class="section">
+            <h2>Significance of Results/Benefits to NASA/JPL</h2>
+            <p class="section-text">
+              The unprecedented constraint on the structure of the deep interior<br>
+              <strong>changes our understanding of the evolution of Europa.</strong> The lack of a<br>
+              metallic core indicates a cold evolution, with implications for the origin<br>
+              of the Jupiter system and the evolution of the other Galilean moons.<br>
+              The <strong>methodology developed to combine gravity and magnetic data<br>
+              will be fundamental in the context of Europa Clipper’s interior<br>
+              science.</strong> This technique will provide a framework to connect interior<br>
+              models with the results of ongoing lab work at JPL (PSIE, PI: S. Vance).<br>
+              New experimental data on the thermodynamic and electric properties<br>
+              of solutions relevant to Europa’s ocean are being collected and will be<br>
+              implemented in this interior modeling framework.
+            </p>
+          </section>
+        </div>
+
+        <div class="right-column">
+          <figure style="margin:0;">
+            <div class="chart chart-one placeholder">
+              <span class="placeholder-caption">[Chart: two-panel core-radius probability distributions, upper-right]</span>
+              <div class="panel-a">
+                <span class="panel-letter">a</span>
+                <span class="axis-y">Sample models</span>
+                <div class="distribution"></div>
+                <div class="credible first"></div>
+                <div class="credible second"></div>
+              </div>
+              <div class="panel-b">
+                <span class="panel-letter">b</span>
+                <span class="axis-y">Sample models</span>
+                <span class="axis-x">Core Radius [km]</span>
+                <span class="legend">1σ level credible interval</span>
+                <div class="distribution"></div>
+                <div class="credible first" style="left:15%;"></div>
+                <div class="credible second" style="left:30%;"></div>
+              </div>
+            </div>
+            <figcaption class="figure-caption">
+              <strong>Figure 1:</strong> metallic core radius resulting from the inversion of Europa’s gravity field<br>
+              measurements from the earlier analysis (Anderson et al., 1998; <strong>Panel A</strong>) and the<br>
+              more recent analysis (Gomez-Casajus et al., 2021; <strong>Panel B</strong>).
+            </figcaption>
+          </figure>
+
+          <figure style="margin:0;">
+            <div class="chart heatmap-chart placeholder">
+              <span class="placeholder-caption">[Chart: three stacked heatmaps of ice-shell thickness and ocean depth, right-center]</span>
+              <div class="heatmap-stack">
+                <div class="heatmap">
+                  <div class="colorbar"></div>
+                  <div class="colorbar-label">Samples</div>
+                </div>
+                <div class="heatmap">
+                  <div class="colorbar"></div>
+                  <div class="colorbar-label">Samples</div>
+                </div>
+                <div class="heatmap">
+                  <div class="colorbar"></div>
+                  <div class="colorbar-label">Samples</div>
+                  <div class="heatmap-x">Ice Shell Thickness [km]</div>
+                </div>
+              </div>
+            </div>
+            <figcaption class="figure-caption">
+              <strong>Figure 2:</strong> Europa’s ice and ocean thicknesses derived from inversion of <strong>(A) gravity<br>
+              data only, (B) magnetic data only, (C) combination of gravity and magnetic data.</strong>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <section class="future">
+        <h2>Future Work</h2>
+        <p>
+          The framework developed will be expanded to include new experimental data in preparation for the analysis of Europa Clipper’s data. It will be<br>
+          also applied to Ganymede, Callisto and Titan to explore their interiors. Finally, ongoing work includes the application of this framework to the<br>
+          moons of Uranus in the context of the formulation of the Uranus Orbiter and Probe, highly prioritized by the Planetary Science Decadal Survey.
+        </p>
+      </section>
+
+      <div class="footer-grid">
+        <footer class="institution">
+          <p class="agency">National Aeronautics and Space Administration</p>
+          <p class="lab">
+            <strong>Jet Propulsion Laboratory</strong><br>
+            California Institute of Technology<br>
+            Pasadena, California
+          </p>
+          <p style="font-weight:700; margin-bottom:34px;">www.nasa.gov</p>
+          <div class="clearance">
+            <p>Clearance Number: CL#00-0000</p>
+            <p>Poster Number: PRD-</p>
+            <p>Copyright 2024. All rights reserved.</p>
+          </div>
+        </footer>
+
+        <aside class="acknowledgements">
+          <h2>Publications and Acknowledgements:</h2>
+          <p>
+            <strong>Petricca F.</strong> et al., Partial Differentiation of Europa and Implications for the Origin of<br>
+            Materials in the Jupiter System, <strong>Nature Astronomy</strong>, in press<br>
+            <strong>Petricca F.</strong> et al., Characterization of Icy Moon Hydrospheres Through Joint Inversion of<br>
+            Gravity and Magnetic Field Measurements, <strong>Geophysical Research Letters</strong>
+          </p>
+          <p>
+            This work is funded and supported by the JPL Office of Research and Development via<br>
+            the JPL Postdoctoral Program.
+          </p>
+          <h2 class="contact-title">Author Contact Information:</h2>
+          <div class="contact-row">
+            <span class="mail-icon" aria-hidden="true"></span>
+            <span>flavio.petricca@jpl.nasa.gov</span>
+            <span class="phone-icon" aria-hidden="true"></span>
+            <span>(626) 497-8608</span>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

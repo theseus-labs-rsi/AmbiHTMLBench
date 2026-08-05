@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>问题解决 - 数学教材</title>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                packages: {'[+]': ['cancel']}
+            },
+            loader: {
+                load: ['[tex]/cancel']
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: "Microsoft YaHei", "SimHei", sans-serif;
+            background-color: #fff;
+            color: #333;
+            line-height: 1.5;
+            margin: 0;
+            padding: 20px;
+        }
+        .page-container {
+            max-width: 850px;
+            margin: 0 auto;
+            position: relative;
+            padding-bottom: 60px;
+        }
+        .placeholder {
+            background-color: #f5f5f5;
+            border: 2px dashed #bbb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-style: italic;
+            text-align: center;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .red-text { color: #d32f2f; }
+        .brown-text { color: #8d6e63; }
+        
+        /* Header styles */
+        .header-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        .header-deco-1 { width: 18px; height: 18px; background-color: #B39DDB; transform: rotate(45deg); margin-right: -8px; z-index: 1; }
+        .header-deco-2 { width: 28px; height: 28px; background-color: #7E57C2; transform: rotate(45deg); margin-right: -12px; z-index: 2; }
+        .header-deco-3 { width: 18px; height: 18px; background-color: #B39DDB; transform: rotate(45deg); margin-right: 15px; z-index: 1; }
+        .header-title {
+            background: linear-gradient(to bottom, #9B70C4, #7E57C2);
+            color: white;
+            padding: 8px 30px;
+            font-size: 24px;
+            font-weight: bold;
+            border-radius: 0 15px 15px 0;
+            border-bottom: 3px solid #5E35B1;
+            letter-spacing: 5px;
+        }
+
+        /* Section layout */
+        .q-header {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        .q-icon {
+            background-color: #e57373;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50% 50% 50% 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 18px;
+            margin-right: 10px;
+            transform: rotate(-45deg);
+            flex-shrink: 0;
+        }
+        .q-icon span { transform: rotate(45deg); }
+        .q-text {
+            font-size: 17px;
+            flex: 1;
+        }
+        
+        /* Arrows */
+        .arrow-right {
+            display: inline-block;
+            width: 40px;
+            height: 2px;
+            background: #d32f2f;
+            position: relative;
+            margin: 0 10px;
+            vertical-align: middle;
+        }
+        .arrow-right::after {
+            content: ''; position: absolute; right: 0; top: -4px;
+            border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 10px solid #d32f2f;
+        }
+        .arrow-down {
+            display: block;
+            width: 2px;
+            height: 25px;
+            background: #d32f2f;
+            position: relative;
+            margin: 5px auto;
+        }
+        .arrow-down::after {
+            content: ''; position: absolute; bottom: -5px; left: -4px;
+            border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 10px solid #d32f2f;
+        }
+
+        /* Bubbles */
+        .bubble {
+            border: 1px solid #80DEEA;
+            border-radius: 20px;
+            padding: 8px 15px;
+            background: #E0F7FA;
+            font-size: 14px;
+            color: #00838F;
+            position: relative;
+            display: inline-block;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        .bubble-left::after {
+            content: ''; position: absolute; bottom: -12px; right: 30%;
+            border-width: 12px 10px 0 0; border-style: solid; border-color: #80DEEA transparent transparent transparent;
+        }
+        .bubble-left::before {
+            content: ''; position: absolute; bottom: -10px; right: 31%;
+            border-width: 11px 9px 0 0; border-style: solid; border-color: #E0F7FA transparent transparent transparent;
+            z-index: 1;
+        }
+        .bubble-right::after {
+            content: ''; position: absolute; bottom: -12px; left: 30%;
+            border-width: 12px 0 0 10px; border-style: solid; border-color: #80DEEA transparent transparent transparent;
+        }
+        .bubble-right::before {
+            content: ''; position: absolute; bottom: -10px; left: 31%;
+            border-width: 11px 0 0 9px; border-style: solid; border-color: #E0F7FA transparent transparent transparent;
+            z-index: 1;
+        }
+
+        /* Section 1 */
+        .s1-bus-img { width: 100%; height: 180px; margin-bottom: 10px; border-radius: 5px; }
+        .s1-middle-row { display: flex; justify-content: space-between; align-items: flex-start; margin-top: 20px; }
+        .s1-line-diag { width: 320px; height: 100px; margin: 0 auto 15px; }
+        
+        /* Section 2 */
+        .s2-row { display: flex; justify-content: space-between; margin-top: 20px; }
+        .s2-col-left { width: 28%; display: flex; flex-direction: column; align-items: center; }
+        .s2-col-center { width: 50%; display: flex; flex-direction: column; align-items: center; }
+        .s2-col-right { width: 18%; display: flex; flex-direction: column; align-items: center; padding-top: 100px; }
+        .s2-grid { width: 250px; height: 150px; }
+        
+        /* Footer */
+        .footer-note {
+            color: #8d6e63;
+            font-size: 13px;
+            margin-top: 40px;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 15px;
+            line-height: 1.6;
+        }
+        .page-num-container {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+
+    <!-- Header -->
+    <div class="header-wrapper">
+        <div class="header-deco-1"></div>
+        <div class="header-deco-2"></div>
+        <div class="header-deco-3"></div>
+        <div class="header-title">问题解决</div>
+    </div>
+
+    <!-- Section 1 -->
+    <div class="q-header">
+        <div class="q-icon"><span>1</span></div>
+        <div class="q-text">汽车已经行了多少千米？</div>
+        <div class="red-text" style="font-size: 15px; display: flex; align-items: center;">
+            求一个数的几分之几的问题
+            <span class="arrow-right"></span>
+            用已知量乘分率
+        </div>
+    </div>
+
+    <div class="placeholder s1-bus-img">
+        [Illustration: Bus driving on a mountain road. Bubbles pointing to road: "要行84千米。" and to bus: "已经行了全程的 2/3。"]
+    </div>
+
+    <div style="text-align: center; margin: 15px 0; font-size: 15px; color: #444;">
+        “行了全程的 $\frac{2}{3}$ ” 就是把全程看作单位“1”，已经行了的路程是84km的 $\frac{2}{3}$。
+    </div>
+
+    <div class="s1-middle-row">
+        <!-- Left Avatar -->
+        <div style="width: 20%; text-align: center; padding-top: 10px;">
+            <div class="bubble bubble-left" style="margin-bottom: 15px;">怎么理解“已经行<br>了全程的 $\frac{2}{3}$ ”？</div>
+            <div class="placeholder" style="width: 60px; height: 70px; margin: 0 auto; border: none; background: transparent;">[Girl Avatar]</div>
+        </div>
+
+        <!-- Center Diagram & Math -->
+        <div style="width: 55%; text-align: center;">
+            <div class="placeholder s1-line-diag">
+                [Diagram: Line segment divided into 3 parts. Bracket over 2 parts labeled "行了全程的 2/3". Bracket under whole line labeled "全程 84km"]
+            </div>
+            <div style="font-size: 16px; margin-bottom: 10px;">
+                可以这样算：$84 \div 3 \times 2 = 56(\text{km})$
+            </div>
+            <div style="font-size: 16px;">
+                也可以这样算：$84 \times \frac{2}{3} = \overset{28}{\cancel{84}} \times \frac{2}{\underset{1}{\cancel{3}}} = 56(\text{km})$
+            </div>
+        </div>
+
+        <!-- Right Avatar -->
+        <div style="width: 20%; text-align: center; padding-top: 10px;">
+            <div class="bubble bubble-right" style="margin-bottom: 15px;">把全程平均分成3<br>份，已经行了2份。</div>
+            <div class="placeholder" style="width: 60px; height: 70px; margin: 0 auto; border: none; background: transparent;">[Boy Avatar]</div>
+        </div>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 15px;">
+        <div style="font-size: 16px; padding-left: 10%;">答：汽车已经行了 56km。</div>
+        <div class="brown-text" style="font-size: 13px; text-align: left;">
+            当分数用来表示单位“1”的几分之几时，也可以叫做“分率”。<br>
+            <div style="color: #d32f2f; text-align: center; margin-top: 5px;">单位“1” $\times$ 几分之几 = 几分之几对应的量</div>
+        </div>
+    </div>
+
+    <!-- Discuss Section -->
+    <div style="display: flex; align-items: center; margin: 25px 0 10px 0; padding-left: 5%;">
+        <div style="background-color: #9CCC65; color: white; padding: 2px 10px; border-radius: 12px; font-weight: bold; font-size: 14px; margin-right: 15px;">议一议</div>
+        <div style="font-size: 16px;">“ $84 \times \frac{2}{3}$ ”这样列式，你是怎么想的？</div>
+    </div>
+    <div class="red-text" style="text-align: center; font-size: 15px; margin-bottom: 40px;">
+        求一个数的几分之几是多少。
+    </div>
+
+
+    <!-- Section 2 -->
+    <div class="q-header" style="align-items: stretch;">
+        <div class="q-icon"><span>2</span></div>
+        <div class="q-text" style="width: 55%; margin-right: 20px;">
+            张伯伯把 $20\text{hm}^2$ 土地的 $\frac{3}{4}$ 用来种玫瑰，其中种红玫瑰的面积占玫瑰地面积的 $\frac{3}{5}$。张伯伯种了多少公顷红玫瑰？
+        </div>
+        <div class="red-text" style="width: 30%; text-align: center; font-size: 14px; display: flex; flex-direction: column; justify-content: center;">
+            连续求一个数的几分之几的问题
+            <div class="arrow-down"></div>
+            用已知量连续乘分率
+        </div>
+    </div>
+
+    <div class="s2-row">
+        <!-- Left: Boy & Notes -->
+        <div class="s2-col-left">
+            <div class="bubble bubble-left" style="margin-bottom: 10px;">题中的 $\frac{3}{4}$ 表示什<br>么意思？ $\frac{3}{5}$ 呢？</div>
+            <div class="placeholder" style="width: 60px; height: 70px; border: none; background: transparent; margin-bottom: 15px;">[Boy Avatar]</div>
+            
+            <div class="red-text" style="font-size: 13px; line-height: 1.5; text-align: left; width: 100%; margin-bottom: 15px;">
+                <span style="font-size: 15px; font-weight: bold;">$\frac{3}{4}$</span><br>
+                表示把 $20\text{hm}^2$ 土地<br>看作单位“1”，其中<br>的 $\frac{3}{4}$ 种玫瑰。
+            </div>
+            <div class="red-text" style="font-size: 13px; line-height: 1.5; text-align: left; width: 100%;">
+                <span style="font-size: 15px; font-weight: bold;">$\frac{3}{5}$</span><br>
+                表示把种玫瑰的土地看作单位“1”，其中的 $\frac{3}{5}$ 种红玫瑰。
+            </div>
+        </div>
+
+        <!-- Center: Grid & Math -->
+        <div class="s2-col-center">
+            <div style="font-size: 15px; margin-bottom: 5px;">$20\text{hm}^2$ 土地</div>
+            <div style="display: flex; align-items: center; justify-content: center;">
+                <div class="placeholder s2-grid">
+                    [Diagram: 5x4 grid representing land. 15 squares hatched for rose land. 9 squares shaded pink for red roses.]
+                </div>
+                <div style="font-size: 14px; width: 100px; margin-left: 10px; line-height: 1.4;">
+                    $20\text{hm}^2$ 土地的 $\frac{3}{4}$ 种玫瑰
+                </div>
+            </div>
+            <div style="font-size: 14px; margin-top: 5px; text-align: center; padding-right: 50px;">
+                玫瑰地的 $\frac{3}{5}$ 种红玫瑰
+            </div>
+            
+            <div style="font-size: 16px; margin: 25px 0 15px 0;">
+                $20 \times \frac{3}{4} \times \frac{3}{5} = 9(\text{hm}^2)$
+            </div>
+            <div style="font-size: 16px;">
+                答：张伯伯种了 $9\text{hm}^2$ 红玫瑰。
+            </div>
+        </div>
+
+        <!-- Right: Girl -->
+        <div class="s2-col-right">
+            <div class="bubble bubble-right" style="margin-bottom: 15px;">还可以怎样解决？</div>
+            <div class="placeholder" style="width: 60px; height: 70px; border: none; background: transparent;">[Girl Avatar]</div>
+        </div>
+    </div>
+
+    <!-- Footer Note -->
+    <div class="footer-note">
+        <span class="red-text" style="font-weight: bold;">注意：</span>分数连乘问题中最基本的数量关系式：单位“1”的量 $\times$ 分率 = 分率的对应量。准确地找出单位“1”的关键在于明确题目中“哪个量是（或占、相当于）哪个量的几分之几”，是哪个量的几分之几，那个量就是单位“1”。
+    </div>
+
+    <!-- Page Number -->
+    <div class="page-num-container">
+        7
+        <div class="placeholder" style="width: 35px; height: 35px; border-radius: 50%; margin-left: 8px; border: none; background: #000; color: #fff; font-size: 10px;">[Panda]</div>
+    </div>
+
+</div>
+
+</body>
+</html>

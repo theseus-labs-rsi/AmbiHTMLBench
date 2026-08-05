@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script>window.MathJax={tex:{inlineMath:[["$","$"]],displayMath:[["$$","$$"]]}};</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>光明日报 - 民主法治</title>
+    <style>
+        :root {
+            --newspaper-font: "SimSun", "Songti SC", serif;
+            --header-font: "SimHei", "Heiti SC", sans-serif;
+            --text-color: #333;
+            --link-color: #0056b3;
+            --bg-color: #fff;
+        }
+
+        body {
+            font-family: var(--newspaper-font);
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .newspaper-page {
+            background-color: var(--bg-color);
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        /* Header Styles */
+        .page-header {
+            grid-column: 1 / -1;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .logo-area {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-text {
+            font-family: var(--header-font);
+            font-size: 36px;
+            font-weight: bold;
+            font-style: italic;
+            letter-spacing: 2px;
+        }
+
+        .meta-info {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+            font-family: var(--header-font);
+        }
+
+        .section-title {
+            text-align: right;
+        }
+
+        .section-title h2 {
+            font-family: var(--header-font);
+            font-size: 28px;
+            margin: 0;
+            color: #004080;
+        }
+
+        .page-number {
+            font-family: var(--header-font);
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        /* Column Layouts */
+        .main-column {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-column {
+            border-left: 1px solid #eee;
+            padding-left: 20px;
+        }
+
+        /* Article Styles */
+        .article-header {
+            margin-bottom: 20px;
+        }
+
+        .category-tag {
+            font-family: var(--header-font);
+            font-size: 18px;
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .main-headline {
+            font-family: var(--header-font);
+            font-size: 32px;
+            font-weight: 900;
+            line-height: 1.3;
+            margin: 10px 0;
+            color: #000;
+        }
+
+        .sub-headline {
+            font-family: var(--header-font);
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .byline {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .article-body {
+            font-size: 14px;
+            text-align: justify;
+        }
+
+        .article-body p {
+            margin-bottom: 15px;
+            text-indent: 2em;
+        }
+
+        .sub-section-title {
+            font-family: var(--header-font);
+            font-size: 18px;
+            font-weight: bold;
+            margin: 25px 0 15px 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .sub-section-title::before {
+            content: "◆";
+            margin-right: 8px;
+            color: #0056b3;
+        }
+
+        /* Image Placeholders */
+        .img-placeholder {
+            background-color: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-family: var(--header-font);
+            margin: 15px 0;
+            border: 1px solid #ccc;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .img-float-left {
+            float: left;
+            margin-right: 20px;
+            margin-bottom: 10px;
+            width: 300px;
+            height: 200px;
+        }
+
+        .img-full-width {
+            width: 100%;
+            height: 300px;
+            margin: 20px 0;
+            clear: both;
+        }
+        
+        .img-sidebar-bottom {
+            width: 100%;
+            height: 250px;
+            margin-top: 20px;
+        }
+
+        .caption {
+            position: absolute;
+            bottom: 5px;
+            left: 5px;
+            font-size: 10px;
+            background: rgba(255,255,255,0.7);
+            padding: 2px 4px;
+        }
+
+        /* Sidebar Styles */
+        .sidebar-article {
+            margin-bottom: 30px;
+        }
+
+        .sidebar-headline {
+            font-family: var(--header-font);
+            font-size: 24px;
+            font-weight: bold;
+            line-height: 1.4;
+            margin-bottom: 15px;
+            writing-mode: vertical-rl; /* Vertical text for the main sidebar headline as seen in some layouts, but here it looks horizontal in the crop, wait, looking closely at the right column top... actually the headline "共同营造..." is vertical in the far right, but the text block next to it is horizontal. Let's look closer. Ah, the headline "共同营造..." is actually a vertical headline on the far right edge. */
+            text-orientation: mixed;
+            float: right;
+            height: 400px;
+            margin-left: 15px;
+            font-size: 28px;
+        }
+        
+        /* Correction: The headline "共同营造..." is actually vertical text on the far right. */
+        .vertical-headline {
+            writing-mode: vertical-rl;
+            font-family: var(--header-font);
+            font-size: 32px;
+            font-weight: bold;
+            float: right;
+            margin-left: 20px;
+            height: 500px;
+            line-height: 1.5;
+        }
+
+        .sidebar-text {
+            font-size: 14px;
+            text-align: justify;
+        }
+
+        .case-study-box {
+            border: 1px solid #000;
+            padding: 15px;
+            margin-top: 40px;
+            background: #f9f9f9;
+        }
+
+        .case-title {
+            font-family: var(--header-font);
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #000;
+            padding-bottom: 5px;
+        }
+
+        /* Utility */
+        .clearfix::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        @media (max-width: 768px) {
+            .newspaper-page {
+                grid-template-columns: 1fr;
+            }
+            .sidebar-column {
+                border-left: none;
+                border-top: 1px solid #eee;
+                padding-left: 0;
+                padding-top: 20px;
+            }
+            .vertical-headline {
+                display: none; /* Hide vertical text on mobile for simplicity */
+            }
+            .img-float-left {
+                float: none;
+                width: 100%;
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="newspaper-page">
+    <!-- Header -->
+    <header class="page-header">
+        <div class="logo-area">
+            <div class="logo-text">光明日报</div>
+            <div class="meta-info">
+                2025年1月11日 星期六 &nbsp;|&nbsp; 责任编辑：徐海鹏、陈慧娟、安胜蓝 &nbsp;|&nbsp; 电子邮箱：gmmrbzk@163.com &nbsp;|&nbsp; 美术编辑：杨震
+            </div>
+        </div>
+        <div class="section-title">
+            <h2>民主法治</h2>
+            <div class="page-number">05</div>
+        </div>
+    </header>
+
+    <!-- Main Content (Left Column) -->
+    <main class="main-column">
+        <span class="category-tag">民生汇</span>
+        
+        <article class="article-header">
+            <h1 class="main-headline">打造全年不打烊的议政平台</h1>
+            <h2 class="sub-headline">——吉林省政协探索创新网络议政为民履职新形式</h2>
+            <div class="byline">本报记者 任爽 本报见习记者 张楠 本报通讯员 芦猛</div>
+        </article>
+
+        <div class="article-body clearfix">
+            <p>“直播间所做的宣传是否存在虚假成分？直播带货出现问题怎么取证？如何充分发挥网络资政的作用？2024年11月7日，在吉林省市场监管厅会议室，吉林省市场监管厅和长春市市场监管局的负责同志以及10余名省政协委员正面对面交流。</p>
+            
+            <p>“加强网络平台销售食品管理”“是我通过‘政协吉言’平台提出的一条微建议。”吉林省政协委员邱连和没想到，委员们的微建议能得到省政协和市场监管部门的“双重重视”，还衍生出一场如此热烈的协商恳谈会，双方集思广益、共同破题。</p>
+
+            <p>近年来，吉林省政协围绕全省经济发展重点、群众生活难点、社会治理焦点，创新“互联网+政协”履职新模式，增强网络议政、远程协商时效，建设并依托“政协吉言”网络平台开展微建议工作，积极探索政协协商同社会治理相结合的新形式，打造指尖上365天不打烊的协商民主议政平台。</p>
+
+            <div class="sub-section-title">实现“时时刻刻”建言资政</div>
+            <p>“你看，打开这个App，随时随地都能提建议，履职更方便了！”吉林省政协委员刘继生打开“政协吉言”网络平台，几分钟时间，就编辑好一条图文并茂的微建议。</p>
+            <p>一年以来，吉林省政协不断在全省17万名各级委员中开展宣传发动工作，鼓励他们主动担当起社会的“监督员”和群众的“服务员”，激发他们提交微建议的积极性。同时，吉林省政协还积极开展主题业务培训，让微建议切实从群众中来、从实际中来。</p>
+            <p>截至2025年1月3日，吉林省三级政协委员通过“政协吉言”平台提交微建议13803条，已办结3429条，办复率90.2%。</p>
+            <p>吉林省政协党组副书记、副主席郭乃硕说：“‘政协吉言’是吉林省各级政协委员网络履职的重要载体。微建议一事一议、即问即要、图文并茂，有助于政协委员积累履职经验，提升履职能力，是创新政协协商方式的有益实践。”</p>
+
+            <div class="sub-section-title">保障微建议也能高质高效落地</div>
+            <p>“去年劳动节过后，一条短视频引发了我的关注。吉林省政协委员、九三学社吉林省委会内部监督委员会主任孙立忠说，视频里外卖骑手在长春市，有乘客打车结束时，计价器显示11元。司机按照当地出租车行业传统，坚持‘四舍五入’收费12元，引发乘客不满，在网上引起热烈讨论。</p>
+            <p>孙立忠认为：“以前，因为需要找零钱，所以长春市的出租车收费几乎都是‘四舍五入’。可是现在，移动支付已经这么便捷了，完全可以实现‘据实收费’，‘四舍五入’的收费方式显然不太合理。”</p>
+            <p>2024年6月18日，孙立忠通过“政协吉言”平台，提交微建议——建议长春市依据消费者权益保护法规范出租车收费方式，根据计价器显示金额据实收费。不到48小时，孙立忠的建议就通过省政协办公厅转办至长春市交通运输局。</p>
+            <p>2024年7月3日，长春市发展和改革委员会等4部门联合下发《关于调整我市巡游出租汽车计价器计程里程和低速等候费，四舍五入后以整元计费》条款，从2024年8月1日起正式实施。</p>
+            <p>“这条微建议从提交到审核，再到办理和落实，一共不过15天时间，我由衷为这份为人民服务的高效点赞！”回忆办结过程，孙立忠仍难掩激动的心情。</p>
+            <p>1月2日，新年开工第一天，吉林省政协办公厅数据信息中心尽是忙碌的身影。工作人员李旭一早就忙着审核分发后台收到的微建议，“每天要确保省本级平台做到当日提交、当日审核完毕，并提请相关部门3天之内受理，30天之内办结，审核交办环节实现实时动态‘清零’。”</p>
+            <p>2024年9月，在“政协吉言”平台运行1年后，吉林省政协总结经验，印发《政协吉林省委员会微建议工作办法》，进一步严格把控了微建议的转交和办理时限，明确微建议办理工作流程，不到48小时，省政协办公厅就通过审核、督办、评价等各个环节将微建议转办至相关部门。</p>
+
+            <div class="sub-section-title">践行“人民政协为人民”理念</div>
+            <p>“天儿这么冷，走到轻轨站可真遭罪啊！特别是下完雪后，路那么滑，就更不方便了。”由于附近公交线路和轻轨线路接不上，长春市绿园区西新镇居民如果想乘坐轻轨，至少要步行10分钟才能到轻轨站，十分不便。</p>
+            <p>“现在，在小区里或者是往轻轨站去的路上，经常听到群众反映公交线路不合理的问题。”吉林省政协委员刘海就住在春杨路附近，对群众的期盼感同身受，“经过实地考察，我提出了‘长春市净月1号线公交在轻轨3号线增设公交站点’的微建议。</p>
+            <p>收到建议后，长春市交通运输局马上实地核实，对公交线路进行优化调整，切实解决了沿线小区居民乘车换乘需求。</p>
+            <p>“提出小建议，发挥大作用。”刘海说，政协委员就是要深入生活，让微建议切实从群众遇到的困难和问题中来，真正服务群众。</p>
+            <p>依据辽源市政协委员张文芳提出的《关于将枫谷园补植轮休通道的建议》，当地已对该公园百余棵被砍伐、为残障人士和老年人入园提供便利；在白山市政协委员郑胡勇提出《关于解决井盖噪声扰民问题》后，白山市住建局对全市1086个井盖开展安全隐患专项整治行动，消除安全隐患及噪声隐患；吉林省政协委员、民盟吉林省委会副主委封雪梅在微建议中提出长春市新民大街夜间光线比较昏暗，路灯亮度不足，很快长春市城乡建设委员会就对新民大街照明设施全部改造……一个个群众急难愁盼的问题，通过微建议切实得到解决，有效提升了人民群众的幸福感和获得感。</p>
+
+            <div class="sub-section-title">汇聚多方强大合力</div>
+            <p>2024年秋季学期开学，吉林省实验中学迎来了一批“新学习伙伴”。吉林省教育技术装备中心和省教育装备配套指南团体标准编制工作。2024年4月19日，吉林省教育技术装备中心专门召开会议，组织吉林省政协多名教育界委员齐聚一堂，针对中小学课桌椅尺寸等问题进行协商恳谈。“对于特殊身材的学生，要有专门的尺寸标准，就像我们买衣服有不同尺码一样。”在启动会上，吉林省政协委员、九三学社四平市委会主委王进德提出了“量体裁衣”式课桌椅定制建议。</p>
+            <p>经过实地调研和多方研讨，吉林省教育技术装备中心在国家标准基础上，编制出中小学课桌椅团体标准，加入可休息式课桌椅和坐姿矫正器等多项配置选择，基本能满足身高2米、体重200斤以内学生的需求。新标准的课桌椅将在全省范围内进一步推广，更好地服务学生健康成长。</p>
+            <p>“小切口服务大民生，多方力量汇聚强大合力！”王进德说，微建议让各界别走进部门、部门之间、委员与委员之间、委员与部门之间又架起了一座门。</p>
+            <p>凝聚合力不仅在委员与相关部门之间，更在政协与委员之间。“我们在‘政协吉言’上发起话题，鼓励委员们根据自身调研情况或工作实际提出微建议，突破过去委员建言存在地域差异、时间错配、互动不足等瓶颈，凝聚集体智慧力量。”吉林省政协办公厅副主任徐高介绍。</p>
+            <p>一年多来，在“政协吉言”平台设置的47个议政专题中，委员们留言10万余条，约300万字，从中可以总结出从解决一件事到“办好一类事”的办法。</p>
+            <p>朱国贤表示，吉林省政协按照省委关于健全协商民主机制的部署，将进一步增强网络议政效能，以纽带、不断拓展委员履职本领，加强人民政协反映社情民意、联系群众、服务人民机制建设，增加吉林人民的获得感、幸福感和安全感，为吉林全面振兴贡献智慧力量。</p>
+
+            <!-- Image Placeholder 1: Meeting Scene -->
+            <div class="img-placeholder img-float-left">
+                [Image: Meeting scene with people at a desk]
+                <div class="caption">吉林省政协委员提出微建议，方便居民出行。新华社发</div>
+            </div>
+
+            <p>根据政协委员提出的建议，辽源市多处公园全属控制箱包上了防碰撞软护角。吉林省政协供图</p>
+
+            <!-- Image Placeholder 2: Conference Room -->
+            <div class="img-placeholder img-full-width">
+                [Image: Conference room with screen showing data]
+                <div class="caption">多位政协委员提出微建议，助力解决群众急难愁盼问题。吉林省政协供图</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Sidebar (Right Column) -->
+    <aside class="sidebar-column">
+        <span class="category-tag">资政场</span>
+
+        <article class="sidebar-article clearfix">
+            <h2 class="vertical-headline">共同营造更有利于未成年人成长的法治环境</h2>
+            <div class="sidebar-text">
+                <p>近日，河北邯郸初中生被害案一审宣判，该案的办理体现了我国对于未成年人犯罪零容忍。同时，这也引人思考：如何切实预防未成年人犯罪，更好守护“少年的你”？</p>
+                <p>党的二十届三中全会强调，加强和改进未成年人权益保护，强化未成年人犯罪预防和治理。未成年人是祖国的未来与民族的希望，但正处在成长的他们，心智尚未成熟，易受外界影响。最高法发布的情况通报显示，近年来，未成年人违法犯罪数量总体呈上升趋势，大量未成年人违法犯罪处于无人监管、辍学流浪状态。</p>
+                <p>预防惩治未成年人犯罪是一项复杂的系统工程，涉及方方面面，为强化未成年人犯罪预防，不少地方进行了有益探索。比如，广东省河源市东源县灯塔镇制定建立学校、家庭、社会“三维互动”未成年人教育引导机制。这些探索实践对于推动创新未成年人犯罪预防工作机制、保障未成年人身心健康具有积极意义。但纵观现实，还应从多方面加强未成年人犯罪预防工作。</p>
+
+                <div class="sub-section-title" style="font-size: 16px; margin-top: 20px;">构建多层次未成年人犯罪防治法治体系</div>
+                <p>近年来，预防未成年人犯罪、未成年人保护等法律法规不断完善，对预防和治理未成年人违法犯罪发挥了积极作用。比如，刑法修正案（十一）将刑事责任年龄个别性、有条件地下调到十二周岁，强调依法惩治低龄未成年人的恶性犯罪。此外，近年来我国颁布实施了家庭教育促进法，通过立法形式明确家庭教育的责任和要求，确保在家庭环境中得到充分的关爱和教育，促进其健康成长和全面发展。</p>
+                <p>与此同时，应强化未成年人保护法在未成年人保护法律体系中的核心地位，通过提炼未成年人犯罪防治共性问题，从家庭、学校、社会等多方面进行源头治理。同时，还应完善相关法律法规，做好未成年人保护法与预防未成年人犯罪法的衔接，发挥好学校的作用。另外，针对未成年人网络保护等新情况新问题，应及时完善相关法律法规，尤其是要在数字化时代进一步细化网络防控的责任划分，强化网络服务提供者对于未成年人网络犯罪的风险防控责任。同时，应加强对未成年人接触网络的监护责任。此外，还应预防未成年人犯罪法为基础，发挥刑法作为最后法的保障性作用，对专门学校、专门教育、附条件不起诉、社区矫正等与罪错未成年人身心特点相适应的少年司法制度。</p>
+
+                <div class="sub-section-title" style="font-size: 16px; margin-top: 20px;">调动社会各方积极参与共同治理</div>
+                <p>治理未成年人违法犯罪重在预防和惩治未成年人违法犯罪既需要法律规范，也需要社会共治。首先，应引导家庭履行好监护责任，加强对子女良好道德习惯的培养。父母是未成年人的第一监护人，要明确家庭在未成年人犯罪预防中的责任，对于因监护不力导致未成年人犯罪的，应强制其接受亲职教育、设置家访、参加社会服务等惩罚措施。其次，要完善校园法治教育工作，采取聘任法治副校长、开展模拟法庭、建立校园专门纠纷调解室与心理疏导中心等措施，加强对于未成年人法治意识的培养，做到预防与治理并重。同时，应建立健全更加完善的校园欺凌预防与处理机制，畅通校园欺凌的匿名举报通道，当发现学生出现一般不良行为时，应及时给予管教或者惩戒，加强对罪错未成年人的分级干预，保护未成年人的合法权益。防治未成年人犯罪工作并非一蹴而就，需要全社会形成合力，共同营造有利于未成年人成长的法治环境，让法治的阳光普照每一个角落。</p>
+                <p>(作者系河北省社会科学院科研基地研究员)</p>
+
+                <div class="sub-section-title" style="font-size: 16px; margin-top: 20px;">推进未成年人犯罪防治司法体制改革</div>
+                <p>对未成年人犯罪案件的处理应坚持宽容但不纵容、特殊预防和一般预防相结合的原则。对涉罪未成年人，应坚持“教育、感化、挽救”方针的基础上，应将帮助未成年人重新回归社会作为最终目的，注重未成年人的身心健康发展。落实宽严相济刑事政策，充分把握未成年人刑事案件的特殊性，区分不同情形，做到当宽则宽，当严则严。对主观恶性不大、犯罪情节较轻、属于初犯、偶犯的未成年人，应依法从宽处理。</p>
+            </div>
+        </article>
+
+        <div class="case-study-box">
+            <div class="category-tag" style="font-size: 14px;">案例苑</div>
+            <h3 class="case-title">签约主播开小号被起诉 法院认定主播违约</h3>
+            <div class="sidebar-text" style="font-size: 13px;">
+                <p>□ 案情：2022年10月20日，某传媒公司与主播小李签订合约，约定小李进行互联网直播提供平台支持，利用自身享有的资源为小李进行人气打造、人气提升。小李承诺将该公司作为唯一的互联网直播合作伙伴，在合作协议期内，不与任何第三方签订直播合作协议，不在其他直播平台进行直播。后来，公司发现小李在所签约直播平台开设另一个账号进行直播以获取收益。公司便以小李违约为由将主播小李诉至法院，要求解除双方合同关系，并要求小李支付违约金30万元。</p>
+                <p>□ 判决：法院审理后认为，由于小李于合作期间擅自在合作的其他账号直播，构成根本违约。原告公司有权依据合同选择解除合同，违约责任由小李承担。最终法院判决解除双方合同关系；综合考虑合同履行情况、当事人过错程度及预期利益等因素，法院判决小李赔偿违约金5万元、律师费2.5万元、公证费1500元。二审维持原判。</p>
+                <p>□ 说法：近年来，网络直播行业“异军突起”，在带来经济利益的同时，也存在许多乱象。本案中，小李未经传媒公司同意擅自在其他账号从事直播活动，应当承担违约责任。但其认为违约金过高，请求予以减少。法院结合合同履行情况、当事人过错程度及预期利益等因素，根据公平原则和诚实信用原则，酌定对违约金进行调整。实践中，传媒公司以网络主播违约为核心诉求，在主播培训、平台推广等方面的包装投入较大，主播则依赖传媒公司的包装提升自身知名度，为传媒公司带来流量和收益。各方签订合同规定了各自权利义务，应强化诚信意识和契约精神，遵守直播相关法律法规，共同营造良好的直播环境和行业氛围。</p>
+                <p style="text-align: right; font-size: 11px; margin-top: 10px;">(本报记者王金虎整理)</p>
+            </div>
+            <!-- Image Placeholder 3: Cartoon -->
+            <div class="img-placeholder img-sidebar-bottom" style="background-color: #eef;">
+                [Image: Cartoon illustration of a person at a computer]
+            </div>
+        </div>
+    </aside>
+</div>
+
+</body>
+</html>

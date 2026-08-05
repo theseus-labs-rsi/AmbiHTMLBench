@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generalized Functional ANOVA in Closed-Form: A Unified View of Additive Explanations</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Computer+Modern+Serif&display=swap');
+
+  body {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 11pt;
+    line-height: 1.4;
+    color: #000;
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    position: relative;
+  }
+
+  .page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 60px 80px 40px 100px;
+    position: relative;
+  }
+
+  .sidebar-text {
+    position: fixed;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%) rotate(-90deg);
+    transform-origin: left center;
+    font-size: 10pt;
+    color: #333;
+    white-space: nowrap;
+    letter-spacing: 0.5px;
+  }
+
+  .top-rule {
+    border: none;
+    border-top: 3px solid #000;
+    margin: 0 0 20px 0;
+  }
+
+  .title {
+    text-align: center;
+    font-size: 18pt;
+    font-weight: bold;
+    line-height: 1.3;
+    margin: 0 0 15px 0;
+  }
+
+  .title-rule {
+    border: none;
+    border-top: 1px solid #000;
+    margin: 0 0 25px 0;
+  }
+
+  .authors-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px 30px;
+    margin-bottom: 10px;
+  }
+
+  .author-block {
+    text-align: center;
+    flex: 0 0 auto;
+    min-width: 180px;
+  }
+
+  .author-name {
+    font-weight: bold;
+    font-size: 11pt;
+    margin-bottom: 2px;
+  }
+
+  .author-affiliation {
+    font-size: 10pt;
+    line-height: 1.3;
+  }
+
+  .authors-row2 {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .abstract-heading {
+    text-align: center;
+    font-weight: bold;
+    font-size: 12pt;
+    margin: 25px 0 12px 0;
+  }
+
+  .abstract-text {
+    text-align: justify;
+    font-size: 10.5pt;
+    line-height: 1.5;
+    margin: 0 40px 25px 40px;
+  }
+
+  .section-heading {
+    font-size: 12pt;
+    font-weight: bold;
+    margin: 20px 0 10px 0;
+  }
+
+  .section-text {
+    text-align: justify;
+    font-size: 10.5pt;
+    line-height: 1.5;
+    margin-bottom: 15px;
+  }
+
+  .footnotes {
+    margin-top: 30px;
+    font-size: 9pt;
+    line-height: 1.4;
+    border-top: 1px solid #ccc;
+    padding-top: 8px;
+  }
+
+  .footnote-line {
+    margin-bottom: 3px;
+  }
+
+  .preprint {
+    font-size: 9pt;
+    margin-top: 20px;
+    color: #333;
+  }
+
+  sup {
+    font-size: 8pt;
+  }
+
+  .email {
+    font-family: "Courier New", monospace;
+    font-size: 9pt;
+  }
+</style>
+</head>
+<body>
+
+<div class="sidebar-text">arXiv:2605.18422v1 [stat.ML] 18 May 2026</div>
+
+<div class="page">
+
+  <hr class="top-rule">
+
+  <div class="title">
+    Generalized Functional ANOVA in Closed-Form:<br>
+    A Unified View of Additive Explanations
+  </div>
+
+  <hr class="title-rule">
+
+  <div class="authors-container">
+    <div class="author-block">
+      <div class="author-name">Baptiste Ferrere<sup>*</sup></div>
+      <div class="author-affiliation">EDF R&amp;D, SINCLAIR Lab<br>Université de Toulouse</div>
+    </div>
+    <div class="author-block">
+      <div class="author-name">Nicolas Bousquet<sup>†</sup></div>
+      <div class="author-affiliation">EDF R&amp;D, SINCLAIR Lab<br>Sorbonne Université</div>
+    </div>
+    <div class="author-block">
+      <div class="author-name">Fabrice Gamboa<sup>†</sup></div>
+      <div class="author-affiliation">Université de Toulouse, ANITI<br>Universidad Medellín</div>
+    </div>
+  </div>
+
+  <div class="authors-row2">
+    <div class="author-block" style="display:inline-block;">
+      <div class="author-name">Jean-Michel Loubes<sup>†</sup></div>
+      <div class="author-affiliation">Université de Toulouse, ANITI<br>INRIA Regalia</div>
+    </div>
+  </div>
+
+  <div class="abstract-heading">Abstract</div>
+
+  <div class="abstract-text">
+    The functional ANOVA, or Hoeffding decomposition, provides a principled framework for interpretability by decomposing a model prediction into main effects and higher-order interactions. For independent inputs, this classical decomposition is explicit. It is closely connected to SHAP values, generalized additive models, and orthogonal polynomial expansions, and therefore constitutes a fundamental tool for additive explainability. In the more general and realistic dependent setting, however, obtaining a tractable representation and estimating the decomposition from data remain challenging. In this work, we address this problem for continuous inputs. By combining Hilbert space methods with the generalized functional ANOVA, we build an explicit decomposition basis allowing to easily compute the decomposition. Our formulation recovers the classical independent case and its associated orthogonal decomposition. Building on this representation, we propose a simple but mighty algorithm to estimate the decomposition from a data sample in a model-agnostic setting and we compare it empirically with several state-of-the-art explanation methods, demonstrating the power of the approach.
+  </div>
+
+  <div class="section-heading">1 &nbsp; Introduction</div>
+
+  <div class="section-text">
+    Modern machine-learning models perform thousands of nonlinear operations to produce their prediction, making the mapping between <em>inputs</em> and <em>outputs</em> often opaque to human inspection. This lack of interpretability has motivated several overlapping research areas: eXplainable AI (XAI), interpretability and trustworthy machine learning, which share the common goal of designing methods to explain the predictions of machine learning models. Existing approaches for XAI are typically grouped into three families: model-agnostic explanations, model-specific explanations, and inherently interpretable models. The first two are <em>post-hoc</em> methods, which aim to explain the predictions of an already trained model, most often a tree ensemble or a neural network in the tabular setting, from its inputs and outputs. Model-agnostic methods assume only access to the input–output behavior of the model, treating it as a <em>black box</em>, whereas model-specific methods exploit knowledge of its internal structure (e.g., trees, layers, or gradients). The third family constrains the model class itself so that predictions admit a direct interpretation by design. Despite their popularity, many of these approaches face two recurring criticisms. First, they often rely on <em>heuristic</em> constructions rather than rigorous representation theorems, making it difficult to characterize what the resulting explanations
+  </div>
+
+  <div class="footnotes">
+    <div class="footnote-line"><sup>*</sup>Correspondence to: Baptiste Ferrere &lt;<span class="email">baptiste.ferrere@edf.fr</span>&gt;</div>
+    <div class="footnote-line"><sup>†</sup>Equal supervising.</div>
+  </div>
+
+  <div class="preprint">Preprint.</div>
+
+</div>
+
+</body>
+</html>

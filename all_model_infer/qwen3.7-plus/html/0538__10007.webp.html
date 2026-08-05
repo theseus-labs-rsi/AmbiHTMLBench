@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>牡丹亭 - Tree Peony Pavilion - Kunqu Opera</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    background: #1a1a2e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    font-family: 'Noto Serif SC', serif;
+  }
+
+  .poster {
+    width: 600px;
+    min-height: 860px;
+    background: #f5f0e8;
+    position: relative;
+    padding: 30px 35px 25px 35px;
+    overflow: hidden;
+  }
+
+  .poster::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      radial-gradient(ellipse at 20% 30%, rgba(200,180,150,0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 70%, rgba(180,160,130,0.1) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  /* Top bar */
+  .top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .logo-circle {
+    width: 42px;
+    height: 42px;
+    border: 2px solid #8b4513;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: #8b4513;
+    font-family: 'Noto Serif SC', serif;
+  }
+
+  .top-right-text {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 22px;
+    color: #2c2c2c;
+    letter-spacing: 4px;
+    font-weight: 700;
+  }
+
+  /* Main content area */
+  .main-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Title section */
+  .title-section {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .title-en {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: #2c2c2c;
+    line-height: 1.4;
+    letter-spacing: 1px;
+  }
+
+  .title-cn {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 72px;
+    font-weight: 900;
+    color: #1a1a1a;
+    letter-spacing: 12px;
+    margin: 5px 0;
+    line-height: 1.2;
+  }
+
+  .subtitle-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 5px;
+  }
+
+  .subtitle-cn {
+    font-size: 20px;
+    color: #2c2c2c;
+    font-weight: 600;
+  }
+
+  .subtitle-divider {
+    width: 40px;
+    height: 1px;
+    background: #c0392b;
+    transform: rotate(-30deg);
+  }
+
+  .subtitle-en {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    color: #666;
+    font-style: italic;
+  }
+
+  .subtitle-kunqu {
+    font-family: 'Playfair Display', serif;
+    font-size: 13px;
+    color: #666;
+    font-style: italic;
+  }
+
+  /* Red dot */
+  .red-dot {
+    position: absolute;
+    top: 130px;
+    right: 160px;
+    width: 10px;
+    height: 10px;
+    background: #c0392b;
+    border-radius: 50%;
+    z-index: 2;
+  }
+
+  /* Left vertical text */
+  .left-vertical {
+    position: absolute;
+    left: 12px;
+    top: 200px;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    z-index: 1;
+  }
+
+  .left-vertical .en-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 11px;
+    color: #888;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+  }
+
+  .left-vertical .cn-text {
+    font-size: 14px;
+    color: #2c2c2c;
+    letter-spacing: 4px;
+    font-weight: 600;
+  }
+
+  /* Right credits */
+  .right-credits {
+    position: absolute;
+    right: 15px;
+    top: 195px;
+    z-index: 1;
+    font-size: 9px;
+    color: #555;
+    line-height: 1.8;
+    max-width: 160px;
+  }
+
+  .right-credits .credit-label {
+    color: #c0392b;
+    font-weight: 600;
+  }
+
+  /* Cast section */
+  .cast-section {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin: 20px 0 15px 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cast-item {
+    text-align: center;
+  }
+
+  .cast-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 2px;
+  }
+
+  .cast-role {
+    font-size: 10px;
+    color: #888;
+    line-height: 1.5;
+  }
+
+  .cast-role-en {
+    font-family: 'Playfair Display', serif;
+    font-size: 9px;
+    color: #aaa;
+    font-style: italic;
+  }
+
+  .cast-note {
+    font-size: 9px;
+    color: #c0392b;
+    margin-top: 2px;
+  }
+
+  /* Bottom info section */
+  .bottom-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 25px;
+    position: relative;
+    z-index: 1;
+    padding: 0 10px;
+  }
+
+  .venue-section {
+    text-align: right;
+  }
+
+  .venue-en {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    color: #2c2c2c;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+
+  .venue-cn {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-top: 2px;
+  }
+
+  .venue-address {
+    font-size: 11px;
+    color: #666;
+    margin-top: 5px;
+    line-height: 1.6;
+  }
+
+  .date-section {
+    text-align: center;
+  }
+
+  .date-en {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    color: #2c2c2c;
+    font-weight: 700;
+  }
+
+  .date-cn {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-top: 3px;
+    letter-spacing: 2px;
+  }
+
+  .time-info {
+    font-size: 12px;
+    color: #555;
+    margin-top: 5px;
+  }
+
+  .time-big {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2c2c2c;
+    margin-top: 8px;
+  }
+
+  .date-label {
+    font-size: 9px;
+    color: #c0392b;
+    margin-top: 3px;
+  }
+
+  .date-label-cn {
+    font-size: 9px;
+    color: #c0392b;
+  }
+
+  /* Staff section */
+  .staff-section {
+    position: absolute;
+    left: 15px;
+    bottom: 130px;
+    z-index: 1;
+    font-size: 9px;
+    color: #555;
+    line-height: 1.8;
+    max-width: 150px;
+  }
+
+  .staff-section .staff-label {
+    color: #c0392b;
+    font-weight: 600;
+  }
+
+  /* Sponsor section */
+  .sponsor-section {
+    position: relative;
+    z-index: 1;
+    margin-top: 30px;
+    text-align: center;
+    border-top: 1px solid #ddd;
+    padding-top: 12px;
+  }
+
+  .sponsor-label {
+    font-size: 10px;
+    color: #999;
+    margin-bottom: 8px;
+  }
+
+  .sponsor-label .dot {
+    color: #c0392b;
+  }
+
+  .sponsor-logos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .sponsor-item {
+    font-size: 14px;
+    color: #555;
+    font-weight: 600;
+    letter-spacing: 2px;
+  }
+
+  .sponsor-item .placeholder-logo {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 1px solid #999;
+    border-radius: 50%;
+    vertical-align: middle;
+    margin: 0 3px;
+  }
+
+  /* Decorative elements */
+  .deco-line {
+    position: absolute;
+    z-index: 0;
+  }
+
+  .faint-bg-text {
+    position: absolute;
+    font-size: 200px;
+    color: rgba(180, 160, 130, 0.06);
+    font-weight: 900;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+    pointer-events: none;
+    letter-spacing: 20px;
+  }
+</style>
+</head>
+<body>
+
+<div class="poster">
+  <!-- Faint background character -->
+  <div class="faint-bg-text">牡丹</div>
+
+  <!-- Red dot decoration -->
+  <div class="red-dot"></div>
+
+  <!-- Top bar -->
+  <div class="top-bar">
+    <div class="logo-circle">昆</div>
+    <div class="top-right-text">春风上巳天</div>
+  </div>
+
+  <!-- Left vertical text -->
+  <div class="left-vertical">
+    <div class="en-text">Upper And<br>Lower And Session</div>
+    <div class="cn-text">上下本，成都站</div>
+  </div>
+
+  <!-- Right credits -->
+  <div class="right-credits">
+    <div><span class="credit-label">● 主办方：</span>石小梅昆曲工作室、南京保利大剧院、文化发展(控股)有限公司</div>
+    <div><span class="credit-label">● 联合主办：</span>江苏省演艺集团昆剧院、四川省大剧院</div>
+    <div><span class="credit-label">● 出品方：</span>石小梅昆曲工作室</div>
+    <div><span class="credit-label">● 制作：</span>江苏省演艺集团昆剧院</div>
+    <div><span class="credit-label">● 特别鸣谢：</span>一足山记</div>
+  </div>
+
+  <!-- Main content -->
+  <div class="main-content">
+    <!-- Title -->
+    <div class="title-section">
+      <div class="title-en">Tree peony<br>Pavilion</div>
+      <div class="title-cn">牡丹亭</div>
+      <div class="subtitle-row">
+        <span class="subtitle-cn">昆曲</span>
+        <span class="subtitle-divider"></span>
+        <span class="subtitle-en">Essence of</span>
+      </div>
+      <div class="subtitle-kunqu">Kunqu</div>
+    </div>
+
+    <!-- Cast -->
+    <div class="cast-section">
+      <div class="cast-item">
+        <div class="cast-name">孔爱萍</div>
+        <div class="cast-role">饰 杜丽娘</div>
+        <div class="cast-role-en">KONG AIPING as Du Liniang</div>
+        <div class="cast-note">★ 梅花奖得主 · 30年</div>
+      </div>
+      <div class="cast-item">
+        <div class="cast-name">石小梅</div>
+        <div class="cast-role">饰 柳梦梅</div>
+        <div class="cast-role-en">SHI XIAOMEI as Liu Mengmei</div>
+        <div class="cast-note">★ 梅花奖得主 · 一生</div>
+      </div>
+      <div class="cast-item">
+        <div class="cast-name">施夏明</div>
+        <div class="cast-role">饰 柳梦梅（下本）</div>
+        <div class="cast-role-en">SHI XIAMING as Liu Mengmei</div>
+      </div>
+    </div>
+
+    <!-- Staff section (left bottom) -->
+    <div class="staff-section">
+      <div><span class="staff-label">● 导演：</span>张继青</div>
+      <div><span class="staff-label">● 艺术指导：</span>张继青</div>
+      <div><span class="staff-label">● 音乐指导：</span>朱复</div>
+      <div><span class="staff-label">● 舞美设计：</span>朱复</div>
+      <div><span class="staff-label">● 灯光设计：</span>周正平</div>
+      <div><span class="staff-label">● 服装设计：</span>蓝玲</div>
+      <div><span class="staff-label">● 化妆造型：</span>孙艾娜</div>
+      <div><span class="staff-label">● 执行导演：</span>施夏明</div>
+      <div><span class="staff-label">● 舞台监督：</span>赵于涛</div>
+      <div><span class="staff-label">● 出品人：</span>柯军</div>
+    </div>
+
+    <!-- Bottom info -->
+    <div class="bottom-info">
+      <div class="venue-section">
+        <div class="venue-en">Sichuan Grand<br>Theatre</div>
+        <div class="venue-cn">四川大剧院</div>
+        <div class="venue-address">
+          成都市青羊区<br>
+          人民中路1号附2号
+        </div>
+      </div>
+
+      <div class="date-section">
+        <div class="date-en">April 17th-18th Sat.</div>
+        <div class="date-cn">四月十七日五<br>至十八日六</div>
+        <div class="date-label">★ 周五 · Friday</div>
+        <div class="date-label-cn">★ 周六 · Saturday</div>
+        <div class="time-info">19:30-22:00</div>
+        <div class="time-big">19:30-22:00</div>
+      </div>
+    </div>
+
+    <!-- Sponsor section -->
+    <div class="sponsor-section">
+      <div class="sponsor-label"><span class="dot">●</span> 活动赞助 Sponsor</div>
+      <div class="sponsor-logos">
+        <div class="sponsor-item">朝<span class="placeholder-logo"></span>食</div>
+        <div class="sponsor-item">熙熙</div>
+        <div class="sponsor-item">观观 MUJIAN</div>
+        <div class="sponsor-item">童翼通识教育</div>
+        <div class="sponsor-item">麦数<span class="placeholder-logo"></span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

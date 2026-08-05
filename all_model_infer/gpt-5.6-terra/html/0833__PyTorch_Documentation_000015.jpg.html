@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AdaptiveAvgPool3d — PyTorch Documentation</title>
+<script>
+window.MathJax = {tex:{inlineMath:[['$','$'],['\\(','\\)']]}, svg:{fontCache:'global'}};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Arial,Helvetica,sans-serif;color:#252b35;background:#fff;font-size:14px}
+  a{color:#c84128;text-decoration:underline;font-weight:600}
+  .topbar{height:129px;border-bottom:1px solid #e4e5e7;box-shadow:0 2px 7px rgba(0,0,0,.09);display:flex;align-items:center;padding:0 48px;position:relative;z-index:2;background:white}
+  .logo{font-size:20px;color:#20242b;margin-right:17px;white-space:nowrap}
+  .logo .flame{color:#ef582d;font-size:25px;vertical-align:-2px;margin-right:4px}
+  .version{height:35px;border:1px solid #d8dce0;border-radius:3px;padding:8px 10px;color:#d54228;font-weight:bold;margin-right:17px;white-space:nowrap}
+  .version span{font-size:10px;color:#536171;margin-left:7px}
+  .nav{height:100%;display:flex;align-items:center;gap:27px;color:#425063;font-size:13px}
+  .nav div{line-height:22px;white-space:nowrap}
+  .external{font-size:13px;margin-left:2px}
+  .topright{margin-left:auto;display:flex;align-items:center;gap:28px;color:#3a4658}
+  .goto{font-size:11px;line-height:11px;color:#222}
+  .goto b{font-size:12px}
+  .search{width:233px;height:39px;border:1px solid #d4d8dd;border-radius:5px;display:flex;align-items:center;padding:0 9px;color:#4b5665;font-size:16px}
+  .glass{font-size:25px;color:#182230;margin-right:15px;line-height:1}
+  .toggle{width:30px;height:16px;background:#536176;border-radius:9px;margin-left:auto;position:relative}
+  .toggle:after{content:"";position:absolute;width:12px;height:12px;background:#fff;border-radius:50%;left:2px;top:2px}
+  .theme{font-size:28px}
+  .social{position:absolute;right:48px;bottom:20px;display:flex;gap:19px;color:#435167;font-size:20px;font-weight:bold}
+  .layout{display:grid;grid-template-columns:216px minmax(760px, 992px) 168px;min-height:1470px}
+  .sidebar{border-right:1px solid #d7d8da;padding:17px 18px 25px 48px;overflow:hidden}
+  .side-title{font-size:14px;margin-bottom:16px;color:#1d2733}
+  .side-root{margin-left:11px;margin-bottom:8px}
+  .side-active{border-left:3px solid #ef4c28;margin-left:0;padding:7px 8px;font-weight:bold;line-height:20px;position:relative}
+  .chev{position:absolute;right:1px;top:7px;font-size:17px;font-weight:normal}
+  .side-list{list-style:none;padding:0;margin:5px 0 0 27px;font-size:14px;line-height:1.55}
+  .side-list li{padding:5px 0;color:#252b34;max-width:123px;overflow-wrap:anywhere}
+  main{padding:17px 32px 0 32px;min-width:0}
+  .crumbrow{height:51px;display:flex;align-items:flex-start;padding-top:0;font-size:13px;font-weight:bold;color:#4e5968}
+  .crumb{display:flex;gap:10px;align-items:center}
+  .home{font-size:18px;color:#536176;line-height:14px}
+  .rating-top{margin-left:auto;padding-right:1px;font-size:12px;font-weight:bold;color:#37404d}
+  .stars{color:#e4e6e8;font-size:16px;letter-spacing:1px;margin-left:5px}
+  h1{font-size:40px;line-height:48px;margin:7px 0 21px;font-weight:500;letter-spacing:-1.4px}
+  .signature{font-family:"Courier New",monospace;font-size:18px;font-weight:bold;font-style:italic;position:relative;margin-bottom:10px;line-height:25px}
+  .purple{color:#8f2b87}
+  .source{position:absolute;right:0;color:#c64027;text-decoration:underline;font-family:"Courier New",monospace;font-size:16px}
+  .description{font-size:16px;line-height:1.55;margin:0 32px 21px}
+  .section{margin:0 32px}
+  .param-head,.return-head{height:27px;background:#f1f2f3;padding:4px 8px;font-size:16px;font-weight:bold}
+  .param-body{padding:4px 8px 13px 40px;font-size:16px;line-height:27px}
+  .param-body strong{font-size:16px}
+  .linkitalic{font-style:italic;color:#bd402d;text-decoration:underline}
+  code{font-family:"Courier New",monospace;font-size:15px}
+  .inline-code{font-family:"Courier New",monospace;color:#8c2d82;background:#f2eff2;border:1px solid #ded4de;border-radius:3px;padding:1px 4px}
+  .shape{font-size:16px;line-height:25px;margin-top:4px}
+  .shape h3{font-size:16px;margin:0 0 5px}
+  .shape ul{margin:0;padding-left:64px}
+  .shape li{padding-left:0;margin:5px 0}
+  .examples{margin-top:32px}
+  .examples h2{font-size:16px;margin:0;border-bottom:1px solid #d3d4d5;padding-bottom:4px}
+  pre{margin:17px 0 21px;background:#f2f3f5;border:1px solid #d3d5d7;border-radius:4px;padding:14px 16px;font-family:"Courier New",monospace;font-size:14px;line-height:17px;color:#20242a;white-space:pre-wrap}
+  .kw{color:#a36b18}.green{color:#287447}.violet{color:#7836a5}.gray{color:#4f5154}
+  .forward{font-family:"Courier New",monospace;font-size:18px;font-weight:bold;font-style:italic;color:#8f2b87;margin-top:0;position:relative}
+  .forward .black{color:#242a34}
+  .forward-desc{font-size:16px;margin:11px 32px 25px;line-height:23px}
+  .return{margin:0 32px}
+  .return-body{padding:6px 40px;font-size:16px}
+  .rightbar{border-left:1px solid #d7d8da;margin-top:22px;height:632px;padding:10px 0 0 16px;color:#303b4a;font-size:14px}
+  .rightbar .onthis{font-size:14px;line-height:22px;margin-bottom:6px}
+  .rightbar .tag{display:block;width:max-content;max-width:151px;background:#f1f1f1;border:1px solid #d7d7d7;border-radius:3px;padding:1px 4px;color:#242a34;font-family:"Courier New",monospace;font-size:12px;font-weight:bold;margin:5px 0 7px}
+  .rightbar .show{line-height:23px;margin:24px 0;color:#c94228;text-decoration:underline}
+  .libraries{font-weight:bold;font-size:16px;line-height:17px;margin:23px 0 9px}
+  .library-list{line-height:24px}
+  .bottom{height:174px;border-top:1px solid #d4d5d6;margin-top:362px;position:relative;padding-top:14px}
+  .ratebottom{text-align:center;font-size:11px;font-weight:bold}
+  .feedback{display:block;margin:23px auto 0;width:172px;background:#f2f3f4;color:#4a5666;text-decoration:none;font-weight:normal;padding:12px;font-size:18px}
+  .feedback b{font-size:28px;line-height:12px;color:#df4d2e;float:right}
+  .prev,.next{position:absolute;bottom:10px;font-size:16px;color:#4a5664}
+  .prev{left:8px}.next{right:17px;text-align:right}
+  .prev .arr{font-size:28px;margin-right:10px}.next .arr{font-size:28px;margin-left:10px}
+  .ask{position:fixed;right:64px;bottom:65px;border:3px solid #a5bcff;background:#fff;border-radius:28px;box-shadow:0 4px 9px #b9c1cc;padding:10px 22px;color:#252b35;font-size:16px}
+  .ask b{color:#087fd2;font-size:27px;vertical-align:-3px;margin-right:9px}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="logo"><span class="flame">◔</span>PyTorch</div>
+  <div class="version">v2.12... <span>▾</span></div>
+  <nav class="nav">
+    <div>Install<br>PyTorch</div><span class="external">↗</span>
+    <div>User<br>Guide</div><span>⌄</span>
+    <div>Reference<br>API</div><span>⌄</span>
+    <div>Developer<br>Notes</div><span>⌄</span>
+    <div>Community⌄</div>
+    <div>Tutorials ↗</div>
+  </nav>
+  <div class="topright">
+    <div class="goto">Go to<br><b>pytorch.org ↗</b></div>
+    <div class="search"><span class="glass">⌕</span>Search the docs ... <span class="toggle"></span></div>
+    <div class="theme">◐</div>
+  </div>
+  <div class="social"><span>𝕏</span><span>◉</span><span>D</span><span>♣</span></div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="side-title">PyTorch API</div>
+    <div class="side-root">torch</div>
+    <div class="side-active">Aliases in<br>torch.nn <span class="chev">⌃</span></div>
+    <ul class="side-list">
+      <li>Sequential</li><li>ModuleList</li><li>ModuleDict</li><li>ParameterList</li><li>ParameterDict</li>
+      <li>Conv1d</li><li>Conv2d</li><li>Conv3d</li><li>ConvTranspose1d</li><li>ConvTranspose2d</li><li>ConvTranspose3d</li>
+      <li>LazyConv1d</li><li>LazyConv2d</li><li>LazyConv3d</li><li>LazyConvTranspose1d</li><li>LazyConvTranspose2d</li><li>LazyConvTranspose3d</li>
+      <li>Unfold</li><li>Fold</li><li>MaxPool1d</li><li>MaxPool2d</li><li>MaxPool3d</li><li>MaxUnpool1d</li><li>MaxUnpool2d</li><li>MaxUnpool3d</li>
+      <li>AvgPool1d</li><li>AvgPool2d</li><li>AvgPool3d</li><li>FractionalMaxPool2d</li><li>FractionalMaxPool3d</li>
+      <li>LPPool1d</li><li>LPPool2d</li><li>LPPool3d</li><li>AdaptiveMaxPool1d</li><li>AdaptiveMaxPool2d</li><li>AdaptiveMaxPool3d</li>
+    </ul>
+  </aside>
+
+  <main>
+    <div class="crumbrow">
+      <div class="crumb"><span class="home">⌂</span><span>›</span><span>Reference API</span><span>›</span><span>...</span><span>›</span><span>Aliases in torch.nn</span><span>›</span><span>AdaptiveAvgPool3d</span></div>
+      <div class="rating-top">Rate this Page <span class="stars">★★★★★</span></div>
+    </div>
+    <h1>AdaptiveAvgPool3d</h1>
+    <div class="signature">class torch.nn.modules.pooling.<span class="purple">AdaptiveAvgPool3d</span><span class="black">(output_size)</span><a class="source" href="#">[source]</a></div>
+    <p class="description">Applies a 3D adaptive average pooling over an input signal composed of several input planes.</p>
+    <p class="description">The output is of size D x H x W, for any input size. The number of output features is equal to the number of input planes.</p>
+
+    <div class="section">
+      <div class="param-head">Parameters:</div>
+      <div class="param-body"><strong>output_size</strong> (<a class="linkitalic">int</a> | <i>None</i> | <a class="linkitalic">tuple</a>[<a class="linkitalic">int</a> | <i>None</i>, <a class="linkitalic">int</a> | <i>None</i>, <a class="linkitalic">int</a> | <i>None</i>]) – the target output size of the form D x H x W. Can be a<br>tuple (D, H, W) or a single number D for a cube D x D x D. D, H and W can be either a <span class="inline-code">int</span>, or <span class="inline-code">None</span> which means the size<br>will be the same as that of the input.</div>
+
+      <div class="shape">
+        <h3>Shape:</h3>
+        <ul>
+          <li>Input: \( (N, C, D_{in}, H_{in}, W_{in}) \) or \( (C, D_{in}, H_{in}, W_{in}) \).</li>
+          <li>Output: \( (N, C, S_0, S_1, S_2) \) or \( (C, S_0, S_1, S_2) \), where \( S = \text{output\_size} \).</li>
+        </ul>
+      </div>
+
+      <div class="examples">
+        <h2>Examples</h2>
+        <pre><span class="gray">&gt;&gt;&gt; # target output size of 5x7x9</span>
+&gt;&gt;&gt; <span class="green">m</span> = nn.AdaptiveAvgPool3d((<span class="kw">5</span>, <span class="kw">7</span>, <span class="kw">9</span>))
+&gt;&gt;&gt; <span class="kw">input</span> = torch.randn(<span class="kw">1</span>, <span class="kw">64</span>, <span class="kw">8</span>, <span class="kw">9</span>, <span class="kw">10</span>)
+&gt;&gt;&gt; <span class="kw">output</span> = m(<span class="kw">input</span>)
+<span class="gray">&gt;&gt;&gt; # target output size of 7x7x7 (cube)</span>
+&gt;&gt;&gt; <span class="green">m</span> = nn.AdaptiveAvgPool3d(<span class="kw">7</span>)
+&gt;&gt;&gt; <span class="kw">input</span> = torch.randn(<span class="kw">1</span>, <span class="kw">64</span>, <span class="kw">10</span>, <span class="kw">9</span>, <span class="kw">8</span>)
+&gt;&gt;&gt; <span class="kw">output</span> = m(<span class="kw">input</span>)
+<span class="gray">&gt;&gt;&gt; # target output size of 7x9x8</span>
+&gt;&gt;&gt; <span class="green">m</span> = nn.AdaptiveAvgPool3d((<span class="kw">7</span>, <span class="violet">None</span>, <span class="violet">None</span>))
+&gt;&gt;&gt; <span class="kw">input</span> = torch.randn(<span class="kw">1</span>, <span class="kw">64</span>, <span class="kw">10</span>, <span class="kw">9</span>, <span class="kw">8</span>)
+&gt;&gt;&gt; <span class="kw">output</span> = m(<span class="kw">input</span>)</pre>
+      </div>
+
+      <div class="forward">forward<span class="black">(input)</span><a class="source" href="#">[source]</a></div>
+      <div class="forward-desc">Runs the forward pass.</div>
+      <div class="return">
+        <div class="return-head">Return type:</div>
+        <div class="return-body"><a class="linkitalic">Tensor</a></div>
+      </div>
+    </div>
+
+    <div class="bottom">
+      <div class="ratebottom">Rate this Page <span class="stars">★★★★★</span></div>
+      <a class="feedback" href="#">Send Feedback <b>›</b></a>
+      <div class="prev"><span class="arr">‹</span>Previous<br><span style="padding-left:25px"><a href="#">AdaptiveAvgPool2d</a></span></div>
+      <div class="next">Next <span class="arr">›</span><br><a href="#">ReflectionPad1d</a><span class="arr">›</span></div>
+    </div>
+  </main>
+
+  <aside class="rightbar">
+    <div class="onthis">☷ On this<br>&nbsp;&nbsp;page</div>
+    <span class="tag">AdaptiveAvgPool3d</span>
+    <span class="tag" style="margin-left:16px">AdaptiveAvgPool3d</span>
+    <div class="show">▣ Show<br>Source</div>
+    <div class="libraries">PyTorch<br>Libraries</div>
+    <div class="library-list">ExecuTorch ↗<br>Helion ↗<br>torchao ↗<br>kineto ↗<br>torchchat ↗<br>TorchRL ↗<br>torchvision ↗<br>torchaudio ↗<br>torchsort ↗<br>PyTorch on<br>XLA<br>Devices ↗</div>
+  </aside>
+</div>
+<div class="ask"><b>≫</b>Ask AI</div>
+</body>
+</html>

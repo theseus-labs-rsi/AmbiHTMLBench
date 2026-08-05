@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>魔吉拉的面具</title>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$']],
+    displayMath: [['$$', '$$']]
+  }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+  }
+
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: #081d1b;
+    font-family: "Noto Sans SC", "Microsoft YaHei", Arial, sans-serif;
+  }
+
+  .frame {
+    position: relative;
+    width: min(100vw, 177.63vh);
+    aspect-ratio: 540 / 304;
+    overflow: hidden;
+    background:
+      linear-gradient(to bottom, rgba(3, 18, 17, 0.18) 0 57%, rgba(102, 158, 143, 0.2) 58% 100%),
+      repeating-linear-gradient(91deg, transparent 0 17%, rgba(5, 24, 23, 0.3) 17.5% 18%, transparent 18.5% 34%),
+      #173c38;
+  }
+
+  .scene-background {
+    position: absolute;
+    inset: 0;
+    border: 0;
+    color: transparent;
+    font-size: 0;
+    background:
+      radial-gradient(ellipse at 49% 63%, rgba(121, 185, 166, 0.42), transparent 33%),
+      linear-gradient(168deg, transparent 0 52%, rgba(106, 166, 149, 0.36) 52.5% 53%, transparent 53.5%),
+      linear-gradient(192deg, transparent 0 58%, rgba(91, 145, 132, 0.42) 58.5% 59%, transparent 59.5%);
+  }
+
+  .wall-seam {
+    position: absolute;
+    top: 0;
+    bottom: 40%;
+    width: 2px;
+    background: rgba(2, 18, 17, 0.55);
+    box-shadow: 12px 0 20px rgba(0, 0, 0, 0.24);
+  }
+
+  .seam-1 { left: 27%; }
+  .seam-2 { left: 68%; }
+  .seam-3 { left: 92%; }
+
+  .floor {
+    position: absolute;
+    left: -8%;
+    right: -8%;
+    bottom: -4%;
+    height: 45%;
+    background:
+      linear-gradient(153deg, transparent 0 27%, rgba(29, 89, 79, 0.38) 27.5% 28%, transparent 28.5%),
+      linear-gradient(207deg, transparent 0 33%, rgba(29, 89, 79, 0.38) 33.5% 34%, transparent 34.5%),
+      repeating-linear-gradient(171deg, rgba(126, 181, 165, 0.16) 0 2px, transparent 2px 31px),
+      #6a9f90;
+    clip-path: polygon(0 26%, 100% 0, 100% 100%, 0 100%);
+  }
+
+  .platform {
+    position: absolute;
+    left: 36.5%;
+    bottom: 2.5%;
+    width: 40%;
+    height: 25%;
+    border: 0;
+    color: transparent;
+    font-size: 0;
+    background: rgba(172, 193, 180, 0.7);
+    clip-path: polygon(19% 7%, 94% 23%, 99% 63%, 80% 97%, 13% 92%, 0 61%);
+    box-shadow: inset 0 0 12px rgba(26, 59, 53, 0.38);
+  }
+
+  .character {
+    position: absolute;
+    left: 43.5%;
+    bottom: 12%;
+    width: 12%;
+    height: 27%;
+    border: 0;
+    color: transparent;
+    font-size: 0;
+    background:
+      radial-gradient(circle at 49% 12%, #253f3b 0 19%, transparent 20%),
+      linear-gradient(104deg, transparent 0 38%, #d7ddd2 39% 50%, transparent 51%) 35% 100% / 48% 48% no-repeat,
+      linear-gradient(76deg, transparent 0 39%, #e1e5dc 40% 51%, transparent 52%) 70% 100% / 48% 48% no-repeat,
+      linear-gradient(to bottom, #294b44 0 51%, #765226 52% 73%, transparent 74%);
+    filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.35));
+  }
+
+  .chest {
+    position: absolute;
+    left: 55%;
+    bottom: 15%;
+    width: 13%;
+    height: 23%;
+    border: 0;
+    color: transparent;
+    font-size: 0;
+    background:
+      linear-gradient(to right, #294d47 0 14%, #799082 15% 28%, #284b45 29% 70%, #778c80 71% 84%, #294b45 85%),
+      #365e56;
+    border: 3px solid rgba(30, 68, 61, 0.8);
+    box-shadow: inset 0 8px 0 rgba(126, 151, 139, 0.4), 0 5px 8px rgba(0, 0, 0, 0.32);
+  }
+
+  .chest::after {
+    content: "";
+    position: absolute;
+    left: 39%;
+    top: 35%;
+    width: 24%;
+    height: 24%;
+    border: 3px solid rgba(130, 151, 141, 0.76);
+    border-top: 0;
+  }
+
+  .dialog-shadow {
+    position: absolute;
+    left: 22.7%;
+    top: 26.7%;
+    width: 53.3%;
+    height: 38.2%;
+    background: rgba(0, 0, 0, 0.45);
+    filter: blur(9px);
+  }
+
+  .dialog {
+    position: absolute;
+    left: 25.8%;
+    top: 29.7%;
+    width: 48.4%;
+    height: 31.2%;
+    display: grid;
+    grid-template-columns: 27% 1fr;
+    color: #f4f4e9;
+    background: rgba(67, 101, 94, 0.91);
+    border-top: 1px solid rgba(179, 210, 198, 0.52);
+    border-bottom: 1px solid rgba(179, 210, 198, 0.45);
+    box-shadow:
+      inset 8px 0 12px rgba(126, 180, 166, 0.18),
+      inset -8px 0 12px rgba(126, 180, 166, 0.18),
+      0 0 6px rgba(165, 209, 195, 0.52);
+  }
+
+  .dialog::before,
+  .dialog::after {
+    content: "";
+    position: absolute;
+    top: 4%;
+    bottom: 4%;
+    width: 4px;
+    border-left: 1px solid rgba(169, 205, 193, 0.52);
+    border-right: 1px solid rgba(22, 53, 50, 0.36);
+  }
+
+  .dialog::before { left: -7px; }
+  .dialog::after { right: -7px; }
+
+  .item-art {
+    position: relative;
+    min-width: 0;
+  }
+
+  .mask {
+    position: absolute;
+    left: 28%;
+    top: 26%;
+    width: 50%;
+    aspect-ratio: 1;
+    border: 0;
+    color: transparent;
+    font-size: 0;
+    background:
+      radial-gradient(circle at 50% 54%, #e7dc1e 0 7%, #e53724 8% 16%, #794154 17% 31%, transparent 32%),
+      conic-gradient(
+        from 0deg,
+        transparent 0 4%, #e2ad20 5% 8%, transparent 9% 16%,
+        #7ea05a 17% 20%, transparent 21% 29%,
+        #dd5628 30% 34%, transparent 35% 43%,
+        #5c86a4 44% 48%, transparent 49% 57%,
+        #d5c12d 58% 62%, transparent 63% 71%,
+        #c8412a 72% 76%, transparent 77% 85%,
+        #719267 86% 90%, transparent 91%
+      );
+    filter: drop-shadow(0 0 5px rgba(229, 199, 37, 0.72));
+  }
+
+  .quantity {
+    position: absolute;
+    left: 47%;
+    top: 70%;
+    font-size: clamp(5px, 1.1vw, 8px);
+    color: #eeeede;
+  }
+
+  .content {
+    position: relative;
+    min-width: 0;
+    padding: 8.2% 7% 4% 1%;
+  }
+
+  h1 {
+    margin: 0 0 4.5% 0;
+    font-size: clamp(8px, 1.9vw, 13px);
+    line-height: 1.1;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.42);
+  }
+
+  .description {
+    margin: 0;
+    font-size: clamp(5px, 1.05vw, 7.4px);
+    line-height: 1.42;
+    letter-spacing: 0;
+    color: rgba(245, 245, 232, 0.94);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.38);
+  }
+
+  .prompt {
+    position: absolute;
+    right: 2.5%;
+    bottom: 3.2%;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: clamp(5px, 0.95vw, 7px);
+    color: #f4f2e6;
+  }
+
+  .button-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: clamp(7px, 1.4vw, 10px);
+    aspect-ratio: 1;
+    border: 1px solid rgba(245, 245, 235, 0.94);
+    border-radius: 50%;
+    font-size: clamp(4px, 0.75vw, 6px);
+    line-height: 1;
+  }
+</style>
+</head>
+<body>
+  <main class="frame" aria-label="游戏物品获得画面">
+    <div class="placeholder scene-background" aria-label="[Game scene: full-frame background]">[Game scene: full-frame background]</div>
+    <div class="wall-seam seam-1"></div>
+    <div class="wall-seam seam-2"></div>
+    <div class="wall-seam seam-3"></div>
+    <div class="floor"></div>
+    <div class="placeholder platform" aria-label="[Stone platform: bottom-center]">[Stone platform: bottom-center]</div>
+    <div class="placeholder character" aria-label="[Character: bottom-center]">[Character: bottom-center]</div>
+    <div class="placeholder chest" aria-label="[Treasure chest: bottom-center]">[Treasure chest: bottom-center]</div>
+
+    <div class="dialog-shadow"></div>
+    <section class="dialog" aria-label="物品说明">
+      <div class="item-art">
+        <div class="placeholder mask" aria-label="[Item image: 魔吉拉的面具]">[Item image: 魔吉拉的面具]</div>
+        <span class="quantity">×1</span>
+      </div>
+      <div class="content">
+        <h1>魔吉拉的面具</h1>
+        <p class="description">
+          从太古时期流传下来的面具。<br>
+          戴上它的话，有些怪物不容易发现自己。<br>
+          无法轻易获得的珍贵物品。
+        </p>
+      </div>
+      <div class="prompt">
+        <span>打开袋子</span>
+        <span class="button-icon">＋</span>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

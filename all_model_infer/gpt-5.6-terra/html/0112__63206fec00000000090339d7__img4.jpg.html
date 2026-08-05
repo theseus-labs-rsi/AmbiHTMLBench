@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>问题解决</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    *{box-sizing:border-box}
+    body{
+      margin:0;background:#f5f5f2;color:#5c5554;
+      font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif;
+    }
+    .page{
+      width:540px;height:720px;margin:0 auto;background:#fff;
+      position:relative;overflow:hidden;padding:51px 39px 15px;
+    }
+    .title{
+      height:35px;text-align:center;color:#68517d;font-weight:bold;
+      font-size:16px;letter-spacing:2px;position:relative;
+    }
+    .title:after{
+      content:"";position:absolute;width:145px;height:22px;left:190px;top:3px;
+      border-right:2px solid #a897ce;border-bottom:2px solid #a897ce;
+      border-radius:0 0 5px 0;
+    }
+    .blocks{position:absolute;left:163px;top:54px;width:69px;height:32px}
+    .blocks i{position:absolute;display:block;background:#bcb0d4}
+    .blocks .a{width:22px;height:19px;left:1px;top:1px;transform:rotate(18deg)}
+    .blocks .b{width:22px;height:22px;left:23px;top:7px;background:#8169b4;transform:rotate(45deg)}
+    .blocks .c{width:20px;height:20px;right:2px;top:1px}
+    .problem{position:relative;font-size:12px}
+    .phead{height:29px;display:flex;align-items:center;white-space:nowrap}
+    .num{
+      color:#fff;font-size:16px;font-weight:bold;font-style:italic;
+      width:25px;height:25px;line-height:23px;text-align:center;
+      background:#f37f39;border-radius:55% 45% 48% 52%;
+      transform:rotate(-18deg);margin-right:5px;
+    }
+    .question{font-size:13px;color:#625b59}
+    .red{color:#b65b56}
+    .arrow{font-size:25px;line-height:10px;color:#dc5b3f;font-weight:bold;margin:0 5px}
+    .scene{
+      height:97px;width:368px;margin-left:63px;position:relative;
+      overflow:hidden;border-radius:1px;
+      background:
+       linear-gradient(165deg,transparent 0 19%,#d8eced 19% 34%,transparent 34%) 72px 0/190px 55px no-repeat,
+       linear-gradient(#cfe9ee 0 45%,#89bc75 45% 100%);
+      border-bottom:2px solid #808362;
+    }
+    .scene:before{
+      content:"";position:absolute;left:-10px;bottom:17px;width:178px;height:54px;
+      background:#548b62;border-radius:58% 50% 15% 0;box-shadow:52px -8px 0 #4f855d, 213px -4px 0 #4f855d;
+    }
+    .scene:after{
+      content:"";position:absolute;bottom:0;left:0;width:100%;height:28px;
+      background:#d5bb72;clip-path:polygon(0 70%,45% 72%,49% 42%,66% 45%,73% 72%,100% 60%,100% 100%,0 100%);
+    }
+    .tree{position:absolute;bottom:19px;width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-bottom:28px solid #17634d;z-index:2}
+    .tree:after{content:"";position:absolute;left:-3px;top:25px;width:6px;height:15px;background:#75523c}
+    .t1{left:10px}.t2{left:38px;transform:scale(.72)}.t3{left:278px;transform:scale(.85)}.t4{left:322px;transform:scale(1.15)}
+    .bus{position:absolute;right:72px;bottom:15px;width:79px;height:30px;background:#edab38;border:2px solid #78674b;border-radius:4px;z-index:5}
+    .bus:before{content:"";position:absolute;left:7px;top:4px;width:45px;height:12px;background:#bde5e7;border:1px solid #796b5a;box-shadow:14px 0 0 #bde5e7,28px 0 0 #bde5e7}
+    .bus:after{content:"";position:absolute;left:10px;bottom:-8px;width:11px;height:11px;background:#4d5655;border:2px solid #e6e6df;border-radius:50%;box-shadow:45px 0 0 #4d5655}
+    .sign{position:absolute;z-index:8;padding:3px 7px;border-radius:13px;background:#fff;color:#69605e;font-size:10px;box-shadow:0 1px 2px #888}
+    .sign.one{left:141px;top:42px}.sign.two{right:8px;top:22px}
+    .explain-row{height:53px;position:relative}
+    .bubble{
+      position:absolute;border:1px solid #bcdce0;border-radius:50%;background:#fbffff;
+      color:#67605c;padding:8px 9px;text-align:center;font-size:11px;line-height:16px;
+    }
+    .bubble.left{left:0;top:1px;width:101px;height:43px}
+    .bubble.right{right:0;top:1px;width:105px;height:47px}
+    .kid{position:absolute;font-size:10px;color:#736762;text-align:center;line-height:12px}
+    .kid:before{content:"";display:block;margin:auto;width:20px;height:20px;background:#f0d1b0;border-radius:50%;border:2px solid #504b45}
+    .kid.left{left:67px;top:5px}.kid.right{right:20px;top:5px}
+    .sentence{position:absolute;left:139px;top:8px;width:215px;text-align:center;font-size:11px;line-height:17px}
+    .bar-wrap{margin:-2px 0 0 160px;width:153px;text-align:center;font-size:11px}
+    .fracbar{height:11px;border-bottom:2px solid #69635d;position:relative;margin-top:3px}
+    .fracbar span{position:absolute;top:0;height:7px;border-left:1px solid #56514e}
+    .fracbar .s1{left:0}.fracbar .s2{left:51px}.fracbar .s3{left:102px}.fracbar .s4{right:0}
+    .fracbar:before{content:"";position:absolute;left:0;top:0;width:102px;height:6px;border:1px solid #77716a;border-bottom:0}
+    .formula{text-align:center;font-size:12px;line-height:22px;margin-top:2px}
+    .answer{font-size:11px;margin:3px 0 2px 62px}
+    .talk{font-size:10.5px;line-height:16px;color:#716262;margin-left:29px}
+    .talk strong{color:#b65d58;font-weight:normal}
+    .talk .yellow{color:#b5a800;font-weight:bold;font-size:13px;margin-right:6px}
+    .divider{height:7px}
+    .bottom .phead{height:34px}
+    .bottom .question{white-space:nowrap;font-size:12px}
+    .lower{position:relative;height:177px}
+    .cloud{
+      position:absolute;left:0;top:2px;width:98px;height:48px;border:1px solid #c7e0e3;border-radius:45%;
+      padding:7px 6px;text-align:center;font-size:10px;line-height:14px;background:#fbffff;
+    }
+    .work{
+      position:absolute;left:139px;top:0;width:158px;text-align:center;font-size:11px;color:#555;
+    }
+    .land-label{margin-bottom:2px}
+    .land{height:38px;border:1px solid #655c57;display:flex;background:#fff}
+    .land span{width:20%;border-right:1px solid #655c57;position:relative}
+    .land span:last-child{border:0}
+    .land .rose{
+      background:repeating-linear-gradient(45deg,#e6bad0 0 1px,#fff2fa 1px 4px);
+    }
+    .rose:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(-45deg,transparent 0 3px,rgba(176,84,129,.5) 3px 4px)}
+    .under{margin-top:5px}
+    .rightnote{position:absolute;right:1px;top:20px;width:115px;font-size:11px;line-height:20px}
+    .rightnote .r{color:#bd605b;font-size:19px;font-weight:bold;margin-left:35px}
+    .solve{position:absolute;left:140px;top:78px;width:178px;font-size:12px;text-align:center;line-height:22px}
+    .solve .ans{text-align:left;margin-top:2px}
+    .girl{position:absolute;right:11px;bottom:5px;width:45px;text-align:center;font-size:10px}
+    .girl:before{content:"";display:block;width:23px;height:23px;margin:auto;background:#f0d0b6;border:2px solid #544c49;border-radius:50%}
+    .tip{position:absolute;left:0;bottom:4px;width:137px;font-size:10px;line-height:15px;color:#b55b58}
+    .footer{position:absolute;left:66px;right:39px;bottom:13px;color:#b2615c;font-size:8.5px;line-height:13px}
+    .pencil{position:absolute;right:29px;bottom:29px;font-size:23px;color:#242424;transform:rotate(-21deg)}
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="blocks"><i class="a"></i><i class="b"></i><i class="c"></i></div>
+    <div class="title">问题解决</div>
+
+    <section class="problem top">
+      <div class="phead">
+        <span class="num">1</span>
+        <span class="question">汽车已经行了多少千米？</span>
+        <span class="red">求一个数的几分之几的问题</span><span class="arrow">→</span>
+        <span class="red">用已知量乘分率</span>
+      </div>
+
+      <div class="scene placeholder" aria-label="山路和校车插图">
+        <i class="tree t1"></i><i class="tree t2"></i><i class="tree t3"></i><i class="tree t4"></i>
+        <div class="bus"></div>
+        <div class="sign one">要行84千米</div>
+        <div class="sign two">已经行了全程的 $\frac{2}{3}$</div>
+      </div>
+
+      <div class="explain-row">
+        <div class="bubble left">行了全程的 $\frac{2}{3}$<br>怎么办呢？</div>
+        <div class="kid left">[人物]</div>
+        <div class="sentence">把全程看作单位“1”，已经行了的路程是84km的 $\frac{2}{3}$</div>
+        <div class="bubble right">全程平均分成3份，<br>已经行了2份。</div>
+        <div class="kid right">[人物]</div>
+      </div>
+
+      <div class="bar-wrap">
+        <div>全程84km</div>
+        <div class="fracbar"><span class="s1"></span><span class="s2"></span><span class="s3"></span><span class="s4"></span></div>
+      </div>
+      <div class="formula">
+        可以这样算：$84\times\frac{2}{3}=56(\mathrm{km})$<br>
+        也可以这样算：$84\times\frac{2}{3}=84\div3\times2=56(\mathrm{km})$
+      </div>
+      <div class="answer">答：汽车已经行了56km。</div>
+      <div class="talk"><span class="yellow">谈一谈</span>“$84\times\frac{2}{3}$”这样列式，你是怎么想的？<br><span style="margin-left:69px">求一个数的几分之几是多少。</span></div>
+    </section>
+
+    <div class="divider"></div>
+
+    <section class="problem bottom">
+      <div class="phead">
+        <span class="num">2</span>
+        <span class="question">张伯伯把20hm²土地的 $\frac{3}{5}$ 用来种玫瑰，其中种红玫瑰的面积占玫瑰地面<br>积的 $\frac{3}{4}$。张伯伯种了多少公顷红玫瑰？</span>
+        <span class="red" style="position:absolute;right:1px;top:26px;font-size:10px">连续求一个数的几分之几的问题</span>
+      </div>
+
+      <div class="lower">
+        <div class="cloud">题中的 $\frac{3}{4}$ 表示什么意义？<br>玫瑰地的 $\frac{3}{4}$ 呢？</div>
+        <div class="work">
+          <div class="land-label">20hm²土地</div>
+          <div class="land">
+            <span class="rose"></span><span class="rose"></span><span class="rose"></span><span></span><span></span>
+          </div>
+          <div class="under">玫瑰地的 $\frac{3}{4}$ 种红玫瑰</div>
+        </div>
+        <div class="rightnote"><span class="r">↓</span><br>用已知量连续乘分率<br><br>20hm²土地的 $\frac{3}{5}$ 种玫瑰<br><span style="display:inline-block;margin:6px 0 0 28px;padding:3px 7px;border:1px solid #c3dfe1;border-radius:12px">还可以怎样解决？</span></div>
+        <div class="tip">$\frac{3}{4}$ 表示玫瑰地面积的 $\frac{3}{4}$ 是种红玫瑰<br><br>$\frac{3}{5}$ 表示把种玫瑰的土地看作单位“1”，其中的 $\frac{3}{5}$ 种玫瑰</div>
+        <div class="solve">
+          $20\times\frac{3}{5}\times\frac{3}{4}=9(\mathrm{hm}^2)$
+          <div class="ans">答：张伯伯种了9hm²红玫瑰。</div>
+        </div>
+        <div class="girl">[人物]</div>
+      </div>
+    </section>
+
+    <div class="pencil">❧</div>
+    <div class="footer">注意：分数连乘求一个数的几分之几的实际问题中，单位“1”的量 × 分率＝分率的对应量。连续地找出单位“1”的关键在于明确题目中“哪个量是基数，或占，相当于‘哪个量的几分之几’”。是哪个量的几分之几？哪个量是单位“1”。</div>
+  </main>
+</body>
+</html>

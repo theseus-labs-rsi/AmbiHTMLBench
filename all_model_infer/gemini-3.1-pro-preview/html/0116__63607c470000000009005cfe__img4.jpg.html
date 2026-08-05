@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中小学教师类 (D类)</title>
+<style>
+    :root {
+        --bg-color: #fcf4e3;
+        --grid-color: #eaddcb;
+        --board-color: #5c4140;
+        --yellow-page: #f6ae33;
+        --white-page: #ffffff;
+        --text-main: #333333;
+        --red-accent: #d82b2b;
+        --header-red: #d3554e;
+        --header-text: #ffe946;
+        --pink-tab: #ff8ca3;
+        --yellow-tab: #ffd560;
+    }
+
+    body {
+        margin: 0;
+        padding: 40px 20px;
+        background-color: var(--bg-color);
+        background-image: 
+            linear-gradient(var(--grid-color) 1px, transparent 1px),
+            linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+        background-size: 20px 20px;
+        font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        color: var(--text-main);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .main-container {
+        position: relative;
+        width: 100%;
+        max-width: 600px;
+    }
+
+    .board {
+        position: relative;
+        background-color: var(--board-color);
+        border-radius: 20px;
+        padding: 12px 12px 25px 12px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        z-index: 10;
+    }
+
+    .yellow-layer {
+        background-color: var(--yellow-page);
+        border-radius: 15px;
+        padding: 0 0 15px 0;
+        position: relative;
+    }
+
+    .white-layer {
+        background-color: var(--white-page);
+        border-radius: 15px;
+        padding: 60px 40px 40px 40px;
+        position: relative;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    /* Header Banner */
+    .header-banner {
+        position: absolute;
+        top: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: var(--header-red);
+        border-radius: 50px;
+        padding: 12px 45px;
+        z-index: 20;
+        white-space: nowrap;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+    }
+
+    .header-banner h1 {
+        margin: 0;
+        color: var(--header-text);
+        font-size: 28px;
+        font-weight: bold;
+        letter-spacing: 2px;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    }
+
+    .header-decor {
+        position: absolute;
+        bottom: -12px;
+        left: 20px;
+        width: 0; 
+        height: 0; 
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-top: 15px solid #f6ae33;
+        transform: rotate(30deg);
+        z-index: -1;
+    }
+    
+    .header-decor::after {
+        content: '';
+        position: absolute;
+        top: -15px;
+        left: -5px;
+        width: 10px;
+        height: 10px;
+        background: #fff;
+        border-radius: 50%;
+    }
+
+    /* Left Binding Rings */
+    .binding-rings {
+        position: absolute;
+        left: -8px;
+        top: 60px;
+        bottom: 60px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        z-index: 15;
+    }
+
+    .ring-pair {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .ring {
+        width: 26px;
+        height: 6px;
+        background-color: var(--board-color);
+        border-radius: 4px;
+        position: relative;
+    }
+    
+    .ring::after {
+        content: '';
+        position: absolute;
+        top: 1px;
+        left: 2px;
+        right: 2px;
+        height: 1px;
+        background-color: rgba(255,255,255,0.3);
+    }
+
+    /* Right Tabs */
+    .tab {
+        position: absolute;
+        right: -10px;
+        width: 25px;
+        border-radius: 0 5px 5px 0;
+        z-index: 5;
+    }
+
+    .tab-pink {
+        top: 120px;
+        height: 45px;
+        background-color: var(--pink-tab);
+    }
+
+    .tab-yellow {
+        top: 180px;
+        height: 45px;
+        background-color: var(--yellow-tab);
+    }
+
+    /* Typography & Layout */
+    .content-section {
+        margin-bottom: 25px;
+    }
+
+    .section-title {
+        font-weight: bold;
+        font-size: 17px;
+        margin-bottom: 15px;
+        color: #000;
+    }
+
+    p {
+        margin: 0 0 12px 0;
+        line-height: 1.8;
+        font-size: 15px;
+        text-align: justify;
+    }
+
+    .bullet-point {
+        position: relative;
+        padding-left: 22px;
+        margin-bottom: 12px;
+        line-height: 1.8;
+        font-size: 15px;
+        text-align: justify;
+    }
+
+    .bullet-point::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 7px;
+        width: 0;
+        height: 0;
+        border-top: 6px solid transparent;
+        border-bottom: 6px solid transparent;
+        border-left: 10px solid var(--red-accent);
+    }
+
+    strong {
+        font-weight: bold;
+        color: #000;
+    }
+
+    .dashed-line {
+        border: none;
+        border-top: 1px dashed #dcdcdc;
+        margin: 15px 0;
+    }
+
+    /* Footer */
+    .footer-note {
+        text-align: right;
+        margin-top: 10px;
+        font-size: 13px;
+        color: #555;
+        padding-right: 15px;
+    }
+</style>
+</head>
+<body>
+
+<div class="main-container">
+    <div class="board">
+        <!-- Right sticky tabs -->
+        <div class="tab tab-pink"></div>
+        <div class="tab tab-yellow"></div>
+
+        <!-- Left binding rings -->
+        <div class="binding-rings">
+            <div class="ring-pair"><div class="ring"></div><div class="ring"></div></div>
+            <div class="ring-pair"><div class="ring"></div><div class="ring"></div></div>
+            <div class="ring-pair"><div class="ring"></div><div class="ring"></div></div>
+            <div class="ring-pair"><div class="ring"></div><div class="ring"></div></div>
+            <div class="ring-pair"><div class="ring"></div><div class="ring"></div></div>
+            <div class="ring-pair"><div class="ring"></div><div class="ring"></div></div>
+        </div>
+
+        <div class="yellow-layer">
+            <div class="white-layer">
+                
+                <!-- Header -->
+                <div class="header-banner">
+                    <div class="header-decor"></div>
+                    <h1>中小学教师类 (D类)</h1>
+                </div>
+
+                <!-- Content -->
+                <div class="content-section">
+                    <div class="section-title">(一) 科目</div>
+                    <p>教育系统事业单位考试整体来说考试形式为<strong>公共科目+</strong> <strong>专业知识</strong>。</p>
+                    
+                    <div class="bullet-point">
+                        <strong>公共科目包括:</strong>教育基础知识:教育学、心理学或教育心理学、教育法律法规、新课改或公共基础知识 (事业单位考试中的公基)。心理学与教育心理学并不相同,心理学通常称为普通心理学,教育心理学简称为教心。
+                    </div>
+                    <hr class="dashed-line">
+                    
+                    <div class="bullet-point">
+                        <strong>专业学科:</strong>一般来说一部分考核学科基础知识,另外一部分考核教学知识(教学设计、教学实施、教学评价)。
+                    </div>
+                    <hr class="dashed-line">
+                </div>
+
+                <div class="content-section">
+                    <div class="section-title">(二) 题型</div>
+                    <p>教育理论知识的题型分为客观题和主观题两大类型。</p>
+                    
+                    <div class="bullet-point">
+                        <strong>客观题</strong>主要是指单选题、多选题、不定项选择题、判断题、填空题等;
+                    </div>
+                    <hr class="dashed-line">
+                    
+                    <div class="bullet-point">
+                        <strong>主观题</strong>主要包括名词解释题、辨析题、简答题、论述题、材料/案例分析题、教学设计题(活动设计题)等。<strong>一般地域不同,题型也有所区别。</strong>
+                    </div>
+                    <hr class="dashed-line">
+                </div>
+
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer-note">
+        *线上课程面向22岁及以上
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detect and Treat Postpartum Haemorrhage Early</title>
+  <script>
+    window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #dff3f4;
+      color: #1262a4;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    .page {
+      position: relative;
+      width: 2104px;
+      min-height: 1488px;
+      overflow: hidden;
+      background: #dff3f4;
+    }
+    .left-panel {
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 403px;
+      background: #cceced;
+    }
+    .band {
+      position: absolute;
+      top: 363px;
+      left: 0;
+      width: 100%;
+      height: 113px;
+      background: #fff;
+    }
+    .wave {
+      position: absolute;
+      z-index: 1;
+      background: #fff;
+    }
+    .wave.one {
+      top: 363px;
+      left: 365px;
+      width: 690px;
+      height: 190px;
+      border-radius: 0 50% 50% 0;
+      transform: skewX(40deg);
+    }
+    .wave.two {
+      top: 441px;
+      left: 412px;
+      width: 550px;
+      height: 188px;
+      border-radius: 50%;
+    }
+    .wave.three {
+      top: 441px;
+      left: 1300px;
+      width: 570px;
+      height: 190px;
+      border-radius: 50%;
+    }
+    .cloud {
+      position: absolute;
+      background: #fff;
+      border-radius: 80px;
+      z-index: 0;
+    }
+    .cloud.top { right: -10px; top: 68px; width: 256px; height: 64px; }
+    .cloud.top:before, .cloud.top:after,
+    .cloud.lower:before, .cloud.lower:after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      background: #fff;
+    }
+    .cloud.top:before { width: 92px; height: 92px; left: 41px; top: -58px; }
+    .cloud.top:after { width: 83px; height: 83px; right: 20px; top: -30px; }
+    .cloud.lower { left: 442px; bottom: 504px; width: 270px; height: 62px; }
+    .cloud.lower:before { width: 104px; height: 104px; left: 55px; top: -60px; }
+    .cloud.lower:after { width: 72px; height: 72px; right: 28px; top: -27px; }
+
+    .title {
+      position: absolute;
+      top: 102px;
+      left: 69px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      color: #572b8c;
+      z-index: 2;
+      white-space: nowrap;
+    }
+    .title strong {
+      display: inline-block;
+      padding: 7px 27px 10px;
+      border: 1.5px solid #0064aa;
+      border-radius: 30px;
+      background: #fff;
+      font-size: 61px;
+      line-height: 1;
+      letter-spacing: 2px;
+    }
+    .title .and {
+      font-size: 30px;
+      font-weight: 400;
+      letter-spacing: 1px;
+    }
+    .title .rest {
+      font-size: 52px;
+      font-weight: 400;
+      letter-spacing: 5px;
+    }
+
+    .letters {
+      position: absolute;
+      z-index: 2;
+      color: #572b8c;
+      font-weight: 700;
+      font-size: 103px;
+      line-height: 1;
+    }
+    .e-left { left: 176px; top: 211px; }
+    .m { left: 529px; top: 306px; }
+    .o { left: 875px; top: 367px; }
+    .t { left: 1198px; top: 367px; }
+    .iv { left: 1510px; top: 306px; }
+    .e-right { left: 1849px; top: 232px; }
+
+    .circle {
+      position: absolute;
+      z-index: 3;
+      width: 126px;
+      height: 126px;
+      border-radius: 50%;
+      background: #68c7c8;
+      color: #0064aa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      text-align: center;
+    }
+    .circle .placeholder {
+      width: 105px;
+      height: 105px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      color: transparent;
+    }
+    .circle.drape { left: 148px; top: 358px; }
+    .circle.massage { left: 511px; top: 433px; }
+    .circle.oxy { left: 843px; top: 493px; }
+    .circle.tx { left: 1168px; top: 493px; }
+    .circle.ivfluid { left: 1494px; top: 433px; }
+    .circle.exam { left: 1818px; top: 358px; }
+    .circle.drape .placeholder { background: linear-gradient(135deg, transparent 45%, #f55677 46% 68%, transparent 69%); border: 2px solid #0064aa; clip-path: polygon(0 10%, 100% 10%, 50% 92%); }
+    .circle.massage .placeholder { background: #b1803b; border: 2px solid #0064aa; }
+    .circle.oxy .placeholder:after,
+    .circle.tx .placeholder:after { content: ""; width: 62px; height: 20px; background: #ffae17; border: 2px solid #0064aa; transform: rotate(-45deg); }
+    .circle.ivfluid .placeholder { border: 2px solid #0064aa; width: 42px; height: 58px; border-radius: 7px; }
+    .circle.exam .placeholder { border: 3px solid #0064aa; width: 80px; height: 80px; }
+    .circle.exam .placeholder:before { content: ""; width: 53px; height: 53px; border: 2px solid #fff; border-radius: 50%; }
+
+    .pill {
+      position: absolute;
+      z-index: 3;
+      padding: 10px 20px;
+      border: 1.5px solid #0064aa;
+      border-radius: 28px;
+      background: #fff;
+      color: #572b8c;
+      font-size: 25px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    .pill.early { left: 78px; top: 526px; width: 278px; }
+    .pill.massage { left: 435px; top: 600px; width: 274px; padding: 26px 19px; }
+    .pill.oxy { left: 776px; top: 659px; width: 272px; padding: 27px 24px; }
+    .pill.tx { left: 1105px; top: 659px; width: 274px; padding: 27px 22px; }
+    .pill.iv { left: 1430px; top: 600px; width: 274px; padding: 26px 24px; }
+    .pill.exam { left: 1746px; top: 526px; width: 278px; }
+
+    .content {
+      position: absolute;
+      z-index: 3;
+      top: 628px;
+      font-size: 22px;
+      line-height: 1.26;
+      color: #1262a4;
+    }
+    .content ul { margin: 0; padding-left: 29px; }
+    .content li { padding-left: 0; margin-bottom: 8px; }
+    .content b {
+      font-weight: 700;
+      background: #fff;
+    }
+    .early-copy { left: 68px; width: 290px; }
+    .massage-copy { left: 434px; top: 697px; width: 260px; }
+    .oxy-copy { left: 758px; top: 759px; width: 320px; padding-left: 28px; border-left: 1px solid #0064aa; min-height: 228px; }
+    .tx-copy { left: 1090px; top: 760px; width: 314px; padding-left: 28px; border-left: 1px solid #0064aa; min-height: 227px; }
+    .iv-copy { left: 1422px; top: 697px; width: 310px; padding-left: 29px; border-right: 1px solid #0064aa; min-height: 290px; }
+    .exam-copy { left: 1732px; top: 628px; width: 274px; }
+
+    .trigger {
+      position: absolute;
+      top: 1059px;
+      left: 68px;
+      width: 295px;
+      color: #1262a4;
+      font-size: 23px;
+      line-height: 1.2;
+      z-index: 3;
+    }
+    .trigger h2 {
+      display: inline-block;
+      margin: 0 0 29px;
+      padding: 4px 11px;
+      background: #fff;
+      font-size: 22px;
+    }
+    .trigger p { margin: 0 0 10px; }
+    .trigger b { color: #572b8c; font-size: 27px; }
+
+    .implementation {
+      position: absolute;
+      left: 441px;
+      top: 1035px;
+      width: 1585px;
+      height: 385px;
+      padding: 21px 28px;
+      border: 1.5px solid #0064aa;
+      border-radius: 29px;
+      background: #fff;
+      z-index: 3;
+    }
+    .implementation h2 {
+      margin: 0 0 25px;
+      color: #572b8c;
+      font-size: 29px;
+      line-height: 1;
+    }
+    .strategy-grid {
+      display: grid;
+      grid-template-columns: 112px 1fr 112px 1fr;
+      column-gap: 22px;
+      row-gap: 26px;
+      align-items: start;
+      font-size: 22px;
+      line-height: 1.27;
+    }
+    .strategy-grid p { margin: 0; }
+    .strategy-grid b { font-weight: 700; }
+    .strategy-icon {
+      width: 92px;
+      height: 92px;
+      justify-self: center;
+      border: 2px solid #1262a4;
+      color: #1262a4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 12px;
+    }
+    .strategy-icon.audit { clip-path: polygon(15% 0, 70% 0, 100% 28%, 100% 100%, 15% 100%); background: #b8e2df; }
+    .strategy-icon.trophy { border: 0; background: #ffae17; clip-path: polygon(15% 0, 85% 0, 80% 50%, 60% 67%, 60% 88%, 78% 100%, 22% 100%, 40% 88%, 40% 67%, 20% 50%); }
+    .strategy-icon.case { height: 62px; background: #ac91be; border-radius: 5px; }
+    .strategy-icon.training { background: #b8e2df; }
+    .who {
+      position: absolute;
+      left: 64px;
+      bottom: 72px;
+      color: #0098d7;
+      font-weight: 700;
+      font-size: 17px;
+      line-height: .95;
+      z-index: 3;
+    }
+    .who:before {
+      content: "◎";
+      float: left;
+      margin-right: 7px;
+      font-size: 50px;
+      line-height: .7;
+    }
+    .hrp {
+      position: absolute;
+      left: 240px;
+      bottom: 72px;
+      font-size: 14px;
+      line-height: .8;
+      color: #0098d7;
+      z-index: 3;
+    }
+    .hrp strong { font-size: 37px; font-weight: 400; }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="left-panel"></div>
+    <div class="band"></div>
+    <div class="wave one"></div>
+    <div class="wave two"></div>
+    <div class="wave three"></div>
+    <div class="cloud top"></div>
+    <div class="cloud lower"></div>
+
+    <header class="title">
+      <strong>DETECT</strong>
+      <span class="and">AND</span>
+      <strong>TREAT</strong>
+      <span class="rest">POSTPARTUM HAEMORRHAGE EARLY</span>
+    </header>
+
+    <div class="letters e-left">E</div>
+    <div class="letters m">M</div>
+    <div class="letters o">O</div>
+    <div class="letters t">T</div>
+    <div class="letters iv">IV</div>
+    <div class="letters e-right">E</div>
+
+    <div class="circle drape"><div class="placeholder" aria-label="[Diagram: calibrated drape]">[Diagram: calibrated drape]</div></div>
+    <div class="circle massage"><div class="placeholder" aria-label="[Diagram: uterine massage]">[Diagram: uterine massage]</div></div>
+    <div class="circle oxy"><div class="placeholder" aria-label="[Diagram: syringe]">[Diagram: syringe]</div></div>
+    <div class="circle tx"><div class="placeholder" aria-label="[Diagram: syringe]">[Diagram: syringe]</div></div>
+    <div class="circle ivfluid"><div class="placeholder" aria-label="[Diagram: IV fluid bag]">[Diagram: IV fluid bag]</div></div>
+    <div class="circle exam"><div class="placeholder" aria-label="[Diagram: magnifying glass]">[Diagram: magnifying glass]</div></div>
+
+    <div class="pill early">Early detection<br>and trigger criteria</div>
+    <div class="pill massage">Massage of uterus</div>
+    <div class="pill oxy">Oxytocic drugs</div>
+    <div class="pill tx">Tranexamic acid</div>
+    <div class="pill iv">IV fluids</div>
+    <div class="pill exam">Examination<br>and escalation</div>
+
+    <section class="content early-copy">
+      <ul>
+        <li>Calibrated drape for blood loss collection with trigger lines at <b>300ml and 500ml</b> for the first hour after birth</li>
+        <li>Observations (blood loss, blood flow, uterine tone) every <b>15 minutes</b> documented on the blood loss monitoring chart</li>
+        <li>Blood pressure and pulse carried out once in the <b>1st hour</b> postpartum and documented on the blood loss monitoring chart</li>
+      </ul>
+    </section>
+
+    <section class="content massage-copy">
+      <ul>
+        <li>Massage until uterus has contracted or for <b>one minute</b></li>
+      </ul>
+    </section>
+
+    <section class="content oxy-copy">
+      <ul>
+        <li><b>10 IU IV oxytocin injection</b> or diluted in <b>200-500ml crystalloid</b> over <b>10 minutes</b></li>
+      </ul>
+      <div style="margin-left:29px;">IV infusion maintenance dose for <b>20 IU IV oxytcin</b> diluted in <b>1000ml saline</b> over <b>4 hours</b> (+- misoprostol 800mcg PR/SL if used)</div>
+    </section>
+
+    <section class="content tx-copy">
+      <ul>
+        <li><b>1g IV injection of tranexamic acid</b> or diluted in <b>200ml crystalloid</b> over <b>10 minutes</b></li>
+      </ul>
+    </section>
+
+    <section class="content iv-copy">
+      <ul>
+        <li>IV fluids in addition to the infusion should be given if clinically indicated. For resuscitation and will require a <b>2nd IV access</b></li>
+      </ul>
+    </section>
+
+    <section class="content exam-copy">
+      <ul>
+        <li>Ensure bladder is empty, evacuate clots, check for tears with an internal examination and placenta for completeness</li>
+        <li>Escalate if bleeding does not stop after first response or you are unable to identify or manage cause of bleeding</li>
+      </ul>
+    </section>
+
+    <section class="trigger">
+      <h2>Trigger criteria</h2>
+      <p><b>1</b> Clinical judgement</p>
+      <p><b>2</b> Blood loss 500ml or more</p>
+      <p><b>3</b> Blood loss 300ml or more<br>&nbsp;&nbsp;&nbsp;plus one abnormal<br>&nbsp;&nbsp;&nbsp;observation</p>
+    </section>
+
+    <section class="implementation">
+      <h2>Implementation strategies</h2>
+      <div class="strategy-grid">
+        <div class="strategy-icon audit"><span>[Diagram: audit newsletter]</span></div>
+        <p><b>Audit newsletters:</b> sharing with all staff monthly detection and bundle use rates along with PPH, severe PPH, blood transfusion, laparotomy and death from PPH rates and given feedback at monthly departmental meetings</p>
+        <div class="strategy-icon case"><span>[Diagram: trolley/carry case]</span></div>
+        <p><b>Trolley and/or carry case:</b> including all medicines and devices required for the treatment of PPH restocked after every use and complete a stocking checklist at the start of every shift</p>
+
+        <div class="strategy-icon trophy"><span>[Diagram: trophy]</span></div>
+        <p><b>Champions:</b> midwife and doctor to oversee change, troubleshoot, give feedback on audit newsletters, connect with other champions through chats, meeting and websites for sharing knowledge and lessons learnt</p>
+        <div class="strategy-icon training"><span>[Diagram: training chart]</span></div>
+        <p><b>Training:</b> on-site, simulation-based, and peer-assisted training of 90 minutes to a whole day facilitated by the use of provider guides, flipcharts and job aids displayed in labour wards</p>
+      </div>
+    </section>
+
+    <div class="who">World Health<br>Organization</div>
+    <div class="hrp">human<br>reproduction<br>programme<br><strong>hrp</strong></div>
+  </main>
+</body>
+</html>

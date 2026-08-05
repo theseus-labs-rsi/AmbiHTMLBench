@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Make or Buy Decision</title>
+    <style>
+        body {
+            background-color: #8B5A2B;
+            background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, #6B421A 2px, #6B421A 4px);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            color: #000080;
+        }
+
+        h1 {
+            color: #F5DEB3;
+            font-size: 3.5rem;
+            text-shadow: 2px 2px 4px #000;
+            margin-bottom: 20px;
+            font-weight: normal;
+            letter-spacing: 1px;
+        }
+
+        .main-container {
+            background-color: #F0F8FF; /* Very light blue/white */
+            background-color: #ffffff;
+            border: 2px solid #000;
+            padding: 30px 40px;
+            width: 90%;
+            max-width: 1000px;
+            position: relative;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.5);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 1.5rem;
+        }
+
+        th, td {
+            padding: 8px 10px;
+            text-align: right;
+        }
+
+        th.label-col, td.label-col {
+            text-align: left;
+            width: 40%;
+        }
+
+        .header-row-1 th {
+            font-size: 1.2rem;
+            padding-bottom: 5px;
+        }
+
+        .header-row-2 th {
+            font-size: 1.5rem;
+            border-bottom: 3px solid #000;
+            padding-bottom: 5px;
+        }
+
+        .underline-header {
+            border-bottom: 2px solid #000;
+            display: inline-block;
+            padding-bottom: 2px;
+            margin-bottom: 5px;
+        }
+
+        .green-text {
+            color: #008000;
+            font-weight: bold;
+        }
+
+        .blue-text {
+            color: #000080;
+        }
+
+        .total-row td {
+            border-top: 3px solid #000; /* Double line effect simulated */
+            border-bottom: 3px solid #000;
+            font-weight: bold;
+            font-size: 1.6rem;
+            padding-top: 10px;
+        }
+        
+        /* Specific underlines for headers */
+        .cost-per-unit-header {
+            border-bottom: 2px solid #000;
+            display: block;
+            width: fit-content;
+            margin: 0 auto;
+        }
+        
+        .cost-total-header {
+            border-bottom: 2px solid #000;
+            display: block;
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        .make-header, .buy-header {
+            border-bottom: 3px solid #000;
+            display: block;
+            width: 80%;
+            margin: 0 auto;
+            font-weight: bold;
+        }
+
+        .bottom-calc-box {
+            background-color: #fff;
+            border: 2px solid #000;
+            padding: 10px 20px;
+            margin-top: 30px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #000080;
+            display: inline-block;
+            position: relative;
+            z-index: 10;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+        }
+
+        .arrow-container {
+            position: absolute;
+            bottom: 120px; /* Adjust based on layout */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 200px;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        /* SVG Arrow styling */
+        svg.arrow {
+            position: absolute;
+            bottom: 60px; 
+            left: 45%;
+            width: 300px;
+            height: 300px;
+            overflow: visible;
+        }
+        
+        .arrow-line {
+            stroke: red;
+            stroke-width: 4;
+            fill: none;
+        }
+        
+        .arrow-head {
+            fill: red;
+        }
+
+        /* Adjusting table specific alignments */
+        .col-unit { text-align: center; }
+        .col-make { text-align: right; padding-right: 40px; }
+        .col-buy { text-align: right; padding-right: 20px; }
+
+    </style>
+</head>
+<body>
+
+    <h1>The Make or Buy Decision</h1>
+
+    <div class="main-container">
+        <table>
+            <thead>
+                <tr class="header-row-1">
+                    <th class="label-col"></th>
+                    <th class="col-unit">
+                        <span class="underline-header" style="color: #800080;">Cost<br>Per Unit</span>
+                    </th>
+                    <th colspan="2" class="col-make" style="text-align: center;">
+                        <span class="underline-header" style="color: #800080; font-size: 1.4rem;">Cost of 20,000 Units</span>
+                    </th>
+                </tr>
+                <tr class="header-row-2">
+                    <th class="label-col"></th>
+                    <th class="col-unit"></th>
+                    <th class="col-make"><span class="make-header">Make</span></th>
+                    <th class="col-buy"><span class="buy-header">Buy</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="label-col green-text" style="font-size: 1.6rem;">Outside purchase price</td>
+                    <td class="col-unit green-text" style="font-size: 1.6rem;">$ 25</td>
+                    <td class="col-make"></td>
+                    <td class="col-buy green-text" style="font-size: 1.6rem;">$ 500,000</td>
+                </tr>
+                <tr>
+                    <td class="label-col blue-text" style="font-weight: bold;">Direct materials</td>
+                    <td class="col-unit blue-text">$ 9</td>
+                    <td class="col-make blue-text">180,000</td>
+                    <td class="col-buy"></td>
+                </tr>
+                <tr>
+                    <td class="label-col blue-text" style="font-weight: bold;">Direct labor</td>
+                    <td class="col-unit blue-text">5</td>
+                    <td class="col-make blue-text">100,000</td>
+                    <td class="col-buy"></td>
+                </tr>
+                <tr>
+                    <td class="label-col blue-text" style="font-weight: bold;">Variable overhead</td>
+                    <td class="col-unit blue-text">1</td>
+                    <td class="col-make blue-text">20,000</td>
+                    <td class="col-buy"></td>
+                </tr>
+                <tr>
+                    <td class="label-col blue-text" style="font-weight: bold;">Depreciation of equip.</td>
+                    <td class="col-unit blue-text">3</td>
+                    <td class="col-make blue-text">-</td>
+                    <td class="col-buy"></td>
+                </tr>
+                <tr>
+                    <td class="label-col blue-text" style="font-weight: bold;">Supervisor's salary</td>
+                    <td class="col-unit blue-text">2</td>
+                    <td class="col-make blue-text">40,000</td>
+                    <td class="col-buy"></td>
+                </tr>
+                <tr>
+                    <td class="label-col blue-text" style="font-weight: bold;">General factory overhead</td>
+                    <td class="col-unit blue-text">10</td>
+                    <td class="col-make blue-text">-</td>
+                    <td class="col-buy"></td>
+                </tr>
+                <tr class="total-row">
+                    <td class="label-col blue-text">Total cost</td>
+                    <td class="col-unit blue-text">$ 30</td>
+                    <td class="col-make blue-text">$ 340,000</td>
+                    <td class="col-buy green-text">$ 500,000</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Arrow SVG -->
+    <svg class="arrow" viewBox="0 0 200 200">
+        <!-- Line from bottom box to 180,000 -->
+        <!-- Bottom box is roughly at x=50%, y=bottom. 180,000 is in the table. -->
+        <!-- This is a rough approximation for the visual layout -->
+        <line x1="100" y1="180" x2="130" y2="20" class="arrow-line" />
+        <polygon points="130,20 120,35 140,30" class="arrow-head" />
+    </svg>
+
+    <div class="bottom-calc-box">
+        20,000 &times; $9 per unit = $180,000
+    </div>
+
+</body>
+</html>

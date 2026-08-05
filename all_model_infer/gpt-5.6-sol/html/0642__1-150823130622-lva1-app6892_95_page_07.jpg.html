@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Micro-controller vs. Micro-processor</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  html, body {
+    margin: 0;
+    min-width: 1024px;
+    min-height: 768px;
+    background: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  .page {
+    position: relative;
+    width: 1024px;
+    height: 768px;
+    margin: 0 auto;
+    overflow: hidden;
+    background: #ffffff;
+  }
+
+  .title-band {
+    position: absolute;
+    top: 15px;
+    left: 60px;
+    width: 910px;
+    height: 30px;
+    background: linear-gradient(
+      90deg,
+      #17116f 0%,
+      #4e4d8f 31%,
+      #a8a8ba 56%,
+      #eeeeF2 82%,
+      #ffffff 100%
+    );
+  }
+
+  .title {
+    position: absolute;
+    top: 15px;
+    left: 87px;
+    height: 31px;
+    color: #ffffff;
+    font-size: 29px;
+    line-height: 31px;
+    font-weight: 700;
+    letter-spacing: -0.6px;
+    text-shadow: 1px 1px 1px #333333;
+    white-space: nowrap;
+  }
+
+  .pixel {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+  }
+
+  .pixel.p1 {
+    top: 15px;
+    left: 15px;
+    background: #060070;
+  }
+
+  .pixel.p2 {
+    top: 15px;
+    left: 46px;
+    background: #d7d7e3;
+  }
+
+  .pixel.p3 {
+    top: 0;
+    left: 61px;
+    background: #b6b6d0;
+  }
+
+  .pixel.p4 {
+    top: 15px;
+    left: 61px;
+    background: #7777ad;
+  }
+
+  .pixel.p5 {
+    top: 30px;
+    left: 46px;
+    background: #7979b1;
+  }
+
+  .pixel.p6 {
+    top: 30px;
+    left: 31px;
+    background: #a9a9cf;
+  }
+
+  .pixel.p7 {
+    top: 45px;
+    left: 31px;
+    background: #8c8cc0;
+  }
+
+  .diagram-panel {
+    position: absolute;
+    top: 197px;
+    left: 77px;
+    width: 857px;
+    height: 388px;
+    border: 1px solid #bdbdbd;
+    border-radius: 23px;
+    background: #eeeeee;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.16);
+  }
+
+  .diagram-text {
+    font-family: "Arial Narrow", "Liberation Sans Narrow", Arial, sans-serif;
+    font-weight: 700;
+    color: #050505;
+  }
+
+  .section-heading {
+    position: absolute;
+    top: 11px;
+    height: 34px;
+    font-size: 27px;
+    line-height: 34px;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    white-space: nowrap;
+  }
+
+  .one-chip-heading {
+    left: 96px;
+  }
+
+  .many-chip-heading {
+    left: 471px;
+  }
+
+  .microcontroller {
+    position: absolute;
+    top: 69px;
+    left: 16px;
+    width: 268px;
+    height: 275px;
+    border: 2px solid #222222;
+    background: #0ca5dc;
+  }
+
+  .microcontroller-title {
+    position: absolute;
+    top: 4px;
+    left: 0;
+    width: 100%;
+    height: 34px;
+    text-align: center;
+    font-size: 26px;
+    line-height: 34px;
+  }
+
+  .inner-block,
+  .chip-block {
+    position: absolute;
+    border: 2px solid #292929;
+    background: #ffffff;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .inner-block {
+    height: 49px;
+    font-size: 24px;
+    line-height: 45px;
+    padding-left: 8px;
+  }
+
+  .cpu {
+    top: 40px;
+    left: 11px;
+    width: 63px;
+  }
+
+  .timer-small {
+    top: 40px;
+    left: 81px;
+    width: 170px;
+    font-size: 23px;
+    padding-left: 4px;
+  }
+
+  .memory-small {
+    top: 102px;
+    left: 11px;
+    width: 144px;
+  }
+
+  .clock-small {
+    top: 102px;
+    left: 164px;
+    width: 87px;
+    padding-left: 14px;
+  }
+
+  .io-small {
+    top: 169px;
+    left: 11px;
+    width: 144px;
+    height: 45px;
+    line-height: 41px;
+  }
+
+  .usart-small {
+    top: 169px;
+    left: 164px;
+    width: 87px;
+    height: 45px;
+    line-height: 41px;
+    padding-left: 7px;
+    font-size: 21px;
+  }
+
+  .other-small {
+    top: 227px;
+    left: 11px;
+    width: 239px;
+    height: 38px;
+    line-height: 34px;
+    text-align: center;
+    padding-left: 0;
+    font-size: 23px;
+  }
+
+  .chip-block {
+    height: 74px;
+    font-size: 31px;
+    line-height: 70px;
+  }
+
+  .microprocessor {
+    top: 68px;
+    left: 350px;
+    width: 223px;
+    background: #25ae4d;
+    color: #ffffff;
+    padding-left: 19px;
+    text-shadow: 0 0 2px #777777;
+  }
+
+  .clock-chip {
+    top: 68px;
+    left: 588px;
+    width: 86px;
+    background: #bc805d;
+    color: #ffffff;
+    text-align: center;
+  }
+
+  .usart-chip {
+    top: 68px;
+    left: 687px;
+    width: 121px;
+    background: #98d5e5;
+    text-align: center;
+  }
+
+  .memory-chip {
+    top: 169px;
+    left: 350px;
+    width: 222px;
+    height: 73px;
+    background: #0da5dc;
+    color: #ffffff;
+    padding-left: 22px;
+    font-size: 34px;
+    line-height: 69px;
+    text-shadow: 0 0 2px #888888;
+  }
+
+  .io-chip {
+    top: 169px;
+    left: 585px;
+    width: 228px;
+    height: 73px;
+    background: #f1e3a6;
+    padding-left: 14px;
+    font-size: 31px;
+    line-height: 69px;
+  }
+
+  .timer-chip {
+    top: 273px;
+    left: 353px;
+    width: 222px;
+    height: 68px;
+    background: #c5c5c5;
+    padding-left: 4px;
+    font-size: 29px;
+    line-height: 64px;
+  }
+
+  .other-chip {
+    position: absolute;
+    top: 273px;
+    left: 585px;
+    width: 228px;
+    height: 65px;
+    border: 2px solid #292929;
+    background:
+      linear-gradient(
+        90deg,
+        #b9aedb 0,
+        #b9aedb 28%,
+        #eadfa9 28%,
+        #eadfa9 55%,
+        #a8e612 55%,
+        #a8e612 78%,
+        #f1a2c4 78%,
+        #f1a2c4 100%
+      );
+    overflow: hidden;
+  }
+
+  .other-chip-label {
+    position: absolute;
+    top: 0;
+    left: 10px;
+    height: 61px;
+    font-size: 27px;
+    line-height: 61px;
+    white-space: nowrap;
+    z-index: 2;
+  }
+
+  .footer-copyright {
+    position: absolute;
+    left: 0;
+    bottom: 22px;
+    width: 100%;
+    text-align: center;
+    color: #111111;
+    font-size: 17px;
+    line-height: 22px;
+  }
+
+  .page-number {
+    position: absolute;
+    right: 61px;
+    bottom: 21px;
+    color: #000000;
+    font-size: 18px;
+    line-height: 22px;
+    font-weight: 700;
+  }
+</style>
+</head>
+<body>
+  <main class="page">
+    <div class="title-band"></div>
+    <div class="pixel p1"></div>
+    <div class="pixel p2"></div>
+    <div class="pixel p3"></div>
+    <div class="pixel p4"></div>
+    <div class="pixel p5"></div>
+    <div class="pixel p6"></div>
+    <div class="pixel p7"></div>
+
+    <header class="title">Micro-controller vs. Micro-processor</header>
+
+    <section class="diagram-panel diagram-text">
+      <div class="section-heading one-chip-heading">One Chip</div>
+      <div class="section-heading many-chip-heading">Many Different Chips</div>
+
+      <div class="microcontroller">
+        <div class="microcontroller-title">Microcontroller</div>
+        <div class="inner-block cpu">CPU</div>
+        <div class="inner-block timer-small">Timer/Counter</div>
+        <div class="inner-block memory-small">Memory</div>
+        <div class="inner-block clock-small">Clock</div>
+        <div class="inner-block io-small">I/O Interface</div>
+        <div class="inner-block usart-small">USART</div>
+        <div class="inner-block other-small">Other Peripherals</div>
+      </div>
+
+      <div class="chip-block microprocessor">Microprocessor</div>
+      <div class="chip-block clock-chip">Clock</div>
+      <div class="chip-block usart-chip">USART</div>
+      <div class="chip-block memory-chip">Memory</div>
+      <div class="chip-block io-chip">I/O Interfaces</div>
+      <div class="chip-block timer-chip">Timer/Counter</div>
+
+      <div class="other-chip">
+        <div class="other-chip-label">Other Peripherals</div>
+      </div>
+    </section>
+
+    <footer class="footer-copyright">© 2015 by Eng. Mohamed Tarek.</footer>
+    <div class="page-number">7</div>
+  </main>
+</body>
+</html>

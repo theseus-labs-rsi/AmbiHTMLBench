@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirmation Contract</title>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      background: #fff;
+      color: #111;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      min-width: 2200px;
+    }
+
+    .page {
+      position: relative;
+      width: 2200px;
+      height: 1700px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .logo-area {
+      position: absolute;
+      left: 39px;
+      top: 78px;
+      width: 505px;
+      height: 112px;
+    }
+
+    .logo-mark {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 245px;
+      color: #000;
+      font-family: "Arial Black", Arial, Helvetica, sans-serif;
+      font-weight: 900;
+      line-height: 0.76;
+      letter-spacing: -6px;
+      transform: scaleX(0.92);
+      transform-origin: left top;
+    }
+
+    .logo-main {
+      display: block;
+      font-size: 73px;
+    }
+
+    .logo-sub {
+      display: block;
+      margin-left: 12px;
+      font-size: 45px;
+      letter-spacing: -4px;
+    }
+
+    .logo-address {
+      position: absolute;
+      left: 246px;
+      top: 2px;
+      font-size: 20px;
+      line-height: 30px;
+      white-space: nowrap;
+    }
+
+    .contract-info {
+      position: absolute;
+      left: 585px;
+      top: 9px;
+      width: 612px;
+      font-size: 18px;
+    }
+
+    .contract-info .row {
+      display: grid;
+      grid-template-columns: 184px 1fr;
+      min-height: 33px;
+      line-height: 30px;
+    }
+
+    .contract-info .label,
+    .secondary-info .label {
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .contract-info .contract-row {
+      min-height: 38px;
+      line-height: 31px;
+    }
+
+    .contract-info .contract-row .label,
+    .contract-info .contract-row .value {
+      font-size: 27px;
+      font-weight: 700;
+    }
+
+    .secondary-info {
+      position: absolute;
+      left: 1208px;
+      top: 14px;
+      width: 405px;
+      font-size: 18px;
+    }
+
+    .secondary-info .row {
+      display: grid;
+      grid-template-columns: 157px 1fr;
+      min-height: 32px;
+      line-height: 32px;
+    }
+
+    .address-box {
+      position: absolute;
+      left: 29px;
+      top: 257px;
+      width: 499px;
+      height: 200px;
+      padding: 12px 11px;
+      border: 2px solid #888;
+      box-shadow: 8px 9px 0 #888;
+      font-size: 24px;
+      line-height: 30px;
+    }
+
+    .summary-box {
+      position: absolute;
+      left: 1641px;
+      top: 5px;
+      width: 467px;
+      height: 553px;
+      padding: 5px 10px;
+      border: 3px solid #888;
+      box-shadow: 8px 10px 0 #888;
+      font-size: 18px;
+    }
+
+    .summary-title {
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 24px;
+    }
+
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      margin-top: 1px;
+      font-size: 18px;
+    }
+
+    .summary-table col.month {
+      width: 176px;
+    }
+
+    .summary-table col.spots {
+      width: 89px;
+    }
+
+    .summary-table col.rate {
+      width: 160px;
+    }
+
+    .summary-table th {
+      height: 28px;
+      padding: 0;
+      text-align: left;
+      vertical-align: top;
+      text-decoration: underline;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .summary-table th:nth-child(2),
+    .summary-table th:nth-child(3),
+    .summary-table td:nth-child(2),
+    .summary-table td:nth-child(3) {
+      text-align: right;
+    }
+
+    .summary-table td {
+      height: 29px;
+      padding: 0;
+      vertical-align: top;
+      white-space: nowrap;
+    }
+
+    .summary-table .broadcast-row td:nth-child(2),
+    .summary-table .broadcast-row td:nth-child(3) {
+      border-bottom: 7px double #111;
+    }
+
+    .summary-table .grand-total td {
+      padding-top: 3px;
+    }
+
+    .ad-table {
+      position: absolute;
+      left: 9px;
+      top: 773px;
+      width: 2102px;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 16px;
+      line-height: 19px;
+    }
+
+    .ad-table col.c1  { width: 79px; }
+    .ad-table col.c2  { width: 288px; }
+    .ad-table col.c3  { width: 193px; }
+    .ad-table col.c4  { width: 38px; }
+    .ad-table col.c5  { width: 76px; }
+    .ad-table col.c6  { width: 219px; }
+    .ad-table col.c7  { width: 45px; }
+    .ad-table col.c8  { width: 41px; }
+    .ad-table col.c9  { width: 42px; }
+    .ad-table col.c10 { width: 35px; }
+    .ad-table col.c11 { width: 38px; }
+    .ad-table col.c12 { width: 36px; }
+    .ad-table col.c13 { width: 38px; }
+    .ad-table col.c14 { width: 36px; }
+    .ad-table col.c15 { width: 59px; }
+    .ad-table col.c16 { width: 116px; }
+    .ad-table col.c17 { width: 168px; }
+    .ad-table col.c18 { width: 200px; }
+    .ad-table col.c19 { width: 57px; }
+    .ad-table col.c20 { width: 215px; }
+    .ad-table col.c21 { width: 83px; }
+
+    .ad-table th,
+    .ad-table td {
+      border: 1px solid #111;
+      padding: 4px 4px;
+      overflow: hidden;
+    }
+
+    .ad-table th {
+      height: 31px;
+      padding: 3px 2px;
+      font-weight: 400;
+      text-align: center;
+      vertical-align: middle;
+      white-space: nowrap;
+      line-height: 18px;
+    }
+
+    .ad-table td {
+      vertical-align: top;
+      height: 50px;
+    }
+
+    .ad-table tbody tr:first-child td {
+      height: 43px;
+    }
+
+    .ad-table td.num,
+    .ad-table td.money,
+    .ad-table td.rate,
+    .ad-table td.total,
+    .ad-table td.entered {
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .ad-table td.center {
+      padding-left: 0;
+      padding-right: 0;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .ad-table td.type,
+    .ad-table td.dates,
+    .ad-table td.station {
+      white-space: nowrap;
+    }
+
+    .ad-table td.runtime {
+      white-space: normal;
+      line-height: 19px;
+    }
+
+    .blank-table-extension {
+      position: absolute;
+      left: 9px;
+      top: 1045px;
+      width: 2102px;
+      height: 234px;
+      border-left: 1px solid #111;
+      border-right: 1px solid #111;
+      border-bottom: 2px solid #111;
+    }
+
+    .blank-table-extension::after {
+      content: "";
+      position: absolute;
+      left: 366px;
+      top: 0;
+      bottom: 0;
+      border-left: 1px solid #111;
+    }
+
+    .confirmation {
+      position: absolute;
+      left: 9px;
+      top: 1277px;
+      width: 2102px;
+      height: 135px;
+    }
+
+    .confirmation-title {
+      height: 42px;
+      border-top: 5px solid #111;
+      border-bottom: 1px solid #111;
+      color: #808080;
+      font-size: 36px;
+      line-height: 36px;
+      text-align: center;
+      font-weight: 400;
+    }
+
+    .confirmation-fields {
+      display: grid;
+      grid-template-columns: 777px 653px 672px;
+      height: 94px;
+      border-bottom: 1px solid #111;
+    }
+
+    .confirmation-field {
+      position: relative;
+      height: 94px;
+      padding: 9px 6px;
+      border-right: 1px solid #111;
+      color: #888;
+      font-size: 16px;
+      line-height: 20px;
+    }
+
+    .confirmation-field:last-child {
+      border-right: 1px solid #111;
+    }
+
+    .confirmation-field .date {
+      position: absolute;
+      top: 9px;
+      right: 8px;
+    }
+
+    .footer-left {
+      position: absolute;
+      left: 4px;
+      top: 1561px;
+      font-size: 16px;
+      line-height: 24px;
+    }
+
+    .printed-at {
+      position: absolute;
+      left: 4px;
+      top: 1596px;
+      font-size: 20px;
+      line-height: 25px;
+    }
+
+    .page-number {
+      position: absolute;
+      left: 2020px;
+      top: 1609px;
+      font-size: 17px;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="logo-area">
+      <div class="logo-mark">
+        <span class="logo-main">WAOW</span>
+        <span class="logo-sub">WAUSAU</span>
+      </div>
+      <div class="logo-address">
+        WAOW-WYOW Television Inc<br>
+        1908 Grand Ave<br>
+        Wausau, WI 54403-6870
+      </div>
+    </section>
+
+    <section class="contract-info">
+      <div class="row contract-row">
+        <div class="label">Contract #</div>
+        <div class="value">566900</div>
+      </div>
+      <div class="row">
+        <div class="label">Schedule Dates</div>
+        <div class="value">05/19/20-05/22/20</div>
+      </div>
+      <div class="row">
+        <div class="label">Advertiser</div>
+        <div class="value">Priorities USA Action (20447)</div>
+      </div>
+      <div class="row">
+        <div class="label">Agency</div>
+        <div class="value">Targeted Platform Media (4420)</div>
+      </div>
+      <div class="row">
+        <div class="label">Product</div>
+        <div class="value">Political - Issue (1105)</div>
+      </div>
+      <div class="row">
+        <div class="label">Brand</div>
+        <div class="value">Issue (116111)</div>
+      </div>
+      <div class="row">
+        <div class="label">Salesperson</div>
+        <div class="value">Eagle, Washington DC (1446)</div>
+      </div>
+      <div class="row">
+        <div class="label">Sales Office</div>
+        <div class="value">Katz/Washington DC</div>
+      </div>
+      <div class="row">
+        <div class="label">Buyer Name</div>
+        <div class="value"></div>
+      </div>
+      <div class="row">
+        <div class="label">Phone/Fax</div>
+        <div class="value">/</div>
+      </div>
+      <div class="row">
+        <div class="label">CPE</div>
+        <div class="value">750/760/8261</div>
+      </div>
+      <div class="row">
+        <div class="label">Account Types</div>
+        <div class="value">National/Agency Political</div>
+      </div>
+      <div class="row">
+        <div class="label">Billing Type</div>
+        <div class="value">Standard</div>
+      </div>
+      <div class="row">
+        <div class="label">Comments</div>
+        <div class="value"></div>
+      </div>
+    </section>
+
+    <section class="secondary-info">
+      <div class="row">
+        <div class="label">Date Entered</div>
+        <div class="value">02/18/20</div>
+      </div>
+      <div class="row">
+        <div class="label">Last Modified</div>
+        <div class="value">02/18/20</div>
+      </div>
+      <div class="row">
+        <div class="label">Entered By</div>
+        <div class="value">Tracy Lake</div>
+      </div>
+      <div class="row">
+        <div class="label">CO-OP</div>
+        <div class="value">No</div>
+      </div>
+      <div class="row">
+        <div class="label">External #</div>
+        <div class="value">26801332</div>
+      </div>
+      <div class="row">
+        <div class="label">Demo</div>
+        <div class="value"></div>
+      </div>
+      <div class="row">
+        <div class="label">Order Type</div>
+        <div class="value">Normal</div>
+      </div>
+      <div class="row">
+        <div class="label">Package Deal</div>
+        <div class="value"></div>
+      </div>
+      <div class="row">
+        <div class="label">Commission %</div>
+        <div class="value">15.00</div>
+      </div>
+      <div class="row">
+        <div class="label">Commission</div>
+        <div class="value">$6,105.00</div>
+      </div>
+      <div class="row">
+        <div class="label">Net Total</div>
+        <div class="value">$34,595.00</div>
+      </div>
+      <div class="row">
+        <div class="label">Sales Tax</div>
+        <div class="value"></div>
+      </div>
+    </section>
+
+    <section class="address-box">
+      Targeted Platform Media<br>
+      650 MASSACHUSETTS AVE NW<br>
+      WASHINGTON, DC 20001-3796
+    </section>
+
+    <section class="summary-box">
+      <div class="summary-title">WAOW+ ABC (WAOW)</div>
+      <table class="summary-table">
+        <colgroup>
+          <col class="month">
+          <col class="spots">
+          <col class="rate">
+        </colgroup>
+        <thead>
+          <tr>
+            <th>By Broadcast Month</th>
+            <th>Spots</th>
+            <th>Rate</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="broadcast-row">
+            <td>May. 2020</td>
+            <td>32</td>
+            <td>$40,700.00</td>
+          </tr>
+          <tr class="grand-total">
+            <td>Grand Total:</td>
+            <td>32</td>
+            <td>$40,700.00</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <table class="ad-table">
+      <colgroup>
+        <col class="c1">
+        <col class="c2">
+        <col class="c3">
+        <col class="c4">
+        <col class="c5">
+        <col class="c6">
+        <col class="c7">
+        <col class="c8">
+        <col class="c9">
+        <col class="c10">
+        <col class="c11">
+        <col class="c12">
+        <col class="c13">
+        <col class="c14">
+        <col class="c15">
+        <col class="c16">
+        <col class="c17">
+        <col class="c18">
+        <col class="c19">
+        <col class="c20">
+        <col class="c21">
+      </colgroup>
+      <thead>
+        <tr>
+          <th>Line</th>
+          <th>Line Type / Break Type (Ref #)</th>
+          <th>Dates</th>
+          <th>Sec</th>
+          <th>Length</th>
+          <th>Run Times</th>
+          <th>SPW</th>
+          <th>Mo</th>
+          <th>Tu</th>
+          <th>We</th>
+          <th>Th</th>
+          <th>Fr</th>
+          <th>Sa</th>
+          <th>Su</th>
+          <th>Spots</th>
+          <th>Rate</th>
+          <th>Total</th>
+          <th>Station</th>
+          <th></th>
+          <th>Comments</th>
+          <th>Entered</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="num">11.0</td>
+          <td class="type">Normal Line / SPOT</td>
+          <td class="dates">05/19/20-05/22/20</td>
+          <td class="num">1</td>
+          <td class="num">:30</td>
+          <td class="runtime">4:58:56P- News 9 WAOW at<br>5pm</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="center">1</td>
+          <td class="center">1</td>
+          <td class="center">1</td>
+          <td class="center">1</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="num">4</td>
+          <td class="rate">$1,600.00</td>
+          <td class="total">$6,400.00</td>
+          <td class="station">WAOW+ ABC (WAOW)</td>
+          <td></td>
+          <td></td>
+          <td class="entered">2/18/20</td>
+        </tr>
+        <tr>
+          <td class="num">12.0</td>
+          <td class="type">Normal Line / SPOT</td>
+          <td class="dates">05/19/20-05/22/20</td>
+          <td class="num">1</td>
+          <td class="num">:30</td>
+          <td class="runtime">5:58:46P- News 9 WAOW at<br>6pm</td>
+          <td class="center">2</td>
+          <td class="center">X</td>
+          <td class="center">X</td>
+          <td class="center">X</td>
+          <td class="center">X</td>
+          <td class="center">X</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="num">2</td>
+          <td class="rate">$2,000.00</td>
+          <td class="total">$4,000.00</td>
+          <td class="station">WAOW+ ABC (WAOW)</td>
+          <td></td>
+          <td></td>
+          <td class="entered">2/18/20</td>
+        </tr>
+        <tr>
+          <td class="num">13.0</td>
+          <td class="type">Normal Line / SPOT</td>
+          <td class="dates">05/19/20-05/22/20</td>
+          <td class="num">1</td>
+          <td class="num">:30</td>
+          <td class="runtime">6:30P- Entertainment<br>Tonight</td>
+          <td class="center">2</td>
+          <td class="center">X</td>
+          <td class="center">X</td>
+          <td class="center">X</td>
+          <td class="center">X</td>
+          <td class="center">X</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="num">2</td>
+          <td class="rate">$700.00</td>
+          <td class="total">$1,400.00</td>
+          <td class="station">WAOW+ ABC (WAOW)</td>
+          <td></td>
+          <td></td>
+          <td class="entered">2/18/20</td>
+        </tr>
+        <tr>
+          <td class="num">14.0</td>
+          <td class="type">Normal Line / SPOT</td>
+          <td class="dates">05/19/20-05/22/20</td>
+          <td class="num">1</td>
+          <td class="num">:30</td>
+          <td class="runtime">9:59:46P- News 9 WAOW at<br>10pm</td>
+          <td class="center">2</td>
+          <td class="center">X</td>
+          <td class="center">X</td>
+          <td class="center">X</td>
+          <td class="center">X</td>
+          <td class="center">X</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="num">2</td>
+          <td class="rate">$2,400.00</td>
+          <td class="total">$4,800.00</td>
+          <td class="station">WAOW+ ABC (WAOW)</td>
+          <td></td>
+          <td></td>
+          <td class="entered">2/18/20</td>
+        </tr>
+        <tr>
+          <td class="num">15.0</td>
+          <td class="type">Normal Line / SPOT</td>
+          <td class="dates">05/19/20-05/22/20</td>
+          <td class="num">1</td>
+          <td class="num">:30</td>
+          <td class="runtime">10:35P- JIMMY KIMMEL<br>LIVE</td>
+          <td class="center">2</td>
+          <td class="center">X</td>
+          <td class="center">X</td>
+          <td class="center">X</td>
+          <td class="center">X</td>
+          <td class="center">X</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="num">2</td>
+          <td class="rate">$400.00</td>
+          <td class="total">$800.00</td>
+          <td class="station">WAOW+ ABC (WAOW)</td>
+          <td></td>
+          <td></td>
+          <td class="entered">2/18/20</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="blank-table-extension"></div>
+
+    <section class="confirmation">
+      <div class="confirmation-title">CONFIRMATION CONTRACT</div>
+      <div class="confirmation-fields">
+        <div class="confirmation-field">
+          Accepted-Agency/Advertiser:
+          <span class="date">Date:</span>
+        </div>
+        <div class="confirmation-field">
+          Accepted-Station:
+          <span class="date">Date:</span>
+        </div>
+        <div class="confirmation-field">Comments:</div>
+      </div>
+    </section>
+
+    <div class="footer-left">B/E Bookend&nbsp;&nbsp;&nbsp;P/B Piggy Back</div>
+    <div class="printed-at">Printed At: 09:38 AM on Tuesday, February 18 2020</div>
+    <div class="page-number">Page 2 of 2</div>
+  </main>
+</body>
+</html>

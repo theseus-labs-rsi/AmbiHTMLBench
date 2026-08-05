@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARIA: scrollbar role - MDN</title>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #1a1a1a;
+            --link-color: #0052cc;
+            --border-color: #e0e0e0;
+            --code-bg: #f4f5f7;
+            --sidebar-bg: #f9f9fb;
+            --highlight-bg: #e6f0ff;
+            --highlight-border: #0052cc;
+            --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-main);
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            line-height: 1.5;
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        code {
+            font-family: var(--font-mono);
+            background-color: var(--code-bg);
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        .placeholder {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #eee;
+            border: 1px dashed #aaa;
+            color: #666;
+            font-size: 12px;
+        }
+
+        /* Top Banner */
+        .top-banner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 20px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+        }
+
+        .top-banner-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-primary {
+            background-color: #0232d8;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .top-banner-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            font-size: 11px;
+        }
+
+        .ad-badge {
+            border: 1px solid #ccc;
+            padding: 1px 4px;
+            border-radius: 2px;
+            margin-bottom: 4px;
+            color: #666;
+        }
+
+        .top-banner-right a {
+            color: #666;
+            text-decoration: underline;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 20px;
+            font-weight: 500;
+        }
+
+        .header-nav span {
+            cursor: pointer;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-bar {
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            padding: 5px 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 150px;
+        }
+
+        /* Breadcrumbs */
+        .breadcrumbs {
+            padding: 10px 20px;
+            background-color: var(--sidebar-bg);
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .breadcrumbs-path span {
+            margin: 0 5px;
+            color: #666;
+        }
+
+        .breadcrumbs-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Left Sidebar */
+        .left-sidebar {
+            width: 250px;
+            flex-shrink: 0;
+            padding: 20px 0;
+            border-right: 1px solid var(--border-color);
+            height: calc(100vh - 150px);
+            overflow-y: auto;
+        }
+
+        .filter-box {
+            margin: 0 20px 15px 20px;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+        }
+
+        .sidebar-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-family: var(--font-mono);
+            font-size: 13px;
+        }
+
+        .sidebar-list li {
+            padding: 6px 20px;
+            color: #333;
+        }
+
+        .sidebar-list li.disabled {
+            color: #aaa;
+        }
+
+        .sidebar-list li.active {
+            background-color: var(--highlight-bg);
+            border-left: 3px solid var(--highlight-border);
+            padding-left: 17px;
+        }
+
+        /* Center Content */
+        .content {
+            flex-grow: 1;
+            padding: 40px 60px;
+            max-width: 850px;
+        }
+
+        .content h1 {
+            font-size: 2.5em;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .content h2 {
+            font-size: 1.8em;
+            margin-top: 40px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .content h3 {
+            font-size: 1.4em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .content p {
+            margin-bottom: 1.2em;
+            line-height: 1.6;
+        }
+
+        .content a {
+            text-decoration: underline;
+        }
+
+        /* Right Sidebar */
+        .right-sidebar {
+            width: 250px;
+            flex-shrink: 0;
+            padding: 40px 20px;
+        }
+
+        .toc {
+            margin-bottom: 40px;
+        }
+
+        .toc h3 {
+            font-size: 1.1em;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .toc ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 14px;
+            line-height: 2;
+        }
+
+        .toc ul li.active {
+            background-color: var(--code-bg);
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-left: -8px;
+        }
+
+        .ad-container {
+            background-color: #0052cc;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            position: relative;
+            font-size: 14px;
+        }
+
+        .ad-container .ad-badge-inner {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(255,255,255,0.2);
+            padding: 2px 4px;
+            font-size: 10px;
+            border-radius: 2px;
+        }
+
+        .ad-container h4 {
+            font-size: 24px;
+            margin: 0 0 20px 0;
+            font-style: italic;
+            font-weight: bold;
+        }
+
+        .ad-container p {
+            margin-bottom: 20px;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .ad-container .btn-outline {
+            display: inline-block;
+            border: 1px solid white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 12px;
+        }
+
+        .ad-disclaimer {
+            display: block;
+            margin-top: 10px;
+            font-size: 11px;
+            color: #666;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Banner -->
+    <div class="top-banner">
+        <div class="top-banner-left">
+            <div class="placeholder" style="width: 60px; height: 20px; border: none; background: transparent; color: red; font-weight: bold;">[Twilio Logo]</div>
+            <span>Connect communication channels, contextual data, and integrated AI-driven workflows all in one place.</span>
+            <a href="#" class="btn-primary">Learn more</a>
+        </div>
+        <div class="top-banner-right">
+            <span class="ad-badge">AD</span>
+            <a href="#">Don't want to see ads?</a>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="placeholder" style="width: 80px; height: 30px; border: none; background: transparent; color: black; font-size: 20px; font-weight: bold; font-style: italic;">// mdn_</div>
+        <div class="header-nav">
+            <span>HTML &#8964;</span>
+            <span>CSS &#8964;</span>
+            <span>JavaScript &#8964;</span>
+            <span>Web APIs &#8964;</span>
+            <span>All &#8964;</span>
+            <span>&#127891; Learn &#8964;</span>
+            <span>&#128295; Tools &#8964;</span>
+            <span>About &#8964;</span>
+            <span>Blog</span>
+        </div>
+        <div class="header-right">
+            <div class="search-bar">
+                <span>&#128269;</span>
+                <span style="color: #ccc;">|</span>
+            </div>
+            <span>&#9680; Theme</span>
+            <span>&#25A; English (US)</span>
+        </div>
+    </div>
+
+    <!-- Breadcrumbs -->
+    <div class="breadcrumbs">
+        <div class="breadcrumbs-path">
+            Web <span>&gt;</span> Accessibility <span>&gt;</span> ARIA <span>&gt;</span> ARIA reference <span>&gt;</span> Roles <span>&gt;</span> scrollbar
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        
+        <!-- Left Sidebar -->
+        <div class="left-sidebar">
+            <div class="filter-box">
+                <span>&#9082;</span> Filter
+            </div>
+            <ul class="sidebar-list">
+                <li class="disabled">progressbar</li>
+                <li>radio</li>
+                <li>radiogroup</li>
+                <li>range</li>
+                <li>region</li>
+                <li>roletype</li>
+                <li>row</li>
+                <li>rowgroup</li>
+                <li>rowheader</li>
+                <li class="active">scrollbar</li>
+                <li>search</li>
+                <li>searchbox</li>
+                <li>section</li>
+                <li>sectionhead</li>
+                <li>select</li>
+                <li>separator</li>
+                <li>slider</li>
+                <li>spinbutton</li>
+                <li>status</li>
+                <li>Structural</li>
+                <li>structure</li>
+                <li>suggestion</li>
+                <li>switch</li>
+                <li>tab</li>
+                <li>table</li>
+                <li>tablist</li>
+                <li>tabpanel</li>
+                <li>term</li>
+                <li>textbox</li>
+                <li>timer</li>
+                <li>toolbar</li>
+                <li>tooltip</li>
+                <li>tree</li>
+                <li>treegrid</li>
+            </ul>
+        </div>
+
+        <!-- Center Content -->
+        <div class="content">
+            <h1>ARIA: scrollbar role</h1>
+            <p>A <code>scrollbar</code> is a graphical object that controls the scrolling of content within a viewing area.</p>
+
+            <h2>Description</h2>
+            <p>A <code>scrollbar</code> is a range that controls what part of a viewport's content is currently visible in the viewport's frame; whether the viewport is a full browser size, an iframe, or any element's <a href="#">block formatting context</a>.</p>
+
+            <h3>What is scroll bar</h3>
+            <p>Many applications provide native scroll bars when the content area is larger than the application window. Scrollbars generally appear on the right or bottom of the viewing area. Native scroll bars appear as thin rectangular track areas the length of the viewport it controls with a piece of UI called a thumb or scroller that can be dragged along a track to move the associated content within the viewport. Some scrollbars have arrows at each end of the track that allow scrolling the viewport a short set distance when activated.</p>
+            
+            <p>Take this document as an example: if the viewport is the full browser window and the content is taller than the viewport, in most browsers the scroll bar on the right edge of the window represents the overall length of the page and the scroll thumb represents the portion of the page content that is currently in the viewport.</p>
+            
+            <p>Scroll bars may also appear on viewports that are sub-sections of the full browser window. Continuing with this content as our example, if this content is embedded in an <code>&lt;iframe&gt;</code> or <code>&lt;object&gt;</code>, the native vertical scroll bar will be the height of the frame. A scroll bar generally is the length of the viewport, but isn't required to be.</p>
+            
+            <p>If you aren't currently seeing a scroll bar, it may be because your browser only displays the scroll bar when scrolling or only when an element's content is too big to fit in its block formatting context. Depending on the browser and operating system, scroll bars can be made to be visible even when the content fits in the viewport when no scrolling is necessary or even possible.</p>
+
+            <h3>ARIA <code>scrollbar</code></h3>
+            <p>It is always best to use native scroll bars. You can use the CSS <code>overflow</code> property to ensure the appearance of native scroll bars. A <a href="#">CSS scrollbar specification</a> is being developed. Some browsers allow <a href="#">styling scroll bars via prefixed pseudo-elements</a>.</p>
+            
+            <p>Because native scroll bar styling has historically been limited, you may come across a scrollbar implemented in JavaScript that you need to support and make fully accessible. For this, you can use the <code>scrollbar</code> role to inform assistive technologies that a UI control is an interactive scrollbar.</p>
+            
+            <p>An element with the <code>scrollbar</code> role is a graphical object that controls the scrolling of content within a viewing area; it is the ARIA role which indicates an element is a scroll bar. The HTML element that is most similar is the <code>range</code> <code>&lt;input&gt;</code> type, <code>&lt;input type="range"&gt;</code>.</p>
+            
+            <p>The <code>scrollbar</code> element has two required attributes: <code>aria-controls</code> and <code>aria-valuenow</code>. The <code>aria-controls</code> attribute references the <code>id</code> of the scrollable area it controls. The <code>aria-valuenow</code> property defines the current value of the scrollbar.</p>
+            
+            <p>While the <code>aria-valuenow</code> is always required, the <code>aria-valuemin</code> and <code>aria-valuemax</code> properties only need to be set for the scrollbar role when the <code>scrollbar</code>'s minimum value is not 0 or the</p>
+        </div>
+
+        <!-- Right Sidebar -->
+        <div class="right-sidebar">
+            <div class="toc">
+                <h3>In this article</h3>
+                <ul>
+                    <li class="active">Description</li>
+                    <li>Examples</li>
+                    <li>Specifications</li>
+                    <li>See also</li>
+                </ul>
+            </div>
+
+            <div class="ad-container">
+                <span class="ad-badge-inner">AD</span>
+                <h4>imagekit.io</h4>
+                <p><strong>Image & Video API</strong><br>Real-time URL transforms, global CDN delivery & easy integration with existing storage.</p>
+                <a href="#" class="btn-outline">Start Free &#8599;</a>
+            </div>
+            <a href="#" class="ad-disclaimer">Don't want to see ads?</a>
+        </div>
+
+    </div>
+
+</body>
+</html>

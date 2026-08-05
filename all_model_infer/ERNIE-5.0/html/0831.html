@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>window.MathJax={tex:{inlineMath:[["$","$"]],displayMath:[["$$","$$"]]}};</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy and security | Mozilla Support</title>
+    <style>
+        :root {
+            --primary-blue: #0060df;
+            --text-dark: #1a1a1a;
+            --text-grey: #555;
+            --border-color: #e0e0e0;
+            --bg-light: #f9f9fb;
+            --sidebar-card-bg: #1a1a40;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text-dark);
+            line-height: 1.5;
+            background-color: #fff;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--primary-blue);
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 100;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.1;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a {
+            color: var(--text-dark);
+        }
+
+        .btn-signin {
+            border: 1px solid var(--primary-blue);
+            color: var(--primary-blue);
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        /* Main Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            display: flex;
+            gap: 60px;
+        }
+
+        .main-content {
+            flex: 2;
+            min-width: 0; /* Prevent flex item overflow */
+        }
+
+        .sidebar {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        /* Breadcrumbs */
+        .breadcrumbs {
+            font-size: 0.9rem;
+            color: var(--text-grey);
+            margin-bottom: 30px;
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .firefox-logo {
+            width: 48px;
+            height: 48px;
+            background: radial-gradient(circle at 30% 30%, #ff9500, #ff5e00, #cc3300);
+            border-radius: 50%;
+            flex-shrink: 0;
+            position: relative;
+        }
+        
+        .firefox-logo::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 30px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.2;
+        }
+
+        .hero-text h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #1a1a40;
+        }
+
+        .hero-text p {
+            font-size: 1.1rem;
+            color: var(--text-grey);
+            margin-bottom: 20px;
+        }
+
+        .download-btn-container {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        .btn-download {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 4px;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .sub-nav {
+            display: flex;
+            gap: 15px;
+            font-size: 0.85rem;
+            margin-top: 10px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 20px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+        }
+
+        .tab {
+            font-size: 0.9rem;
+            color: var(--text-grey);
+            cursor: pointer;
+            padding-bottom: 5px;
+        }
+
+        .tab.active {
+            color: var(--primary-blue);
+            border-bottom: 2px solid var(--primary-blue);
+            font-weight: 500;
+        }
+
+        /* Article List */
+        .article-item {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 20px;
+        }
+
+        .article-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .article-icon {
+            font-size: 1.2rem;
+            color: var(--text-grey);
+        }
+
+        .article-desc {
+            color: var(--text-grey);
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+        }
+
+        .article-meta {
+            font-size: 0.85rem;
+            color: var(--text-grey);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .meta-tag {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Sidebar Styles */
+        .search-box {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+
+        .sidebar-section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .topic-list {
+            list-style: none;
+            margin-bottom: 40px;
+        }
+
+        .topic-list li {
+            margin-bottom: 10px;
+        }
+
+        .topic-list a {
+            color: var(--text-grey);
+            font-size: 0.95rem;
+        }
+        
+        .topic-list a:hover {
+            color: var(--primary-blue);
+        }
+
+        .topic-list li.active a {
+            background-color: #f0f0f5;
+            padding: 5px 10px;
+            border-radius: 4px;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .ask-card {
+            background-color: var(--sidebar-card-bg);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .ask-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .ask-card p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .btn-continue {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .nav-links {
+                display: none;
+            }
+            .hero {
+                flex-direction: column;
+            }
+            .download-btn-container {
+                position: static;
+                margin-top: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <span>Mozilla</span>
+            <span>Support</span>
+        </div>
+        <nav class="nav-links">
+            <a href="#">Explore Help Articles</a>
+            <a href="#">Community Forums</a>
+            <a href="#">Ask a Question</a>
+            <a href="#">Contribute</a>
+        </nav>
+        <a href="#" class="btn-signin">Sign In/Up</a>
+    </header>
+
+    <div class="container">
+        <main class="main-content">
+            <div class="breadcrumbs">
+                Home / Firefox / Privacy and security
+            </div>
+
+            <div class="hero">
+                <div class="firefox-logo"></div>
+                <div class="hero-text">
+                    <h1>Privacy and security</h1>
+                    <p>Learn how to protect your privacy and secure your data.</p>
+                    <div class="sub-nav">
+                        <a href="#">Systems and Languages</a>
+                        <a href="#">What's New</a>
+                        <a href="#">Privacy</a>
+                    </div>
+                </div>
+                <div class="download-btn-container">
+                    <a href="#" class="btn-download">Download Firefox</a>
+                </div>
+            </div>
+
+            <div class="tabs">
+                <div class="tab active">All articles and threads</div>
+                <div class="tab">Tracking protection</div>
+                <div class="tab">Encryption</div>
+                <div class="tab">Security</div>
+            </div>
+
+            <div class="article-list">
+                <!-- Article 1 -->
+                <div class="article-item">
+                    <div class="article-title">
+                        <span class="article-icon">📄</span>
+                        Use built-in VPN in Firefox
+                    </div>
+                    <div class="article-desc">
+                        Learn how to activate and use the built-in VPN feature in Firefox to protect your browsing.
+                    </div>
+                    <div class="article-meta">
+                        <span class="meta-tag">Firefox</span>
+                        <span>✏️ Last updated: 1 day ago</span>
+                    </div>
+                </div>
+
+                <!-- Article 2 -->
+                <div class="article-item">
+                    <div class="article-title">
+                        <span class="article-icon">📄</span>
+                        Common Myths about Private Browsing
+                    </div>
+                    <div class="article-desc">
+                        Learn more about common misconceptions about Private Browsing in Firefox.
+                    </div>
+                    <div class="article-meta">
+                        <span class="meta-tag">Firefox</span>
+                        <span>✏️ Last updated: 11/3/25</span>
+                    </div>
+                </div>
+
+                <!-- Article 3 -->
+                <div class="article-item">
+                    <div class="article-title">
+                        <span class="article-icon">📄</span>
+                        Avoid and report Mozilla tech support scams
+                    </div>
+                    <div class="article-desc">
+                        Mozilla does not provide telephone support and does not charge for software downloads, upgrades or technical help. Learn more.
+                    </div>
+                    <div class="article-meta">
+                        <span class="meta-tag">Firefox, Firefox for Android, Firefox for iOS,...</span>
+                        <span>✏️ Last updated: 2/3/25</span>
+                    </div>
+                </div>
+
+                <!-- Article 4 -->
+                <div class="article-item">
+                    <div class="article-title">
+                        <span class="article-icon">📄</span>
+                        Insecure connection password warning in Firefox
+                    </div>
+                    <div class="article-desc">
+                        Firefox will show you a "connection is not secure" warning message when a website login page is insecure and information could be stolen.
+                    </div>
+                    <div class="article-meta">
+                        <span class="meta-tag">Firefox</span>
+                        <span>✏️ Last updated: 3/19/26</span>
+                    </div>
+                </div>
+
+                <!-- Article 5 -->
+                <div class="article-item">
+                    <div class="article-title">
+                        <span class="article-icon">📄</span>
+                        Third-party trackers
+                    </div>
+                    <div class="article-desc">
+                        Learn about cross-site (third-party) cookies that collect information to track your browsing, which are used on many websites.
+                    </div>
+                    <div class="article-meta">
+                        <span class="meta-tag">Firefox</span>
+                        <span>✏️ Last updated: 10/26/24</span>
+                    </div>
+                </div>
+
+                <!-- Article 6 -->
+                <div class="article-item">
+                    <div class="article-title">
+                        <span class="article-icon">📄</span>
+                        Does Firefox share my location with websites?
+                    </div>
+                    <div class="article-desc">
+                        Learn what information Firefox sends to websites about your location and how to use and manage location-aware features of your browser.
+                    </div>
+                    <div class="article-meta">
+                        <span class="meta-tag">Firefox</span>
+                        <span>✏️ Last updated: 3/22/26</span>
+                    </div>
+                </div>
+
+                <!-- Article 7 -->
+                <div class="article-item">
+                    <div class="article-title">
+                        <span class="article-icon">📄</span>
+                        Configure DNS over HTTPS protection levels in Firefox
+                    </div>
+                    <div class="article-desc">
+                        DNS over HTTPS (DoH) is a recommended feature that enhances privacy. Learn more about the DoH protection levels you can configure in Firefox settings.
+                    </div>
+                    <div class="article-meta">
+                        <span class="meta-tag">Firefox</span>
+                        <span>✏️ Last updated: 3/27/25</span>
+                    </div>
+                </div>
+
+                <!-- Article 8 (Partial) -->
+                <div class="article-item">
+                    <div class="article-title">
+                        <span class="article-icon">📄</span>
+                        Enhanced Tracking Protection in Firefox for desktop
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <aside class="sidebar">
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="Search questions, arti...">
+                <span class="search-icon">🔍</span>
+            </div>
+
+            <div class="sidebar-section-title">Popular Firefox Topics</div>
+            <ul class="topic-list">
+                <li><a href="#">Backup, recovery, and sync</a></li>
+                <li><a href="#">Browse</a></li>
+                <li><a href="#">Performance and connectivity</a></li>
+                <li><a href="#">Accessibility</a></li>
+                <li><a href="#">Download and save</a></li>
+                <li><a href="#">Search, tag, and share</a></li>
+                <li><a href="#">Installation and updates</a></li>
+                <li><a href="#">Settings</a></li>
+                <li class="active"><a href="#">Privacy and security</a></li>
+                <li><a href="#">Passwords and sign in</a></li>
+            </ul>
+
+            <div class="ask-card">
+                <h3>' Ask a Question</h3>
+                <p>Still need help? Sign in to ask your question on our forums.</p>
+                <button class="btn-continue">Continue</button>
+            </div>
+        </aside>
+    </div>
+
+</body>
+</html>

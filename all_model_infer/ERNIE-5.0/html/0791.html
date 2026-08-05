@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script>window.MathJax={tex:{inlineMath:[["$","$"]],displayMath:[["$$","$$"]]}};</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>步行游览区 - 北线</title>
+    <style>
+        :root {
+            --primary-color: #4da6a6;
+            --text-color: #333;
+            --bg-color: #fff;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "Heiti SC", sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            display: flex;
+            max-width: 900px;
+            width: 100%;
+            background: var(--bg-color);
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            position: relative;
+            min-height: 800px;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 80px;
+            background-color: #fff;
+            border-right: 2px solid #eee;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            position: relative;
+        }
+
+        .sidebar-title {
+            writing-mode: vertical-lr;
+            font-size: 32px;
+            font-weight: bold;
+            letter-spacing: 10px;
+            color: #004d4d;
+            margin-bottom: 40px;
+            border: 4px solid #004d4d;
+            padding: 10px 5px;
+            border-radius: 5px;
+        }
+
+        .direction-indicator {
+            writing-mode: vertical-lr;
+            font-size: 20px;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: auto;
+        }
+
+        .arrow-down {
+            width: 0; 
+            height: 0; 
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 8px solid #000;
+        }
+
+        .page-number {
+            font-size: 60px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-family: sans-serif;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            padding: 20px 30px;
+            position: relative;
+        }
+
+        .continuation-tag {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #555;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .continuation-tag::before {
+            content: "⛰️"; /* Simple mountain icon placeholder */
+            font-size: 20px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .title-box {
+            display: inline-block;
+            border: 3px solid var(--primary-color);
+            border-radius: 15px;
+            padding: 8px 15px;
+            font-size: 22px;
+            font-weight: bold;
+            color: #006666;
+            margin-bottom: 15px;
+            position: relative;
+            background: #fff;
+            z-index: 2;
+        }
+        
+        /* Little tail for the speech bubble effect */
+        .title-box::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 20px;
+            border-width: 8px 8px 0;
+            border-style: solid;
+            border-color: var(--primary-color) transparent;
+            display: block;
+            width: 0;
+        }
+        
+        .title-box::before {
+             content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 21px;
+            border-width: 7px 7px 0;
+            border-style: solid;
+            border-color: #fff transparent;
+            display: block;
+            width: 0;
+            z-index: 1;
+        }
+
+        .content-block {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .text-description {
+            flex: 1;
+            font-size: 16px;
+            line-height: 1.6;
+            text-align: justify;
+            padding-top: 10px;
+        }
+
+        .image-placeholder {
+            width: 180px;
+            height: 140px;
+            background-color: #ddd;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 14px;
+            flex-shrink: 0;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .image-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Specific adjustments for layout flow */
+        .section:nth-child(2) .content-block {
+            flex-direction: row-reverse; /* Image on left for the middle section based on visual flow? No, looking at image, image is on right for all. Wait. */
+        }
+        
+        /* Re-evaluating image position based on provided image */
+        /* Section 1: Image Top Right */
+        /* Section 2: Image Middle Right */
+        /* Section 3: Image Bottom Right */
+        
+        /* Actually, looking closely at the provided image: */
+        /* Section 1 (Madagascar): Title top left, Image top right. Text below title. */
+        /* Section 2 (Red Panda): Title middle left, Image middle right. Text below title. */
+        /* Section 3 (Reptile): Title bottom left, Image bottom right. Text below title. */
+        
+        /* Let's adjust the flex layout to match this specific flow */
+        .section-layout-1 {
+            display: flex;
+            flex-direction: column;
+        }
+        .layout-row-1 {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+        
+        .layout-row-2 {
+             display: flex;
+             justify-content: space-between;
+             align-items: flex-start;
+             margin-bottom: 10px;
+        }
+
+        .layout-row-3 {
+             display: flex;
+             justify-content: space-between;
+             align-items: flex-start;
+        }
+
+        .text-block {
+            width: 65%;
+        }
+        
+        .img-block {
+            width: 30%;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Left Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-title">步行游览区</div>
+        
+        <div class="direction-indicator">
+            <span>北</span>
+            <div class="arrow-down"></div>
+            <span>线</span>
+        </div>
+
+        <div class="page-number">6</div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="continuation-tag">接上篇</div>
+
+        <!-- Section 1: Madagascar Jungle -->
+        <div class="section">
+            <div class="layout-row-1">
+                <div class="title-box">马达加斯加丛林</div>
+                <div class="image-placeholder img-block">
+                    [Image: Lemur on branch]
+                </div>
+            </div>
+            <div class="text-block text-description">
+                环尾狐猴的天堂，成群结队的环尾狐猴在这里攀爬跳跃，在零距离投喂专属食物的时候有可能会跳到你的肩膀上哦，这时候就是拍照留念的最佳时机啦！
+            </div>
+        </div>
+
+        <!-- Section 2: Red Panda Exhibit -->
+        <div class="section">
+            <div class="layout-row-2">
+                <div class="title-box">小熊猫展区</div>
+                <div class="image-placeholder img-block">
+                    [Image: Red Panda Plush/Toy]
+                </div>
+            </div>
+            <div class="text-block text-description">
+                北野里最受欢迎的网红打卡地之一，里面设有零食铺子可以购买竹叶和小熊猫互动，注：自带的食物不能给它吃哦！
+            </div>
+        </div>
+
+        <!-- Section 3: Reptile House -->
+        <div class="section">
+            <div class="layout-row-3">
+                <div class="title-box">爬行动物馆</div>
+                <div class="image-placeholder img-block">
+                    [Image: Green Snake]
+                </div>
+            </div>
+            <div class="text-block text-description">
+                喜欢蟒蛇、蜥蜴的小伙伴们千万不要错过这里，黄金蟒、网纹蟒、红鬣蜥、绿鬣蜥、黑白泰迦等等都有昂！PS:怕蛇的小伙伴就不要挑战自己啦！
+            </div>
+        </div>
+
+    </main>
+</div>
+
+</body>
+</html>

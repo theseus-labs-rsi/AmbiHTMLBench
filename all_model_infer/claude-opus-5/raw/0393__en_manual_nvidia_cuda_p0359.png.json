@@ -1,0 +1,32 @@
+{
+  "id": "msg_0876e0db14b34bfa90f14295aee2d9c0",
+  "model": "claude-opus-5",
+  "object": "chat.completion",
+  "created": 1785574818,
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>CUDA C++ Programming Guide, Release 13.3 — 13.6.1.2 Memory Model (CDP1)</title>\n<script>\nwindow.MathJax = {\n  tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] }\n};\n</script>\n<script src=\"https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js\" async></script>\n<style>\n  html { background: #ffffff; }\n  body {\n    margin: 0 auto;\n    padding: 48px 0 32px 0;\n    max-width: 8.5in;\n    font-family: \"DejaVu Sans\", \"Verdana\", Arial, sans-serif;\n    font-size: 15.5px;\n    line-height: 1.45;\n    color: #1a1a1a;\n  }\n  .page { padding: 0 60px; }\n\n  header.pagehead {\n    text-align: right;\n    font-weight: bold;\n    font-size: 15px;\n    padding-bottom: 6px;\n    border-bottom: 1.5px solid #000;\n    margin-bottom: 42px;\n  }\n\n  h3.sec, h4.sec, h5.sec {\n    color: #76b900;\n    font-weight: bold;\n    margin: 0 0 20px 0;\n    line-height: 1.3;\n  }\n  h3.sec { font-size: 17px; }\n  h4.sec { font-size: 17px; margin-top: 46px; }\n  h5.sec { font-size: 17px; margin-top: 46px; }\n  .sec .num { margin-right: 10px; }\n\n  p {\n    margin: 0 0 14px 0;\n    text-align: justify;\n  }\n  em.xref { color: #76b900; font-style: italic; }\n\n  code, .code {\n    font-family: \"DejaVu Sans Mono\", \"Consolas\", monospace;\n    font-size: 14.5px;\n  }\n\n  .warning {\n    border: 1.5px solid #000;\n    padding: 12px 16px;\n    margin: 30px 0 30px 0;\n    text-align: justify;\n  }\n  .warning .label { font-weight: bold; }\n\n  pre.codeblock {\n    background: #f4f4f4;\n    margin: 18px -60px 0 -60px;\n    padding: 14px 60px 10px 60px;\n    font-family: \"DejaVu Sans Mono\", \"Consolas\", monospace;\n    font-size: 15px;\n    line-height: 1.5;\n    white-space: pre;\n    overflow: hidden;\n  }\n  .kw { color: #007f00; font-weight: bold; }\n  .num-lit { color: #b06000; }\n\n  .continues {\n    text-align: right;\n    font-size: 13.5px;\n    margin-top: 6px;\n  }\n\n  footer.pagefoot {\n    display: flex;\n    justify-content: space-between;\n    align-items: baseline;\n    font-weight: bold;\n    font-size: 15px;\n    border-top: 1.5px solid #000;\n    padding-top: 8px;\n    margin-top: 40px;\n  }\n</style>\n</head>\n<body>\n<div class=\"page\">\n\n  <header class=\"pagehead\">CUDA C++ Programming Guide, Release 13.3</header>\n\n  <h3 class=\"sec\"><span class=\"num\">13.6.1.2</span>Memory Model (CDP1)</h3>\n\n  <p>See <em class=\"xref\">Memory Model</em>, above, for CDP2 version of document.</p>\n\n  <p>Parent and child grids share the same global and constant memory storage, but have distinct local and\n  shared memory.</p>\n\n  <h4 class=\"sec\"><span class=\"num\">13.6.1.2.1</span>Coherence and Consistency (CDP1)</h4>\n\n  <p>See <em class=\"xref\">Coherence and Consistency</em>, above, for CDP2 version of document.</p>\n\n  <h5 class=\"sec\"><span class=\"num\">13.6.1.2.1.1</span>Global Memory (CDP1)</h5>\n\n  <p>See <em class=\"xref\">Global Memory</em>, above, for CDP2 version of document.</p>\n\n  <p>Parent and child grids have coherent access to global memory, with weak consistency guarantees\n  between child and parent. There are two points in the execution of a child grid when its view of memory\n  is fully consistent with the parent thread: when the child grid is invoked by the parent, and when the\n  child grid completes as signaled by a synchronization API invocation in the parent thread.</p>\n\n  <div class=\"warning\">\n    <span class=\"label\">Warning:</span> &nbsp; Explicit synchronization with child kernels from a parent block (i.e. using <code>cudaDeviceSynchronize()</code> in device code) is deprecated in CUDA 11.6, removed for compute_90+ compilation, and is slated for full removal in a future CUDA release.\n  </div>\n\n  <p>All global memory operations in the parent thread prior to the child grid's invocation are visible to\n  the child grid. All memory operations of the child grid are visible to the parent after the parent has\n  synchronized on the child grid's completion.</p>\n\n  <p>In the following example, the child grid executing <code>child_launch</code> is only guaranteed to see the modifications to <code>data</code> made before the child grid was launched. Since thread 0 of the parent is performing\n  the launch, the child will be consistent with the memory seen by thread 0 of the parent. Due to the\n  first <code>__syncthreads()</code> call, the child will see <code>data[0]=0</code>, <code>data[1]=1</code>, …, <code>data[255]=255</code> (without\n  the <code>__syncthreads()</code> call, only <code>data[0]</code> would be guaranteed to be seen by the child). When the\n  child grid returns, thread 0 is guaranteed to see modifications made by the threads in its child grid.\n  Those modifications become available to the other threads of the parent grid only after the second\n  <code>__syncthreads()</code> call:</p>\n\n<pre class=\"codeblock\">__global__ <span class=\"kw\">void</span> child_launch(<span class=\"kw\">int</span> *data) {\n   data[threadIdx.x] = data[threadIdx.x]+<span class=\"num-lit\">1</span>;\n}\n\n__global__ <span class=\"kw\">void</span> parent_launch(<span class=\"kw\">int</span> *data) {\n   data[threadIdx.x] = threadIdx.x;\n\n   __syncthreads();\n\n   <span class=\"kw\">if</span> (threadIdx.x == <span class=\"num-lit\">0</span>) {\n       child_launch&lt;&lt;&lt; <span class=\"num-lit\">1</span>, <span class=\"num-lit\">256</span> &gt;&gt;&gt;(data);\n       cudaDeviceSynchronize();\n   }\n\n   __syncthreads();</pre>\n\n  <div class=\"continues\">(continues on next page)</div>\n\n  <footer class=\"pagefoot\">\n    <span>13.6.&nbsp; Legacy CUDA Dynamic Parallelism (CDP1)</span>\n    <span>343</span>\n  </footer>\n\n</div>\n</body>\n</html>"
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 2381,
+    "completion_tokens": 1318,
+    "total_tokens": 3699,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "text_tokens": 0,
+      "audio_tokens": 0,
+      "image_tokens": 0
+    },
+    "completion_tokens_details": {
+      "text_tokens": 0,
+      "audio_tokens": 0,
+      "reasoning_tokens": 0
+    }
+  }
+}

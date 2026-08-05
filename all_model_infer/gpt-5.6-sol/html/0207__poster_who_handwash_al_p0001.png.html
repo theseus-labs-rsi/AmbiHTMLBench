@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Si të lahen duart</title>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #242223;
+    }
+
+    .poster {
+      width: 100%;
+      max-width: 1488px;
+      min-height: 2105px;
+      margin: 0 auto;
+      padding: 28px 50px 50px;
+      overflow: hidden;
+      background: #ffffff;
+    }
+
+    .title {
+      display: flex;
+      align-items: baseline;
+      margin: 0 0 0 -9px;
+      white-space: nowrap;
+      font-size: 180px;
+      line-height: 0.84;
+      letter-spacing: -3px;
+      font-weight: 900;
+    }
+
+    .title .dark {
+      color: #242021;
+    }
+
+    .title .light {
+      color: #a6a4a5;
+    }
+
+    .title .word + .word {
+      margin-left: 48px;
+    }
+
+    .tagline {
+      margin: 27px 0 0 -14px;
+      white-space: nowrap;
+      color: #a6a4a5;
+      font-size: 36px;
+      line-height: 43px;
+      font-weight: 700;
+    }
+
+    .duration {
+      display: flex;
+      align-items: center;
+      height: 55px;
+      margin-top: 48px;
+    }
+
+    .clock {
+      position: relative;
+      flex: 0 0 54px;
+      width: 54px;
+      height: 54px;
+      background: #646263;
+    }
+
+    .clock-face {
+      position: absolute;
+      top: 7px;
+      left: 7px;
+      width: 40px;
+      height: 40px;
+      border: 4px solid #ffffff;
+      border-radius: 50%;
+    }
+
+    .clock-face::before {
+      content: "";
+      position: absolute;
+      left: 16px;
+      top: 4px;
+      width: 4px;
+      height: 17px;
+      border-radius: 3px;
+      background: #ffffff;
+      transform-origin: 50% 100%;
+      transform: rotate(8deg);
+    }
+
+    .clock-face::after {
+      content: "";
+      position: absolute;
+      left: 16px;
+      top: 19px;
+      width: 14px;
+      height: 4px;
+      border-radius: 3px;
+      background: #ffffff;
+      transform-origin: 0 50%;
+      transform: rotate(-23deg);
+    }
+
+    .duration-text {
+      margin-left: 17px;
+      white-space: nowrap;
+      font-size: 36px;
+      line-height: 55px;
+      font-weight: 700;
+    }
+
+    .duration-text .time {
+      color: #a6a4a5;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-rows: 339px repeat(3, 338px);
+      column-gap: 48px;
+      row-gap: 0;
+      margin-top: 59px;
+    }
+
+    .step {
+      min-width: 0;
+      height: 338px;
+    }
+
+    .diagram {
+      position: relative;
+      width: 100%;
+      height: 224px;
+      overflow: hidden;
+      background: #f4f4f4;
+    }
+
+    .step-number {
+      position: absolute;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 54px;
+      height: 55px;
+      background: #7b797a;
+      color: #ffffff;
+      font-size: 46px;
+      line-height: 55px;
+      font-weight: 700;
+    }
+
+    .placeholder-caption {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      padding: 0 12px;
+      color: #b7b5b6;
+      text-align: center;
+      font-size: 13px;
+      line-height: 18px;
+      transform: translateY(-50%);
+    }
+
+    .caption {
+      margin-top: 9px;
+      font-size: 26px;
+      line-height: 1.12;
+      font-weight: 400;
+    }
+
+    .footer {
+      width: 100%;
+      height: 232px;
+      margin-top: 59px;
+      text-align: center;
+    }
+
+    .footer-orange {
+      height: 158px;
+      padding-top: 10px;
+      background: #fc630f;
+      color: #ffffff;
+    }
+
+    .emblem-placeholder {
+      position: relative;
+      width: 88px;
+      height: 83px;
+      margin: 0 auto;
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 10px;
+      line-height: 14px;
+    }
+
+    .emblem-placeholder::before {
+      content: "";
+      position: absolute;
+      top: 1px;
+      left: 22px;
+      width: 42px;
+      height: 57px;
+      border: 2px solid #ffffff;
+      border-radius: 50% 50% 46% 46%;
+    }
+
+    .emblem-placeholder .placeholder-caption {
+      top: 31px;
+      padding: 0;
+      color: rgba(255, 255, 255, 0.68);
+      font-size: 9px;
+      line-height: 11px;
+    }
+
+    .ministry-name {
+      margin-top: 0;
+      font-size: 16px;
+      line-height: 18px;
+      font-weight: 700;
+    }
+
+    .footer-gray {
+      height: 74px;
+      padding-top: 8px;
+      background: #a6a4a5;
+      color: #ffffff;
+      font-size: 14px;
+      line-height: 17px;
+      font-weight: 400;
+    }
+
+    @media (max-width: 1100px) {
+      .poster {
+        min-width: 960px;
+      }
+
+      .title {
+        font-size: 150px;
+      }
+
+      .title .word + .word {
+        margin-left: 35px;
+      }
+
+      .tagline,
+      .duration-text {
+        font-size: 29px;
+      }
+
+      .caption {
+        font-size: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="poster">
+    <h1 class="title">
+      <span class="word dark">Si të</span>
+      <span class="word light">lahen</span>
+      <span class="word dark">duart</span>
+    </h1>
+
+    <div class="tagline">LAJINI DUART KUR TË JENË NDOTUR DUKSHËM! NË TË KUNDËRT, FSHIJINI ATO</div>
+
+    <div class="duration">
+      <div class="clock" aria-label="Orë">
+        <div class="clock-face"></div>
+      </div>
+      <div class="duration-text">
+        Kohëzgjatja e gjithë procedurës: <span class="time">40 – 60 sekonda</span>
+      </div>
+    </div>
+
+    <section class="steps" aria-label="Hapat e larjes së duarve">
+      <article class="step">
+        <div class="diagram placeholder" aria-label="Illustration for step 0">
+          <div class="step-number">0</div>
+          <div class="placeholder-caption">[Illustration: step 0]</div>
+        </div>
+        <div class="caption">Lagini duart me ujë;</div>
+      </article>
+
+      <article class="step">
+        <div class="diagram placeholder" aria-label="Illustration for step 1">
+          <div class="step-number">1</div>
+          <div class="placeholder-caption">[Illustration: step 1]</div>
+        </div>
+        <div class="caption">Vendosni mjaft sapun që të mbulohet e gjithë sipërfaqja e dorës;</div>
+      </article>
+
+      <article class="step">
+        <div class="diagram placeholder" aria-label="Illustration for step 2">
+          <div class="step-number">2</div>
+          <div class="placeholder-caption">[Illustration: step 2]</div>
+        </div>
+        <div class="caption">Fërkojini duart pëllëmbë me pëllëmbë;</div>
+      </article>
+
+      <article class="step">
+        <div class="diagram placeholder" aria-label="Illustration for step 3">
+          <div class="step-number">3</div>
+          <div class="placeholder-caption">[Illustration: step 3]</div>
+        </div>
+        <div class="caption">Pëllëmbë e djathtë mbi shpinën e së majtës me gishtat e gërshetuar dhe anasjelltas;</div>
+      </article>
+
+      <article class="step">
+        <div class="diagram placeholder" aria-label="Illustration for step 4">
+          <div class="step-number">4</div>
+          <div class="placeholder-caption">[Illustration: step 4]</div>
+        </div>
+        <div class="caption">Pëllëmbë me pëllëmbë me gishtat e gërshetuar;</div>
+      </article>
+
+      <article class="step">
+        <div class="diagram placeholder" aria-label="Illustration for step 5">
+          <div class="step-number">5</div>
+          <div class="placeholder-caption">[Illustration: step 5]</div>
+        </div>
+        <div class="caption">Shpinën e gishtave kundër pëllëmbëve me gishtat e gërshetuar;</div>
+      </article>
+
+      <article class="step">
+        <div class="diagram placeholder" aria-label="Illustration for step 6">
+          <div class="step-number">6</div>
+          <div class="placeholder-caption">[Illustration: step 6]</div>
+        </div>
+        <div class="caption">Fërkim rrotullues i gishtit të madh të majtë duke e shtrënguar në pëllëmbën e djathtë dhe anasjelltas;</div>
+      </article>
+
+      <article class="step">
+        <div class="diagram placeholder" aria-label="Illustration for step 7">
+          <div class="step-number">7</div>
+          <div class="placeholder-caption">[Illustration: step 7]</div>
+        </div>
+        <div class="caption">Fërkim rrotullues, prapa dhe përpara me gishtat e shtrënguar të dorës së djathtë në pëllëmbën e majtë dhe anasjelltas;</div>
+      </article>
+
+      <article class="step">
+        <div class="diagram placeholder" aria-label="Illustration for step 8">
+          <div class="step-number">8</div>
+          <div class="placeholder-caption">[Illustration: step 8]</div>
+        </div>
+        <div class="caption">Shpëlaji duart me ujë;</div>
+      </article>
+
+      <article class="step">
+        <div class="diagram placeholder" aria-label="Illustration for step 9">
+          <div class="step-number">9</div>
+          <div class="placeholder-caption">[Illustration: step 9]</div>
+        </div>
+        <div class="caption">Thaji duart tërësisht me peshqir për një përdorim;</div>
+      </article>
+
+      <article class="step">
+        <div class="diagram placeholder" aria-label="Illustration for step 10">
+          <div class="step-number">10</div>
+          <div class="placeholder-caption">[Illustration: step 10]</div>
+        </div>
+        <div class="caption">Përdore peshqirin për ta ndalur rubinetin;</div>
+      </article>
+
+      <article class="step">
+        <div class="diagram placeholder" aria-label="Illustration for step 11">
+          <div class="step-number">11</div>
+          <div class="placeholder-caption">[Illustration: step 11]</div>
+        </div>
+        <div class="caption">Duart tuaja tash janë të sigurta.</div>
+      </article>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-orange">
+        <div class="emblem-placeholder placeholder" aria-label="Emblem: centered">
+          <div class="placeholder-caption">[Emblem: centered]</div>
+        </div>
+        <div class="ministry-name">MINISTRIA E<br>SHËNDETËSISË</div>
+      </div>
+      <div class="footer-gray">
+        5 momentet e mia për higjienë të duarve<br>
+        'Bazuar në: 'My 5 moments for Hand Hygiene',<br>
+        URL: http://www.who.int/gpsc/5may/background/5moments/en/index.html © World Health Organization 2009’. Të gjitha të drejtat e rezervuara.’
+      </div>
+    </footer>
+  </main>
+</body>
+</html>

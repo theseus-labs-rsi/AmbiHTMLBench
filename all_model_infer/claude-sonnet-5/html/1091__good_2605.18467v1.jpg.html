@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InstructAV2AV: Instruction-Guided Audio-Video Joint Editing</title>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  body {
+    font-family: 'Times New Roman', Times, serif;
+    color: #111;
+    margin: 0;
+    padding: 0;
+    background: #fff;
+  }
+  .page {
+    max-width: 850px;
+    margin: 40px auto;
+    padding: 30px 45px;
+    position: relative;
+  }
+  .sidebar-text {
+    position: absolute;
+    left: -40px;
+    top: 300px;
+    transform: rotate(-90deg);
+    transform-origin: left top;
+    font-size: 12px;
+    color: #333;
+    white-space: nowrap;
+  }
+  h1.title {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 14px;
+    margin-top: 10px;
+  }
+  .authors {
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 14px;
+  }
+  .garbled-line {
+    background: #d9d9d9;
+    font-size: 9px;
+    padding: 4px 8px;
+    font-family: monospace;
+    letter-spacing: 0.5px;
+    margin-bottom: 20px;
+    overflow-wrap: break-word;
+  }
+  .filmrow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+  .placeholder {
+    width: 355px;
+    height: 90px;
+    background: repeating-linear-gradient(
+      to right,
+      #000 0px, #000 10px, #fff 10px, #fff 14px
+    );
+    background-color: #000;
+    position: relative;
+    border: 2px solid #000;
+  }
+  .placeholder::before, .placeholder::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0;
+    height: 6px;
+    background: repeating-linear-gradient(
+      to right,
+      #fff 0px, #fff 6px, #000 6px, #000 10px
+    );
+  }
+  .placeholder::before { top: 0; }
+  .placeholder::after { bottom: 0; }
+  .placeholder-caption {
+    position: absolute;
+    bottom: 30px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: #fff;
+    font-size: 10px;
+    z-index: 2;
+  }
+  .arrow {
+    font-size: 26px;
+    width: 40px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .caption-line {
+    font-size: 8.5px;
+    font-family: monospace;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    padding: 0 2px;
+  }
+  .caption-line span {
+    width: 47%;
+  }
+  .fig-caption {
+    font-size: 10.5px;
+    line-height: 1.4;
+    margin-top: 8px;
+    margin-bottom: 26px;
+  }
+  .fig-caption b {
+    font-weight: bold;
+  }
+  .body-columns {
+    display: flex;
+    gap: 22px;
+    font-size: 10.5px;
+    line-height: 1.4;
+    text-align: justify;
+  }
+  .body-columns .col {
+    flex: 1;
+  }
+  .footnote-block {
+    margin-top: 18px;
+    border-top: 1px solid #000;
+    padding-top: 6px;
+    font-size: 8.5px;
+    line-height: 1.35;
+  }
+  .footnote-block .corresponding {
+    font-size: 8.5px;
+    margin-bottom: 2px;
+  }
+  .link {
+    color: #0645AD;
+  }
+  sup {
+    font-size: 8px;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="sidebar-text">arXiv:2605.18467v1&nbsp;&nbsp;[cs.CV]&nbsp;&nbsp;18 May 2026</div>
+
+  <h1 class="title">InstructAV2AV: Instruction-Guided Audio-Video Joint Editing</h1>
+
+  <div class="authors">
+    HAOJIE ZHENG, Beijing Academy of Artificial Intelligence, China and Peking University, China<br>
+    YIXIN YANG, Peking University, China<br>
+    SIQI YANG, Peking University, China<br>
+    SHUCHEN WENG<sup>*</sup>, Beijing Academy of Artificial Intelligence, China and Peking University, China<br>
+    BOXIN SHI<sup>*</sup>, Peking University, China
+  </div>
+
+  <div class="garbled-line">
+    !~fi/˚301(!7'863,369(05I::;332&lt;fim&gt;)˚)v(2~1(}0    @&&A·'"%›A&06˝&B›)54&')·,#&5;·"#&%&i'"%6A"9&5›_"056 '"7C"[6)6 (˚"0&·'"%&0~6\40'~)˝&i·#·6'% (2&'i=
+  </div>
+
+  <div class="filmrow">
+    <div class="placeholder"><div class="placeholder-caption">[Film-strip: source frames]</div></div>
+    <div class="arrow">&#10145;</div>
+    <div class="placeholder"><div class="placeholder-caption">[Film-strip: edited frames]</div></div>
+  </div>
+  <div class="caption-line">
+    <span>!"!$%&"()˚+(,&~˝/0,!~023!4˚(!05</span>
+    <span>ƒ"#$%&"'% (#$)$"" #), "~$%~.˝"(#$~.)'"'~/0˝"~.˝ "#)0~.&#0)$%&#0/6, /#03&~4~#$5~6#,)$%›7&0&02,'"'˝$9~.&6·""~25/):&›)\#$"'&0;·"#$;&~=</span>
+  </div>
+
+  <div class="filmrow">
+    <div class="placeholder"><div class="placeholder-caption">[Film-strip: source frames]</div></div>
+    <div class="arrow">&#10145;</div>
+    <div class="placeholder"><div class="placeholder-caption">[Film-strip: edited frames]</div></div>
+  </div>
+  <div class="caption-line">
+    <span>!2f#%&˚(')'+(,&~˝/0,!~023/0,36!()0</span>
+    <span>&gt;55·#·5409˝:)$'#%&&45#$·50):)$%˝0˚('"'&0)% "'i'˚"'&J1'i</span>
+  </div>
+
+  <div class="filmrow">
+    <div class="placeholder"><div class="placeholder-caption">[Film-strip: source frames]</div></div>
+    <div class="arrow">&#10145;</div>
+    <div class="placeholder"><div class="placeholder-caption">[Film-strip: edited frames]</div></div>
+  </div>
+  <div class="caption-line">
+    <span>!˚!#%&˚()'e(,&~˝/0,!~023!?3@))9~˝</span>
+    <span>E&(˚".&i·"'&,;"˝A(~89·6'#$5)$%›"$·"'&i6'#$4·6~0'#,&#'("#$%›"'&›A&#$~ %</span>
+  </div>
+
+  <div class="filmrow">
+    <div class="placeholder"><div class="placeholder-caption">[Film-strip: source frames]</div></div>
+    <div class="arrow">&#10145;</div>
+    <div class="placeholder"><div class="placeholder-caption">[Film-strip: edited frames]</div></div>
+  </div>
+
+  <div class="fig-caption">
+    <b>Fig. 1.</b>&nbsp;InstructAV2AV achieves open-world instruction-guided audio-video joint editing. Given solely text instructions, it manipulates specified visual targets and their audio tracks while faithfully preserving non-target backgrounds and ambient sounds. We demonstrate its versatility across four representative scenarios: (a) Identity-preserving speech modification, changing the spoken words of the woman to a target sentence while strictly retaining her visual identity and vocal timbre; (b) Audio-visual instance editing, replacing the speaking man with a young woman in a gray blazer alongside her synchronized voice; (c) Audio-visual instance insertion, adding a dark vintage sedan driving across the scene and its engine sound; and (d) Audio-visual instance removal, erasing the chipmunk and its scream from the environment. We highly encourage readers to view the supplementary video for dynamic results.
+  </div>
+
+  <div class="body-columns">
+    <div class="col">
+      Recent diffusion-based methods have achieved impressive progress in video content manipulation. However, they typically ignore the accompanying audio, leaving the audio disjointed from the edited results. In this paper, we propose InstructAV2AV, an end-to-end framework for instruction-guided audio-video joint editing. We first develop a scalable data synthesis
+
+      <div class="footnote-block">
+        <div class="corresponding">*Corresponding authors.</div>
+        <div>
+          Authors' Contact Information: Haojie Zheng, Beijing Academy of Artificial Intelligence, Beijing, China, suimu@stu.pku.edu.cn; Yixin Yang, Peking University, Beijing, China, yangyixin93@pku.edu.cn; Siqi Yang, Peking University, Beijing, China, yousiki@pku.edu.cn; Shuchen Weng, Beijing Academy of Artificial Intelligence, Beijing, China and Peking University, Beijing, China, shuchenweng@pku.edu.cn; Boxin Shi, Peking University, Beijing, China, shiboxin@pku.edu.cn.
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      pipeline and construct InsAVE-80K, the first large-scale audio-video editing dataset with high-quality source-to-target pairs. With this data foundation, we adapt an audio-video generation backbone to leverage its robust priors. We concatenate the audio-video input with noisy latent codes to anchor the source context, propose the source-instruction gated attention to improve instruction following and content preservation, and introduce a two-stage training strategy to effectively transfer these pre-trained priors. Extensive experiments demonstrate that InstructAV2AV outperforms state-of-the-art methods across 11 metrics spanning three aspects on two evaluation sets, highlighting its potential for controllable content creation. Project page:
+      <a class="link" href="https://hjzheng.net/projects/InstructAV2AV/">https://hjzheng.net/projects/InstructAV2AV/</a>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

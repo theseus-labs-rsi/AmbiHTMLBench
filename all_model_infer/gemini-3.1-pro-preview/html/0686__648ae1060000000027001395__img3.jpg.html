@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>三、函数</title>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 20px;
+      background-color: #f0f2f5;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+      color: #111;
+      display: flex;
+      justify-content: center;
+    }
+    .page-container {
+      width: 100%;
+      max-width: 800px;
+      background-color: #ffffff;
+      padding: 35px 40px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    h2.section-title {
+      text-align: center;
+      font-size: 15px;
+      font-weight: bold;
+      margin: 0 0 12px 0;
+    }
+    .text-block {
+      margin-bottom: 8px;
+      text-align: justify;
+      font-size: 12.5px;
+    }
+    .bold-title {
+      font-weight: bold;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid #000;
+      margin: 8px 0 16px 0;
+      font-size: 12px;
+      text-align: center;
+    }
+    th, td {
+      border: 1px solid #000;
+      padding: 5px 4px;
+      vertical-align: middle;
+    }
+    .vertical-cell {
+      writing-mode: vertical-lr;
+      letter-spacing: 2px;
+      padding: 4px 2px;
+      font-weight: 500;
+      width: 24px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .flowchart-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 8px 0;
+      position: relative;
+    }
+    .flow-node {
+      border: 1px solid #000;
+      border-radius: 20px;
+      padding: 3px 12px;
+      font-size: 11.5px;
+      background: #fff;
+      display: inline-block;
+      white-space: nowrap;
+      z-index: 2;
+    }
+    .flow-bottom-row {
+      display: flex;
+      justify-content: space-around;
+      width: 80%;
+      margin-top: 15px;
+      position: relative;
+    }
+    .flow-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .sub-section-title {
+      font-size: 13px;
+      font-weight: bold;
+      margin: 14px 0 6px 0;
+    }
+    .diagram-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 6px 0 14px 0;
+    }
+    .graph-svg {
+      width: 280px;
+      height: 200px;
+    }
+    .table-properties td {
+      font-size: 11.5px;
+      padding: 4px 2px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-container">
+  <h2 class="section-title">三、函数</h2>
+
+  <div class="text-block">
+    <span class="bold-title">1.概念：</span>A、B为两个非空实数集，对于集合A中任意取x，在集合B中都有唯一确定的数值与之对应，就称f(x) 是A到B的函数。
+  </div>
+
+  <div class="text-block bold-title">
+    2.性质:
+  </div>
+
+  <!-- Table 1: Properties of Functions -->
+  <table>
+    <colgroup>
+      <col style="width: 10%;">
+      <col style="width: 30%;">
+      <col style="width: 30%;">
+      <col style="width: 30%;">
+    </colgroup>
+    <tr>
+      <td>定义域</td>
+      <td>一次函数、二次函数 $x \in \mathbf{R}$</td>
+      <td>反比例函数 $x \neq 0$</td>
+      <td>对数函数 $x > 0$</td>
+    </tr>
+    <tr>
+      <td rowspan="2">值域</td>
+      <td>
+        一次函数: $y=kx+b\,(k \neq 0)$<br>
+        $y \in \mathbf{R}$
+      </td>
+      <td>
+        反比例函数: $y=\frac{k}{x}\,(k \neq 0)$<br>
+        $y \in (-\infty, 0) \cup (0, +\infty)$
+      </td>
+      <td rowspan="2">
+        二次函数: $y=ax^2+bx+c\,(a,b,c\text{为常数且}a \neq 0)$<br><br>
+        $y\text{看开口方向和对称性}$
+      </td>
+    </tr>
+    <tr>
+      <td>
+        指数函数: $y=a^x\ (a > 0 \text{ 且 } a \neq 1)$<br>
+        $y \in (0, +\infty)$
+      </td>
+      <td>
+        对数函数: $\log_a x\ (a > 0 \text{ 且 } a \neq 1)$<br>
+        $y \in \mathbf{R}$
+      </td>
+    </tr>
+    <tr>
+      <td rowspan="3">单调性</td>
+      <td colspan="3">
+        $x_1 < x_2 \quad f(x_1) < f(x_2) \iff f(x)\text{ 是增函数} \quad \frac{f(x_1)-f(x_2)}{x_1-x_2} > 0 \iff f(x)\text{ 是增函数}$
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+        $x_1 < x_2 \quad f(x_1) > f(x_2) \iff f(x)\text{ 是减函数} \quad \frac{f(x_1)-f(x_2)}{x_1-x_2} < 0 \iff f(x)\text{ 是减函数}$
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+        复合函数 $y=f(g(x))\quad$ 同增异减
+      </td>
+    </tr>
+    <tr>
+      <td rowspan="2">奇偶性</td>
+      <td colspan="3">
+        $f(-x)=f(x) \iff f(x)\text{ 是偶函数} \iff \text{图像关于}y\text{轴对称，对称轴 } x=\frac{a+b}{2}$
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+        $f(-x)=-f(x) \iff f(x)\text{ 是奇函数} \iff \text{图像关于原点对称，对称中心 } \left(\frac{a+b}{2},\, 0\right)$
+      </td>
+    </tr>
+    <tr>
+      <td>零点</td>
+      <td colspan="3" style="padding: 10px 0;">
+        <div class="flowchart-container">
+          <svg class="flow-svg" viewBox="0 0 500 80">
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#333" />
+              </marker>
+              <marker id="arrow-both" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#333" />
+              </marker>
+            </defs>
+            <!-- Line from Top to Left -->
+            <line x1="230" y1="26" x2="160" y2="48" stroke="#333" stroke-width="1.2" marker-end="url(#arrow)" />
+            <!-- Line from Top to Right -->
+            <line x1="270" y1="26" x2="340" y2="48" stroke="#333" stroke-width="1.2" marker-end="url(#arrow)" />
+            <!-- Double Arrow between Left and Right -->
+            <line x1="225" y1="62" x2="275" y2="62" stroke="#333" stroke-width="1.2" marker-end="url(#arrow)" marker-start="url(#arrow)" />
+          </svg>
+          <div class="flow-node">函数 $y=f(x)$ 有零点</div>
+          <div class="flow-bottom-row">
+            <div class="flow-node">函数 $y=f(x)$ 的图像<br>与 $x$ 轴有交点</div>
+            <div class="flow-node" style="display: flex; align-items: center;">方程 $f(x)=0$ 有实数根</div>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- Section 3: Power Functions -->
+  <div class="bold-title" style="margin-top: 15px; font-size: 13px;">3. 幂函数</div>
+
+  <div class="sub-section-title">3.2 五个幂函数的图象</div>
+  
+  <div class="diagram-container">
+    <svg class="graph-svg" viewBox="0 0 300 220">
+      <defs>
+        <marker id="axis-arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 2 L 8 5 L 0 8 z" fill="#000" />
+        </marker>
+      </defs>
+      <!-- Axes -->
+      <line x1="25" y1="140" x2="265" y2="140" stroke="#000" stroke-width="1.2" marker-end="url(#axis-arrow)" />
+      <line x1="140" y1="205" x2="140" y2="20" stroke="#000" stroke-width="1.2" marker-end="url(#axis-arrow)" />
+      <text x="260" y="153" font-size="12" font-style="italic">x</text>
+      <text x="128" y="24" font-size="12" font-style="italic">y</text>
+      <text x="128" y="153" font-size="11">O</text>
+
+      <!-- Point (1,1) Coordinates -->
+      <line x1="185" y1="140" x2="185" y2="95" stroke="#333" stroke-width="1" stroke-dasharray="2,2" />
+      <line x1="140" y1="95" x2="185" y2="95" stroke="#333" stroke-width="1" stroke-dasharray="2,2" />
+      <circle cx="185" cy="95" r="2" fill="#000" />
+      <text x="182" y="153" font-size="10">1</text>
+      <text x="130" y="98" font-size="10">1</text>
+
+      <!-- Point (-1, 1) and (-1, -1) Dashed references -->
+      <line x1="95" y1="140" x2="95" y2="95" stroke="#999" stroke-width="0.8" stroke-dasharray="2,2" />
+      <line x1="95" y1="140" x2="95" y2="185" stroke="#999" stroke-width="0.8" stroke-dasharray="2,2" />
+      <circle cx="95" cy="95" r="1.5" fill="#666" />
+      <circle cx="95" cy="185" r="1.5" fill="#666" />
+
+      <!-- Curves -->
+      <!-- y = x^3 -->
+      <path d="M 80 200 C 120 185 130 155 140 140 C 150 125 160 95 198 35" fill="none" stroke="#000" stroke-width="1.2" />
+      <text x="195" y="32" font-size="10">$y=x^3$</text>
+
+      <!-- y = x^2 -->
+      <path d="M 85 45 Q 140 160 195 45" fill="none" stroke="#000" stroke-width="1.2" />
+      <text x="135" y="42" font-size="10">$y=x^2$</text>
+
+      <!-- y = x -->
+      <line x1="75" y1="205" x2="225" y2="55" stroke="#000" stroke-width="1.2" />
+      <text x="215" y="65" font-size="10">$y=x$</text>
+
+      <!-- y = x^(1/2) -->
+      <path d="M 140 140 Q 155 105 240 80" fill="none" stroke="#000" stroke-width="1.2" />
+      <text x="235" y="92" font-size="10">$y=x^{\frac{1}{2}}$</text>
+
+      <!-- y = x^(-1) -->
+      <!-- Branch 1 (Quadrant 1) -->
+      <path d="M 152 40 Q 158 115 245 128" fill="none" stroke="#000" stroke-width="1.2" />
+      <!-- Branch 2 (Quadrant 3) -->
+      <path d="M 35 152 Q 122 165 128 210" fill="none" stroke="#000" stroke-width="1.2" />
+      <text x="238" y="125" font-size="10">$y=x^{-1}$</text>
+    </svg>
+  </div>
+
+  <div class="sub-section-title">3.3 五个幂函数的性质</div>
+
+  <!-- Table 2: Five Power Functions -->
+  <table class="table-properties">
+    <colgroup>
+      <col style="width: 8%;">
+      <col style="width: 18.4%;">
+      <col style="width: 18.4%;">
+      <col style="width: 18.4%;">
+      <col style="width: 18.4%;">
+      <col style="width: 18.4%;">
+    </colgroup>
+    <tr>
+      <td style="font-size: 11px; padding: 2px;">幂函数</td>
+      <td>$y=x$</td>
+      <td>$y=x^2$</td>
+      <td>$y=x^3$</td>
+      <td>$y=x^{\frac{1}{2}}$</td>
+      <td>$y=x^{-1}$</td>
+    </tr>
+    <tr>
+      <td><div class="vertical-cell">定义域</div></td>
+      <td>$\mathbf{R}$</td>
+      <td>$\mathbf{R}$</td>
+      <td>$\mathbf{R}$</td>
+      <td>$[0, +\infty)$</td>
+      <td>$(-\infty, 0) \cup (0, +\infty)$</td>
+    </tr>
+    <tr>
+      <td><div class="vertical-cell">值域</div></td>
+      <td>$\mathbf{R}$</td>
+      <td>$[0, +\infty)$</td>
+      <td>$\mathbf{R}$</td>
+      <td>$[0, +\infty)$</td>
+      <td>$(-\infty, 0) \cup (0, +\infty)$</td>
+    </tr>
+    <tr>
+      <td><div class="vertical-cell">奇偶性</div></td>
+      <td>奇</td>
+      <td>偶</td>
+      <td>奇</td>
+      <td>非奇非偶</td>
+      <td>奇</td>
+    </tr>
+    <tr>
+      <td><div class="vertical-cell">单调性</div></td>
+      <td>增</td>
+      <td>
+        $x \in [0, +\infty)$，增<br>
+        $x \in (-\infty, 0]$，减
+      </td>
+      <td>增</td>
+      <td>增</td>
+      <td>
+        $x \in (0, +\infty)$，减<br>
+        $x \in (-\infty, 0)$，减
+      </td>
+    </tr>
+    <tr>
+      <td><div class="vertical-cell">公共点</div></td>
+      <td colspan="5">$(1, 1)$</td>
+    </tr>
+  </table>
+</div>
+
+</body>
+</html>

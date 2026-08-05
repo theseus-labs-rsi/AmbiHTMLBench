@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>指读（Pointing Reading）</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: #d9d7cd;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      padding: 18px;
+      color: #505050;
+      font-family: "SimSun", "Songti SC", "Noto Serif CJK SC", serif;
+    }
+
+    .page {
+      position: relative;
+      width: 520px;
+      min-height: 700px;
+      overflow: hidden;
+      padding: 19px 48px 32px 42px;
+      background:
+        linear-gradient(rgba(238, 236, 224, 0.9), rgba(238, 236, 224, 0.9)),
+        repeating-linear-gradient(
+          0deg,
+          transparent 0,
+          transparent 27px,
+          rgba(90, 90, 90, 0.035) 28px
+        );
+      box-shadow: 0 1px 8px rgba(0, 0, 0, 0.22);
+    }
+
+    .running-head {
+      margin: 0 0 6px 16px;
+      color: #555;
+      font-family: Arial, "Microsoft YaHei", sans-serif;
+      font-size: 10px;
+      transform: rotate(-2deg);
+      transform-origin: left center;
+    }
+
+    .direction-label {
+      position: relative;
+      z-index: 2;
+      width: 258px;
+      margin: 0 auto -2px;
+      padding: 4px 12px 5px;
+      border: 1px solid #99978f;
+      background: #e4e2dc;
+      color: #555;
+      text-align: center;
+      font-size: 14px;
+      letter-spacing: 3px;
+      box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.18);
+      transform: rotate(-0.5deg);
+    }
+
+    .title-banner {
+      display: grid;
+      grid-template-columns: 77px 1fr;
+      min-height: 58px;
+      margin: 0 -3px 69px;
+      border: 1px solid #73777b;
+      background: #242830;
+      color: #e3e3e3;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+      transform: rotate(-0.6deg);
+    }
+
+    .method-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-right: 1px solid #666970;
+      font-size: 13px;
+    }
+
+    .title {
+      display: flex;
+      align-items: center;
+      padding: 0 13px;
+      white-space: nowrap;
+      font-size: 27px;
+      letter-spacing: 1px;
+    }
+
+    .title .english {
+      margin-left: 9px;
+      font-size: 23px;
+      letter-spacing: 0;
+    }
+
+    .step {
+      position: relative;
+      margin: 0 0 9px;
+      font-size: 15px;
+      line-height: 1.75;
+    }
+
+    .step-heading {
+      display: inline-block;
+      padding: 0 5px;
+      background: #4a4a4c;
+      color: #ededed;
+      font-size: 15px;
+      line-height: 24px;
+      white-space: nowrap;
+    }
+
+    .boxed {
+      display: inline-block;
+      margin-left: -1px;
+      padding: 7px 10px 6px;
+      border: 5px solid #ff7628;
+    }
+
+    .step-one .boxed {
+      margin-bottom: 1px;
+    }
+
+    .step-two .boxed {
+      margin-top: 8px;
+      margin-bottom: 5px;
+    }
+
+    .indented {
+      margin: 0 0 3px 36px;
+    }
+
+    .body-copy {
+      margin: 0 0 0 13px;
+      font-size: 15px;
+      line-height: 2.02;
+      text-align: justify;
+    }
+
+    .line {
+      position: relative;
+      display: inline;
+      padding-bottom: 4px;
+      background-image: linear-gradient(#ff7d31, #ff7d31);
+      background-position: 0 100%;
+      background-repeat: no-repeat;
+      background-size: 100% 4px;
+    }
+
+    .paragraph-line {
+      display: block;
+      width: fit-content;
+      max-width: 100%;
+      margin-bottom: 1px;
+    }
+
+    .closing {
+      width: 205px;
+      margin: 5px 0 0 14px;
+      font-size: 15px;
+      line-height: 2.02;
+    }
+
+    .closing .paragraph-line {
+      margin-bottom: 0;
+    }
+
+    .illustration {
+      position: absolute;
+      right: 42px;
+      bottom: 18px;
+      width: 184px;
+      height: 220px;
+      border: 0;
+      background: transparent;
+      color: transparent;
+    }
+
+    .illustration::before {
+      content: "";
+      position: absolute;
+      left: 34px;
+      top: 30px;
+      width: 111px;
+      height: 91px;
+      border: 3px solid #343434;
+      border-radius: 48% 48% 44% 44%;
+      transform: rotate(3deg);
+    }
+
+    .ear {
+      position: absolute;
+      top: 13px;
+      width: 38px;
+      height: 46px;
+      border-top: 4px solid #343434;
+      z-index: 2;
+    }
+
+    .ear.left {
+      left: 48px;
+      border-left: 4px solid #343434;
+      transform: rotate(-15deg) skewY(25deg);
+    }
+
+    .ear.right {
+      right: 39px;
+      border-right: 4px solid #343434;
+      transform: rotate(16deg) skewY(-25deg);
+    }
+
+    .eye {
+      position: absolute;
+      top: 65px;
+      z-index: 3;
+      width: 44px;
+      height: 48px;
+      border: 3px solid #343434;
+      border-radius: 50%;
+    }
+
+    .eye.left {
+      left: 51px;
+    }
+
+    .eye.right {
+      right: 45px;
+    }
+
+    .eye::after {
+      content: "";
+      position: absolute;
+      left: 13px;
+      top: 13px;
+      width: 18px;
+      height: 24px;
+      border-radius: 45%;
+      background: #343434;
+      box-shadow:
+        -5px 4px 0 -2px #343434,
+        5px -3px 0 -3px #343434;
+      transform: rotate(15deg);
+    }
+
+    .nose {
+      position: absolute;
+      left: 91px;
+      top: 119px;
+      z-index: 3;
+      width: 9px;
+      height: 4px;
+      border-bottom: 3px solid #343434;
+      border-radius: 50%;
+    }
+
+    .body-shape {
+      position: absolute;
+      left: 41px;
+      top: 122px;
+      width: 112px;
+      height: 91px;
+      border: 3px solid #343434;
+      border-radius: 34% 34% 10% 10%;
+      transform: rotate(1deg);
+    }
+
+    .arm {
+      position: absolute;
+      z-index: 4;
+      top: 146px;
+      height: 47px;
+      border-bottom: 4px solid #343434;
+    }
+
+    .arm.left {
+      left: 49px;
+      width: 73px;
+      border-left: 4px solid #343434;
+      border-radius: 0 0 0 60%;
+      transform: rotate(25deg);
+    }
+
+    .arm.right {
+      right: 45px;
+      width: 73px;
+      border-right: 4px solid #343434;
+      border-radius: 0 0 55% 0;
+      transform: rotate(-16deg);
+    }
+
+    .book {
+      position: absolute;
+      left: 32px;
+      bottom: 2px;
+      z-index: 5;
+      width: 126px;
+      height: 53px;
+      border-bottom: 5px solid #343434;
+      clip-path: polygon(5% 0, 50% 9%, 95% 0, 100% 95%, 51% 88%, 0 96%);
+      background:
+        repeating-linear-gradient(
+          82deg,
+          transparent 0,
+          transparent 10px,
+          #343434 11px,
+          #343434 13px,
+          transparent 14px
+        );
+    }
+
+    @media (max-width: 560px) {
+      body {
+        padding: 0;
+      }
+
+      .page {
+        width: 100vw;
+        min-height: 135vw;
+        transform-origin: top left;
+      }
+    }
+  </style>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [["$", "$"]],
+        displayMath: [["$$", "$$"]]
+      }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+  <main class="page">
+    <div class="running-head">实践 Plain reading</div>
+
+    <div class="direction-label">用手指来指引读书的方向</div>
+
+    <header class="title-banner">
+      <div class="method-number">方法 40</div>
+      <div class="title">
+        指读 <span class="english">（Pointing Reading）</span>
+      </div>
+    </header>
+
+    <section class="step step-one">
+      <div class="boxed">
+        <span class="step-heading">①用手指或是笔尖指着当前读到的位置</span>
+      </div>
+      <p class="indented">
+        <span class="line">视线聚焦在手指或笔尖。</span>
+      </p>
+    </section>
+
+    <section class="step step-two">
+      <div class="boxed">
+        <span class="step-heading">②沿着阅读的方向移动手指或笔尖</span>
+      </div>
+
+      <p class="body-copy">
+        <span class="paragraph-line line">一边往下读，一边移动手指或笔尖。此时视线依然聚焦在</span>
+        <span class="paragraph-line line">手指或笔尖。手指（或笔尖）的移动速度与我们阅读的速度相</span>
+        <span class="paragraph-line line">同。这样一来，我们的阅读速度会受到手指（或笔尖）移动速</span>
+        <span class="paragraph-line line">度的制约，但是可以保证不会出现倒退或是看错行的情况。</span>
+      </p>
+
+      <div class="closing">
+        <span class="paragraph-line line">大家也可以试着将</span>
+        <span class="paragraph-line line">这种方式与朗读结合起</span>
+        <span class="paragraph-line line">来，将指着的内容出声</span>
+        <span class="paragraph-line line">读出来。</span>
+      </div>
+    </section>
+
+    <figure class="placeholder illustration" aria-label="右下角手绘插图：一只大眼睛动物手指书本">
+      <span class="ear left"></span>
+      <span class="ear right"></span>
+      <span class="eye left"></span>
+      <span class="eye right"></span>
+      <span class="nose"></span>
+      <span class="body-shape"></span>
+      <span class="arm left"></span>
+      <span class="arm right"></span>
+      <span class="book"></span>
+      [Illustration: bottom-right]
+    </figure>
+  </main>
+</body>
+</html>

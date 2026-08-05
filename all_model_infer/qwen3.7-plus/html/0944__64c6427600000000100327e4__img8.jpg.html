@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>公民权利</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: "KaiTi", "STKaiti", "SimSun", serif;
+    background: #f5f5f0;
+    padding: 20px;
+    font-size: 15px;
+    line-height: 1.8;
+    color: #1a1a1a;
+  }
+  .page {
+    max-width: 1100px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 30px 25px 40px;
+    position: relative;
+    background-image:
+      linear-gradient(#e8e8e8 1px, transparent 1px),
+      linear-gradient(90deg, #e8e8e8 1px, transparent 1px);
+    background-size: 28px 28px;
+    background-position: 0 0;
+  }
+  .spiral {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 10px;
+    padding-top: 5px;
+  }
+  .spiral span {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #888;
+    border-radius: 50%;
+    background: #fff;
+  }
+  .title-area {
+    text-align: center;
+    margin-bottom: 20px;
+    position: relative;
+  }
+  .title-area h1 {
+    font-size: 32px;
+    font-weight: bold;
+    color: #1a3a8a;
+    display: inline-block;
+    position: relative;
+    padding: 0 20px;
+  }
+  .title-area h1::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: -10px;
+    right: -10px;
+    bottom: -8px;
+    border: 3px solid #2255cc;
+    border-radius: 50%;
+    transform: rotate(-5deg);
+  }
+  .title-area h1::after {
+    content: '↩';
+    position: absolute;
+    top: -20px;
+    right: -30px;
+    font-size: 24px;
+    color: #2255cc;
+  }
+  .content {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+  }
+  .col-left {
+    flex: 1.2;
+    min-width: 0;
+  }
+  .col-right {
+    flex: 0.8;
+    min-width: 0;
+  }
+  .section-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #1a1a1a;
+  }
+  .section-title .num {
+    font-size: 22px;
+    font-weight: bold;
+  }
+  .q-label {
+    font-weight: bold;
+    color: #333;
+  }
+  .q-label::before {
+    content: 'Q: ';
+  }
+  .annotation {
+    font-size: 13px;
+    color: #444;
+    margin-left: 10px;
+    line-height: 1.6;
+  }
+  .annotation-block {
+    margin: 8px 0 8px 30px;
+    font-size: 13px;
+    color: #333;
+  }
+  .annotation-block .line {
+    display: block;
+  }
+  .item {
+    margin-left: 20px;
+    line-height: 1.8;
+  }
+  .item-num {
+    font-weight: bold;
+  }
+  .sub-item {
+    margin-left: 30px;
+    line-height: 1.8;
+  }
+  .highlight {
+    text-decoration: underline;
+    text-decoration-color: #2255cc;
+  }
+  .blue-text {
+    color: #1a3a8a;
+  }
+  .right-col-section {
+    margin-bottom: 15px;
+  }
+  .right-col-section .q-label {
+    margin-bottom: 5px;
+  }
+  .right-col-section .item {
+    margin-left: 15px;
+  }
+  .arrow-annotation {
+    position: absolute;
+    color: #2255cc;
+    font-size: 14px;
+  }
+  .mid-annotations {
+    position: absolute;
+    top: 120px;
+    left: 50%;
+    transform: translateX(-30%);
+    font-size: 12px;
+    color: #333;
+    line-height: 1.7;
+    white-space: nowrap;
+  }
+  .mid-annotations .line {
+    display: block;
+  }
+  .bracket-note {
+    color: #555;
+    font-size: 14px;
+  }
+  .underline-blue {
+    border-bottom: 2px solid #2255cc;
+  }
+  .flex-row {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+  }
+  .indent-block {
+    margin-left: 25px;
+  }
+  .right-bottom {
+    margin-top: 20px;
+  }
+  .right-bottom .q-label {
+    margin-bottom: 5px;
+  }
+  .right-bottom .item {
+    margin-left: 15px;
+  }
+  .col-left-inner {
+    position: relative;
+  }
+  .floating-notes {
+    position: absolute;
+    top: 60px;
+    right: -10px;
+    font-size: 12px;
+    color: #333;
+    line-height: 1.7;
+    width: 200px;
+  }
+  .floating-notes .fn-line {
+    display: block;
+  }
+  .blue-arrow {
+    color: #2255cc;
+    font-size: 20px;
+  }
+  .col-right-inner {
+    position: relative;
+  }
+  .right-floating {
+    margin-top: 10px;
+    padding: 8px;
+    border-left: 2px solid #2255cc;
+    margin-left: 10px;
+  }
+  .right-floating .q-label {
+    margin-bottom: 3px;
+  }
+  .right-floating .item {
+    margin-left: 10px;
+  }
+  .top-annotations {
+    font-size: 13px;
+    color: #333;
+    margin-left: 40px;
+    line-height: 1.7;
+  }
+  .top-annotations .ta-line {
+    display: block;
+  }
+  .connector {
+    color: #2255cc;
+    font-size: 18px;
+  }
+  .right-col-wrapper {
+    position: relative;
+  }
+  .right-col-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -15px;
+    width: 3px;
+    height: 60px;
+    background: #2255cc;
+    border-radius: 2px;
+  }
+  .q-block {
+    margin-bottom: 12px;
+  }
+  .q-block .q-label {
+    margin-bottom: 4px;
+  }
+  .q-block .item {
+    margin-left: 18px;
+  }
+  .sub-q {
+    font-size: 14px;
+    color: #444;
+    margin-left: 18px;
+  }
+  .right-bottom-block {
+    margin-top: 30px;
+    border-top: 1px dashed #aaa;
+    padding-top: 10px;
+  }
+  .right-bottom-block .q-label {
+    margin-bottom: 4px;
+  }
+  .right-bottom-block .item {
+    margin-left: 18px;
+  }
+  .left-main {
+    position: relative;
+  }
+  .mid-note {
+    position: absolute;
+    top: 55px;
+    right: -180px;
+    width: 180px;
+    font-size: 12px;
+    color: #333;
+    line-height: 1.7;
+  }
+  .mid-note .mn-line {
+    display: block;
+  }
+  .mid-note2 {
+    position: absolute;
+    top: 130px;
+    right: -180px;
+    width: 180px;
+    font-size: 12px;
+    color: #333;
+    line-height: 1.7;
+  }
+  .mid-note2 .mn-line {
+    display: block;
+  }
+  .mid-note3 {
+    position: absolute;
+    top: 200px;
+    right: -180px;
+    width: 180px;
+    font-size: 12px;
+    color: #333;
+    line-height: 1.7;
+  }
+  .mid-note3 .mn-line {
+    display: block;
+  }
+  .mid-note4 {
+    position: absolute;
+    top: 260px;
+    right: -180px;
+    width: 180px;
+    font-size: 12px;
+    color: #333;
+    line-height: 1.7;
+  }
+  .mid-note4 .mn-line {
+    display: block;
+  }
+  .mid-note5 {
+    position: absolute;
+    top: 310px;
+    right: -180px;
+    width: 180px;
+    font-size: 12px;
+    color: #333;
+    line-height: 1.7;
+  }
+  .mid-note5 .mn-line {
+    display: block;
+  }
+  .blue-curve {
+    position: absolute;
+    top: 80px;
+    right: -200px;
+    width: 40px;
+    height: 200px;
+    border-right: 3px solid #2255cc;
+    border-radius: 0 20px 20px 0;
+  }
+  .layout-wrapper {
+    display: flex;
+    gap: 10px;
+    position: relative;
+  }
+  .left-col {
+    flex: 1.3;
+  }
+  .right-col {
+    flex: 0.9;
+    border-left: 2px solid #2255cc;
+    padding-left: 15px;
+    margin-left: 10px;
+  }
+  .annotations-mid {
+    position: absolute;
+    top: 70px;
+    left: 42%;
+    font-size: 12px;
+    color: #333;
+    line-height: 1.8;
+  }
+  .annotations-mid .am-line {
+    display: block;
+  }
+  .q-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+  .q-row .q-label {
+    white-space: nowrap;
+  }
+  .q-row .q-text {
+    font-weight: bold;
+  }
+  .item-row {
+    margin-left: 22px;
+    line-height: 1.9;
+  }
+  .sub-row {
+    margin-left: 35px;
+    line-height: 1.9;
+    font-size: 14px;
+    color: #444;
+  }
+  .right-q-block {
+    margin-bottom: 14px;
+  }
+  .right-q-block .q-row {
+    margin-bottom: 4px;
+  }
+  .right-q-block .item-row {
+    margin-left: 18px;
+  }
+  .right-bottom-section {
+    margin-top: 25px;
+    padding-top: 10px;
+  }
+  .right-bottom-section .q-row {
+    margin-bottom: 4px;
+  }
+  .right-bottom-section .item-row {
+    margin-left: 18px;
+  }
+  .top-ann {
+    margin-left: 50px;
+    font-size: 13px;
+    color: #333;
+    line-height: 1.7;
+    margin-bottom: 5px;
+  }
+  .top-ann .ta-line {
+    display: block;
+  }
+  .main-layout {
+    display: flex;
+    gap: 0;
+    position: relative;
+  }
+  .left-panel {
+    flex: 1.4;
+    padding-right: 10px;
+  }
+  .right-panel {
+    flex: 1;
+    border-left: 2.5px solid #2255cc;
+    padding-left: 15px;
+    position: relative;
+  }
+  .right-panel::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -12px;
+    width: 22px;
+    height: 3px;
+    background: #2255cc;
+  }
+  .mid-ann-zone {
+    position: absolute;
+    top: 65px;
+    left: 48%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: #333;
+    line-height: 1.75;
+    z-index: 2;
+  }
+  .mid-ann-zone .ma-line {
+    display: block;
+  }
+  .blue-bracket {
+    position: absolute;
+    top: 60px;
+    right: 28%;
+    width: 25px;
+    height: 180px;
+    border: 2.5px solid #2255cc;
+    border-left: none;
+    border-radius: 0 12px 12px 0;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="spiral">
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span>
+  </div>
+
+  <div class="title-area">
+    <h1>公民权利</h1>
+  </div>
+
+  <div class="main-layout">
+    <div class="left-panel">
+      <div class="section-title"><span class="num">①</span> 公民基本权利</div>
+
+      <div class="q-row">
+        <span class="q-label">Q:</span>
+        <span class="q-text">有哪些</span>
+      </div>
+      <div class="item-row">
+        政治权利、人身自由、经济权、受教育权、文化权利
+      </div>
+      <div class="sub-row">
+        （平等权、宗教信仰自由、特定人群的特殊保护）
+      </div>
+      <div class="item-row">
+        选举权、被选举权、政治自由
+      </div>
+      <div class="sub-row">
+        （监督权）
+      </div>
+
+      <div class="q-row" style="margin-top: 12px;">
+        <span class="q-label">Q:</span>
+        <span class="q-text">内容、意义、注意事项</span>
+      </div>
+      <div class="item-row">
+        <span class="item-num">①</span> 批评、建议、申诉、控告、检举
+      </div>
+      <div class="item-row">
+        <span class="item-num">②</span> 利用宪法依法行使权利，全心全意为人民服务
+      </div>
+      <div class="item-row">
+        <span class="item-num">③</span> 不得捏造、歪曲事实
+      </div>
+
+      <div class="q-row" style="margin-top: 12px;">
+        <span class="q-label">Q:</span>
+        <span class="q-text">人身自由内容、意义</span>
+      </div>
+      <div class="item-row">
+        <span class="item-num">①</span> 如上
+      </div>
+      <div class="item-row">
+        <span class="item-num">②</span> 有利于支配自己，有尊严地生活
+      </div>
+
+      <div class="q-row" style="margin-top: 12px;">
+        <span class="q-label">Q:</span>
+        <span class="q-text">人身自由侵权表现</span>
+      </div>
+      <div class="item-row">
+        非法拘禁和以其他方法非法剥夺、限制公民人身自由
+      </div>
+      <div class="item-row">
+        非法搜查公民身体
+      </div>
+
+      <div class="q-row" style="margin-top: 12px;">
+        <span class="q-label">Q:</span>
+        <span class="q-text">人格尊严内容、侵权表现</span>
+      </div>
+      <div class="item-row">
+        <span class="item-num">①</span> 如上
+      </div>
+      <div class="item-row">
+        <span class="item-num">②</span> 用任何方式对公民进行侮辱、诽谤、诬告陷害
+      </div>
+    </div>
+
+    <div class="mid-ann-zone">
+      <span class="ma-line">人格尊严不受侵犯</span>
+      <span class="ma-line">人身自由不受侵犯，住宅不受侵犯</span>
+      <span class="ma-line">通信自由、通信秘密</span>
+      <span class="ma-line">名誉、荣誉、肖像、姓名、隐私权</span>
+      <span class="ma-line">对平等权、劳动权、物质帮助权</span>
+    </div>
+
+    <div class="right-panel">
+      <div class="section-title"><span class="num">②</span> 依法行使权利</div>
+
+      <div class="right-q-block">
+        <div class="q-row">
+          <span class="q-label">Q:</span>
+          <span class="q-text">如何依法行使权利</span>
+        </div>
+        <div class="item-row">
+          <span class="item-num">①</span> 不得损害国家、社会、集体利益、其他的自由权利
+        </div>
+        <div class="item-row">
+          <span class="item-num">②</span> 树立按法定程序办事意识
+        </div>
+      </div>
+
+      <div class="right-q-block">
+        <div class="q-row">
+          <span class="q-label">Q:</span>
+          <span class="q-text">维权方式</span>
+        </div>
+      </div>
+
+      <div class="right-q-block">
+        <div class="q-row">
+          <span class="q-label">Q:</span>
+          <span class="q-text">① ② 有哪些</span>
+        </div>
+        <div class="item-row">
+          和解、调解、仲裁、诉讼
+        </div>
+      </div>
+
+      <div class="right-bottom-section">
+        <div class="q-row">
+          <span class="q-label">Q:</span>
+          <span class="q-text">侵犯住宅权表现</span>
+        </div>
+        <div class="item-row">
+          非法搜查或侵入公民住宅
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

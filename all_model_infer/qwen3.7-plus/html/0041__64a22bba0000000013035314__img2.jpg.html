@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第十一章 三角形</title>
+<style>
+  body {
+    font-family: "SimSun", "Songti SC", serif;
+    font-size: 14px;
+    line-height: 1.8;
+    color: #333;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 30px 40px;
+    background: #fff;
+  }
+  p {
+    text-indent: 2em;
+    margin: 0.5em 0;
+  }
+  .figure-row {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    margin: 20px 0 5px 0;
+  }
+  .figure-item {
+    text-align: center;
+    flex: 1;
+  }
+  .figure-item .placeholder {
+    width: 220px;
+    height: 130px;
+    margin: 0 auto;
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 12px;
+  }
+  .figure-item .caption {
+    margin-top: 6px;
+    font-size: 13px;
+    color: #555;
+  }
+  .figure-label {
+    text-align: center;
+    font-size: 13px;
+    color: #555;
+    margin: 5px 0 20px 0;
+  }
+  .exercise-box {
+    border: 2px dashed #c8a96e;
+    border-radius: 12px;
+    padding: 20px 25px;
+    margin: 25px 0;
+    position: relative;
+  }
+  .exercise-title {
+    display: inline-block;
+    background: #d4a843;
+    color: #fff;
+    padding: 3px 18px;
+    border-radius: 15px;
+    font-size: 15px;
+    font-weight: bold;
+    position: relative;
+    top: -30px;
+    margin-left: 10px;
+  }
+  .exercise-question {
+    font-size: 14px;
+    margin-bottom: 15px;
+    text-indent: 0;
+  }
+  .shapes-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 10px;
+  }
+  .shape-item {
+    text-align: center;
+  }
+  .shape-item .shape-placeholder {
+    width: 120px;
+    height: 90px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .shape-item .shape-label {
+    font-size: 13px;
+    color: #555;
+    margin-top: 4px;
+  }
+  .footer {
+    text-align: right;
+    font-size: 13px;
+    color: #555;
+    margin-top: 30px;
+  }
+  svg {
+    max-width: 100%;
+  }
+</style>
+</head>
+<body>
+
+<p>还可以发现，斜钉一根木条的四边形木架的形状不会改变，这是因为斜钉一根木条后，四边形变成两个三角形，由于三角形有稳定性，斜钉一根木条的窗框在未安装好之前也不会变形。</p>
+
+<p>三角形的稳定性有广泛的应用，图 11.1-8 表示其中一些例子，你能再举一些例子吗？</p>
+
+<div class="figure-row">
+  <div class="figure-item">
+    <div class="placeholder">
+      <svg width="200" height="120" viewBox="0 0 200 120">
+        <rect x="0" y="0" width="200" height="120" fill="#e8e4d8"/>
+        <polygon points="10,100 30,60 60,40 90,30 120,35 150,50 180,70 190,100" fill="none" stroke="#888" stroke-width="2"/>
+        <line x1="10" y1="100" x2="190" y2="100" stroke="#888" stroke-width="2"/>
+        <line x1="30" y1="60" x2="60" y2="100" stroke="#888" stroke-width="1.5"/>
+        <line x1="60" y1="40" x2="90" y2="100" stroke="#888" stroke-width="1.5"/>
+        <line x1="90" y1="30" x2="120" y2="100" stroke="#888" stroke-width="1.5"/>
+        <line x1="120" y1="35" x2="150" y2="100" stroke="#888" stroke-width="1.5"/>
+        <line x1="150" y1="50" x2="180" y2="100" stroke="#888" stroke-width="1.5"/>
+        <line x1="30" y1="60" x2="90" y2="30" stroke="#888" stroke-width="1.5"/>
+        <line x1="60" y1="40" x2="120" y2="35" stroke="#888" stroke-width="1.5"/>
+        <line x1="90" y1="30" x2="150" y2="50" stroke="#888" stroke-width="1.5"/>
+        <line x1="120" y1="35" x2="180" y2="70" stroke="#888" stroke-width="1.5"/>
+        <rect x="0" y="100" width="200" height="20" fill="#c8c0a0"/>
+      </svg>
+    </div>
+    <div class="caption">钢架桥</div>
+  </div>
+  <div class="figure-item">
+    <div class="placeholder">
+      <svg width="200" height="120" viewBox="0 0 200 120">
+        <rect x="0" y="0" width="200" height="120" fill="#f5f0e8"/>
+        <!-- crane body -->
+        <rect x="20" y="85" width="80" height="20" rx="3" fill="#e8a020"/>
+        <rect x="30" y="75" width="50" height="15" rx="2" fill="#d09018"/>
+        <!-- wheels -->
+        <circle cx="35" cy="108" r="6" fill="#555"/>
+        <circle cx="55" cy="108" r="6" fill="#555"/>
+        <circle cx="80" cy="108" r="6" fill="#555"/>
+        <circle cx="95" cy="108" r="6" fill="#555"/>
+        <!-- crane arm -->
+        <line x1="70" y1="75" x2="170" y2="20" stroke="#e8a020" stroke-width="4"/>
+        <line x1="70" y1="75" x2="170" y2="20" stroke="#d09018" stroke-width="2"/>
+        <!-- cable -->
+        <line x1="165" y1="22" x2="165" y2="55" stroke="#888" stroke-width="1.5"/>
+        <!-- hook -->
+        <rect x="160" y="55" width="10" height="8" fill="#888"/>
+        <!-- support -->
+        <line x1="70" y1="75" x2="100" y2="20" stroke="#e8a020" stroke-width="2"/>
+      </svg>
+    </div>
+    <div class="caption">起重机</div>
+  </div>
+</div>
+<div class="figure-label">图 11.1-8</div>
+
+<p>四边形的不稳定性也有广泛的应用，图 11.1-9 表示其中一些例子。</p>
+
+<div class="figure-row">
+  <div class="figure-item">
+    <div class="placeholder">
+      <svg width="200" height="130" viewBox="0 0 200 130">
+        <rect x="0" y="0" width="200" height="130" fill="#f5f0e8"/>
+        <!-- expandable hanger - diamond pattern -->
+        <g stroke="#c89030" stroke-width="5" stroke-linecap="round" fill="none">
+          <line x1="30" y1="65" x2="70" y2="25"/>
+          <line x1="70" y1="25" x2="110" y2="65"/>
+          <line x1="110" y1="65" x2="150" y2="25"/>
+          <line x1="150" y1="25" x2="190" y2="65"/>
+          <line x1="30" y1="65" x2="70" y2="105"/>
+          <line x1="70" y1="105" x2="110" y2="65"/>
+          <line x1="110" y1="65" x2="150" y2="105"/>
+          <line x1="150" y1="105" x2="190" y2="65"/>
+        </g>
+        <g fill="#a07020">
+          <circle cx="30" cy="65" r="5"/>
+          <circle cx="70" cy="25" r="5"/>
+          <circle cx="110" cy="65" r="5"/>
+          <circle cx="150" cy="25" r="5"/>
+          <circle cx="190" cy="65" r="5"/>
+          <circle cx="70" cy="105" r="5"/>
+          <circle cx="150" cy="105" r="5"/>
+        </g>
+      </svg>
+    </div>
+    <div class="caption">活动挂架</div>
+  </div>
+  <div class="figure-item">
+    <div class="placeholder">
+      <svg width="220" height="130" viewBox="0 0 220 130">
+        <rect x="0" y="0" width="220" height="130" fill="#d8e8f0"/>
+        <!-- retractable gate -->
+        <g stroke="#aaa" stroke-width="2" fill="none">
+          <line x1="10" y1="20" x2="10" y2="110"/>
+          <line x1="30" y1="20" x2="30" y2="110"/>
+          <line x1="50" y1="20" x2="50" y2="110"/>
+          <line x1="70" y1="20" x2="70" y2="110"/>
+          <line x1="90" y1="20" x2="90" y2="110"/>
+          <line x1="110" y1="20" x2="110" y2="110"/>
+          <line x1="130" y1="20" x2="130" y2="110"/>
+          <line x1="150" y1="20" x2="150" y2="110"/>
+          <line x1="170" y1="20" x2="170" y2="110"/>
+          <line x1="10" y1="20" x2="170" y2="20"/>
+          <line x1="10" y1="110" x2="170" y2="110"/>
+          <!-- X patterns -->
+          <line x1="10" y1="20" x2="30" y2="65"/>
+          <line x1="30" y1="20" x2="10" y2="65"/>
+          <line x1="30" y1="20" x2="50" y2="65"/>
+          <line x1="50" y1="20" x2="30" y2="65"/>
+          <line x1="50" y1="20" x2="70" y2="65"/>
+          <line x1="70" y1="20" x2="50" y2="65"/>
+          <line x1="70" y1="20" x2="90" y2="65"/>
+          <line x1="90" y1="20" x2="70" y2="65"/>
+          <line x1="90" y1="20" x2="110" y2="65"/>
+          <line x1="110" y1="20" x2="90" y2="65"/>
+          <line x1="110" y1="20" x2="130" y2="65"/>
+          <line x1="130" y1="20" x2="110" y2="65"/>
+          <line x1="130" y1="20" x2="150" y2="65"/>
+          <line x1="150" y1="20" x2="130" y2="65"/>
+          <line x1="150" y1="20" x2="170" y2="65"/>
+          <line x1="170" y1="20" x2="150" y2="65"/>
+          <line x1="10" y1="65" x2="30" y2="110"/>
+          <line x1="30" y1="65" x2="10" y2="110"/>
+          <line x1="30" y1="65" x2="50" y2="110"/>
+          <line x1="50" y1="65" x2="30" y2="110"/>
+          <line x1="50" y1="65" x2="70" y2="110"/>
+          <line x1="70" y1="65" x2="50" y2="110"/>
+          <line x1="70" y1="65" x2="90" y2="110"/>
+          <line x1="90" y1="65" x2="70" y2="110"/>
+          <line x1="90" y1="65" x2="110" y2="110"/>
+          <line x1="110" y1="65" x2="90" y2="110"/>
+          <line x1="110" y1="65" x2="130" y2="110"/>
+          <line x1="130" y1="65" x2="110" y2="110"/>
+          <line x1="130" y1="65" x2="150" y2="110"/>
+          <line x1="150" y1="65" x2="130" y2="110"/>
+          <line x1="150" y1="65" x2="170" y2="110"/>
+          <line x1="170" y1="65" x2="150" y2="110"/>
+        </g>
+        <!-- gate post -->
+        <rect x="175" y="10" width="30" height="100" fill="#ddd" stroke="#999" stroke-width="1"/>
+        <rect x="180" y="15" width="20" height="15" fill="#333"/>
+      </svg>
+    </div>
+    <div class="caption">伸缩门</div>
+  </div>
+</div>
+<div class="figure-label">图 11.1-9</div>
+
+<div class="exercise-box">
+  <div class="exercise-title">练习</div>
+  <p class="exercise-question">下列图形中哪些具有稳定性？</p>
+  <div class="shapes-grid">
+    <div class="shape-item">
+      <div class="shape-placeholder">
+        <svg width="110" height="80" viewBox="0 0 110 80">
+          <polygon points="10,60 40,15 90,15 60,60" fill="none" stroke="#555" stroke-width="1.5"/>
+          <line x1="40" y1="15" x2="60" y2="60" stroke="#555" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="shape-label">(1)</div>
+    </div>
+    <div class="shape-item">
+      <div class="shape-placeholder">
+        <svg width="110" height="80" viewBox="0 0 110 80">
+          <rect x="10" y="15" width="90" height="50" fill="none" stroke="#555" stroke-width="1.5"/>
+          <line x1="55" y1="15" x2="55" y2="65" stroke="#555" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="shape-label">(2)</div>
+    </div>
+    <div class="shape-item">
+      <div class="shape-placeholder">
+        <svg width="110" height="80" viewBox="0 0 110 80">
+          <polygon points="20,40 20,65 90,65 90,40 55,15" fill="none" stroke="#555" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="shape-label">(3)</div>
+    </div>
+    <div class="shape-item">
+      <div class="shape-placeholder">
+        <svg width="110" height="80" viewBox="0 0 110 80">
+          <polygon points="15,20 55,10 95,20 80,65 30,65" fill="none" stroke="#555" stroke-width="1.5"/>
+          <line x1="15" y1="20" x2="55" y2="10" stroke="#555" stroke-width="1.5"/>
+          <line x1="15" y1="20" x2="80" y2="65" stroke="#555" stroke-width="1.5"/>
+          <line x1="15" y1="20" x2="30" y2="65" stroke="#555" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="shape-label">(4)</div>
+    </div>
+    <div class="shape-item">
+      <div class="shape-placeholder">
+        <svg width="110" height="80" viewBox="0 0 110 80">
+          <polygon points="20,20 55,10 90,20 90,55 55,70 20,55" fill="none" stroke="#555" stroke-width="1.5"/>
+          <line x1="20" y1="20" x2="90" y2="55" stroke="#555" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="shape-label">(5)</div>
+    </div>
+    <div class="shape-item">
+      <div class="shape-placeholder">
+        <svg width="110" height="80" viewBox="0 0 110 80">
+          <polygon points="55,10 95,30 80,70 30,70 15,30" fill="none" stroke="#555" stroke-width="1.5"/>
+          <line x1="55" y1="10" x2="55" y2="40" stroke="#555" stroke-width="1.5"/>
+          <line x1="55" y1="40" x2="95" y2="30" stroke="#555" stroke-width="1.5"/>
+          <line x1="55" y1="40" x2="80" y2="70" stroke="#555" stroke-width="1.5"/>
+          <line x1="55" y1="40" x2="30" y2="70" stroke="#555" stroke-width="1.5"/>
+          <line x1="55" y1="40" x2="15" y2="30" stroke="#555" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="shape-label">(6)</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">第十一章 三角形 &nbsp;&nbsp; 7</div>
+
+</body>
+</html>

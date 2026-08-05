@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Make or Buy Decision</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .slide-container {
+            position: relative;
+            width: 960px;
+            height: 720px;
+            background: #5d2e06;
+            background: linear-gradient(180deg, #6e380a 0%, #4e2505 100%);
+            background-image: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.3) 0px,
+                rgba(0, 0, 0, 0.3) 2px,
+                rgba(255, 255, 255, 0.06) 2px,
+                rgba(255, 255, 255, 0.06) 4px,
+                transparent 4px,
+                transparent 7px
+            );
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            overflow: hidden;
+        }
+
+        /* Watermark Scale Graphic */
+        .scale-watermark {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.35;
+        }
+
+        .slide-title {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            font-size: 46px;
+            font-weight: bold;
+            color: #deb673;
+            margin-top: 30px;
+            margin-bottom: 25px;
+            letter-spacing: 0.5px;
+            text-shadow: 
+                -1.5px -1.5px 0 #000,  
+                 1.5px -1.5px 0 #000,
+                -1.5px  1.5px 0 #000,
+                 1.5px  1.5px 0 #000,
+                 3px 3px 3px rgba(0,0,0,0.8);
+        }
+
+        .content-card {
+            position: relative;
+            z-index: 2;
+            width: 875px;
+            margin: 0 auto;
+            background-color: #f1f8fc;
+            border: 2.5px solid #000;
+            padding: 12px 35px 22px 35px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 21px;
+            font-weight: bold;
+            color: #0b1a60;
+        }
+
+        th, td {
+            padding: 2.5px 4px;
+            vertical-align: middle;
+        }
+
+        .col-desc {
+            width: 44%;
+            text-align: left;
+        }
+
+        .col-unit {
+            width: 16%;
+            text-align: right;
+            padding-right: 15px;
+        }
+
+        .col-make {
+            width: 20%;
+            text-align: right;
+            padding-right: 15px;
+        }
+
+        .col-buy {
+            width: 20%;
+            text-align: right;
+        }
+
+        .header-unit {
+            text-align: center;
+            line-height: 1.15;
+            padding-bottom: 4px;
+            border-bottom: 3.5px solid #000;
+        }
+
+        .header-cost-20k {
+            text-align: center;
+            padding-bottom: 4px;
+            border-bottom: 3.5px solid #000;
+        }
+
+        .header-sub-make {
+            text-align: center;
+            padding-top: 4px;
+            padding-bottom: 4px;
+            border-bottom: 3.5px solid #000;
+        }
+
+        .header-sub-buy {
+            text-align: center;
+            padding-top: 4px;
+            padding-bottom: 4px;
+            color: #117c2a;
+            border-bottom: 3.5px solid #000;
+        }
+
+        .green-text {
+            color: #117c2a;
+        }
+
+        .thick-underline {
+            display: inline-block;
+            border-bottom: 3.5px solid #000;
+            padding-bottom: 1px;
+            width: 88px;
+            text-align: right;
+        }
+
+        .thick-underline-lg {
+            display: inline-block;
+            border-bottom: 3.5px solid #000;
+            padding-bottom: 1px;
+            width: 145px;
+            text-align: right;
+        }
+
+        .total-cell-unit {
+            border-top: 2px solid #000;
+            border-bottom: 3.5px solid #000;
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
+
+        .total-cell-make {
+            border-top: 2px solid #000;
+            border-bottom: 3.5px solid #000;
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
+
+        .total-cell-buy {
+            border-bottom: 3.5px solid #000;
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
+
+        .dash {
+            text-align: center;
+            padding-right: 25px;
+        }
+
+        /* Formula Callout Box */
+        .formula-box {
+            position: absolute;
+            bottom: 58px;
+            left: 195px;
+            background: #ffffff;
+            border: 2px solid #000;
+            padding: 8px 24px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #0b1a60;
+            z-index: 10;
+            box-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+            white-space: nowrap;
+        }
+
+        /* Overlay SVG for red arrow */
+        .arrow-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 15;
+        }
+    </style>
+</head>
+<body>
+
+<div class="slide-container">
+    <!-- Watermark Background Graphic (Scales of Justice) -->
+    <svg class="scale-watermark" viewBox="0 0 960 720">
+        <!-- Scale Pillar -->
+        <rect x="474" y="320" width="12" height="400" fill="#2c1404" />
+        <rect x="470" y="300" width="20" height="20" fill="#2c1404" />
+        <!-- Left Pan Base -->
+        <path d="M 390 670 C 390 730, 570 730, 570 670 Z" fill="#3d1b06" />
+        <!-- Right Pan Base -->
+        <path d="M 770 630 C 770 690, 950 690, 950 630 Z" fill="#3d1b06" />
+    </svg>
+
+    <!-- Slide Title -->
+    <div class="slide-title">The Make or Buy Decision</div>
+
+    <!-- Central Content Table Card -->
+    <div class="content-card">
+        <table>
+            <!-- Header Row 1 -->
+            <tr>
+                <th class="col-desc"></th>
+                <th class="col-unit">
+                    <div class="header-unit">Cost<br>Per Unit</div>
+                </th>
+                <th colspan="2" style="text-align: center;">
+                    <div class="header-cost-20k">Cost of 20,000 Units</div>
+                </th>
+            </tr>
+            <!-- Header Row 2 -->
+            <tr>
+                <th></th>
+                <th></th>
+                <th class="col-make">
+                    <div class="header-sub-make">Make</div>
+                </th>
+                <th class="col-buy">
+                    <div class="header-sub-buy">Buy</div>
+                </th>
+            </tr>
+            <!-- Row: Outside purchase price -->
+            <tr class="green-text">
+                <td class="col-desc">Outside purchase price</td>
+                <td class="col-unit"><span class="thick-underline">$ 25</span></td>
+                <td class="col-make"></td>
+                <td class="col-buy"><span class="thick-underline-lg">$ 500,000</span></td>
+            </tr>
+            <!-- Row: Spacer -->
+            <tr style="height: 14px;"><td colspan="4"></td></tr>
+            <!-- Row: Direct materials -->
+            <tr>
+                <td class="col-desc">Direct materials</td>
+                <td class="col-unit">$ &nbsp; 9</td>
+                <td class="col-make">180,000</td>
+                <td class="col-buy"></td>
+            </tr>
+            <!-- Row: Direct labor -->
+            <tr>
+                <td class="col-desc">Direct labor</td>
+                <td class="col-unit">5</td>
+                <td class="col-make">100,000</td>
+                <td class="col-buy"></td>
+            </tr>
+            <!-- Row: Variable overhead -->
+            <tr>
+                <td class="col-desc">Variable overhead</td>
+                <td class="col-unit">1</td>
+                <td class="col-make">20,000</td>
+                <td class="col-buy"></td>
+            </tr>
+            <!-- Row: Depreciation of equip. -->
+            <tr>
+                <td class="col-desc">Depreciation of equip.</td>
+                <td class="col-unit">3</td>
+                <td class="col-make dash">-</td>
+                <td class="col-buy"></td>
+            </tr>
+            <!-- Row: Supervisor's salary -->
+            <tr>
+                <td class="col-desc">Supervisor's salary</td>
+                <td class="col-unit">2</td>
+                <td class="col-make">40,000</td>
+                <td class="col-buy"></td>
+            </tr>
+            <!-- Row: General factory overhead -->
+            <tr>
+                <td class="col-desc">General factory overhead</td>
+                <td class="col-unit">10</td>
+                <td class="col-make dash">-</td>
+                <td class="col-buy"></td>
+            </tr>
+            <!-- Row: Total cost -->
+            <tr>
+                <td class="col-desc">Total cost</td>
+                <td class="col-unit total-cell-unit">$ 30</td>
+                <td class="col-make total-cell-make">$ 340,000</td>
+                <td class="col-buy total-cell-buy green-text">$ 500,000</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Formula Box -->
+    <div class="formula-box">
+        20,000 &times; $9 per unit = $180,000
+    </div>
+
+    <!-- Red Arrow Overlay -->
+    <svg class="arrow-overlay" viewBox="0 0 960 720">
+        <defs>
+            <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="7" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="#c81e2b" />
+            </marker>
+        </defs>
+        <line x1="462" y1="590" x2="615" y2="335" stroke="#c81e2b" stroke-width="4.5" marker-end="url(#arrowhead)" />
+    </svg>
+</div>
+
+</body>
+</html>

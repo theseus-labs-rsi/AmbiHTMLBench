@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Python Language Reference</title>
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$']],
+      displayMath: [['$$', '$$']]
+    }
+  };
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    margin: 0;
+    width: 100%;
+    min-width: 1200px;
+    min-height: 1700px;
+    color: #202020;
+    background: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  body {
+    overflow-x: hidden;
+  }
+
+  a {
+    color: #0875a5;
+    text-decoration: none;
+  }
+
+  .page-header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 59px;
+    padding: 0 27px;
+    border-bottom: 1px solid #aaa;
+    white-space: nowrap;
+    font-size: 13px;
+    color: #333;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    margin-right: 7px;
+  }
+
+  .python-mark {
+    position: relative;
+    width: 15px;
+    height: 15px;
+    margin-right: 5px;
+  }
+
+  .python-mark::before,
+  .python-mark::after {
+    content: "";
+    position: absolute;
+    width: 9px;
+    height: 7px;
+    border-radius: 4px 4px 3px 3px;
+  }
+
+  .python-mark::before {
+    top: 1px;
+    left: 1px;
+    background: #3776ab;
+  }
+
+  .python-mark::after {
+    right: 1px;
+    bottom: 1px;
+    background: #ffd343;
+  }
+
+  .crumb-separator {
+    margin: 0 6px;
+    color: #555;
+  }
+
+  .page-header select,
+  .page-header input,
+  .page-header button {
+    height: 21px;
+    border: 1px solid #999;
+    border-radius: 1px;
+    background: #fff;
+    color: #333;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+  }
+
+  .language-select {
+    width: 296px;
+    margin-right: 5px;
+  }
+
+  .version-select {
+    width: 88px;
+    margin-right: 2px;
+  }
+
+  .header-spacer {
+    flex: 1 1 auto;
+    min-width: 20px;
+  }
+
+  .theme-label {
+    margin-right: 5px;
+  }
+
+  .theme-select {
+    width: 58px;
+    margin-right: 8px;
+  }
+
+  .search-input {
+    width: 150px;
+    padding: 1px 5px;
+  }
+
+  .go-button {
+    width: 42px;
+    margin-left: 4px;
+  }
+
+  .header-links {
+    margin-left: 8px;
+    font-size: 13px;
+  }
+
+  .header-links a {
+    color: #333;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 390px minmax(0, 1fr);
+    align-items: stretch;
+    min-height: 1641px;
+    padding-left: 16px;
+  }
+
+  .sidebar {
+    position: relative;
+    min-height: 1641px;
+    padding: 35px 22px 40px 11px;
+    background: #ededed;
+    border-right: 13px solid #d3d3d3;
+    font-size: 14px;
+    line-height: 19px;
+  }
+
+  .side-section {
+    margin: 0 0 27px;
+  }
+
+  .side-title {
+    margin-bottom: 4px;
+    font-size: 16px;
+    color: #444;
+  }
+
+  .side-item {
+    padding-left: 11px;
+    font-size: 13px;
+  }
+
+  .sidebar a {
+    color: #444;
+  }
+
+  .collapse-handle {
+    position: absolute;
+    top: 840px;
+    right: -11px;
+    color: #888;
+    font-size: 18px;
+  }
+
+  .main-content {
+    padding: 20px 30px 45px 32px;
+  }
+
+  .content-column {
+    width: 900px;
+  }
+
+  h1 {
+    margin: 0 0 26px;
+    color: #171717;
+    font-size: 36px;
+    line-height: 44px;
+    font-weight: 400;
+  }
+
+  .intro {
+    width: 880px;
+    margin: 0 0 16px;
+    font-size: 16px;
+    line-height: 27px;
+  }
+
+  .intro a {
+    text-decoration: underline;
+  }
+
+  .toc {
+    width: 820px;
+    margin-top: 4px;
+    font-size: 16px;
+    line-height: 27px;
+  }
+
+  .toc ul {
+    margin: 0;
+    padding-left: 23px;
+    list-style-type: disc;
+  }
+
+  .toc ul ul {
+    padding-left: 21px;
+    list-style-type: circle;
+  }
+
+  .toc li {
+    height: 27px;
+    margin: 0;
+    padding: 0;
+  }
+
+  .toc li::marker {
+    color: #222;
+    font-size: 10px;
+  }
+
+  .toc ul ul li::marker {
+    font-size: 9px;
+  }
+</style>
+</head>
+<body>
+<header class="page-header">
+  <div class="brand">
+    <span class="python-mark" aria-hidden="true"></span>
+    <span>Python</span>
+  </div>
+  <span class="crumb-separator">»</span>
+
+  <select class="language-select" aria-label="Language">
+    <option selected>English</option>
+  </select>
+
+  <select class="version-select" aria-label="Version">
+    <option selected>3.14.5</option>
+  </select>
+
+  <span class="crumb-separator">»</span>
+  <span>3.14.5 Documentation</span>
+  <span class="crumb-separator">»</span>
+  <span>The Python Language Reference</span>
+
+  <span class="header-spacer"></span>
+
+  <span class="theme-label">Theme</span>
+  <select class="theme-select" aria-label="Theme">
+    <option selected>Auto</option>
+  </select>
+
+  <input class="search-input" type="text" placeholder="Quick search" aria-label="Quick search">
+  <button class="go-button" type="button">Go</button>
+
+  <nav class="header-links">
+    <a href="#">previous</a> |
+    <a href="#">next</a> |
+    <a href="#">modules</a> |
+    <a href="#">index</a>
+  </nav>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <section class="side-section">
+      <div class="side-title">Previous topic</div>
+      <div class="side-item"><a href="#">8. Editors and IDEs</a></div>
+    </section>
+
+    <section class="side-section">
+      <div class="side-title">Next topic</div>
+      <div class="side-item"><a href="#">1. Introduction</a></div>
+    </section>
+
+    <section class="side-section">
+      <div class="side-title">This page</div>
+      <div class="side-item"><a href="#">Report a bug</a></div>
+      <div class="side-item"><a href="#">Improve this page</a></div>
+      <div class="side-item"><a href="#">Show source</a></div>
+    </section>
+
+    <div class="collapse-handle">‹</div>
+  </aside>
+
+  <main class="main-content">
+    <div class="content-column">
+      <h1>The Python Language Reference</h1>
+
+      <p class="intro">
+        This reference manual describes the syntax and “core semantics” of the language. It is terse, but attempts to<br>
+        be exact and complete. The semantics of non-essential built-in object types and of the built-in functions and<br>
+        modules are described in <a href="#">The Python Standard Library</a>. For an informal introduction to the language, see <a href="#">The<br>
+        Python Tutorial</a>. For C or C++ programmers, two additional manuals exist: <a href="#">Extending and Embedding the<br>
+        Python Interpreter</a> describes the high-level picture of how to write a Python extension module, and the<br>
+        <a href="#">Python/C API reference manual</a> describes the interfaces available to C/C++ programmers in detail.
+      </p>
+
+      <nav class="toc">
+        <ul>
+          <li><a href="#">1. Introduction</a>
+            <ul>
+              <li><a href="#">1.1. Alternate Implementations</a></li>
+              <li><a href="#">1.2. Notation</a></li>
+            </ul>
+          </li>
+
+          <li><a href="#">2. Lexical analysis</a>
+            <ul>
+              <li><a href="#">2.1. Line structure</a></li>
+              <li><a href="#">2.2. Other tokens</a></li>
+              <li><a href="#">2.3. Names (identifiers and keywords)</a></li>
+              <li><a href="#">2.4. Literals</a></li>
+              <li><a href="#">2.5. String and Bytes literals</a></li>
+              <li><a href="#">2.6. Numeric literals</a></li>
+              <li><a href="#">2.7. Operators and delimiters</a></li>
+            </ul>
+          </li>
+
+          <li><a href="#">3. Data model</a>
+            <ul>
+              <li><a href="#">3.1. Objects, values and types</a></li>
+              <li><a href="#">3.2. The standard type hierarchy</a></li>
+              <li><a href="#">3.3. Special method names</a></li>
+              <li><a href="#">3.4. Coroutines</a></li>
+            </ul>
+          </li>
+
+          <li><a href="#">4. Execution model</a>
+            <ul>
+              <li><a href="#">4.1. Structure of a program</a></li>
+              <li><a href="#">4.2. Naming and binding</a></li>
+              <li><a href="#">4.3. Exceptions</a></li>
+              <li><a href="#">4.4. Runtime Components</a></li>
+            </ul>
+          </li>
+
+          <li><a href="#">5. The import system</a>
+            <ul>
+              <li><a href="#">5.1. importlib</a></li>
+              <li><a href="#">5.2. Packages</a></li>
+              <li><a href="#">5.3. Searching</a></li>
+              <li><a href="#">5.4. Loading</a></li>
+              <li><a href="#">5.5. The Path Based Finder</a></li>
+              <li><a href="#">5.6. Replacing the standard import system</a></li>
+              <li><a href="#">5.7. Package Relative Imports</a></li>
+              <li><a href="#">5.8. Special considerations for __main__</a></li>
+              <li><a href="#">5.9. References</a></li>
+            </ul>
+          </li>
+
+          <li><a href="#">6. Expressions</a>
+            <ul>
+              <li><a href="#">6.1. Arithmetic conversions</a></li>
+              <li><a href="#">6.2. Atoms</a></li>
+              <li><a href="#">6.3. Primaries</a></li>
+              <li><a href="#">6.4. Await expression</a></li>
+              <li><a href="#">6.5. The power operator</a></li>
+              <li><a href="#">6.6. Unary arithmetic and bitwise operations</a></li>
+              <li><a href="#">6.7. Binary arithmetic operations</a></li>
+              <li><a href="#">6.8. Shifting operations</a></li>
+              <li><a href="#">6.9. Binary bitwise operations</a></li>
+              <li><a href="#">6.10. Comparisons</a></li>
+              <li><a href="#">6.11. Boolean operations</a></li>
+              <li><a href="#">6.12. Assignment expressions</a></li>
+              <li><a href="#">6.13. Conditional expressions</a></li>
+              <li><a href="#">6.14. Lambdas</a></li>
+              <li><a href="#">6.15. Expression lists</a></li>
+              <li><a href="#">6.16. Evaluation order</a></li>
+              <li><a href="#">6.17. Operator precedence</a></li>
+            </ul>
+          </li>
+
+          <li><a href="#">7. Simple statements</a>
+            <ul>
+              <li><a href="#">7.1. Expression statements</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </main>
+</div>
+</body>
+</html>

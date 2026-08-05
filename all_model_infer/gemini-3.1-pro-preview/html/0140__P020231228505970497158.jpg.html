@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulation-Based Validation for Autonomous Driving Systems</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            color: #000000;
+            line-height: 1.4;
+        }
+        .header {
+            background: linear-gradient(to right, #e87b05, #e05c03);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 5px solid #d44d00;
+        }
+        .header-logo {
+            width: 150px;
+            height: 50px;
+            background-color: transparent;
+            display: inline-block;
+        }
+        .header-text {
+            text-align: left;
+            flex-grow: 1;
+            margin-left: 20px;
+        }
+        .header-text h2 {
+            margin: 0;
+            font-size: 1.2em;
+            font-weight: normal;
+        }
+        .header-text h1 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+        .header-badge {
+            background-color: #0066cc;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .title-section {
+            text-align: center;
+            padding: 30px;
+        }
+        .title-section h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .title-section p {
+            font-size: 1.2em;
+            margin: 5px 0;
+        }
+        .contact-info {
+            display: grid;
+            grid-template-columns: auto auto auto;
+            gap: 10px 40px;
+            justify-content: center;
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+        .contact-info div {
+            display: flex;
+            align-items: center;
+        }
+        .section-header {
+            background-color: #fcebd2;
+            text-align: center;
+            padding: 10px;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 20px 40px;
+            border-radius: 5px;
+        }
+        .abstract {
+            padding: 0 40px;
+            text-align: justify;
+            font-size: 1.1em;
+        }
+        .validation-framework {
+            display: flex;
+            padding: 0 40px;
+            gap: 40px;
+        }
+        .validation-text {
+            flex: 1;
+        }
+        .validation-item {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .validation-icon {
+            width: 40px;
+            height: 40px;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        .validation-item h3 {
+            margin: 0 0 5px 0;
+            font-size: 1.2em;
+        }
+        .validation-image {
+            flex: 1.5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .two-columns {
+            display: flex;
+            padding: 0 40px;
+            gap: 40px;
+        }
+        .column {
+            flex: 1;
+        }
+        .semantic-model-image {
+            width: 100%;
+            height: 250px;
+            border: 1px solid #ccc;
+            margin-top: 15px;
+            background-color: #f9f9f9;
+        }
+        .property-spec {
+            font-size: 0.85em;
+        }
+        .property-spec table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .property-spec td {
+            border-bottom: 1px solid #ccc;
+            padding: 5px 0;
+        }
+        .scenario-generation {
+            text-align: justify;
+        }
+        .scenario-image {
+            width: 100%;
+            height: 300px;
+            border: 1px solid #ccc;
+            margin-top: 15px;
+            background-color: #f9f9f9;
+        }
+        .property-violation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .violation-item {
+            text-align: center;
+        }
+        .violation-image {
+            width: 100%;
+            height: 120px;
+            background-color: #555;
+        }
+        .violation-caption {
+            font-size: 0.8em;
+            margin-top: 5px;
+        }
+        .footer {
+            background: linear-gradient(to right, #e87b05, #e05c03);
+            height: 100px;
+            margin-top: 40px;
+            border-top: 5px solid #d44d00;
+        }
+        .placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="placeholder header-logo">[Logo: ISCAS]</div>
+        <div class="header-text">
+            <h2>中国科学院软件研究所学术年会 2023</h2>
+            <h1>暨计算机科学国家重点实验室开放周</h1>
+        </div>
+        <div class="header-badge">学术论文</div>
+    </div>
+
+    <div class="title-section">
+        <h1>Simulation-Based Validation for<br>Autonomous Driving Systems</h1>
+        <p>Changwen Li, Joseph Sifakis, Qiang Wang, Rongjie Yan, Jian Zhang</p>
+        
+        <div class="contact-info">
+            <div>学术会议:</div>
+            <div style="grid-column: span 2;">International Symposium on Software Testing and Analysis</div>
+            <div>联系方式:</div>
+            <div>晏荣杰 yrj@ios.ac.cn</div>
+            <div>李昌文 licw@ios.ac.cn</div>
+        </div>
+    </div>
+
+    <div class="section-header">Abstract</div>
+    <div class="abstract">
+        We investigate a rigorous simulation and testing-based validation method for autonomous driving systems that integrates an existing industrial simulator and a formally defined testing environment. The environment includes a scenario generator that drives the simulation process and a monitor that checks at runtime the observed behavior of the system against a set of system properties to be validated. The validation method consists in extracting from the simulator a semantic model of the simulated system including a metric graph, which is a mathematical model of the environment in which the vehicles of the system evolve. The monitor can verify properties formalized in a first-order linear temporal logic and provide diagnostics explaining their non-satisfaction. Instead of exploring the system behavior randomly as many simulators do, we propose a method to systematically generate sets of scenarios that cover potentially risky situations, especially for different types of junctions where specific traffic rules must be respected. We show that the systematic exploration of risky situations has uncovered many flaws in the real simulator that would have been very difficult to discover by a random exploration process.
+    </div>
+
+    <div class="section-header">The Validation Framework RvADS</div>
+    <div class="validation-framework">
+        <div class="validation-text">
+            <div class="validation-item">
+                <div class="placeholder validation-icon">[Icon: Gears]</div>
+                <div>
+                    <h3>Scenario Generator</h3>
+                    <p>The Scenario Generator drives the simulation process. It generates scenarios as the coordinated sequences of actions executed by the agents in the Simulator.</p>
+                </div>
+            </div>
+            <div class="validation-item">
+                <div class="placeholder validation-icon">[Icon: Car]</div>
+                <div>
+                    <h3>Simulator</h3>
+                    <p>The Simulator executes an ADS model obtained as the composition of the world model and the behavior model.</p>
+                </div>
+            </div>
+            <div class="validation-item">
+                <div class="placeholder validation-icon">[Icon: Magnifying Glass]</div>
+                <div>
+                    <h3>Monitor</h3>
+                    <p>The Monitor observes the system behavior as sequences of global states and applies a runtime verification method of the properties.</p>
+                </div>
+            </div>
+        </div>
+        <div class="validation-image">
+            <div class="placeholder" style="width: 100%; height: 350px; border: 1px solid black;">
+                [Diagram: RvADS framework showing Scenario Generator, Extended Simulator, Monitor, and Property Specification interacting, outputting 'verdict for each run and property']
+            </div>
+        </div>
+    </div>
+
+    <div class="two-columns">
+        <div class="column">
+            <div class="section-header" style="margin: 20px 0;">Semantic Model</div>
+            <div class="abstract" style="padding: 0;">
+                The system is modeled as a semantic model with a well-defined notion of system state as the distribution of vehicles and objects on a map with all their kinetic and time attributes.
+            </div>
+            <div class="placeholder semantic-model-image">
+                [Graph Diagram: Vehicles and objects mapped with kinetic/time attributes]
+            </div>
+        </div>
+        <div class="column">
+            <div class="section-header" style="margin: 20px 0;">Property Specification</div>
+            <div class="property-spec">
+                <table>
+                    <tr>
+                        <td style="border-top: 1px solid black;">
+                            <em>Properties for a stop junction j:</em><br>
+                            $p_1$: If a vehicle is in the junction, then no other vehicle can be in the junction:<br>
+                            $\forall a. \forall a'. \Box ([a@j \land a \neq a'] \rightarrow \neg a'@j]$
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            $p_2$: If a vehicle arrives at the same time as another vehicle, the vehicle on the right has the right-of-way:<br>
+                            $\forall j.en. \forall j.en'. \forall a. \forall a'. \Box ([a@j.en \land a'@j.en' \land a.wt = a.wt' \land j.en\ right\text{-}of\ j.en'] \rightarrow [[N\ a'@j.en']\ U\ a@j]]$
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            $p_3$: The vehicle that arrives first at the entrance will pass before other vehicles:<br>
+                            $\forall j.en. \forall j.en'. \forall a. \forall a'. \Box ([a@j.en \land a'@j.en' \land a.wt < a'.wt] \rightarrow [[N\ a@j.en]\ U\ a'@j]]$
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <em>Properties for a traffic light junction j:</em><br>
+                            $p_4$: Any vehicle facing a red light must stop until the traffic light turns green, unless the vehicle is turning right.<br>
+                            $\forall j.en. \forall a. \forall lt.\ \Box ([a@j.en \land lt@j.en \land lt.cl = red \land \neg take(a, j.en, right)] \rightarrow [a@j.en\ U\ lt.cl = green]]$
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            $p_5$: If a vehicle facing a red light is turning right, then the vehicle should wait until there is no vehicle on the left.<br>
+                            $\forall j.en. \forall j.en'. \forall a. \forall a'. \forall lt.\ \Box ([a@j.en \land a'@j.en' \land (j.en\ right\text{-}of\ j.en') \land lt@j.en \land (lt.cl = red) \land take(a, j.en, right)] \rightarrow [[N\ a@j.en]\ U\ a'@j]]$
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border-bottom: 1px solid black;">
+                            $p_6$: If two vehicles arrive at the entrances of a junction opposite each other and the traffic lights are green, the vehicle turning left must give way to the other.<br>
+                            $\forall j.en. \forall j.en'. \forall a. \forall a'. \Box ([a@j.en \land a'@j.en' \land j.en\ opposite\ j.en' \land take(a, j.en, left) \land \neg take(a', j.en', left)] \rightarrow [[N\ a@j.en]\ U\ a'@j]]$
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="two-columns">
+        <div class="column">
+            <div class="section-header" style="margin: 20px 0;">Scenario Generation</div>
+            <div class="scenario-generation">
+                We define structurally equivalent abstract scenarios by simply rotating the inputs and preserving the symbolic directions based on the assumption that the traffic rules do not particularize the inputs of the junction according to their positions.<br>
+                It is sufficient to apply one test case per equivalence class for the system that is assumed to be consistent. If equivalent test scenarios differ in the properties tested, it means that test process is inconsistent.
+            </div>
+            <div class="placeholder scenario-image">
+                [Diagram: Four classes of equivalence scenarios with circular graphs]
+            </div>
+        </div>
+        <div class="column">
+            <div class="section-header" style="margin: 20px 0;">Examples of Property Violation</div>
+            <div class="property-violation-grid">
+                <div class="violation-item">
+                    <div class="placeholder violation-image">[Screenshot: Violation of p1 (at time t=1)]</div>
+                    <div class="violation-caption">(a) Violation of $p_1$ (at time $t=1$)</div>
+                </div>
+                <div class="violation-item">
+                    <div class="placeholder violation-image">[Screenshot: Violation of p2 (at time t)]</div>
+                    <div class="violation-caption">(b) Violation of $p_2$ (at time $t$)</div>
+                </div>
+                <div class="violation-item">
+                    <div class="placeholder violation-image">[Screenshot: Violation of p5 (at time t=1)]</div>
+                    <div class="violation-caption">(c) Violation of $p_5$ (at time $t=1$)</div>
+                </div>
+                <div class="violation-item">
+                    <div class="placeholder violation-image">[Screenshot: Violation of p5 (at time t)]</div>
+                    <div class="violation-caption">(d) Violation of $p_5$ (at time $t$)</div>
+                </div>
+                <div class="violation-item">
+                    <div class="placeholder violation-image">[Screenshot: Violation of p6 (at time t=1)]</div>
+                    <div class="violation-caption">(e) Violation of $p_6$ (at time $t=1$)</div>
+                </div>
+                <div class="violation-item">
+                    <div class="placeholder violation-image">[Screenshot: Violation of p6 (at time t)]</div>
+                    <div class="violation-caption">(f) Violation of $p_6$ (at time $t$)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer"></div>
+
+</body>
+</html>

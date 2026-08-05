@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Cloud Documentation</title>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-width: 1040px;
+      color: #202124;
+      background: #f8f9fa;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 14px;
+      letter-spacing: 0;
+    }
+
+    body {
+      overflow-x: auto;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .topbar {
+      position: fixed;
+      z-index: 20;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 49px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #dadce0;
+      background: #fff;
+      box-shadow: 0 2px 4px rgba(60, 64, 67, 0.16);
+      white-space: nowrap;
+    }
+
+    .brand {
+      width: 197px;
+      padding-left: 24px;
+      color: #5f6368;
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .google-word {
+      font-weight: 500;
+    }
+
+    .g-blue { color: #4285f4; }
+    .g-red { color: #ea4335; }
+    .g-yellow { color: #fbbc05; }
+    .g-green { color: #34a853; }
+
+    .top-link {
+      position: relative;
+      height: 49px;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      color: #4a4d51;
+      font-size: 14px;
+    }
+
+    .top-link.active {
+      color: #1769aa;
+      font-weight: 500;
+    }
+
+    .top-link.active::after {
+      position: absolute;
+      right: 9px;
+      bottom: 0;
+      left: 9px;
+      height: 3px;
+      border-radius: 2px 2px 0 0;
+      background: #1a73e8;
+      content: "";
+    }
+
+    .caret {
+      width: 0;
+      height: 0;
+      margin-left: 10px;
+      border-top: 5px solid #5f6368;
+      border-right: 5px solid transparent;
+      border-left: 5px solid transparent;
+    }
+
+    .top-spacer {
+      flex: 1;
+      min-width: 30px;
+    }
+
+    .search {
+      width: 200px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 0 11px;
+      border-radius: 4px;
+      color: #5f6368;
+      background: #f1f3f4;
+      font-size: 15px;
+    }
+
+    .search-icon {
+      width: 14px;
+      height: 14px;
+      display: inline-block;
+      border: 2px solid #6b7075;
+      border-radius: 50%;
+      position: relative;
+    }
+
+    .search-icon::after {
+      position: absolute;
+      width: 7px;
+      height: 2px;
+      right: -5px;
+      bottom: -2px;
+      transform: rotate(45deg);
+      background: #6b7075;
+      content: "";
+    }
+
+    .shortcut {
+      margin-left: auto;
+      padding: 3px 7px;
+      border-radius: 8px;
+      color: #777;
+      background: #fff;
+      font-size: 12px;
+      font-style: italic;
+    }
+
+    .console {
+      height: 36px;
+      margin-left: 8px;
+      padding: 0 13px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      border: 1px solid #dadce0;
+      border-radius: 4px;
+      color: #4b4f52;
+      background: #fff;
+    }
+
+    .console-icon {
+      width: 15px;
+      height: 12px;
+      border: 1px solid #5f6368;
+      border-radius: 2px;
+      position: relative;
+    }
+
+    .console-icon::before {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      content: "↔";
+      font-size: 9px;
+      line-height: 7px;
+    }
+
+    .theme-icon {
+      width: 42px;
+      color: #5f6368;
+      text-align: center;
+      font-size: 24px;
+    }
+
+    .language {
+      height: 36px;
+      padding: 0 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid #dadce0;
+      border-radius: 4px;
+      color: #4b4f52;
+      background: #fff;
+    }
+
+    .globe {
+      font-size: 16px;
+    }
+
+    .sign-in {
+      padding: 0 16px;
+      color: #1769aa;
+      font-size: 13px;
+    }
+
+    .sidebar {
+      position: fixed;
+      z-index: 10;
+      top: 49px;
+      bottom: 0;
+      left: 0;
+      width: 270px;
+      overflow: hidden;
+      border-right: 1px solid #dadce0;
+      background: #fff;
+    }
+
+    .filter-wrap {
+      height: 81px;
+      padding: 23px 24px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .filter {
+      width: 221px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 11px;
+      border-radius: 3px;
+      color: #5f6368;
+      background: #f1f3f4;
+    }
+
+    .filter-icon {
+      color: #6f7478;
+      font-size: 13px;
+    }
+
+    .sidebar-links {
+      padding: 10px 0 14px;
+      border-bottom: 1px solid #dadce0;
+    }
+
+    .sidebar-link {
+      min-height: 24px;
+      display: flex;
+      align-items: center;
+      padding: 4px 24px;
+      color: #202124;
+      font-size: 12.5px;
+      line-height: 16px;
+    }
+
+    .sidebar-link.selected {
+      margin-right: 8px;
+      border-radius: 0 16px 16px 0;
+      color: #1769aa;
+      background: #e8f0fe;
+      font-weight: 600;
+    }
+
+    .nav-category {
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 15px 0 24px;
+      border-bottom: 1px solid #dadce0;
+      color: #55595c;
+      font-size: 12.5px;
+      font-weight: 600;
+    }
+
+    .chevron {
+      width: 9px;
+      height: 9px;
+      margin-right: 1px;
+      transform: rotate(45deg);
+      border-right: 2px solid #62676a;
+      border-bottom: 2px solid #62676a;
+    }
+
+    .collapse {
+      position: absolute;
+      right: 8px;
+      bottom: 15px;
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #dadce0;
+      border-radius: 50%;
+      color: #697076;
+      background: #f8f9fa;
+      box-shadow: 0 2px 6px rgba(60, 64, 67, 0.2);
+      font-size: 25px;
+      font-weight: 300;
+    }
+
+    .workspace {
+      min-height: 100vh;
+      padding: 72px 0 0 293px;
+      background: #f8f9fa;
+    }
+
+    .document {
+      width: 936px;
+      min-height: 1700px;
+      overflow: hidden;
+      border: 1px solid #dadce0;
+      border-radius: 12px 12px 0 0;
+      background: #fff;
+    }
+
+    .hero {
+      position: relative;
+      height: 164px;
+      overflow: hidden;
+      padding: 39px 40px;
+    }
+
+    .hero h1 {
+      position: relative;
+      z-index: 2;
+      width: 670px;
+      margin: 0 0 17px;
+      font-size: 38px;
+      line-height: 1.12;
+      font-weight: 500;
+    }
+
+    .hero p {
+      position: relative;
+      z-index: 2;
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .hero-art {
+      position: absolute;
+      top: 8px;
+      right: -18px;
+      width: 282px;
+      height: 190px;
+      overflow: hidden;
+    }
+
+    .loop {
+      position: absolute;
+      top: 34px;
+      right: 44px;
+      width: 184px;
+      height: 118px;
+      transform: rotate(45deg);
+      border: 31px solid transparent;
+      border-top-color: #49b879;
+      border-right-color: #3679e7;
+      border-bottom-color: #735de8;
+      border-radius: 28px;
+    }
+
+    .loop::before {
+      position: absolute;
+      top: -35px;
+      left: -35px;
+      width: 70px;
+      height: 70px;
+      border: 4px solid #188038;
+      border-radius: 50%;
+      content: "";
+    }
+
+    .loop::after {
+      position: absolute;
+      top: -13px;
+      left: -13px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #0f9d3f;
+      content: "";
+    }
+
+    .dots {
+      position: absolute;
+      right: 19px;
+      bottom: 19px;
+      width: 92px;
+      height: 92px;
+      border: 3px dotted #7fa8f5;
+      border-radius: 50%;
+    }
+
+    .yellow-line {
+      position: absolute;
+      right: 197px;
+      bottom: 21px;
+      width: 112px;
+      height: 9px;
+      border-radius: 6px;
+      background: #f9c95e;
+    }
+
+    .yellow-line::before {
+      position: absolute;
+      left: -97px;
+      color: #f9b806;
+      content: "• • • • • •";
+      font-size: 22px;
+      line-height: 7px;
+      white-space: nowrap;
+    }
+
+    .promo {
+      height: 168px;
+      display: grid;
+      grid-template-columns: 1fr 240px;
+      align-items: center;
+      padding: 31px 64px 33px 40px;
+      background: linear-gradient(105deg, #e4edff 0%, #e5f5e8 100%);
+    }
+
+    .promo h2 {
+      margin: 0 0 6px;
+      font-size: 18px;
+      line-height: 1.25;
+      font-weight: 600;
+    }
+
+    .promo ul {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .promo-button {
+      width: 176px;
+      height: 37px;
+      justify-self: end;
+      border: 0;
+      border-radius: 3px;
+      color: #fff;
+      background: #1a73e8;
+      font-weight: 500;
+    }
+
+    .content {
+      padding: 39px 40px 80px;
+    }
+
+    .section {
+      margin-bottom: 39px;
+    }
+
+    .section h2 {
+      margin: 0 0 18px;
+      font-size: 29px;
+      line-height: 1.15;
+      font-weight: 500;
+    }
+
+    .section-intro {
+      margin: 0 0 34px;
+      font-size: 16px;
+      line-height: 1.45;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .card {
+      min-height: 182px;
+      padding: 18px 16px 17px;
+      border: 1px solid #dadce0;
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .card h3 {
+      min-height: 38px;
+      margin: 0 0 25px;
+      color: #1976d2;
+      font-size: 20px;
+      line-height: 1.34;
+      font-weight: 400;
+    }
+
+    .card p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 24px;
+    }
+
+    .discover-grid .card:nth-child(1) h3,
+    .discover-grid .card:nth-child(3) h3 {
+      margin-bottom: 25px;
+    }
+
+    .discover-grid .card:nth-child(2) h3 {
+      margin-bottom: 16px;
+    }
+
+    .discover-grid .card:nth-child(4),
+    .discover-grid .card:nth-child(5) {
+      min-height: 159px;
+    }
+
+    .discover-grid .card:nth-child(4) h3,
+    .discover-grid .card:nth-child(5) h3 {
+      margin-bottom: 17px;
+    }
+
+    .get-started {
+      margin-top: 38px;
+    }
+
+    .get-started .section-intro {
+      margin-bottom: 34px;
+    }
+
+    .get-started .card {
+      min-height: 182px;
+    }
+
+    .get-started .card h3 {
+      margin-bottom: 25px;
+    }
+
+    .spotlight {
+      margin-top: 40px;
+      margin-bottom: 0;
+    }
+
+    .spotlight h2 {
+      margin-bottom: 34px;
+    }
+
+    .spotlight-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .spotlight-card {
+      height: 190px;
+      padding: 16px;
+      overflow: hidden;
+      border: 1px solid;
+      border-radius: 8px;
+    }
+
+    .spotlight-card.blue {
+      border-color: #7baaf7;
+      background: #e8f0fe;
+    }
+
+    .spotlight-card.green {
+      border-color: #77b98c;
+      background: #e6f4ea;
+    }
+
+    .tag {
+      display: inline-block;
+      margin-bottom: 11px;
+      padding: 5px 9px;
+      border: 1px solid #dadce0;
+      border-radius: 8px;
+      color: #202124;
+      background: #fff;
+      font-size: 12px;
+      line-height: 1;
+    }
+
+    .spotlight-card h3 {
+      margin: 0;
+      color: #1976d2;
+      font-size: 20px;
+      line-height: 1.35;
+      font-weight: 400;
+    }
+
+    @media (max-width: 1120px) {
+      .top-link.secondary {
+        display: none;
+      }
+
+      .document {
+        width: calc(100vw - 315px);
+        min-width: 720px;
+      }
+
+      .card-grid {
+        gap: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand" aria-label="Google Cloud">
+      <span class="google-word"><span class="g-blue">G</span><span class="g-red">o</span><span class="g-yellow">o</span><span class="g-blue">g</span><span class="g-green">l</span><span class="g-red">e</span></span> Cloud
+    </div>
+    <div class="top-link active">Technology areas <span class="caret"></span></div>
+    <div class="top-link secondary">Cross-product tools <span class="caret"></span></div>
+    <div class="top-spacer"></div>
+    <div class="search">
+      <span class="search-icon"></span>
+      <span>Search</span>
+      <span class="shortcut">/</span>
+    </div>
+    <div class="console"><span class="console-icon"></span><span>Console</span></div>
+    <div class="theme-icon">☀</div>
+    <div class="language"><span class="globe">⊕</span><span>English</span><span class="caret"></span></div>
+    <div class="sign-in">Sign in</div>
+  </header>
+
+  <aside class="sidebar">
+    <div class="filter-wrap">
+      <div class="filter"><span class="filter-icon">≡</span><span>Filter</span></div>
+    </div>
+
+    <nav>
+      <div class="sidebar-links">
+        <div class="sidebar-link selected">Google Cloud Documentation home</div>
+        <div class="sidebar-link">Get started with Google Cloud</div>
+        <div class="sidebar-link">Product list</div>
+        <div class="sidebar-link">Integrated AI assistance with Gemini<br>for Google Cloud</div>
+        <div class="sidebar-link">What's new in documentation</div>
+        <div class="sidebar-link">Recent product release notes</div>
+        <div class="sidebar-link">Cloud Customer Care</div>
+      </div>
+
+      <div class="nav-category"><span>Cross-product tools</span><span class="chevron"></span></div>
+      <div class="nav-category"><span>AI and ML</span><span class="chevron"></span></div>
+      <div class="nav-category"><span>Application development</span><span class="chevron"></span></div>
+      <div class="nav-category"><span>Application hosting</span><span class="chevron"></span></div>
+      <div class="nav-category"><span>Compute</span><span class="chevron"></span></div>
+      <div class="nav-category"><span>Data analytics</span><span class="chevron"></span></div>
+      <div class="nav-category"><span>Databases</span><span class="chevron"></span></div>
+      <div class="nav-category"><span>Distributed, hybrid, and multicloud</span><span class="chevron"></span></div>
+      <div class="nav-category"><span>Industry solutions</span><span class="chevron"></span></div>
+      <div class="nav-category"><span>Migration</span><span class="chevron"></span></div>
+      <div class="nav-category"><span>Networking</span><span class="chevron"></span></div>
+      <div class="nav-category"><span>Observability and monitoring</span><span class="chevron"></span></div>
+      <div class="nav-category"><span>Security</span><span class="chevron"></span></div>
+      <div class="nav-category"><span>Storage</span><span class="chevron"></span></div>
+    </nav>
+
+    <div class="collapse">‹</div>
+  </aside>
+
+  <main class="workspace">
+    <article class="document">
+      <section class="hero">
+        <h1>Google Cloud Documentation</h1>
+        <p>Find user guides, quickstarts, tutorials, use cases, code samples, and more.</p>
+        <div class="hero-art" aria-label="[Diagram: top-right]">
+          <div class="loop"></div>
+          <div class="dots"></div>
+          <div class="yellow-line"></div>
+        </div>
+      </section>
+
+      <section class="promo">
+        <div>
+          <h2>Start your proof of concept with $300 in free credit</h2>
+          <ul>
+            <li>Develop with our latest Generative AI models and tools.</li>
+            <li>Get free usage of 20+ popular products, including Compute Engine and AI APIs.</li>
+            <li>No automatic charges, no commitment.</li>
+          </ul>
+        </div>
+        <button class="promo-button">Get started for free</button>
+      </section>
+
+      <div class="content">
+        <section class="section">
+          <h2>Discover</h2>
+          <p class="section-intro">Learn about Google Cloud, find prescriptive guidance, and explore migration resources.</p>
+
+          <div class="card-grid discover-grid">
+            <article class="card">
+              <h3>Google Cloud overview</h3>
+              <p>Learn about Google Cloud, including popular features with pointers to documentation and tutorials.</p>
+            </article>
+
+            <article class="card">
+              <h3>Cloud Architecture<br>Center</h3>
+              <p>Plan and design your infrastructure with architectural guidance and best practices.</p>
+            </article>
+
+            <article class="card">
+              <h3>Start free</h3>
+              <p>Start building in the console with $300 in free credits for new customers. All customers get free usage of over 20 products.</p>
+            </article>
+
+            <article class="card">
+              <h3>Migrate to Google Cloud</h3>
+              <p>Plan how to migrate your workloads, data, and processes.</p>
+            </article>
+
+            <article class="card">
+              <h3>Google Cloud for AWS<br>and Azure customers</h3>
+              <p>Compare AWS and Azure services to Google Cloud.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section get-started">
+          <h2>Get started</h2>
+          <p class="section-intro">Find tools, resources, and training to begin building on Google Cloud.</p>
+
+          <div class="card-grid">
+            <article class="card">
+              <h3>Get started with Google<br>Cloud</h3>
+              <p>Explore product quickstarts, tutorials, and interactive walkthroughs.</p>
+            </article>
+
+            <article class="card">
+              <h3>Boost productivity with<br>Generative AI</h3>
+              <p>Get generative-AI powered assistance with an always-on collaborator.</p>
+            </article>
+
+            <article class="card">
+              <h3>Google Cloud Setup<br>guided flow</h3>
+              <p>Prepare your organization for scalable, production-ready, enterprise workloads.</p>
+            </article>
+
+            <article class="card">
+              <h3>Grow your skills and get<br>certified</h3>
+              <p>Study emerging cloud technologies and get Google Cloud certified.</p>
+            </article>
+
+            <article class="card">
+              <h3>Browse code samples</h3>
+              <p>Review samples to demonstrate the use of Google Cloud products.</p>
+            </article>
+
+            <article class="card">
+              <h3>Jump Start Solutions</h3>
+              <p>Plan and quickly deploy pre-built solutions to solve your business challenges.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section spotlight">
+          <h2>Documentation spotlight</h2>
+          <div class="spotlight-grid">
+            <article class="spotlight-card blue">
+              <span class="tag">New guide</span>
+              <h3>[illegible]</h3>
+            </article>
+            <article class="spotlight-card green">
+              <span class="tag">Popular guide</span>
+              <h3>[illegible]</h3>
+            </article>
+          </div>
+        </section>
+      </div>
+    </article>
+  </main>
+</body>
+</html>

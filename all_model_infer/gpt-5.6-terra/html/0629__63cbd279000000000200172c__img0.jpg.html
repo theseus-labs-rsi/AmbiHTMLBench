@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>股票涨跌幅规定</title>
+  <script>
+    window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      width: 540px;
+      height: 720px;
+      overflow: hidden;
+      font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+    }
+    body {
+      background: #147cb2;
+      color: #161616;
+    }
+    .page {
+      position: relative;
+      width: 540px;
+      height: 720px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 36px 51px, #9fcfd0 0 14px, transparent 15px),
+        radial-gradient(circle at 166px 29px, #e48b83 0 11px, transparent 12px),
+        radial-gradient(circle at 307px 35px, #acd4d1 0 14px, transparent 15px),
+        radial-gradient(circle at 419px 39px, #e9aaa4 0 12px, transparent 13px),
+        radial-gradient(circle at 507px 40px, #a9d4d0 0 15px, transparent 16px),
+        radial-gradient(circle at 525px 109px, #a9d97c 0 11px, transparent 12px),
+        radial-gradient(circle at 16px 176px, #22aa93 0 13px, transparent 14px),
+        radial-gradient(circle at 520px 326px, #acd2c7 0 12px, transparent 13px),
+        radial-gradient(circle at 17px 380px, #20a991 0 13px, transparent 14px),
+        radial-gradient(circle at 513px 519px, #d0aa64 0 15px, transparent 16px),
+        radial-gradient(circle at 27px 529px, #9fcbd1 0 11px, transparent 12px),
+        radial-gradient(circle at 28px 634px, #e89c95 0 11px, transparent 12px),
+        radial-gradient(circle at 436px 702px, #bed18c 0 11px, transparent 12px),
+        #147cb2;
+    }
+    .header {
+      position: absolute;
+      top: 3px;
+      left: 23px;
+      right: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #071b39;
+      font-weight: 800;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      font-size: 19px;
+      letter-spacing: .3px;
+    }
+    .logo-mark {
+      width: 29px;
+      height: 23px;
+      margin-right: 7px;
+      border-radius: 50%;
+      position: relative;
+      background: linear-gradient(145deg, #e92132 0 39%, #145ec1 40% 70%, #16a6bc 71%);
+      transform: skewX(-12deg);
+    }
+    .logo-mark:after {
+      content: "";
+      position: absolute;
+      background: #147cb2;
+      width: 19px;
+      height: 8px;
+      border-radius: 50%;
+      left: 4px;
+      top: 7px;
+      transform: rotate(-22deg);
+    }
+    .advisor {
+      font-size: 13px;
+      padding-top: 4px;
+    }
+    .back-sheet {
+      position: absolute;
+      left: 43px;
+      top: 88px;
+      width: 467px;
+      height: 603px;
+      border: 2px solid #20201d;
+      border-radius: 4px;
+      background: #fee9aa;
+      box-shadow: 3px 3px 0 rgba(0,0,0,.16);
+    }
+    .notebook {
+      position: absolute;
+      left: 30px;
+      top: 54px;
+      width: 466px;
+      height: 624px;
+      border: 2px solid #191919;
+      border-radius: 5px;
+      background:
+        repeating-linear-gradient(0deg, rgba(215,181,91,.16) 0, rgba(215,181,91,.16) 1px, transparent 1px, transparent 18px),
+        repeating-linear-gradient(90deg, rgba(215,181,91,.13) 0, rgba(215,181,91,.13) 1px, transparent 1px, transparent 18px),
+        #fffef8;
+      box-shadow: 2px 3px 0 rgba(0,0,0,.22);
+    }
+    .rings {
+      position: absolute;
+      top: -25px;
+      left: 43px;
+      right: 41px;
+      height: 59px;
+      display: flex;
+      justify-content: space-between;
+      pointer-events: none;
+    }
+    .ring {
+      width: 17px;
+      height: 58px;
+      border: 4px solid #080909;
+      border-radius: 50%;
+      background: #147cb2;
+    }
+    .question {
+      position: absolute;
+      top: 39px;
+      left: 31px;
+      width: 415px;
+      min-height: 80px;
+      padding: 10px 12px 7px;
+      border: 4px solid #ffcf69;
+      border-radius: 9px;
+      background: #ffc35b;
+      font-family: "Arial Black", "Microsoft YaHei", sans-serif;
+      font-size: 25px;
+      line-height: 1.4;
+      font-weight: 900;
+      letter-spacing: 1px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.35);
+    }
+    .question:before, .question:after {
+      content: "•";
+      position: absolute;
+      color: #fff5c5;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .question:before { left: 7px; top: -8px; }
+    .question:after { right: 5px; bottom: -7px; }
+    .content {
+      position: absolute;
+      top: 151px;
+      left: 31px;
+      width: 387px;
+    }
+    .intro {
+      margin: 3px 0 19px -11px;
+      font-size: 19px;
+      line-height: 1.3;
+      white-space: nowrap;
+    }
+    .star {
+      color: #ffc15e;
+      font-size: 25px;
+      vertical-align: -2px;
+      margin-right: 3px;
+    }
+    table {
+      width: 387px;
+      border-collapse: collapse;
+      table-layout: fixed;
+      background: rgba(255,255,255,.58);
+      font-size: 16px;
+      text-align: center;
+    }
+    th, td {
+      border: 4px solid #ffc45f;
+      padding: 5px 4px;
+      vertical-align: middle;
+    }
+    th {
+      height: 37px;
+      font-weight: 500;
+      font-size: 17px;
+    }
+    td {
+      height: 60px;
+      line-height: 1.48;
+    }
+    .col-sector { width: 97px; }
+    .col-meaning { width: 203px; }
+    .col-limit { width: 87px; }
+    .disclaimer {
+      position: absolute;
+      left: 31px;
+      bottom: 12px;
+      width: 367px;
+      font-size: 8px;
+      line-height: 1.2;
+      font-weight: 600;
+      text-align: left;
+    }
+    .mascot {
+      position: absolute;
+      right: -4px;
+      bottom: -14px;
+      width: 83px;
+      height: 100px;
+      border: 1px solid #555;
+      border-radius: 42px 42px 12px 12px;
+      background: #f8fbf1;
+      color: #555;
+      font-size: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      transform: rotate(6deg);
+    }
+    .mascot:before {
+      content: "";
+      position: absolute;
+      top: 15px;
+      left: 21px;
+      width: 38px;
+      height: 31px;
+      border: 2px solid #343434;
+      border-radius: 12px;
+      background: #f0b0a5;
+    }
+    .mascot span {
+      position: relative;
+      z-index: 1;
+      margin-top: 58px;
+    }
+    .risk {
+      position: absolute;
+      bottom: 6px;
+      width: 100%;
+      text-align: center;
+      color: #17213d;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="header">
+      <div class="brand"><span class="logo-mark"></span>中国银河证券 CGS</div>
+      <div class="advisor">常红艳&nbsp; 投顾编号：S0130618110013</div>
+    </div>
+
+    <div class="back-sheet"></div>
+
+    <main class="notebook">
+      <div class="rings">
+        <span class="ring"></span>
+        <span class="ring"></span>
+        <span class="ring"></span>
+        <span class="ring"></span>
+        <span class="ring"></span>
+      </div>
+
+      <section class="question">
+        Q3：股票涨跌幅为什么有的是<br>
+        10%，有的是20%呢?
+      </section>
+
+      <section class="content">
+        <p class="intro"><span class="star">✦</span>下表是在不同板块炒股的单日涨跌幅规定:</p>
+        <table>
+          <thead>
+            <tr>
+              <th class="col-sector">板块</th>
+              <th class="col-meaning">含义</th>
+              <th class="col-limit">涨跌幅</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>st类股票</td>
+              <td>财务状况有问题的公司居<br>多，不要轻易买!</td>
+              <td>5%</td>
+            </tr>
+            <tr>
+              <td>主板</td>
+              <td>最常见，以传统行业为主<br>的股票交易市场。</td>
+              <td>10%</td>
+            </tr>
+            <tr>
+              <td>创业板</td>
+              <td>主要是无法在主板上市的<br>高成长的中小企业。</td>
+              <td>20%</td>
+            </tr>
+            <tr>
+              <td>科创板</td>
+              <td>主要是有核心技术的创新<br>型和科技型中小企业。</td>
+              <td>20%</td>
+            </tr>
+            <tr>
+              <td>北交所</td>
+              <td>主要是“专精特新”“小<br>巨人”中小企业。</td>
+              <td>30%</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <div class="disclaimer">
+        免责声明：本资料仅为投资者教育之目的而发布，不构成投资建议。投资者据此操作，风险自担。<br>
+        银河证券为证券行业信息资料提供可能，但银河证券不对该信息的准确性、完整性或可靠性、及时性作任何担保。银河证券亦不对因使用此资料的信息而引起的损失承担任何责任。投资有风险，入市需谨慎。
+      </div>
+
+      <div class="mascot placeholder"><span>[卡通人物]</span></div>
+    </main>
+
+    <div class="risk">投资有风险，入市需谨慎</div>
+  </div>
+</body>
+</html>

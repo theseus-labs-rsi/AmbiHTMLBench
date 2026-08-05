@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>内部交易抵销 第③步：调整所得税</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    background-color: #f5f0e8;
+    font-family: "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .card {
+    background: #fff;
+    border: 2px solid #c8b89a;
+    border-radius: 16px;
+    max-width: 680px;
+    width: 100%;
+    padding: 30px 40px 40px;
+    position: relative;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+
+  .paw-prints {
+    display: flex;
+    justify-content: center;
+    gap: 200px;
+    margin-bottom: -10px;
+  }
+
+  .paw {
+    font-size: 28px;
+    color: #b8956a;
+  }
+
+  .title {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .title h1 {
+    font-size: 32px;
+    color: #6b4c2a;
+    font-weight: 900;
+    letter-spacing: 4px;
+    margin-bottom: 6px;
+  }
+
+  .title h2 {
+    font-size: 28px;
+    color: #6b4c2a;
+    font-weight: 900;
+    letter-spacing: 2px;
+  }
+
+  .badge {
+    display: inline-block;
+    background: #f5e6c8;
+    color: #6b4c2a;
+    font-size: 16px;
+    font-weight: 700;
+    padding: 6px 20px;
+    border-radius: 20px;
+    margin-bottom: 24px;
+    letter-spacing: 1px;
+  }
+
+  .section-label {
+    font-size: 16px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 10px;
+  }
+
+  .calc-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+
+  .calc-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-right: 8px;
+  }
+
+  .calc-left span {
+    font-size: 15px;
+    color: #444;
+    white-space: nowrap;
+  }
+
+  .brace {
+    font-size: 48px;
+    color: #555;
+    line-height: 1;
+    margin-right: 8px;
+    font-family: serif;
+  }
+
+  .calc-result {
+    font-size: 15px;
+    color: #444;
+    white-space: nowrap;
+  }
+
+  .main-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .calc-block {
+    flex: 1;
+  }
+
+  .calc-block + .calc-block {
+    margin-top: 20px;
+  }
+
+  .right-annotation {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 10px;
+    margin-top: 10px;
+    min-width: 100px;
+  }
+
+  .group-label {
+    font-size: 15px;
+    font-weight: 700;
+    color: #333;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+
+  .group-value {
+    font-size: 15px;
+    color: #444;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+
+  .arrow-down {
+    width: 4px;
+    height: 120px;
+    background: #5b9bd5;
+    position: relative;
+    border-radius: 2px;
+  }
+
+  .arrow-down::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 14px solid #5b9bd5;
+  }
+
+  .accounting-entry {
+    margin-top: 30px;
+    font-size: 16px;
+    color: #555;
+    line-height: 2;
+  }
+
+  .accounting-entry .label {
+    font-weight: 700;
+    color: #333;
+  }
+
+  .bottom-cats {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 30px;
+    padding-top: 10px;
+  }
+
+  .cat-placeholder {
+    width: 120px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: #aaa;
+  }
+
+  .cat-left {
+    position: relative;
+  }
+
+  .cat-right {
+    position: relative;
+  }
+
+  .cat-illustration {
+    font-size: 60px;
+    opacity: 0.7;
+  }
+
+  .flex-row {
+    display: flex;
+    align-items: center;
+  }
+
+  .calc-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+
+  .calc-group .lines {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .calc-group .lines span {
+    font-size: 15px;
+    color: #444;
+  }
+
+  .big-brace {
+    font-size: 52px;
+    color: #888;
+    line-height: 0.8;
+    margin: 0 6px;
+    font-family: "Times New Roman", serif;
+  }
+
+  .result-text {
+    font-size: 15px;
+    color: #444;
+    align-self: center;
+  }
+
+  .two-calc-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .calc-section {
+    display: flex;
+    align-items: center;
+  }
+
+  .calc-section .left-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 140px;
+  }
+
+  .calc-section .left-text span {
+    font-size: 15px;
+    color: #444;
+  }
+
+  .calc-section .brace-wrap {
+    display: flex;
+    align-items: center;
+    margin: 0 6px;
+  }
+
+  .calc-section .brace-wrap .big-brace {
+    font-size: 50px;
+    color: #999;
+  }
+
+  .calc-section .right-text {
+    font-size: 15px;
+    color: #444;
+    white-space: nowrap;
+  }
+
+  .right-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 20px;
+    padding-top: 20px;
+  }
+
+  .right-panel .text-block {
+    text-align: center;
+    font-size: 15px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 4px;
+  }
+
+  .right-panel .text-block2 {
+    text-align: center;
+    font-size: 15px;
+    color: #444;
+    margin-bottom: 10px;
+  }
+
+  .blue-arrow {
+    width: 5px;
+    height: 130px;
+    background: linear-gradient(to bottom, #6baed6, #4a90c4);
+    border-radius: 3px;
+    position: relative;
+  }
+
+  .blue-arrow::after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-top: 16px solid #4a90c4;
+  }
+
+  .content-flex {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .content-left {
+    flex: 1;
+  }
+
+  .content-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 30px;
+    margin-left: 10px;
+  }
+
+  .entry-line {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 2px;
+  }
+
+  .entry-line .bold {
+    font-weight: 700;
+    color: #333;
+  }
+
+  .cat-area {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+
+  .cat-img {
+    width: 130px;
+    height: 110px;
+    background: #f9f4ec;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 50px;
+  }
+
+  .cat-img-right {
+    width: 130px;
+    height: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 50px;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="paw-prints">
+    <span class="paw">🐾</span>
+    <span class="paw">🐾</span>
+  </div>
+  <div class="title">
+    <h1>内部交易抵销</h1>
+    <h2>第③步：调整所得税</h2>
+  </div>
+
+  <div class="badge">若实现60%对外销售</div>
+
+  <div class="content-flex">
+    <div class="content-left">
+      <div class="two-calc-sections">
+        <!-- 个别报表层面 -->
+        <div>
+          <div class="section-label">个别报表层面因为存货跌价准备：</div>
+          <div class="calc-section">
+            <div class="left-text">
+              <span>账面价值900</span>
+              <span>计税基础1200</span>
+            </div>
+            <div class="brace-wrap">
+              <span class="big-brace">}</span>
+            </div>
+            <div class="right-text">递延所得税资产300*25%=75</div>
+          </div>
+        </div>
+
+        <!-- 合并报表层面 -->
+        <div>
+          <div class="section-label">合并报表层面因为存货跌价准备：</div>
+          <div class="calc-section">
+            <div class="left-text">
+              <span>账面价值800</span>
+              <span>计税基础1200</span>
+            </div>
+            <div class="brace-wrap">
+              <span class="big-brace">}</span>
+            </div>
+            <div class="right-text">递延所得税资产400*25%=100</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accounting-entry">
+        <div class="entry-line"><span class="bold">会计处理：</span>借：递延所得税资产25</div>
+        <div class="entry-line" style="padding-left: 60px;">贷：所得税费用25</div>
+      </div>
+    </div>
+
+    <div class="content-right">
+      <div class="text-block">【集团角度】</div>
+      <div class="text-block2">调增25</div>
+      <div class="blue-arrow"></div>
+    </div>
+  </div>
+
+  <div class="cat-area">
+    <div class="cat-img">🐱</div>
+    <div class="cat-img-right">🐱</div>
+  </div>
+</div>
+</body>
+</html>

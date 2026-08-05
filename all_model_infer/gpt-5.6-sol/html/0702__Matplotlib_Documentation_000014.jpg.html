@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Images, contours and fields - Matplotlib</title>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-width: 1180px;
+      min-height: 100%;
+      color: #303030;
+      background: #fff;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      font-size: 15px;
+    }
+
+    .topbar {
+      position: fixed;
+      z-index: 20;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 65px;
+      display: flex;
+      align-items: center;
+      padding: 0 34px 0 38px;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14);
+    }
+
+    .brand {
+      width: 320px;
+      flex: 0 0 320px;
+      color: #18536f;
+      font-size: 35px;
+      font-weight: 700;
+      font-style: italic;
+      letter-spacing: 0;
+      line-height: 1;
+    }
+
+    .brand-wheel {
+      position: relative;
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      margin: 0 1px;
+      vertical-align: -4px;
+      border: 1px solid #9eb9c4;
+      border-radius: 50%;
+      background:
+        linear-gradient(70deg, transparent 48%, #efb247 49%, #efb247 51%, transparent 52%),
+        linear-gradient(130deg, transparent 48%, #62a6b9 49%, #62a6b9 51%, transparent 52%),
+        linear-gradient(10deg, transparent 48%, #8ebc5d 49%, #8ebc5d 51%, transparent 52%),
+        #f8fbfb;
+    }
+
+    .brand-wheel::after {
+      content: "";
+      position: absolute;
+      inset: 8px;
+      border-radius: 50%;
+      background: #f5cf5e;
+      opacity: 0.8;
+    }
+
+    .topnav {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      white-space: nowrap;
+      color: #34404e;
+    }
+
+    .topnav a {
+      color: inherit;
+      text-decoration: none;
+      font-size: 16px;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-left: auto;
+      color: #3e4d60;
+    }
+
+    .icon {
+      display: inline-flex;
+      width: 21px;
+      height: 21px;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .search {
+      position: relative;
+      width: 18px;
+      height: 18px;
+      border: 3px solid #455367;
+      border-radius: 50%;
+    }
+
+    .search::after {
+      content: "";
+      position: absolute;
+      right: -6px;
+      bottom: -4px;
+      width: 8px;
+      height: 3px;
+      border-radius: 2px;
+      background: #455367;
+      transform: rotate(45deg);
+    }
+
+    .theme {
+      border: 2px solid #455367;
+      border-radius: 50%;
+      background: linear-gradient(90deg, #455367 50%, #fff 50%);
+    }
+
+    .version {
+      height: 34px;
+      padding: 0 10px;
+      border: 1px solid #d7d7d7;
+      border-radius: 5px;
+      background: #fff;
+      color: #303030;
+      font-size: 15px;
+    }
+
+    .sidebar {
+      position: fixed;
+      z-index: 10;
+      top: 65px;
+      bottom: 0;
+      left: 0;
+      width: 368px;
+      overflow: hidden;
+      border-right: 1px solid #d5d8dc;
+      background: #fff;
+      padding: 43px 31px 40px 32px;
+    }
+
+    .sidebar h2 {
+      margin: 0 0 18px;
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    .section-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-left: 10px;
+      color: #3c4b5d;
+      line-height: 30px;
+    }
+
+    .chevron {
+      width: 8px;
+      height: 8px;
+      margin-right: 2px;
+      border-right: 1.5px solid #252525;
+      border-bottom: 1.5px solid #252525;
+      transform: rotate(45deg);
+    }
+
+    .section-label.active {
+      height: 33px;
+      margin-bottom: 3px;
+      padding-left: 8px;
+      border-left: 3px solid #2b9dcc;
+      color: #245a77;
+      font-weight: 700;
+    }
+
+    .section-label.active .chevron {
+      transform: rotate(225deg);
+    }
+
+    .side-list {
+      margin: 0;
+      padding: 0 0 0 26px;
+      list-style: none;
+    }
+
+    .side-list li {
+      min-height: 32px;
+      color: #3b4a5d;
+      font-size: 14.5px;
+      line-height: 20px;
+      padding: 5px 0 7px;
+    }
+
+    .main {
+      margin-left: 368px;
+      padding: 81px 0 50px 96px;
+    }
+
+    .breadcrumbs {
+      display: flex;
+      align-items: center;
+      height: 20px;
+      margin-left: -25px;
+      color: #3e4c5e;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .home {
+      position: relative;
+      width: 14px;
+      height: 11px;
+      margin-right: 13px;
+      margin-left: 1px;
+      background: #526276;
+      border-radius: 1px;
+    }
+
+    .home::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: -6px;
+      border-left: 7px solid transparent;
+      border-right: 7px solid transparent;
+      border-bottom: 7px solid #526276;
+    }
+
+    .crumb-arrow {
+      width: 7px;
+      height: 7px;
+      margin: 0 10px;
+      border-top: 2px solid #5b6674;
+      border-right: 2px solid #5b6674;
+      transform: rotate(45deg);
+    }
+
+    h1 {
+      margin: 52px 0 20px;
+      color: #333;
+      font-size: 38px;
+      font-weight: 400;
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(5, 168px);
+      grid-auto-rows: 222px;
+      gap: 24px 14px;
+      width: 896px;
+    }
+
+    .card {
+      overflow: hidden;
+      padding: 12px 11px 14px;
+      border-radius: 6px;
+      background: #fff;
+      box-shadow: 0 1px 10px rgba(0, 0, 0, 0.13);
+    }
+
+    .thumbnail {
+      position: relative;
+      width: 146px;
+      height: 116px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .card-title {
+      margin-top: 10px;
+      color: #303030;
+      font-size: 16px;
+      line-height: 27px;
+      letter-spacing: 0;
+    }
+
+    .placeholder {
+      position: absolute;
+      overflow: hidden;
+    }
+
+    .placeholder-caption {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+    }
+
+    .plot {
+      left: 11px;
+      top: 10px;
+      width: 124px;
+      height: 93px;
+      border-left: 1px solid #9b9b9b;
+      border-bottom: 1px solid #9b9b9b;
+      background-color: #fff;
+    }
+
+    .plot::before {
+      content: "";
+      position: absolute;
+      inset: 7px 6px 7px 8px;
+      background:
+        repeating-linear-gradient(to right, transparent 0 26px, rgba(0,0,0,.08) 27px),
+        repeating-linear-gradient(to bottom, transparent 0 21px, rgba(0,0,0,.08) 22px);
+    }
+
+    .heat {
+      background:
+        radial-gradient(circle at 65% 32%, #351066 0 8%, #1766a3 18%, transparent 38%),
+        radial-gradient(circle at 48% 71%, #f2df37 0 8%, #45b95c 19%, transparent 39%),
+        linear-gradient(135deg, #2d5f9e, #46b864 54%, #e4dd3b);
+    }
+
+    .heat-soft {
+      background:
+        radial-gradient(ellipse at 54% 50%, rgba(250,245,226,.98) 0 8%, #93bde0 23%, #fff 55%),
+        #173f58;
+    }
+
+    .contours {
+      background:
+        radial-gradient(ellipse at 35% 65%, transparent 0 12%, #f4df73 13% 14%, transparent 15% 23%, #7fc5aa 24% 25%, transparent 26%),
+        radial-gradient(ellipse at 72% 34%, transparent 0 14%, #b9b3c4 15% 16%, transparent 17% 26%, #8cc0ad 27% 28%, transparent 29%),
+        linear-gradient(45deg, transparent 49.5%, #75a4a8 50%, transparent 50.5%),
+        #fff;
+    }
+
+    .ellipse {
+      background:
+        radial-gradient(ellipse at 51% 51%, #f6e9df 0 5%, #c7d8ee 18%, #9ab8d9 35%, #6c9cc1 53%, #3f7fa8 72%, #fff 73%);
+    }
+
+    .masked {
+      background:
+        radial-gradient(ellipse at 42% 56%, #fff 0 6%, #e4eaec 7% 10%, #df2532 16%, #7c1725 28%, transparent 29%),
+        radial-gradient(ellipse at 70% 32%, #17141f 0 7%, #541429 17%, #d02c46 28%, transparent 29%),
+        #506b75;
+    }
+
+    .barcode {
+      left: 2px;
+      top: 13px;
+      width: 142px;
+      height: 83px;
+      background: repeating-linear-gradient(
+        90deg,
+        #050505 0 2px,
+        #fff 2px 4px,
+        #050505 4px 7px,
+        #fff 7px 9px,
+        #050505 9px 10px,
+        #fff 10px 14px
+      );
+    }
+
+    .quad-grid {
+      left: 8px;
+      top: 8px;
+      width: 130px;
+      height: 101px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 5px;
+    }
+
+    .quad-grid span {
+      position: relative;
+      border-left: 1px solid #aaa;
+      border-bottom: 1px solid #aaa;
+      background:
+        linear-gradient(33deg, transparent 47%, #607080 48% 50%, transparent 51%),
+        linear-gradient(145deg, transparent 48%, #7aa 49% 50%, transparent 51%);
+    }
+
+    .wind span::before,
+    .wind span::after {
+      content: "";
+      position: absolute;
+      left: 11px;
+      top: 10px;
+      width: 32px;
+      height: 1px;
+      background: #262626;
+      box-shadow: 15px 10px #262626, 36px 5px #262626, 9px 23px #262626, 48px 25px #262626;
+      transform: rotate(-40deg);
+    }
+
+    .affine span {
+      background:
+        linear-gradient(145deg, transparent 18%, #2879a2 19% 75%, transparent 76%),
+        radial-gradient(circle at 52% 50%, #e9da35, #46ae62 26%, #246b9e 52%, transparent 53%);
+    }
+
+    .two-plots {
+      left: 11px;
+      top: 10px;
+      width: 124px;
+      height: 92px;
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .two-plots span {
+      border-left: 1px solid #aaa;
+      border-bottom: 1px solid #aaa;
+      background:
+        radial-gradient(ellipse at 60% 55%, #151515 0 4%, #46aa50 12%, rgba(64,157,76,.35) 30%, transparent 58%),
+        #f8f8f8;
+    }
+
+    .corner {
+      left: 10px;
+      top: 7px;
+      width: 128px;
+      height: 104px;
+      border: 1px solid #9a9a9a;
+      background:
+        linear-gradient(90deg, transparent 46%, #fff 46% 56%, transparent 56%),
+        linear-gradient(0deg, transparent 45%, #fff 45% 53%, transparent 53%),
+        radial-gradient(circle at 29% 31%, #532278 0 18%, #1a858b 19% 31%, #73bd53 32% 46%, #e9da4b 47% 55%, #be356a 56% 66%, #166984 67% 76%, #fff 77%),
+        #fff;
+    }
+
+    .four-contours {
+      left: 9px;
+      top: 8px;
+      width: 128px;
+      height: 102px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 4px;
+    }
+
+    .four-contours span {
+      background:
+        radial-gradient(ellipse at 51% 51%, #151515 0 5%, #5b2778 10%, #55a853 18%, transparent 30%),
+        linear-gradient(135deg, transparent 49%, #777 50%, transparent 51%);
+      border: 1px solid #ddd;
+    }
+
+    .hatch {
+      background:
+        repeating-linear-gradient(135deg, transparent 0 4px, rgba(35,35,35,.45) 5px 6px),
+        repeating-linear-gradient(45deg, #b9b9b9 0 13px, #ddd 14px 25px);
+    }
+
+    .polar {
+      background:
+        repeating-radial-gradient(circle at 18% 80%, transparent 0 13px, #777 14px 15px),
+        linear-gradient(79deg, transparent 49%, #3c57c0 50%, transparent 51%),
+        linear-gradient(22deg, transparent 49%, #d57547 50%, transparent 51%);
+    }
+
+    .figimage {
+      left: 19px;
+      top: 64px;
+      width: 37px;
+      height: 47px;
+      background:
+        linear-gradient(90deg, #40116e 50%, transparent 50%),
+        linear-gradient(#69c63f 50%, #32117c 50%);
+    }
+
+    .heatmap-table {
+      left: 8px;
+      top: 12px;
+      width: 131px;
+      height: 91px;
+      background:
+        repeating-linear-gradient(90deg, transparent 0 21px, #fff 21px 23px),
+        repeating-linear-gradient(0deg, transparent 0 14px, #fff 14px 16px),
+        linear-gradient(120deg, #f4e7a5, #54a85b);
+    }
+
+    .resampling {
+      left: 8px;
+      top: 20px;
+      width: 130px;
+      height: 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .resampling span:first-child {
+      background:
+        radial-gradient(circle at 50% 50%, #111459, #a81240 38%, #1664a1 39% 69%, #ddd 70%);
+    }
+
+    .resampling span:last-child {
+      background:
+        linear-gradient(90deg, #ebdc44 25%, #3167a1 25% 50%, #66a93c 50% 75%, #463475 75%),
+        linear-gradient(#64387b 25%, transparent 25% 50%, #4ba35d 50% 75%, transparent 75%);
+      background-blend-mode: multiply;
+    }
+
+    .portrait {
+      left: 44px;
+      top: 12px;
+      width: 59px;
+      height: 59px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 49% 38%, #d8ac84 0 18%, #292020 19% 24%, transparent 25%),
+        linear-gradient(90deg, #2a1836 50%, #4c78ac 50%);
+    }
+
+    .masked-pair {
+      left: 10px;
+      top: 13px;
+      width: 126px;
+      height: 93px;
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .masked-pair span {
+      background:
+        radial-gradient(ellipse at 60% 50%, #111 0 5%, #54ad4f 9%, #fff 14%, transparent 18%),
+        radial-gradient(ellipse at 45% 50%, #531331, #d03248 17%, #b3d5de 33%, transparent 52%),
+        #fff;
+      border: 1px solid #aaa;
+    }
+
+    .four-heat {
+      left: 7px;
+      top: 8px;
+      width: 132px;
+      height: 102px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 5px;
+    }
+
+    .four-heat span {
+      background:
+        radial-gradient(ellipse, #eee 0 8%, #b7a6d6 24%, #563685 60%, #241a53);
+    }
+
+    .blend {
+      left: 31px;
+      top: 14px;
+      width: 87px;
+      height: 86px;
+      border: 1px solid #222;
+      background:
+        radial-gradient(circle at 67% 62%, #f5de59 0 9%, #ed6b32 23%, transparent 47%),
+        radial-gradient(circle at 27% 55%, #e8f0d0 0 8%, #2678a5 29%, transparent 48%),
+        #9e9e85;
+    }
+
+    .formatter {
+      left: 47px;
+      top: 13px;
+      width: 54px;
+      height: 97px;
+      background:
+        linear-gradient(90deg, transparent 33%, rgba(255,255,255,.8) 33% 35%, transparent 35% 66%, rgba(255,255,255,.8) 66% 68%, transparent 68%),
+        linear-gradient(0deg, transparent 24%, rgba(255,255,255,.8) 24% 26%, transparent 26% 49%, rgba(255,255,255,.8) 49% 51%, transparent 51% 74%, rgba(255,255,255,.8) 74% 76%, transparent 76%),
+        linear-gradient(145deg, #24a56c, #c9dc36 24%, #45337f 25% 52%, #28906f 53% 75%, #3a397f 76%);
+    }
+
+    .interpolations {
+      left: 5px;
+      top: 14px;
+      width: 137px;
+      height: 91px;
+      background:
+        repeating-linear-gradient(90deg, transparent 0 31px, #fff 31px 34px),
+        repeating-linear-gradient(0deg, transparent 0 27px, #fff 27px 30px),
+        radial-gradient(circle at 20% 25%, #e1db35, #58b967 16%, #268698 32%, #432273 48%, #dd3d49 68%, #f0da35);
+    }
+
+    .irregular {
+      left: 9px;
+      top: 8px;
+      width: 128px;
+      height: 100px;
+      background:
+        radial-gradient(ellipse at 29% 30%, #318ab1 0 12%, transparent 28%),
+        radial-gradient(ellipse at 72% 29%, #d43a35 0 12%, transparent 28%),
+        radial-gradient(ellipse at 29% 74%, #318ab1 0 12%, transparent 28%),
+        radial-gradient(ellipse at 72% 74%, #d43a35 0 12%, transparent 28%),
+        repeating-linear-gradient(0deg, transparent 0 19px, #777 20px);
+    }
+
+    .layered {
+      left: 29px;
+      top: 18px;
+      width: 89px;
+      height: 88px;
+      background:
+        radial-gradient(ellipse at 60% 55%, #e7d539 0 9%, #5fc04e 22%, #237a9c 44%, transparent 65%),
+        repeating-linear-gradient(90deg, rgba(39,50,85,.16) 0 10px, rgba(72,160,125,.2) 10px 20px),
+        #4b7590;
+    }
+
+    .matrix {
+      left: 32px;
+      top: 13px;
+      width: 88px;
+      height: 92px;
+      background:
+        linear-gradient(45deg, transparent 43%, #482778 44% 50%, #25a478 51% 58%, #d6dc3f 59% 64%, transparent 65%),
+        #440154;
+    }
+
+    .multi {
+      left: 10px;
+      top: 16px;
+      width: 127px;
+      height: 83px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr 7px;
+      gap: 5px;
+    }
+
+    .multi span {
+      background:
+        radial-gradient(circle at 30% 50%, #3b176e, transparent 28%),
+        radial-gradient(circle at 72% 45%, #2daf83, transparent 35%),
+        #31618a;
+    }
+
+    .multi::after {
+      content: "";
+      grid-column: 1 / 3;
+      background: linear-gradient(90deg, #492276, #26898e, #d7dc3a);
+    }
+
+    .pcolor {
+      left: 5px;
+      top: 7px;
+      width: 137px;
+      height: 102px;
+      background:
+        repeating-linear-gradient(90deg, transparent 0 13px, #181818 13px 15px),
+        repeating-linear-gradient(0deg, transparent 0 12px, #181818 12px 14px),
+        linear-gradient(125deg, #3b307e, #2aa183 37%, #bbd637 61%, #5a2a7b 82%);
+    }
+
+    @media (max-width: 1250px) {
+      .brand {
+        width: 285px;
+        flex-basis: 285px;
+      }
+
+      .topnav {
+        gap: 13px;
+      }
+
+      .top-actions {
+        gap: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">matpl<span class="brand-wheel"></span>tlib</div>
+    <nav class="topnav" aria-label="Primary navigation">
+      <a href="#">Plot types</a>
+      <a href="#">User guide</a>
+      <a href="#">Tutorials</a>
+      <a href="#">Examples</a>
+      <a href="#">Reference</a>
+      <a href="#">Contribute</a>
+      <a href="#">Releases</a>
+    </nav>
+    <div class="top-actions">
+      <span class="icon search" aria-label="Search"></span>
+      <span class="icon theme" aria-label="Theme"></span>
+      <select class="version" aria-label="Version">
+        <option>3.10 (stable)</option>
+      </select>
+      <span class="icon" aria-label="Settings">≡</span>
+      <span class="icon" aria-label="Discourse">◕</span>
+      <span class="icon" aria-label="GitHub">●</span>
+      <span class="icon" aria-label="Twitter">♥</span>
+    </div>
+  </header>
+
+  <aside class="sidebar">
+    <h2>Section Navigation</h2>
+    <div class="section-label">
+      <span>Lines, bars and markers</span>
+      <span class="chevron"></span>
+    </div>
+    <div class="section-label active">
+      <span>Images, contours and fields</span>
+      <span class="chevron"></span>
+    </div>
+    <ul class="side-list">
+      <li>Affine transform of an image</li>
+      <li>Wind barbs</li>
+      <li>Barcode</li>
+      <li>Interactive adjustment of colormap range</li>
+      <li>Colormap normalizations</li>
+      <li>Colormap normalizations SymLogNorm</li>
+      <li>Contour corner mask</li>
+      <li>Contour Demo</li>
+      <li>Contour image</li>
+      <li>Contour Label Demo</li>
+      <li>Contourf demo</li>
+      <li>Contourf hatching</li>
+      <li>Contourf and log color scale</li>
+      <li>Contouring the solution space of optimizations</li>
+      <li>BboxImage Demo</li>
+      <li>Figimage Demo</li>
+      <li>Annotated heatmap</li>
+      <li>Image resampling</li>
+      <li>Clipping images with patches</li>
+      <li>Many ways to plot images</li>
+      <li>Image with masked values</li>
+      <li>Image nonuniform</li>
+      <li>Blend transparency with color in 2D images</li>
+      <li>Modifying the coordinate formatter</li>
+      <li>Interpolations for imshow</li>
+      <li>Contour plot of irregularly spaced data</li>
+      <li>Layer images with alpha blending</li>
+      <li>Visualize matrices with matshow</li>
+      <li>Multiple images with one colorbar</li>
+      <li>pcolor images</li>
+      <li>pcolormesh grids and shading</li>
+      <li>pcolormesh</li>
+      <li>Streamplot</li>
+      <li>QuadMesh Demo</li>
+      <li>Advanced quiver and quiverkey functions</li>
+      <li>Quiver Simple Demo</li>
+      <li>Shading example</li>
+      <li>Spectrogram</li>
+      <li>Spy Demos</li>
+      <li>Tricontour Demo</li>
+      <li>Tricontour Smooth Delaunay</li>
+      <li>Tricontour Smooth User</li>
+      <li>Trigradient Demo</li>
+    </ul>
+  </aside>
+
+  <main class="main">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <span class="home"></span>
+      <span class="crumb-arrow"></span>
+      <span>Examples</span>
+      <span class="crumb-arrow"></span>
+      <span>Images,...</span>
+    </nav>
+
+    <h1>Images, contours and fields</h1>
+
+    <section class="gallery">
+      <article class="card">
+        <div class="thumbnail">
+          <div class="placeholder quad-grid affine">
+            <span></span><span></span><span></span><span></span>
+            <span class="placeholder-caption">[Plots: affine transformations]</span>
+          </div>
+        </div>
+        <div class="card-title">Affine transform of<br>an image</div>
+      </article>
+
+      <article class="card">
+        <div class="thumbnail">
+          <div class="placeholder quad-grid wind">
+            <span></span><span></span><span></span><span></span>
+            <span class="placeholder-caption">[Plots: wind barbs]</span>
+          </div>
+        </div>
+        <div class="card-title">Wind barbs</div>
+      </article>
+
+      <article class="card">
+        <div class="thumbnail">
+          <div class="placeholder barcode">
+            <span class="placeholder-caption">[Barcode plot]</span>
+          </div>
+        </div>
+        <div class="card-title">Barcode</div>
+      </article>
+
+      <article class="card">
+        <div class="thumbnail">
+          <div class="placeholder plot heat">
+            <span class="placeholder-caption">[Interactive colormap plot]</span>
+          </div>
+        </div>
+        <div class="card-title">Interactive<br>adjustment of<br>colormap range</div>
+      </article>
+
+      <article class="card">
+        <div class="thumbnail">
+          <div class="placeholder two-plots">
+            <span class="heat-soft"></span><span class="heat-soft"></span>
+            <span class="placeholder-caption">[Colormap normalization plots]</span>
+          </div>
+        </div>
+        <div class="card-title">Colormap<br>normalizations</div>
+      </article>
+
+      <article class="card">
+        <div class="thumbnail">
+          <div class="placeholder two-plots">
+            <span></span><span></span>
+            <span class="placeholder-caption">[SymLogNorm plots]</span>
+          </div>
+        </div>
+        <div class="card-title">Colormap<br>normalizations<br>SymLogNorm</div>
+      </article>
+
+      <article class="card">
+        <div class="thumbnail">
+          <div class="placeholder corner">
+            <span class="placeholder-caption">[Contour corner mask plots]</span>
+          </div>
+        </div>
+        <div class="card-title">Contour corner<br>mask</div>
+      </article>
+
+      <article class="card">
+        <div class="thumbnail">
+          <div class="placeholder plot contours">
+            <span class="placeholder-caption">[Contour plot]</span>
+          </div>
+        </div>
+        <div class="card-title">Contour Demo</div>
+      </article>
+
+      <article class="card">
+        <div class="thumbnail">
+          <div class="placeholder four-contours">
+            <span></span><span></span><span></span><span></span>
+            <span class="placeholder-caption">[Contour image plots]</span>
+          </div>
+        </div>
+        <div class="card-title">Contour image</div>
+      </article>
+
+      <article class="card">
+        <div class="thumbnail">
+          <div class="placeholder plot contours">
+            <span class="placeholder-caption">[Labeled contour plot]</span>
+          </div>
+        </div>
+        <div class="card-title">Contour Label<br>Demo</div>
+      </article>
+
+      <article class="card">
+        <div class="thumbnail">
+          <div class="placeholder plot masked">
+            <span class="placeholder-caption">[Filled contour plot]</span>
+          </div>
+        </div>
+        <div class="card-title">Contourf demo</div>
+      </article>
+
+      <article class="card">
+        <div class="thumbnail">
+          <div class="placeholder plot hatch">
+            <span class="placeholder-caption">[Hatched contour plot]</span>
+          </div>
+        </div>
+        <div class="card-title">Contourf hatching</div>
+      </article>
+
+      <article class="card">
+        <div class="thumbnail">
+          <div class="placeholder plot ellipse">
+            <span class="placeholder-caption">[Logarithmic contour plot]</span>
+          </div>
+        </div>
+        <div class="card-title">Contourf and log<br>color scale</div>
+      </article>
+
+      <article class="card">
+        <div class="thumbnail">
+          <div class="placeholder plot polar">
+            <span class="placeholder-caption">[Optimization contour plot]</span>
+          </div>
+        </div>
+        <div class="card-title">Contouring the<br>solution space of<br>optimizations</div>
+      </article>
+
+      <article class="card">
+        <div class="thumbnail">
+          <div class="placeholder plot">
+            <div style="position:absolute;left:32px;top:37px;padding:2px;background:#69bd64;color:#fff;font-size:9px;">Test</div>
+            <div style="position:absolute;right:-33px;top:0;width:28px;height:92px;background:repeating-linear-gradient(0deg,#e1de3b 0 3px,#168a9b 3px 6px,#53247a 6px 9px,#e2494d 9px 12px);"></div>
+            <span class="placeholder-caption">[BboxImage plot]</span>
+          </div>
+        </div>
+        <div class="card-title">BboxImage Demo</div>
+      </article>
+
+      <article class="card">
+        <div class="thumbnail">
+          <div class="placeholder figimage">
+            <span class="placeholder-caption">[Figimage plot]</span>
+          </div>
+        </div>
+        <div class="card-title">Figimage Demo</div>
+      </article>
+
+      <article class="card">
+        <div class="thumbnail">
+          <div class="placeholder heatmap-table">
+            <span class="placeholder-caption">[Annotated heatmap]</span>
+          </div>
+        </div>
+        <div class="card-title">Annotated heatmap</div>
+      </article>
+
+      <article class="card">
+        <div class="thumbnail">
+          <div class="placeholder resampling">
+            <span></span><span></span>
+            <span class="placeholder-caption">[Image resampling plots]</span>
+          </div>
+        </div>
+        <div class="card-title">Image resampling</div>
+      </article>
+
+      <article class="card">
+        <div class="thumbnail">
+          <div class="placeholder portrait">
+            <span class="placeholder-caption">[Circular portrait image]</span>
+          </div>
+        </div>
+        <div class="card-title">Clipping images<br>with patches</div>
+      </article>
+
+      <article class="card">
+        <div class="thumbnail">
+          <div class="placeholder plot heat">
+            <span class="placeholder-caption">[Overlapping image plots]</span>
+          </div>
+        </div>
+        <div class="card-title">Many ways to plot<br>images</div>
+      </article>
+
+      <article class="card">
+        <div class="thumbnail">
+          <div class="placeholder masked-pair">
+            <span></span><span></span>
+            <span class="placeholder-caption">[Images with masked values]</span>
+          </div>
+        </div>
+        <div class="card-title">Image with masked<br>values</div>
+      </article>
+
+      <article class="card">
+        <div class="thumbnail">
+          <div class="placeholder four-heat">
+            <span></span><span></span><span></span><span></span>
+            <span class="placeholder-caption">[Nonuniform image plots]</span>
+          </div>
+        </div>
+        <div class="card-title">Image nonuniform</div>
+      </article>
+
+      <article class="card">
+        <div class="thumbnail">
+          <div class="placeholder blend">
+            <span class="placeholder-caption">[Blended color images]</span>
+          </div>
+        </div>
+        <div class="card-title">Blend transparency<br>with color in 2D<br>images</div>
+      </article>
+
+      <article class="card">
+        <div class="thumbnail">
+          <div class="placeholder formatter">
+            <span class="placeholder-caption">[Coordinate formatter image]</span>
+          </div>
+        </div>
+        <div class="card-title">Modifying the<br>coordinate<br>formatter</div>
+      </article>
+
+      <article class="card">
+        <div class="thumbnail">
+          <div class="placeholder interpolations">
+            <span class="placeholder-caption">[Interpolation comparison plots]</span>
+          </div>
+        </div>
+        <div class="card-title">Interpolations for<br>imshow</div>
+      </article>
+
+      <article class="card">
+        <div class="thumbnail">
+          <div class="placeholder irregular">
+            <span class="placeholder-caption">[Irregularly spaced contour plots]</span>
+          </div>
+        </div>
+        <div class="card-title">Contour plot of<br>irregularly spaced</div>
+      </article>
+
+      <article class="card">
+        <div class="thumbnail">
+          <div class="placeholder layered">
+            <span class="placeholder-caption">[Layered images]</span>
+          </div>
+        </div>
+        <div class="card-title">Layer images with<br>alpha blending</div>
+      </article>
+
+      <article class="card">
+        <div class="thumbnail">
+          <div class="placeholder matrix">
+            <span class="placeholder-caption">[Matrix visualization]</span>
+          </div>
+        </div>
+        <div class="card-title">Visualize matrices<br>with matshow</div>
+      </article>
+
+      <article class="card">
+        <div class="thumbnail">
+          <div class="placeholder multi">
+            <span></span><span></span><span></span><span></span>
+            <span class="placeholder-caption">[Multiple images with one colorbar]</span>
+          </div>
+        </div>
+        <div class="card-title">Multiple images<br>with one colorbar</div>
+      </article>
+
+      <article class="card">
+        <div class="thumbnail">
+          <div class="placeholder pcolor">
+            <span class="placeholder-caption">[Pcolor image plots]</span>
+          </div>
+        </div>
+        <div class="card-title" style="text-align:center;">pcolor images</div>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

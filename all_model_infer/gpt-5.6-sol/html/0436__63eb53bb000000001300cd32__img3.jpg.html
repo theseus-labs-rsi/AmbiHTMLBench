@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NF-κB信号通路与Notch信号通路</title>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']]
+  }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+* {
+  box-sizing: border-box;
+}
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #ffffff;
+}
+body {
+  font-family: "Microsoft YaHei", "Noto Sans CJK SC", "PingFang SC", Arial, sans-serif;
+  color: #111;
+}
+.page {
+  position: relative;
+  width: 540px;
+  height: 752px;
+  margin: 0 auto;
+  overflow: hidden;
+  background: #fff;
+}
+h1, h2, p, figure {
+  margin: 0;
+}
+.main-title {
+  position: absolute;
+  top: 32px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 25px;
+  line-height: 34px;
+  font-weight: 500;
+  letter-spacing: .2px;
+}
+.intro {
+  position: absolute;
+  top: 83px;
+  left: 40px;
+  width: 461px;
+  font-size: 18px;
+  line-height: 25px;
+  font-weight: 400;
+  letter-spacing: .1px;
+}
+.top-figure {
+  position: absolute;
+  top: 158px;
+  left: 103px;
+  width: 338px;
+  height: 163px;
+}
+.figure-heading {
+  position: relative;
+  height: 25px;
+  border-bottom: 1px solid #d5d5d5;
+  font-size: 12px;
+  line-height: 20px;
+  font-weight: 700;
+  padding-left: 34px;
+}
+.figure-mark {
+  position: absolute;
+  top: 10px;
+  left: 6px;
+  width: 18px;
+  height: 5px;
+}
+.figure-mark::before,
+.figure-mark::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+}
+.figure-mark::before {
+  left: 0;
+  top: 1px;
+  width: 4px;
+  height: 4px;
+  background: #dc9a74;
+}
+.figure-mark::after {
+  left: 7px;
+  top: 2px;
+  width: 3px;
+  height: 3px;
+  background: #aaa;
+}
+.function-chart {
+  position: relative;
+  width: 100%;
+  height: 103px;
+}
+.placeholder-caption {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.level-label {
+  position: absolute;
+  width: 54px;
+  height: 20px;
+  background: linear-gradient(90deg, #d9dbe1, #eef0f1);
+  color: #333;
+  text-align: center;
+  font-size: 9px;
+  line-height: 20px;
+}
+.level-label.cell {
+  top: 61px;
+  left: 0;
+}
+.level-label.body {
+  top: 61px;
+  left: 168px;
+}
+.branch {
+  position: absolute;
+  width: 106px;
+  height: 18px;
+  background: linear-gradient(90deg, #f7f0dc, #e9e2cb);
+  text-align: center;
+  color: #3b3b3b;
+  font-size: 9px;
+  line-height: 18px;
+}
+.branch.cell-top {
+  top: 47px;
+  left: 55px;
+}
+.branch.cell-bottom {
+  top: 76px;
+  left: 55px;
+}
+.branch.body-top {
+  top: 47px;
+  left: 224px;
+}
+.branch.body-bottom {
+  top: 76px;
+  left: 224px;
+}
+.connector {
+  position: absolute;
+  height: 1px;
+  background: #b6b6b6;
+}
+.connector.c1 {
+  top: 70px;
+  left: 49px;
+  width: 19px;
+  transform: rotate(-23deg);
+}
+.connector.c2 {
+  top: 76px;
+  left: 49px;
+  width: 19px;
+  transform: rotate(23deg);
+}
+.connector.c3 {
+  top: 70px;
+  left: 217px;
+  width: 20px;
+  transform: rotate(-23deg);
+}
+.connector.c4 {
+  top: 76px;
+  left: 217px;
+  width: 20px;
+  transform: rotate(23deg);
+}
+.top-caption {
+  position: absolute;
+  left: 34px;
+  top: 140px;
+  width: 297px;
+  color: #222;
+  font-family: Arial, "Microsoft YaHei", sans-serif;
+  font-size: 6.3px;
+  line-height: 8px;
+}
+.second-title {
+  position: absolute;
+  top: 360px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 25px;
+  line-height: 33px;
+  font-weight: 500;
+  letter-spacing: .1px;
+}
+.notch-text {
+  position: absolute;
+  top: 400px;
+  left: 54px;
+  width: 438px;
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 400;
+  letter-spacing: .1px;
+}
+.bottom-figure {
+  position: absolute;
+  top: 508px;
+  left: 107px;
+  width: 335px;
+  height: 185px;
+}
+.bottom-heading {
+  position: relative;
+  height: 27px;
+  border-bottom: 1px solid #d1d1d1;
+  padding-left: 31px;
+  font-size: 12px;
+  line-height: 22px;
+  font-weight: 700;
+}
+.bottom-heading .figure-mark {
+  top: 11px;
+  left: 3px;
+}
+.notch-diagram {
+  position: absolute;
+  top: 30px;
+  left: 46px;
+  width: 227px;
+  height: 128px;
+  overflow: hidden;
+  border: 1px solid #ece8df;
+  background: #f8eee2;
+}
+.upper-cell {
+  position: absolute;
+  inset: 0 0 50px 0;
+  background: #f8eee2;
+}
+.lower-cell {
+  position: absolute;
+  left: -20px;
+  right: -20px;
+  bottom: -10px;
+  height: 68px;
+  background: #a8c4dd;
+  border-top: 2px solid #7599bb;
+  transform: rotate(-3deg);
+}
+.signal-panel {
+  position: absolute;
+  top: 13px;
+  left: 15px;
+  width: 95px;
+  height: 56px;
+  border: 1px solid #aaa;
+  background: #fafafa;
+  box-shadow: 0 0 1px rgba(0,0,0,.2);
+}
+.signal-line {
+  position: absolute;
+  height: 3px;
+  background: #9a4d91;
+}
+.signal-line.s1 {
+  top: 22px;
+  left: 10px;
+  width: 46px;
+}
+.signal-line.s2 {
+  top: 33px;
+  left: 24px;
+  width: 58px;
+}
+.signal-line.s3 {
+  top: 43px;
+  left: 9px;
+  width: 36px;
+}
+.signal-node {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  background: #6b286b;
+  border-radius: 1px;
+}
+.signal-node.n1 {
+  top: 20px;
+  left: 8px;
+}
+.signal-node.n2 {
+  top: 31px;
+  left: 80px;
+}
+.signal-node.n3 {
+  top: 41px;
+  left: 42px;
+}
+.nucleus {
+  position: absolute;
+  top: 29px;
+  left: 118px;
+  width: 39px;
+  height: 47px;
+  border: 1px solid #cbb6a6;
+  border-radius: 50%;
+  background: rgba(255,255,255,.42);
+}
+.nucleus::after {
+  content: "[illegible]";
+  position: absolute;
+  top: 19px;
+  left: 5px;
+  font: 4px Arial, sans-serif;
+  color: #777;
+}
+.receptor {
+  position: absolute;
+  top: 70px;
+  left: 104px;
+  width: 6px;
+  height: 27px;
+  border-left: 2px solid #5d4968;
+  border-right: 1px solid #754e76;
+}
+.receptor::before,
+.receptor::after {
+  content: "";
+  position: absolute;
+  left: -5px;
+  width: 12px;
+  height: 5px;
+  border: 1px solid #444;
+  background: #eee;
+}
+.receptor::before {
+  top: -3px;
+}
+.receptor::after {
+  bottom: -3px;
+}
+.arrow {
+  position: absolute;
+  width: 1px;
+  background: #686868;
+  transform-origin: top;
+}
+.arrow.a1 {
+  top: 61px;
+  left: 64px;
+  height: 35px;
+  transform: rotate(-40deg);
+}
+.arrow.a2 {
+  top: 62px;
+  left: 91px;
+  height: 31px;
+  transform: rotate(-22deg);
+}
+.arrow.a3 {
+  top: 73px;
+  left: 138px;
+  height: 29px;
+  transform: rotate(25deg);
+}
+.info-box {
+  position: absolute;
+  border: 1px solid #777;
+  background: rgba(255,255,255,.8);
+  color: #555;
+  font: 3.5px/4px Arial, sans-serif;
+  padding: 2px;
+}
+.info-box.i1 {
+  top: 60px;
+  left: 119px;
+  width: 30px;
+  height: 13px;
+}
+.info-box.i2 {
+  top: 91px;
+  left: 149px;
+  width: 65px;
+  height: 20px;
+}
+.info-box.i3 {
+  top: 104px;
+  left: 69px;
+  width: 38px;
+  height: 12px;
+}
+.figure-credit {
+  position: absolute;
+  top: 163px;
+  left: 53px;
+  font-family: Arial, sans-serif;
+  font-size: 5.5px;
+  color: #222;
+  white-space: nowrap;
+}
+.figure-note {
+  position: absolute;
+  top: 163px;
+  right: 24px;
+  font-size: 5.5px;
+  color: #222;
+  white-space: nowrap;
+}
+.figure-note::before {
+  content: "•";
+  margin-right: 5px;
+}
+.speaker {
+  position: absolute;
+  right: 98px;
+  bottom: 54px;
+  width: 16px;
+  height: 17px;
+  opacity: .36;
+}
+.speaker-box {
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 5px;
+  height: 6px;
+  background: #888;
+}
+.speaker-cone {
+  position: absolute;
+  left: 4px;
+  top: 3px;
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-right: 8px solid #888;
+}
+.wave {
+  position: absolute;
+  border: 1px solid #888;
+  border-left-color: transparent;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+}
+.wave.w1 {
+  left: 10px;
+  top: 5px;
+  width: 4px;
+  height: 8px;
+}
+.wave.w2 {
+  left: 11px;
+  top: 2px;
+  width: 6px;
+  height: 14px;
+}
+</style>
+</head>
+<body>
+<main class="page">
+  <h1 class="main-title">NF-κB信号通路</h1>
+
+  <p class="intro">
+    相对于RTK相关信号通路，NF-κB信号通路的功能也更加特<br>
+    化一些，与TGF-β和Wnt信号相比高度集中于炎症反应。
+  </p>
+
+  <figure class="top-figure">
+    <div class="figure-heading">
+      <span class="figure-mark"></span>
+      经典NF-κB信号的功能
+    </div>
+    <div class="function-chart placeholder">
+      <span class="placeholder-caption">[Diagram: centered]</span>
+      <div class="level-label cell">细胞水平</div>
+      <div class="branch cell-top">细胞增殖和凋亡</div>
+      <div class="branch cell-bottom">炎症细胞的活化</div>
+      <div class="connector c1"></div>
+      <div class="connector c2"></div>
+
+      <div class="level-label body">个体水平</div>
+      <div class="branch body-top">肿瘤发生和发展</div>
+      <div class="branch body-bottom">炎症反应</div>
+      <div class="connector c3"></div>
+      <div class="connector c4"></div>
+    </div>
+    <figcaption class="top-caption">
+      相对于RTK相关信号通路，NF-κB信号通路的功能也更加特化一些，与TGF-β和Wnt信号相比，<br>
+      高度集中于炎症反应。
+    </figcaption>
+  </figure>
+
+  <h2 class="second-title">Notch信号通路</h2>
+
+  <p class="notch-text">
+    通过膜蛋白作为配体和受体，介导两个细胞相互靠近接<br>
+    触之后的活化效应。Notch 与配体结合，经过 ADAM 剪<br>
+    切释放胞外段与配体一同降解，经 γ-secretase 剪切释放<br>
+    胞内段传导信号 Notch 胞内段进入细胞质传导信号。
+  </p>
+
+  <figure class="bottom-figure">
+    <div class="bottom-heading">
+      <span class="figure-mark"></span>
+      Notch信号通路的调控
+    </div>
+    <div class="notch-diagram placeholder">
+      <span class="placeholder-caption">[Diagram: centered]</span>
+      <div class="upper-cell"></div>
+      <div class="lower-cell"></div>
+      <div class="signal-panel">
+        <div class="signal-line s1"></div>
+        <div class="signal-line s2"></div>
+        <div class="signal-line s3"></div>
+        <div class="signal-node n1"></div>
+        <div class="signal-node n2"></div>
+        <div class="signal-node n3"></div>
+      </div>
+      <div class="nucleus"></div>
+      <div class="receptor"></div>
+      <div class="arrow a1"></div>
+      <div class="arrow a2"></div>
+      <div class="arrow a3"></div>
+      <div class="info-box i1">[illegible]</div>
+      <div class="info-box i2">[illegible]</div>
+      <div class="info-box i3">[illegible]</div>
+    </div>
+    <figcaption class="figure-credit">Chris Siebel and Urban Lendahl, <i>Physiol Rev.</i> 2017</figcaption>
+    <div class="figure-note">Notch和配体的双向调控</div>
+  </figure>
+
+  <div class="speaker" aria-label="[Icon: speaker, bottom-right]">
+    <div class="speaker-box"></div>
+    <div class="speaker-cone"></div>
+    <div class="wave w1"></div>
+    <div class="wave w2"></div>
+  </div>
+</main>
+</body>
+</html>

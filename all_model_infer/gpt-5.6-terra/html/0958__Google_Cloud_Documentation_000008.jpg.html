@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compute Engine documentation</title>
+  <script>
+    window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: #202124;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 14px;
+      background: #fff;
+    }
+    .topbar {
+      height: 48px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #e1e4e8;
+      padding: 0 24px;
+      gap: 34px;
+      white-space: nowrap;
+    }
+    .brand {
+      font-size: 22px;
+      letter-spacing: .1px;
+    }
+    .brand span:nth-child(1) { color: #4285f4; }
+    .brand span:nth-child(2) { color: #ea4335; }
+    .brand span:nth-child(3) { color: #fbbc05; }
+    .brand span:nth-child(4) { color: #4285f4; }
+    .brand span:nth-child(5) { color: #34a853; }
+    .brand span:nth-child(6) { color: #ea4335; }
+    .brand .cloud { color: #5f6368; margin-left: 5px; }
+    .topnav {
+      display: flex;
+      height: 100%;
+      align-items: center;
+      gap: 38px;
+      color: #5f6368;
+    }
+    .topnav .active {
+      color: #1967d2;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      border-bottom: 3px solid #1a73e8;
+    }
+    .caret {
+      display: inline-block;
+      margin-left: 9px;
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 6px solid currentColor;
+      vertical-align: middle;
+    }
+    .top-actions {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .search {
+      width: 200px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 10px;
+      color: #5f6368;
+      background: #f1f3f4;
+      border-radius: 2px;
+      font-size: 16px;
+    }
+    .search-icon { font-size: 23px; line-height: 1; }
+    .shortcut {
+      margin-left: auto;
+      padding: 3px 7px;
+      color: #777;
+      background: #fff;
+      border-radius: 6px;
+      font-size: 13px;
+      font-style: italic;
+    }
+    .top-button, .language {
+      height: 36px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 12px;
+      color: #5f6368;
+      background: #fff;
+      border: 1px solid #dadce0;
+      border-radius: 4px;
+    }
+    .sun { color: #5f6368; font-size: 25px; padding: 0 3px; }
+    .signin { color: #1a73e8; margin-left: 6px; }
+    .productbar {
+      height: 104px;
+      background: #e8f0fe;
+      border-bottom: 1px solid #b9c1cc;
+      box-shadow: 0 2px 3px rgba(60,64,67,.15);
+    }
+    .product-head {
+      height: 61px;
+      display: flex;
+      align-items: center;
+      padding: 0 25px;
+      gap: 10px;
+    }
+    .chip { font-size: 27px; color: #1a73e8; }
+    .product-name { font-size: 20px; }
+    .start-free {
+      margin-left: auto;
+      color: white;
+      background: #1a73e8;
+      border: 0;
+      border-radius: 4px;
+      padding: 10px 25px;
+      font-size: 14px;
+    }
+    .product-tabs {
+      height: 43px;
+      display: flex;
+      gap: 38px;
+      align-items: end;
+      padding-left: 25px;
+    }
+    .product-tabs div {
+      height: 43px;
+      padding-top: 12px;
+    }
+    .product-tabs .selected {
+      color: #1967d2;
+      border-bottom: 3px solid #1a73e8;
+    }
+    .shell { display: flex; min-height: 1392px; }
+    aside {
+      flex: 0 0 270px;
+      border-right: 1px solid #dadce0;
+      background: #fff;
+      color: #202124;
+    }
+    .filter {
+      height: 32px;
+      margin: 24px 24px 23px;
+      padding: 8px 11px;
+      background: #f1f3f4;
+      color: #5f6368;
+      font-size: 13px;
+      border-radius: 3px;
+    }
+    .filter::before { content: "☷"; margin-right: 10px; font-size: 14px; }
+    .intro-links {
+      border-top: 1px solid #dadce0;
+      padding: 14px 24px 14px;
+      line-height: 1.22;
+      font-size: 12.5px;
+    }
+    .intro-links div { margin: 0 0 9px; }
+    .side-section {
+      min-height: 48px;
+      border-top: 1px solid #dadce0;
+      padding: 15px 24px;
+      position: relative;
+      color: #5f6368;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    .side-section .angle {
+      position: absolute;
+      right: 16px;
+      font-size: 18px;
+      top: 12px;
+      font-weight: normal;
+    }
+    .side-section.open { color: #5f6368; padding-bottom: 8px; }
+    .tree {
+      font-size: 12px;
+      color: #202124;
+      font-weight: normal;
+      line-height: 1.35;
+      margin-top: 6px;
+      margin-left: 0;
+    }
+    .tree div { margin: 7px 0; }
+    .tree .indent1 { padding-left: 16px; }
+    .tree .indent2 { padding-left: 32px; }
+    .tree .selected-tree {
+      margin-left: -24px;
+      margin-right: -16px;
+      padding: 4px 8px 4px 56px;
+      color: #1967d2;
+      background: #e8f0fe;
+      border-radius: 0 18px 18px 0;
+    }
+    .tree .arrowline::before { content: "›"; position: absolute; left: 26px; }
+    main {
+      width: 958px;
+      margin: 23px 0 0 23px;
+      border: 1px solid #dadce0;
+      border-radius: 10px 10px 0 0;
+      overflow: hidden;
+      min-height: 1430px;
+    }
+    .hero {
+      height: 228px;
+      position: relative;
+      overflow: hidden;
+      background: #eaf2ff;
+    }
+    .hero h1 {
+      position: relative;
+      z-index: 2;
+      margin: 40px 0 24px 40px;
+      font-size: 38px;
+      line-height: 1.16;
+      letter-spacing: 0;
+      font-weight: 500;
+    }
+    .blue-button {
+      position: relative;
+      z-index: 2;
+      display: inline-block;
+      margin-left: 40px;
+      padding: 10px 24px;
+      background: #1a73e8;
+      color: #fff;
+      border-radius: 3px;
+      font-size: 14px;
+    }
+    .art {
+      position: absolute;
+      inset: 0 0 0 495px;
+      overflow: hidden;
+      background: #e9f8ef;
+    }
+    .art .line { position: absolute; border-color: #4285f4; }
+    .art .box1 {
+      left: 22px; top: -15px; width: 60px; height: 142px;
+      border: 2px solid #4285f4;
+    }
+    .art .box2 {
+      left: 50px; top: 21px; width: 100px; height: 41px;
+      border: 2px solid #34a853;
+    }
+    .art .diamond {
+      left: 181px; top: 28px; width: 28px; height: 28px;
+      border: 2px solid #4285f4; transform: rotate(45deg);
+      background: #e9f8ef;
+    }
+    .art .arc1 {
+      left: 264px; top: -81px; width: 165px; height: 162px;
+      border: 2px solid #4285f4; border-radius: 50%;
+    }
+    .art .arc2 {
+      left: 198px; top: -52px; width: 190px; height: 174px;
+      border: 2px solid #fbbc04; border-radius: 0 0 100px 100px;
+    }
+    .art .circle-red {
+      left: 90px; top: 86px; width: 163px; height: 163px;
+      border: 2px solid #ea4335; border-radius: 50%;
+    }
+    .art .circle-blue {
+      left: 135px; top: 131px; width: 73px; height: 73px;
+      border: 2px dashed #4285f4; border-radius: 50%;
+    }
+    .art .greenline {
+      left: 162px; top: 166px; width: 100px; border-top: 2px solid #34a853;
+    }
+    .art .yellowline {
+      left: 242px; top: 120px; width: 185px; height: 59px;
+      border: 2px solid #fbbc04; border-left: 0; border-radius: 0 0 0 44px;
+    }
+    .art .small-circle {
+      position: absolute; width: 31px; height: 31px;
+      border: 2px dotted #34a853; border-radius: 50%;
+    }
+    .art .small-circle::after {
+      content: ""; position: absolute; inset: 7px; border: 2px solid #34a853; border-radius: 50%;
+    }
+    .art .one { left: 14px; top: 188px; }
+    .art .two { left: 360px; top: 105px; }
+    .content { background: white; }
+    .overview {
+      min-height: 216px;
+      padding: 38px 40px 31px;
+      font-size: 16px;
+      line-height: 1.48;
+    }
+    .overview p { margin: 0 0 16px; max-width: 850px; }
+    a { color: #1967d2; text-decoration: none; }
+    .credit {
+      height: 168px;
+      display: flex;
+      align-items: center;
+      padding: 31px 104px 31px 40px;
+      background: linear-gradient(90deg, #e9f2ff, #edf9eb);
+    }
+    .credit h2 {
+      margin: 0 0 5px;
+      font-size: 19px;
+      font-weight: 500;
+    }
+    .credit ul {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 14px;
+      line-height: 1.56;
+    }
+    .credit .blue-button {
+      margin-left: auto;
+      min-width: 175px;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .resources { padding: 38px 40px 0; }
+    .resources h2, .related h2 {
+      margin: 0 0 19px;
+      font-size: 29px;
+      font-weight: 500;
+    }
+    .resources > p {
+      margin: 0 0 35px;
+      font-size: 16px;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .card {
+      height: 395px;
+      border: 1px solid #dadce0;
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #d2e3fc;
+      color: #1a73e8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+    .card h3 {
+      margin: 0 0 28px;
+      font-size: 21px;
+      font-weight: 400;
+    }
+    .card a {
+      display: block;
+      margin: 0 0 15px;
+      line-height: 1.35;
+      font-size: 14px;
+    }
+    .related {
+      padding: 40px 40px 0;
+      text-align: center;
+    }
+    .related h2 { margin-bottom: 21px; }
+    .switcher {
+      display: flex;
+      justify-content: center;
+      gap: 11px;
+      margin-bottom: 21px;
+    }
+    .tab {
+      padding: 8px 15px;
+      border: 1px solid #dadce0;
+      border-radius: 8px;
+      background: #fff;
+      font-size: 13px;
+    }
+    .tab.active {
+      color: #fff;
+      background: #1a73e8;
+      border-color: #1a73e8;
+    }
+    .related > p {
+      max-width: 760px;
+      margin: 0 auto 35px;
+      font-size: 16px;
+      line-height: 1.48;
+    }
+    .training-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      text-align: left;
+    }
+    .training {
+      height: 155px;
+      border: 1px solid #dadce0;
+      border-radius: 8px;
+      padding: 18px 16px;
+    }
+    .badge {
+      display: inline-block;
+      color: #a50e0e;
+      background: #fef7e0;
+      padding: 5px 8px;
+      border-radius: 8px;
+      font-size: 12px;
+    }
+    .collapse {
+      position: fixed;
+      left: 220px;
+      bottom: 15px;
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      border: 1px solid #dadce0;
+      background: #f8f9fa;
+      box-shadow: 0 2px 5px rgba(60,64,67,.25);
+      color: #5f6368;
+      font-size: 23px;
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span><span class="cloud">Cloud</span></div>
+    <nav class="topnav">
+      <div class="active">Technology areas <span class="caret"></span></div>
+      <div>Cross-product tools <span class="caret"></span></div>
+    </nav>
+    <div class="top-actions">
+      <div class="search"><span class="search-icon">⌕</span><span>Search</span><span class="shortcut">/</span></div>
+      <div class="top-button">▣&nbsp; Console</div>
+      <div class="sun">☀</div>
+      <div class="language">◉&nbsp; English <span class="caret"></span></div>
+      <div class="signin">Sign in</div>
+    </div>
+  </header>
+
+  <section class="productbar">
+    <div class="product-head">
+      <span class="chip">▣</span>
+      <span class="product-name">Compute Engine</span>
+      <button class="start-free">Start free</button>
+    </div>
+    <div class="product-tabs">
+      <div class="selected">Overview</div>
+      <div>Guides</div>
+      <div>APIs &amp; Reference</div>
+      <div>Samples</div>
+      <div>Resources</div>
+    </div>
+  </section>
+
+  <div class="shell">
+    <aside>
+      <div class="filter">Filter</div>
+      <div class="intro-links">
+        <div>Google Cloud Documentation home</div>
+        <div>Get started with Google Cloud</div>
+        <div>Product list</div>
+        <div>Integrated AI assistance with Gemini<br>for Google Cloud</div>
+        <div>What's new in documentation</div>
+        <div>Recent product release notes</div>
+        <div>Cloud Customer Care</div>
+      </div>
+      <div class="side-section">Cross-product tools <span class="angle">⌄</span></div>
+      <div class="side-section">AI and ML <span class="angle">⌄</span></div>
+      <div class="side-section">Application development <span class="angle">⌄</span></div>
+      <div class="side-section">Application hosting <span class="angle">⌄</span></div>
+      <div class="side-section open">
+        Compute <span class="angle">⌃</span>
+        <div class="tree">
+          <div class="indent1">Overview of compute</div>
+          <div class="indent1">⌄&nbsp; Virtual machines</div>
+          <div class="selected-tree">Compute Engine</div>
+          <div class="indent2">Capacity Planner</div>
+          <div class="indent2">See additional products on<br>overview page</div>
+          <div class="indent1">›&nbsp; Images</div>
+          <div class="indent1">›&nbsp; Block storage</div>
+          <div class="indent1">›&nbsp; Workloads</div>
+          <div class="indent1">›&nbsp; Selected related products</div>
+        </div>
+      </div>
+      <div class="side-section">Data analytics <span class="angle">⌄</span></div>
+      <div class="side-section">Databases <span class="angle">⌄</span></div>
+      <div class="side-section">Distributed, hybrid, and multicloud <span class="angle">⌄</span></div>
+      <div class="side-section">Industry solutions <span class="angle">⌄</span></div>
+      <div class="side-section">Migration <span class="angle">⌄</span></div>
+      <div class="side-section">Networking <span class="angle">⌄</span></div>
+      <div class="side-section">Observability and monitoring <span class="angle">⌄</span></div>
+      <div class="side-section">Security <span class="angle">⌄</span></div>
+      <div class="side-section">Storage <span class="angle">⌄</span></div>
+    </aside>
+
+    <main>
+      <section class="hero">
+        <h1>Compute Engine<br>documentation</h1>
+        <a class="blue-button" href="#">Read product documentation</a>
+        <div class="art">
+          <div class="box1"></div>
+          <div class="box2"></div>
+          <div class="diamond"></div>
+          <div class="arc1"></div>
+          <div class="arc2"></div>
+          <div class="circle-red"></div>
+          <div class="circle-blue"></div>
+          <div class="greenline"></div>
+          <div class="yellowline"></div>
+          <div class="small-circle one"></div>
+          <div class="small-circle two"></div>
+        </div>
+      </section>
+
+      <section class="overview">
+        <p>Compute Engine is a <a href="#">computing and hosting service</a> that lets you create and run virtual machines on Google infrastructure. Compute Engine offers scale, performance, and value that lets you easily launch large compute clusters on Google's infrastructure. There are no upfront investments, and you can run thousands of virtual CPUs on a system that offers quick, consistent performance.</p>
+        <a href="#">Go to the Compute Engine product page for more.</a>
+      </section>
+
+      <section class="credit">
+        <div>
+          <h2>Start your proof of concept with $300 in free credit</h2>
+          <ul>
+            <li>Concepts and tools for Generative AI models and tools.</li>
+            <li>Get free usage of 20+ popular products, including Compute Engine and AI APIs.</li>
+            <li>No automatic charges, no commitment.</li>
+          </ul>
+        </div>
+        <a href="#" class="blue-button">Get started for free</a>
+      </section>
+
+      <section class="resources">
+        <h2>Documentation resources</h2>
+        <p>Find quickstarts and guides, review key references, and get help with common issues.</p>
+        <div class="cards">
+          <article class="card">
+            <div class="card-icon">☷</div>
+            <h3>Guides</h3>
+            <a href="#">Machine families resource and<br>comparison guide</a>
+            <a href="#">Choose a deployment strategy</a>
+            <a href="#">Create and start a VM</a>
+            <a href="#">About SSH connections</a>
+            <a href="#">Choose a migration path</a>
+            <a href="#">Data protection options</a>
+            <a href="#">VM instance lifecycle</a>
+          </article>
+          <article class="card">
+            <div class="card-icon">▣</div>
+            <h3>Reference</h3>
+            <a href="#">gcloud compute command-line tool</a>
+            <a href="#">Client libraries</a>
+            <a href="#">REST API</a>
+          </article>
+          <article class="card">
+            <div class="card-icon">●</div>
+            <h3>Resources</h3>
+            <a href="#">Pricing</a>
+            <a href="#">Quotas and limits</a>
+            <a href="#">Release notes</a>
+            <a href="#">Support</a>
+            <a href="#">Samples and videos</a>
+          </article>
+        </div>
+      </section>
+
+      <section class="related">
+        <h2>Related resources</h2>
+        <div class="switcher">
+          <div class="tab active">✓&nbsp;&nbsp; Training and tutorials</div>
+          <div class="tab">Use cases</div>
+          <div class="tab">Code samples</div>
+        </div>
+        <p>Explore self-paced training, use cases, reference architectures, and code samples with examples of how to use and connect Google Cloud services.</p>
+        <div class="training-row">
+          <div class="training"><span class="badge">Training</span></div>
+          <div class="training"><span class="badge">Training</span></div>
+          <div class="training"><span class="badge">Training</span></div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <div class="collapse">‹</div>
+</body>
+</html>

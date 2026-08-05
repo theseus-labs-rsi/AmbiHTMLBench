@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Django 4.1.12 release notes | Django documentation</title>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$']],
+        displayMath: [['$$', '$$']]
+      }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    :root {
+      --dark-green: #073e2d;
+      --header-green: #0b4b36;
+      --green: #44b78b;
+      --link-green: #2b9f7b;
+      --survey-green: #94d4b9;
+      --text: #123d30;
+      --rule: #d6dfdb;
+      --sidebar-bg: #f7f7f7;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-width: 1180px;
+      min-height: 100%;
+      color: #102e25;
+      background: #fff;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    a {
+      color: var(--link-green);
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 1px;
+    }
+
+    .site-header {
+      height: 82px;
+      padding: 0 69px;
+      display: flex;
+      align-items: center;
+      background: var(--header-green);
+      color: #fff;
+    }
+
+    .brand {
+      flex: 0 0 282px;
+      color: #fff;
+      font-size: 33px;
+      font-weight: 700;
+      letter-spacing: -2px;
+      line-height: 1;
+      text-decoration: none;
+    }
+
+    .top-nav {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      white-space: nowrap;
+    }
+
+    .top-nav a {
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .top-nav a.active {
+      color: #3c9878;
+    }
+
+    .search-area {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .search-box {
+      width: 214px;
+      height: 46px;
+      padding: 0 43px 0 12px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      border: 1px solid #d5ded9;
+      border-radius: 5px;
+      background: #fff;
+      color: #18352c;
+      font-size: 15px;
+    }
+
+    .search-icon {
+      width: 15px;
+      height: 15px;
+      position: absolute;
+      right: 17px;
+      top: 12px;
+      border: 3px solid #49ad8b;
+      border-radius: 50%;
+    }
+
+    .search-icon::after {
+      content: "";
+      width: 8px;
+      height: 3px;
+      position: absolute;
+      right: -6px;
+      bottom: -4px;
+      background: #49ad8b;
+      transform: rotate(48deg);
+      border-radius: 2px;
+    }
+
+    .theme-mark {
+      width: 16px;
+      height: 16px;
+      display: inline-block;
+      position: relative;
+      border-radius: 50%;
+      background: #fff;
+    }
+
+    .theme-mark::after {
+      content: "";
+      width: 8px;
+      height: 16px;
+      position: absolute;
+      right: 0;
+      top: 0;
+      border-radius: 0 9px 9px 0;
+      background: var(--header-green);
+    }
+
+    .documentation-bar {
+      height: 73px;
+      padding: 0 60px;
+      display: flex;
+      align-items: center;
+      background: #45b991;
+      border-bottom: 1px solid #267c62;
+      color: #d8f0e6;
+      font-size: 32px;
+      font-weight: 300;
+    }
+
+    .survey {
+      height: 393px;
+      padding: 43px 130px 38px;
+      text-align: center;
+      background: var(--survey-green);
+      color: #111d19;
+    }
+
+    .survey h1 {
+      margin: 0 0 25px;
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 1.3;
+    }
+
+    .survey p {
+      max-width: 1085px;
+      margin: 0 auto;
+      font-size: 18px;
+      line-height: 1.58;
+    }
+
+    .survey p + p {
+      margin-top: 28px;
+    }
+
+    .survey strong {
+      font-weight: 700;
+    }
+
+    .survey-button {
+      width: 454px;
+      height: 65px;
+      margin: 22px auto 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      background: #41b58e;
+      color: #111;
+      font-size: 18px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .page-body {
+      min-height: 1052px;
+      display: grid;
+      grid-template-columns: minmax(0, 930px) minmax(410px, 510px);
+      align-items: stretch;
+    }
+
+    .article {
+      padding: 19px 52px 70px 60px;
+      background: #fff;
+    }
+
+    .article h1 {
+      margin: 0 0 24px;
+      color: #123f31;
+      font-size: 29px;
+      font-weight: 400;
+      line-height: 1.25;
+      letter-spacing: -0.4px;
+    }
+
+    .pilcrow {
+      margin-left: 4px;
+      color: #36ae85;
+      font-size: 22px;
+      font-weight: 700;
+      text-decoration: none;
+      vertical-align: 3px;
+    }
+
+    .date {
+      margin: 0 0 18px;
+      font-size: 14px;
+      font-style: italic;
+      line-height: 1.45;
+    }
+
+    .article p {
+      margin: 0 0 15px;
+      font-size: 14px;
+      line-height: 1.48;
+    }
+
+    .article h2 {
+      margin: 13px 0 17px;
+      color: #103e30;
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 1.13;
+      letter-spacing: 0.1px;
+    }
+
+    .article h2 code {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    code,
+    .code-text {
+      color: #113e30;
+      font-family: "Courier New", Courier, monospace;
+      font-weight: 700;
+    }
+
+    .article strong {
+      font-weight: 700;
+    }
+
+    .article-nav {
+      height: 65px;
+      margin-top: 27px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .article-nav a {
+      text-decoration: none;
+    }
+
+    .arrow {
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 0;
+      vertical-align: -2px;
+    }
+
+    .sidebar {
+      min-height: 1052px;
+      padding: 40px 59px 55px 53px;
+      background: var(--sidebar-bg);
+      border-left: 1px solid #f0f1f0;
+      color: #143e31;
+    }
+
+    .sidebar-section {
+      margin: 0 0 23px;
+    }
+
+    .sidebar h2 {
+      margin: 0;
+      padding: 0 0 14px;
+      border-bottom: 1px solid #d4ddda;
+      color: #133f31;
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.25;
+    }
+
+    .support-row {
+      min-height: 113px;
+      padding-top: 37px;
+      display: flex;
+      gap: 33px;
+      align-items: flex-start;
+    }
+
+    .pixel-heart {
+      width: 66px;
+      height: 57px;
+      flex: 0 0 66px;
+      position: relative;
+    }
+
+    .pixel-heart span {
+      width: 10px;
+      height: 10px;
+      position: absolute;
+      background: #d7196a;
+      box-shadow:
+        10px 0 #e13879,
+        30px 0 #d7196a,
+        40px 0 #e13879,
+        -10px 10px #d7196a,
+        0 10px #d7196a,
+        10px 10px #e13879,
+        20px 10px #d7196a,
+        30px 10px #e13879,
+        40px 10px #d7196a,
+        50px 10px #d7196a,
+        -10px 20px #e13879,
+        0 20px #d7196a,
+        10px 20px #d7196a,
+        20px 20px #e13879,
+        30px 20px #d7196a,
+        40px 20px #d7196a,
+        50px 20px #e13879,
+        0 30px #d7196a,
+        10px 30px #e13879,
+        20px 30px #d7196a,
+        30px 30px #e13879,
+        40px 30px #d7196a,
+        10px 40px #d7196a,
+        20px 40px #e13879,
+        30px 40px #d7196a,
+        20px 50px #d7196a;
+      left: 10px;
+      top: 0;
+    }
+
+    .support-copy {
+      padding-top: 0;
+      color: #2ca17d;
+      font-size: 14px;
+      line-height: 1.62;
+    }
+
+    .sidebar-list {
+      margin: 19px 0 0;
+      padding-left: 19px;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .sidebar-list li {
+      margin: 0 0 11px;
+      padding-left: 1px;
+    }
+
+    .sidebar-list ul {
+      margin: 10px 0 0;
+      padding-left: 20px;
+      list-style-type: circle;
+    }
+
+    .sidebar-list ul li {
+      padding-left: 0;
+    }
+
+    .sidebar-list ul ul {
+      list-style-type: square;
+    }
+
+    .sidebar .browse-list {
+      margin-top: 19px;
+    }
+
+    .help-block {
+      padding: 20px 0 15px;
+      border-bottom: 1px solid #d4ddda;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .help-block:first-of-type {
+      padding-top: 22px;
+    }
+
+    .help-title {
+      display: block;
+      margin-bottom: 2px;
+      color: #2ba17d;
+      font-size: 16px;
+      text-decoration: none;
+    }
+
+    .nowrap-crop {
+      width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .floating-tools {
+      position: fixed;
+      right: 18px;
+      bottom: 16px;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 11px;
+      font-size: 11px;
+      color: #173d31;
+    }
+
+    .floating-tools div {
+      min-height: 38px;
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #cce2d9;
+      border-radius: 5px;
+      background: #effbf6;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+      white-space: nowrap;
+    }
+
+    .floating-tools .getting-help {
+      color: #42a987;
+      font-weight: 700;
+    }
+
+    .floating-tools .up {
+      width: 44px;
+      padding: 0;
+      color: #43b28d;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    @media (max-width: 1200px) {
+      .site-header {
+        padding-left: 40px;
+        padding-right: 40px;
+      }
+
+      .brand {
+        flex-basis: 220px;
+      }
+
+      .top-nav {
+        gap: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#">django</a>
+
+    <nav class="top-nav" aria-label="Primary navigation">
+      <a href="#">OVERVIEW</a>
+      <a href="#">DOWNLOAD</a>
+      <a class="active" href="#">DOCUMENTATION</a>
+      <a href="#">NEWS</a>
+      <a href="#">CODE</a>
+      <a href="#">ISSUES</a>
+      <a href="#">COMMUNITY</a>
+      <a href="#">FOUNDATION</a>
+      <a href="#">♥ DONATE</a>
+    </nav>
+
+    <div class="search-area">
+      <div class="search-box">
+        Search (⌘ K)
+        <span class="search-icon" aria-hidden="true"></span>
+      </div>
+      <span class="theme-mark" aria-hidden="true"></span>
+    </div>
+  </header>
+
+  <div class="documentation-bar">Documentation</div>
+
+  <section class="survey">
+    <h1>Django Developer Survey</h1>
+    <p>
+      The Django Software Foundation is once again partnering with JetBrains to run the 2026 Django Developer Survey 📊 Help us better<br>
+      understand how Django is being used around the world and guide future technical and community decisions. <strong>Read more on the Django<br>
+      blog.</strong>
+    </p>
+    <p>
+      Please help us spread the word by sharing the survey with your communities and on social media 📣 The more diverse the responses,<br>
+      the better the results for everyone.
+    </p>
+    <a class="survey-button" href="#">Take the survey ✨</a>
+  </section>
+
+  <main class="page-body">
+    <article class="article">
+      <h1>Django 4.1.12 release notes <a class="pilcrow" href="#">¶</a></h1>
+
+      <p class="date">October 4, 2023</p>
+
+      <p>Django 4.1.12 fixes a security issue with severity “moderate” in 4.1.11.</p>
+
+      <h2>
+        CVE-2023-43665: Denial-of-service possibility in<br>
+        <code>django.utils.text.Truncator</code> <a class="pilcrow" href="#">¶</a>
+      </h2>
+
+      <p>
+        Following the fix for <a href="#"><strong>CVE 2019-14232</strong></a>, the regular expressions used in the implementation of
+        <code>django.utils.text.Truncator</code>’s <code>chars()</code> and <code>words()</code> methods (with
+        <code>html=True</code>) were revised and improved. However, these regular expressions still exhibited linear backtracking
+        complexity, so when given a very long, potentially malformed HTML input, the evaluation would still be slow, leading to a
+        potential denial of service vulnerability.
+      </p>
+
+      <p>
+        The <code>chars()</code> and <code>words()</code> methods are used to implement the
+        <a href="#"><code>truncatechars_html</code></a> and <a href="#"><code>truncatewords_html</code></a> template filters,
+        which were thus also vulnerable.
+      </p>
+
+      <p>
+        The input processed by <code>Truncator</code>, when operating in HTML mode, has been limited to the first five million
+        characters in order to avoid potential performance and memory issues.
+      </p>
+
+      <nav class="article-nav" aria-label="Release note navigation">
+        <a href="#"><span class="arrow">‹</span>&nbsp; Django 4.1.13 release notes</a>
+        <a href="#">Django 4.1.11 release notes &nbsp;<span class="arrow">›</span></a>
+      </nav>
+    </article>
+
+    <aside class="sidebar">
+      <section class="sidebar-section">
+        <h2>Support Django!</h2>
+        <div class="support-row">
+          <div class="pixel-heart" aria-hidden="true"><span></span></div>
+          <div class="support-copy">
+            Agence Debord donated to the Django<br>
+            Software Foundation to support Django<br>
+            development. Donate today!
+          </div>
+        </div>
+      </section>
+
+      <section class="sidebar-section">
+        <h2>Contents</h2>
+        <ul class="sidebar-list">
+          <li>
+            <a href="#">Django 4.1.12 release notes</a>
+            <ul>
+              <li>
+                <a href="#">CVE-2023-43665: Denial-of-service possibility in<br>
+                <span class="code-text">django.utils.text.Truncator</span></a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+
+      <section class="sidebar-section">
+        <h2>Browse</h2>
+        <ul class="sidebar-list browse-list">
+          <li>Prev: <a href="#">Django 4.1.13 release notes</a></li>
+          <li>Next: <a href="#">Django 4.1.11 release notes</a></li>
+          <li><a href="#">Table of contents</a></li>
+          <li><a href="#">General Index</a></li>
+          <li><a href="#">Python Module Index</a></li>
+        </ul>
+      </section>
+
+      <section class="sidebar-section">
+        <h2>You are here:</h2>
+        <ul class="sidebar-list">
+          <li>
+            <a href="#">Django 5.2 documentation</a>
+            <ul>
+              <li>
+                <a href="#">Release notes</a>
+                <ul>
+                  <li>Django 4.1.12 release notes</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+
+      <section class="sidebar-section">
+        <h2>Getting help</h2>
+
+        <div class="help-block">
+          <a class="help-title" href="#">FAQ</a>
+          <div class="nowrap-crop">Try the FAQ — it's got answers to many common questi</div>
+        </div>
+
+        <div class="help-block">
+          <a class="help-title" href="#">Index, Module Index, or Table of Contents</a>
+          <div>Handy when looking for specific information.</div>
+        </div>
+
+        <div class="help-block">
+          <a class="help-title" href="#">Django Discord Server</a>
+          <div>Join the Django Discord Community.</div>
+        </div>
+      </section>
+    </aside>
+  </main>
+
+  <div class="floating-tools" aria-label="Documentation tools">
+    <div class="getting-help">Getting Help</div>
+    <div>Language: en</div>
+    <div>Documentation version: 5.2</div>
+    <div class="up">⌃</div>
+  </div>
+</body>
+</html>

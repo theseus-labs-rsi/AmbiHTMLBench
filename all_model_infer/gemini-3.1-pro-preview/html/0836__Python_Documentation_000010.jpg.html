@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python 3.14.5 documentation</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-size: 14px;
+            color: #111111;
+            background-color: #ffffff;
+            line-height: 1.4;
+        }
+        a {
+            color: #006599;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        /* Navbar Styling */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 15px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #cccccc;
+            font-size: 13px;
+            height: 33px;
+        }
+        .navbar.bottom {
+            border-top: 1px solid #cccccc;
+            border-bottom: none;
+            margin-top: 20px;
+        }
+        .nav-left, .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav-select {
+            font-size: 12px;
+            padding: 1px 4px;
+            border: 1px solid #a0a0a0;
+            border-radius: 2px;
+            background-color: #ffffff;
+            color: #111111;
+            height: 20px;
+        }
+        .search-input {
+            font-size: 12px;
+            padding: 1px 5px;
+            border: 1px solid #a0a0a0;
+            border-radius: 2px;
+            width: 120px;
+            height: 20px;
+            color: #666666;
+        }
+        .go-btn {
+            font-size: 12px;
+            padding: 0 6px;
+            height: 20px;
+            border: 1px solid #a0a0a0;
+            border-radius: 2px;
+            background-color: #efefef;
+            cursor: pointer;
+        }
+        .nav-separator {
+            color: #888888;
+            margin: 0 2px;
+        }
+        .placeholder.icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background: linear-gradient(135deg, #387EB8 50%, #FFE052 50%);
+            border-radius: 2px;
+            vertical-align: middle;
+            margin-right: 2px;
+        }
+        /* Main Container Layout */
+        .main-container {
+            display: flex;
+            min-height: calc(100vh - 180px);
+            position: relative;
+        }
+        /* Left Sidebar */
+        .sidebar {
+            width: 220px;
+            background-color: #dedede;
+            padding: 15px 15px 40px 15px;
+            font-size: 13px;
+            position: relative;
+            flex-shrink: 0;
+        }
+        .sidebar-toggle {
+            position: absolute;
+            right: 0;
+            top: 340px;
+            width: 10px;
+            height: 20px;
+            background-color: #cccccc;
+            color: #ffffff;
+            font-size: 10px;
+            line-height: 20px;
+            text-align: center;
+            cursor: pointer;
+            user-select: none;
+        }
+        .sidebar-title {
+            font-weight: bold;
+            color: #222222;
+            margin-bottom: 4px;
+        }
+        .sidebar-subtitle {
+            font-size: 12px;
+            color: #222222;
+            margin-bottom: 18px;
+        }
+        .sidebar-list {
+            list-style: none;
+            padding-left: 10px;
+            margin-bottom: 18px;
+        }
+        .sidebar-list li {
+            font-size: 12px;
+            color: #222222;
+            line-height: 1.45;
+        }
+        /* Main Content Area */
+        .content {
+            flex: 1;
+            padding: 22px 35px;
+            background-color: #ffffff;
+        }
+        .content h1 {
+            font-size: 26px;
+            font-weight: 400;
+            color: #111111;
+            margin-bottom: 16px;
+        }
+        .content .welcome-text {
+            font-size: 14px;
+            color: #111111;
+            margin-bottom: 24px;
+        }
+        .section-header {
+            font-weight: bold;
+            font-size: 14px;
+            color: #111111;
+            margin-top: 24px;
+            margin-bottom: 18px;
+        }
+        /* Grid Layout for Content Sections */
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            column-gap: 40px;
+            row-gap: 18px;
+        }
+        .grid-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .item-title {
+            font-size: 16px;
+            color: #006599;
+            line-height: 1.3;
+        }
+        .item-desc {
+            font-size: 13px;
+            font-style: italic;
+            color: #111111;
+            margin-top: 3px;
+        }
+        .item-desc.blue-italic {
+            color: #006599;
+        }
+        /* Project Info Grid (Links only) */
+        .grid-2col-compact {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            column-gap: 40px;
+            row-gap: 12px;
+        }
+        /* Footer Styling */
+        .footer {
+            text-align: right;
+            padding: 15px 20px 30px 20px;
+            font-size: 11px;
+            color: #555555;
+            line-height: 1.55;
+            background-color: #ffffff;
+        }
+        .footer a {
+            color: #555555;
+            text-decoration: underline;
+        }
+        .footer-spacer {
+            height: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navigation Bar -->
+    <div class="navbar">
+        <div class="nav-left">
+            <span class="placeholder icon" title="[Python Logo]"></span>
+            <a href="#">Python »</a>
+            <select class="nav-select"><option>English</option></select>
+            <select class="nav-select"><option>3.14.5</option></select>
+            <a href="#">3.14.5 Documentation »</a>
+        </div>
+        <div class="nav-right">
+            <span>Theme</span>
+            <select class="nav-select"><option>Auto</option></select>
+            <span class="nav-separator">|</span>
+            <input type="text" value="Quick search" class="search-input" readonly>
+            <input type="button" value="Go" class="go-btn">
+            <span class="nav-separator">|</span>
+            <a href="#">modules</a>
+            <span class="nav-separator">|</span>
+            <a href="#">index</a>
+        </div>
+    </div>
+
+    <!-- Main Workspace -->
+    <div class="main-container">
+        <!-- Left Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-toggle" title="Toggle Sidebar">«</div>
+            
+            <div class="sidebar-title">Download</div>
+            <div class="sidebar-subtitle">Download these documents</div>
+
+            <div class="sidebar-title">Docs by version</div>
+            <ul class="sidebar-list">
+                <li>Python 3.16 (in development)</li>
+                <li>Python 3.15 (pre-release)</li>
+                <li>Python 3.14 (stable)</li>
+                <li>Python 3.13 (stable)</li>
+                <li>Python 3.12 (security-fixes)</li>
+                <li>Python 3.11 (security-fixes)</li>
+                <li>Python 3.10 (security-fixes)</li>
+                <li>Python 3.9 (EOL)</li>
+                <li>Python 3.8 (EOL)</li>
+                <li>Python 3.7 (EOL)</li>
+                <li>Python 3.6 (EOL)</li>
+                <li>Python 3.5 (EOL)</li>
+                <li>Python 3.4 (EOL)</li>
+                <li>Python 3.3 (EOL)</li>
+                <li>Python 3.2 (EOL)</li>
+                <li>Python 3.1 (EOL)</li>
+                <li>Python 3.0 (EOL)</li>
+                <li>Python 2.7 (EOL)</li>
+                <li>Python 2.6 (EOL)</li>
+                <li>All versions</li>
+            </ul>
+
+            <div class="sidebar-title">Other resources</div>
+            <ul class="sidebar-list">
+                <li>PEP Index</li>
+                <li>Beginner's Guide</li>
+                <li>Book List</li>
+                <li>Audio/Visual Talks</li>
+                <li>Python Developer's Guide</li>
+            </ul>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="content">
+            <h1>Python 3.14.5 documentation</h1>
+            <p class="welcome-text">Welcome! This is the official documentation for Python 3.14.5.</p>
+
+            <div class="section-header">Documentation sections:</div>
+            <div class="grid-2col">
+                <div class="grid-item">
+                    <a href="#" class="item-title">What's new in Python 3.14?</a>
+                    <a href="#" class="item-desc blue-italic">Or all "What's new" documents since Python 2.0</a>
+                </div>
+                <div class="grid-item">
+                    <a href="#" class="item-title">Installing Python modules</a>
+                    <div class="item-desc">Third-party modules and PyPI.org</div>
+                </div>
+
+                <div class="grid-item">
+                    <a href="#" class="item-title">Tutorial</a>
+                    <div class="item-desc">Start here: a tour of Python's syntax and features</div>
+                </div>
+                <div class="grid-item">
+                    <a href="#" class="item-title">Distributing Python modules</a>
+                    <div class="item-desc">Publishing modules for use by other people</div>
+                </div>
+
+                <div class="grid-item">
+                    <a href="#" class="item-title">Library reference</a>
+                    <div class="item-desc">Standard library and builtins</div>
+                </div>
+                <div class="grid-item">
+                    <a href="#" class="item-title">Extending and embedding</a>
+                    <div class="item-desc">For C/C++ programmers</div>
+                </div>
+
+                <div class="grid-item">
+                    <a href="#" class="item-title">Language reference</a>
+                    <div class="item-desc">Syntax and language elements</div>
+                </div>
+                <div class="grid-item">
+                    <a href="#" class="item-title">Python's C API</a>
+                    <div class="item-desc">C API reference</div>
+                </div>
+
+                <div class="grid-item">
+                    <a href="#" class="item-title">Python setup and usage</a>
+                    <div class="item-desc">How to install, configure, and use Python</div>
+                </div>
+                <div class="grid-item">
+                    <a href="#" class="item-title">FAQs</a>
+                    <div class="item-desc">Frequently asked questions (with answers!)</div>
+                </div>
+
+                <div class="grid-item">
+                    <a href="#" class="item-title">Python HOWTOs</a>
+                    <div class="item-desc">In-depth topic manuals</div>
+                </div>
+                <div class="grid-item">
+                    <a href="#" class="item-title">Deprecations</a>
+                    <div class="item-desc">Deprecated functionality</div>
+                </div>
+            </div>
+
+            <div class="section-header">Indices, glossary, and search:</div>
+            <div class="grid-2col">
+                <div class="grid-item">
+                    <a href="#" class="item-title">Global module index</a>
+                    <div class="item-desc">All modules and libraries</div>
+                </div>
+                <div class="grid-item">
+                    <a href="#" class="item-title">Search page</a>
+                    <div class="item-desc">Search this documentation</div>
+                </div>
+
+                <div class="grid-item">
+                    <a href="#" class="item-title">General index</a>
+                    <div class="item-desc">All functions, classes, and terms</div>
+                </div>
+                <div class="grid-item">
+                    <a href="#" class="item-title">Complete table of contents</a>
+                    <div class="item-desc">Lists all sections and subsections</div>
+                </div>
+
+                <div class="grid-item">
+                    <a href="#" class="item-title">Glossary</a>
+                    <div class="item-desc">Terms explained</div>
+                </div>
+                <div class="grid-item"></div>
+            </div>
+
+            <div class="section-header">Project information:</div>
+            <div class="grid-2col-compact">
+                <div class="grid-item">
+                    <a href="#" class="item-title">Reporting issues</a>
+                </div>
+                <div class="grid-item">
+                    <a href="#" class="item-title">History and license of Python</a>
+                </div>
+
+                <div class="grid-item">
+                    <a href="#" class="item-title">Contributing to docs</a>
+                </div>
+                <div class="grid-item">
+                    <a href="#" class="item-title">Copyright</a>
+                </div>
+
+                <div class="grid-item">
+                    <a href="#" class="item-title">Download the documentation</a>
+                </div>
+                <div class="grid-item">
+                    <a href="#" class="item-title">About the documentation</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="navbar bottom">
+        <div class="nav-left">
+            <span class="placeholder icon" title="[Python Logo]"></span>
+            <a href="#">Python »</a>
+            <select class="nav-select"><option>English</option></select>
+            <select class="nav-select"><option>3.14.5</option></select>
+            <a href="#">3.14.5 Documentation »</a>
+        </div>
+        <div class="nav-right">
+            <span>Theme</span>
+            <select class="nav-select"><option>Auto</option></select>
+            <span class="nav-separator">|</span>
+            <input type="text" value="Quick search" class="search-input" readonly>
+            <input type="button" value="Go" class="go-btn">
+            <span class="nav-separator">|</span>
+            <a href="#">modules</a>
+            <span class="nav-separator">|</span>
+            <a href="#">index</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div>© <a href="#">Copyright</a> 2001 Python Software Foundation.</div>
+        <div>This page is licensed under the Python Software Foundation License Version 2.</div>
+        <div>Examples, recipes, and other code in the documentation are additionally licensed under the Zero Clause BSD License.</div>
+        <div>See <a href="#">History and License</a> for more information.</div>
+        <div class="footer-spacer"></div>
+        <div>The Python Software Foundation is a non-profit corporation. <a href="#">Please donate.</a></div>
+        <div class="footer-spacer"></div>
+        <div>Last updated on May 22, 2026 (08:42 UTC). <a href="#">Found a bug?</a></div>
+        <div>Created using <a href="#">Sphinx</a> 8.2.3.</div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Windows technical documentation for developers and IT pros</title>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      color: #1b1b1b;
+      background: #fff;
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 14px;
+      letter-spacing: 0;
+    }
+
+    body {
+      min-height: 1600px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    button,
+    a {
+      color: inherit;
+      font: inherit;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    .event-banner {
+      position: relative;
+      height: 148px;
+      min-height: 148px;
+      overflow: hidden;
+      color: #fff;
+      background: #000;
+    }
+
+    .event-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: flex-start;
+      height: 100%;
+      padding: 36px 24px;
+    }
+
+    .event-copy h2 {
+      margin: 0 0 16px;
+      font-size: 32px;
+      font-weight: 600;
+      line-height: 1;
+    }
+
+    .event-copy p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1;
+    }
+
+    .learn-button {
+      margin: 20px 0 0 96px;
+      padding: 9px 13px;
+      border: 1px solid #d6d6d6;
+      border-radius: 4px;
+      color: #171717;
+      background: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, .28);
+    }
+
+    .chevron {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      margin: 0 3px 1px 8px;
+      border-top: 1.5px solid currentColor;
+      border-right: 1.5px solid currentColor;
+      transform: rotate(45deg);
+    }
+
+    .event-art {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: 356px;
+      height: 148px;
+      overflow: hidden;
+      background:
+        linear-gradient(90deg, transparent 0 13%, rgba(12,131,34,.72) 13% 17%, transparent 17% 21%, #54d728 21% 27%, transparent 27% 30%, #0a8834 30% 38%, transparent 38% 42%, #35b548 42% 49%, transparent 49% 54%, #148bd0 54% 62%, transparent 62% 66%, #0675bf 66% 73%, transparent 73% 77%, #efbd26 77% 84%, transparent 84%),
+        linear-gradient(0deg, #0c6b30 0 13%, #07a4a0 13% 28%, #1bd1b3 28% 42%, transparent 42%),
+        repeating-linear-gradient(90deg, transparent 0 10px, rgba(255,255,255,.15) 10px 12px),
+        #000;
+      clip-path: polygon(0 100%, 0 78%, 8% 78%, 8% 58%, 17% 58%, 17% 34%, 24% 34%, 24% 25%, 32% 25%, 32% 35%, 39% 35%, 39% 20%, 49% 20%, 49% 10%, 54% 10%, 54% 36%, 62% 36%, 62% 23%, 67% 23%, 67% 35%, 75% 35%, 75% 12%, 82% 12%, 82% 4%, 90% 4%, 90% 23%, 100% 23%, 100% 100%);
+    }
+
+    .event-art::before {
+      content: "";
+      position: absolute;
+      right: -4px;
+      bottom: 0;
+      width: 105px;
+      height: 102px;
+      background:
+        repeating-linear-gradient(0deg, transparent 0 8px, rgba(0,0,0,.25) 8px 10px),
+        repeating-linear-gradient(90deg, #e71988 0 14px, #ff4b1f 14px 28px, #9e16d7 28px 42px, #ffca22 42px 56px);
+      clip-path: polygon(0 100%, 0 52%, 15% 52%, 15% 29%, 34% 29%, 34% 11%, 59% 11%, 59% 28%, 79% 28%, 79% 41%, 100% 41%, 100% 100%);
+    }
+
+    .event-art span {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+
+    .close-banner {
+      position: absolute;
+      z-index: 5;
+      top: 24px;
+      right: 24px;
+      width: 33px;
+      height: 33px;
+      padding: 0;
+      border: 0;
+      border-radius: 4px;
+      background: #fff;
+      color: #222;
+      font-size: 27px;
+      line-height: 31px;
+      text-align: center;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, .35);
+    }
+
+    .global-nav,
+    .product-nav {
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+      border-bottom: 1px solid #d8d8d8;
+      background: #fff;
+    }
+
+    .global-nav {
+      height: 55px;
+      padding: 0 24px;
+    }
+
+    .product-nav {
+      height: 53px;
+      padding: 0 24px;
+      overflow: hidden;
+    }
+
+    .ms-mark {
+      display: grid;
+      grid-template-columns: 11px 11px;
+      grid-template-rows: 11px 11px;
+      gap: 2px;
+      width: 24px;
+      height: 24px;
+      margin-right: 16px;
+    }
+
+    .ms-mark i:nth-child(1) { background: #f25022; }
+    .ms-mark i:nth-child(2) { background: #7fba00; }
+    .ms-mark i:nth-child(3) { background: #00a4ef; }
+    .ms-mark i:nth-child(4) { background: #ffb900; }
+
+    .learn-brand {
+      height: 28px;
+      padding-left: 17px;
+      border-left: 2px solid #676767;
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 28px;
+    }
+
+    .global-links,
+    .product-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      margin-left: 27px;
+    }
+
+    .product-links {
+      gap: 24px;
+      margin-left: 24px;
+    }
+
+    .global-links a,
+    .product-links a {
+      font-size: 14px;
+    }
+
+    .product-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .down {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      margin: 0 2px 3px 7px;
+      border-right: 1px solid currentColor;
+      border-bottom: 1px solid currentColor;
+      transform: rotate(45deg);
+    }
+
+    .global-actions {
+      display: flex;
+      align-items: center;
+      gap: 23px;
+      margin-left: auto;
+    }
+
+    .search-icon {
+      position: relative;
+      display: block;
+      width: 15px;
+      height: 15px;
+    }
+
+    .search-icon::before {
+      content: "";
+      position: absolute;
+      top: 1px;
+      left: 1px;
+      width: 7px;
+      height: 7px;
+      border: 1.5px solid #222;
+      border-radius: 50%;
+    }
+
+    .search-icon::after {
+      content: "";
+      position: absolute;
+      top: 9px;
+      left: 9px;
+      width: 5px;
+      border-top: 1.5px solid #222;
+      transform: rotate(45deg);
+      transform-origin: left center;
+    }
+
+    .sign-in {
+      color: #0067a5;
+    }
+
+    .hero {
+      min-height: 207px;
+      padding: 35px 24px 30px;
+      color: #fff;
+      background-color: #0878c9;
+      background-image:
+        linear-gradient(90deg, rgba(0,95,171,.12), transparent 45%, rgba(0,111,190,.16)),
+        radial-gradient(circle, rgba(0,95,171,.28) 1px, transparent 2px);
+      background-size: auto, 50px 50px;
+    }
+
+    .hero h1 {
+      max-width: 760px;
+      margin: 0 0 25px;
+      font-size: 39px;
+      font-weight: 600;
+      line-height: 1.17;
+    }
+
+    .hero p {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.35;
+    }
+
+    main {
+      flex: 1 0 auto;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 23px 22px;
+      padding: 47px 24px 0;
+    }
+
+    .card {
+      min-height: 176px;
+      padding: 18px 17px 17px;
+      border: 1px solid #e5e5e5;
+      border-radius: 3px;
+      background: #fff;
+      box-shadow: 0 2px 3px rgba(0, 0, 0, .14);
+    }
+
+    .card-icon {
+      position: relative;
+      width: 48px;
+      height: 48px;
+      margin-bottom: 10px;
+      color: #178fd1;
+    }
+
+    .card-icon::before,
+    .card-icon::after {
+      content: "";
+      position: absolute;
+    }
+
+    .application::before {
+      left: 1px;
+      top: 2px;
+      width: 37px;
+      height: 38px;
+      border: 4px solid currentColor;
+      border-radius: 8px;
+    }
+
+    .application::after {
+      right: 0;
+      bottom: 0;
+      width: 24px;
+      height: 26px;
+      border: 4px solid currentColor;
+      border-radius: 7px;
+      background: #fff;
+    }
+
+    .tools::before {
+      left: 1px;
+      top: 2px;
+      width: 37px;
+      height: 38px;
+      border: 4px solid currentColor;
+      border-radius: 7px;
+    }
+
+    .tools::after {
+      content: "‹›";
+      left: 8px;
+      top: 8px;
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 30px;
+    }
+
+    .hardware {
+      border: 4px solid currentColor;
+      border-radius: 12px;
+      transform: scale(.7);
+      transform-origin: top left;
+      width: 53px;
+      height: 53px;
+      margin-bottom: -1px;
+    }
+
+    .hardware::before {
+      left: 13px;
+      top: 13px;
+      width: 17px;
+      height: 17px;
+      border: 4px solid currentColor;
+      border-radius: 50%;
+    }
+
+    .hardware::after {
+      left: -10px;
+      top: 19px;
+      width: 65px;
+      height: 8px;
+      border-top: 4px solid currentColor;
+      border-bottom: 4px solid currentColor;
+    }
+
+    .client::before {
+      left: 4px;
+      top: 7px;
+      width: 35px;
+      height: 25px;
+      border: 4px solid currentColor;
+      border-radius: 5px;
+    }
+
+    .client::after {
+      left: 0;
+      bottom: 5px;
+      width: 48px;
+      border-top: 4px solid currentColor;
+      border-radius: 4px;
+    }
+
+    .server::before {
+      left: 10px;
+      top: 0;
+      width: 24px;
+      height: 42px;
+      border: 4px solid currentColor;
+      border-radius: 7px;
+    }
+
+    .server::after {
+      content: "═";
+      left: 16px;
+      top: 12px;
+      font-size: 23px;
+      line-height: 23px;
+    }
+
+    .iot::before {
+      content: "⚙";
+      left: 0;
+      top: -7px;
+      font-size: 53px;
+      font-weight: 400;
+      line-height: 53px;
+    }
+
+    .insider::before {
+      content: "♡";
+      left: 1px;
+      top: 6px;
+      font-size: 49px;
+      font-weight: 700;
+      line-height: 40px;
+    }
+
+    .insider::after {
+      content: "•••";
+      left: 8px;
+      top: -14px;
+      font-size: 31px;
+      letter-spacing: 2px;
+    }
+
+    .win365::before {
+      left: 1px;
+      top: 0;
+      width: 45px;
+      height: 45px;
+      border: 3px solid currentColor;
+      border-radius: 6px;
+    }
+
+    .win365::after {
+      content: "▦";
+      left: 11px;
+      top: 5px;
+      font-size: 31px;
+      line-height: 31px;
+    }
+
+    .card h2 {
+      margin: 0 0 8px;
+      color: #006cad;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1.15;
+    }
+
+    .card p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.28;
+    }
+
+    footer {
+      flex: 0 0 auto;
+      min-height: 125px;
+      margin-top: 577px;
+      padding: 29px 24px 24px;
+      background: #f2f1ed;
+      color: #282828;
+    }
+
+    .footer-top,
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .footer-top {
+      gap: 45px;
+      margin-left: 11px;
+      margin-bottom: 28px;
+    }
+
+    .footer-bottom {
+      gap: 28px;
+    }
+
+    .footer-top a,
+    .footer-bottom a,
+    .copyright {
+      font-size: 13px;
+    }
+
+    .globe {
+      font-size: 16px;
+      vertical-align: -1px;
+    }
+
+    .privacy-choice {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .privacy-toggle {
+      position: relative;
+      width: 34px;
+      height: 17px;
+      border: 1px solid #1688d4;
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .privacy-toggle::before {
+      content: "✓";
+      position: absolute;
+      left: 3px;
+      top: -3px;
+      color: #0078d4;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .privacy-toggle::after {
+      content: "×";
+      position: absolute;
+      right: 3px;
+      top: -3px;
+      color: #0078d4;
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .external {
+      font-size: 10px;
+      vertical-align: 3px;
+    }
+
+    @media (max-width: 900px) {
+      body {
+        min-height: 100vh;
+      }
+
+      .global-links,
+      .product-links {
+        overflow: hidden;
+      }
+
+      .event-art {
+        opacity: .65;
+      }
+
+      .cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      footer {
+        margin-top: 80px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .event-copy h2 {
+        font-size: 25px;
+      }
+
+      .learn-button {
+        margin-left: 25px;
+      }
+
+      .global-links,
+      .product-links {
+        display: none;
+      }
+
+      .hero h1 {
+        font-size: 31px;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <section class="event-banner" aria-label="Microsoft Build 2026">
+      <div class="event-content">
+        <div class="event-copy">
+          <h2>Microsoft Build 2026</h2>
+          <p>June 2-3, 2026</p>
+        </div>
+        <a class="learn-button" href="#">Learn more <span class="chevron" aria-hidden="true"></span></a>
+      </div>
+      <div class="placeholder event-art" role="img" aria-label="Colorful pixel-art cityscape at top-right">
+        <span>[Image: colorful pixel-art cityscape at top-right]</span>
+      </div>
+      <button class="close-banner" type="button" aria-label="Close">×</button>
+    </section>
+
+    <nav class="global-nav" aria-label="Microsoft Learn">
+      <span class="ms-mark" aria-label="Microsoft">
+        <i></i><i></i><i></i><i></i>
+      </span>
+      <a class="learn-brand" href="#">Learn</a>
+      <div class="global-links">
+        <a href="#">Documentation <span class="down" aria-hidden="true"></span></a>
+        <a href="#">Training &amp; Labs <span class="down" aria-hidden="true"></span></a>
+        <a href="#">Q&amp;A <span class="down" aria-hidden="true"></span></a>
+        <a href="#">Topics <span class="down" aria-hidden="true"></span></a>
+      </div>
+      <div class="global-actions">
+        <a class="search-icon" href="#" aria-label="Search"></a>
+        <a class="sign-in" href="#">Sign in</a>
+      </div>
+    </nav>
+
+    <nav class="product-nav" aria-label="Windows documentation">
+      <a class="product-title" href="#">Windows</a>
+      <div class="product-links">
+        <a href="#">Release health</a>
+        <a href="#">Windows client <span class="down" aria-hidden="true"></span></a>
+        <a href="#">Application developers <span class="down" aria-hidden="true"></span></a>
+        <a href="#">Hardware developers <span class="down" aria-hidden="true"></span></a>
+        <a href="#">Windows Server</a>
+        <a href="#">Windows for IoT</a>
+        <a href="#">Windows Insider Program</a>
+        <a href="#">Windows 365</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>Windows technical documentation for<br>developers and IT pros.</h1>
+      <p>Information for Windows application developers, hardware developers, and IT pros.</p>
+    </section>
+
+    <section class="cards" aria-label="Windows documentation categories">
+      <article class="card">
+        <div class="card-icon application" aria-hidden="true"></div>
+        <h2>Application developers</h2>
+        <p>Design, develop, and deploy applications and<br>other solutions for Windows PCs and other<br>devices.</p>
+      </article>
+
+      <article class="card">
+        <div class="card-icon tools" aria-hidden="true"></div>
+        <h2>Developer tools</h2>
+        <p>No matter what you're building, Windows is<br>optimized for developers.</p>
+      </article>
+
+      <article class="card">
+        <div class="card-icon hardware" aria-hidden="true"></div>
+        <h2>Hardware developers</h2>
+        <p>Design, develop, and deploy hardware and<br>device drivers for Windows PCs and other<br>devices.</p>
+      </article>
+
+      <article class="card">
+        <div class="card-icon client" aria-hidden="true"></div>
+        <h2>Windows client for IT pros</h2>
+        <p>Evaluate, plan, deploy, secure, and manage<br>devices running Windows 10 and Windows 11.</p>
+      </article>
+
+      <article class="card">
+        <div class="card-icon server" aria-hidden="true"></div>
+        <h2>Windows Server for IT pros</h2>
+        <p>Build and deploy connected applications,<br>networks, and web services on Windows Server.</p>
+      </article>
+
+      <article class="card">
+        <div class="card-icon iot" aria-hidden="true"></div>
+        <h2>Windows for IoT</h2>
+        <p>Create IoT solutions with secure devices that<br>can be quickly provisioned, easily managed,<br>and seamlessly connected to an overall cloud<br>strategy.</p>
+      </article>
+
+      <article class="card">
+        <div class="card-icon insider" aria-hidden="true"></div>
+        <h2>Windows Insider Program</h2>
+        <p>Be the first to see what's next and help shape<br>Windows' future by running Windows Insider<br>Preview builds and giving feedback.</p>
+      </article>
+
+      <article class="card">
+        <div class="card-icon win365" aria-hidden="true"></div>
+        <h2>Windows 365</h2>
+        <p>Official product documentation for Windows<br>365.</p>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-top">
+      <a href="#"><span class="globe" aria-hidden="true">◉</span> English (United States)</a>
+      <a class="privacy-choice" href="#">
+        <span class="privacy-toggle" aria-hidden="true"></span>
+        <strong>Your Privacy Choices</strong>
+      </a>
+      <a href="#"><span aria-hidden="true">☼</span> Theme <span class="down" aria-hidden="true"></span></a>
+    </div>
+    <div class="footer-bottom">
+      <a href="#">AI Disclaimer</a>
+      <a href="#">Previous Versions</a>
+      <a href="#">Blog <span class="external">↗</span></a>
+      <a href="#">Contribute</a>
+      <a href="#">Privacy<span class="external">↗</span></a>
+      <a href="#">Consumer Health Privacy<span class="external">↗</span></a>
+      <a href="#">Terms of Use</a>
+      <a href="#">Trademarks<span class="external">↗</span></a>
+      <span class="copyright">© Microsoft 2026</span>
+    </div>
+  </footer>
+</body>
+</html>

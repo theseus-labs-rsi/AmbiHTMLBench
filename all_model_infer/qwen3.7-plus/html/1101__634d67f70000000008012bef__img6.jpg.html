@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>医学笔记 - 奈瑟菌属</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&display=swap');
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    background: #2a2a2a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    font-family: 'Noto Serif SC', 'SimSun', serif;
+  }
+
+  .notebook-page {
+    background: #f5f0e8;
+    background-image:
+      linear-gradient(rgba(180, 200, 220, 0.35) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(180, 200, 220, 0.35) 1px, transparent 1px);
+    background-size: 22px 22px;
+    width: 780px;
+    min-height: 1050px;
+    padding: 30px 35px 40px 50px;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    font-size: 14px;
+    line-height: 1.7;
+    color: #1a1a2e;
+  }
+
+  .notebook-page::before {
+    content: '';
+    position: absolute;
+    left: 42px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: rgba(220, 100, 100, 0.3);
+  }
+
+  .spiral-binding {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 42px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 0;
+  }
+
+  .spiral-ring {
+    width: 28px;
+    height: 18px;
+    border: 3px solid #888;
+    border-radius: 50%;
+    background: #ddd;
+  }
+
+  h2 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    margin-top: 12px;
+    border-bottom: 1.5px solid #333;
+    padding-bottom: 2px;
+    display: inline-block;
+  }
+
+  h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-top: 14px;
+    margin-bottom: 6px;
+  }
+
+  h4 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-top: 10px;
+    margin-bottom: 4px;
+  }
+
+  .section-title {
+    font-size: 17px;
+    font-weight: 700;
+    margin-top: 16px;
+    margin-bottom: 8px;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  ul, ol {
+    margin-left: 20px;
+    margin-bottom: 6px;
+  }
+
+  li {
+    margin-bottom: 2px;
+  }
+
+  .highlight-box {
+    display: inline-block;
+    border: 2px solid #c0392b;
+    background: rgba(231, 76, 60, 0.08);
+    padding: 2px 8px;
+    margin: 2px 0;
+    border-radius: 3px;
+  }
+
+  .highlight-box-blue {
+    display: inline-block;
+    border: 2px solid #2980b9;
+    background: rgba(52, 152, 219, 0.08);
+    padding: 2px 8px;
+    margin: 2px 0;
+    border-radius: 3px;
+  }
+
+  .arrow-right {
+    color: #c0392b;
+    font-weight: bold;
+    font-size: 16px;
+  }
+
+  .arrow-down {
+    color: #c0392b;
+    font-weight: bold;
+    font-size: 16px;
+    display: block;
+    text-align: center;
+  }
+
+  .sub-item {
+    margin-left: 16px;
+  }
+
+  .numbered-list {
+    counter-reset: item;
+    list-style: none;
+    margin-left: 10px;
+  }
+
+  .numbered-list li {
+    counter-increment: item;
+    margin-bottom: 3px;
+  }
+
+  .numbered-list li::before {
+    content: counter(item) ". ";
+    font-weight: bold;
+  }
+
+  .flow-chart {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin: 6px 0;
+    font-size: 13px;
+  }
+
+  .flow-box {
+    border: 1.5px solid #555;
+    padding: 2px 8px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 3px;
+  }
+
+  .flow-arrow {
+    color: #c0392b;
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  .two-col {
+    display: flex;
+    gap: 20px;
+    margin-top: 8px;
+  }
+
+  .two-col > div {
+    flex: 1;
+  }
+
+  .note-box {
+    border: 1.5px solid #888;
+    padding: 6px 10px;
+    margin: 6px 0;
+    background: rgba(255,255,255,0.2);
+    border-radius: 4px;
+    font-size: 13px;
+  }
+
+  .red-text {
+    color: #c0392b;
+    font-weight: bold;
+  }
+
+  .blue-text {
+    color: #2471a3;
+    font-weight: bold;
+  }
+
+  .underline-text {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .indent {
+    margin-left: 24px;
+  }
+
+  .indent2 {
+    margin-left: 40px;
+  }
+
+  .separator {
+    border: none;
+    border-top: 1px dashed #999;
+    margin: 10px 0;
+  }
+
+  .page-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .top-section {
+    margin-bottom: 10px;
+  }
+
+  .main-section {
+    margin-top: 10px;
+  }
+
+  .boxed-text {
+    border: 2px solid #c0392b;
+    display: inline-block;
+    padding: 1px 6px;
+    background: rgba(231, 76, 60, 0.06);
+  }
+
+  .boxed-blue {
+    border: 2px solid #2980b9;
+    display: inline-block;
+    padding: 1px 6px;
+    background: rgba(52, 152, 219, 0.06);
+  }
+
+  .annotation {
+    font-size: 12px;
+    color: #666;
+    font-style: italic;
+  }
+
+  .big-arrow {
+    font-size: 24px;
+    color: #c0392b;
+    display: inline-block;
+    transform: rotate(0deg);
+  }
+
+  .vertical-arrow {
+    font-size: 20px;
+    color: #c0392b;
+    text-align: center;
+    display: block;
+  }
+
+  .disease-flow {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 3px;
+    margin: 4px 0 4px 20px;
+  }
+
+  .disease-flow .box {
+    border: 1.5px solid #444;
+    padding: 2px 6px;
+    font-size: 13px;
+    background: rgba(255,255,255,0.25);
+  }
+
+  .disease-flow .arr {
+    color: #c0392b;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .gn-section {
+    margin-top: 14px;
+    padding-top: 8px;
+    border-top: 1.5px dashed #aaa;
+  }
+
+  .gn-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .check-item {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+
+  .check-item::before {
+    content: "☐";
+    font-size: 14px;
+  }
+
+  .table-like {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 2px 10px;
+    margin: 6px 0 6px 20px;
+    font-size: 13px;
+  }
+
+  .table-like .label {
+    font-weight: bold;
+    text-align: right;
+  }
+
+  .pink-box {
+    background: rgba(255, 182, 193, 0.25);
+    border: 1.5px solid #e88;
+    padding: 3px 8px;
+    display: inline-block;
+    border-radius: 3px;
+  }
+
+  .green-box {
+    background: rgba(144, 238, 144, 0.2);
+    border: 1.5px solid #6a6;
+    padding: 3px 8px;
+    display: inline-block;
+    border-radius: 3px;
+  }
+</style>
+</head>
+<body>
+
+<div class="notebook-page">
+  <div class="spiral-binding">
+    <div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div>
+    <div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div>
+    <div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div>
+    <div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div>
+    <div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div>
+    <div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div>
+    <div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div>
+    <div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div>
+    <div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div>
+    <div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div>
+    <div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div>
+    <div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div>
+    <div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div>
+    <div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div>
+    <div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div>
+    <div class="spiral-ring"></div><div class="spiral-ring"></div><div class="spiral-ring"></div>
+    <div class="spiral-ring"></div><div class=""></div>
+  </div>
+
+  <div class="page-content">
+
+    <!-- 三、防治原则 -->
+    <div class="top-section">
+      <h2>三、防治原则</h2>
+      <ul>
+        <li>尿路感染：首季多饮水，或口服<span class="boxed-text">呋喃妥因</span></li>
+        <li>心内膜炎、脑膜炎：<span class="highlight-box">青霉素或氨苄西林与氨基糖苷类联合用药效果较好</span></li>
+      </ul>
+    </div>
+
+    <hr class="separator">
+
+    <!-- 第四节 奈瑟菌属 -->
+    <div class="main-section">
+      <h2>第四节 奈瑟菌属</h2>
+
+      <!-- 一、脑膜炎奈瑟菌 -->
+      <h3>一、脑膜炎奈瑟菌</h3>
+      <ul>
+        <li><span class="highlight-box-blue">G⁻</span>，肾形双排列</li>
+        <li>有荚膜和菌毛</li>
+        <li>无芽胞，无鞭毛</li>
+        <li>专性需氧</li>
+        <li>营养要求高</li>
+        <li>在<span class="boxed-blue">巧克力色培养基</span>上生长良好</li>
+        <li>初次分离需要5%~10% CO₂</li>
+        <li>分解葡萄糖和麦芽糖，不产酸</li>
+        <li>氧化酶试验阳性</li>
+      </ul>
+
+      <!-- 二、致病物质 -->
+      <h3>二、致病物质</h3>
+      <ol class="numbered-list">
+        <li><span class="pink-box">荚膜</span>：有抗吞噬作用，能增强细菌的侵袭力</li>
+        <li><span class="pink-box">菌毛</span>：可黏附到鼻咽部黏膜上皮细胞表面</li>
+        <li><span class="pink-box">内毒素</span>：是主要致病物质</li>
+        <li><span class="pink-box">自溶酶</span>：使细菌自溶，释放内毒素</li>
+      </ol>
+
+      <!-- 三、所致疾病 -->
+      <h3>三、所致疾病</h3>
+      <ul>
+        <li><span class="highlight-box">流行性脑脊髓膜炎（流脑）</span></li>
+        <li>普通型占90%，病程分期：</li>
+      </ul>
+      <div class="disease-flow">
+        <span class="box">上呼吸道感染期</span>
+        <span class="arr">→</span>
+        <span class="box">败血症期</span>
+        <span class="arr">→</span>
+        <span class="box">脑膜炎期</span>
+      </div>
+      <ul>
+        <li>大量毒素释放入血引起毒血症</li>
+        <li>入血引起菌血症或败血症</li>
+        <li>累及脑膜，恶心、呕吐和皮肤瘀点瘀斑</li>
+      </ul>
+
+      <!-- 四、免疫性 -->
+      <h3>四、免疫性</h3>
+      <ul>
+        <li>以<span class="green-box">体液免疫</span>为主</li>
+        <li>以IgM、IgG为主</li>
+        <li>病后免疫力不牢固</li>
+      </ul>
+
+      <!-- 五、微生物学检查 -->
+      <h3>五、微生物学检查</h3>
+      <div class="table-like">
+        <span class="label">标本：</span>
+        <span>脑脊液、血液、瘀斑渗出液</span>
+        <span class="label">直接涂片：</span>
+        <span>革兰阴性双球菌，中性粒细胞内</span>
+        <span class="label">分离培养：</span>
+        <span>巧克力色培养基，5%~10% CO₂</span>
+      </div>
+
+      <!-- 六、防治原则 -->
+      <h3>六、防治原则</h3>
+      <ul>
+        <li><span class="highlight-box">流脑疫苗</span></li>
+        <li>治疗：<span class="boxed-text">青霉素G</span>，<span class="boxed-text">磺胺嘧啶（SD）</span></li>
+      </ul>
+    </div>
+
+    <hr class="separator">
+
+    <!-- 淋病奈瑟菌 -->
+    <div class="gn-section">
+      <div class="gn-title">淋病奈瑟菌（淋球菌）</div>
+
+      <h4>一、生物学性状</h4>
+      <ul>
+        <li>G⁻，肾形双排列，有荚膜和菌毛</li>
+        <li>营养要求高，在巧克力色培养基上生长</li>
+        <li>初次分离需5%~10% CO₂</li>
+        <li>只分解葡萄糖，不分解麦芽糖</li>
+        <li>氧化酶试验阳性</li>
+      </ul>
+
+      <h4>二、致病物质</h4>
+      <ol class="numbered-list">
+        <li>菌毛：黏附尿道/宫颈黏膜上皮细胞</li>
+        <li>外膜蛋白：抑制吞噬</li>
+        <li>IgA蛋白酶：破坏黏膜表面IgA</li>
+        <li>内毒素：引起炎症反应</li>
+      </ol>
+
+      <h4>三、所致疾病</h4>
+      <ul>
+        <li>通过性接触传播</li>
+        <li>男性：尿道炎（尿痛、脓性分泌物）</li>
+        <li>女性：宫颈炎、盆腔炎（症状较轻，易被忽视）</li>
+        <li>新生儿：<span class="highlight-box">结膜炎（脓漏眼）</span></li>
+      </ul>
+
+      <h4>四、微生物学检查</h4>
+      <div class="table-like">
+        <span class="label">标本：</span>
+        <span>尿道/宫颈分泌物</span>
+        <span class="label">直接涂片：</span>
+        <span>革兰阴性双球菌，白细胞内</span>
+        <span class="label">分离培养：</span>
+        <span>巧克力色培养基，CO₂环境</span>
+      </div>
+
+      <h4>五、防治原则</h4>
+      <ul>
+        <li>加强性卫生教育</li>
+        <li>治疗：<span class="boxed-text">头孢曲松</span>、<span class="boxed-text">大观霉素</span></li>
+        <li>新生儿预防：出生后用<span class="boxed-text">硝酸银</span>滴眼</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>京剧艺术节</title>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$']],
+        displayMath: [['$$', '$$']]
+      }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: #ededed;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      color: #050505;
+      font-family: "Songti SC", "STSong", "SimSun", serif;
+    }
+
+    .poster {
+      position: relative;
+      width: min(100vw, 1200px);
+      aspect-ratio: 1200 / 2133;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 1200px;
+      height: 2133px;
+      transform-origin: top left;
+      transform: scale(calc(min(100vw, 1200px) / 1200));
+    }
+
+    .five-roles {
+      position: absolute;
+      top: 123px;
+      left: 85px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .role {
+      display: flex;
+      width: 100px;
+      height: 100px;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #171717;
+      border-radius: 50%;
+      font-size: 55px;
+      line-height: 1;
+      font-weight: 400;
+    }
+
+    .main-title {
+      position: absolute;
+      top: 112px;
+      left: 201px;
+      width: 165px;
+      font-size: 139px;
+      line-height: 1.12;
+      letter-spacing: -8px;
+      font-weight: 500;
+    }
+
+    .main-title span {
+      display: block;
+      width: 165px;
+      height: 158px;
+      text-align: center;
+    }
+
+    .main-title .red {
+      color: #cf101d;
+    }
+
+    .sub-title {
+      position: absolute;
+      top: 892px;
+      left: 113px;
+      width: 54px;
+      font-size: 40px;
+      line-height: 1.02;
+      text-align: center;
+    }
+
+    .brand-mark {
+      position: absolute;
+      top: 124px;
+      right: 82px;
+      width: 65px;
+      height: 65px;
+      display: grid;
+      grid-template-columns: repeat(3, 17px);
+      grid-template-rows: repeat(3, 17px);
+      gap: 5px;
+      transform: rotate(45deg);
+    }
+
+    .brand-mark i {
+      display: block;
+      width: 17px;
+      height: 17px;
+      background: #d31120;
+    }
+
+    .brand-name {
+      position: absolute;
+      top: 208px;
+      right: 62px;
+      width: 86px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 33px;
+      font-weight: 600;
+      line-height: 1.36;
+      text-align: center;
+    }
+
+    .pink-corner {
+      position: absolute;
+      top: 310px;
+      right: -1px;
+      width: 82px;
+      height: 158px;
+      background: #eb008b;
+      clip-path: polygon(100% 0, 100% 100%, 0 49%);
+    }
+
+    .pink-circle {
+      position: absolute;
+      top: 532px;
+      left: 739px;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: #d1577f;
+    }
+
+    .red-circle {
+      position: absolute;
+      top: 824px;
+      left: 623px;
+      z-index: 4;
+      width: 161px;
+      height: 161px;
+      border-radius: 50%;
+      background: #d7111d;
+    }
+
+    .geometry {
+      position: absolute;
+      z-index: 2;
+      top: 444px;
+      right: 0;
+      width: 479px;
+      height: 760px;
+    }
+
+    .geometry .diagonal {
+      position: absolute;
+      top: 0;
+      right: -81px;
+      width: 214px;
+      height: 700px;
+      background: #050505;
+      transform: rotate(45deg);
+      transform-origin: top right;
+    }
+
+    .geometry .left-triangle {
+      position: absolute;
+      top: 250px;
+      left: 0;
+      width: 212px;
+      height: 645px;
+      background: #050505;
+      clip-path: polygon(100% 0, 100% 100%, 0 50%);
+    }
+
+    .geometry .pink-panel {
+      position: absolute;
+      top: 256px;
+      left: 211px;
+      width: 268px;
+      height: 480px;
+      background: linear-gradient(to bottom, #eda0bb 0%, #f9d7e2 28%, #fff 70%);
+      clip-path: polygon(0 0, 35% 21%, 67% 0, 100% 21%, 100% 100%, 0 100%);
+    }
+
+    .geometry .pink-small {
+      position: absolute;
+      top: 466px;
+      left: 244px;
+      z-index: 4;
+      width: 111px;
+      height: 53px;
+      background: #d6668c;
+      clip-path: polygon(0 0, 100% 0, 45% 100%);
+    }
+
+    .geometry .black-small {
+      position: absolute;
+      top: 488px;
+      left: 300px;
+      z-index: 5;
+      width: 48px;
+      height: 47px;
+      background: #050505;
+      clip-path: polygon(0 0, 100% 20%, 75% 100%);
+    }
+
+    .geometry .right-pink {
+      position: absolute;
+      right: -1px;
+      bottom: 0;
+      width: 51px;
+      height: 53px;
+      background: #d46b8f;
+      clip-path: polygon(0 0, 100% 0, 100% 100%);
+    }
+
+    .red-bar {
+      position: absolute;
+      z-index: 3;
+      top: 1094px;
+      left: 869px;
+      width: 63px;
+      height: 600px;
+      background: #d7111d;
+    }
+
+    .red-seal {
+      position: absolute;
+      top: 1491px;
+      left: 703px;
+      width: 51px;
+      height: 51px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 64% 36%, rgba(255,255,255,.34) 0 7%, transparent 8%),
+        radial-gradient(circle at 43% 63%, #cd1a19 0 11%, transparent 12%),
+        radial-gradient(circle at 55% 47%, #df443d 0 30%, #c90e11 70%);
+      filter: blur(.4px);
+    }
+
+    .details {
+      position: absolute;
+      top: 1421px;
+      left: 82px;
+      width: 670px;
+    }
+
+    .info-line {
+      margin: 0 0 25px;
+      font-size: 46px;
+      line-height: 1.25;
+      white-space: nowrap;
+    }
+
+    .info-line .label {
+      display: inline-block;
+      min-width: 164px;
+    }
+
+    .date-block {
+      position: relative;
+      margin-top: 25px;
+      height: 120px;
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    .date-label {
+      position: absolute;
+      top: 0;
+      left: 2px;
+      font-size: 17px;
+      letter-spacing: .5px;
+    }
+
+    .date {
+      position: absolute;
+      top: 17px;
+      font-size: 78px;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .date-one {
+      left: 0;
+    }
+
+    .date-two {
+      left: 357px;
+    }
+
+    .weekday {
+      margin-left: 8px;
+      font-size: 27px;
+      vertical-align: baseline;
+    }
+
+    .date-slash {
+      position: absolute;
+      top: 28px;
+      left: 307px;
+      width: 74px;
+      height: 1px;
+      background: #555;
+      transform: rotate(-48deg);
+      transform-origin: center;
+    }
+
+    .phone {
+      margin-top: 11px;
+      font-size: 44px;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    .birds {
+      position: absolute;
+      z-index: 3;
+      top: 1512px;
+      right: 31px;
+      width: 192px;
+      height: 174px;
+      opacity: .9;
+    }
+
+    .bird {
+      position: absolute;
+      width: 31px;
+      height: 16px;
+    }
+
+    .bird::before,
+    .bird::after {
+      position: absolute;
+      top: 4px;
+      width: 17px;
+      height: 8px;
+      border-top: 5px solid #111;
+      border-radius: 50%;
+      content: "";
+    }
+
+    .bird::before {
+      left: 1px;
+      transform: rotate(21deg);
+    }
+
+    .bird::after {
+      right: 1px;
+      transform: rotate(-21deg);
+    }
+
+    .bird:nth-child(1) { top: 14px; right: 3px; transform: scale(.72); opacity: .5; }
+    .bird:nth-child(2) { top: 49px; right: 27px; transform: scale(.92); }
+    .bird:nth-child(3) { top: 53px; right: 80px; transform: scale(.76); }
+    .bird:nth-child(4) { top: 91px; right: 105px; transform: scale(.95); }
+    .bird:nth-child(5) { top: 89px; right: 153px; transform: scale(1.1); }
+    .bird:nth-child(6) { top: 139px; right: 41px; transform: scale(.62); }
+    .bird:nth-child(7) { top: 132px; right: 93px; transform: scale(.48); opacity: .65; }
+
+    .landscape {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 1200px;
+      height: 473px;
+    }
+
+    .mountain-back {
+      position: absolute;
+      right: -60px;
+      bottom: 0;
+      width: 685px;
+      height: 440px;
+      opacity: .55;
+      filter: blur(5px);
+      background: linear-gradient(to top, rgba(170,170,170,.86), rgba(228,228,228,.55) 54%, transparent 73%);
+      clip-path: polygon(
+        0 70%, 5% 67%, 9% 58%, 13% 55%, 17% 38%, 23% 43%, 28% 34%,
+        33% 27%, 39% 36%, 45% 32%, 52% 37%, 57% 45%, 63% 34%, 67% 31%,
+        72% 42%, 77% 45%, 81% 38%, 87% 44%, 91% 37%, 96% 42%, 100% 37%,
+        100% 100%, 0 100%
+      );
+    }
+
+    .mountain-mid {
+      position: absolute;
+      left: 140px;
+      bottom: -4px;
+      width: 760px;
+      height: 390px;
+      background: linear-gradient(to top, #777 0%, #999 18%, #bbb 37%, rgba(220,220,220,.8) 58%, transparent 75%);
+      filter: blur(3px);
+      clip-path: polygon(
+        0 66%, 4% 61%, 7% 41%, 10% 45%, 13% 53%, 18% 51%, 24% 48%,
+        31% 47%, 38% 41%, 43% 43%, 48% 34%, 53% 17%, 57% 13%, 60% 34%,
+        64% 40%, 69% 31%, 72% 16%, 76% 11%, 81% 29%, 86% 42%, 92% 51%,
+        100% 58%, 100% 100%, 0 100%
+      );
+    }
+
+    .mountain-front {
+      position: absolute;
+      left: -30px;
+      bottom: -8px;
+      width: 770px;
+      height: 267px;
+      background: linear-gradient(to bottom, #050505 0%, #181818 28%, #5d5d5d 56%, rgba(210,210,210,.85) 83%, rgba(255,255,255,0) 100%);
+      filter: blur(1px);
+      clip-path: polygon(
+        0 72%, 6% 64%, 10% 54%, 16% 50%, 21% 59%, 25% 56%, 28% 38%,
+        32% 33%, 35% 11%, 40% 6%, 43% 27%, 47% 25%, 51% 43%, 56% 50%,
+        63% 51%, 69% 58%, 76% 63%, 83% 65%, 91% 70%, 100% 79%, 100% 100%,
+        0 100%
+      );
+    }
+
+    .mist {
+      position: absolute;
+      left: 164px;
+      bottom: 90px;
+      width: 770px;
+      height: 83px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.58);
+      filter: blur(22px);
+    }
+
+    .trees {
+      position: absolute;
+      left: 774px;
+      bottom: 44px;
+      width: 88px;
+      height: 116px;
+    }
+
+    .tree {
+      position: absolute;
+      bottom: 0;
+      width: 2px;
+      background: #161616;
+      transform-origin: bottom;
+    }
+
+    .tree::before,
+    .tree::after {
+      position: absolute;
+      width: 2px;
+      background: #161616;
+      content: "";
+      transform-origin: bottom;
+    }
+
+    .tree-one {
+      left: 18px;
+      height: 82px;
+    }
+
+    .tree-one::before {
+      top: 20px;
+      left: 0;
+      height: 31px;
+      transform: rotate(-42deg);
+    }
+
+    .tree-one::after {
+      top: 29px;
+      left: 0;
+      height: 31px;
+      transform: rotate(47deg);
+    }
+
+    .tree-two {
+      left: 56px;
+      height: 105px;
+    }
+
+    .tree-two::before {
+      top: 25px;
+      left: 0;
+      height: 35px;
+      transform: rotate(-43deg);
+    }
+
+    .tree-two::after {
+      top: 43px;
+      left: 0;
+      height: 33px;
+      transform: rotate(48deg);
+    }
+  </style>
+</head>
+<body>
+  <main class="poster">
+    <div class="canvas">
+      <div class="five-roles" aria-label="生旦净末丑">
+        <div class="role">生</div>
+        <div class="role">旦</div>
+        <div class="role">净</div>
+        <div class="role">末</div>
+        <div class="role">丑</div>
+      </div>
+
+      <div class="main-title" aria-label="京剧艺术节">
+        <span class="red">京</span>
+        <span class="red">剧</span>
+        <span>艺</span>
+        <span>术</span>
+        <span>节</span>
+      </div>
+
+      <div class="sub-title">稿<br>定<br>艺<br>术<br>展</div>
+
+      <div class="brand-mark" aria-hidden="true">
+        <i></i><i></i><i></i>
+        <i></i><i></i><i></i>
+        <i></i><i></i><i></i>
+      </div>
+      <div class="brand-name">Gao<br>Ding<br>Yi<br>Shu</div>
+
+      <div class="pink-corner" aria-hidden="true"></div>
+      <div class="pink-circle" aria-hidden="true"></div>
+      <div class="red-circle" aria-hidden="true"></div>
+
+      <div class="geometry" aria-hidden="true">
+        <div class="diagonal"></div>
+        <div class="left-triangle"></div>
+        <div class="pink-panel"></div>
+        <div class="pink-small"></div>
+        <div class="black-small"></div>
+        <div class="right-pink"></div>
+      </div>
+
+      <div class="red-bar" aria-hidden="true"></div>
+      <div class="red-seal" aria-hidden="true"></div>
+
+      <section class="details">
+        <p class="info-line"><span class="label">主办方：</span>稿定集团</p>
+        <p class="info-line"><span class="label">地点：</span>厦门市稿定剧院</p>
+
+        <div class="date-block">
+          <div class="date-label">DATE.</div>
+          <div class="date date-one">12.20<span class="weekday">SUN</span></div>
+          <div class="date-slash" aria-hidden="true"></div>
+          <div class="date date-two">12.30<span class="weekday">SAT</span></div>
+        </div>
+
+        <div class="phone">联系电话：0592-8888888</div>
+      </section>
+
+      <div class="birds" aria-hidden="true">
+        <i class="bird"></i>
+        <i class="bird"></i>
+        <i class="bird"></i>
+        <i class="bird"></i>
+        <i class="bird"></i>
+        <i class="bird"></i>
+        <i class="bird"></i>
+      </div>
+
+      <div class="landscape" aria-hidden="true">
+        <div class="mountain-back"></div>
+        <div class="mountain-mid"></div>
+        <div class="mountain-front"></div>
+        <div class="mist"></div>
+        <div class="trees">
+          <i class="tree tree-one"></i>
+          <i class="tree tree-two"></i>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

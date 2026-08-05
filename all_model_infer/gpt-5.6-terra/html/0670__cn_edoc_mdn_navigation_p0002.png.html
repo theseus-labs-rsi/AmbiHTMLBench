@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NavigationDestination： getState() 方法 - Web API | MDN</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #fff;
+      color: #16181d;
+      font-family: Arial, "Noto Sans SC", "Microsoft YaHei", sans-serif;
+      font-size: 22px;
+    }
+    .page {
+      width: 1530px;
+      min-height: 1980px;
+      position: relative;
+      padding: 38px 99px 115px;
+    }
+    .topline {
+      height: 32px;
+      position: relative;
+      font-size: 20px;
+      line-height: 28px;
+    }
+    .date { position: absolute; left: -40px; top: 0; }
+    .doc-title {
+      text-align: center;
+      font-size: 20px;
+    }
+    .container { width: 1332px; }
+    .codebox, .specbox, .compat-table {
+      border: 2px solid #c5c9ce;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .codebox {
+      margin-top: 0;
+      height: 276px;
+    }
+    .codehead {
+      height: 93px;
+      padding: 29px 31px;
+      border-bottom: 2px solid #c5c9ce;
+      font-size: 23px;
+    }
+    pre {
+      margin: 0;
+      height: 181px;
+      padding: 34px 31px;
+      background: #ebeced;
+      font: 22px/1.75 "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      white-space: pre-wrap;
+    }
+    .red { color: #d7003d; }
+    .green { color: #007d3f; }
+    .gray { color: #51565d; }
+    h1 {
+      margin: 28px 0 8px;
+      font-size: 56px;
+      line-height: 1.15;
+      font-weight: 500;
+      letter-spacing: -2px;
+    }
+    .specbox {
+      height: 184px;
+      border-radius: 0;
+    }
+    .spec-title {
+      height: 70px;
+      padding: 19px 22px;
+      border-bottom: 2px solid #c5c9ce;
+      font-size: 21px;
+      font-weight: 700;
+    }
+    .spec-content {
+      height: 112px;
+      padding: 20px 22px;
+      background: #f5f5f6;
+      line-height: 1.78;
+      color: #0056ae;
+    }
+    a { color: #0056ae; text-decoration: underline; }
+    .external {
+      text-decoration: none;
+      font-size: .85em;
+      margin-left: 3px;
+      vertical-align: 1px;
+    }
+    .compat-heading { margin-top: 28px; }
+    .compat-heading h1 { margin: 0 0 10px; }
+    .compat-links {
+      margin-bottom: 7px;
+      font-size: 23px;
+    }
+    .compat-table {
+      width: 100%;
+      height: 424px;
+      border-radius: 8px;
+      display: grid;
+      grid-template-columns: 274px repeat(12, 1fr);
+      grid-template-rows: 46px 268px 108px;
+      background: #fff;
+    }
+    .blank-top {
+      grid-row: 1 / span 2;
+      grid-column: 1;
+      border-right: 2px solid #c5c9ce;
+      border-bottom: 2px solid #c5c9ce;
+    }
+    .platform {
+      border-bottom: 2px solid #c5c9ce;
+      text-align: center;
+      color: #555b62;
+      font-size: 31px;
+      line-height: 43px;
+    }
+    .desktop { grid-column: 2 / span 5; border-right: 2px solid #c5c9ce; }
+    .mobile { grid-column: 7 / span 6; }
+    .browser {
+      border-right: 2px solid #c5c9ce;
+      border-bottom: 2px solid #c5c9ce;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-bottom: 9px;
+    }
+    .browser:last-of-type { border-right: 0; }
+    .vertical-name {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      font-size: 23px;
+      line-height: 1;
+      text-align: center;
+    }
+    .browser-icon {
+      position: absolute;
+      bottom: 9px;
+      font-size: 27px;
+      color: #565c63;
+      line-height: 1;
+    }
+    .feature {
+      grid-column: 1;
+      padding: 35px 14px;
+      border-right: 2px solid #c5c9ce;
+      font-family: Consolas, monospace;
+      font-size: 20px;
+    }
+    .feature span, .inline-code {
+      background: #eceef0;
+      border-radius: 2px;
+      padding: 4px 7px;
+    }
+    .support {
+      border-right: 2px solid #c5c9ce;
+      text-align: center;
+      padding-top: 18px;
+      color: #075f32;
+      font-size: 24px;
+      line-height: 1.75;
+    }
+    .support:last-child { border-right: 0; }
+    .check {
+      display: block;
+      color: #555b62;
+      font-size: 30px;
+      line-height: 26px;
+    }
+    .legend {
+      margin-top: 6px;
+      font-size: 21px;
+    }
+    .legend .check {
+      display: inline-block;
+      margin-right: 10px;
+      vertical-align: -3px;
+    }
+    .references {
+      margin-top: 69px;
+    }
+    .references h1 { margin-bottom: 29px; }
+    ul {
+      margin: 0 0 0 35px;
+      padding-left: 40px;
+      font-size: 22px;
+      line-height: 1.8;
+    }
+    li { padding-left: 0; }
+    .footer {
+      position: absolute;
+      left: 69px;
+      right: 70px;
+      bottom: 115px;
+      height: 193px;
+      border-top: 2px solid #c5c9ce;
+      background: #f6f6f7;
+      padding: 53px 31px;
+      color: #555b63;
+    }
+    .mdn-logo {
+      font: bold 31px Georgia, serif;
+      margin-bottom: 34px;
+    }
+    .mdn-logo strong {
+      font: 56px Arial, sans-serif;
+      letter-spacing: -8px;
+      margin-right: 12px;
+    }
+    .tagline { font-size: 22px; }
+    .url {
+      position: absolute;
+      left: -10px;
+      bottom: -78px;
+      color: #111;
+      font-size: 19px;
+    }
+    .page-number {
+      position: absolute;
+      right: -10px;
+      bottom: -78px;
+      color: #111;
+      font-size: 19px;
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="topline">
+      <div class="date">2026/6/29 02:28</div>
+      <div class="doc-title">NavigationDestination： getState() 方法 - Web API | MDN</div>
+    </div>
+
+    <section class="container codebox">
+      <div class="codehead">JS</div>
+      <pre>navigation.<span class="red">addEventListener</span>(<span class="green">"navigate"</span>, (event) =&gt; {
+  console.<span class="red">log</span>(event.destination.<span class="red">getState</span><span class="gray">()</span>);
+<span class="gray">});</span></pre>
+    </section>
+
+    <section class="container">
+      <h1>规范</h1>
+      <div class="specbox">
+        <div class="spec-title">规范</div>
+        <div class="spec-content">
+          <a href="#">HTML</a><br>
+          <a href="#"># the-navigationdestination-interface:dom-navigationdestination-getstate-2</a><a class="external" href="#">↗</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="container compat-heading">
+      <h1>浏览器兼容性</h1>
+      <div class="compat-links">
+        <a href="#">报告此兼容性数据的问题</a><a class="external" href="#">↗</a> •
+        <a href="#">在 GitHub 上查看数据</a><a class="external" href="#">↗</a>
+      </div>
+
+      <div class="compat-table">
+        <div class="blank-top"></div>
+        <div class="platform desktop">▣</div>
+        <div class="platform mobile">▯</div>
+
+        <div class="browser"><span class="vertical-name">Chrome</span><span class="browser-icon">◉</span></div>
+        <div class="browser"><span class="vertical-name">Edge</span><span class="browser-icon">◉</span></div>
+        <div class="browser"><span class="vertical-name">Firefox</span><span class="browser-icon">●</span></div>
+        <div class="browser"><span class="vertical-name">Opera</span><span class="browser-icon">◯</span></div>
+        <div class="browser"><span class="vertical-name">Safari</span><span class="browser-icon">◉</span></div>
+        <div class="browser"><span class="vertical-name">Chrome Android</span><span class="browser-icon">◉</span></div>
+        <div class="browser"><span class="vertical-name">Firefox for Android</span><span class="browser-icon">●</span></div>
+        <div class="browser"><span class="vertical-name">Opera Android</span><span class="browser-icon">◯</span></div>
+        <div class="browser"><span class="vertical-name">Safari on iOS</span><span class="browser-icon">◉</span></div>
+        <div class="browser"><span class="vertical-name">Samsung Internet</span><span class="browser-icon">◉</span></div>
+        <div class="browser"><span class="vertical-name">WebView Android</span><span class="browser-icon">♟</span></div>
+        <div class="browser"><span class="vertical-name">WebView on iOS</span><span class="browser-icon">◉</span></div>
+
+        <div class="feature"><span>getState</span></div>
+        <div class="support"><span class="check">✓</span>102</div>
+        <div class="support"><span class="check">✓</span>102</div>
+        <div class="support"><span class="check">✓</span>147</div>
+        <div class="support"><span class="check">✓</span>88</div>
+        <div class="support"><span class="check">✓</span>26.2</div>
+        <div class="support"><span class="check">✓</span>102</div>
+        <div class="support"><span class="check">✓</span>147</div>
+        <div class="support"><span class="check">✓</span>70</div>
+        <div class="support"><span class="check">✓</span>26.2</div>
+        <div class="support"><span class="check">✓</span>19</div>
+        <div class="support"><span class="check">✓</span>102</div>
+        <div class="support"><span class="check">✓</span>26.2</div>
+      </div>
+      <div class="legend"><span class="check">✓</span>完全支持</div>
+    </section>
+
+    <section class="container references">
+      <h1>参见</h1>
+      <ul>
+        <li><a href="#">现代客户端路由：导航 API</a><a class="external" href="#">↗</a></li>
+        <li><a href="#">导航 API 说明</a><a class="external" href="#">↗</a></li>
+        <li>Domenic Denicola 的<a href="#">导航 API 在线演示</a><a class="external" href="#">↗</a></li>
+        <li>允许更新状态的方法——<a href="#"><span class="inline-code">Navigation.navigate()</span></a>、 <a href="#"><span class="inline-code">Navigation.reload()</span></a> 和 <a href="#"><span class="inline-code">Navigation.updateCurrentEntry()</span></a></li>
+      </ul>
+    </section>
+
+    <footer class="footer">
+      <div class="mdn-logo"><strong>Λ/</strong>mdn__</div>
+      <div class="tagline">构建更美好互联网的蓝图。</div>
+      <div class="url">https://developer.mozilla.org/zh-CN/docs/Web/API/NavigationDestination/getState</div>
+      <div class="page-number">2/2</div>
+    </footer>
+  </main>
+</body>
+</html>

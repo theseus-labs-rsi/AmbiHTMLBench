@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>化学实验基本操作</title>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$']],
+    displayMath: [['$$', '$$']]
+  }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    background: #d7d7d4;
+    color: #252525;
+  }
+
+  body {
+    font-family: "SimSun", "Songti SC", "STSong", serif;
+  }
+
+  .page {
+    position: relative;
+    width: 726px;
+    min-height: 968px;
+    margin: 0 auto;
+    padding: 0 32px 26px;
+    background: #f1f0eb;
+    font-size: 13.4px;
+    line-height: 1.52;
+    text-align: justify;
+    text-justify: inter-ideograph;
+  }
+
+  p {
+    margin: 0;
+    text-indent: 2em;
+  }
+
+  .continued {
+    text-indent: 0;
+  }
+
+  .operation {
+    padding-left: 1.3em;
+    text-indent: -1.3em;
+  }
+
+  .section-title {
+    margin: 3px 0 0;
+    font-weight: 700;
+    text-indent: 0;
+  }
+
+  .figure-row {
+    display: grid;
+    grid-template-columns: 1.08fr 1fr 1fr 1fr;
+    gap: 18px;
+    height: 101px;
+    margin: 1px 15px 0;
+    align-items: end;
+  }
+
+  .placeholder {
+    position: relative;
+    color: #454545;
+    text-align: center;
+  }
+
+  .figure {
+    height: 98px;
+  }
+
+  .drawing {
+    position: relative;
+    width: 100%;
+    height: 75px;
+    overflow: hidden;
+  }
+
+  .figure-caption {
+    height: 20px;
+    padding-top: 2px;
+    font-size: 12px;
+    line-height: 16px;
+    text-align: center;
+  }
+
+  .balance .beam {
+    position: absolute;
+    left: 13%;
+    top: 26px;
+    width: 74%;
+    height: 3px;
+    background: #555;
+    transform: rotate(-1deg);
+  }
+
+  .balance .post {
+    position: absolute;
+    left: 49%;
+    top: 17px;
+    width: 3px;
+    height: 43px;
+    background: #555;
+  }
+
+  .balance .base {
+    position: absolute;
+    left: 28%;
+    bottom: 4px;
+    width: 44%;
+    height: 8px;
+    border-top: 2px solid #555;
+    border-bottom: 2px solid #555;
+  }
+
+  .balance .pan {
+    position: absolute;
+    top: 33px;
+    width: 31%;
+    height: 12px;
+    border: 2px solid #555;
+    border-top: 0;
+    border-radius: 0 0 50% 50%;
+  }
+
+  .balance .pan.left {
+    left: 5%;
+  }
+
+  .balance .pan.right {
+    right: 5%;
+  }
+
+  .balance .cord {
+    position: absolute;
+    top: 25px;
+    width: 22%;
+    height: 15px;
+    border-left: 1px solid #555;
+    border-right: 1px solid #555;
+  }
+
+  .balance .cord.left {
+    left: 10%;
+  }
+
+  .balance .cord.right {
+    right: 10%;
+  }
+
+  .hands::before,
+  .hands::after {
+    content: "";
+    position: absolute;
+    top: 27px;
+    width: 44%;
+    height: 23px;
+    border: 2px solid #555;
+    border-radius: 50%;
+  }
+
+  .hands::before {
+    left: 1%;
+    transform: rotate(-29deg);
+    border-right-color: transparent;
+  }
+
+  .hands::after {
+    right: 1%;
+    transform: rotate(28deg);
+    border-left-color: transparent;
+  }
+
+  .hands .tube {
+    position: absolute;
+    z-index: 2;
+    left: 39%;
+    top: 9px;
+    width: 8px;
+    height: 57px;
+    border: 2px solid #555;
+    transform: rotate(-13deg);
+  }
+
+  .hands .stopper {
+    position: absolute;
+    z-index: 3;
+    left: 38%;
+    top: 28px;
+    width: 25px;
+    height: 15px;
+    border: 2px solid #555;
+    background: #f1f0eb;
+    transform: rotate(-13deg);
+  }
+
+  .tube-join .tube {
+    left: 28%;
+    top: 22px;
+    width: 51px;
+    height: 7px;
+    transform: rotate(3deg);
+  }
+
+  .tube-join .hose {
+    position: absolute;
+    z-index: 3;
+    left: 57%;
+    top: 20px;
+    width: 31px;
+    height: 11px;
+    border: 2px solid #555;
+    border-radius: 6px;
+    transform: rotate(3deg);
+    background: #f1f0eb;
+  }
+
+  .stopper-fit .flask {
+    position: absolute;
+    left: 39%;
+    bottom: 3px;
+    width: 34px;
+    height: 43px;
+    border: 2px solid #555;
+    border-radius: 5px 5px 15px 15px;
+  }
+
+  .stopper-fit .flask::before {
+    content: "";
+    position: absolute;
+    left: 8px;
+    top: -18px;
+    width: 14px;
+    height: 18px;
+    border-left: 2px solid #555;
+    border-right: 2px solid #555;
+  }
+
+  .stopper-fit .plug {
+    position: absolute;
+    z-index: 4;
+    left: 42%;
+    top: 17px;
+    width: 24px;
+    height: 10px;
+    border: 2px solid #555;
+    transform: rotate(-8deg);
+    background: #f1f0eb;
+  }
+
+  .apparatus-wrap {
+    float: right;
+    width: 153px;
+    height: 130px;
+    margin: 1px 1px 0 14px;
+  }
+
+  .apparatus {
+    height: 105px;
+  }
+
+  .apparatus .jar {
+    position: absolute;
+    left: 12px;
+    bottom: 5px;
+    width: 40px;
+    height: 62px;
+    border: 2px solid #555;
+    border-radius: 3px 3px 12px 12px;
+  }
+
+  .apparatus .jar::before {
+    content: "";
+    position: absolute;
+    left: 8px;
+    top: -17px;
+    width: 20px;
+    height: 17px;
+    border-left: 2px solid #555;
+    border-right: 2px solid #555;
+  }
+
+  .apparatus .tube-a {
+    position: absolute;
+    left: 40px;
+    top: 17px;
+    width: 65px;
+    height: 36px;
+    border-top: 3px solid #555;
+    border-right: 3px solid #555;
+    border-radius: 0 7px 0 0;
+  }
+
+  .apparatus .beaker {
+    position: absolute;
+    right: 3px;
+    bottom: 4px;
+    width: 45px;
+    height: 50px;
+    border: 2px solid #555;
+    border-top: 1px solid #555;
+  }
+
+  .apparatus .water {
+    position: absolute;
+    right: 5px;
+    bottom: 7px;
+    width: 41px;
+    height: 27px;
+    border-top: 1px dashed #777;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 5px,
+      rgba(80, 80, 80, 0.13) 6px
+    );
+  }
+
+  .apparatus .tube-b {
+    position: absolute;
+    z-index: 2;
+    right: 24px;
+    top: 48px;
+    width: 3px;
+    height: 49px;
+    background: #555;
+  }
+
+  .apparatus-wrap .figure-caption {
+    font-size: 10px;
+    line-height: 13px;
+  }
+
+  .notes {
+    clear: both;
+  }
+
+  .numbered {
+    padding-left: 1.9em;
+    text-indent: -1.9em;
+  }
+
+  .page-number {
+    position: absolute;
+    bottom: 7px;
+    left: 0;
+    width: 100%;
+    font-size: 12px;
+    line-height: 14px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<main class="page">
+  <p class="continued">度盘上的左、右两边的格数接近相等，指针静止时则应指在分度盘的中间。如果天平未达到平衡，调节左、右的平衡螺母，使天平平衡。</p>
+  <p class="operation">（2）称量时把称量物放在左盘，砝码放在右盘。砝码要用镊子夹取。先加质量大的砝码，再加质量小的砝码，最后移动游码，直到天平平衡为止。记录所加砝码和游码的质量。</p>
+  <p class="operation">（3）称量完毕后，应把砝码放回砝码盒中，把游码移回零处。</p>
+  <p class="operation">（4）化学实验称量的药品，常是一些粉末状或是易潮解的、有腐蚀性的药品。为了不使天平受到污染和损坏，使用时应该特别注意。</p>
+  <p>①称量干燥的固体药品前，应在两个托盘上各放一张相同质量的纸，然后把药品放在纸上称量。②易潮解的药品（如固体氢氧化钠），必须放在玻璃器皿（如小烧杯、表面皿）里称量。</p>
+
+  <div class="figure-row">
+    <figure class="placeholder figure">
+      <div class="drawing balance" aria-label="托盘天平示意图">
+        <span class="beam"></span>
+        <span class="post"></span>
+        <span class="base"></span>
+        <span class="cord left"></span>
+        <span class="cord right"></span>
+        <span class="pan left"></span>
+        <span class="pan right"></span>
+      </div>
+      <figcaption class="figure-caption">图5</figcaption>
+    </figure>
+
+    <figure class="placeholder figure">
+      <div class="drawing hands" aria-label="把玻璃管插入带孔橡皮塞示意图">
+        <span class="tube"></span>
+        <span class="stopper"></span>
+      </div>
+      <figcaption class="figure-caption">图6</figcaption>
+    </figure>
+
+    <figure class="placeholder figure">
+      <div class="drawing hands tube-join" aria-label="连接玻璃管和胶皮管示意图">
+        <span class="tube"></span>
+        <span class="hose"></span>
+      </div>
+      <figcaption class="figure-caption">图7</figcaption>
+    </figure>
+
+    <figure class="placeholder figure">
+      <div class="drawing hands stopper-fit" aria-label="在容器口塞橡皮塞示意图">
+        <span class="flask"></span>
+        <span class="plug"></span>
+      </div>
+      <figcaption class="figure-caption">图8</figcaption>
+    </figure>
+  </div>
+
+  <p class="section-title">3．连接仪器装置</p>
+  <p>正确连接仪器装置，是进行化学实验的重要环节。在初中化学实验中用得较多的是连接玻璃导管、橡皮塞、胶皮管等的操作。</p>
+  <p class="operation">（1）把玻璃管插入带孔橡皮塞　左手拿橡皮塞，右手拿玻璃管（靠近要插入塞子的一端）（如图6）。先把要插入塞子的玻璃管的一端用水润湿，然后稍稍用力转动（小心不要使玻璃管折断，以致刺破手掌），使它插入。</p>
+  <p class="operation">（2）连接玻璃管和胶皮管　左手拿胶皮管，右手拿玻璃管（如图7）。先把玻璃管口用水润湿，稍稍用力即可把玻璃管插入胶皮管。</p>
+  <p class="operation">（3）在容器口塞橡皮塞　左手拿容器，右手拿橡皮塞（如图8）慢慢转动，塞进容器口。切不可把容器放在桌上再使劲塞进塞子，因为这样做容易压破容器。</p>
+
+  <figure class="placeholder apparatus-wrap">
+    <div class="drawing apparatus" aria-label="检查装置气密性示意图">
+      <span class="jar"></span>
+      <span class="tube-a"></span>
+      <span class="beaker"></span>
+      <span class="water"></span>
+      <span class="tube-b"></span>
+    </div>
+    <figcaption class="figure-caption">图9　检查装置的气密性</figcaption>
+  </figure>
+
+  <p class="section-title">4．检查装置的气密性</p>
+  <p>如图9，把导管的一端浸在水里，两手紧握容器的外壁，如果装置不漏气，里面的空气受热膨胀，导管口有气泡冒出；松开手一段时间后，导管中有水柱上升，形成一段稳定的水柱。</p>
+
+  <div class="notes">
+    <p class="section-title">5．物质的加热</p>
+    <p class="operation">（1）酒精灯的使用方法　在化学实验中，酒精灯是最常用的加热器具。使用酒精灯时，先要检查灯芯，如果灯芯顶端不平或已烧焦，需要剪去少许使其平整。然后检查灯里有无酒精。向灯里添加酒精时，不能超过酒精灯容积的 $2/3$。</p>
+    <p>在使用酒精灯时，有几点要注意：绝对禁止向燃着的酒精灯里添加酒精，以免失火；绝对禁止用酒精灯引燃另一只酒精灯。用完酒精灯，必须用灯帽盖灭（如图10），不可用嘴去吹。不要碰倒酒精灯，万一洒出的酒精在桌上燃烧起来，不要惊慌应立即用湿抹布扑盖。</p>
+    <p class="operation">（2）给物质加热　酒精灯的灯焰分为焰心、内焰、外焰三个部分。把一根火柴梗放在酒精灯的灯焰中（如图11），约2s后取出来。可以看到，处在火焰外层（外焰）的部分最先碳化。说明外焰温度最高，内焰燃烧不充分，温度较低，焰心温度最低。因此，应用外焰部分进行加热。</p>
+    <p>在用酒精灯给物质加热时，有以下几点需要注意：</p>
+    <p class="numbered">①给液体加热可以用试管、烧瓶、烧杯、蒸发皿；给固体加热可以用干燥的试管、蒸发皿等。有些仪器如集气瓶、量筒、漏斗等不允许加热。</p>
+    <p class="numbered">②如果被加热的玻璃容器外壁有水，应在加热前擦拭干净，然后加热，以免容器炸裂。</p>
+    <p class="numbered">③加热的时候，不要使玻璃容器的底部跟灯芯接触，也不要离得过远（如图12），距离过近或过远都会影响加热效果。烧得很热的玻璃容器，不要立即用冷水冲洗，否则可能破裂。也不要直接放在实验台上，以免烫坏实验台。</p>
+    <p class="numbered">④给试管里的固体加热，应该先进行预热。预热的方法是：在火焰上来回移动试管。对已固定的试管，可移动酒精灯，待试管均匀受热后，再把灯焰固定在放固体的部位加热。</p>
+  </div>
+
+  <div class="page-number">6</div>
+</main>
+</body>
+</html>

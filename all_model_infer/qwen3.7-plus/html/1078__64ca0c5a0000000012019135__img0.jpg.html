@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>前置过滤器怎么选？</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+    background-color: #fff5f5;
+    padding: 20px;
+    max-width: 700px;
+    margin: 0 auto;
+    color: #333;
+    line-height: 1.6;
+  }
+  .container {
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .main-title {
+    font-size: 26px;
+    font-weight: 900;
+    color: #1a1a1a;
+    margin-bottom: 16px;
+    position: relative;
+    display: inline-block;
+  }
+  .main-title::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 0;
+    right: -10px;
+    height: 14px;
+    background: #f5d76e;
+    z-index: -1;
+    border-radius: 3px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    margin-top: 20px;
+  }
+  .check-icon {
+    width: 28px;
+    height: 28px;
+    background: #4CAF50;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    flex-shrink: 0;
+  }
+  .section-header-text {
+    font-size: 22px;
+    font-weight: 900;
+    color: #1a1a1a;
+  }
+  .section-header-text .highlight-red {
+    color: #d32f2f;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 16px;
+    font-size: 14px;
+  }
+  table thead th {
+    background: #e8772e;
+    color: white;
+    padding: 10px 12px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 15px;
+    border: 1px solid #d4691f;
+  }
+  table tbody td {
+    padding: 10px 12px;
+    border: 1px solid #f0d5b8;
+    vertical-align: middle;
+  }
+  table tbody tr:nth-child(odd) td {
+    background: #fdf0e6;
+  }
+  table tbody tr:nth-child(even) td {
+    background: #fff8f0;
+  }
+  table tbody td:first-child {
+    text-align: center;
+    font-weight: bold;
+    font-size: 15px;
+    white-space: nowrap;
+    background: #f5e0cc !important;
+  }
+  table tbody td:last-child {
+    text-align: center;
+    font-size: 18px;
+    letter-spacing: 2px;
+    white-space: nowrap;
+  }
+  .desc-text {
+    font-size: 15px;
+    line-height: 1.8;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  .desc-text .red-bold {
+    color: #d32f2f;
+    font-weight: bold;
+  }
+  .material-section {
+    margin-top: 10px;
+  }
+  .material-grid {
+    display: flex;
+    gap: 16px;
+    margin-top: 12px;
+  }
+  .material-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .material-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .material-img {
+    width: 140px;
+    height: 120px;
+    background: #f0f0f0;
+    border-radius: 8px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+  .material-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  .material-img .placeholder-img {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #e8e8e8 0%, #d0d0d0 100%);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: #999;
+  }
+  .material-text {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #333;
+  }
+  .material-text .red {
+    color: #d32f2f;
+    font-weight: bold;
+  }
+  .material-text .bold {
+    font-weight: bold;
+  }
+  .img-placeholder {
+    width: 140px;
+    height: 120px;
+    background: linear-gradient(135deg, #e0e0e0, #c8c8c8);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: #888;
+    flex-shrink: 0;
+  }
+  .img-placeholder-tall {
+    width: 140px;
+    height: 260px;
+    background: linear-gradient(135deg, #e0e0e0, #c8c8c8);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: #888;
+    flex-shrink: 0;
+  }
+  .right-col-content {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .right-col-text {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #333;
+  }
+  .right-col-text .red {
+    color: #d32f2f;
+    font-weight: bold;
+  }
+  .right-col-text .bold {
+    font-weight: bold;
+  }
+  .bottom-grid {
+    display: flex;
+    gap: 16px;
+    margin-top: 12px;
+  }
+  .bottom-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .bottom-right {
+    flex: 1;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .bottom-left-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .bottom-left-item .img-placeholder {
+    width: 130px;
+    height: 100px;
+  }
+  .bottom-left-text {
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .bottom-left-text .red {
+    color: #d32f2f;
+    font-weight: bold;
+  }
+  .bottom-left-text .bold {
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="main-title">前置过滤器怎么选？</div>
+
+  <div class="section-header">
+    <div class="check-icon">✓</div>
+    <div class="section-header-text">冲洗方式<span class="highlight-red">首选虹吸反冲式</span></div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width:22%;">冲洗方式</th>
+        <th style="width:55%;">优缺点</th>
+        <th style="width:23%;">推荐值</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>叠片式</td>
+        <td>冲洗效率高，但是过滤不干净，没有排污口</td>
+        <td>★</td>
+      </tr>
+      <tr>
+        <td>顺冲式</td>
+        <td>冲洗效率高，容易造成堵塞以及二次污染</td>
+        <td>★★</td>
+      </tr>
+      <tr>
+        <td>反冲式</td>
+        <td>冲洗更彻底，避免二次污染。用水量大时容易造成水压不稳</td>
+        <td>★★★</td>
+      </tr>
+      <tr>
+        <td>虹吸反冲式</td>
+        <td>冲洗更彻底，避免二次污染，对水压没有影响</td>
+        <td>★★★★★</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="desc-text">
+    冲洗方式是前置过滤器选购重点，不好的冲洗方式容易造成堵塞，影响滤网使用寿命。<span class="red-bold">首推虹吸反冲洗清洗方式，其次推荐普通反冲洗方式。</span>
+  </div>
+
+  <div class="section-header material-section">
+    <div class="check-icon">✓</div>
+    <div class="section-header-text">材质 316L不锈钢+环保铜+隔铅层</div>
+  </div>
+
+  <div class="bottom-grid">
+    <div class="bottom-left">
+      <div class="bottom-left-item">
+        <div class="img-placeholder" style="width:130px;height:100px;">[图片：滤网材质]</div>
+        <div class="bottom-left-text">
+          滤网材质，认准<br>
+          <span class="red">316L不锈钢</span>材质<br>
+          更耐腐蚀
+        </div>
+      </div>
+      <div class="bottom-left-item">
+        <div class="img-placeholder" style="width:130px;height:100px;">[图片：管道部件]</div>
+        <div class="bottom-left-text">
+          管道部分<span class="bold">首推环保铜</span>，再搭配<span class="red">隔铅层</span>则更好！
+        </div>
+      </div>
+    </div>
+    <div class="bottom-right">
+      <div class="img-placeholder-tall">[图片：瓶身材质]</div>
+      <div class="right-col-text">
+        瓶身材质，<br>
+        注意标注<span class="red">不含双酚A</span>，<br>
+        防冻达<br>
+        <span class="red">-30℃</span>，<br>
+        防爆至少达<br>
+        到<span class="red">1.0Mpa</span>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

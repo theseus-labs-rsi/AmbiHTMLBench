@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script>window.MathJax={tex:{inlineMath:[["$","$"]],displayMath:[["$$","$$"]]}};</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>浙江大学报 - 当下视窗</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "SimSun", "Songti SC", serif;
+            background-color: #fff;
+            color: #000;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+        
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #c00;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: baseline;
+            gap: 20px;
+        }
+        
+        .issue-number {
+            font-size: 36px;
+            color: #c00;
+            font-weight: bold;
+            font-family: Arial, sans-serif;
+        }
+        
+        .section-title {
+            font-size: 28px;
+            color: #c00;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        
+        .header-center {
+            flex: 1;
+            text-align: center;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        
+        .header-right img {
+            height: 40px;
+        }
+        
+        /* Quote Box */
+        .quote-box {
+            border: 2px solid #c00;
+            border-image: linear-gradient(to right, #c00, transparent) 1;
+            padding: 12px 20px;
+            margin-bottom: 20px;
+            position: relative;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.95), rgba(255,255,255,0.98));
+        }
+        
+        .quote-box::before,
+        .quote-box::after {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #c00;
+        }
+        
+        .quote-box::before {
+            top: -6px;
+            left: -6px;
+            border-right: none;
+            border-bottom: none;
+        }
+        
+        .quote-box::after {
+            bottom: -6px;
+            right: -6px;
+            border-left: none;
+            border-top: none;
+        }
+        
+        .quote-text {
+            font-size: 13px;
+            line-height: 1.7;
+            text-align: justify;
+            text-indent: 2em;
+        }
+        
+        /* Main Layout */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 25px;
+        }
+        
+        /* Article Styles */
+        .article {
+            margin-bottom: 30px;
+        }
+        
+        .article-title {
+            font-size: 32px;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0 10px 0;
+            letter-spacing: 1px;
+        }
+        
+        .byline {
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .byline::before {
+            content: "■";
+            color: #000;
+        }
+        
+        .article-body {
+            font-size: 14px;
+            line-height: 1.75;
+            text-align: justify;
+            text-indent: 2em;
+        }
+        
+        .article-body p {
+            margin-bottom: 12px;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            border-left: 1px solid #ddd;
+            padding-left: 20px;
+        }
+        
+        .sidebar-header {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        .sidebar-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #000;
+            display: inline-block;
+            padding-right: 10px;
+            background: #fff;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .sidebar-title::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            right: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(to right, #c00, transparent);
+            transform: translateY(-50%);
+        }
+        
+        .book-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 18px;
+            align-items: flex-start;
+        }
+        
+        .book-cover {
+            width: 70px;
+            height: 100px;
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .book-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .book-info {
+            flex: 1;
+        }
+        
+        .book-title {
+            background: #e8a86d;
+            color: #000;
+            font-size: 13px;
+            font-weight: bold;
+            padding: 3px 6px;
+            margin-bottom: 5px;
+            display: inline-block;
+        }
+        
+        .book-author {
+            font-size: 12px;
+            color: #333;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .book-desc {
+            font-size: 11px;
+            line-height: 1.5;
+            color: #444;
+            text-align: justify;
+        }
+        
+        /* Subheadings */
+        .subheading {
+            font-weight: bold;
+            font-size: 15px;
+            margin-top: 18px;
+            margin-bottom: 8px;
+            text-indent: 0;
+        }
+        
+        @media print {
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <span class="issue-number">2</span>
+                <span class="section-title">当下·视窗</span>
+            </div>
+            <div class="header-center">
+                2019年11月15日 星期五<br>
+                责任编辑:马宇丹 联系电话:0571-88981339
+            </div>
+            <div class="header-right">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 50'%3E%3Ctext x='10' y='35' font-family='serif' font-size='24' fill='%23c00'%3E浙江大学报%3C/text%3E%3Ctext x='10' y='48' font-family='Arial' font-size='10' fill='%23000'%3EZHE JIANG DA XUE BAO%3C/text%3E%3C/svg%3E" alt="浙江大学报">
+            </div>
+        </div>
+
+        <!-- Quote Box -->
+        <div class="quote-box">
+            <p class="quote-text">浙大文科120年来弦歌不辍、薪火相传，书写了精彩篇章。近年来，浙大文科人不断努力、不断沉淀、在加快建设世界一流、中国特色、浙大风格的哲学社会科学体系，开启浙大文科繁荣发展的新征程中交出了一份又一份的优异成绩单。本期我们走近浙大文科学术成果代表，听听浙大文科人著书背后的故事。</p>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="main-content">
+            <!-- Left Column: Articles -->
+            <div class="left-column">
+                <!-- Article 1 -->
+                <div class="article">
+                    <h1 class="article-title">许钧：傅雷是我一生的梦</h1>
+                    <div class="byline">本报记者 吴雅兰</div>
+                    
+                    <div class="article-body">
+                        <p>2008年，在我国著名翻译家、文学评论家傅雷诞辰100周年时，同为翻译家的许钧曾这样说。</p>
+                        
+                        <p>“在今天，傅雷已不仅仅属于中国。他更属于整个世界；傅雷精神，可以帮助我们跨越文字的障碍，在文学上有所交流；在文化上有所互补，促使全世界的人们为了一个和平的文化而努力追求。”</p>
+                        
+                        <p>十余年后，已是浙江大学文科资深教授的许钧在紫金港校区的办公室里，翻开他研究傅雷的著作《傅雷翻译研究》，对记者说：“傅雷就是一辈子研究不完的课题。”窗外深秋的光穿过树叶的缝隙，照在书页上，映出暖眼令人鼓舞的生命力。</p>
+                        
+                        <p>《傅雷翻译研究》是国内外对于傅雷翻译观、艺术观以及翻译成就与翻译影响进行最系统性与专题研究的首次尝试，在拓荒者研究的维度与空间的同时，也为“译者何为”提供了新的答案。</p>
+                        
+                        <p>一瞬入梦，一梦四十年。这本书可以说是许钧数十年研究傅雷的一个缩影。</p>
+                        
+                        <h3 class="subheading">从一本书、一棵树到一个大写的人</h3>
+                        
+                        <p>“如果说30岁的时候，傅雷对我来说是一本书，那么到40岁的时候，傅雷在我眼中是一棵常青树，正是经过他的妙笔，巴尔扎克、罗曼·罗兰、罗丹等——那些法国文学的学生命得以在中国重燃。而我50岁的时候，开始理解傅雷的精神境界，他是一个人，一个大写的人。”</p>
+                        
+                        <p>许钧第一次接触傅雷译著是读大学的时候。他问老师借了一本傅雷翻译的老舍《头》，捧上就入了迷。“中文怎么这么美？”1979年许钧去法国留学，第一件事就是去塞纳河边的旧书店找法文的原著，带着一箱书回来。两年后许钧回国，带了一大批法文的书。彼时，中国刚刚开始改革开放，国外最新的经典小说成为社会热点。为了有一本原版的中文名著，读者们常常在书店门口排起长队。这从众的盛况让许钧萌动念头：发一声感叹：“如果以后我也能翻译出一本书，该多幸福啊！”</p>
+                        
+                        <p>从那时起，许钧的心中就埋下了一颗想要研究傅雷的种子。特别是当他自己开始从事翻译工作后，更是以傅雷为学习的榜样。“为什么要这样翻？怎么体现原著本身的风格？如何处理形象与精神的关系？”带着一连串问题，许钧从傅雷译著的文本世界开始研究，并逐步深入到傅雷的艺术风格、精神内核。</p>
+                        
+                        <p>许钧说，已有的傅雷研究，往往更多关注其“为人”部分，学术界对于其“为译”这一重要维度，尽管也有一定关注，但却留下很多研究空白与学术遗憾。“我想超越学术的层面，从思想与文化的角度来观照，以傅雷的翻译世界作为关注焦点，揭示‘傅雷体华文风格’形成的深层原因。”</p>
+                        
+                        <h3 class="subheading">针对一句话的不同翻译就写了万字论文</h3>
+                        
+                        <p>“硬译难，是理解傅雷的基础。”</p>
+                        
+                        <p>学问是要下真功夫、苦功夫、实功夫的。就像当年傅雷不惜四五遍原著不会动手翻译一样，许钧把不同出版社出版的500多万字的傅雷19部译著以及傅雷之后其他翻译家对相同作品的不同翻译版本都拿来来回往仔细地品读了几遍。</p>
+                        
+                        <p>光是经约略，莫里斯托夫的第一句，许钧就能写了“多”万字的第一句话。</p>
+                        
+                        <p>在傅雷开篇所译的《约翰·克利斯朵夫》中，中国读者都看到了一种与全书相吻合的气势，这个字就像一个根须的先兆，预设了一个英雄的横空出世。然而，这份永无止境的心境冲击，这份铭刻在记忆中的永恒，都是因为傅雷的创造。</p>
+                        
+                        <p>许钧发现，无论是法文原著还是很早就有英译本，开头这一句都是无法让人感受到这份震撼。比如，英译本用的是mumur（低语）过来就是“低语”。傅雷用“轰”这个词不是孤零零的一句话，而是贯穿全局的一颗。除了开头，书中后面还有几处也是一模一样的句子。傅雷把这些可能做了同样的翻译，这跟原著是非常契合的，而有其他版本是翻译成了不同的文字。</p>
+                        
+                        <p>在追求“神似”还是“形似”这个翻译的经典问题上，傅雷有着更神似的，我们经常说忠实于原著，形似就是忠实吗？未必如此，因为从外语到汉语，发音变了，字形变了，意义就有可能发生变化。如果一味机械翻译，意就可能走样了。“许钧认为，傅雷对原作的理解，是为傅雷的翻译观，本身就有创见的思想。”</p>
+                        
+                        <p>借助傅雷的译著，许钧开始关注站在他后面的那个人，关注赋予了原著生命的那个人。许钧逐渐懂得翻译不仅仅是“种语言的文字转换，更是一种思想的迁徙与传播、文化的跨越与交流。</p>
+                        
+                        <p>许钧认为，傅雷每一次翻译选择的背后，都隐藏着其不“求真”的独立思考。在黑格尔的《美学》中，他说图借助翻译，寻找光明；在《中国月亮》，中华民族面临巨大灾难的危急时刻，他期冀借助翻译，为振奋民族人心燃希望；而当“现实的翻译”直压着个人、国人苦难的深渊中挣扎之时，他则寄希望于借助翻译之为痛苦的心灵打开通往自由的道路。</p>
+                        
+                        <p>“这是多么，翻译那些书？傅雷是精心思考过的，而且这些考虑是与时俱进的。比如《巨人三传》，当时正是一战后，十九世纪的纸，他是想把英国主义气息传递给青年人。”许钧说，傅雷通过翻译所要塑造的，是一个正直人的、一种精神，翻译对于傅雷，是一种灵魂的表达、理想的体现、热爱祖国的展示。”</p>
+                        
+                        <h3 class="subheading">与傅雷家人成为朋友</h3>
+                        
+                        <p>因为发自内心的喜爱，许钧把让傅雷译著更长远地走进大众视野当成是自己毕生的使命。</p>
+                        
+                        <p>2008年，在傅雷诞辰一百周年之际，许钧参与、组织了一系列活动。比如，在国家图书馆开幕的“洁白的丰碑——纪念傅雷百年诞辰展览”上，许钧应邀做了演讲；他牵头举办“傅雷与翻译”国际学术研讨会；中外学者共同探讨傅雷的文艺思想……</p>
+                        
+                        <p>这份长达十几年的真挚情感也让许钧与傅雷家人成为了朋友。</p>
+                        
+                        <p>许钧第一次去傅雷次子傅敏家中做客，看到珍藏的傅雷翻译《都尔的本堂神甫》的手稿时，简直屏息凝光。傅敏的夫人陈女士特意戴上白色手套去拿了装订了3页手稿给许钧看。“而我们看到的只是翻译的最终版本，是静态的一个结果。有了手稿，我们就能从初稿、修改稿到定稿的动态还原中，更好地研究傅雷为什么这么翻译。”</p>
+                        
+                        <p>后来，傅雷家人还主动把另外的3份手稿复印给了许钧，从傅雷的笔迹、文本领悟精神世界，对深刻受到的是的父爱和情怀的相知。</p>
+                        
+                        <p>对于傅雷翻译的研究，资深的十几位学生毕生。不仅如此，他还带着学生一起做，让学生从傅雷著作的用词造句、形象塑造等方面，逐步展开研究。</p>
+                        
+                        <p>后来，我也想自己完成这个研究。”许钧坦率地说，之所以和学生合作，是想把对傅雷的研究传承下去，“我和我的学生正在研习‘一代’与许钧合作完成《傅雷翻译研究》的书稿，期望如今都已成为国内雷学的专家。”</p>
+                        
+                        <p>此外，许钧的一名学生评传上全国优秀硕士论文奖；另一名学生从四大翻译批评研究傅雷法语巴尔扎克的从高老出发，从此走上了翻译批评的学术道路，如今成为了国内翻译批评研究领域最有影响力的学者之一……</p>
+                        
+                        <p>“当年，我从踏入人对傅雷的研究，如今几十年过去了，还有更多空间值得我们进一步探索。我将带着我的学生、学生的学生，继续研究。我的傅雷梦会一直下去。”许钧说。</p>
+                    </div>
+                </div>
+
+                <!-- Article 2 -->
+                <div class="article">
+                    <h1 class="article-title">束景南：我比了解自己更了解王阳明</h1>
+                    <div class="byline">本报记者 杨金</div>
+                    
+                    <div class="article-body">
+                        <p>古稀之年的资深教授考证，查阅二万多本古籍，二十多年的潜心研究，煌煌四卷本的《王阳明年谱长编》，光手写的书稿就有三千页，逾四百十万。</p>
+                        
+                        <p>浙大古籍所教授束景南的王阳明年谱长编一经出版就在海内外产生了巨大反响，被学界评价为“旷世巨著”，甚至还存有学者认为此书可代表二十一世纪阳明学研究的最高水平，也成为束景南后半生学术探索的代表作或荣光。</p>
+                        
+                        <h3 class="subheading">历阅书海，方得始终</h3>
+                        
+                        <p>1978年，束景南成为文革后首届研究生中的一员，考入复旦大学，学习中国古代文学，师从蒋天枢教授的大弟子朱东润教授。他说：“当年在学校，蒋先生对我们极其严格，背诗文、背诵铭文等古文字都要学习。我虽然主修先秦两汉古典文学，但兴趣广泛，对哲学、历史都非常感兴趣。”他回忆，“一次偶然先生家中多数，有幸拜读了陈寅恪的《柳如是别传》手稿，自己也产生了要为王阳明写年谱与立大传的念头。”</p>
+                        
+                        <p>入浙大后，束景南正式开始了对王阳明的深入研究，提起王阳明，他说：“我研究了二十多年，可以说，我了解王阳明比了解自己还了解他。五百年来，有人认为王阳明是反封建的思想家、“儒家的心学集大成者”、“儒教农民起义式的创子手”，又有人说他是“中国封建社会的最后完人”、“神圣圣人”、“千古一圣”，他到底是个什么样的人，为何褒贬如此不一，大起大落，他的心学究竟是怎样？这样的思想，我想要一探究竟。”这二十年来使我为王阳明写年谱和大传的极大动力。</p>
+                        
+                        <p>研究王阳明，有三个挑战首先面对：一是王阳明的相关资料极为缺少，二是信息量很大的资料中还存在很多错误，三是“一祖多传统说法也有很大错谬。”</p>
+                        
+                        <p>为了搜集到更多足以支撑研究的资料，他翻阅了二百多种古籍，从明代到近代，直到当代，做了大量的笔记摘录。白天在图书馆古籍室，手抄着各种所需资料，晚上整理研究并考证它们，多年下来，把浩如烟海的古籍几乎翻烂，丛书全都查阅了一遍，除了浙大图书馆古籍室，束景南还常到浙大中文系图书馆查资料，他说：“那里有很多老先生留下的线装书，上面都满了夹注，我一个人坐在那里，一本本地查过去，并把有用的资料抄写下来，手头满满都是。”</p>
+                        
+                        <p>束景南说，研究王阳明，一方面要从开拓资料入手，要不畏艰难，全面查找、线索绝迹都不能放过，如浙大艺术学系资料室中藏的书法和绘画资料，也是珍贵的资料，“某家通过细致的研究和书画上的题诗批注，就文献内容，找到了一些从未被发现过的王阳明铁诗快文及其相关证据。”</p>
+                        
+                        <p>在考据创作的过程中每千里，束景南废寝忘食，用手写作的方式，以每天写成的速度，用了三年时间，终成三千万手稿。他笑称，自己的时间也献给了属于人的书法作品，与电脑打字相比，通过手写，印象更深刻，并且能更深入地思考，脚踏实地，考证细节，不断地对作品精核求真。光写可的证据，束景南写成《王阳明年谱长编》后仍不断地确证、修订它，未是在学术探索不断的道路上。</p>
+                        
+                        <p>《王阳明年谱长编》一书也在写法上突破了历来传统的年谱写作模式，百科全书式地对阳明文学文献研究“生平研究”“思想研究”三大领域作了全面探讨，包罗万象，特色鲜明，具有浓厚的学术史与思想史的张力与价值。正如束景南自己所说，做学问要文吏哲融会贯通，用思辨考证的方法去深究史料材料的潜能和心灵其中，超越其外，多有所得。</p>
+                        
+                        <h3 class="subheading">这“神”为“人”，求真求是</h3>
+                        
+                        <p>说到《王阳明年谱长编》书的创新和亮点，束景南两眼放光，自信地说起自己如何在资料考古中发现线索，又是如何靠着线索往下一个个击破，查得历史真相。他更像是一名经验丰富的“侦探”，游走于历史时空之中，侦破桩桩悬案，解开多年未解之谜，填补历史空白。</p>
+                        
+                        <p>例如，在明武宗正德十四年事件中，钱德洪在《阳明先生年谱》中详细描述了阳明遭功名追逼、投湖渔船、驾船风浪海遁、入武夷山峨眉、遇虎不食的故事，现录了共五百多年，对于这“神”的版本，束景南进行了仔细详实的考证。根据王阳明好友湛若水的《叙墓志铭》和正德甲子季本的《皇明王先生游海神祠记》，故事另方面细密考证，确证明“游海神祠化救”作出是由于阳明本人虚构，不过言在佯狂避祸，明明扬击朝廷的昏君权阉而已，由此破解了阳明正德二年“游海”的千古之谜。</p>
+                        
+                        <p>又如关于阳明的诗学思想，歌诗法及其诗歌文学创作活动，历来不明，束景南详细考明了阳明前七子、茶陵派等的诗歌酬唱交游活动，发现了阳明“九声四气歌法”，这一重要发现，束景南一名认为《喊山阁法》的书籍，该书和王阳明研究没有多大关系，但通过束景南的深入探索，不但破解了“九声四气歌法”的奥秘，还顺藤摸瓜，进一步理清出了王阳明的明代心学实践者的白沙“古诗即政”之心的渊源，即阳明人在其化成十九年已相识，并且王阳明家中“天泉楼”是他根据白沙的《咏心泉》诗命名的，可见陈白沙的心学思想影响了王阳明思想发展的一生。</p>
+                        
+                        <p>束景南说：“非道之作无他，唯在求真，求实，求是。我是通过我的研究，打破阳明学日本的神话说，让阳明研究回归中国，让他自己《写阳明谱》与《阳明大传》提出了一个根本的写作原则：一切凭材料说话，一切据实立论，反对凭空无根的空谈。”</p>
+                        
+                        <p>针对年谱中提出且由于重大而未能展开评论的问题，他又进一步写下了一系列详密的考辨文章，例如《入越考》、《王阳明再考》、《王阳明再考再考》、《王阳明正德三年中的良知“四句”》等。通过详实的考证，细腻的推理论证，束景南出了五百年来将王阳明神化的思维定式，破除了多年的误案、悬案、选案，书中内容之丰富，考证之精密严谨，也为世人呈现出了一个宏大多彩的中国晚明新阶段文化思想画卷。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Sidebar -->
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <h2 class="sidebar-title">代表成果</h2>
+                </div>
+                
+                <div class="book-list">
+                    <div class="book-item">
+                        <div class="book-cover placeholder">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 140'%3E%3Crect fill='%23654321' width='100' height='140'/%3E%3Ctext x='50' y='70' font-family='serif' font-size='12' fill='%23fff' text-anchor='middle'%3E王阳明%3C/text%3E%3C/svg%3E" alt="Book Cover">
+                        </div>
+                        <div class="book-info">
+                            <div class="book-title">《王阳明年谱长编》</div>
+                            <div class="book-author">作者:束景南</div>
+                            <div class="book-desc">以大量新发现新考定的充分资料为依据，以王阳明的整个人生历程为叙述框架，以阳明一生心学思想的形成发展演变为主线，结构合理，逻辑清晰地展现了王阳明重新复杂的二重及核心思想发展的心路历程。获全国优秀古籍图书二等奖、浙江大学董氏文史哲研究一等奖。</div>
+                        </div>
+                    </div>
+                    
+                    <div class="book-item">
+                        <div class="book-cover placeholder">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 140'%3E%3Crect fill='%238b0000' width='100' height='140'/%3E%3Ctext x='50' y='70' font-family='serif' font-size='10' fill='%23fff' text-anchor='middle'%3E蒋廷黻%3C/text%3E%3C/svg%3E" alt="Book Cover">
+                        </div>
+                        <div class="book-info">
+                            <div class="book-title">《美国哈佛大学燕京图书馆藏蒋廷黻资料》</div>
+                            <div class="book-author">作者:陈红民,傅敏,肖如平</div>
+                            <div class="book-desc">蒋廷黻是著名哈佛大学哈佛燕京图书馆的“蒋廷黻资料”整理、解读与利用，内容涵盖了1947—1965年间蒋廷黻个人收藏保存的各类档案，对研究蒋廷黻个人，对当代国际关系史、当代台湾史研究具有很高的史学价值。获浙江省第十九届哲学社会科学优秀成果奖一等奖。</div>
+                        </div>
+                    </div>
+                    
+                    <div class="book-item">
+                        <div class="book-cover placeholder">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 140'%3E%3Crect fill='%23f5f5dc' width='100' height='140'/%3E%3Ctext x='50' y='70' font-family='serif' font-size='10' fill='%23000' text-anchor='middle'%3E词汇核心%3C/text%3E%3C/svg%3E" alt="Book Cover">
+                        </div>
+                        <div class="book-info">
+                            <div class="book-title">《汉语词汇核心义研究》</div>
+                            <div class="book-author">作者:王云路,王诚</div>
+                            <div class="book-desc">立足于汉语史，从传统训诂学中汲取养料，同时借鉴现代语言学方法，第一次较为全面地探讨了汉语词的核心语义，丰富了词汇学、语义学理论。成果的影响得到古今文学研究、现代汉语和方言词汇的研究，乃至延伸至中文信息处理和中译史等情领域。入选2013年度《国家社会科学基金成果文库》。</div>
+                        </div>
+                    </div>
+                    
+                    <div class="book-item">
+                        <div class="book-cover placeholder">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 140'%3E%3Crect fill='%23e6e6fa' width='100' height='140'/%3E%3Ctext x='50' y='70' font-family='serif' font-size='9' fill='%23000' text-anchor='middle'%3E法国哲学%3C/text%3E%3C/svg%3E" alt="Book Cover">
+                        </div>
+                        <div class="book-info">
+                            <div class="book-title">《20世纪法国哲学的现象学之旅》</div>
+                            <div class="book-author">作者:杨大春</div>
+                            <div class="book-desc">围绕身心、身体和物质三个范畴，描述出渐进运用观念论(唯心论)、精神论(唯灵论)和物质论(唯物论)三个形态，渐摆脱创始者实用主义现象学和概念论现象学两个倾向向太美，意识现象学，表象现象学和物质现象学三个纵向亚类，则其第一格地展开了法国现象学研究。获2017年浙江省第十九届哲学社会科学优秀成果奖一等奖(基础研究类)。</div>
+                        </div>
+                    </div>
+                    
+                    <div class="book-item">
+                        <div class="book-cover placeholder">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 140'%3E%3Crect fill='%23fff8dc' width='100' height='140'/%3E%3Ctext x='50' y='70' font-family='serif' font-size='10' fill='%23000' text-anchor='middle'%3E傅雷研究%3C/text%3E%3C/svg%3E" alt="Book Cover">
+                        </div>
+                        <div class="book-info">
+                            <div class="book-title">《傅雷翻译研究》</div>
+                            <div class="book-author">作者:许钧,宋学智,胡安江</div>
+                            <div class="book-desc">在学术空白处着力，创造多个首次，国内对于傅雷翻译现象、傅雷艺术观，以及傅雷成功与翻译影响进行贯穿式系统性专题研究的首次尝试，首次从语言与文化视角，从一个跨域了语言与文学二元对立的高度，对傅雷的翻译风格问题进行了系统而独特的消解与研究；首次全面系统地从“神似”观的历时溯源、文化基础、发展脉络、哲学根源等方面，对傅雷的翻译思想精髓进行了深入、细致的整体性探究；首次在拓展的翻译活动场域，从接受与传播的角度，探讨了傅雷的翻译文学对中国文学与文化的影响。获浙江省第十届哲学社会科学优秀成果奖一等奖(基础研究类)。</div>
+                        </div>
+                    </div>
+                    
+                    <div class="book-item">
+                        <div class="book-cover placeholder">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 140'%3E%3Crect fill='%23f0f0f0' width='100' height='140' stroke='%23ccc'/%3E%3Ctext x='50' y='70' font-family='serif' font-size='9' fill='%23000' text-anchor='middle'%3E伦理学批评%3C/text%3E%3C/svg%3E" alt="Book Cover">
+                        </div>
+                        <div class="book-info">
+                            <div class="book-title">《文学伦理学批评导论》</div>
+                            <div class="book-author">作者:聂珍钊</div>
+                            <div class="book-desc">第一次对文学伦理学批评进行了全面、系统和深入的研究，讨论了文学伦理学批评的理论与批评实践的基本学术问题，在借鉴和吸收西方伦理批评和中国经典批评的基础上创造了具有中国特色的文学伦理学批评。</div>
+                        </div>
+                    </div>
+                    
+                    <div class="book-item">
+                        <div class="book-cover placeholder">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 140'%3E%3Crect fill='%23fafafa' width='100' height='140' stroke='%23ddd'/%3E%3Ctext x='50' y='70' font-family='serif' font-size='10' fill='%23666' text-anchor='middle'%3E诗的八堂课%3C/text%3E%3C/svg%3E" alt="Book Cover">
+                        </div>
+                        <div class="book-info">
+                            <div class="book-title">《诗的八堂课》</div>
+                            <div class="book-author">作者:欧丽娟</div>
+                            <div class="book-desc">诗人写诗都写什么？是怎样写出来？又如何去读？诗人写诗以各种形式呈现，往往古今中外的主张与诗论，既博雅、通识、声气、肌理、玄思、情色、乡愁、死亡等话题，开展有意义也有意思的讨论。从2017年1月由商务印书馆出版，到2018年5月第八次印刷，《诗的八堂课》总印量已达20万册。</div>
+                        </div>
+                    </div>
+                    
+                    <div class="book-item">
+                        <div class="book-cover placeholder">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 140'%3E%3Crect fill='%23800000' width='100' height='140'/%3E%3Ctext x='50' y='70' font-family='serif' font-size='8' fill='%23fff' text-anchor='middle'%3E国际传播%3C/text%3E%3C/svg%3E" alt="Book Cover">
+                        </div>
+                        <div class="book-info">
+                            <div class="book-title">《国际传播的理论、现状和发展趋势研究》</div>
+                            <div class="book-author">作者:吴飞,麦尔,韦路等</div>
+                            <div class="book-desc">著作是教育部2009年度重大攻关项目的结题成果，在国内首次全面系统围绕国际传播的理论脉络，并对当今中国所面临的国际舆论环境、国际传播策略进行了深入的分析，无论研究设计还是内容创新，都给人一种全新的感觉。</div>
+                        </div>
+                    </div>
+                    
+                    <div class="book-item">
+                        <div class="book-cover placeholder">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 140'%3E%3Crect fill='%23556b2f' width='100' height='140'/%3E%3Ctext x='50' y='70' font-family='serif' font-size='8' fill='%23fff' text-anchor='middle'%3E科技进阶%3C/text%3E%3C/svg%3E" alt="Book Cover">
+                        </div>
+                        <div class="book-info">
+                            <div class="book-title">《科技进阶与中国经济发展方式转变》</div>
+                            <div class="book-author">作者:肖文</div>
+                            <div class="book-desc">本书主要应用理论研究、实证研究、案例研究、比较研究，基于调研等方法，研究视角独特，以生产效率提升为核心，研究观点新颖，从保障基础上提出政策；以科技进步为视角，探讨了科学发展现实基础对于经济发展方式转变的内生机理与外在条件，使得基础以及实现模式，具有重要的理论价值及实践意义。</div>
+                        </div>
+                    </div>
+                    
+                    <div class="book-item">
+                        <div class="book-cover placeholder">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 140'%3E%3Crect fill='%23f5f5f5' width='100' height='140' stroke='%23ccc'/%3E%3Ctext x='50' y='70' font-family='serif' font-size='9' fill='%23000' text-anchor='middle'%3E实验经济%3C/text%3E%3C/svg%3E" alt="Book Cover">
+                        </div>
+                        <div class="book-info">
+                            <div class="book-title">《实验经济学简史》</div>
+                            <div class="book-author">作者:池柳聪</div>
+                            <div class="book-desc">国内外第一部全面深入系统阐述实验经济学学科现状的著作。通过独特的方法论科学诠释经济学学科、文献计量学、沟通规范方法、厘清实验经济学的学科性质与意义，界定这门学科的边界与范围，确定其在经济学各分支学科中的位置以及未来可能的发展轨道。</div>
+                        </div>
+                    </div>
+                    
+                    <div class="book-item">
+                        <div class="book-cover placeholder">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 140'%3E%3Crect fill='%23e6e6fa' width='100' height='140' stroke='%23999'/%3E%3Ctext x='50' y='70' font-family='serif' font-size='8' fill='%23000' text-anchor='middle'%3E创业教育%3C/text%3E%3C/svg%3E" alt="Book Cover">
+                        </div>
+                        <div class="book-info">
+                            <div class="book-title">《高校创业教育体系建设战略研究》</div>
+                            <div class="book-author">作者:徐小洲,梅伟惠</div>
+                            <div class="book-desc">通过理论构建、国际比较和现状分析相结合，追踪国际高校创业教育体系演进脉络，勾勒出了高校创业教育体系建设的理论框架，明晰了创业教育体系建设三大主体及其职责划分，提出“创新我国高校创业教育发展五大难题的战略与策略。</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

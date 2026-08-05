@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advanced form styling | MDN</title>
+<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #1b1b1b;
+    font-size: 15px;
+  }
+  code {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    background: #f0f0f2;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 0.9em;
+  }
+  a { color: #0060df; text-decoration: underline; }
+
+  /* Top ad bar */
+  .ad-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 20px;
+    border-bottom: 1px solid #ddd;
+    font-size: 13px;
+  }
+  .ad-bar .left { display: flex; align-items: center; gap: 12px; }
+  .ad-bar .mongo-logo { font-weight: bold; display: flex; align-items: center; gap: 4px;}
+  .get-started-btn {
+    background: #00684a;
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-size: 13px;
+    text-decoration: none;
+  }
+  .ad-top-right {
+    text-align: right;
+    padding: 4px 20px;
+    font-size: 12px;
+    color: #555;
+  }
+  .ad-tag {
+    border: 1px solid #999;
+    border-radius: 3px;
+    padding: 0px 4px;
+    font-size: 10px;
+    margin-bottom: 4px;
+    display: inline-block;
+  }
+
+  /* Header nav */
+  header.mdn-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    border-bottom: 1px solid #eee;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    font-size: 22px;
+    font-weight: bold;
+    gap: 6px;
+    color: #1b1b1b;
+    text-decoration: none;
+  }
+  nav.main-nav {
+    display: flex;
+    gap: 22px;
+    align-items: center;
+    font-size: 15px;
+    color: #1b1b1b;
+  }
+  nav.main-nav a { color: #1b1b1b; text-decoration: none; }
+  .header-icons { display: flex; align-items: center; gap: 14px; }
+  .search-box {
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    padding: 6px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 140px;
+    color: #888;
+  }
+
+  /* Breadcrumb */
+  .breadcrumb-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    border-bottom: 1px solid #eee;
+    font-size: 13px;
+    color: #555;
+  }
+  .breadcrumb-bar a { color: #555; text-decoration: none; }
+  .breadcrumb-right { display: flex; gap: 18px; }
+
+  /* Layout */
+  .page-wrapper {
+    display: grid;
+    grid-template-columns: 280px 1fr 260px;
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+
+  /* Sidebar */
+  aside.sidebar {
+    padding: 20px 16px;
+    border-right: 1px solid #eee;
+    font-size: 14px;
+  }
+  .filter-box {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 6px 10px;
+    margin-bottom: 14px;
+    color: #888;
+  }
+  .sidebar ul { list-style: none; padding-left: 14px; margin: 4px 0; }
+  .sidebar > ul { padding-left: 0; }
+  .sidebar li { margin: 6px 0; }
+  .sidebar .section-title { font-weight: bold; margin-top: 18px; margin-bottom: 4px; }
+  .sidebar .active {
+    background: #f2f0ff;
+    border-left: 3px solid #8b5cf6;
+    padding: 4px 8px;
+    margin-left: -3px;
+    display: block;
+    border-radius: 2px;
+  }
+  .sidebar a { color: #1b1b1b; text-decoration: none; }
+  .sidebar .dim { color: #999; }
+
+  /* Main content */
+  main.content {
+    padding: 24px 40px;
+    max-width: 900px;
+  }
+  h1.page-title { font-size: 34px; margin: 0 0 20px 0; }
+  .prevnext-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 20px;
+  }
+  .prevnext-bar a { text-decoration: underline; }
+
+  p { line-height: 1.6; margin: 0 0 16px 0; }
+
+  table.info-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+  }
+  table.info-table td {
+    border: 1px solid #ddd;
+    padding: 14px 16px;
+    vertical-align: top;
+    line-height: 1.6;
+  }
+  table.info-table td:first-child {
+    background: #f9f9f9;
+    font-weight: bold;
+    width: 150px;
+  }
+
+  ul.doc-list { margin: 0 0 16px 0; padding-left: 24px; line-height: 1.8; }
+
+  .note-box {
+    display: flex;
+    gap: 12px;
+    background: #f4f9ff;
+    border-left: 4px solid #0060df;
+    padding: 16px;
+    margin: 20px 0;
+    border-radius: 2px;
+    line-height: 1.6;
+  }
+  .note-box .icon { flex-shrink: 0; }
+
+  h2.section-heading {
+    margin-top: 34px;
+    margin-bottom: 16px;
+    font-size: 28px;
+    display: inline-block;
+  }
+  h2.section-heading code {
+    font-size: 1em;
+    background: #eee;
+    padding: 2px 6px;
+  }
+
+  /* right sidebar */
+  aside.toc {
+    padding: 20px 16px;
+  }
+  aside.toc h2 {
+    font-size: 20px;
+    margin: 0 0 14px 0;
+  }
+  .toc-list { list-style: none; padding: 0; margin: 0; font-size: 14px; line-height: 1.6; }
+  .toc-list li { margin-bottom: 14px; }
+  .toc-current {
+    border-left: 3px solid #f2a900;
+    padding-left: 10px;
+    margin-left: -13px;
+    font-weight: 500;
+  }
+
+  .placeholder {
+    background: #1c2a4e;
+    color: #fff;
+    padding: 18px;
+    border-radius: 6px;
+    width: 220px;
+    position: relative;
+    font-size: 13px;
+    margin-top: 10px;
+  }
+  .placeholder .ad-label {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    border: 1px solid #888;
+    font-size: 9px;
+    padding: 0 3px;
+    color: #ccc;
+  }
+  .placeholder .brand {
+    font-style: italic;
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  .placeholder .headline { font-weight: bold; font-size: 15px; margin-bottom: 6px; }
+  .placeholder .desc { color: #cfd6e6; line-height: 1.5; margin-bottom: 14px; }
+  .placeholder .btn {
+    background: #fff;
+    color: #1c2a4e;
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 13px;
+  }
+  .dont-want-ads { font-size: 12px; margin-top: 8px; text-decoration: underline; color: #333; }
+
+  code.inline-tag { color: #0060df; text-decoration: underline; background: none; padding: 0; }
+</style>
+</head>
+<body>
+
+<div class="ad-bar">
+  <div class="left">
+    <span class="mongo-logo">&#9670; MongoDB</span>
+    <span>Simplify infrastructure with MongoDB Atlas, the most popular modern database.</span>
+  </div>
+  <a href="#" class="get-started-btn">Get started for free</a>
+</div>
+<div class="ad-top-right">
+  <span class="ad-tag">AD</span><br>
+  <a href="#">Don't want to see ads?</a>
+</div>
+
+<header class="mdn-header">
+  <a href="#" class="logo">
+    <span>&#9632;</span> MDN <span style="font-weight:normal;">_</span>
+  </a>
+  <nav class="main-nav">
+    <a href="#">HTML ▾</a>
+    <a href="#">CSS ▾</a>
+    <a href="#">JavaScript ▾</a>
+    <a href="#">Web APIs ▾</a>
+    <a href="#">All ▾</a>
+    <a href="#">&#128218; Learn ▾</a>
+    <a href="#">&#128295; Tools ▾</a>
+    <a href="#">About ▾</a>
+    <a href="#">Blog</a>
+  </nav>
+  <div class="header-icons">
+    <div class="search-box">_ &#128269;</div>
+    <span>&#8674;</span>
+  </div>
+</header>
+
+<div class="breadcrumb-bar">
+  <div>
+    <a href="#">Learn</a> &gt; <a href="#">Extension modules</a> &gt; <a href="#">Web forms</a> &gt; <a href="#">Advanced form styling</a>
+  </div>
+  <div class="breadcrumb-right">
+    <span>&#9686; Theme</span>
+    <span>&#8981; English (US)</span>
+  </div>
+</div>
+
+<div class="page-wrapper">
+
+  <aside class="sidebar">
+    <div class="filter-box">&#9660; Filter</div>
+    <ul>
+      <li class="dim">CSS text styling</li>
+      <li>&#9656; CSS layout</li>
+      <li>&#9656; Dynamic scripting with JavaScript</li>
+      <li>&#9656; JavaScript frameworks and libraries</li>
+      <li>&#9656; Accessibility</li>
+      <li>Design for developers</li>
+      <li>Version control</li>
+    </ul>
+    <div class="section-title">Extension modules</div>
+    <ul>
+      <li>&#9656; Advanced JavaScript objects</li>
+      <li>&#9656; Client-side web APIs</li>
+      <li>&#9656; Asynchronous JavaScript</li>
+      <li>&#9662; Web forms
+        <ul>
+          <li>Your first form</li>
+          <li>How to structure a web form</li>
+          <li>Basic native form controls</li>
+          <li>The HTML5 input types</li>
+          <li>Other form controls</li>
+          <li>Styling web forms</li>
+          <li><span class="active">Advanced form styling</span></li>
+          <li>Customizable selects</li>
+          <li>Customizable listboxes</li>
+          <li>UI pseudo-classes</li>
+          <li>Client-side form validation</li>
+          <li>Sending form data</li>
+          <li>&#9656; Additional tutorials</li>
+        </ul>
+      </li>
+      <li>&#9656; Understanding client-side tools</li>
+      <li>&#9656; Server-side websites</li>
+      <li>Web performance</li>
+      <li>&#9656; Testing</li>
+    </ul>
+    <div class="section-title">Further resources</div>
+    <ul>
+      <li>&#9656; How to solve common problems</li>
+      <li>About</li>
+      <li>Resources for educators</li>
+    </ul>
+  </aside>
+
+  <main class="content">
+    <h1 class="page-title">Advanced form styling</h1>
+
+    <div class="prevnext-bar">
+      <a href="#">&#8592; Previous</a>
+      <a href="#">Overview: Web forms</a>
+      <a href="#">Next &#8594;</a>
+    </div>
+
+    <p>In this article, we will see what can be done with CSS to style the types of form control that are more difficult to style — the "bad" and "ugly" categories. As we saw <a href="#">in the previous article</a>, text fields and buttons are perfectly easy to style; now we will dig into styling the more problematic bits.</p>
+
+    <table class="info-table">
+      <tr>
+        <td>Prerequisites:</td>
+        <td>A basic understanding of <a href="#">HTML</a> and <a href="#">CSS</a>.</td>
+      </tr>
+      <tr>
+        <td>Objective:</td>
+        <td>To understand what parts of forms are hard to style, and why; to learn what can be done to customize them.</td>
+      </tr>
+    </table>
+
+    <p>To recap what we said in the previous article, we have:</p>
+
+    <p><strong>The bad</strong>: Some elements are more difficult to style, requiring more complex CSS or some more specific tricks:</p>
+    <ul class="doc-list">
+      <li>Checkboxes and radio buttons</li>
+      <li><code class="inline-tag">&lt;input type="search"&gt;</code></li>
+    </ul>
+
+    <p><strong>The ugly</strong>: Some elements can't be styled thoroughly using CSS. These include:</p>
+    <ul class="doc-list">
+      <li>Elements involved in creating dropdown widgets, including <code class="inline-tag">&lt;select&gt;</code>, <code class="inline-tag">&lt;option&gt;</code>, <code class="inline-tag">&lt;optgroup&gt;</code> and <code class="inline-tag">&lt;datalist&gt;</code>.</li>
+    </ul>
+
+    <div class="note-box">
+      <span class="icon">&#8505;</span>
+      <div>
+        <strong>Note:</strong> Some browsers now support <a href="#">Customizable select elements</a>, a set of HTML and CSS features that together enable full customization of <code>&lt;select&gt;</code> elements and their contents just like any regular DOM elements.
+      </div>
+    </div>
+
+    <ul class="doc-list">
+      <li><code class="inline-tag">&lt;input type="color"&gt;</code></li>
+      <li>Date-related controls such as <code class="inline-tag">&lt;input type="datetime-local"&gt;</code></li>
+      <li><code class="inline-tag">&lt;input type="range"&gt;</code></li>
+      <li><code class="inline-tag">&lt;input type="file"&gt;</code></li>
+      <li><code class="inline-tag">&lt;progress&gt;</code> and <code class="inline-tag">&lt;meter&gt;</code></li>
+    </ul>
+
+    <p>Let's first talk about the <code class="inline-tag">appearance</code> property, which is useful for making all of the above more stylable.</p>
+
+    <h2 class="section-heading"><code>appearance</code>: controlling OS-level styling</h2>
+
+    <p>In the previous article, we mentioned that historically, the styling of web form controls was largely derived from the underlying operating system, which is part of the reason for the difficulty in customizing the look of these controls.</p>
+
+    <p>The <code class="inline-tag">appearance</code> property was created as a way to control what OS- or system-level styling was applied to web form controls. By far the most helpful value, and probably the only one you'll use, is <code>none</code>. This stops any control you apply it to from using system-level styling, as much as possible, and lets you build up the styles yourself using CSS.</p>
+
+    <p>For example, let's take the following controls:</p>
+  </main>
+
+  <aside class="toc">
+    <h2>In this article</h2>
+    <ul class="toc-list">
+      <li class="toc-current">appearance: controlling OS-level styling</li>
+      <li>What can be done about the "ugly" elements?</li>
+      <li>Summary</li>
+    </ul>
+
+    <div class="placeholder">
+      <span class="ad-label">AD</span>
+      <div class="brand"><em>imagekit.io</em></div>
+      <div class="headline">Image &amp; Video API</div>
+      <div class="desc">Real-time URL transforms, global CDN delivery &amp; easy integration with existing storage.</div>
+      <span class="btn">Start Free &#8599;</span>
+    </div>
+    <a href="#" class="dont-want-ads">Don't want to see ads?</a>
+  </aside>
+
+</div>
+
+</body>
+</html>

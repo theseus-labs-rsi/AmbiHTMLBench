@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>古诗学习页</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #e6e5d8;
+      font-family: "SimSun", "Songti SC", serif;
+      color: #383632;
+    }
+    .page {
+      width: 540px;
+      height: 720px;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 18% 50%, rgba(243,224,209,.45), transparent 18%),
+        radial-gradient(ellipse at 75% 22%, rgba(241,236,207,.38), transparent 26%),
+        linear-gradient(90deg, rgba(255,255,255,.63), rgba(247,246,230,.65));
+      box-shadow: 0 0 8px rgba(60,55,35,.16);
+    }
+    .instructions {
+      position: absolute;
+      top: 32px;
+      left: 54px;
+      width: 277px;
+      color: #ee4a4d;
+      font-family: "Microsoft YaHei", sans-serif;
+      font-weight: 700;
+      font-size: 22px;
+      line-height: 1.25;
+      letter-spacing: .2px;
+    }
+    .main {
+      position: absolute;
+      top: 167px;
+      left: 99px;
+      width: 208px;
+      text-align: center;
+    }
+    .poem-title {
+      font-size: 19px;
+      letter-spacing: 8px;
+      margin-bottom: 8px;
+    }
+    .author {
+      font-size: 15px;
+      letter-spacing: 2px;
+      margin-bottom: 18px;
+    }
+    .poem {
+      font-size: 18px;
+      line-height: 1.8;
+      letter-spacing: 2px;
+      margin: 0;
+      white-space: nowrap;
+    }
+    .line {
+      position: relative;
+      height: 32px;
+    }
+    .pinyin {
+      position: absolute;
+      font-family: Arial, sans-serif;
+      font-size: 8px;
+      letter-spacing: 0;
+      line-height: 1;
+      color: #555;
+      top: -4px;
+    }
+    .p1 { left: 48px; }
+    .p2 { left: 75px; }
+    .p3 { left: 96px; }
+    .p4 { left: 67px; }
+    .p5 { left: 52px; }
+    .p6 { left: 84px; }
+    .section-two {
+      margin-top: 29px;
+    }
+    .note-number {
+      font-size: 11px;
+      vertical-align: top;
+      letter-spacing: 0;
+    }
+    .right-box {
+      position: absolute;
+      top: 109px;
+      right: 27px;
+      width: 183px;
+      height: 442px;
+      border: 6px solid #ee4548;
+      border-radius: 10px 8px 16px 10px;
+      transform: rotate(.7deg);
+      background: rgba(255,255,247,.18);
+    }
+    .right-box::before {
+      content: "";
+      position: absolute;
+      top: 13px;
+      left: -11px;
+      width: 15px;
+      height: 55px;
+      background: #f5f4e7;
+      border-radius: 8px;
+    }
+    .annotations {
+      position: absolute;
+      top: 44px;
+      left: 29px;
+      width: 135px;
+      font-size: 11px;
+      line-height: 1.42;
+      letter-spacing: .3px;
+    }
+    .annotations h3 {
+      font-size: 12px;
+      font-weight: normal;
+      margin: 0 0 9px 0;
+    }
+    .annotations p {
+      margin: 2px 0;
+      padding-left: 0;
+    }
+    .focus {
+      position: absolute;
+      top: 191px;
+      left: 37px;
+      color: #ec4948;
+      font-family: "Microsoft YaHei", sans-serif;
+      font-size: 39px;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+    .bottom-notes {
+      position: absolute;
+      top: 281px;
+      left: 29px;
+      width: 139px;
+      font-size: 11px;
+      line-height: 1.42;
+      letter-spacing: .2px;
+    }
+    .bottom-notes h3 {
+      font-size: 12px;
+      font-weight: normal;
+      margin: 0 0 10px 0;
+    }
+    .bottom-notes p {
+      margin: 3px 0;
+    }
+    .speech {
+      position: absolute;
+      top: 548px;
+      left: 327px;
+      width: 134px;
+      height: 51px;
+      border: 1px solid #e3a66a;
+      border-radius: 50%;
+      color: #5f5547;
+      font-size: 11px;
+      line-height: 1.25;
+      padding: 9px 16px 5px 22px;
+      transform: rotate(3deg);
+      background: rgba(255,249,220,.48);
+    }
+    .speech::before {
+      content: "● ● ●";
+      position: absolute;
+      left: -28px;
+      bottom: 7px;
+      color: #e3a66a;
+      font-size: 9px;
+      letter-spacing: 2px;
+      transform: rotate(-10deg);
+    }
+    .placeholder {
+      position: absolute;
+      color: rgba(87,90,56,.45);
+      font-size: 8px;
+      text-align: center;
+      pointer-events: none;
+    }
+    .flowers-left {
+      left: 0;
+      top: 285px;
+      width: 108px;
+      height: 110px;
+      background:
+        radial-gradient(circle at 28% 24%, #d6656e 0 4px, #f0a5a6 5px 9px, transparent 10px),
+        radial-gradient(circle at 58% 46%, #c65b64 0 4px, #f5adb0 5px 10px, transparent 11px),
+        radial-gradient(circle at 21% 77%, #db8181 0 3px, #f2b2aa 4px 8px, transparent 9px),
+        linear-gradient(148deg, transparent 44%, #789462 45% 46%, transparent 47%),
+        linear-gradient(23deg, transparent 43%, #708c58 44% 45%, transparent 46%);
+      opacity: .68;
+    }
+    .bird {
+      left: 308px;
+      top: 205px;
+      width: 25px;
+      height: 28px;
+      font-size: 0;
+      background: radial-gradient(ellipse at 58% 55%, #342a1e 0 28%, transparent 29%);
+      transform: rotate(-22deg);
+    }
+    .water-scene {
+      left: 65px;
+      bottom: 0;
+      width: 475px;
+      height: 124px;
+      background:
+        radial-gradient(ellipse at 71% 70%, #24251e 0 8%, transparent 9%),
+        radial-gradient(ellipse at 78% 74%, #29291f 0 10%, transparent 11%),
+        radial-gradient(ellipse at 87% 62%, #39372a 0 9%, transparent 10%),
+        radial-gradient(circle at 89% 71%, #d36171 0 4px, #f49c9c 5px 9px, transparent 10px),
+        repeating-linear-gradient(177deg, transparent 0 13px, rgba(123,139,107,.3) 14px 15px, transparent 16px 25px);
+      opacity: .78;
+    }
+    .page-number {
+      position: absolute;
+      left: 64px;
+      bottom: 25px;
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="instructions">
+      1.三首古诗都要能背诵能<br>默写；2.能翻译每句诗的<br>意思；3.注释栏处的关键<br>字词的意思都要掌握。
+    </div>
+
+    <div class="placeholder flowers-left">[花枝图案：左侧]</div>
+    <div class="placeholder bird">[小鸟]</div>
+
+    <main class="main">
+      <div class="poem-title">绝 句</div>
+      <div class="author">[唐] 杜<span class="pinyin" style="position:relative;top:-11px;left:1px;">fǔ</span>甫</div>
+
+      <div class="poem">
+        <div class="line">迟 日 江 山 丽，</div>
+        <div class="line">春 风 花 草 香。</div>
+        <div class="line"><span class="pinyin p1">ní róng</span>泥 融 飞 燕 子，</div>
+        <div class="line"><span class="pinyin p2">yuān yāng</span>沙 暖 睡 鸳 鸯。</div>
+      </div>
+
+      <div class="section-two">
+        <div class="poem-title" style="font-size:17px;letter-spacing:1px;">惠崇春江晚景<sup class="note-number">①</sup></div>
+        <div class="author">[宋] 苏<span class="pinyin" style="position:relative;top:-11px;left:1px;">sū shì</span>轼</div>
+
+        <div class="poem">
+          <div class="line">竹 外 桃 花 三 两 枝，</div>
+          <div class="line"><span class="pinyin p5">lóu hāo</span>春 江 水 暖 鸭 先 知。</div>
+          <div class="line">蒌 蒿 满 地 芦 芽 短，</div>
+          <div class="line">正 是 河 豚 欲 上 时。</div>
+        </div>
+      </div>
+    </main>
+
+    <aside class="right-box">
+      <section class="annotations">
+        <h3>注释</h3>
+        <p>① 迟日　春天白天渐长，所以说“迟日”。</p>
+        <p>② 泥融　这里指泥土湿润。</p>
+        <p>③ 鸳鸯　一种鸟，常在水边或水中，雄与雌常常成对生活。</p>
+      </section>
+
+      <div class="focus">重点</div>
+
+      <section class="bottom-notes">
+        <h3>注释</h3>
+        <p>① 惠崇是北宋名僧，能诗善画。这首诗是苏轼为惠崇的画作《春江晚景》所写的题画诗。</p>
+        <p>② [芦芽] 芦苇的嫩芽。</p>
+        <p>③ [河豚] 一种有毒的鱼。</p>
+      </section>
+    </aside>
+
+    <div class="speech">我能指出“蒌<br>蒿”是一种植物，<br>因为……</div>
+    <div class="placeholder water-scene">[水面、鸭子与花枝图案：底部]</div>
+    <div class="page-number">2</div>
+  </div>
+</body>
+</html>

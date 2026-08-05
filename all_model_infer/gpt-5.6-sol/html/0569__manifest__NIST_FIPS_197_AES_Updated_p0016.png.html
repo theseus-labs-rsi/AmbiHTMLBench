@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advanced Encryption Standard (AES) - Mathematical Preliminaries</title>
+<script>
+MathJax = { tex: { inlineMath: [['$','$'], ['\\(','\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] } };
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  @page { size: 8.5in 11in; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #fff; color: #000; }
+  body {
+    width: 8.5in;
+    min-height: 11in;
+    margin: 0 auto;
+    padding: 0.43in 0.86in 0.28in;
+    font-family: "Times New Roman", Times, serif;
+    font-size: 16.2px;
+    line-height: 1.25;
+  }
+  .running-header {
+    height: 0.52in;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    letter-spacing: 0.8px;
+    font-variant: small-caps;
+  }
+  main { width: 100%; }
+  h1, h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+  h1 {
+    font-size: 24px;
+    line-height: 1.1;
+    margin: 0 0 0.22in;
+  }
+  h1 .num { display: inline-block; width: 0.44in; }
+  h2 {
+    font-size: 20px;
+    line-height: 1.1;
+    margin: 0.18in 0 0.18in;
+  }
+  h2 .num { display: inline-block; width: 0.48in; }
+  p { margin: 0 0 0.13in; text-align: left; }
+  .equation {
+    position: relative;
+    text-align: center;
+    margin: 0.19in 0 0.19in;
+    min-height: 0.22in;
+    font-size: 17px;
+  }
+  .equation .label {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  .example-equations {
+    margin: 0.37in 0 0.31in;
+    font-size: 16px;
+  }
+  .example-equations .row {
+    display: grid;
+    grid-template-columns: 1fr 1.45in;
+    column-gap: 0.1in;
+    align-items: baseline;
+    margin: 0.035in 0;
+  }
+  .example-equations .formula { text-align: center; white-space: nowrap; }
+  .example-equations .kind { text-align: right; white-space: nowrap; }
+  .footnote {
+    border-top: 1px solid #000;
+    width: 3.1in;
+    margin-top: 0.08in;
+    padding-top: 0.02in;
+    font-size: 10.5px;
+    line-height: 1.08;
+  }
+  .page-number {
+    text-align: center;
+    font-size: 14px;
+    margin-top: 0.08in;
+  }
+  sup { line-height: 0; }
+  i { font-style: italic; }
+  @media print {
+    body { margin: 0; }
+  }
+</style>
+</head>
+<body>
+  <header class="running-header">
+    <div>FIPS 197</div>
+    <div>Advanced Encryption Standard (AES)</div>
+  </header>
+
+  <main>
+    <h1><span class="num">4.</span>Mathematical Preliminaries</h1>
+
+    <p>For some transformations of the AES algorithms specified in Sec. <span style="color:#0000ee">5</span>, each byte in the state array is interpreted as one of the 256 elements of a finite field, also known as a Galois Field, denoted by GF(2<sup>8</sup>). <sup style="color:#0000ee">1</sup></p>
+
+    <p>In order to define addition and multiplication in GF(2<sup>8</sup>), each byte {<i>b</i><sub>7</sub> <i>b</i><sub>6</sub> <i>b</i><sub>5</sub> <i>b</i><sub>4</sub> <i>b</i><sub>3</sub> <i>b</i><sub>2</sub> <i>b</i><sub>1</sub> <i>b</i><sub>0</sub>} is interpreted as a polynomial, denoted by <i>b</i>(<i>x</i>), as follows:</p>
+
+    <div class="equation"><i>b</i>(<i>x</i>) = <i>b</i><sub>7</sub><i>x</i><sup>7</sup> + <i>b</i><sub>6</sub><i>x</i><sup>6</sup> + <i>b</i><sub>5</sub><i>x</i><sup>5</sup> + <i>b</i><sub>4</sub><i>x</i><sup>4</sup> + <i>b</i><sub>3</sub><i>x</i><sup>3</sup> + <i>b</i><sub>2</sub><i>x</i><sup>2</sup> + <i>b</i><sub>1</sub><i>x</i> + <i>b</i><sub>0</sub>.<span class="label">(4.1)</span></div>
+
+    <p>For example, {01100011} is represented by the polynomial <i>x</i><sup>6</sup> + <i>x</i><sup>5</sup> + <i>x</i> + 1.</p>
+
+    <h2><span class="num">4.1</span>Addition in GF(2<sup>8</sup>)</h2>
+
+    <p>In order to add two elements in the finite field GF(2<sup>8</sup>), the coefficients of the polynomials that represent the elements are added modulo 2 (i.e., with the exclusive-OR operation, denoted by ⊕), so that 1 ⊕ 1 = 0, 1 ⊕ 0 = 1, and 0 ⊕ 0 = 0.</p>
+
+    <p>Equivalently, two bytes can be added by applying the exclusive-OR operation to each pair of corresponding bits in the bytes. Thus, the sum of {<i>a</i><sub>7</sub> <i>a</i><sub>6</sub> <i>a</i><sub>5</sub> <i>a</i><sub>4</sub> <i>a</i><sub>3</sub> <i>a</i><sub>2</sub> <i>a</i><sub>1</sub> <i>a</i><sub>0</sub>} and {<i>b</i><sub>7</sub> <i>b</i><sub>6</sub> <i>b</i><sub>5</sub> <i>b</i><sub>4</sub> <i>b</i><sub>3</sub> <i>b</i><sub>2</sub> <i>b</i><sub>1</sub> <i>b</i><sub>0</sub>} is {<i>a</i><sub>7</sub> ⊕ <i>b</i><sub>7</sub> &nbsp; <i>a</i><sub>6</sub> ⊕ <i>b</i><sub>6</sub> &nbsp; <i>a</i><sub>5</sub> ⊕ <i>b</i><sub>5</sub> &nbsp; <i>a</i><sub>4</sub> ⊕ <i>b</i><sub>4</sub> &nbsp; <i>a</i><sub>3</sub> ⊕ <i>b</i><sub>3</sub> &nbsp; <i>a</i><sub>2</sub> ⊕ <i>b</i><sub>2</sub> &nbsp; <i>a</i><sub>1</sub> ⊕ <i>b</i><sub>1</sub> &nbsp; <i>a</i><sub>0</sub> ⊕ <i>b</i><sub>0</sub>}. (In Section <span style="color:#0000ee">5.1.4</span>, this definition is extended to words.)</p>
+
+    <p>For example, the following three representations of addition are equivalent:</p>
+
+    <div class="example-equations">
+      <div class="row"><div class="formula">(<i>x</i><sup>6</sup> + <i>x</i><sup>4</sup> + <i>x</i><sup>2</sup> + <i>x</i> + 1) + (<i>x</i><sup>7</sup> + <i>x</i> + 1) = <i>x</i><sup>7</sup> + <i>x</i><sup>6</sup> + <i>x</i><sup>4</sup> + <i>x</i><sup>2</sup></div><div class="kind">(polynomial)</div></div>
+      <div class="row"><div class="formula">{01010111} ⊕ {10000011} = {11010100}</div><div class="kind">(binary)</div></div>
+      <div class="row"><div class="formula">{57} ⊕ {83} = {d4}</div><div class="kind">(hexadecimal).</div></div>
+      <span class="label" style="float:right">(4.2)</span>
+    </div>
+
+    <p>Because the coefficients of the polynomials are reduced modulo 2, the coefficient 1 is equivalent to the coefficient −1, so addition is equivalent to subtraction. For example, <i>x</i><sup>4</sup> + <i>x</i><sup>2</sup> represents the same finite field element as <i>x</i><sup>4</sup> − <i>x</i><sup>2</sup>, −<i>x</i><sup>4</sup> + <i>x</i><sup>2</sup>, and −<i>x</i><sup>4</sup> − <i>x</i><sup>2</sup>. Similarly, the sum of any element with itself is the zero element.</p>
+
+    <h2><span class="num">4.2</span>Multiplication in GF(2<sup>8</sup>)</h2>
+
+    <p>The symbol • denotes multiplication in GF(2<sup>8</sup>). Conceptually, this multiplication is defined on two bytes in two steps: 1) the two polynomials that represent the bytes are multiplied as polynomials, and 2) the resulting polynomial is reduced modulo the following fixed polynomial:</p>
+
+    <div class="equation"><i>m</i>(<i>x</i>) = <i>x</i><sup>8</sup> + <i>x</i><sup>4</sup> + <i>x</i><sup>3</sup> + <i>x</i> + 1.<span class="label">(4.3)</span></div>
+
+    <p>Within both steps, the individual coefficients of the polynomials are reduced modulo 2.</p>
+  </main>
+
+  <footer>
+    <div class="footnote"><sup>1</sup>Information about the properties of finite fields can be found in textbooks, such as Michael Artin’s <i>Algebra</i> <span style="color:#0000ee">[4]</span>.</div>
+    <div class="page-number">8</div>
+  </footer>
+</body>
+</html>

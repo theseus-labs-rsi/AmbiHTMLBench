@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>window.MathJax={tex:{inlineMath:[["$","$"]],displayMath:[["$$","$$"]]}};</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Architecture Center | Google Cloud</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Google Sans', Roboto, Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #202124;
+            background-color: #fff;
+        }
+
+        /* Header Styles */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            border-bottom: 1px solid #dadce0;
+            background: #fff;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 20px;
+            font-weight: 500;
+            color: #5f6368;
+            text-decoration: none;
+        }
+
+        .logo-text {
+            color: #5f6368;
+        }
+
+        .logo-g {
+            color: #4285f4;
+            font-weight: bold;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 16px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #5f6368;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            color: #202124;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            padding: 6px 12px;
+            width: 240px;
+            background: #fff;
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            width: 100%;
+            margin-left: 8px;
+            font-size: 14px;
+        }
+
+        .console-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 12px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            background: #fff;
+            color: #5f6368;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .icon-btn {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        .icon-btn:hover {
+            background: #f1f3f4;
+        }
+
+        .lang-selector {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 12px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            color: #5f6368;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .sign-in {
+            color: #1a73e8;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #e8f0fe 0%, #f8f9fa 50%, #fff 100%);
+            padding: 48px 24px;
+            position: relative;
+            overflow: hidden;
+            min-height: 280px;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+            max-width: 700px;
+        }
+
+        .hero h1 {
+            font-size: 36px;
+            font-weight: 400;
+            color: #202124;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+
+        .hero p {
+            font-size: 16px;
+            color: #5f6368;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .hero-link {
+            color: #1a73e8;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .hero-link:hover {
+            text-decoration: underline;
+        }
+
+        .hero-illustration {
+            position: absolute;
+            right: 10%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 400px;
+            height: 200px;
+            opacity: 0.9;
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 40px 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-gray {
+            background-color: #f8f9fa;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 400;
+            color: #202124;
+            margin-bottom: 24px;
+            letter-spacing: -0.3px;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #dadce0;
+            border-radius: 8px;
+            padding: 24px;
+            transition: box-shadow 0.2s;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            box-shadow: 0 1px 3px rgba(60,64,67,0.15), 0 4px 8px rgba(60,64,67,0.1);
+        }
+
+        .card-title {
+            color: #1a73e8;
+            font-size: 18px;
+            font-weight: 400;
+            margin-bottom: 12px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .card-title:hover {
+            text-decoration: underline;
+        }
+
+        .card-description {
+            color: #5f6368;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .external-icon {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            margin-left: 4px;
+            vertical-align: middle;
+        }
+
+        /* Domain Specific Section */
+        .domain-section {
+            display: flex;
+            gap: 32px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+
+        .sidebar {
+            width: 260px;
+            flex-shrink: 0;
+        }
+
+        .filter-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: #f1f3f4;
+            border-radius: 4px;
+            font-weight: 500;
+            color: #202124;
+            margin-bottom: 8px;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-list {
+            list-style: none;
+        }
+
+        .filter-item {
+            padding: 12px 16px;
+            color: #202124;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .filter-item:hover {
+            background: #f1f3f4;
+        }
+
+        .content-area {
+            flex: 1;
+        }
+
+        .filter-search {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            margin-bottom: 24px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .content-card {
+            background: #fff;
+            border: 1px solid #dadce0;
+            border-radius: 8px;
+            padding: 24px;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-card-title {
+            color: #1a73e8;
+            font-size: 18px;
+            font-weight: 400;
+            margin-bottom: 8px;
+            text-decoration: none;
+            line-height: 1.3;
+        }
+
+        .content-card-date {
+            color: #5f6368;
+            font-size: 12px;
+            margin-bottom: 12px;
+        }
+
+        .content-card-desc {
+            color: #5f6368;
+            font-size: 14px;
+            line-height: 1.6;
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="header-left">
+        <a href="#" class="logo">
+            <span style="color:#4285f4;font-weight:bold;">G</span><span class="logo-g">oogle</span> 
+            <span class="logo-text">Cloud</span>
+        </a>
+        <nav class="nav-menu">
+            <div class="nav-item">Technology areas ▼</div>
+            <div class="nav-item">Cross-product tools ▼</div>
+        </nav>
+    </div>
+    
+    <div class="header-right">
+        <div class="search-box">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#5f6368">
+                <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            </svg>
+            <input type="text" placeholder="Search">
+            <span style="color:#dadce0;margin-left:auto;cursor:pointer">×</span>
+        </div>
+        
+        <a href="#" class="console-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#5f6368">
+                <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM4 18V6h16v12H4z"/>
+                <path d="M6 8h12v2H6zm0 4h8v2H6z"/>
+            </svg>
+            Console
+        </a>
+        
+        <button class="icon-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#5f6368">
+                <path d="M12 22C6.49 22 2 17.51 2 12S6.49 2 12 2s10 4.04 10 9c0 3.31-2.69 6-6 6h-1.77c-.28 0-.5.22-.5.5 0 .12.05.23.13.33.41.47.64 1.06.64 1.67A2.5 2.5 0 0 1 12 22zm0-18c-4.41 0-8 3.59-8 8s3.59 8 8 8c.28 0 .5-.22.5-.5a.54.54 0 0 0-.14-.35c-.41-.46-.63-1.05-.63-1.65a2.5 2.5 0 0 1 2.5-2.5H16c2.21 0 4-1.79 4-4 0-3.86-3.59-7-8-7z"/>
+                <circle cx="6.5" cy="11.5" r="1.5"/>
+                <circle cx="9.5" cy="7.5" r="1.5"/>
+                <circle cx="14.5" cy="7.5" r="1.5"/>
+                <circle cx="11.5" cy="11.5" r="1.5"/>
+            </svg>
+        </button>
+        
+        <div class="lang-selector">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#5f6368">
+                <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95a15.65 15.65 0 0 0-1.38-3.56c1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2 0 .68.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.9-4.33-3.56zm2.95-8H5.08c.96-1.66 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2 0-.68.07-1.35.16-2h4.68c.09.65.16 1.32.16 2 0 .68-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2 0-.68-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z"/>
+            </svg>
+            English ▼
+        </div>
+        
+        <a href="#" class="sign-in">Sign in</a>
+    </div>
+</header>
+
+<section class="hero">
+    <div class="hero-content">
+        <h1>Cloud Architecture Center</h1>
+        <p>Discover reference architectures, design guidance, and best practices for building, migrating, and managing your cloud workloads.</p>
+        <a href="#" class="hero-link">See what's new!</a>
+    </div>
+    <div class="hero-illustration">
+        <!-- Placeholder for the cloud/gear illustration -->
+        <svg viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M250 80 Q270 80 275 90 Q290 85 295 100 Q310 105 305 120 Q315 130 300 135 L230 135 Q215 130 220 115 Q210 110 220 100 Q225 85 245 85 Z" stroke="#34a853" stroke-width="3" fill="none"/>
+            <path d="M320 120 L340 100 L370 100 L390 120 L390 160 L370 180 L340 180 L320 160 Z" stroke="#4285f4" stroke-width="3" fill="none"/>
+            <circle cx="355" cy="140" r="25" stroke="#4285f4" stroke-width="3" fill="none"/>
+            <circle cx="380" cy="70" r="30" stroke="#fbbc04" stroke-width="3" fill="none" opacity="0.5"/>
+            <circle cx="330" cy="50" r="25" stroke="#ea4335" stroke-width="2" fill="none" opacity="0.3"/>
+        </svg>
+    </div>
+</section>
+
+<section class="section section-gray">
+    <h2 class="section-title">Review foundational architecture guidance for enterprise deployments in Google Cloud</h2>
+    
+    <div class="cards-grid">
+        <div class="card">
+            <a href="#" class="card-title">Google Cloud Well-Architected Framework</a>
+            <p class="card-description">Design cloud topologies that are secure, efficient, resilient, high-performing, cost-effective, and sustainable.</p>
+        </div>
+        
+        <div class="card">
+            <a href="#" class="card-title">Deployment archetypes</a>
+            <p class="card-description">Learn about basic archetypes for cloud deployments: zonal, regional, multi-regional, global, hybrid, and multicloud.</p>
+        </div>
+        
+        <div class="card">
+            <a href="#" class="card-title">Infrastructure reliability guide</a>
+            <p class="card-description">Design and build infrastructure to run workloads reliably in Google Cloud.</p>
+        </div>
+        
+        <div class="card">
+            <a href="#" class="card-title">Landing zone design</a>
+            <p class="card-description">Build a landing zone that includes identity onboarding, resource hierarchy, network design, and security controls.</p>
+        </div>
+        
+        <div class="card">
+            <a href="#" class="card-title">Enterprise foundations blueprint</a>
+            <p class="card-description">Build a foundation for governance, security scale, visibility, and access.</p>
+        </div>
+        
+        <div class="card">
+            <a href="#" class="card-title">Delivery Navigator<svg class="external-icon" viewBox="0 0 24 24" fill="#1a73e8"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg></a>
+            <p class="card-description">Accelerate cloud solution deployments with implementation plans and technical guides from Google Cloud Consulting.</p>
+        </div>
+    </div>
+</section>
+
+<section class="domain-section">
+    <aside class="sidebar">
+        <div class="filter-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#202124"><path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"/></svg>
+            FILTER BY
+        </div>
+        <ul class="filter-list">
+            <li class="filter-item">AI and ML</li>
+            <li class="filter-item">Application development</li>
+            <li class="filter-item">Big data and analytics</li>
+            <li class="filter-item">Databases</li>
+            <li class="filter-item">Hybrid and multicloud</li>
+            <li class="filter-item">Migration</li>
+            <li class="filter-item">Monitoring and Logging</li>
+            <li class="filter-item">Networking</li>
+            <li class="filter-item">Reliability and DR</li>
+            <li class="filter-item">Security and compliance</li>
+            <li class="filter-item">Storage</li>
+        </ul>
+    </aside>
+    
+    <main class="content-area">
+        <h2 class="section-title">Discover domain-specific architecture guidance</h2>
+        
+        <input type="text" class="filter-search" placeholder="Filter results">
+        
+        <div class="content-grid">
+            <article class="content-card">
+                <a href="#" class="content-card-title">DevOps capabilities</a>
+                <div class="content-card-date">Updated May 21, 2026</div>
+                <p class="content-card-desc">A set of capabilities that drive higher software delivery and organizational performance, as identified and validated by the DevOps Research and Assessment (DORA) team.</p>
+            </article>
+            
+            <article class="content-card">
+                <a href="#" class="content-card-title">Networking for AI inference model serving on all backends</a>
+                <div class="content-card-date">Updated May 20, 2026</div>
+                <p class="content-card-desc">Guidance to help you create a unified frontend for multiple AI models that are hosted on-premises or by any provider, including third-party and Google Cloud.</p>
+            </article>
+            
+            <article class="content-card">
+                <a href="#" class="content-card-title">Networking for AI inference model serving on GKE</a>
+                <div class="content-card-date">Updated May 20, 2026</div>
+                <p class="content-card-desc">Guidance to help you create a multiple-model inference service using GKE.</p>
+            </article>
+            
+            <article class="content-card">
+                <a href="#" class="content-card-title">Build trusted AI agents with Google Maps Platform</a>
+                <div class="content-card-date">Updated May 1, 2026</div>
+                <p class="content-card-desc">A high-level architecture to build trusted and effective AI agents by grounding them in real-world contextual data from Google Maps Platform and Google Calendar.</p>
+            </article>
+            
+            <article class="content-card">
+                <a href="#" class="content-card-title">Deployment guidance for Gemini for Government</a>
+                <div class="content-card-date">Updated April 23, 2026</div>
+                <p class="content-card-desc">This document provides technical guidance for US Federal agencies and DoD departments on deploying and using Gemini for Government in compliance with FedRAMP...</p>
+            </article>
+            
+            <article class="content-card">
+                <a href="#" class="content-card-title">Agentic AI use case: Build a multicloud open data lakehouse</a>
+                <div class="content-card-date">Updated April 22, 2026</div>
+                <p class="content-card-desc">A high-level architecture to build a multicloud open data lakehouse that establishes a highly governed, secure pipeline from raw multicloud silos to AI and agentic driven actions.</p>
+            </article>
+            
+            <article class="content-card">
+                <a href="#" class="content-card-title">Choose your agentic AI architecture components</a>
+                <div class="content-card-date"></div>
+                <p class="content-card-desc"></p>
+            </article>
+            
+            <article class="content-card">
+                <a href="#" class="content-card-title">FedRAMP and DoD compliance scope for Google Cloud and Distributed Cloud air-gapped</a>
+                <div class="content-card-date"></div>
+                <p class="content-card-desc"></p>
+            </article>
+            
+            <article class="content-card">
+                <a href="#" class="content-card-title">DoD compliance scope for Distributed Cloud air-gapped</a>
+                <div class="content-card-date"></div>
+                <p class="content-card-desc"></p>
+            </article>
+        </div>
+    </main>
+</section>
+
+</body>
+</html>

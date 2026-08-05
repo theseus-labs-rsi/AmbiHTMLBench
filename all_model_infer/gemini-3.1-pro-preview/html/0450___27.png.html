@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document</title>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+    body {
+        font-family: "Times New Roman", Times, serif;
+        font-size: 15px;
+        line-height: 1.3;
+        color: #000;
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+    }
+    .page {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 950px;
+    }
+    .column {
+        width: 48%;
+        text-align: justify;
+    }
+    .placeholder {
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #666;
+        font-style: italic;
+        margin-bottom: 5px;
+        text-align: center;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+    .fig1-placeholder {
+        height: 180px;
+    }
+    .fig2-placeholder {
+        height: 160px;
+    }
+    .caption {
+        font-size: 13.5px;
+        margin-bottom: 15px;
+        line-height: 1.2;
+    }
+    .equation-container {
+        display: flex;
+        align-items: center;
+        margin: 15px 0;
+        position: relative;
+    }
+    .equation {
+        width: 100%;
+        text-align: center;
+    }
+    .equation-number {
+        position: absolute;
+        right: 0;
+    }
+    p {
+        margin-top: 0;
+        margin-bottom: 10px;
+    }
+    .indent {
+        text-indent: 1.5em;
+    }
+    .labels {
+        display: flex;
+        justify-content: space-around;
+        font-size: 13px;
+        margin-bottom: 5px;
+    }
+</style>
+</head>
+<body>
+<div class="page">
+    <div class="column">
+        <div class="placeholder fig1-placeholder">
+            [Diagram: Geometry generation strategies. Left: Pixelated geometry matrix. Right: NGnet-generated geometry heatmap and shape.]
+        </div>
+        <div class="labels">
+            <span>(a)</span>
+            <span>(b)</span>
+        </div>
+        <div class="caption">
+            Fig. 1. Geometry generation strategies. (a) Pixelated geometry and its mapped matrix. (b) NGnet-generated geometry and its mapped matrix.
+        </div>
+        
+        <div class="placeholder fig2-placeholder">
+            [Diagram: CNN structure used in the ML modeling process. Shows Input, Convolution+Relu, Max. Pooling, Fully connected layers, and Output.]
+        </div>
+        <div class="caption">
+            Fig. 2. CNN structure used in the ML modeling process.
+        </div>
+
+        <p>antenna shape is expressed in terms of the linear combination of normalized Gaussian functions, as shown in Fig. 1(b). The antenna geometry can be expressed as</p>
+        
+        <div class="equation-container">
+            <div class="equation">
+                $$
+                \begin{cases}
+                \sum_{k=1}^N w_{i'} b_{i'}(\boldsymbol{x}) \ge 0, & \rho_{\text{topo}}(\boldsymbol{x}) = 1 \\
+                \sum_{k=1}^N w_{i'} b_{i'}(\boldsymbol{x}) < 0, & \rho_{\text{topo}}(\boldsymbol{x}) = 0
+                \end{cases}
+                $$
+            </div>
+            <div class="equation-number">(4)</div>
+        </div>
+
+        <p>in which $b_{i'}(\boldsymbol{x})$ represents the normalized Gaussian function, $w_{i'}$ is the weighting coefficient, and $N$ is the number of Gaussian functions. $b_{i'}(\boldsymbol{x})$ is calculated using</p>
+
+        <div class="equation-container">
+            <div class="equation">
+                $$ b_{i'}(\boldsymbol{x}) = G_{i'}(\boldsymbol{x}) / \sum_{k=1}^N G_k(\boldsymbol{x}) $$
+            </div>
+            <div class="equation-number">(5)</div>
+        </div>
+
+        <p>in which $G_k(\boldsymbol{x})$ represents the Gaussian function with center $\mu_k$ and covariance matrix $\Sigma_k$, expressed as follows:</p>
+
+        <div class="equation-container">
+            <div class="equation">
+                $$ G_k(\boldsymbol{x}) = \frac{1}{(2\pi)^{D/2} |\Sigma|^{1/2}} e^{-1/2 (\boldsymbol{x} - \boldsymbol{\mu}_k)^T \Sigma_k^{-1} (\boldsymbol{x} - \boldsymbol{\mu}_k)} $$
+            </div>
+            <div class="equation-number">(6)</div>
+        </div>
+
+        <p>in which $D$ signifies the dimension of input $\boldsymbol{x}$. In this case, $\rho_{\text{topo}}(\boldsymbol{x})$ is mapped into a vector of hyperparameters $\boldsymbol{w} =$</p>
+    </div>
+    
+    <div class="column">
+        <p>in Fig. 2. The first two layers play roles in feature extraction, and the third layer maps the extracted features into the final output, such as the antenna performance at frequency points of concern. The convolution layer is the fundamental component of the CNN, which typically consists of linear and nonlinear operations, i.e., convolution operation and activation operation. The convolution operation introduces a small array of numbers called a kernel to be applied to the input tensor, which is an array of numbers. The elementwise product between each element of the kernel and the input tensor is calculated at each location of the tensor and then summed to obtain the output value at the corresponding position of the output tensor, which is called a feature map. This procedure is then repeated by applying multiple kernels to form multiple feature maps to represent the characteristics of the input tensors. Two main hyperparameters define the convolution operation: the kernel size $p \times q$ and kernel number $n_{\text{kernel}}$. We suggest using a $3 \times 3$ size kernel in the proposed algorithm.</p>
+        
+        <p class="indent">For overlap of the outermost element of the input tensor, zero padding is essential before the convolution operation. The kernels are shared across the entire image positions, which largely increases the modeling efficiency by reducing the number of parameters to learn. The outputs of the convolution are then passed through a nonlinear activation function, which is the rectified linear unit (ReLU) in the presented algorithm. Then, the output is passed through the pooling layer to implement the downsampling operation, which reduces the in-plane dimensionality of the feature maps. Here, max pooling is implemented, in which the maximum values in each patch extracted from the input feature maps are outputted. The used CNN consists of a stack of several convolution layers and pooling layers, followed by one fully connected layer and one regression layer. To achieve a balance between the computational cost and modeling ability, a shallow CNN with a layer number of 2 is recommended. The output feature maps of the final pooling layer are flattened and connected to the fully connected layer, in which every input is connected to every output by a learnable weight.</p>
+    </div>
+</div>
+</body>
+</html>

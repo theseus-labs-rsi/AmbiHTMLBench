@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Experiments</title>
+<script>
+window.MathJax = {
+  tex: {inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']]},
+  svg: {fontCache: 'global'}
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: white; }
+  body {
+    width: 1464px;
+    height: 1152px;
+    overflow: hidden;
+    font-family: "Times New Roman", Times, serif;
+    color: #050505;
+  }
+  .page {
+    display: grid;
+    grid-template-columns: 670px 671px;
+    column-gap: 31px;
+    margin-left: 46px;
+    padding-top: 30px;
+  }
+  .left, .right { min-width: 0; }
+  p {
+    margin: 0 0 0 0;
+    font-size: 27px;
+    line-height: 1.18;
+    text-align: justify;
+    hyphens: none;
+  }
+  .intro { margin-bottom: 16px; }
+  .equation {
+    height: 106px;
+    position: relative;
+    font-size: 26px;
+    text-align: center;
+    padding-top: 27px;
+  }
+  .eqnum {
+    position: absolute;
+    right: 0;
+    top: 36px;
+    font-size: 25px;
+  }
+  .where { margin-top: 1px; }
+  .section {
+    text-align: center;
+    font-size: 28px;
+    margin-top: 27px;
+    margin-bottom: 17px;
+    font-variant: small-caps;
+    letter-spacing: .2px;
+  }
+  .subsection {
+    font-size: 27px;
+    margin-bottom: 12px;
+  }
+  .subsection .label { font-style: italic; }
+  .subsection .name { font-style: italic; margin-left: 10px; }
+  .indent { text-indent: 27px; }
+  .para-gap { margin-top: 2px; }
+  .benchmark { margin-top: 29px; }
+  .figure { width: 671px; }
+  .scene {
+    width: 671px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    overflow: hidden;
+    background: #c3ad75;
+  }
+  .scene.top {
+    height: 267px;
+    grid-template-rows: 134px 133px;
+    border-right: 1px solid #fff;
+  }
+  .scene.bottom {
+    height: 166px;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: 166px;
+    margin-top: 34px;
+  }
+  .tile {
+    position: relative;
+    overflow: hidden;
+    border-right: 1px solid rgba(255,255,255,.32);
+    background:
+      linear-gradient(145deg, rgba(230,220,190,.82) 0%, rgba(190,158,87,.74) 40%, rgba(96,79,51,.5) 100%);
+  }
+  .tile:nth-child(2n) {
+    background: linear-gradient(140deg, #d4c7a1 0%, #a88650 44%, #4f5548 45%, #a88d58 100%);
+  }
+  .tile:nth-child(3n) {
+    background: linear-gradient(135deg, #747c73 0%, #d1bc85 43%, #96763c 100%);
+  }
+  .tile:after {
+    content: "";
+    position: absolute;
+    width: 40px;
+    height: 70px;
+    right: 19px;
+    top: 38px;
+    border-radius: 15px 15px 9px 9px;
+    transform: rotate(-12deg);
+    background: linear-gradient(90deg,#d5d5d3 0 35%,#888 37% 51%,#e4e4e3 53%);
+    box-shadow: 15px 27px 0 -12px #696969, -18px 39px 0 -15px #e1e1df;
+    opacity: .94;
+  }
+  .top .tile:nth-child(n+6):after { top: 18px; transform: rotate(18deg); }
+  .bottom .tile:after { top: 23px; right: 31px; }
+  .tag {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 103px;
+    min-height: 37px;
+    padding: 0 4px;
+    background: rgba(0,47,107,.83);
+    color: white;
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    line-height: 20px;
+    text-align: center;
+  }
+  .bottom .tag {
+    width: 100%;
+    font-size: 21px;
+    line-height: 28px;
+    background: rgba(0,46,107,.79);
+  }
+  .top .tile:nth-child(5n) .tag { width: 102px; }
+  .figure-label {
+    text-align: center;
+    font-size: 25px;
+    line-height: 1;
+    margin-top: 8px;
+  }
+  .second-label { margin-top: 7px; }
+  .caption {
+    font-size: 27px;
+    line-height: 1.19;
+    margin-top: 17px;
+    text-align: justify;
+  }
+  .caption .fig { font-weight: normal; }
+  .caption strong { font-weight: bold; }
+  .right-text { margin-top: 37px; }
+  .right-text p { font-size: 27px; line-height: 1.18; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="left">
+    <p class="intro">layer. The model is trained using a cross-entropy loss:</p>
+    <div class="equation">
+      $$\mathcal{L}_{\mathrm{cls}}=\sum_{k\in\{pos,rot,open\}}\sum_{b=1}^{B_k}y_{k,b}\log(\hat{y}_{k,b})$$
+      <span class="eqnum">(7)</span>
+    </div>
+    <p class="where">where $B_k$ denotes the number of bins for each action component. This approach allows the model to leverage the point cloud as a spatial anchor for localization.</p>
+
+    <div class="section">IV. &nbsp;Experiments</div>
+
+    <div class="subsection"><span class="label">A.</span><span class="name">Implementation Details</span></div>
+
+    <p class="indent">We utilize Qwen2.5-VL [3] as the VLM backbone. To initialize from the pretrained PTv3 model [69], we use the same model configuration as PTv3-Large. Specifically, there are 5 hierarchical stages with (3, 3, 3, 12, 3) layers and feature dimensionality of (64, 128, 256, 512, 768) per stage. The PointACT module, including the hierarchical interaction blocks and the action head, comprises approximately 300M trainable parameters. To maintain the knowledge of the VLM, we keep the VLM backbone frozen if not otherwise mentioned. We crop the input point cloud using a workspace bounding box defined relative to the robot base frame [57, 11], and perform voxelization with size of 1cm. We set the maximum number of points as 4096.</p>
+
+    <p class="indent para-gap">Across our experimental benchmarks, the model is trained with a total batch size of 128 distributed across 2 NVIDIA H100 GPUs. We optimize the model for 20K to 50K gradient steps using the AdamW optimizer with a learning rate of $5\times10^{-5}$ and a cosine decay schedule. We apply standard point cloud augmentations, including random rotation around the gravity axis, alongside image-level augmentations for the VLM input during training.</p>
+
+    <div class="subsection benchmark"><span class="label">B.</span><span class="name">Evaluation Benchmarks</span></div>
+  </div>
+
+  <div class="right">
+    <div class="figure">
+      <div class="scene top placeholder" aria-label="[Illustrated robotic tabletop task scenes]">
+        <div class="tile"><div class="tag">Water<br>plants</div></div>
+        <div class="tile"><div class="tag">Frame off<br>hanger</div></div>
+        <div class="tile"><div class="tag">Toilet seat<br>down</div></div>
+        <div class="tile"><div class="tag">Umbrella<br>out</div></div>
+        <div class="tile"><div class="tag">Close<br>fridge</div></div>
+        <div class="tile"><div class="tag">Close<br>laptop</div></div>
+        <div class="tile"><div class="tag">Wine at<br>rack</div></div>
+        <div class="tile"><div class="tag">Close box</div></div>
+        <div class="tile"><div class="tag">Phone on<br>base</div></div>
+        <div class="tile"><div class="tag">Sweep to<br>dustpan</div></div>
+      </div>
+      <div class="figure-label">(a) RLBench 10 tasks.</div>
+
+      <div class="scene bottom placeholder" aria-label="[Illustrated LIBERO robotic task scenes]">
+        <div class="tile"><div class="tag">Spatial</div></div>
+        <div class="tile"><div class="tag">Object</div></div>
+        <div class="tile"><div class="tag">Goal</div></div>
+        <div class="tile"><div class="tag">Long</div></div>
+      </div>
+      <div class="figure-label second-label">(b) LIBERO 4 task suites.</div>
+
+      <p class="caption"><span class="fig">Fig. 3:</span> &nbsp;<strong>Illustration of the simulated benchmarks.</strong> (a) Examples of tasks from the RLBench 10 tasks benchmark [42], covering a diverse set of manipulation skills such as object placement, articulated object interaction and tool use. (b) Representative tasks from the LIBERO benchmark [41], including spatial reasoning, object pick-and-place, goal-conditioned tasks, and long-horizon manipulation.</p>
+    </div>
+
+    <div class="right-text">
+      <p><strong>RLBench.</strong> We use the same 10 RLBench tabletop manipulation tasks as HybridVLA [42], including <em>Close box, Close laptop, Toilet seat down, Sweep to dustpan, Close fridge, Phone on base, Take umbrella out, Frame off hanger, Wine at rack,</em> and <em>Water plants.</em> We train a unified multi-task policy using 100 demonstrations per task, and use the keypoint action space following prior work [42, 57, 11, 22, 17, 52]. The classification head is used for keypoint prediction with action chunk size $H = 1$ since the action is already long-horizon. An RRT-based motion planner is used to compute collision-free trajectories to the predicted keypoint. Following</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

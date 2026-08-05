@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NavigationDestination： getState() 方法 - Web API | MDN</title>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      background: #fff;
+      color: #090909;
+      font-family: Arial, "Noto Sans SC", "Microsoft YaHei", sans-serif;
+    }
+
+    body {
+      min-width: 1100px;
+    }
+
+    .page {
+      position: relative;
+      width: 100%;
+      min-height: 1980px;
+      padding-top: 1px;
+      background: #fff;
+    }
+
+    .print-header {
+      position: relative;
+      height: 70px;
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .print-date {
+      position: absolute;
+      top: 40px;
+      left: 59px;
+    }
+
+    .print-title {
+      position: absolute;
+      top: 43px;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+    }
+
+    main {
+      width: calc(100% - 200px);
+      margin: 0 100px;
+    }
+
+    a {
+      color: #0059aa;
+      text-decoration: none;
+    }
+
+    .external {
+      display: inline-block;
+      position: relative;
+      top: -1px;
+      margin-left: 3px;
+      width: 14px;
+      height: 14px;
+      border: 2px solid #0863b5;
+      border-radius: 2px;
+      vertical-align: middle;
+    }
+
+    .external::before {
+      content: "";
+      position: absolute;
+      width: 7px;
+      height: 2px;
+      right: -3px;
+      top: -2px;
+      background: #0863b5;
+    }
+
+    .external::after {
+      content: "↗";
+      position: absolute;
+      right: -3px;
+      top: -9px;
+      padding-left: 1px;
+      background: #fff;
+      color: #0863b5;
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 14px;
+    }
+
+    .code-card {
+      width: 100%;
+      border: 2px solid #c5c9cd;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .code-label {
+      height: 92px;
+      padding: 31px 30px;
+      border-bottom: 2px solid #c5c9cd;
+      background: #fff;
+      font-size: 23px;
+    }
+
+    .code-body {
+      height: 180px;
+      padding: 34px 30px;
+      background: #edeef0;
+      font-family: "Courier New", Consolas, monospace;
+      font-size: 23px;
+      line-height: 1.72;
+      white-space: pre;
+    }
+
+    .token-method {
+      color: #e00042;
+    }
+
+    .token-string {
+      color: #007934;
+    }
+
+    .token-punctuation {
+      color: #555b61;
+    }
+
+    h1 {
+      margin: 29px 0 5px;
+      font-size: 58px;
+      line-height: 1.25;
+      font-weight: 500;
+      letter-spacing: -2px;
+    }
+
+    .spec-card {
+      width: 100%;
+      height: 184px;
+      border: 2px solid #c5c9cd;
+      background: #f8f8fa;
+    }
+
+    .spec-heading {
+      height: 70px;
+      padding: 19px 22px;
+      border-bottom: 2px solid #c5c9cd;
+      background: #fff;
+      font-size: 23px;
+      font-weight: 700;
+    }
+
+    .spec-content {
+      padding: 20px 22px;
+      color: #0059aa;
+      font-size: 24px;
+      line-height: 1.65;
+    }
+
+    .spec-content a {
+      display: block;
+      white-space: nowrap;
+    }
+
+    .compatibility h1 {
+      margin-top: 25px;
+      margin-bottom: 2px;
+    }
+
+    .compat-links {
+      margin-bottom: 4px;
+      color: #0059aa;
+      font-size: 24px;
+      line-height: 1.25;
+    }
+
+    .compat-links .bullet {
+      color: #111;
+      padding: 0 9px;
+    }
+
+    .compat-table-wrap {
+      overflow: hidden;
+      width: 100%;
+      border: 2px solid #c5c9cd;
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .compat-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .compat-table th,
+    .compat-table td {
+      border-right: 2px solid #c5c9cd;
+      border-bottom: 2px solid #c5c9cd;
+    }
+
+    .compat-table tr > *:last-child {
+      border-right: 0;
+    }
+
+    .compat-table tr:last-child > * {
+      border-bottom: 0;
+    }
+
+    .feature-spacer {
+      width: 273px;
+      background: #fff;
+    }
+
+    .device-heading {
+      height: 46px;
+      text-align: center;
+      color: #555a5f;
+      font-weight: 400;
+    }
+
+    .device-icon {
+      display: inline-block;
+      position: relative;
+      width: 27px;
+      height: 21px;
+      vertical-align: middle;
+    }
+
+    .monitor-icon {
+      border: 3px solid #555a5f;
+      border-radius: 4px;
+    }
+
+    .monitor-icon::before {
+      content: "";
+      position: absolute;
+      left: 10px;
+      bottom: -7px;
+      width: 3px;
+      height: 6px;
+      background: #555a5f;
+    }
+
+    .monitor-icon::after {
+      content: "";
+      position: absolute;
+      left: 6px;
+      bottom: -8px;
+      width: 14px;
+      height: 3px;
+      border-radius: 2px;
+      background: #555a5f;
+    }
+
+    .phone-icon {
+      width: 20px;
+      height: 28px;
+      border: 3px solid #555a5f;
+      border-radius: 4px;
+    }
+
+    .phone-icon::after {
+      content: "";
+      position: absolute;
+      left: 6px;
+      bottom: 2px;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: #555a5f;
+    }
+
+    .browser-head {
+      position: relative;
+      height: 267px;
+      vertical-align: bottom;
+      background: #fff;
+      font-weight: 400;
+    }
+
+    .browser-head .vertical-name {
+      position: absolute;
+      left: 50%;
+      top: 12px;
+      height: 215px;
+      writing-mode: vertical-rl;
+      transform: translateX(-50%) rotate(180deg);
+      text-align: left;
+      font-size: 22px;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .browser-logo {
+      position: absolute;
+      bottom: 9px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 28px;
+      height: 28px;
+      border: 2px solid #5a5f64;
+      border-radius: 50%;
+      color: #5a5f64;
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 24px;
+      text-align: center;
+    }
+
+    .browser-logo.android {
+      width: 30px;
+      height: 21px;
+      border-radius: 14px 14px 4px 4px;
+      line-height: 18px;
+    }
+
+    .feature-name {
+      height: 106px;
+      padding-left: 13px;
+      text-align: left;
+      vertical-align: middle;
+      background: #fff;
+      font-weight: 400;
+    }
+
+    .feature-name code {
+      padding: 4px 8px;
+      background: #f0f1f2;
+      font-family: "Courier New", Consolas, monospace;
+      font-size: 20px;
+      font-weight: 400;
+    }
+
+    .support-cell {
+      position: relative;
+      height: 106px;
+      text-align: center;
+      vertical-align: top;
+      background: #fff;
+    }
+
+    .support-cell::before {
+      content: "";
+      position: absolute;
+      top: 17px;
+      left: 27px;
+      height: 33px;
+      border-left: 1px solid #e6e8e9;
+    }
+
+    .checkmark {
+      display: inline-block;
+      width: 17px;
+      height: 10px;
+      margin-top: 23px;
+      border-left: 3px solid #555b60;
+      border-bottom: 3px solid #555b60;
+      transform: rotate(-45deg);
+    }
+
+    .version {
+      display: block;
+      margin-top: 18px;
+      color: #006b35;
+      font-size: 25px;
+      font-weight: 400;
+      line-height: 1;
+    }
+
+    .support-key {
+      height: 43px;
+      padding-top: 9px;
+      font-size: 23px;
+    }
+
+    .key-check {
+      display: inline-block;
+      width: 17px;
+      height: 10px;
+      margin: 0 18px 2px 7px;
+      border-left: 3px solid #555b60;
+      border-bottom: 3px solid #555b60;
+      transform: rotate(-45deg);
+      vertical-align: middle;
+    }
+
+    .references {
+      margin-top: 61px;
+    }
+
+    .references h1 {
+      margin: 0 0 27px;
+    }
+
+    .references ul {
+      margin: 0;
+      padding-left: 74px;
+      font-size: 23px;
+      line-height: 1.72;
+    }
+
+    .references li {
+      padding-left: 1px;
+    }
+
+    .references code {
+      padding: 3px 7px;
+      border-radius: 7px;
+      background: #f0f2f4;
+      color: #0059aa;
+      font-family: "Courier New", Consolas, monospace;
+      font-size: 22px;
+      white-space: nowrap;
+    }
+
+    .site-footer {
+      position: absolute;
+      left: 69px;
+      right: 69px;
+      bottom: 58px;
+      height: 250px;
+      padding: 56px 30px;
+      border-top: 2px solid #c5c9cd;
+      background: #f8f8f9;
+      color: #565b61;
+    }
+
+    .mdn-logo {
+      display: flex;
+      align-items: flex-end;
+      height: 53px;
+    }
+
+    .mdn-mark {
+      display: inline-block;
+      margin-right: 8px;
+      font-family: Georgia, serif;
+      font-size: 55px;
+      font-style: italic;
+      line-height: .8;
+      letter-spacing: -12px;
+      transform: skewX(-7deg);
+    }
+
+    .mdn-word {
+      font-family: Georgia, serif;
+      font-size: 36px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .mdn-underscore {
+      margin-left: 4px;
+      font-size: 37px;
+      line-height: .7;
+    }
+
+    .tagline {
+      margin-top: 27px;
+      font-size: 22px;
+    }
+
+    .print-footer-url {
+      position: absolute;
+      left: 59px;
+      bottom: 38px;
+      font-size: 19px;
+    }
+
+    .page-number {
+      position: absolute;
+      right: 59px;
+      bottom: 38px;
+      font-size: 19px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="print-header">
+      <div class="print-date">2026/6/29 02:28</div>
+      <div class="print-title">NavigationDestination： getState() 方法 - Web API | MDN</div>
+    </header>
+
+    <main>
+      <section class="code-card" aria-label="JavaScript example">
+        <div class="code-label">JS</div>
+        <div class="code-body">navigation.<span class="token-method">addEventListener</span>(<span class="token-string">"navigate"</span>, (event) =&gt; {
+  console.<span class="token-method">log</span>(event.destination.<span class="token-method">getState</span>()<span class="token-punctuation">;</span>
+<span class="token-punctuation">});</span></div>
+      </section>
+
+      <section class="specification">
+        <h1>规范</h1>
+        <div class="spec-card">
+          <div class="spec-heading">规范</div>
+          <div class="spec-content">
+            <a href="#">HTML</a>
+            <a href="#"># the-navigationdestination-interface:dom-navigationdestination-getstate-2<span class="external" aria-hidden="true"></span></a>
+          </div>
+        </div>
+      </section>
+
+      <section class="compatibility">
+        <h1>浏览器兼容性</h1>
+        <div class="compat-links">
+          <a href="#">报告此兼容性数据的问题<span class="external" aria-hidden="true"></span></a><span class="bullet">•</span><a href="#">在 GitHub 上查看数据<span class="external" aria-hidden="true"></span></a>
+        </div>
+
+        <div class="compat-table-wrap">
+          <table class="compat-table" aria-label="浏览器兼容性">
+            <colgroup>
+              <col style="width:273px">
+              <col style="width:7.15%">
+              <col style="width:7.15%">
+              <col style="width:7.15%">
+              <col style="width:6.15%">
+              <col style="width:7.65%">
+              <col style="width:7.15%">
+              <col style="width:7.05%">
+              <col style="width:6.25%">
+              <col style="width:7.65%">
+              <col style="width:6.15%">
+              <col style="width:7.25%">
+              <col style="width:7.45%">
+            </colgroup>
+            <thead>
+              <tr>
+                <th class="feature-spacer" rowspan="2"></th>
+                <th class="device-heading" colspan="5"><span class="device-icon monitor-icon" aria-hidden="true"></span></th>
+                <th class="device-heading" colspan="7"><span class="device-icon phone-icon" aria-hidden="true"></span></th>
+              </tr>
+              <tr>
+                <th class="browser-head"><span class="vertical-name">Chrome</span><span class="browser-logo">◉</span></th>
+                <th class="browser-head"><span class="vertical-name">Edge</span><span class="browser-logo">e</span></th>
+                <th class="browser-head"><span class="vertical-name">Firefox</span><span class="browser-logo">●</span></th>
+                <th class="browser-head"><span class="vertical-name">Opera</span><span class="browser-logo">O</span></th>
+                <th class="browser-head"><span class="vertical-name">Safari</span><span class="browser-logo">／</span></th>
+                <th class="browser-head"><span class="vertical-name">Chrome Android</span><span class="browser-logo">◉</span></th>
+                <th class="browser-head"><span class="vertical-name">Firefox for Android</span><span class="browser-logo">●</span></th>
+                <th class="browser-head"><span class="vertical-name">Opera Android</span><span class="browser-logo">O</span></th>
+                <th class="browser-head"><span class="vertical-name">Safari on iOS</span><span class="browser-logo">／</span></th>
+                <th class="browser-head"><span class="vertical-name">Samsung Internet</span><span class="browser-logo">S</span></th>
+                <th class="browser-head"><span class="vertical-name">WebView Android</span><span class="browser-logo android">●</span></th>
+                <th class="browser-head"><span class="vertical-name">WebView on iOS</span><span class="browser-logo">／</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th class="feature-name"><code>getState</code></th>
+                <td class="support-cell"><span class="checkmark"></span><span class="version">102</span></td>
+                <td class="support-cell"><span class="checkmark"></span><span class="version">102</span></td>
+                <td class="support-cell"><span class="checkmark"></span><span class="version">147</span></td>
+                <td class="support-cell"><span class="checkmark"></span><span class="version">88</span></td>
+                <td class="support-cell"><span class="checkmark"></span><span class="version">26.2</span></td>
+                <td class="support-cell"><span class="checkmark"></span><span class="version">102</span></td>
+                <td class="support-cell"><span class="checkmark"></span><span class="version">147</span></td>
+                <td class="support-cell"><span class="checkmark"></span><span class="version">70</span></td>
+                <td class="support-cell"><span class="checkmark"></span><span class="version">26.2</span></td>
+                <td class="support-cell"><span class="checkmark"></span><span class="version">19</span></td>
+                <td class="support-cell"><span class="checkmark"></span><span class="version">102</span></td>
+                <td class="support-cell"><span class="checkmark"></span><span class="version">26.2</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="support-key"><span class="key-check"></span>完全支持</div>
+      </section>
+
+      <section class="references">
+        <h1>参见</h1>
+        <ul>
+          <li><a href="#">现代客户端路由：导航 API<span class="external" aria-hidden="true"></span></a></li>
+          <li><a href="#">导航 API 说明<span class="external" aria-hidden="true"></span></a></li>
+          <li>Domenic Denicola 的<a href="#">导航 API 在线演示<span class="external" aria-hidden="true"></span></a></li>
+          <li>允许更新状态的方法——<code>Navigation.navigate()</code>、 <code>Navigation.reload()</code> 和 <code>Navigation.updateCurrentEntry()</code></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="mdn-logo">
+        <span class="mdn-mark">M</span>
+        <span class="mdn-word">mdn</span>
+        <span class="mdn-underscore">_</span>
+      </div>
+      <div class="tagline">构建更美好互联网的蓝图。</div>
+    </footer>
+
+    <div class="print-footer-url">https://developer.mozilla.org/zh-CN/docs/Web/API/NavigationDestination/getState</div>
+    <div class="page-number">2/2</div>
+  </div>
+</body>
+</html>

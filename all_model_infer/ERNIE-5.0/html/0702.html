@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>window.MathJax={tex:{inlineMath:[["$","$"]],displayMath:[["$$","$$"]]}};</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Images, contours and fields - Matplotlib</title>
+    <style>
+        :root {
+            --primary-color: #0066cc;
+            --text-color: #333;
+            --bg-color: #fff;
+            --sidebar-bg: #f8f9fa;
+            --border-color: #e0e0e0;
+            --header-height: 60px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            line-height: 1.5;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            height: var(--header-height);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo span {
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #555;
+            font-size: 15px;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .header-tools {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .version-select {
+            border: 1px solid var(--border-color);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            background: #f9f9f9;
+        }
+
+        /* Breadcrumbs */
+        .breadcrumbs {
+            padding: 15px 20px;
+            font-size: 14px;
+            color: #666;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .breadcrumbs span {
+            margin: 0 5px;
+        }
+
+        /* Main Layout */
+        .container {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Sidebar */
+        aside {
+            width: 280px;
+            flex-shrink: 0;
+            padding: 20px;
+            border-right: 1px solid var(--border-color);
+            height: calc(100vh - var(--header-height) - 60px);
+            overflow-y: auto;
+            position: sticky;
+            top: var(--header-height);
+        }
+
+        .sidebar-header {
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .nav-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-item {
+            margin-bottom: 5px;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 6px 10px;
+            text-decoration: none;
+            color: #555;
+            font-size: 14px;
+            border-radius: 4px;
+        }
+
+        .nav-link:hover {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        .nav-link.active {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .nav-sublist {
+            list-style: none;
+            padding-left: 20px;
+            margin-top: 5px;
+        }
+
+        .nav-sublist .nav-link {
+            font-size: 13px;
+            color: #666;
+        }
+
+        /* Content Area */
+        main {
+            flex-grow: 1;
+            padding: 30px 40px;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 400;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            transition: box-shadow 0.2s;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 150px;
+            background-color: #f0f0f0;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 12px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-title {
+            font-size: 14px;
+            color: #444;
+            line-height: 1.4;
+        }
+
+        /* Icons placeholder */
+        .icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background-color: currentColor;
+            mask-size: contain;
+            -webkit-mask-size: contain;
+            mask-repeat: no-repeat;
+            -webkit-mask-repeat: no-repeat;
+            mask-position: center;
+            -webkit-mask-position: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+            }
+            aside {
+                width: 100%;
+                height: auto;
+                position: relative;
+                top: 0;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+            .nav-sublist {
+                display: none; /* Simplify for mobile view */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="#" class="logo">matplot<span>lib</span></a>
+        <nav class="nav-links">
+            <a href="#">Plot types</a>
+            <a href="#">User guide</a>
+            <a href="#">Tutorials</a>
+            <a href="#">Reference</a>
+            <a href="#">Contribute</a>
+            <a href="#">Releases</a>
+        </nav>
+        <div class="header-tools">
+            <span class="icon" style="background-color: #555; -webkit-mask-image: url('data:image/svg+xml;utf8,<svg viewBox=\'0 0 24 24\' xmlns=\'http://www.w3.org/2000/svg\'><path d=\'M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z\'/></svg>');"></span>
+            <span class="icon" style="background-color: #555; -webkit-mask-image: url('data:image/svg+xml;utf8,<svg viewBox=\'0 0 24 24\' xmlns=\'http://www.w3.org/2000/svg\'><path d=\'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z\'/></svg>');"></span>
+            <select class="version-select">
+                <option>3.10 (stable)</option>
+            </select>
+            <span class="icon" style="background-color: #555; -webkit-mask-image: url('data:image/svg+xml;utf8,<svg viewBox=\'0 0 24 24\' xmlns=\'http://www.w3.org/2000/svg\'><path d=\'M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z\'/></svg>');"></span>
+            <span class="icon" style="background-color: #555; -webkit-mask-image: url('data:image/svg+xml;utf8,<svg viewBox=\'0 0 24 24\' xmlns=\'http://www.w3.org/2000/svg\'><path d=\'M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z\'/></svg>');"></span>
+        </div>
+    </header>
+
+    <div class="breadcrumbs">
+        <span class="icon" style="background-color: #555; -webkit-mask-image: url('data:image/svg+xml;utf8,<svg viewBox=\'0 0 24 24\' xmlns=\'http://www.w3.org/2000/svg\'><path d=\'M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z\'/></svg>');"></span>
+        <span>&gt;</span>
+        <a href="#" style="color: #555; text-decoration: none;">Examples</a>
+        <span>&gt;</span>
+        <span>Images,...</span>
+    </div>
+
+    <div class="container">
+        <aside>
+            <div class="sidebar-header">Section Navigation</div>
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Lines, bars and markers</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link active">Images, contours and fields</a>
+                    <ul class="nav-sublist">
+                        <li class="nav-item"><a href="#" class="nav-link">Affine transform of an image</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Wind barbs</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Barcode</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Interactive adjustment of colormap range</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Colormap normalizations</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Colormap normalizations SymLogNorm</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Contour corner mask</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Contour Demo</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Contour image</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Contour Label Demo</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Contourf demo</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Contour hatching</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Contourf and log color scale</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Contouring the solution space of optimizations</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">BboxImage Demo</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Figimage Demo</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Annotated heatmap</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Image resampling</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Clipping images with patches</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Many ways to plot images</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Image with masked values</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Image nonuniform</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Blend transparency with color in 2D images</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Modifying the coordinate formatter</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Interpolations for imshow</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Contour plot of irregularly spaced data</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Layer images with alpha blending</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Visualize matrices with matshow</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Multiple images with one colorbar</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">pcolor images</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">pcolormesh grids and shading</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">pcolormesh</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Streamplot</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">QuadMesh Demo</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Advanced quiver and quiverkey functions</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Quiver Simple Demo</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Shading example</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Spectrogram</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Spy Demos</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Tricontour Demo</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Tricontour Smooth Delaunay</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Tricontour Smooth User</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Trigradient Demo</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </aside>
+
+        <main>
+            <h1>Images, contours and fields</h1>
+            
+            <div class="gallery-grid">
+                <!-- Row 1 -->
+                <div class="card">
+                    <div class="card-image">[Image: Affine transform of an image]</div>
+                    <div class="card-title">Affine transform of an image</div>
+                </div>
+                <div class="card">
+                    <div class="card-image">[Image: Wind barbs]</div>
+                    <div class="card-title">Wind barbs</div>
+                </div>
+                <div class="card">
+                    <div class="card-image">[Image: Barcode]</div>
+                    <div class="card-title">Barcode</div>
+                </div>
+                <div class="card">
+                    <div class="card-image">[Image: Interactive adjustment of colormap range]</div>
+                    <div class="card-title">Interactive adjustment of colormap range</div>
+                </div>
+                <div class="card">
+                    <div class="card-image">[Image: Colormap normalizations]</div>
+                    <div class="card-title">Colormap normalizations</div>
+                </div>
+
+                <!-- Row 2 -->
+                <div class="card">
+                    <div class="card-image">[Image: Colormap normalizations SymLogNorm]</div>
+                    <div class="card-title">Colormap normalizations SymLogNorm</div>
+                </div>
+                <div class="card">
+                    <div class="card-image">[Image: Contour corner mask]</div>
+                    <div class="card-title">Contour corner mask</div>
+                </div>
+                <div class="card">
+                    <div class="card-image">[Image: Contour Demo]</div>
+                    <div class="card-title">Contour Demo</div>
+                </div>
+                <div class="card">
+                    <div class="card-image">[Image: Contour image]</div>
+                    <div class="card-title">Contour image</div>
+                </div>
+                <div class="card">
+                    <div class="card-image">[Image: Contour Label Demo]</div>
+                    <div class="card-title">Contour Label Demo</div>
+                </div>
+
+                <!-- Row 3 -->
+                <div class="card">
+                    <div class="card-image">[Image: Contourf demo]</div>
+                    <div class="card-title">Contourf demo</div>
+                </div>
+                <div class="card">
+                    <div class="card-image">[Image: Contourf hatching]</div>
+                    <div class="card-title">Contourf hatching</div>
+                </div>
+                <div class="card">
+                    <div class="card-image">[Image: Contourf and log color scale]</div>
+                    <div class="card-title">Contourf and log color scale</div>
+                </div>
+                <div class="card">
+                    <div class="card-image">[Image: Contouring the solution space of optimizations]</div>
+                    <div class="card-title">Contouring the solution space of optimizations</div>
+                </div>
+                <div class="card">
+                    <div class="card-image">[Image: BboxImage Demo]</div>
+                    <div class="card-title">BboxImage Demo</div>
+                </div>
+
+                <!-- Row 4 -->
+                <div class="card">
+                    <div class="card-image">[Image: Figimage Demo]</div>
+                    <div class="card-title">Figimage Demo</div>
+                </div>
+                <div class="card">
+                    <div class="card-image">[Image: Annotated heatmap]</div>
+                    <div class="card-title">Annotated heatmap</div>
+                </div>
+                <div class="card">
+                    <div class="card-image">[Image: Image resampling]</div>
+                    <div class="card-title">Image resampling</div>
+                </div>
+                <div class="card">
+                    <div class="card-image">[Image: Clipping images with patches]</div>
+                    <div class="card-title">Clipping images with patches</div>
+                </div>
+                <div class="card">
+                    <div class="card-image">[Image: Many ways to plot images]</div>
+                    <div class="card-title">Many ways to plot images</div>
+                </div>
+
+                <!-- Row 5 -->
+                <div class="card">
+                    <div class="card-image">[Image: Image with masked values]</div>
+                    <div class="card-title">Image with masked values</div>
+                </div>
+                <div class="card">
+                    <div class="card-image">[Image: Image nonuniform]</div>
+                    <div class="card-title">Image nonuniform</div>
+                </div>
+                <div class="card">
+                    <div class="card-image">[Image: Blend transparency with color in 2D images]</div>
+                    <div class="card-title">Blend transparency with color in 2D images</div>
+                </div>
+                <div class="card">
+                    <div class="card-image">[Image: Modifying the coordinate formatter]</div>
+                    <div class="card-title">Modifying the coordinate formatter</div>
+                </div>
+                <div class="card">
+                    <div class="card-image">[Image: Interpolations for imshow]</div>
+                    <div class="card-title">Interpolations for imshow</div>
+                </div>
+
+                <!-- Row 6 -->
+                <div class="card">
+                    <div class="card-image">[Image: Contour plot of irregularly spaced]</div>
+                    <div class="card-title">Contour plot of irregularly spaced</div>
+                </div>
+                <div class="card">
+                    <div class="card-image">[Image: Layer images with alpha blending]</div>
+                    <div class="card-title">Layer images with alpha blending</div>
+                </div>
+                <div class="card">
+                    <div class="card-image">[Image: Visualize matrices with matshow]</div>
+                    <div class="card-title">Visualize matrices with matshow</div>
+                </div>
+                <div class="card">
+                    <div class="card-image">[Image: Multiple images with one colorbar]</div>
+                    <div class="card-title">Multiple images with one colorbar</div>
+                </div>
+                <div class="card">
+                    <div class="card-image">[Image: pcolor images]</div>
+                    <div class="card-title">pcolor images</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>

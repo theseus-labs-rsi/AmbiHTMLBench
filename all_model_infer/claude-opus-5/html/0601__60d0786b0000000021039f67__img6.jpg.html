@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>矩阵乘法笔记</title>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$']],
+    displayMath: [['$$', '$$']]
+  }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background: #6b4a2f;
+    font-family: "KaiTi", "STKaiti", serif;
+  }
+  .page {
+    position: relative;
+    width: 540px;
+    min-height: 720px;
+    margin: 0 auto;
+    background: #f4f6f2;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 21px,
+      #cfe0ea 21px,
+      #cfe0ea 22px
+    );
+    box-sizing: border-box;
+    padding: 55px 30px 40px 55px;
+  }
+  .header-line {
+    position: absolute;
+    top: 22px;
+    right: 30px;
+    font-size: 9px;
+    color: #7a8b99;
+    text-align: left;
+    line-height: 20px;
+  }
+  .margin-rule {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 46px;
+    width: 1px;
+    background: #e3b9c4;
+  }
+  .topfaint {
+    position: absolute;
+    top: 26px;
+    left: 90px;
+    color: #d9b8d0;
+    font-size: 15px;
+    opacity: 0.6;
+  }
+  .blue { color: #1f4fd8; }
+  .green { color: #17864a; }
+  .red { color: #d0342c; }
+  .purple { color: #7a3fa0; }
+  .teal { color: #1a7f7a; }
+
+  .block { margin-bottom: 6px; line-height: 1.6; }
+  .row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .indent1 { margin-left: 18px; }
+  .indent2 { margin-left: 40px; }
+  .indent3 { margin-left: 60px; }
+
+  .note-right {
+    position: absolute;
+    right: 22px;
+    top: 205px;
+    width: 175px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: #17864a;
+  }
+  .faint-right {
+    position: absolute;
+    right: 24px;
+    color: #b9c6cf;
+    font-size: 11px;
+  }
+  .placeholder {
+    border: 1px dashed #9aa;
+    color: #778;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .logo {
+    position: absolute;
+    right: 26px;
+    bottom: 18px;
+    color: #1f6fc0;
+    font-weight: bold;
+    letter-spacing: 1px;
+    font-size: 13px;
+  }
+  .spine-left {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 26px;
+    background: #eceee9;
+    border-right: 1px solid #cbd3d8;
+  }
+  .left-fragments {
+    position: absolute;
+    left: 2px;
+    font-size: 11px;
+    color: #333;
+    writing-mode: horizontal-tb;
+  }
+  mjx-container { font-size: 95%; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="spine-left"></div>
+  <div class="margin-rule"></div>
+
+  <div class="header-line">No.<br>Date</div>
+  <div class="topfaint">[illegible]</div>
+
+  <div class="left-fragments" style="top:150px;">[illegible]</div>
+  <div class="left-fragments" style="top:290px;">[illegible]</div>
+  <div class="left-fragments" style="top:520px;">[illegible]</div>
+  <div class="left-fragments" style="top:560px;">[illegible]</div>
+
+  <!-- 例：设 A = ... B = ... 求AB -->
+  <div class="block row blue" style="margin-top:14px;">
+    <span>例：设 $A=\begin{pmatrix}1 &amp; 0 &amp; -3 &amp; 0\\ -1 &amp; 3 &amp; 0\\ 0 &amp; 5 &amp; -1 &amp; 4\end{pmatrix}$</span>
+    <span>$B=\begin{pmatrix}0 &amp; 3 &amp; 4\\ 1 &amp; 2 &amp; 1\\ 1 &amp; 2 &amp; 1\\ -1 &amp; 2 &amp; 1\end{pmatrix}$</span>
+    <span class="green">求AB</span>
+  </div>
+
+  <div class="block row indent2 purple">
+    <span class="blue">$AB=\begin{pmatrix}-3 &amp; 6 &amp; 7\\ 10 &amp; -2 &amp; -6\\ -2 &amp; 17 &amp; 10\end{pmatrix}$</span>
+    <span style="font-size:11px;">$=\ 1\times0+0\times1+(-1)\times1+2\times(-1)$</span>
+  </div>
+
+  <!-- 2. 比较 -->
+  <div class="block red" style="margin-top:10px;">2、比较</div>
+
+  <div class="block row indent1 blue">
+    <span>行列式：$\begin{vmatrix}a_{11} &amp; a_{12}\\ a_{21} &amp; a_{22}\end{vmatrix}\cdot\begin{vmatrix}b_{11} &amp; b_{12} &amp; b_{13}\\ b_{21} &amp; b_{22} &amp; b_{23}\\ b_{31} &amp; b_{32} &amp; b_{33}\end{vmatrix}$</span>
+    <span class="purple">有意义</span>
+  </div>
+
+  <div class="block row indent1 blue">
+    <span>矩阵：$\begin{pmatrix}a_{11} &amp; a_{12}\\ a_{21} &amp; a_{22}\end{pmatrix}\begin{pmatrix}b_{11} &amp; b_{12} &amp; b_{13}\\ b_{21} &amp; b_{22} &amp; b_{23}\\ b_{31} &amp; b_{32} &amp; b_{33}\end{pmatrix}$</span>
+    <span class="teal">无意义</span>
+  </div>
+
+  <div class="note-right">
+    △ 只有当第一个矩阵<br>
+    的列数与第二个<br>
+    矩阵的行数一致时，<br>
+    两个矩阵才能相乘
+  </div>
+
+  <div class="block blue" style="margin-top:16px;">
+    相乘结果矩阵形状：
+    <span class="green">结果矩阵的行数 = 第一个矩阵的行数</span><br>
+    <span class="green indent3" style="display:inline-block; margin-left:150px;">列数 = 第二个矩阵的列数</span>
+  </div>
+
+  <div class="block blue" style="margin-top:8px;">
+    （中间相约，取两头：$A_{5\times4}\cdot B_{4\times3}=C_{5\times3}$）
+  </div>
+
+  <div class="block row blue" style="margin-top:8px;">
+    <span class="indent1">例：$(1\ \ 2\ \ 3)\begin{pmatrix}3\\ 2\\ 1\end{pmatrix}=(10)$</span>
+  </div>
+
+  <div class="block row green" style="margin-top:14px;">
+    <span class="indent2">$\begin{pmatrix}-2 &amp; 4\\ 1 &amp; -2\end{pmatrix}_{2\times2}\begin{pmatrix}2 &amp; 4\\ -3 &amp; -6\end{pmatrix}_{2\times2}=\begin{pmatrix}-16 &amp; -32\\ 8 &amp; 16\end{pmatrix}_{2\times2}$</span>
+    <span class="blue" style="margin-left:20px;">$AB\ne BA$</span>
+  </div>
+
+  <div class="block row green">
+    <span class="indent2">$\begin{pmatrix}2 &amp; 4\\ -3 &amp; -6\end{pmatrix}_{2\times2}\begin{pmatrix}-2 &amp; 4\\ 1 &amp; -2\end{pmatrix}_{2\times2}=\begin{pmatrix}0 &amp; 0\\ 0 &amp; 0\end{pmatrix}_{2\times2}$</span>
+  </div>
+
+  <div class="block blue" style="margin-top:10px;">
+    ① 矩阵乘法不一定满足交换律
+  </div>
+  <div class="block blue">
+    ② 矩阵 $A\ne O$，$B\ne O$ 却有 $AB=O$
+  </div>
+  <div class="block blue indent1">
+    从而不能由 $AB=O$ 得出 $A=O$ 或 $B=O$ 的结论
+  </div>
+  <div class="block blue">
+    ③ $AB=AC$，$A\ne O$ $\not\Rightarrow$ $B=C$
+  </div>
+
+  <!-- 右侧被遮挡的对页残留文字 -->
+  <div class="faint-right" style="top:495px;">[illegible]</div>
+  <div class="faint-right" style="top:520px;">[illegible]</div>
+  <div class="faint-right" style="top:545px;">[illegible]</div>
+  <div class="faint-right" style="top:570px;">[illegible]</div>
+  <div class="faint-right" style="top:598px;">[illegible]</div>
+  <div class="faint-right" style="top:625px;">[illegible]</div>
+
+  <div class="logo">KOKUYO</div>
+</div>
+</body>
+</html>

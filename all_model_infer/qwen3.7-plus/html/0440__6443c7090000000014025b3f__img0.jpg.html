@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>九点(分享) Vol.07 - Design studio web</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", sans-serif;
+    background: #fff;
+    max-width: 600px;
+    margin: 0 auto;
+    overflow-x: hidden;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px 10px;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+  }
+
+  .header-left .logo-text {
+    font-size: 32px;
+    font-weight: bold;
+    font-style: italic;
+    letter-spacing: -1px;
+  }
+
+  .header-left .share-text {
+    font-size: 22px;
+    font-weight: bold;
+  }
+
+  .header-left .vol {
+    font-size: 16px;
+    font-weight: normal;
+    margin-left: 5px;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    border: 2px solid #333;
+    padding: 6px 14px;
+    font-size: 16px;
+    font-weight: bold;
+    gap: 8px;
+  }
+
+  .header-right .folder-icon {
+    width: 24px;
+    height: 20px;
+    background: #555;
+    border-radius: 2px;
+    position: relative;
+  }
+
+  .header-right .folder-icon::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: 2px;
+    width: 10px;
+    height: 5px;
+    background: #555;
+    border-radius: 2px 2px 0 0;
+  }
+
+  .header-line {
+    height: 3px;
+    background: #333;
+    margin: 0 20px;
+  }
+
+  .folders-section {
+    position: relative;
+    height: 320px;
+    padding: 20px;
+    overflow: hidden;
+  }
+
+  .folder {
+    position: absolute;
+    background: #e8e8e8;
+    border-radius: 4px;
+    padding: 12px 16px;
+    box-shadow: 2px 3px 8px rgba(0,0,0,0.15);
+    min-width: 140px;
+  }
+
+  .folder::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 10px;
+    width: 40px;
+    height: 12px;
+    background: #e8e8e8;
+    border-radius: 4px 4px 0 0;
+  }
+
+  .folder-number {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background: #ccc;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 24px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #666;
+    margin-right: 6px;
+  }
+
+  /* Folder 1 - ABCD, rotated left */
+  .folder-1 {
+    top: 30px;
+    left: 10px;
+    transform: rotate(-20deg);
+    background: #e0e0e0;
+    padding: 15px 20px;
+  }
+
+  .folder-1 .folder-title {
+    font-size: 28px;
+    font-weight: bold;
+    letter-spacing: 2px;
+  }
+
+  .folder-1 .folder-sub {
+    font-size: 12px;
+    color: #555;
+    margin-top: 2px;
+  }
+
+  .folder-1 .folder-sub2 {
+    font-size: 11px;
+    color: #555;
+  }
+
+  /* Folder 2 - 条件反射 */
+  .folder-2 {
+    top: 50px;
+    left: 195px;
+    background: #e8e8e8;
+    text-align: center;
+    padding: 14px 20px;
+  }
+
+  .folder-2 .folder-title {
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  .folder-2 .folder-sub {
+    font-size: 13px;
+    color: #555;
+    margin-top: 4px;
+  }
+
+  /* Folder 3 - 立入禁止, rotated right */
+  .folder-3 {
+    top: 20px;
+    right: 10px;
+    transform: rotate(15deg);
+    background: #e0e0e0;
+    padding: 15px 20px;
+    text-align: right;
+  }
+
+  .folder-3 .folder-top {
+    font-size: 12px;
+    color: #555;
+  }
+
+  .folder-3 .folder-title {
+    font-size: 26px;
+    font-weight: bold;
+  }
+
+  /* Folder 4 - 王志弘 */
+  .folder-4 {
+    top: 195px;
+    left: 80px;
+    background: #e8e8e8;
+    padding: 14px 20px;
+  }
+
+  .folder-4 .folder-title {
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  .folder-4 .folder-sub {
+    font-size: 13px;
+    color: #555;
+    margin-top: 4px;
+    letter-spacing: 2px;
+  }
+
+  /* Folder 5 - NICE LAB */
+  .folder-5 {
+    top: 195px;
+    right: 30px;
+    background: #e8e8e8;
+    padding: 14px 20px;
+  }
+
+  .folder-5 .folder-title {
+    font-size: 26px;
+    font-weight: bold;
+    letter-spacing: 1px;
+  }
+
+  .folder-5 .folder-sub {
+    font-size: 11px;
+    color: #555;
+    margin-top: 2px;
+  }
+
+  .blue-bar {
+    height: 30px;
+    background: #2244cc;
+  }
+
+  .title-section {
+    background: #b8f0f0;
+    padding: 30px 20px 20px;
+  }
+
+  .main-title {
+    font-size: 58px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    line-height: 1.2;
+    color: #111;
+  }
+
+  .title-divider {
+    height: 3px;
+    background: #111;
+    margin: 12px 0;
+  }
+
+  .footer {
+    background: #b8f0f0;
+    padding: 10px 20px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .footer-left {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .footer-left .copyright {
+    font-weight: bold;
+  }
+
+  .footer-center {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .triangle-logo {
+    width: 36px;
+    height: 36px;
+    border: 2px solid #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: bold;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    background: #b8f0f0;
+    padding-top: 8px;
+  }
+
+  .barcode {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .barcode-bars {
+    display: flex;
+    gap: 1px;
+    height: 35px;
+  }
+
+  .barcode-bars .bar {
+    width: 2px;
+    background: #111;
+    height: 100%;
+  }
+
+  .barcode-bars .bar.thin {
+    width: 1px;
+  }
+
+  .barcode-bars .bar.wide {
+    width: 3px;
+  }
+
+  .barcode-text {
+    font-size: 10px;
+    margin-top: 3px;
+    letter-spacing: 1px;
+  }
+
+  .folder-row-bottom {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    padding: 10px 20px 20px;
+    position: relative;
+    height: 120px;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <span class="logo-text">九点</span>
+    <span class="share-text">(分享)</span>
+    <span class="vol">Vol.07</span>
+  </div>
+  <div class="header-right">
+    <div class="folder-icon"></div>
+    <span>Design studio web</span>
+  </div>
+</div>
+<div class="header-line"></div>
+
+<div class="folders-section">
+  <!-- Folder 1: ABCD -->
+  <div class="folder folder-1">
+    <span class="folder-number" style="background:#ccc;color:#888;">1</span>
+    <div class="folder-title">ABCD</div>
+    <div class="folder-sub">A BLACK</div>
+    <div class="folder-sub2">COVER DESIGN</div>
+  </div>
+
+  <!-- Folder 2: 条件反射 -->
+  <div class="folder folder-2">
+    <div class="folder-title">条件反射</div>
+    <div style="margin-top:6px;">
+      <span class="folder-number">2</span>
+      <span class="folder-sub" style="display:inline;">REFLEX<br>DESIGN</span>
+    </div>
+  </div>
+
+  <!-- Folder 3: 立入禁止 -->
+  <div class="folder folder-3">
+    <div class="folder-top">STUDIO<br>NA. EO</div>
+    <div class="folder-title">立入禁止</div>
+    <span class="folder-number" style="float:right;margin-top:4px;">3</span>
+  </div>
+
+  <!-- Folder 4: 王志弘 -->
+  <div class="folder folder-4">
+    <div class="folder-title">王志弘 <span class="folder-number">4</span></div>
+    <div class="folder-sub">WANG ZHI HONG</div>
+  </div>
+
+  <!-- Folder 5: NICE LAB -->
+  <div class="folder folder-5">
+    <div class="folder-title">NICE <span class="folder-number">5</span></div>
+    <div class="folder-sub">NICE LAB<br>STUDIO LAB</div>
+  </div>
+</div>
+
+<div class="blue-bar"></div>
+
+<div class="title-section">
+  <div class="main-title">国内知名设计</div>
+  <div class="title-divider"></div>
+  <div class="main-title">工作室的官网</div>
+  <div class="title-divider"></div>
+</div>
+
+<div class="footer">
+  <div class="footer-left">
+    <div class="copyright">Copyright©2023 <span style="font-weight:normal;">(官网)</span></div>
+    <div>Jidn share all rights reserved.</div>
+  </div>
+  <div class="footer-center">
+    <div class="triangle-logo">A</div>
+    <div class="barcode">
+      <div class="barcode-bars">
+        <div class="bar wide"></div>
+        <div class="bar thin"></div>
+        <div class="bar"></div>
+        <div class="bar wide"></div>
+        <div class="bar thin"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar wide"></div>
+        <div class="bar thin"></div>
+        <div class="bar"></div>
+        <div class="bar wide"></div>
+        <div class="bar thin"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar wide"></div>
+        <div class="bar thin"></div>
+        <div class="bar"></div>
+        <div class="bar wide"></div>
+        <div class="bar thin"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar wide"></div>
+        <div class="bar thin"></div>
+        <div class="bar"></div>
+        <div class="bar wide"></div>
+        <div class="bar thin"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar wide"></div>
+        <div class="bar thin"></div>
+        <div class="bar"></div>
+        <div class="bar wide"></div>
+        <div class="bar thin"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar wide"></div>
+        <div class="bar thin"></div>
+        <div class="bar"></div>
+        <div class="bar wide"></div>
+        <div class="bar thin"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar wide"></div>
+        <div class="bar thin"></div>
+        <div class="bar"></div>
+        <div class="bar wide"></div>
+      </div>
+      <div class="barcode-text">((( JIDN SHARE ©2023 )))</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

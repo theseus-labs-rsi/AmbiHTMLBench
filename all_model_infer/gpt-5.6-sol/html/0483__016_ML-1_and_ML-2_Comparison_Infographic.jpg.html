@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NASA’s Artemis Mobile Launchers</title>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$']],
+        displayMath: [['$$', '$$']]
+      }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-width: 320px;
+      background: #283579;
+      color: #fff;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      overflow-x: auto;
+    }
+
+    .poster {
+      width: 100%;
+      min-width: 1180px;
+      min-height: 100vh;
+      padding: 3.2vw 4.35vw 4vw;
+      background:
+        linear-gradient(
+          118deg,
+          #273477 0%,
+          #3b3c88 38%,
+          #733480 68%,
+          #ed1264 100%
+        );
+    }
+
+    .header {
+      position: relative;
+      padding-right: 250px;
+    }
+
+    .eyebrow {
+      margin: 0 0 20px;
+      font-size: clamp(22px, 1.8vw, 60px);
+      font-weight: 700;
+      letter-spacing: 0.55em;
+      white-space: nowrap;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(58px, 4vw, 132px);
+      line-height: 1.02;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    .intro {
+      max-width: 2260px;
+      margin: 24px 0 0;
+      font-size: clamp(21px, 1.35vw, 46px);
+      line-height: 1.26;
+    }
+
+    .logos {
+      position: absolute;
+      top: -6px;
+      right: 0;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 105px;
+      height: 80px;
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      font-size: 15px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .logo.artemis {
+      width: 95px;
+      border: 0;
+      font-size: 20px;
+    }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 460px;
+      gap: 34px;
+      margin-top: 40px;
+      align-items: start;
+    }
+
+    .launcher {
+      min-width: 0;
+    }
+
+    .launcher-graphic {
+      position: relative;
+      height: 960px;
+    }
+
+    .height-bracket {
+      position: absolute;
+      top: 6%;
+      bottom: 5%;
+      left: 0;
+      width: 44px;
+      border-left: 3px solid #fff;
+    }
+
+    .height-bracket::before,
+    .height-bracket::after {
+      position: absolute;
+      left: 0;
+      width: 32px;
+      height: 3px;
+      background: #fff;
+      content: "";
+    }
+
+    .height-bracket::before {
+      top: 0;
+    }
+
+    .height-bracket::after {
+      bottom: 0;
+    }
+
+    .height-label {
+      position: absolute;
+      top: 20%;
+      left: 21px;
+      transform: rotate(-90deg);
+      transform-origin: left top;
+      font-size: 25px;
+      white-space: nowrap;
+    }
+
+    .placeholder {
+      color: rgba(255, 255, 255, 0.82);
+      text-align: center;
+    }
+
+    .launcher-image {
+      position: absolute;
+      top: 4%;
+      right: 1%;
+      bottom: 0;
+      left: 55px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px dashed rgba(255, 255, 255, 0.28);
+      background:
+        linear-gradient(90deg, transparent 35%, rgba(187, 196, 211, 0.25) 35% 72%, transparent 72%),
+        linear-gradient(180deg, transparent 12%, rgba(232, 236, 242, 0.18) 12% 86%, transparent 86%);
+      font-size: 18px;
+    }
+
+    .launcher-two .launcher-image {
+      background:
+        linear-gradient(90deg, transparent 28%, rgba(187, 196, 211, 0.25) 28% 76%, transparent 76%),
+        linear-gradient(180deg, transparent 10%, rgba(232, 236, 242, 0.18) 10% 87%, transparent 87%);
+    }
+
+    .launcher-caption {
+      margin-top: 6px;
+      min-height: 96px;
+      text-align: center;
+      font-size: clamp(23px, 1.35vw, 45px);
+      line-height: 1.35;
+    }
+
+    .launcher-caption strong {
+      color: #fff000;
+      font-weight: 700;
+    }
+
+    .mission-line {
+      display: block;
+      font-weight: 700;
+    }
+
+    .callouts {
+      padding-top: 4px;
+    }
+
+    .callout {
+      display: grid;
+      grid-template-columns: 245px 1fr;
+      gap: 20px;
+      min-height: 285px;
+      margin-bottom: 15px;
+      align-items: center;
+    }
+
+    .callout-image {
+      width: 245px;
+      height: 245px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 3px solid #fff;
+      border-radius: 50%;
+      background: rgba(65, 61, 145, 0.55);
+      font-size: 15px;
+      overflow: hidden;
+    }
+
+    .callout p {
+      margin: 0;
+      font-size: 25px;
+      line-height: 1.2;
+      text-align: center;
+    }
+
+    .callout strong {
+      color: #fff000;
+    }
+
+    .lower {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.06fr);
+      gap: 78px;
+      margin-top: 38px;
+      align-items: start;
+    }
+
+    .copy {
+      font-size: clamp(20px, 1.28vw, 43px);
+      line-height: 1.3;
+    }
+
+    .copy p {
+      margin: 0 0 26px;
+    }
+
+    .copy h2 {
+      margin: 30px 0 24px;
+      font-size: clamp(26px, 1.48vw, 50px);
+      line-height: 1.15;
+      font-weight: 700;
+    }
+
+    .numbers h2 {
+      margin: 0 0 58px;
+      font-size: clamp(30px, 1.65vw, 55px);
+      line-height: 1.1;
+    }
+
+    .number-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 100px;
+    }
+
+    .number-column h3 {
+      margin: 0 0 36px;
+      font-size: clamp(24px, 1.35vw, 45px);
+      line-height: 1.1;
+    }
+
+    .number-column p {
+      margin: 0 0 19px;
+      font-size: clamp(18px, 1.05vw, 36px);
+      line-height: 1.25;
+      white-space: nowrap;
+    }
+
+    figure {
+      margin: 74px 0 0;
+    }
+
+    .photo {
+      width: 100%;
+      aspect-ratio: 1.55 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 4px solid #111;
+      background:
+        linear-gradient(#dde4e8 0 45%, #919bb4 66%, #3d433e 100%);
+      color: #212121;
+      font-size: 20px;
+    }
+
+    figcaption {
+      margin-top: 16px;
+      font-size: clamp(17px, 0.94vw, 32px);
+      line-height: 1.35;
+      font-style: italic;
+    }
+
+    @media (max-width: 1500px) {
+      .poster {
+        padding-right: 45px;
+        padding-left: 45px;
+      }
+
+      .comparison {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 400px;
+      }
+
+      .callout {
+        grid-template-columns: 205px 1fr;
+      }
+
+      .callout-image {
+        width: 205px;
+        height: 205px;
+      }
+
+      .callout p {
+        font-size: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="poster">
+    <header class="header">
+      <p class="eyebrow">EXPLORATION GROUND SYSTEMS</p>
+      <h1>NASA’s Artemis Mobile Launchers</h1>
+      <p class="intro">
+        NASA’s mobile launchers are designed to send the SLS (Space Launch System rocket), Orion spacecraft, astronauts, and large payloads to the Moon in a single launch. With the new universal stage adapter and enhanced exploration upper stage on SLS beginning with Artemis IV, NASA’s mobile launcher 2 will launch 40% more payload to the Moon compared to mobile launcher 1, which launches the SLS Block 1.
+      </p>
+
+      <div class="logos" aria-label="NASA and Artemis logos">
+        <div class="logo placeholder">[NASA logo]</div>
+        <div class="logo artemis placeholder">[Artemis logo]</div>
+      </div>
+    </header>
+
+    <section class="comparison" aria-label="Mobile launcher comparison">
+      <article class="launcher launcher-one">
+        <div class="launcher-graphic">
+          <div class="height-bracket">
+            <span class="height-label">Approx. 370 ft.</span>
+          </div>
+          <div class="launcher-image placeholder">
+            [Image: Mobile Launcher 1 with SLS Block 1 Crew rocket]
+          </div>
+        </div>
+        <div class="launcher-caption">
+          <strong>Mobile Launcher 1</strong> (SLS Block 1 Crew)
+          <span class="mission-line">Artemis I – Artemis II – Artemis III</span>
+        </div>
+      </article>
+
+      <article class="launcher launcher-two">
+        <div class="launcher-graphic">
+          <div class="height-bracket">
+            <span class="height-label">Approx. 390 ft.</span>
+          </div>
+          <div class="launcher-image placeholder">
+            [Image: Mobile Launcher 2 with SLS Block 1B Crew rocket]
+          </div>
+        </div>
+        <div class="launcher-caption">
+          <strong>Mobile Launcher 2</strong> (SLS Block 1B Crew)
+          <span class="mission-line">Artemis IV &amp; Beyond</span>
+        </div>
+      </article>
+
+      <aside class="callouts" aria-label="Mobile launcher 2 details">
+        <div class="callout">
+          <div class="callout-image placeholder">
+            [Detail image: crew access arm and Orion service module umbilical]
+          </div>
+          <p>
+            The <strong>crew access arm</strong> and <strong>Orion service module umbilical</strong> are located 40 feet higher on mobile launcher 2.
+          </p>
+        </div>
+
+        <div class="callout">
+          <div class="callout-image placeholder">
+            [Detail image: SLS universal stage adapter]
+          </div>
+          <p>
+            The new <strong>SLS universal stage adapter</strong> provides increased payload capacity.
+          </p>
+        </div>
+
+        <div class="callout">
+          <div class="callout-image placeholder">
+            [Detail image: SLS exploration upper stage and mobile launcher umbilical]
+          </div>
+          <p>
+            The more powerful <strong>SLS exploration upper stage</strong> requires a new umbilical on mobile launcher 2 along with enhanced propellant loading capabilities.
+          </p>
+        </div>
+      </aside>
+    </section>
+
+    <section class="lower">
+      <article class="copy">
+        <p>
+          Starting with the Artemis IV mission, NASA will use a new mobile launcher to continue the effort to enable humans to live and work on the lunar surface. Mobile launcher 2 will allow the agency to send heavier, increasingly complex missions to the Moon. The enhanced capabilities of the new mobile launcher will support SLS Block 1B configurations. These larger Artemis rockets will provide the power needed to send astronauts and heavy cargo to the Moon.
+        </p>
+
+        <h2>A Bold Mission Calls for Big Rocket</h2>
+        <p>
+          As Artemis missions evolve, so must our ground support equipment. The powerful SLS Block 1B lifts more than double the mass to the Moon in a single launch as compared to current rockets and features a more powerful upper stage that can send both crew and large payloads to space for our most ambitious missions ever attempted. These heavy cargo missions demand a larger and more robust mobile launcher to support SLS prior to launch and withstand the tremendous power of such a large rocket.
+        </p>
+
+        <h2>What’s New with Mobile Launcher 2?</h2>
+        <p>
+          NASA engineers implemented lessons learned from the construction of mobile launcher 1 and the launch of Artemis I to make improvements to the next generation mobile launcher. These improvements will enable mobile launcher 2 to better withstand the immense launch power of SLS Block 1B.
+        </p>
+
+        <p>
+          Structurally, the new mobile launcher will feature a wider cross-section on the launch tower to better protect equipment and an increased diameter on piping and flow nozzles of the ignition overpressure sound suppression system for a better flow of water to launch platform and flame hole.
+        </p>
+
+        <p>
+          New technology includes: a self-contained ground cooling system providing avionics cooling for Orion, reducing reliance on ground support equipment; an improved electrical system; and a new payload accommodations room enabling customers to remotely communicate with payloads.
+        </p>
+      </article>
+
+      <aside class="numbers">
+        <h2>Mobile Launcher by the Numbers:</h2>
+
+        <div class="number-columns">
+          <section class="number-column">
+            <h3>Mobile Launcher 1</h3>
+            <p>Total height above ground: 380 ft</p>
+            <p>Tower: 40 ft square, about 355 ft tall</p>
+            <p>Approximate weight: 10.5 million lbs</p>
+          </section>
+
+          <section class="number-column">
+            <h3>Mobile Launcher 2</h3>
+            <p>Total height above ground: 402 ft</p>
+            <p>Tower: 40 x 50 ft square, about 377 ft tall</p>
+            <p>Approximate weight: 12.4 million lbs</p>
+          </section>
+        </div>
+
+        <figure>
+          <div class="photo placeholder">
+            [Photo: NASA’s Space Launch System rocket atop mobile launcher 1 on Launch Pad 39B]
+          </div>
+          <figcaption>
+            NASA’s Space Launch System rocket atop mobile launcher 1 on Launch Pad 39B at Kennedy Space Center in Florida, prior to the launch of Artemis I. Photo Credit: (NASA/Joel Kowsky)
+          </figcaption>
+        </figure>
+      </aside>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>招聘数据</title>
+  <script>
+    window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      width: 540px;
+      min-height: 720px;
+      background: #fff;
+      font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+      color: #383838;
+    }
+    .page {
+      position: relative;
+      width: 540px;
+      min-height: 720px;
+      padding: 29px 42px 0;
+      overflow: hidden;
+    }
+    .brand {
+      text-align: center;
+      font-weight: 800;
+      font-size: 16px;
+      color: #232323;
+      letter-spacing: .5px;
+      line-height: 20px;
+      text-shadow: 1px 1px 0 #efc83a, -1px -1px 0 #efc83a, 1px -1px 0 #efc83a, -1px 1px 0 #efc83a;
+    }
+    .brand .mark {
+      display: inline-block;
+      width: 13px;
+      height: 13px;
+      line-height: 11px;
+      margin-right: 2px;
+      border: 2px solid #242424;
+      border-radius: 3px;
+      font-size: 9px;
+      color: #f6d331;
+      vertical-align: 1px;
+      text-shadow: none;
+      background: #f6d331;
+    }
+    .title {
+      width: 222px;
+      height: 42px;
+      margin: 32px auto 20px;
+      background: #ffe568;
+      text-align: center;
+      color: #242424;
+      font-size: 30px;
+      line-height: 42px;
+      letter-spacing: 9px;
+      padding-left: 9px;
+      font-weight: 900;
+    }
+    .minor-title {
+      margin: 0 0 8px;
+      font-size: 8px;
+      color: #444;
+      font-weight: 500;
+    }
+    .top-tables {
+      display: flex;
+      gap: 18px;
+      width: 100%;
+    }
+    .table-wrap {
+      width: calc(50% - 9px);
+      background: #fafafa;
+      padding: 5px 7px 4px;
+      min-height: 147px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 8px;
+      color: #353535;
+    }
+    th {
+      color: #969696;
+      font-size: 7px;
+      font-weight: 400;
+      height: 18px;
+      white-space: nowrap;
+    }
+    td {
+      height: 24px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: clip;
+    }
+    .rank { width: 14%; text-align: center; }
+    .province { width: 20%; text-align: left; }
+    .number { width: 25%; text-align: left; }
+    .ratio { width: 17%; text-align: left; }
+    .salary { width: 28%; text-align: left; }
+    .section-title {
+      margin: 13px 0 13px;
+      padding-left: 9px;
+      border-left: 3px solid #ed2728;
+      color: #242424;
+      font-size: 13px;
+      line-height: 16px;
+      font-weight: 700;
+    }
+    .bottom-tables {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+    .bottom-col {
+      width: calc(50% - 10px);
+    }
+    .subheading {
+      margin: 0 0 7px;
+      font-size: 9px;
+      color: #303030;
+      font-weight: 600;
+    }
+    .bottom-wrap {
+      width: 100%;
+      min-height: 260px;
+      background: #fafafa;
+      padding: 5px 7px;
+    }
+    .bottom-wrap table {
+      font-size: 8px;
+    }
+    .bottom-wrap th {
+      height: 18px;
+      font-size: 7px;
+    }
+    .bottom-wrap td {
+      height: 24px;
+    }
+    .type-name { width: 48%; text-align: left; }
+    .type-num { width: 18%; text-align: center; }
+    .type-ratio { width: 23%; text-align: center; }
+    .trend { width: 11%; text-align: center; font-weight: 800; font-size: 13px; }
+    .company-rank { width: 12%; text-align: center; }
+    .company-name { width: 64%; text-align: left; }
+    .company-num { width: 17%; text-align: center; }
+    .company-trend { width: 7%; text-align: center; font-size: 13px; font-weight: 800; }
+    .up { color: #ef343e; }
+    .down { color: #23bd4d; }
+    .flower {
+      position: absolute;
+      left: 238px;
+      bottom: 1px;
+      width: 66px;
+      height: 75px;
+      color: #777;
+      font-size: 0;
+    }
+    .flower::before {
+      content: "";
+      position: absolute;
+      left: 23px;
+      top: 7px;
+      width: 14px;
+      height: 21px;
+      border: 1px solid #777;
+      border-radius: 50% 50% 48% 48%;
+      transform: rotate(14deg);
+    }
+    .flower::after {
+      content: "";
+      position: absolute;
+      left: 30px;
+      top: 24px;
+      width: 1px;
+      height: 51px;
+      background: #777;
+      transform: rotate(12deg);
+      transform-origin: top;
+    }
+    .leaf-a, .leaf-b, .bud {
+      position: absolute;
+      display: block;
+      border: 1px solid #777;
+      background: transparent;
+    }
+    .leaf-a {
+      left: 11px;
+      top: 36px;
+      width: 24px;
+      height: 37px;
+      border-radius: 100% 0 100% 0;
+      transform: rotate(-29deg);
+      border-right: 0;
+      border-bottom: 0;
+    }
+    .leaf-b {
+      left: 31px;
+      top: 43px;
+      width: 24px;
+      height: 32px;
+      border-radius: 0 100% 0 100%;
+      transform: rotate(20deg);
+      border-left: 0;
+      border-bottom: 0;
+    }
+    .bud {
+      left: 19px;
+      top: 2px;
+      width: 18px;
+      height: 17px;
+      border-radius: 45% 55% 55% 45%;
+      transform: rotate(-24deg);
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="brand"><span class="mark">●</span>大铺子讲升学</div>
+
+    <div class="title">招聘数据</div>
+
+    <p class="minor-title">各省节招聘统计</p>
+    <section class="top-tables" aria-label="各省招聘统计">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th class="rank">排名</th>
+              <th class="province">省份</th>
+              <th class="number">招聘人数</th>
+              <th class="ratio">占比</th>
+              <th class="salary">薪资范围</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="rank">1</td><td class="province">江苏</td><td class="number">10247</td><td class="ratio">13%</td><td class="salary">5.0-15.0K</td></tr>
+            <tr><td class="rank">2</td><td class="province">广东</td><td class="number">8789</td><td class="ratio">11%</td><td class="salary">4.0-16.0K</td></tr>
+            <tr><td class="rank">3</td><td class="province">北京</td><td class="number">8046</td><td class="ratio">10%</td><td class="salary">6.0-18.0K</td></tr>
+            <tr><td class="rank">4</td><td class="province">浙江</td><td class="number">6943</td><td class="ratio">9%</td><td class="salary">4.5-15.0K</td></tr>
+            <tr><td class="rank">5</td><td class="province">上海</td><td class="number">6832</td><td class="ratio">9%</td><td class="salary">4.0-20.0K</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th class="rank">排名</th>
+              <th class="province">省份</th>
+              <th class="number">招聘人数</th>
+              <th class="ratio">占比</th>
+              <th class="salary">薪资范围</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="rank">6</td><td class="province">山东</td><td class="number">6653</td><td class="ratio">9%</td><td class="salary">4.3-9.0K</td></tr>
+            <tr><td class="rank">7</td><td class="province">辽宁</td><td class="number">2663</td><td class="ratio">3%</td><td class="salary">3.0-10.0K</td></tr>
+            <tr><td class="rank">8</td><td class="province">安徽</td><td class="number">1637</td><td class="ratio">2%</td><td class="salary">4.8-12.8K</td></tr>
+            <tr><td class="rank">9</td><td class="province">福建</td><td class="number">1625</td><td class="ratio">2%</td><td class="salary">4.0-12.0K</td></tr>
+            <tr><td class="rank">10</td><td class="province">河南</td><td class="number">1392</td><td class="ratio">2%</td><td class="salary">4.0-13.0K</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <h2 class="section-title">招聘企业</h2>
+
+    <section class="bottom-tables" aria-label="招聘企业数据">
+      <div class="bottom-col">
+        <p class="subheading">招聘企业类型</p>
+        <div class="bottom-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th class="type-name">企业类型</th>
+                <th class="type-num">企业数量</th>
+                <th class="type-ratio">招聘人数占比</th>
+                <th class="trend">趋势</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="type-name">国有企业</td><td class="type-num">327</td><td class="type-ratio">8%</td><td class="trend down">↓</td></tr>
+              <tr><td class="type-name">股份制企业</td><td class="type-num">91</td><td class="type-ratio">8%</td><td class="trend up">↑</td></tr>
+              <tr><td class="type-name">民营企业</td><td class="type-num">863</td><td class="type-ratio">57%</td><td class="trend up">↑</td></tr>
+              <tr><td class="type-name">上市公司</td><td class="type-num">56</td><td class="type-ratio">6%</td><td class="trend up">↑</td></tr>
+              <tr><td class="type-name">港澳台公司</td><td class="type-num">4</td><td class="type-ratio">低于1%</td><td class="trend up">↑</td></tr>
+              <tr><td class="type-name">合资企业</td><td class="type-num">36</td><td class="type-ratio">4%</td><td class="trend down">↓</td></tr>
+              <tr><td class="type-name">外商独资/企业代表处</td><td class="type-num">19</td><td class="type-ratio">1%</td><td class="trend down">↓</td></tr>
+              <tr><td class="type-name">机关/事业单位/中等机构</td><td class="type-num">24</td><td class="type-ratio">5%</td><td class="trend down">↓</td></tr>
+              <tr><td class="type-name">其他</td><td class="type-num">253</td><td class="type-ratio">9%</td><td class="trend down">↓</td></tr>
+              <tr><td class="type-name">外商投资/办事处</td><td class="type-num">36</td><td class="type-ratio">1%</td><td class="trend down">↓</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="bottom-col">
+        <p class="subheading">优质招聘企业</p>
+        <div class="bottom-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th class="company-rank">排名</th>
+                <th class="company-name">企业名称</th>
+                <th class="company-num">招聘人数</th>
+                <th class="company-trend">趋势</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="company-rank">1</td><td class="company-name">创智智造机器人（苏州）有限公司</td><td class="company-num">1230</td><td class="company-trend up">↑</td></tr>
+              <tr><td class="company-rank">2</td><td class="company-name">珠海明远智能科技有限公司</td><td class="company-num">950</td><td class="company-trend up">↑</td></tr>
+              <tr><td class="company-rank">3</td><td class="company-name">昆山[illegible]电子玩具科技有限公司</td><td class="company-num">870</td><td class="company-trend up">↑</td></tr>
+              <tr><td class="company-rank">4</td><td class="company-name">安盛国际供应链技术有限公司</td><td class="company-num">826</td><td class="company-trend up">↑</td></tr>
+              <tr><td class="company-rank">5</td><td class="company-name">上海大地[illegible]技术有限公司</td><td class="company-num">550</td><td class="company-trend up">↑</td></tr>
+              <tr><td class="company-rank">6</td><td class="company-name">广西[illegible]合金有限公司</td><td class="company-num">550</td><td class="company-trend up">↑</td></tr>
+              <tr><td class="company-rank">7</td><td class="company-name">佛山市[illegible]科技股份有限公司</td><td class="company-num">530</td><td class="company-trend up">↑</td></tr>
+              <tr><td class="company-rank">8</td><td class="company-name">江苏金[illegible]电子科技有限公司</td><td class="company-num">480</td><td class="company-trend up">↑</td></tr>
+              <tr><td class="company-rank">9</td><td class="company-name">上海迪[illegible]科技有限公司</td><td class="company-num">477</td><td class="company-trend up">↑</td></tr>
+              <tr><td class="company-rank">10</td><td class="company-name">北京[illegible]科技有限公司</td><td class="company-num">464</td><td class="company-trend up">↑</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <div class="flower placeholder" aria-label="[Flower illustration: bottom center]">
+      <span class="bud"></span><span class="leaf-a"></span><span class="leaf-b"></span>
+    </div>
+  </main>
+</body>
+</html>

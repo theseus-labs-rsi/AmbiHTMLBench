@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mars Odyssey Orbiter By The Numbers</title>
+  <script>
+    window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      display: grid;
+      place-items: center;
+      background: #222;
+      font-family: "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+    }
+    .poster {
+      position: relative;
+      width: min(1280px, 100vw);
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      color: #fff;
+      background:
+        radial-gradient(ellipse at 75% 15%, rgba(43,75,136,.83) 0, rgba(51,45,91,.5) 25%, transparent 48%),
+        linear-gradient(118deg, #db4235 0%, #c83939 34%, #a32f43 59%, #353460 100%);
+    }
+    .poster::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: .35;
+      background:
+        linear-gradient(164deg, transparent 0 55%, rgba(105,26,29,.55) 55.2% 100%),
+        linear-gradient(22deg, transparent 0 59%, rgba(119,31,51,.5) 59.2% 100%),
+        linear-gradient(177deg, transparent 0 66%, rgba(102,24,42,.4) 66.2% 100%);
+      pointer-events: none;
+    }
+    .title {
+      position: absolute;
+      top: 73px;
+      width: 100%;
+      text-align: center;
+      line-height: 1;
+    }
+    .title h1 {
+      margin: 0;
+      font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+      font-size: 66px;
+      font-weight: 400;
+      letter-spacing: .5px;
+    }
+    .title p {
+      margin: 8px 0 0;
+      font-size: 39px;
+      font-weight: 300;
+      letter-spacing: 8px;
+    }
+    .left, .right {
+      position: absolute;
+      top: 202px;
+      width: 378px;
+    }
+    .left { left: 51px; }
+    .right { right: 44px; width: 364px; }
+    .metric {
+      border-bottom: 1px solid rgba(255,255,255,.6);
+      min-height: 132px;
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+    }
+    .metric .number {
+      font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+      font-size: 92px;
+      line-height: .9;
+      font-weight: 400;
+      letter-spacing: 1px;
+    }
+    .metric .copy {
+      margin-left: 8px;
+      font-size: 40px;
+      line-height: 1.08;
+      font-weight: 300;
+      letter-spacing: .2px;
+    }
+    .left .metric:nth-child(2) { min-height: 132px; }
+    .left .metric:nth-child(3) {
+      border: 0;
+      align-items: flex-start;
+      min-height: 145px;
+      padding-top: 21px;
+    }
+    .left .metric:nth-child(3) .number { font-size: 91px; }
+    .left .metric:nth-child(3) .copy { font-size: 38px; }
+    .surface {
+      position: absolute;
+      left: 55px;
+      top: 587px;
+      font-size: 33px;
+      line-height: 1.02;
+      font-weight: 300;
+      white-space: nowrap;
+    }
+    .url {
+      position: absolute;
+      left: 45px;
+      bottom: 40px;
+      font-size: 20px;
+      letter-spacing: .2px;
+    }
+    .right .metric {
+      min-height: 142px;
+      justify-content: flex-start;
+    }
+    .right .metric:first-child .number { font-size: 108px; }
+    .right .metric:first-child .copy { font-size: 48px; margin-left: 10px; }
+    .right .metric:nth-child(2) { min-height: 132px; }
+    .right .metric:nth-child(2) .number { font-size: 99px; }
+    .right .metric:nth-child(2) .copy { font-size: 39px; }
+    .relay {
+      position: absolute;
+      top: 497px;
+      right: 43px;
+      width: 365px;
+      font-size: 39px;
+      font-weight: 300;
+      line-height: 1.04;
+      text-align: right;
+    }
+    .relay .six {
+      float: right;
+      margin: -5px 0 0 10px;
+      font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+      font-size: 100px;
+      line-height: .8;
+    }
+    .updated {
+      position: absolute;
+      right: 43px;
+      bottom: 41px;
+      color: rgba(255,255,255,.72);
+      font-size: 20px;
+      font-weight: 300;
+    }
+    .spacecraft.placeholder {
+      position: absolute;
+      left: 446px;
+      top: 258px;
+      width: 368px;
+      height: 430px;
+      border: 0;
+      background: transparent;
+      color: transparent;
+      overflow: hidden;
+    }
+    .spacecraft::before {
+      content: "";
+      position: absolute;
+      left: 128px;
+      top: 4px;
+      width: 111px;
+      height: 405px;
+      transform: rotate(17deg);
+      background:
+        repeating-linear-gradient(to bottom, rgba(17,13,18,.86) 0 4px, rgba(178,137,118,.72) 5px 6px, rgba(17,13,18,.86) 7px 17px),
+        linear-gradient(90deg, #6e443d, #281d24 48%, #987268);
+      border: 3px solid rgba(230,191,169,.75);
+      box-shadow: 0 0 8px rgba(255,231,202,.28);
+    }
+    .spacecraft::after {
+      content: "";
+      position: absolute;
+      left: 93px;
+      top: 191px;
+      width: 193px;
+      height: 100px;
+      transform: rotate(-14deg);
+      border-radius: 44% 54% 46% 43%;
+      background:
+        radial-gradient(circle at 61% 43%, #d4af94 0 8%, transparent 9%),
+        linear-gradient(145deg, #260f12, #8a3926 42%, #d17942 66%, #36151a 100%);
+      box-shadow: 0 4px 8px rgba(24,5,7,.5);
+    }
+    .nasa {
+      position: absolute;
+      right: 37px;
+      top: 39px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: Arial, sans-serif;
+    }
+    .agency {
+      width: 107px;
+      text-align: right;
+      font-size: 8px;
+      line-height: 1.05;
+    }
+    .nasa-mark {
+      width: 47px;
+      height: 47px;
+      border: 1px solid rgba(255,255,255,.8);
+      border-radius: 50%;
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+      font-weight: bold;
+      display: grid;
+      place-items: center;
+      position: relative;
+    }
+    .nasa-mark::after {
+      content: "";
+      position: absolute;
+      width: 55px;
+      height: 1px;
+      background: rgba(255,255,255,.9);
+      transform: rotate(-30deg);
+    }
+    @media (max-width: 760px) {
+      .title h1 { font-size: 5.15vw; }
+      .title p { font-size: 3.05vw; letter-spacing: .63vw; }
+      .metric .number { font-size: 7.2vw; }
+      .metric .copy { font-size: 3.12vw; }
+    }
+  </style>
+</head>
+<body>
+  <main class="poster" aria-label="Mars Odyssey Orbiter by the numbers infographic">
+    <header class="title">
+      <h1>Mars Odyssey Orbiter</h1>
+      <p>BY THE NUMBERS</p>
+    </header>
+
+    <aside class="nasa" aria-label="NASA identification">
+      <div class="agency">National Aeronautics and<br>Space Administration</div>
+      <div class="nasa-mark">NASA</div>
+    </aside>
+
+    <section class="left" aria-label="Mission statistics">
+      <div class="metric">
+        <div class="number">23</div>
+        <div class="copy">Years<br>In Orbit</div>
+      </div>
+      <div class="metric">
+        <div class="number">17.1</div>
+        <div class="copy">Terabits of<br>Data Returned</div>
+      </div>
+      <div class="metric">
+        <div class="number">1.33</div>
+        <div class="copy">Terabits of<br>Data Relayed</div>
+      </div>
+    </section>
+
+    <div class="surface">from Mars Surface Missions</div>
+    <div class="url">science.nasa.gov/mission/odyssey</div>
+
+    <figure class="spacecraft placeholder" aria-label="[Diagram: Mars Odyssey spacecraft centered]">
+      [Diagram: Mars Odyssey spacecraft centered]
+    </figure>
+
+    <section class="right" aria-label="Mission statistics">
+      <div class="metric">
+        <div class="number">100,000</div>
+        <div class="copy">Orbits</div>
+      </div>
+      <div class="metric">
+        <div class="number">1.4</div>
+        <div class="copy">Million<br>Images Taken</div>
+      </div>
+    </section>
+
+    <div class="relay">Relay Support <span class="six">6</span><br>for<br>Mars Missions</div>
+    <div class="updated">Updated June 2024</div>
+  </main>
+</body>
+</html>

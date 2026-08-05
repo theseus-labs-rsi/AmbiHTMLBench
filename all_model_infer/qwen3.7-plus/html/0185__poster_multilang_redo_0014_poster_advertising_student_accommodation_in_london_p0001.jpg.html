@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Great Value Student Accommodation - iQ</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    background-color: #1a1a2e;
+    color: #fff;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .poster {
+    max-width: 900px;
+    width: 100%;
+    background: #1e1e30;
+    position: relative;
+    overflow: hidden;
+    padding: 30px 40px 40px;
+  }
+
+  .poster::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 300px;
+    height: 400px;
+    background: radial-gradient(ellipse at bottom left, rgba(100, 50, 120, 0.3) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .header {
+    text-align: center;
+    position: relative;
+    margin-bottom: 20px;
+  }
+
+  .header h1 {
+    font-size: 3.2em;
+    font-weight: 700;
+    line-height: 1.15;
+    color: #fff;
+    letter-spacing: -0.5px;
+  }
+
+  .header h1 span {
+    display: block;
+  }
+
+  .badge {
+    position: absolute;
+    top: 0;
+    right: 20px;
+    width: 130px;
+    height: 130px;
+    background: #4CAF50;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 700;
+    clip-path: polygon(
+      50% 0%, 61% 3%, 71% 1%, 80% 6%, 89% 4%, 96% 11%, 100% 20%,
+      97% 30%, 100% 40%, 96% 50%, 99% 60%, 95% 70%, 97% 80%, 90% 88%,
+      82% 93%, 72% 97%, 62% 95%, 50% 100%, 38% 95%, 28% 97%, 18% 93%,
+      10% 88%, 3% 80%, 5% 70%, 1% 60%, 4% 50%, 0% 40%, 3% 30%,
+      0% 20%, 4% 11%, 11% 4%, 20% 6%, 29% 1%, 39% 3%
+    );
+    transform: rotate(-5deg);
+  }
+
+  .badge .only {
+    font-size: 0.85em;
+    font-weight: 400;
+  }
+
+  .badge .number {
+    font-size: 2.8em;
+    line-height: 1;
+  }
+
+  .badge .minutes {
+    font-size: 0.85em;
+    font-weight: 400;
+  }
+
+  .badge .away {
+    font-size: 0.8em;
+    font-weight: 400;
+  }
+
+  .heart-section {
+    position: relative;
+    width: 100%;
+    height: 520px;
+    margin: 10px 0 30px;
+  }
+
+  .heart-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 420px;
+    height: 400px;
+  }
+
+  .heart-shape {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
+  .heart-shape svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .heart-text {
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 2;
+  }
+
+  .heart-text h2 {
+    font-size: 2.2em;
+    color: #7B2D8E;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  .iq-logo {
+    position: absolute;
+    top: 62%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+
+  .iq-logo .i-circle {
+    width: 60px;
+    height: 60px;
+    background: #4CAF50;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+    font-weight: 700;
+    color: #fff;
+    margin-right: -10px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .iq-logo .q-circle {
+    width: 70px;
+    height: 70px;
+    background: #7B2D8E;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2em;
+    font-weight: 700;
+    color: #fff;
+    position: relative;
+    z-index: 1;
+  }
+
+  .feature-label {
+    position: absolute;
+    font-size: 0.85em;
+    color: #ccc;
+    text-align: center;
+    line-height: 1.3;
+    max-width: 140px;
+  }
+
+  .feature-label.bold {
+    color: #fff;
+    font-weight: 700;
+  }
+
+  .feature-label .dot {
+    width: 14px;
+    height: 14px;
+    background: #fff;
+    border: 3px solid #4CAF50;
+    border-radius: 50%;
+    position: absolute;
+  }
+
+  /* Feature positions around the heart */
+  .feat-en-suites {
+    top: 12%;
+    left: 32%;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.9em;
+  }
+
+  .feat-study {
+    top: 8%;
+    left: 55%;
+    font-size: 0.8em;
+  }
+
+  .feat-gym {
+    top: 18%;
+    left: 18%;
+    font-size: 0.8em;
+  }
+
+  .feat-tube {
+    top: 15%;
+    right: 5%;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.85em;
+    text-align: right;
+  }
+
+  .feat-rents {
+    top: 30%;
+    left: 5%;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.85em;
+    text-align: right;
+  }
+
+  .feat-social {
+    top: 32%;
+    right: 5%;
+    font-size: 0.8em;
+    text-align: left;
+  }
+
+  .feat-views {
+    top: 42%;
+    left: 5%;
+    font-size: 0.8em;
+    text-align: right;
+  }
+
+  .feat-design {
+    top: 44%;
+    right: 5%;
+    font-size: 0.8em;
+    text-align: left;
+  }
+
+  .feat-studios {
+    top: 52%;
+    left: 5%;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.85em;
+    text-align: right;
+  }
+
+  .feat-insurance {
+    top: 54%;
+    right: 2%;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.85em;
+    text-align: left;
+  }
+
+  .feat-secure {
+    top: 62%;
+    left: 18%;
+    font-size: 0.8em;
+  }
+
+  .feat-management {
+    top: 64%;
+    right: 10%;
+    font-size: 0.8em;
+  }
+
+  .feat-students {
+    top: 74%;
+    left: 12%;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.85em;
+  }
+
+  .feat-balconies {
+    top: 76%;
+    right: 18%;
+    font-size: 0.8em;
+  }
+
+  .feat-broadband {
+    top: 82%;
+    right: 22%;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.85em;
+  }
+
+  .feat-shower {
+    top: 88%;
+    left: 28%;
+    font-size: 0.8em;
+  }
+
+  .photos-section {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin: 20px 0 30px;
+    flex-wrap: wrap;
+  }
+
+  .photo-placeholder {
+    width: 240px;
+    height: 170px;
+    background: #2a2a40;
+    border: 2px solid #3a3a55;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    font-size: 0.8em;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .photo-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .footer {
+    text-align: center;
+    margin-top: 10px;
+    position: relative;
+  }
+
+  .footer p {
+    font-size: 1.2em;
+    color: #ccc;
+    margin-bottom: 5px;
+  }
+
+  .footer .website {
+    font-size: 2.8em;
+    color: #4CAF50;
+    font-weight: 700;
+    text-decoration: none;
+    display: block;
+    margin: 5px 0 15px;
+  }
+
+  .footer .locations {
+    font-size: 1.3em;
+    color: #4CAF50;
+    font-weight: 700;
+  }
+
+  .footer .locations span {
+    color: #4CAF50;
+    margin: 0 10px;
+  }
+
+  .footer .disclaimer {
+    font-size: 0.7em;
+    color: #888;
+    margin-top: 8px;
+  }
+
+  .qr-code {
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+    width: 70px;
+    height: 70px;
+    background: #fff;
+    border: 2px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.5em;
+    color: #333;
+  }
+
+  .qr-code svg {
+    width: 60px;
+    height: 60px;
+  }
+
+  /* Heart SVG styling */
+  .heart-svg-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 440px;
+    height: 420px;
+  }
+
+  .heart-svg-wrapper svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .connector-line {
+    stroke: #4CAF50;
+    stroke-width: 2;
+  }
+
+  .connector-dot {
+    fill: #fff;
+    stroke: #4CAF50;
+    stroke-width: 2;
+  }
+
+  @media (max-width: 700px) {
+    .header h1 {
+      font-size: 2em;
+    }
+    .badge {
+      width: 90px;
+      height: 90px;
+      right: 5px;
+    }
+    .badge .number {
+      font-size: 2em;
+    }
+    .heart-section {
+      height: 400px;
+    }
+    .heart-svg-wrapper {
+      width: 320px;
+      height: 310px;
+    }
+    .heart-text h2 {
+      font-size: 1.5em;
+    }
+    .photos-section {
+      flex-direction: column;
+      align-items: center;
+    }
+    .photo-placeholder {
+      width: 100%;
+      max-width: 300px;
+    }
+    .footer .website {
+      font-size: 1.8em;
+    }
+    .feature-label {
+      font-size: 0.7em;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="poster">
+  <!-- Header -->
+  <div class="header">
+    <h1>
+      <span>Great value</span>
+      <span>student</span>
+      <span>accommodation</span>
+    </h1>
+    <div class="badge">
+      <span class="only">Only</span>
+      <span class="number">15</span>
+      <span class="minutes">minutes</span>
+      <span class="away">away*</span>
+    </div>
+  </div>
+
+  <!-- Heart Section with Features -->
+  <div class="heart-section">
+    <!-- Heart SVG -->
+    <div class="heart-svg-wrapper">
+      <svg viewBox="0 0 440 420" xmlns="http://www.w3.org/2000/svg">
+        <!-- Heart outline -->
+        <path d="M220 380 C220 380, 30 230, 30 140 C30 70, 80 30, 140 30 C180 30, 210 55, 220 80 C230 55, 260 30, 300 30 C360 30, 410 70, 410 140 C410 230, 220 380, 220 380Z"
+              fill="#f0eef5" stroke="#7B2D8E" stroke-width="6" />
+        <!-- Green outer border -->
+        <path d="M220 390 C220 390, 20 235, 20 140 C20 60, 75 20, 140 20 C185 20, 212 50, 220 75 C228 50, 255 20, 300 20 C365 20, 420 60, 420 140 C420 235, 220 390, 220 390Z"
+              fill="none" stroke="#4CAF50" stroke-width="4" />
+
+        <!-- Connector dots and lines -->
+        <!-- En Suites dot (top) -->
+        <circle cx="220" cy="30" r="7" class="connector-dot" />
+        <!-- Dedicated study rooms dot -->
+        <circle cx="290" cy="35" r="7" class="connector-dot" />
+        <!-- Moments from Zone 1 dot -->
+        <circle cx="340" cy="70" r="7" class="connector-dot" />
+        <!-- Brilliant social events dot -->
+        <circle cx="370" cy="140" r="7" class="connector-dot" />
+        <!-- Stylish design dot -->
+        <circle cx="375" cy="200" r="7" class="connector-dot" />
+        <!-- FREE contents insurance dot -->
+        <circle cx="340" cy="260" r="7" class="connector-dot" />
+        <!-- On site management dot -->
+        <circle cx="310" cy="310" r="7" class="connector-dot" />
+        <!-- Balconies dot -->
+        <circle cx="270" cy="345" r="7" class="connector-dot" />
+        <!-- FREE 14Mb broadband dot -->
+        <circle cx="240" cy="370" r="7" class="connector-dot" />
+        <!-- En suite shower rooms dot -->
+        <circle cx="220" cy="385" r="7" class="connector-dot" />
+        <!-- Exclusively for students dot -->
+        <circle cx="170" cy="345" r="7" class="connector-dot" />
+        <!-- Safe and secure dot -->
+        <circle cx="130" cy="310" r="7" class="connector-dot" />
+        <!-- Private Studios dot -->
+        <circle cx="100" cy="260" r="7" class="connector-dot" />
+        <!-- Stunning views dot -->
+        <circle cx="65" cy="200" r="7" class="connector-dot" />
+        <!-- All inclusive rents dot -->
+        <circle cx="70" cy="140" r="7" class="connector-dot" />
+        <!-- On site gym dot -->
+        <circle cx="150" cy="55" r="7" class="connector-dot" />
+      </svg>
+    </div>
+
+    <!-- Heart Text -->
+    <div class="heart-text">
+      <h2>in the heart<br>of London</h2>
+    </div>
+
+    <!-- iQ Logo -->
+    <div class="iq-logo">
+      <div class="i-circle">i</div>
+      <div class="q-circle">Q</div>
+    </div>
+
+    <!-- Feature Labels -->
+    <div class="feature-label bold feat-en-suites">En Suites from £230pw</div>
+    <div class="feature-label feat-study">Dedicated study rooms</div>
+    <div class="feature-label feat-gym">On site gym</div>
+    <div class="feature-label bold feat-tube">Moments from<br>Zone 1 tube links</div>
+    <div class="feature-label bold feat-rents">All inclusive<br>rents</div>
+    <div class="feature-label feat-social">Brilliant<br>social events</div>
+    <div class="feature-label feat-views">Stunning views<br>of London</div>
+    <div class="feature-label feat-design">Stylish design</div>
+    <div class="feature-label bold feat-studios">Private Studios<br>from £250pw</div>
+    <div class="feature-label bold feat-insurance">FREE<br>contents insurance</div>
+    <div class="feature-label feat-secure">Safe and secure</div>
+    <div class="feature-label feat-management">On site management</div>
+    <div class="feature-label bold feat-students">Exclusively for students</div>
+    <div class="feature-label feat-balconies">Balconies</div>
+    <div class="feature-label bold feat-broadband">FREE<br>14Mb broadband</div>
+    <div class="feature-label feat-shower">En suite shower rooms</div>
+  </div>
+
+  <!-- Photos Section -->
+  <div class="photos-section">
+    <div class="photo-placeholder">
+      <div style="width:100%;height:100%;background:linear-gradient(135deg,#3a5a6a,#2a4a5a);display:flex;align-items:center;justify-content:center;color:#aaa;font-size:0.75em;">[Photo: Modern student room with large windows]</div>
+    </div>
+    <div class="photo-placeholder">
+      <div style="width:100%;height:100%;background:linear-gradient(135deg,#4a3a5a,#3a2a4a);display:flex;align-items:center;justify-content:center;color:#aaa;font-size:0.75em;">[Photo: Students socializing in common area]</div>
+    </div>
+    <div class="photo-placeholder">
+      <div style="width:100%;height:100%;background:linear-gradient(135deg,#5a4a6a,#4a3a5a);display:flex;align-items:center;justify-content:center;color:#aaa;font-size:0.75em;">[Photo: Student bedroom with desk and purple wall]</div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p>Find out more info online at</p>
+    <a href="https://www.loveiq.co.uk" class="website">www.loveiq.co.uk</a>
+    <div class="locations">
+      iQ Shoreditch <span>|</span> iQ Hoxton
+    </div>
+    <p class="disclaimer">*Journey time to Old Street Tube Station as stated by tfl.gov.uk</p>
+    <div class="qr-code">
+      <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="2" width="16" height="16" fill="none" stroke="#333" stroke-width="2"/>
+        <rect x="6" y="6" width="8" height="8" fill="#333"/>
+        <rect x="42" y="2" width="16" height="16" fill="none" stroke="#333" stroke-width="2"/>
+        <rect x="46" y="6" width="8" height="8" fill="#333"/>
+        <rect x="2" y="42" width="16" height="16" fill="none" stroke="#333" stroke-width="2"/>
+        <rect x="6" y="46" width="8" height="8" fill="#333"/>
+        <rect x="22" y="2" width="4" height="4" fill="#333"/>
+        <rect x="30" y="2" width="4" height="4" fill="#333"/>
+        <rect x="22" y="10" width="4" height="4" fill="#333"/>
+        <rect x="26" y="6" width="4" height="4" fill="#333"/>
+        <rect x="34" y="10" width="4" height="4" fill="#333"/>
+        <rect x="22" y="22" width="4" height="4" fill="#333"/>
+        <rect x="30" y="22" width="4" height="4" fill="#333"/>
+        <rect x="38" y="22" width="4" height="4" fill="#333"/>
+        <rect x="46" y="22" width="4" height="4" fill="#333"/>
+        <rect x="54" y="22" width="4" height="4" fill="#333"/>
+        <rect x="22" y="30" width="4" height="4" fill="#333"/>
+        <rect x="34" y="30" width="4" height="4" fill="#333"/>
+        <rect x="42" y="30" width="4" height="4" fill="#333"/>
+        <rect x="50" y="30" width="4" height="4" fill="#333"/>
+        <rect x="22" y="38" width="4" height="4" fill="#333"/>
+        <rect x="30" y="38" width="4" height="4" fill="#333"/>
+        <rect x="38" y="38" width="4" height="4" fill="#333"/>
+        <rect x="46" y="38" width="4" height="4" fill="#333"/>
+        <rect x="54" y="38" width="4" height="4" fill="#333"/>
+        <rect x="22" y="46" width="4" height="4" fill="#333"/>
+        <rect x="34" y="46" width="4" height="4" fill="#333"/>
+        <rect x="42" y="46" width="4" height="4" fill="#333"/>
+        <rect x="54" y="46" width="4" height="4" fill="#333"/>
+        <rect x="22" y="54" width="4" height="4" fill="#333"/>
+        <rect x="30" y="54" width="4" height="4" fill="#333"/>
+        <rect x="38" y="54" width="4" height="4" fill="#333"/>
+        <rect x="46" y="54" width="4" height="4" fill="#333"/>
+        <rect x="54" y="54" width="4" height="4" fill="#333"/>
+      </svg>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>window.MathJax={tex:{inlineMath:[["$","$"]],displayMath:[["$$","$$"]]}};</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Architecture Center</title>
+    <style>
+        :root {
+            --azure-blue: #0078d4;
+            --azure-dark-blue: #005a9e;
+            --text-color: #333;
+            --light-gray: #f3f2f1;
+            --border-color: #e1dfdd;
+            --font-family: 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            color: var(--text-color);
+            line-height: 1.5;
+            background-color: #fff;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--azure-blue);
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* Top Banner */
+        .top-banner {
+            background-color: #000;
+            color: #fff;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .banner-left h1 {
+            font-size: 28px;
+            font-weight: 400;
+            margin-bottom: 5px;
+        }
+
+        .banner-left p {
+            font-size: 14px;
+            color: #ccc;
+        }
+
+        .banner-btn {
+            background-color: #fff;
+            color: #000;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .banner-graphic {
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            width: 300px;
+            background: linear-gradient(90deg, transparent, rgba(0,255,0,0.2));
+            /* Placeholder for the pixel art graphic */
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="80" viewBox="0 0 300 80"><rect width="300" height="80" fill="%231a1a1a"/><rect x="200" y="20" width="20" height="20" fill="%2300ff00"/><rect x="220" y="20" width="20" height="20" fill="%2300cc00"/><rect x="240" y="20" width="20" height="20" fill="%23009900"/><rect x="260" y="20" width="20" height="20" fill="%23006600"/><rect x="280" y="20" width="20" height="20" fill="%23003300"/><rect x="200" y="40" width="20" height="20" fill="%2300ffff"/><rect x="220" y="40" width="20" height="20" fill="%2300cccc"/><rect x="240" y="40" width="20" height="20" fill="%23009999"/><rect x="260" y="40" width="20" height="20" fill="%23006666"/><rect x="280" y="40" width="20" height="20" fill="%23003333"/><rect x="200" y="60" width="20" height="20" fill="%23ff00ff"/><rect x="220" y="60" width="20" height="20" fill="%23cc00cc"/><rect x="240" y="60" width="20" height="20" fill="%23990099"/><rect x="260" y="60" width="20" height="20" fill="%23660066"/><rect x="280" y="60" width="20" height="20" fill="%23330033"/></svg>');
+            background-size: cover;
+            opacity: 0.8;
+        }
+
+        .close-banner {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Main Navigation */
+        .main-nav {
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 40px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 18px;
+            color: #000;
+        }
+        
+        .logo svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+            color: #605e5c;
+        }
+
+        .nav-links span {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-size: 14px;
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 15px;
+            color: #605e5c;
+        }
+
+        /* Sub Navigation */
+        .sub-nav {
+            background-color: #fff;
+            padding: 10px 40px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+
+        .sub-nav-links {
+            display: flex;
+            gap: 20px;
+            color: #333;
+        }
+        
+        .sub-nav-links span {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .sub-nav-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-outline {
+            border: 1px solid var(--azure-blue);
+            color: var(--azure-blue);
+            padding: 6px 12px;
+            border-radius: 2px;
+            font-size: 13px;
+        }
+
+        .btn-primary {
+            background-color: var(--azure-blue);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 2px;
+            font-size: 13px;
+            border: none;
+        }
+
+        /* Hero Section */
+        .hero {
+            background-color: var(--azure-blue);
+            color: white;
+            padding: 40px;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .hero h1 {
+            font-size: 36px;
+            font-weight: 300;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            font-size: 16px;
+            max-width: 800px;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        /* Cards Section */
+        .cards-container {
+            padding: 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .card {
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            background: white;
+            transition: box-shadow 0.2s;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .card-content h3 {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #605e5c;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .card-content a {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        /* Workloads Section */
+        .section-title {
+            padding: 40px 40px 10px 40px;
+            font-size: 28px;
+            font-weight: 400;
+            color: #000;
+        }
+
+        .section-subtitle {
+            padding: 0 40px 30px 40px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .workloads-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 0 40px 60px 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .workload-col {
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 25px;
+            background: white;
+        }
+
+        .workload-icon {
+            font-size: 32px;
+            color: var(--azure-blue);
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .workload-col h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .workload-col ul li {
+            margin-bottom: 8px;
+        }
+
+        .workload-col ul li a {
+            font-size: 14px;
+            color: var(--azure-blue);
+        }
+
+        /* Technology Areas Section */
+        .tech-areas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 0 40px 60px 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .tech-col h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .tech-col ul li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        
+        .tech-col ul li a {
+            font-size: 14px;
+            color: var(--azure-blue);
+        }
+
+        .tech-icon {
+            font-size: 12px;
+            color: var(--azure-blue);
+            margin-top: 3px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .top-banner {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            .banner-graphic {
+                display: none;
+            }
+            .main-nav, .sub-nav {
+                flex-wrap: wrap;
+                height: auto;
+                padding: 15px 20px;
+            }
+            .nav-links, .sub-nav-links {
+                display: none; /* Simplify for mobile view */
+            }
+            .hero {
+                padding: 30px 20px;
+            }
+            .cards-container, .workloads-grid, .tech-areas-grid {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Banner -->
+    <div class="top-banner">
+        <div class="banner-left">
+            <h1>Microsoft Build 2026</h1>
+            <p>June 2-3, 2026</p>
+        </div>
+        <a href="#" class="banner-btn">Learn more &gt;</a>
+        <button class="close-banner">&times;</button>
+        <div class="banner-graphic"></div>
+    </div>
+
+    <!-- Main Navigation -->
+    <nav class="main-nav">
+        <div class="nav-left">
+            <div class="logo">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 3.449L9.75 2.1v9.451L0 12.799V3.449zm10.949-.95L24 0v10.95l-13.05 1.75V2.499zm0 13.8L24 24v-8.2l-13.05 1.75v6.451zm-10.95 3.15L0 20.551V11.2l9.75 1.3v9.451z" fill="#f25022"/>
+                    <path d="M0 3.449L9.75 2.1v9.451L0 12.799V3.449zm10.949-.95L24 0v10.95l-13.05 1.75V2.499z" fill="#7fba00"/>
+                    <path d="M24 11.2l-13.05 1.75v6.451L24 24v-8.2zm-13.05-9.1L0 3.449v9.35l9.75-1.3V2.1z" fill="#00a4ef"/>
+                    <path d="M9.75 11.551L24 9.6V0L9.75 2.1v9.451zM0 12.799l9.75-1.3V2.1L0 3.449v9.35zm10.949 9.15L24 24v-8.2l-13.05-1.75v6.451z" fill="#ffb900"/>
+                </svg>
+                Learn
+            </div>
+            <div class="nav-links">
+                <span>Documentation &#9662;</span>
+                <span>Training & Labs &#9662;</span>
+                <span>Q&A &#9662;</span>
+                <span>Topics &#9662;</span>
+            </div>
+        </div>
+        <div class="nav-right">
+            <div class="nav-icons">
+                <span>&#128269;</span> <!-- Search -->
+            </div>
+            <span>Sign in</span>
+        </div>
+    </nav>
+
+    <!-- Sub Navigation -->
+    <div class="sub-nav">
+        <div class="sub-nav-links">
+            <span><strong>Azure</strong></span>
+            <span>Products &#9662;</span>
+            <span>Architecture &#9662;</span>
+            <span>Migration</span>
+            <span>Develop &#9662;</span>
+            <span>Learn Azure &#9662;</span>
+            <span>Troubleshooting</span>
+            <span>Resources &#9662;</span>
+        </div>
+        <div class="sub-nav-actions">
+            <a href="#" class="btn-outline">Portal</a>
+            <button class="btn-primary">Get started with Azure</button>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <h1>Azure Architecture Center</h1>
+        <p>Design solutions on Azure by using established patterns and practices. Azure Architecture Center is a catalog of solution ideas, example workloads, reference architectures, technology decision guides, and architecture guides for Azure workloads.</p>
+    </header>
+
+    <!-- Feature Cards -->
+    <div class="cards-container">
+        <!-- Card 1 -->
+        <div class="card">
+            <div class="card-icon" style="color: #e83e8c;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            </div>
+            <div class="card-content">
+                <h3>Architecture</h3>
+                <a href="#">Browse Azure architectures</a>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card">
+            <div class="card-icon" style="color: #fd7e14;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            </div>
+            <div class="card-content">
+                <h3>Concept</h3>
+                <a href="#">Build by using application architecture fundamentals</a>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card">
+            <div class="card-icon" style="color: #fd7e14;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            </div>
+            <div class="card-content">
+                <h3>Reference</h3>
+                <a href="#">Make technology choices</a>
+            </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="card">
+            <div class="card-icon" style="color: #fd7e14;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            </div>
+            <div class="card-content">
+                <h3>Concept</h3>
+                <a href="#">Learn cloud design patterns</a>
+            </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="card">
+            <div class="card-icon" style="color: #d63384;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            </div>
+            <div class="card-content">
+                <h3>What's New</h3>
+                <a href="#">See what's new and updated</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Architect Workloads Section -->
+    <h2 class="section-title">Architect workloads on Azure</h2>
+    <p class="section-subtitle">Explore best practices and patterns for building workloads on Microsoft Azure.</p>
+
+    <div class="workloads-grid">
+        <!-- Col 1 -->
+        <div class="workload-col">
+            <span class="workload-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"></path><path d="M13 13l6 6"></path></svg>
+            </span>
+            <h3>Design for the cloud</h3>
+            <ul>
+                <li><a href="#">Learn fundamental architecture styles</a></li>
+                <li><a href="#">Use best practices in cloud applications</a></li>
+                <li><a href="#">Avoid performance anti-patterns</a></li>
+                <li><a href="#">Use responsible engineering practices</a></li>
+                <li><a href="#">Use cloud design patterns</a></li>
+            </ul>
+        </div>
+
+        <!-- Col 2 -->
+        <div class="workload-col">
+            <span class="workload-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            </span>
+            <h3>Choose the right technology</h3>
+            <ul>
+                <li><a href="#">Choose a compute service</a></li>
+                <li><a href="#">Choose a container service</a></li>
+                <li><a href="#">Choose a data store</a></li>
+                <li><a href="#">Choose AI services</a></li>
+                <li><a href="#">Choose a messaging service</a></li>
+            </ul>
+        </div>
+
+        <!-- Col 3 -->
+        <div class="workload-col">
+            <span class="workload-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            </span>
+            <h3>Implement an Azure landing zone</h3>
+            <ul>
+                <li><a href="#">Deploy a platform landing zone</a></li>
+                <li><a href="#">Automate through subscription vending</a></li>
+                <li><a href="#">Application landing zone solutions</a></li>
+            </ul>
+        </div>
+
+        <!-- Col 4 -->
+        <div class="workload-col">
+            <span class="workload-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            </span>
+            <h3>Specialized scenarios</h3>
+            <ul>
+                <li><a href="#">Architecture for startups</a></li>
+                <li><a href="#">Architecture for SaaS and multitenant applications</a></li>
+                <li><a href="#">Build mission-critical workloads</a></li>
+                <li><a href="#">Azure for AWS professionals</a></li>
+                <li><a href="#">Azure for Google Cloud professionals</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Technology Areas Section -->
+    <h2 class="section-title">Technology areas</h2>
+    <p class="section-subtitle">Explore architectures and guides for different technologies.</p>
+
+    <div class="tech-areas-grid">
+        <!-- Col 1 -->
+        <div class="tech-col">
+            <h3>Popular articles</h3>
+            <ul>
+                <li><span class="tech-icon">&#128196;</span> <a href="#">Microsoft Foundry chat baseline architecture</a></li>
+                <li><span class="tech-icon">&#128196;</span> <a href="#">Develop and optimize a RAG implementation</a></li>
+                <li><span class="tech-icon">&#128196;</span> <a href="#">AI agent orchestration patterns</a></li>
+                <li><span class="tech-icon">&#128196;</span> <a href="#">Cloud design patterns</a></li>
+                <li><span class="tech-icon">&#128196;</span> <a href="#">Hub-spoke network topology</a></li>
+            </ul>
+        </div>
+
+        <!-- Col 2 -->
+        <div class="tech-col">
+            <h3>AI & Machine Learning</h3>
+            <ul>
+                <li><span class="tech-icon">&#128196;</span> <a href="#">AI architecture design</a></li>
+                <li><span class="tech-icon">&#128196;</span> <a href="#">Microsoft Foundry chat baseline architecture</a></li>
+                <li><span class="tech-icon">&#128196;</span> <a href="#">Build a generative AI gateway</a></li>
+                <li><span class="tech-icon">&#128196;</span> <a href="#">AI agent orchestration patterns</a></li>
+                <li><span class="tech-icon">&#128196;</span> <a href="#">Develop and optimize a RAG implementation</a></li>
+            </ul>
+        </div>
+
+        <!-- Col 3 -->
+        <div class="tech-col">
+            <h3>Analytics</h3>
+            <ul>
+                <li><span class="tech-icon">&#128196;</span> <a href="#">Analytics architecture design</a></li>
+                <li><span class="tech-icon">&#128196;</span> <a href="#">Choose a data analytics technology</a></li>
+                <li><span class="tech-icon">&#128196;</span> <a href="#">Choose a Microsoft Fabric deployment pattern</a></li>
+                <li><span class="tech-icon">&#128196;</span> <a href="#">Analytics end-to-end with Microsoft Fabric</a></li>
+                <li><span class="tech-icon">&#128196;</span> <a href="#">Enterprise BI with Microsoft Fabric</a></li>
+            </ul>
+        </div>
+
+        <!-- Col 4 -->
+        <div class="tech-col">
+            <h3>Compute</h3>
+            <ul>
+                <li><span class="tech-icon">&#128196;</span> <a href="#">Choose an Azure compute service</a></li>
+                <li><span class="tech-icon">&#128196;</span> <a href="#">Run a Linux VM on Azure</a></li>
+                <li><span class="tech-icon">&#128196;</span> <a href="#">Run a Windows VM on Azure</a></li>
+                <li><span class="tech-icon">&#128196;</span> <a href="#">Azure VM baseline architecture</a></li>
+                <li><span class="tech-icon">&#128196;</span> <a href="#">Understand multi-region compute balancing</a></li>
+            </ul>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RFC 9101 - OAuth JAR - Page 4</title>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$']],
+    displayMath: [['$$', '$$']]
+  }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+  html { background: #f0f0f0; }
+  body {
+    font-family: "Noto Serif", "Times New Roman", Georgia, serif;
+    font-size: 12pt;
+    line-height: 1.45;
+    color: #000;
+    margin: 0;
+  }
+  .page {
+    width: 8.5in;
+    min-height: 11in;
+    margin: 0 auto;
+    background: #fff;
+    padding: 0.75in 0.9in 0.6in 0.9in;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+  }
+  .runhead, .runfoot {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 11.5pt;
+  }
+  .runhead {
+    border-bottom: 1px solid #d8d8d8;
+    padding-bottom: 0.22in;
+    margin-bottom: 0.75in;
+  }
+  .runfoot {
+    border-top: 1px solid #d8d8d8;
+    padding-top: 0.2in;
+    margin-top: 0.5in;
+  }
+  .runhead .center, .runfoot .center { text-align: center; }
+  .content { flex: 1 1 auto; }
+  h1 {
+    font-size: 20pt;
+    font-weight: bold;
+    margin: 0 0 0.3em 0;
+  }
+  h1 .num { margin-right: 0.55em; }
+  p { margin: 0 0 1.05em 0; }
+  code, pre, .mono {
+    font-family: "DejaVu Sans Mono", "Consolas", monospace;
+    font-size: 10.5pt;
+  }
+  pre.artwork {
+    background: #f7f7f7;
+    border: 1px solid #eeeeee;
+    padding: 14px 14px 14px 60px;
+    margin: 0 0 1.2em 0;
+    line-height: 1.5;
+    white-space: pre;
+    overflow-x: auto;
+  }
+  ol.alpha, ol.num {
+    list-style: none;
+    margin: 1.5em 0 1.4em 0;
+    padding: 0;
+  }
+  ol.alpha > li, ol.num > li {
+    position: relative;
+    padding-left: 5.6em;
+    margin-bottom: 0.15em;
+  }
+  ol.alpha > li > .lbl, ol.num > li > .lbl {
+    position: absolute;
+    left: 0;
+    width: 5em;
+  }
+  a { color: #2222cc; text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="runhead">
+    <div class="left">RFC 9101</div>
+    <div class="center">OAuth JAR</div>
+    <div class="right">August 2021</div>
+  </div>
+
+  <div class="content">
+
+    <h1><span class="num">1.</span>Introduction</h1>
+
+    <p>The authorization request in <a href="#">OAuth 2.0</a> [<a href="#">RFC6749</a>] utilizes query parameter serialization and is typically sent through user agents such as web browsers.</p>
+
+    <p>For example, the parameters <code>response_type</code>, <code>client_id</code>, <code>state</code>, and <code>redirect_uri</code> are encoded in the URI of the request:</p>
+
+<pre class="artwork">GET /authorize?response_type=code&amp;client_id=s6BhdRkqt3&amp;state=xyz
+&amp;redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb HTTP/1.1
+Host: server.example.com</pre>
+
+    <p>While it is easy to implement, the encoding in the URI does not allow application-layer security to be used to provide confidentiality and integrity protection. While TLS is used to offer communication security between the client and the user agent as well as the user agent and the authorization server, TLS sessions are terminated in the user agent. In addition, TLS sessions may be terminated prematurely at some middlebox (such as a load balancer).</p>
+
+    <p>As a result, the authorization request of [<a href="#">RFC6749</a>] has shortcomings in that:</p>
+
+    <ol class="alpha">
+      <li><span class="lbl">(a)</span>the communication through the user agents is not integrity protected, and thus, the parameters can be tainted (integrity protection failure);</li>
+      <li><span class="lbl">(b)</span>the source of the communication is not authenticated (source authentication failure);</li>
+      <li><span class="lbl">(c)</span>the communication through the user agents can be monitored (containment/ confidentiality failure).</li>
+    </ol>
+
+    <p>Due to these inherent weaknesses, several attacks against the protocol, such as redirection URI rewriting, have been identified.</p>
+
+    <p>The use of application-layer security mitigates these issues.</p>
+
+    <p>The use of application-layer security allows requests to be prepared by a trusted third party so that a client application cannot request more permissions than previously agreed upon.</p>
+
+    <p>Furthermore, passing the request by reference allows the reduction of over-the-wire overhead.</p>
+
+    <p>The <a href="#">JWT</a> [<a href="#">RFC7519</a>] encoding has been chosen because of:</p>
+
+    <ol class="num">
+      <li><span class="lbl">(1)</span>its close relationship with JSON, which is used as OAuth's response format</li>
+      <li><span class="lbl">(2)</span>its developer friendliness due to its textual nature</li>
+      <li><span class="lbl">(3)</span>its relative compactness compared to XML</li>
+      <li><span class="lbl">(4)</span>its development status as a Proposed Standard, along with the associated signing and encryption methods [<a href="#">RFC7515</a>] [<a href="#">RFC7516</a>]</li>
+    </ol>
+
+  </div>
+
+  <div class="runfoot">
+    <div class="left">Sakimura, et al.</div>
+    <div class="center">Standards Track</div>
+    <div class="right">Page 4</div>
+  </div>
+
+</div>
+</body>
+</html>

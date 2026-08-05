@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Investigating the Impact of Magnetic Fields on Superconductivity</title>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+      color: #30323a;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      min-width: 1100px;
+    }
+
+    .poster {
+      width: 1728px;
+      min-height: 2304px;
+      margin: 0 auto;
+      overflow: hidden;
+      background: #ffffff;
+    }
+
+    .hero {
+      height: 540px;
+      position: relative;
+      overflow: hidden;
+      background: #1745ad;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: -160px;
+      right: 205px;
+      width: 450px;
+      height: 570px;
+      background: rgba(47, 86, 182, 0.42);
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 57% 74%);
+    }
+
+    .hero-content {
+      position: absolute;
+      z-index: 3;
+      left: 128px;
+      top: 128px;
+      width: 1060px;
+    }
+
+    .hero h1 {
+      margin: 0;
+      color: #fffdf7;
+      font-size: 54px;
+      line-height: 73px;
+      font-weight: 700;
+      letter-spacing: 0.1px;
+    }
+
+    .authors {
+      margin-top: 13px;
+      color: #83cf76;
+      font-size: 34px;
+      line-height: 42px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .apparatus {
+      position: absolute;
+      z-index: 2;
+      top: 0;
+      right: 35px;
+      width: 515px;
+      height: 500px;
+    }
+
+    .apparatus::before {
+      content: "";
+      position: absolute;
+      top: -105px;
+      right: -245px;
+      width: 680px;
+      height: 680px;
+      border: 3px solid #83cf76;
+      border-radius: 50%;
+    }
+
+    .glow {
+      position: absolute;
+      left: 16px;
+      top: 292px;
+      width: 476px;
+      height: 102px;
+      border-radius: 8px;
+      background: linear-gradient(180deg, #ffdd57 0%, #ff9c22 55%, #e6a13c 100%);
+      box-shadow: 0 0 28px 18px rgba(255, 190, 45, 0.45);
+      transform: skewX(-4deg);
+    }
+
+    .base {
+      position: absolute;
+      left: 7px;
+      top: 314px;
+      width: 478px;
+      height: 105px;
+      border-radius: 10px;
+      background: linear-gradient(145deg, #e1e4e5 0%, #a4a7a8 57%, #66686b 100%);
+      transform: perspective(600px) rotateX(17deg) skewX(-4deg);
+      box-shadow: 0 15px 8px rgba(0, 0, 0, 0.18);
+    }
+
+    .upper {
+      position: absolute;
+      left: 30px;
+      top: 111px;
+      width: 448px;
+      height: 245px;
+      border-radius: 15px;
+      background: linear-gradient(145deg, #e8eaeb 0%, #b9bdbe 48%, #747779 100%);
+      transform: perspective(650px) rotateX(-2deg) skewX(-1deg);
+      box-shadow: 0 16px 8px rgba(0, 0, 0, 0.22);
+    }
+
+    .upper::before {
+      content: "";
+      position: absolute;
+      left: 107px;
+      top: 29px;
+      width: 225px;
+      height: 113px;
+      border-radius: 50%;
+      border: 18px solid #8b451e;
+      background:
+        radial-gradient(ellipse at center, #56575a 0 40%, #1b1c1e 42% 61%, #bc632d 63% 71%, #6d2c16 73% 100%);
+      box-shadow:
+        0 0 0 8px #ef812d,
+        0 0 28px 15px rgba(255, 156, 27, 0.75);
+    }
+
+    .upper::after {
+      content: "";
+      position: absolute;
+      left: 25px;
+      top: 25px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #252627;
+      box-shadow:
+        368px 2px 0 #252627,
+        190px 173px 0 #252627,
+        4px 175px 0 #252627;
+    }
+
+    .caption {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .content {
+      height: 1450px;
+      padding-top: 105px;
+      background: #ffffff;
+    }
+
+    .columns {
+      width: 1474px;
+      height: 1345px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 680px 682px;
+      column-gap: 112px;
+      align-items: start;
+    }
+
+    h2 {
+      margin: 0;
+      color: #10458f;
+      font-size: 34px;
+      line-height: 42px;
+      font-weight: 700;
+    }
+
+    p {
+      margin: 0;
+      font-size: 24px;
+      line-height: 31.5px;
+      font-weight: 400;
+    }
+
+    .left-column .intro-text {
+      margin-top: 18px;
+    }
+
+    .methodology {
+      margin-top: 64px;
+    }
+
+    .methodology-text {
+      margin-top: 18px;
+    }
+
+    .results {
+      margin-top: 54px;
+    }
+
+    .result-list {
+      margin-top: 27px;
+      display: flex;
+      flex-direction: column;
+      gap: 35px;
+    }
+
+    .result-item {
+      height: 75px;
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .result-icon {
+      position: relative;
+      flex: 0 0 74px;
+      width: 74px;
+      height: 74px;
+      border-radius: 50%;
+      background: #83cf67;
+    }
+
+    .result-text {
+      margin-left: 34px;
+      padding-top: 7px;
+      font-size: 24px;
+      line-height: 31px;
+    }
+
+    .thermometer::before,
+    .thermometer::after {
+      content: "";
+      position: absolute;
+      top: 18px;
+      width: 9px;
+      height: 35px;
+      border: 2px solid #315044;
+      border-radius: 7px;
+    }
+
+    .thermometer::before {
+      left: 25px;
+    }
+
+    .thermometer::after {
+      left: 42px;
+    }
+
+    .thermometer span::before,
+    .thermometer span::after {
+      content: "";
+      position: absolute;
+      width: 9px;
+      height: 9px;
+      border: 2px solid #315044;
+      border-radius: 50%;
+      top: 48px;
+      background: #83cf67;
+    }
+
+    .thermometer span::before {
+      left: 25px;
+    }
+
+    .thermometer span::after {
+      left: 42px;
+    }
+
+    .magnet::before {
+      content: "∪";
+      position: absolute;
+      left: 18px;
+      top: 15px;
+      color: #315044;
+      font-size: 47px;
+      line-height: 45px;
+      transform: rotate(-43deg);
+      font-family: Arial, sans-serif;
+    }
+
+    .magnet::after {
+      content: "";
+      position: absolute;
+      left: 29px;
+      top: 22px;
+      width: 21px;
+      height: 7px;
+      border-top: 2px solid #315044;
+      border-bottom: 2px solid #315044;
+      transform: rotate(-43deg);
+    }
+
+    .magnifier::before {
+      content: "";
+      position: absolute;
+      left: 20px;
+      top: 17px;
+      width: 27px;
+      height: 27px;
+      border: 2px solid #315044;
+      border-radius: 50%;
+    }
+
+    .magnifier::after {
+      content: "";
+      position: absolute;
+      width: 25px;
+      height: 2px;
+      left: 43px;
+      top: 48px;
+      background: #315044;
+      transform: rotate(48deg);
+      transform-origin: left center;
+    }
+
+    .arrows::before,
+    .arrows::after {
+      content: "↗";
+      position: absolute;
+      color: #315044;
+      font-size: 29px;
+      line-height: 25px;
+    }
+
+    .arrows::before {
+      left: 13px;
+      top: 15px;
+      transform: rotate(90deg);
+    }
+
+    .arrows::after {
+      right: 12px;
+      bottom: 15px;
+      transform: rotate(-90deg);
+    }
+
+    .right-column h2 {
+      line-height: 45px;
+    }
+
+    .data-table {
+      width: 682px;
+      margin-top: 29px;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 21px;
+      line-height: 26px;
+      color: #30323a;
+    }
+
+    .data-table th {
+      height: 95px;
+      padding: 12px 12px;
+      background: #82c967;
+      border-right: 1px solid rgba(255,255,255,0.25);
+      font-size: 22px;
+      line-height: 27px;
+      font-weight: 700;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .data-table th:last-child {
+      border-right: 0;
+    }
+
+    .data-table td {
+      height: 56px;
+      padding: 12px 10px;
+      border-bottom: 1px solid #a8c99b;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .discussion {
+      margin-top: 67px;
+    }
+
+    .discussion-text {
+      margin-top: 18px;
+    }
+
+    .conclusion {
+      margin-top: 56px;
+    }
+
+    .conclusion-text {
+      margin-top: 18px;
+    }
+
+    .references {
+      height: 314px;
+      padding-top: 69px;
+      background: #f6f7fb;
+    }
+
+    .references-inner {
+      width: 1474px;
+      margin: 0 auto;
+    }
+
+    .references h2 {
+      font-size: 32px;
+      line-height: 40px;
+    }
+
+    .reference-list {
+      margin: 15px 0 0 0;
+      padding-left: 24px;
+      color: #30323a;
+      font-size: 23px;
+      line-height: 30px;
+    }
+
+    .reference-list li {
+      padding-left: 0;
+      margin: 0;
+    }
+
+    .reference-list li::marker {
+      color: #83c96e;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <main class="poster">
+    <header class="hero">
+      <div class="hero-content">
+        <h1>
+          Investigating the Impact of Magnetic<br>
+          Fields on the Superconductivity of<br>
+          High-Temperature Ceramics
+        </h1>
+        <div class="authors">Dr. Alice Green, Dr. Patrick Green, Leslie Thomas, Diego Ruiz</div>
+      </div>
+
+      <figure class="apparatus placeholder" aria-label="Illustration of a magnetic field apparatus">
+        <div class="glow"></div>
+        <div class="base"></div>
+        <div class="upper"><span></span></div>
+        <figcaption class="caption">[Illustration: magnetic field apparatus]</figcaption>
+      </figure>
+    </header>
+
+    <section class="content">
+      <div class="columns">
+        <div class="left-column">
+          <section class="introduction">
+            <h2>Introduction</h2>
+            <p class="intro-text">
+              Superconductivity is a state of zero electrical resistance<br>
+              occurring at low temperatures in certain materials. High-<br>
+              temperature superconductors (HTS), such as yttrium barium<br>
+              copper oxide (YBCO), exhibit superconductivity above the<br>
+              boiling point of liquid nitrogen. This study explores how varying<br>
+              magnetic fields affect the superconducting properties of YBCO<br>
+              ceramics, providing insight into their practical applications in<br>
+              energy transmission and magnetic levitation.
+            </p>
+          </section>
+
+          <section class="methodology">
+            <h2>Methodology</h2>
+            <p class="methodology-text">
+              We synthesized YBCO ceramic samples with varying<br>
+              compositions of yttrium (Y), barium (Ba), copper (Cu), and<br>
+              oxygen (O). Using a cryostat, we cooled the samples to<br>
+              temperatures ranging from 77 K to 90 K. Magnetic fields<br>
+              ranging from 0 to 5 Tesla were applied perpendicularly and<br>
+              parallel to the sample surface. The critical temperature was<br>
+              determined by measuring the resistivity of the samples as a<br>
+              function of temperature in the presence of the magnetic field.<br>
+              The data were analyzed to find the values of Tc and Hc2
+            </p>
+          </section>
+
+          <section class="results">
+            <h2>Results</h2>
+            <div class="result-list">
+              <div class="result-item">
+                <div class="result-icon thermometer"><span></span></div>
+                <div class="result-text">
+                  The superconducting transition temperature<br>
+                  decreased as the magnetic field increased
+                </div>
+              </div>
+
+              <div class="result-item">
+                <div class="result-icon magnet"></div>
+                <div class="result-text">
+                  The rate of decrease was more pronounced for<br>
+                  higher magnetic field strengths
+                </div>
+              </div>
+
+              <div class="result-item">
+                <div class="result-icon magnifier"></div>
+                <div class="result-text">
+                  The upper critical field for YBCO was found<br>
+                  to be 4.8 Tesla when the field was applied
+                </div>
+              </div>
+
+              <div class="result-item">
+                <div class="result-icon arrows"></div>
+                <div class="result-text">
+                  When the magnetic field was applied perpendicular<br>
+                  to the surface, Hc2 increased to 5.1 Tesla
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="right-column">
+          <section class="temperature-data">
+            <h2>
+              Critical Temperature (Tc) vs. Magnetic<br>
+              Field Strength for Perpendicular and<br>
+              Parallel Orientations
+            </h2>
+
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Field Strength<br>(T)</th>
+                  <th>Tc (Parallel)<br>(K)</th>
+                  <th>Tc (Perpendicular)<br>(K)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>0</td>
+                  <td>90</td>
+                  <td>90.0</td>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>88</td>
+                  <td>87.5</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>86</td>
+                  <td>85.0</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>84</td>
+                  <td>82.5</td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>82</td>
+                  <td>80.0</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section class="discussion">
+            <h2>Discussion</h2>
+            <p class="discussion-text">
+              Our results demonstrate that magnetic fields significantly<br>
+              alter the superconducting properties of YBCO ceramics, with<br>
+              field orientation and strength playing critical roles in Tc and<br>
+              Hc2. The anisotropic behavior observed in the samples<br>
+              suggests that further research is needed to optimize YBCO<br>
+              materials for practical applications in magnetic environments,<br>
+              such as in high-speed magnetic levitation trains and power<br>
+              transmission lines.
+            </p>
+          </section>
+
+          <section class="conclusion">
+            <h2>Conclusion</h2>
+            <p class="conclusion-text">
+              Magnetic field-induced suppression of superconductivity<br>
+              in high-temperature ceramic superconductors can be<br>
+              mitigated by adjusting the composition and the orientation<br>
+              of the magnetic field relative to the sample. Future studies<br>
+              should focus on enhancing flux pinning mechanisms to<br>
+              extend the functional temperature range of YBCO<br>
+              superconductors in magnetic fields.
+            </p>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <footer class="references">
+      <div class="references-inner">
+        <h2>References</h2>
+        <ul class="reference-list">
+          <li>
+            Zhang, X., &amp; Wang, L. (2021). Magnetic field effects on the critical temperature of high-temperature superconducting ceramics. Journal<br>
+            of Superconductivity and Novel Magnetism, 34(5), 455-467. https://doi.org/10.1234/jsnm.2021.0506
+          </li>
+          <li>
+            Patel, R. S., &amp; Kumar, V. (2020). Exploring the role of magnetic fields in enhancing the superconductivity of ceramic materials. Materials<br>
+            Science and Engineering Reports, 29(8), 1123-1136. https://doi.org/10.5678/mserep.2020.0804
+          </li>
+        </ul>
+      </div>
+    </footer>
+  </main>
+</body>
+</html>

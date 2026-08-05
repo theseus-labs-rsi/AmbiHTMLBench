@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Shared Propensity Towards Food &amp; Alcohol</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    background: #d8d8d8;
+    background-image:
+      linear-gradient(135deg, #cfcfcf 25%, transparent 25%),
+      linear-gradient(225deg, #cfcfcf 25%, transparent 25%),
+      linear-gradient(315deg, #cfcfcf 25%, transparent 25%),
+      linear-gradient(45deg, #cfcfcf 25%, transparent 25%);
+    background-size: 26px 26px;
+    color: #1a1a1a;
+  }
+  .poster {
+    width: 1056px;
+    margin: 0 auto;
+    padding: 22px 40px 10px 40px;
+  }
+  h1.poster-title {
+    font-size: 41px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-align: center;
+    margin: 12px 0 26px 0;
+    text-transform: uppercase;
+    font-family: "Arial Narrow", Arial, sans-serif;
+  }
+  .columns {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+  }
+  .col { flex: 1 1 0; }
+  .col.left { flex: 0 0 313px; }
+  .col.mid  { flex: 0 0 313px; }
+  .col.right{ flex: 0 0 313px; }
+
+  .band {
+    background: #111;
+    color: #fff;
+    text-align: center;
+    font-size: 23px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 10px 8px;
+    font-family: "Arial Narrow", Arial, sans-serif;
+  }
+  .card {
+    background: #fff;
+    padding: 18px 18px 22px 18px;
+  }
+  .card p { font-size: 12.5px; line-height: 1.5; margin: 0 0 12px 0; }
+  .card ul { font-size: 12.5px; line-height: 1.5; margin: 6px 0 12px 0; padding-left: 22px; }
+  .card li { margin-bottom: 4px; }
+
+  /* stat rows */
+  .stat-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 14px 0;
+  }
+  .stat-num {
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1;
+    min-width: 108px;
+    font-family: "Arial Narrow", Arial, sans-serif;
+  }
+  .stat-icon {
+    width: 44px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: #444;
+    text-align: center;
+    line-height: 1.05;
+  }
+  .stat-text { font-size: 12.5px; line-height: 1.35; }
+
+  .placeholder {
+    border: 1px dashed #999;
+    color: #555;
+    font-size: 9.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2px;
+    background: #fafafa;
+  }
+
+  .icon-strip {
+    display: flex;
+    justify-content: center;
+    gap: 26px;
+    margin: 14px 0 18px 0;
+  }
+  .icon-strip .placeholder { width: 60px; height: 60px; }
+
+  /* results table */
+  table.results {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10.5px;
+  }
+  table.results th, table.results td {
+    border: 1px solid #333;
+    padding: 6px 7px;
+    text-align: left;
+  }
+  table.results thead th {
+    background: #b9b9b9;
+    font-weight: 700;
+  }
+  table.results th.num, table.results td.num { text-align: left; width: 62px; }
+
+  /* bar chart */
+  .chart-title { font-size: 12px; font-weight: 700; margin: 20px 0 12px 0; }
+  .bar-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 18px;
+    font-size: 10.5px;
+  }
+  .bar-label {
+    width: 58px;
+    text-align: right;
+    padding-right: 8px;
+    color: #222;
+  }
+  .axis-tick { width: 8px; border-top: 1px solid #333; }
+  .bar {
+    height: 15px;
+    border: 1px solid #111;
+  }
+  .bar.b13 { width: 92px;  background: #fff; }
+  .bar.b25 { width: 150px; background: #c9c9c9; }
+  .bar.b42 { width: 214px; background: #4d4d4d; }
+  .bar.b20 { width: 118px; background: #111; }
+  .bar-val { font-size: 13px; font-weight: 700; padding-left: 6px; }
+
+  .sub-h { font-size: 12px; font-weight: 700; margin: 16px 0 4px 0; }
+
+  /* conclusion */
+  .card.conclusion p { font-size: 12.5px; line-height: 1.55; margin-bottom: 16px; }
+  .card.conclusion b { font-weight: 700; }
+
+  /* footer */
+  .footer {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-top: 24px;
+    padding: 6px 4px 14px 4px;
+  }
+  .footer-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .footer-left .placeholder { width: 44px; height: 40px; }
+  .uni {
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1.15;
+  }
+  .footer-right {
+    text-align: right;
+    font-size: 7.5px;
+    line-height: 1.5;
+    color: #222;
+    max-width: 620px;
+  }
+  .footer-right .strong { font-weight: 700; font-size: 8px; }
+</style>
+</head>
+<body>
+<div class="poster">
+
+  <h1 class="poster-title">A Shared Propensity Towards Food &amp; Alcohol</h1>
+
+  <div class="columns">
+
+    <!-- LEFT COLUMN -->
+    <div class="col left">
+      <div class="band">Background</div>
+      <div class="card">
+        <p>Overeating and binge drinking are two of the most common health problems among college students:</p>
+
+        <div class="stat-row">
+          <div class="stat-num">48%</div>
+          <div class="stat-icon placeholder">[Icon: burger]</div>
+          <div class="stat-text">report binge<br>eating problems</div>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat-num">63%</div>
+          <div class="stat-icon placeholder">[Icon: female symbol]</div>
+          <div class="stat-text">of females report binge<br>drinking episodes</div>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat-num">85%</div>
+          <div class="stat-icon placeholder">[Icon: male symbol]</div>
+          <div class="stat-text">of males report binge<br>drinking episodes</div>
+        </div>
+      </div>
+
+      <div class="band" style="margin-top:14px;">Alcohol is like food</div>
+      <div class="card">
+        <div class="icon-strip">
+          <div class="placeholder">[Icon: wine glass]</div>
+          <div class="placeholder">[Icon: fork &amp; knife plate]</div>
+          <div class="placeholder">[Icon: beer glass]</div>
+        </div>
+        <ul>
+          <li>Alcohol is derived from sugar - similar chemical bases as food.</li>
+          <li>Both eating and drinking alcohol activate dopaminergic pathways in the human brain.</li>
+          <li>Addiction models have been applied to both food and alcohol use, as well as correlations between food and alcohol intake conducted in animal studies.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- MIDDLE COLUMN -->
+    <div class="col mid">
+      <div class="band">Method &amp; Measures</div>
+      <div class="card">
+        <p>200 UCLA Undergraduates (76% females, Mean Age - 22.1) filled out an online survey in one-sitting as part of a longer experimental study with the following exclusionary criteria:</p>
+        <ul>
+          <li>Less than 21 years old</li>
+          <li>Self-reported history of eating disorders or substance abuse</li>
+          <li>Abstinence from drinking beer</li>
+          <li>A strict diet and food allergies to experimental stimuli</li>
+        </ul>
+
+        <div class="chart-title"># of times alcohol was consumed with a meal / month:</div>
+
+        <div class="bar-row">
+          <div class="bar-label">Under 5</div><div class="axis-tick"></div>
+          <div class="bar b13"></div><div class="bar-val">13%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">5-10</div><div class="axis-tick"></div>
+          <div class="bar b25"></div><div class="bar-val">25%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">11-20</div><div class="axis-tick"></div>
+          <div class="bar b42"></div><div class="bar-val">42%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Over 20</div><div class="axis-tick"></div>
+          <div class="bar b20"></div><div class="bar-val">20%</div>
+        </div>
+
+        <div class="sub-h">Alcohol Expectancy Questionnaire (AEQ)</div>
+        <p>A questionnaire measuring one's anticipatory effects of drinking and consuming alcohol.</p>
+
+        <div class="sub-h">Dutch Eating Behavior Questionnaire (DEBQ)</div>
+        <p>A questionnaire assessing one's eating behaviors (since expectancies predict consumption, food expectancies are implicitly implied).</p>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="col right">
+      <div class="band">Results</div>
+      <div class="card">
+        <table class="results">
+          <thead>
+            <tr>
+              <th>AEQ / DEBQ</th>
+              <th class="num">External</th>
+              <th class="num">Emotional</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Relaxation &amp; Tension Reduction</td><td class="num">320</td><td class="num">240</td></tr>
+            <tr><td>Arousal &amp; Aggression</td><td class="num">240</td><td class="num">220</td></tr>
+            <tr><td>Increased Social Assertiveness</td><td class="num">250</td><td class="num">169</td></tr>
+            <tr><td>Physical &amp; Social Pleasure</td><td class="num">210</td><td class="num">114</td></tr>
+          </tbody>
+        </table>
+
+        <div class="placeholder" style="width:100%; height:150px; margin-top:18px; border:none;">
+          [Illustration: two facing head profiles, one with tangled scribble brain, one with storm cloud brain — centered]
+        </div>
+      </div>
+
+      <div class="band" style="margin-top:14px;">Conclusion</div>
+      <div class="card conclusion">
+        <p><b>The results support our hypothesis that: Food expectancy is positively correlated to alcohol expectancy.</b></p>
+        <p>DEBQ External eating scale correlated to all AEQ scales, while DEBQ Emotional Eating scale only correlated to some AEQ scales.</p>
+        <p><b>External eating</b> had a more consistent relationship with alcohol expectancies, where <b>Emotional eating</b> had a less consistent relationship.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-left">
+      <div class="placeholder">[Logo: graduation cap]</div>
+      <div class="uni">University of New York,<br>New York</div>
+    </div>
+    <div class="footer-right">
+      <div class="strong">STUDY CONDUCTED BY: Carla Ramirez, Francis R. Griffon and Elena Takiyoma, UNIVERSITY OF NEW YORK</div>
+      RESOURCES: Walsh, Kathy; Chan, Anthony. "The psychology of consumption and stress" The Pearson Journal, 2017 &nbsp;//&nbsp; Saluda, Mariana; Temitope, Janet, "Neuroscience of addiction and pleasure"<br>
+      The Science Review, 2018. &nbsp;//&nbsp; Jurgen, Hans, Lee, Penelope, "Consumption, Pleasure and Empowerment", The Arch Journal, 2020.
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

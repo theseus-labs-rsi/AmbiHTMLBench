@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FIPS 197 - Advanced Encryption Standard (AES)</title>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  body {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 12pt;
+    line-height: 1.5;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 60px;
+    color: #000;
+    background: #fff;
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 30px;
+    font-size: 11pt;
+    font-variant: small-caps;
+    letter-spacing: 0.5px;
+  }
+  .header-left {
+    font-variant: normal;
+    font-weight: normal;
+  }
+  .header-right {
+    font-variant: small-caps;
+    font-weight: normal;
+  }
+  h2 {
+    font-size: 16pt;
+    font-weight: bold;
+    margin-top: 24px;
+    margin-bottom: 12px;
+  }
+  h3 {
+    font-size: 14pt;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+  p {
+    margin-top: 0;
+    margin-bottom: 10px;
+    text-align: justify;
+  }
+  .equation {
+    text-align: center;
+    margin: 16px 0;
+    position: relative;
+  }
+  .equation-number {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .example-block {
+    margin: 16px 0;
+    padding-left: 40px;
+  }
+  .example-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 4px 0;
+  }
+  .example-label {
+    text-align: right;
+    min-width: 120px;
+    padding-left: 20px;
+  }
+  .example-number {
+    position: absolute;
+    right: 0;
+  }
+  .example-container {
+    position: relative;
+    margin: 16px 0;
+  }
+  .example-content {
+    padding-left: 40px;
+  }
+  .example-row-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 6px 0;
+  }
+  .example-text {
+    flex: 1;
+  }
+  .example-label-text {
+    min-width: 140px;
+    text-align: right;
+    padding-left: 20px;
+  }
+  .example-number-pos {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .footnote {
+    font-size: 10pt;
+    margin-top: 30px;
+    border-top: 1px solid #000;
+    padding-top: 6px;
+  }
+  .page-number {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 12pt;
+  }
+  sup {
+    font-size: 0.75em;
+  }
+  .section-ref {
+    color: #000;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <span class="header-left">FIPS 197</span>
+  <span class="header-right">Advanced Encryption Standard (AES)</span>
+</div>
+
+<h2>4. Mathematical Preliminaries</h2>
+
+<p>For some transformations of the AES algorithms specified in Sec. 5, each byte in the state array is interpreted as one of the 256 elements of a finite field, also known as a Galois Field, denoted by GF(2<sup>8</sup>).<sup>1</sup></p>
+
+<p>In order to define addition and multiplication in GF(2<sup>8</sup>), each byte \(\{b_7\ b_6\ b_5\ b_4\ b_3\ b_2\ b_1\ b_0\}\) is interpreted as a polynomial, denoted by \(b(x)\), as follows:</p>
+
+<div class="equation">
+  $$b(x) = b_7 x^7 + b_6 x^6 + b_5 x^5 + b_4 x^4 + b_3 x^3 + b_2 x^2 + b_1 x + b_0.$$
+  <span class="equation-number">(4.1)</span>
+</div>
+
+<p>For example, \(\{01100011\}\) is represented by the polynomial \(x^6 + x^5 + x + 1\).</p>
+
+<h3>4.1 Addition in GF(2<sup>8</sup>)</h3>
+
+<p>In order to add two elements in the finite field GF(2<sup>8</sup>), the coefficients of the polynomials that represent the elements are added modulo 2 (i.e., with the exclusive-OR operation, denoted by \(\oplus\)), so that \(1 \oplus 1 = 0\), \(1 \oplus 0 = 1\), and \(0 \oplus 0 = 0\).</p>
+
+<p>Equivalently, two bytes can be added by applying the exclusive-OR operation to each pair of corresponding bits in the bytes. Thus, the sum of \(\{a_7\ a_6\ a_5\ a_4\ a_3\ a_2\ a_1\ a_0\}\) and \(\{b_7\ b_6\ b_5\ b_4\ b_3\ b_2\ b_1\ b_0\}\) is \(\{a_7 \oplus b_7\ \ a_6 \oplus b_6\ \ a_5 \oplus b_5\ \ a_4 \oplus b_4\ \ a_3 \oplus b_3\ \ a_2 \oplus b_2\ \ a_1 \oplus b_1\ \ a_0 \oplus b_0\}\). (In Section 5.1.4, this definition is extended to words.)</p>
+
+<p>For example, the following three representations of addition are equivalent:</p>
+
+<div class="example-container">
+  <div class="example-content">
+    <div class="example-row-wrapper">
+      <span class="example-text">\((x^6 + x^4 + x^2 + x + 1) + (x^7 + x + 1) = x^7 + x^6 + x^4 + x^2\)</span>
+      <span class="example-label-text">(polynomial)</span>
+    </div>
+    <div class="example-row-wrapper">
+      <span class="example-text">\(\{01010111\} \oplus \{10000011\} = \{11010100\}\)</span>
+      <span class="example-label-text">(binary)</span>
+    </div>
+    <div class="example-row-wrapper">
+      <span class="example-text">\(\{\texttt{57}\} \oplus \{\texttt{83}\} = \{\texttt{d4}\}\)</span>
+      <span class="example-label-text">(hexadecimal).</span>
+    </div>
+  </div>
+  <span class="example-number-pos" style="right: 0; top: 50%; transform: translateY(-50%);">(4.2)</span>
+</div>
+
+<p>Because the coefficients of the polynomials are reduced modulo 2, the coefficient 1 is equivalent to the coefficient \(-1\), so addition is equivalent to subtraction. For example, \(x^4 + x^2\) represents the same finite field element as \(x^4 - x^2\), \(-x^4 + x^2\), and \(-x^4 - x^2\). Similarly, the sum of any element with itself is the zero element.</p>
+
+<h3>4.2 Multiplication in GF(2<sup>8</sup>)</h3>
+
+<p>The symbol \(\bullet\) denotes multiplication in GF(2<sup>8</sup>). Conceptually, this multiplication is defined on two bytes in two steps: 1) the two polynomials that represent the bytes are multiplied as polynomials, and 2) the resulting polynomial is reduced modulo the following fixed polynomial:</p>
+
+<div class="equation">
+  $$m(x) = x^8 + x^4 + x^3 + x + 1.$$
+  <span class="equation-number">(4.3)</span>
+</div>
+
+<p>Within both steps, the individual coefficients of the polynomials are reduced modulo 2.</p>
+
+<div class="footnote">
+  <sup>1</sup>Information about the properties of finite fields can be found in textbooks, such as Michael Artin's <em>Algebra</em> [4].
+</div>
+
+<div class="page-number">8</div>
+
+</body>
+</html>

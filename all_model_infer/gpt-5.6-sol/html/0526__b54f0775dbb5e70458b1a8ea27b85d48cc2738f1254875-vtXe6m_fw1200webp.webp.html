@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>預見未來 - 現代藝術展</title>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] }
+  };
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    margin: 0;
+    min-height: 100%;
+    background: #282725;
+  }
+
+  body {
+    display: flex;
+    justify-content: center;
+    color: #fff;
+    font-family: "Noto Serif CJK SC", "Noto Serif SC", "Songti SC", SimSun, serif;
+  }
+
+  .poster {
+    position: relative;
+    width: min(100vw, 1200px);
+    aspect-ratio: 1200 / 1673;
+    overflow: hidden;
+    background:
+      linear-gradient(101deg, transparent 0 44%, rgba(19, 19, 18, .82) 44.5% 75%, transparent 76%),
+      radial-gradient(ellipse at 76% 20%, rgba(8, 8, 8, .95) 0 15%, transparent 38%),
+      radial-gradient(ellipse at 54% 50%, rgba(12, 12, 12, .87) 0 12%, transparent 35%),
+      radial-gradient(ellipse at 40% 7%, rgba(233, 231, 222, .28) 0 17%, transparent 30%),
+      linear-gradient(120deg, #85837d 0%, #aaa79f 32%, #343431 58%, #69665f 77%, #c2bdb3 100%);
+  }
+
+  .poster::before {
+    content: "";
+    position: absolute;
+    inset: -8%;
+    opacity: .7;
+    background:
+      repeating-radial-gradient(
+        ellipse at 73% 43%,
+        transparent 0 17px,
+        rgba(208, 205, 196, .12) 19px 21px,
+        rgba(5, 5, 5, .18) 22px 27px,
+        transparent 29px 42px
+      );
+    transform: rotate(-8deg) scale(1.15);
+  }
+
+  .poster::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(90deg, rgba(0, 0, 0, .12), transparent 24%, transparent 80%, rgba(255, 255, 255, .08)),
+      repeating-linear-gradient(13deg, rgba(255, 255, 255, .018) 0 1px, rgba(0, 0, 0, .018) 1px 3px);
+    mix-blend-mode: overlay;
+  }
+
+  .placeholder {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .placeholder span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .content {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  .english-title {
+    position: absolute;
+    top: 4.8%;
+    left: 4.1%;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(18px, 4.3vw, 54px);
+    line-height: 1.24;
+    letter-spacing: .07em;
+    color: rgba(255, 255, 255, .77);
+  }
+
+  .main-title {
+    position: absolute;
+    top: 20.2%;
+    left: 3.7%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: .16em;
+    width: 43%;
+    font-size: clamp(64px, 16.3vw, 196px);
+    line-height: 1.21;
+    font-weight: 400;
+    letter-spacing: -.05em;
+    color: #fff;
+  }
+
+  .main-title span {
+    text-align: center;
+  }
+
+  .vertical-english {
+    position: absolute;
+    top: 5.8%;
+    left: 72.7%;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(8px, 1.7vw, 21px);
+    line-height: 1.45;
+    letter-spacing: .14em;
+    color: rgba(180, 176, 168, .38);
+  }
+
+  .exhibition-title {
+    position: absolute;
+    top: 5.7%;
+    right: 3.6%;
+    display: flex;
+    flex-direction: row-reverse;
+    gap: .22em;
+    font-size: clamp(32px, 5.5vw, 67px);
+    line-height: 1.33;
+    font-weight: 400;
+  }
+
+  .exhibition-title div {
+    writing-mode: vertical-rl;
+  }
+
+  .event-copy {
+    position: absolute;
+    top: 24.6%;
+    right: 3.4%;
+    width: 30%;
+    text-align: center;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(10px, 2.2vw, 27px);
+    line-height: 1.55;
+    letter-spacing: .09em;
+  }
+
+  .event-copy .lead {
+    margin-bottom: .25em;
+    font-size: 1.12em;
+    white-space: nowrap;
+  }
+
+  .vertical-rule {
+    position: absolute;
+    top: 36.2%;
+    right: 7.25%;
+    width: 1px;
+    height: 25.8%;
+    background: rgba(255, 255, 255, .94);
+  }
+
+  .info-area {
+    position: absolute;
+    top: 55.1%;
+    left: 4%;
+    width: 49%;
+  }
+
+  .info-row {
+    display: grid;
+    grid-template-columns: 15% 85%;
+    align-items: start;
+  }
+
+  .date {
+    position: relative;
+    min-height: 112px;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(18px, 3.5vw, 43px);
+    line-height: 1;
+    letter-spacing: .03em;
+  }
+
+  .date .top {
+    position: absolute;
+    top: 2px;
+    left: 0;
+  }
+
+  .date .bottom {
+    position: absolute;
+    top: 55px;
+    left: 54%;
+  }
+
+  .date .slash {
+    position: absolute;
+    top: 2px;
+    left: 48%;
+    width: 1px;
+    height: 98px;
+    background: #fff;
+    transform: rotate(18deg);
+    transform-origin: top;
+  }
+
+  .date.year {
+    min-height: 190px;
+    font-size: clamp(15px, 2.7vw, 34px);
+    line-height: 1.12;
+  }
+
+  .date.year .digits {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 5px;
+    left: 20%;
+  }
+
+  .date.year .slash {
+    top: 3px;
+    left: 61%;
+    height: 142px;
+    transform: rotate(0);
+  }
+
+  .details {
+    padding-left: 3%;
+  }
+
+  .details h2 {
+    margin: 0 0 20px;
+    font-size: clamp(11px, 1.85vw, 23px);
+    font-weight: 400;
+    letter-spacing: .06em;
+  }
+
+  .details p {
+    margin: 0;
+    font-size: clamp(11px, 1.92vw, 24px);
+    line-height: 1.7;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .organizer-rule {
+    width: 81%;
+    height: 1px;
+    margin: 31px 0 36px;
+    background: rgba(255, 255, 255, .9);
+  }
+
+  .names {
+    word-spacing: .72em;
+  }
+
+  .names .line {
+    display: block;
+  }
+
+  .description-row {
+    margin-top: 5px;
+  }
+
+  .description {
+    padding: 10px 0 0 3%;
+  }
+
+  .description p {
+    margin: 0;
+    font-size: clamp(7px, 1.22vw, 15px);
+    line-height: 1.85;
+    font-weight: 500;
+    text-align: justify;
+  }
+
+  .description-rule {
+    width: 81%;
+    height: 1px;
+    margin-top: 31px;
+    background: rgba(255, 255, 255, .9);
+  }
+
+  .slogan {
+    position: absolute;
+    top: 66.4%;
+    left: 70.2%;
+    width: 27%;
+    font-size: clamp(22px, 4.5vw, 55px);
+    line-height: 1.65;
+    letter-spacing: .05em;
+    white-space: nowrap;
+  }
+
+  .slogan .small {
+    display: block;
+    margin-top: .45em;
+    font-size: .57em;
+    line-height: 1.35;
+    letter-spacing: .08em;
+  }
+
+  .logo {
+    position: absolute;
+    left: 4.4%;
+    bottom: 5.9%;
+    width: 84px;
+    text-align: center;
+    color: rgba(255, 255, 255, .88);
+    font-family: Arial, sans-serif;
+    transform-origin: left bottom;
+  }
+
+  .logo-mark {
+    display: flex;
+    align-items: end;
+    justify-content: center;
+    height: 55px;
+    gap: 2px;
+  }
+
+  .logo-mark i {
+    display: block;
+    width: 9px;
+    background: currentColor;
+    clip-path: polygon(75% 0, 100% 100%, 0 100%);
+  }
+
+  .logo-mark i:nth-child(1) { height: 29px; }
+  .logo-mark i:nth-child(2) { height: 46px; }
+  .logo-mark i:nth-child(3) { height: 55px; }
+  .logo-mark i:nth-child(4) { height: 37px; }
+  .logo-mark i:nth-child(5) { height: 21px; }
+
+  .logo-cn {
+    margin-top: 2px;
+    font-size: 8px;
+    font-weight: 700;
+  }
+
+  .logo-en {
+    font-size: 9px;
+    line-height: .95;
+    font-weight: 700;
+  }
+
+  @media (max-width: 700px) {
+    .date {
+      min-height: 9.3vw;
+    }
+
+    .date .bottom {
+      top: 4.7vw;
+    }
+
+    .date .slash {
+      height: 8.2vw;
+    }
+
+    .date.year {
+      min-height: 15.8vw;
+    }
+
+    .date.year .slash {
+      height: 11.9vw;
+    }
+
+    .details h2 {
+      margin-bottom: 1.7vw;
+    }
+
+    .organizer-rule {
+      margin: 2.55vw 0 3vw;
+    }
+
+    .description {
+      padding-top: .8vw;
+    }
+
+    .description-rule {
+      margin-top: 2.5vw;
+    }
+
+    .logo {
+      transform: scale(.62);
+    }
+  }
+</style>
+</head>
+<body>
+<main class="poster">
+  <div class="placeholder" role="img" aria-label="Abstract ink artwork covering the full poster background">
+    <span>[Abstract artwork: full-page background]</span>
+  </div>
+
+  <div class="content">
+    <div class="english-title">Foresee<br>The<br>Future</div>
+
+    <div class="main-title" aria-label="預見未來">
+      <span>預</span><span>見</span>
+      <span>未</span><span>來</span>
+    </div>
+
+    <div class="vertical-english">Modern<br>art exhibition</div>
+
+    <div class="exhibition-title">
+      <div>現代</div>
+      <div>藝術展</div>
+    </div>
+
+    <div class="event-copy">
+      <div class="lead">Modern art exhibition</div>
+      <div>free to share</div>
+      <div>big coffee guests</div>
+    </div>
+
+    <div class="vertical-rule"></div>
+
+    <section class="info-area">
+      <div class="info-row">
+        <div class="date">
+          <span class="top">06</span>
+          <span class="slash"></span>
+          <span class="bottom">28</span>
+        </div>
+        <div class="details">
+          <h2>主办方</h2>
+          <p>麦礼贺夫人艺术馆/亚洲协会香港中心</p>
+          <div class="organizer-rule"></div>
+        </div>
+      </div>
+
+      <div class="info-row">
+        <div class="date year">
+          <span class="digits"><span>2</span><span>0</span><span>2</span><span>0</span></span>
+          <span class="slash"></span>
+        </div>
+        <div class="details">
+          <h2>主办方</h2>
+          <p class="names">
+            <span class="line">曾 翔　王 锦　沃兴华　刘彦湖</span>
+            <span class="line">于明诠　李成连　沈 鹏　朱关田</span>
+            <span class="line">王学仲　田英章</span>
+          </p>
+          <div class="organizer-rule"></div>
+        </div>
+      </div>
+
+      <div class="info-row description-row">
+        <div class="date">
+          <span class="top">07</span>
+          <span class="slash"></span>
+          <span class="bottom">06</span>
+        </div>
+        <div class="description">
+          <p>
+            现代艺术，又称现代派艺术，很难有一个准确的定义。大致<br>
+            来说，被称为“现代主义”或“现代派”的艺术，是指20世纪以<br>
+            来，区别于传统的、带有前卫和先锋色彩的各种艺术思潮和流派<br>
+            的总称。<br>
+            　　现代艺术主要包括了野兽主义、立体主义、未来主义、表现<br>
+            主义、俄国的至上主义与构成主义、荷兰的风格派、达达主义、<br>
+            超现实主义、抽象主义、波普艺术等。
+          </p>
+          <div class="description-rule"></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="slogan">
+      未来的你<br>
+      是否还在?
+      <span class="small">而我一直在这等着你</span>
+    </div>
+
+    <div class="logo" aria-label="創意香港 CREATE HK">
+      <div class="logo-mark">
+        <i></i><i></i><i></i><i></i><i></i>
+      </div>
+      <div class="logo-cn">創意香港</div>
+      <div class="logo-en">CREATE<br>HK</div>
+    </div>
+  </div>
+</main>
+</body>
+</html>

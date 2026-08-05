@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Images, contours and fields - Matplotlib</title>
+  <script>
+    window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #30333a;
+      background: #fff;
+    }
+    header {
+      height: 64px;
+      display: flex;
+      align-items: center;
+      padding: 0 39px;
+      border-bottom: 1px solid #e2e3e4;
+      box-shadow: 0 2px 7px rgba(0,0,0,.10);
+      white-space: nowrap;
+    }
+    .logo {
+      color: #166181;
+      font-size: 37px;
+      font-weight: 700;
+      font-style: italic;
+      letter-spacing: -.8px;
+      margin-right: auto;
+    }
+    .logo span {
+      color: #456172;
+      font-style: normal;
+    }
+    .topnav {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+      margin-right: 55px;
+      font-size: 16px;
+      color: #39424e;
+    }
+    .head-icons {
+      display: flex;
+      align-items: center;
+      gap: 19px;
+      color: #465467;
+      font-size: 21px;
+    }
+    .version {
+      padding: 7px 10px;
+      border: 1px solid #d8d8d8;
+      border-radius: 4px;
+      font-size: 16px;
+      color: #30343a;
+      background: #fff;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 368px 1fr;
+      min-height: calc(100vh - 64px);
+    }
+    aside {
+      border-right: 1px solid #d9dcdf;
+      padding: 45px 32px 45px;
+    }
+    aside h2 {
+      font-size: 19px;
+      margin: 0 0 19px;
+      font-weight: 700;
+    }
+    .section {
+      color: #414b58;
+      font-size: 15.5px;
+      line-height: 1.55;
+    }
+    .section-title {
+      position: relative;
+      padding: 0 22px 6px 10px;
+    }
+    .section-title .arrow {
+      position: absolute;
+      right: 0;
+      font-size: 20px;
+      top: -3px;
+    }
+    .active {
+      margin-left: 0;
+      border-left: 3px solid #1680a3;
+      padding-left: 8px;
+      font-weight: 700;
+      color: #1d6078;
+    }
+    .items {
+      margin: 6px 0 0 26px;
+    }
+    .items div { margin: 9px 0; }
+    main {
+      max-width: 1040px;
+      padding: 18px 0 56px 72px;
+    }
+    .crumb {
+      height: 60px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #4c5969;
+    }
+    .home { font-size: 19px; color: #556274; }
+    h1 {
+      margin: 5px 0 20px 24px;
+      font-size: 40px;
+      line-height: 1.15;
+      font-weight: 500;
+      letter-spacing: -1.3px;
+    }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(5, 168px);
+      gap: 24px 14px;
+      margin-left: 25px;
+    }
+    .card {
+      height: 222px;
+      border-radius: 6px;
+      background: #fff;
+      box-shadow: 0 1px 9px rgba(0,0,0,.14);
+      padding: 20px 11px 13px;
+      overflow: hidden;
+    }
+    .thumb {
+      height: 105px;
+      margin-bottom: 10px;
+      position: relative;
+      overflow: hidden;
+      background-color: #fff;
+    }
+    .thumb::before, .thumb::after {
+      content: "";
+      position: absolute;
+      inset: 6px 12px;
+    }
+    .affine::before {
+      background:
+        linear-gradient(135deg, transparent 20%, #d7c12c 21% 34%, transparent 35%),
+        linear-gradient(45deg, #066b82 20%, #22a787 21% 62%, #495370 63%);
+      clip-path: polygon(13% 5%, 47% 5%, 45% 43%, 10% 40%, 58% 10%, 95% 7%, 91% 43%, 55% 46%, 15% 59%, 46% 60%, 43% 95%, 10% 91%, 58% 62%, 94% 58%, 91% 91%, 57% 95%);
+    }
+    .wind::before {
+      background:
+        repeating-linear-gradient(45deg, transparent 0 13px, #48545a 14px 15px, transparent 16px 25px),
+        repeating-linear-gradient(90deg, transparent 0 24px, #bfc4c6 25px 26px);
+      border: 1px solid #bababa;
+    }
+    .barcode::before {
+      inset: 8px 0 16px;
+      background: repeating-linear-gradient(90deg,#111 0 2px,#fff 2px 4px,#111 4px 8px,#fff 8px 10px,#111 10px 13px,#fff 13px 16px);
+    }
+    .heat::before {
+      background: radial-gradient(circle at 68% 22%, #cfde32 0 8%, transparent 20%), radial-gradient(circle at 25% 35%, #18a990 0 7%, transparent 22%), radial-gradient(circle at 51% 36%, #54216d 0 10%, transparent 26%), radial-gradient(circle at 55% 75%, #e8ed2d 0 8%, transparent 25%), #1e6885;
+    }
+    .colors::before {
+      inset: 8px 5px 5px;
+      background: radial-gradient(ellipse at center,#eef1fb 2%,#a8b4d5 31%,#1a516e 73%);
+      border-top: 36px solid #0a516a;
+    }
+    .green::before {
+      background: radial-gradient(ellipse,#0c7c30 0,#c6efca 38%,transparent 68%), linear-gradient(#edf7ee,#eef3ff);
+      border: 1px solid #888;
+    }
+    .corner::before {
+      background: conic-gradient(from 45deg,#d8365c 0 15%,#fff 15% 25%,#20a486 25% 39%,#f5c929 39% 53%,#453a84 53% 69%,#fff 69% 75%,#e6c948 75%);
+      border: 1px solid #777;
+    }
+    .contour::before {
+      background: repeating-radial-gradient(ellipse at 40% 63%, transparent 0 10px,#8ea9a0 11px 12px, transparent 13px 18px);
+      border: 1px solid #aaa;
+    }
+    .hatched::before {
+      background: repeating-linear-gradient(135deg,#888 0 2px,#c4c4c4 2px 7px), repeating-linear-gradient(45deg,transparent 0 12px,#555 12px 14px);
+    }
+    .blue::before {
+      background: radial-gradient(circle,#e4d9e2 0 8%,#bbc4dd 9% 24%,#7d9cbd 25% 42%,#397a99 43% 62%,#20618b 63%);
+    }
+    .match::before {
+      background:
+        linear-gradient(45deg, transparent 48%, #45c26b 49% 55%, transparent 56%),
+        #440154;
+    }
+    .grid::before {
+      background: repeating-linear-gradient(0deg,#16858b 0 17px,#efdb38 17px 34px), repeating-linear-gradient(90deg,transparent 0 17px,#563b88 17px 34px);
+    }
+    .photo::before {
+      width: 55px;
+      height: 55px;
+      inset: 9px auto auto 45px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 50% 34%,#aa8266 0 17%,transparent 18%), radial-gradient(ellipse at 50% 54%,#392f28 0 35%,#778dba 36%);
+    }
+    .blend::before {
+      background: radial-gradient(circle at 35% 50%,#bde3e4,#1671a0 23%,transparent 27%),radial-gradient(circle at 65% 54%,#ef3f28,#f7bd39 26%,transparent 29%),#aaa993;
+    }
+    .label::before {
+      background: linear-gradient(90deg,#168a81 0 30%,#fde725 30% 55%,#453781 55% 78%,#21a585 78%);
+      background-size: 100% 25%;
+    }
+    .card p {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.63;
+      color: #292b2f;
+    }
+    @media (max-width: 1050px) {
+      .layout { grid-template-columns: 285px 1fr; }
+      aside { padding-left: 22px; padding-right: 22px; }
+      main { padding-left: 25px; }
+      .gallery { grid-template-columns: repeat(4, 168px); }
+      .topnav { gap: 13px; margin-right: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">mat<span>pl</span>otlib</div>
+    <nav class="topnav">
+      <span>Plot types</span><span>User guide</span><span>Tutorials</span><span>Examples</span>
+      <span>Reference</span><span>Contribute</span><span>Releases</span>
+    </nav>
+    <div class="head-icons">
+      <span>⌕</span><span>◐</span><span class="version">3.10 (stable)⌄</span><span>Ⅲ</span><span>◖</span><span>◉</span><span>♥</span>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside>
+      <h2>Section Navigation</h2>
+      <div class="section">
+        <div class="section-title">Lines, bars and markers <span class="arrow">⌄</span></div>
+        <div class="section-title active">Images, contours and fields <span class="arrow">⌃</span></div>
+        <div class="items">
+          <div>Affine transform of an image</div>
+          <div>Wind barbs</div>
+          <div>Barcode</div>
+          <div>Interactive adjustment of colormap range</div>
+          <div>Colormap normalizations</div>
+          <div>Colormap normalizations SymLogNorm</div>
+          <div>Contour corner mask</div>
+          <div>Contour Demo</div>
+          <div>Contour image</div>
+          <div>Contour Label Demo</div>
+          <div>Contourf demo</div>
+          <div>Contourf hatching</div>
+          <div>Contourf and log color scale</div>
+          <div>Contouring the solution space of optimizations</div>
+          <div>BboxImage Demo</div>
+          <div>Figimage Demo</div>
+          <div>Annotated heatmap</div>
+          <div>Image resampling</div>
+          <div>Clipping images with patches</div>
+          <div>Many ways to plot images</div>
+          <div>Image with masked values</div>
+          <div>Image nonuniform</div>
+          <div>Blend transparency with color in 2D images</div>
+          <div>Modifying the coordinate formatter</div>
+          <div>Interpolations for imshow</div>
+          <div>Contour plot of irregularly spaced data</div>
+          <div>Layer images with alpha blending</div>
+          <div>Visualize matrices with matshow</div>
+          <div>Multiple images with one colorbar</div>
+          <div>pcolor images</div>
+          <div>pcolormesh grids and shading</div>
+          <div>pcolormesh</div>
+          <div>Streamplot</div>
+          <div>QuadMesh Demo</div>
+          <div>Advanced quiver and quiverkey functions</div>
+          <div>Quiver Simple Demo</div>
+          <div>Shading example</div>
+          <div>Spectrogram</div>
+          <div>Spy Demos</div>
+          <div>Tricontour Demo</div>
+          <div>Tricontour Smooth Delaunay</div>
+          <div>Tricontour Smooth User</div>
+          <div>Trigradient Demo</div>
+        </div>
+      </div>
+    </aside>
+
+    <main>
+      <div class="crumb"><span class="home">⌂</span><span>›</span><span>Examples</span><span>›</span><span>Images,...</span></div>
+      <h1>Images, contours and fields</h1>
+
+      <section class="gallery">
+        <article class="card"><div class="thumb affine"></div><p>Affine transform of<br>an image</p></article>
+        <article class="card"><div class="thumb wind"></div><p>Wind barbs</p></article>
+        <article class="card"><div class="thumb barcode"></div><p>Barcode</p></article>
+        <article class="card"><div class="thumb heat"></div><p>Interactive<br>adjustment of<br>colormap range</p></article>
+        <article class="card"><div class="thumb colors"></div><p>Colormap<br>normalizations</p></article>
+
+        <article class="card"><div class="thumb green"></div><p>Colormap<br>normalizations<br>SymLogNorm</p></article>
+        <article class="card"><div class="thumb corner"></div><p>Contour corner<br>mask</p></article>
+        <article class="card"><div class="thumb contour"></div><p>Contour Demo</p></article>
+        <article class="card"><div class="thumb contour"></div><p>Contour image</p></article>
+        <article class="card"><div class="thumb contour"></div><p>Contour Label<br>Demo</p></article>
+
+        <article class="card"><div class="thumb contour"></div><p>Contourf demo</p></article>
+        <article class="card"><div class="thumb hatched"></div><p>Contourf hatching</p></article>
+        <article class="card"><div class="thumb blue"></div><p>Contourf and log<br>color scale</p></article>
+        <article class="card"><div class="thumb contour"></div><p>Contouring the<br>solution space of<br>optimizations</p></article>
+        <article class="card"><div class="thumb label"></div><p>BboxImage Demo</p></article>
+
+        <article class="card"><div class="thumb"><div style="width:25px;height:48px;position:absolute;left:35px;top:38px;background:linear-gradient(135deg,#19a387,#46327e 50%,#a0da39 51%);"></div></div><p>Figimage Demo</p></article>
+        <article class="card"><div class="thumb grid"></div><p>Annotated heatmap</p></article>
+        <article class="card"><div class="thumb grid"></div><p>Image resampling</p></article>
+        <article class="card"><div class="thumb photo"></div><p>Clipping images<br>with patches</p></article>
+        <article class="card"><div class="thumb heat"></div><p>Many ways to plot<br>images</p></article>
+
+        <article class="card"><div class="thumb contour"></div><p>Image with masked<br>values</p></article>
+        <article class="card"><div class="thumb colors"></div><p>Image nonuniform</p></article>
+        <article class="card"><div class="thumb blend"></div><p>Blend transparency<br>with color in 2D<br>images</p></article>
+        <article class="card"><div class="thumb label"></div><p>Modifying the<br>coordinate<br>formatter</p></article>
+        <article class="card"><div class="thumb grid"></div><p>Interpolations for<br>imshow</p></article>
+
+        <article class="card"><div class="thumb contour"></div><p>Contour plot of<br>irregularly spaced</p></article>
+        <article class="card"><div class="thumb heat"></div><p>Layer images with<br>alpha blending</p></article>
+        <article class="card"><div class="thumb match"></div><p>Visualize matrices<br>with matshow</p></article>
+        <article class="card"><div class="thumb grid"></div><p>Multiple images<br>with one colorbar</p></article>
+        <article class="card"><div class="thumb label"></div><p>pcolor images</p></article>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

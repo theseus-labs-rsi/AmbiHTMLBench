@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script>window.MathJax={tex:{inlineMath:[["$","$"]],displayMath:[["$$","$$"]]}};</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>内部交易抵销 第3步：调整所得税</title>
+    <style>
+        body {
+            font-family: "Microsoft YaHei", "Heiti SC", sans-serif;
+            background-color: #f9f7f1; /* Light beige background */
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            margin: 0;
+            color: #333;
+        }
+
+        .slide-container {
+            background-color: #fff;
+            width: 100%;
+            max-width: 800px;
+            padding: 40px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: relative;
+            min-height: 900px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Header Styles */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .paw-print {
+            position: absolute;
+            top: -20px;
+            font-size: 24px;
+            color: #d4a373;
+        }
+        .paw-left { left: 20%; }
+        .paw-right { right: 20%; }
+
+        h1 {
+            color: #8b5a2b;
+            font-size: 32px;
+            margin: 10px 0 5px 0;
+            font-weight: bold;
+        }
+
+        h2 {
+            color: #8b5a2b;
+            font-size: 28px;
+            margin: 5px 0 30px 0;
+            font-weight: bold;
+        }
+
+        /* Condition Pill */
+        .condition-pill {
+            background-color: #fae5d3;
+            color: #8b5a2b;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 30px;
+            align-self: flex-start;
+            margin-left: 20px;
+        }
+
+        /* Main Content Layout */
+        .content-wrapper {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-grow: 1;
+        }
+
+        .left-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .right-column {
+            width: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            height: 300px; /* Approximate height to span the gap */
+        }
+
+        /* Data Blocks */
+        .data-block {
+            margin-bottom: 20px;
+        }
+
+        .block-title {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #555;
+        }
+
+        .value-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .value-text {
+            width: 100px;
+            font-size: 15px;
+        }
+
+        .bracket-container {
+            display: flex;
+            align-items: center;
+            margin-left: 10px;
+        }
+
+        .curly-brace {
+            border-left: 2px solid #333;
+            height: 40px;
+            margin-right: 10px;
+            position: relative;
+        }
+        
+        /* Simulating the brace shape with CSS borders is complex, using a simple line for fidelity to the visual block */
+        .curly-brace::before, .curly-brace::after {
+            content: '';
+            position: absolute;
+            left: -2px;
+            width: 6px;
+            height: 2px;
+            background: #333;
+        }
+        .curly-brace::before { top: 0; }
+        .curly-brace::after { bottom: 0; }
+
+        .calculation {
+            font-size: 15px;
+            color: #333;
+        }
+
+        /* Arrow and Adjustment */
+        .blue-arrow {
+            width: 4px;
+            height: 150px;
+            background-color: #3498db;
+            position: relative;
+            margin-bottom: 10px;
+        }
+        .blue-arrow::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: -6px;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 10px solid #3498db;
+        }
+
+        .adjustment-text {
+            font-weight: bold;
+            font-size: 16px;
+            text-align: center;
+            color: #333;
+        }
+
+        /* Footer Accounting Entry */
+        .footer-entry {
+            margin-top: 40px;
+            font-size: 16px;
+            line-height: 1.8;
+            text-align: left;
+            width: 100%;
+            padding-left: 20px;
+        }
+
+        .footer-entry span {
+            display: block;
+        }
+        
+        .indent {
+            margin-left: 40px;
+        }
+
+        /* Decorations */
+        .cat-left {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 150px;
+            height: 100px;
+            background-color: #eee; /* Placeholder for cat image */
+            border-radius: 50% 50% 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 12px;
+            overflow: hidden;
+        }
+        
+        .cat-right {
+            position: absolute;
+            bottom: 10px;
+            right: 30px;
+            width: 120px;
+            height: 140px;
+            background-color: #eee; /* Placeholder for cat image */
+            border-radius: 50% 50% 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 12px;
+            overflow: hidden;
+        }
+
+        /* SVG Icons for paw prints to avoid external dependencies */
+        .paw-svg {
+            width: 30px;
+            height: 30px;
+            fill: #d4a373;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="slide-container">
+        <!-- Header -->
+        <div class="header">
+            <svg class="paw-svg paw-print paw-left" viewBox="0 0 24 24"><path d="M12 2C10.9 2 10 2.9 10 4C10 5.1 10.9 6 12 6C13.1 6 14 5.1 14 4C14 2.9 13.1 2 12 2M12 8C10.9 8 10 8.9 10 10C10 11.1 10.9 12 12 12C13.1 12 14 11.1 14 10C14 8.9 13.1 8 12 8M12 14C10.9 14 10 14.9 10 16C10 17.1 10.9 18 12 18C13.1 18 14 17.1 14 16C14 14.9 13.1 14 12 14M12 20C10.9 20 10 20.9 10 22C10 23.1 10.9 24 12 24C13.1 24 14 23.1 14 22C14 20.9 13.1 20 12 20M5.5 4.5C4.7 4.5 4 5.2 4 6C4 6.8 4.7 7.5 5.5 7.5C6.3 7.5 7 6.8 7 6C7 5.2 6.3 4.5 5.5 4.5M5.5 10.5C4.7 10.5 4 11.2 4 12C4 12.8 4.7 13.5 5.5 13.5C6.3 13.5 7 12.8 7 12C7 11.2 6.3 10.5 5.5 10.5M5.5 16.5C4.7 16.5 4 17.2 4 18C4 18.8 4.7 19.5 5.5 19.5C6.3 19.5 7 18.8 7 18C7 17.2 6.3 16.5 5.5 16.5M18.5 4.5C17.7 4.5 17 5.2 17 6C17 6.8 17.7 7.5 18.5 7.5C19.3 7.5 20 6.8 20 6C20 5.2 19.3 4.5 18.5 4.5M18.5 10.5C17.7 10.5 17 11.2 17 12C17 12.8 17.7 13.5 18.5 13.5C19.3 13.5 20 12.8 20 12C20 11.2 19.3 10.5 18.5 10.5M18.5 16.5C17.7 16.5 17 17.2 17 18C17 18.8 17.7 19.5 18.5 19.5C19.3 19.5 20 18.8 20 18C20 17.2 19.3 16.5 18.5 16.5Z"/></svg>
+            <svg class="paw-svg paw-print paw-right" viewBox="0 0 24 24"><path d="M12 2C10.9 2 10 2.9 10 4C10 5.1 10.9 6 12 6C13.1 6 14 5.1 14 4C14 2.9 13.1 2 12 2M12 8C10.9 8 10 8.9 10 10C10 11.1 10.9 12 12 12C13.1 12 14 11.1 14 10C14 8.9 13.1 8 12 8M12 14C10.9 14 10 14.9 10 16C10 17.1 10.9 18 12 18C13.1 18 14 17.1 14 16C14 14.9 13.1 14 12 14M12 20C10.9 20 10 20.9 10 22C10 23.1 10.9 24 12 24C13.1 24 14 23.1 14 22C14 20.9 13.1 20 12 20M5.5 4.5C4.7 4.5 4 5.2 4 6C4 6.8 4.7 7.5 5.5 7.5C6.3 7.5 7 6.8 7 6C7 5.2 6.3 4.5 5.5 4.5M5.5 10.5C4.7 10.5 4 11.2 4 12C4 12.8 4.7 13.5 5.5 13.5C6.3 13.5 7 12.8 7 12C7 11.2 6.3 10.5 5.5 10.5M5.5 16.5C4.7 16.5 4 17.2 4 18C4 18.8 4.7 19.5 5.5 19.5C6.3 19.5 7 18.8 7 18C7 17.2 6.3 16.5 5.5 16.5M18.5 4.5C17.7 4.5 17 5.2 17 6C17 6.8 17.7 7.5 18.5 7.5C19.3 7.5 20 6.8 20 6C20 5.2 19.3 4.5 18.5 4.5M18.5 10.5C17.7 10.5 17 11.2 17 12C17 12.8 17.7 13.5 18.5 13.5C19.3 13.5 20 12.8 20 12C20 11.2 19.3 10.5 18.5 10.5M18.5 16.5C17.7 16.5 17 17.2 17 18C17 18.8 17.7 19.5 18.5 19.5C19.3 19.5 20 18.8 20 18C20 17.2 19.3 16.5 18.5 16.5Z"/></svg>
+            <h1>内部交易抵销</h1>
+            <h2>第③步：调整所得税</h2>
+        </div>
+
+        <!-- Condition -->
+        <div class="condition-pill">
+            若实现 60% 对外销售
+        </div>
+
+        <!-- Main Content -->
+        <div class="content-wrapper">
+            <div class="left-column">
+                <!-- Individual Report Block -->
+                <div class="data-block">
+                    <div class="block-title">个别报表层面因为存货跌价准备：</div>
+                    <div class="value-group">
+                        <span class="value-text">账面价值 900</span>
+                        <div class="bracket-container">
+                            <div class="curly-brace"></div>
+                            <span class="calculation">递延所得税资产300*25%=75</span>
+                        </div>
+                    </div>
+                    <div class="value-group">
+                        <span class="value-text">计税基础 1200</span>
+                    </div>
+                </div>
+
+                <!-- Consolidated Report Block -->
+                <div class="data-block">
+                    <div class="block-title">合并报表层面因为存货跌价准备：</div>
+                    <div class="value-group">
+                        <span class="value-text">账面价值800</span>
+                        <div class="bracket-container">
+                            <div class="curly-brace"></div>
+                            <span class="calculation">递延所得税资产400*25%=100</span>
+                        </div>
+                    </div>
+                    <div class="value-group">
+                        <span class="value-text">计税基础 1200</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-column">
+                <div class="blue-arrow"></div>
+                <div class="adjustment-text">
+                    【集团角度】<br>调增25
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Entry -->
+        <div class="footer-entry">
+            <span>会计处理：借：递延所得税资产25</span>
+            <span class="indent">贷：所得税费用25</span>
+        </div>
+
+        <!-- Decorations -->
+        <div class="cat-left">
+            [Image: Sleeping Cat]
+        </div>
+        <div class="cat-right">
+            [Image: Cat with Hat]
+        </div>
+
+    </div>
+
+</body>
+</html>

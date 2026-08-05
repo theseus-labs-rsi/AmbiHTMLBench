@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Water use by data center location</title>
+<script>
+window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    width: 1700px;
+    height: 2200px;
+    background: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #202124;
+  }
+  .page {
+    position: relative;
+    width: 1700px;
+    height: 2200px;
+    overflow: hidden;
+  }
+  .report {
+    position: absolute;
+    top: 105px;
+    left: 125px;
+    width: 1450px;
+  }
+  .table-wrap {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    width: 1450px;
+  }
+  table {
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-size: 19px;
+  }
+  .water-table {
+    width: 1235px;
+  }
+  .water-table col.loc { width: 370px; }
+  .water-table col.unit { width: 185px; }
+  .water-table col.num { width: 120px; }
+  .water-table col.tick { width: 55px; }
+
+  .golf-table {
+    width: 200px;
+  }
+  .water-table th,
+  .golf-table th {
+    font-weight: 700;
+  }
+  .water-table thead tr:first-child th {
+    height: 38px;
+    font-size: 19px;
+  }
+  .water-table .caption {
+    padding: 8px 11px;
+    text-align: left;
+    color: #1458a1;
+    background: #d9e8fb;
+    border-bottom: 1px solid #b7d1ef;
+  }
+  .water-table .year {
+    color: #fff;
+    letter-spacing: .4px;
+    background: #205bbb;
+    text-align: center;
+    padding: 7px 0;
+  }
+  .water-table thead tr:nth-child(2) th {
+    height: 51px;
+    padding: 10px 18px;
+    text-align: left;
+    color: #1656a0;
+    background: #d9e8fb;
+    border-bottom: 1px solid #1c5ea6;
+  }
+  .water-table thead tr:nth-child(2) th.metric-head {
+    text-align: center;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  sup {
+    font-size: 10px;
+    line-height: 0;
+    vertical-align: super;
+    font-weight: 400;
+  }
+  tbody tr { height: 37px; }
+  .water-table td {
+    border-bottom: 1px solid #f3f3f3;
+    padding: 6px 18px;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+  .water-table td.metric,
+  .water-table td.check {
+    background: #e6efff;
+    color: #1559a3;
+  }
+  .water-table td.metric {
+    text-align: right;
+    padding-right: 8px;
+  }
+  .water-table td.check {
+    text-align: center;
+    padding: 0;
+    font-size: 31px;
+    line-height: 1;
+    color: #32a363;
+    font-weight: 300;
+  }
+  .water-table td.sub {
+    padding-left: 38px;
+    color: #6d6d6d;
+  }
+  .water-table tr.group-end td {
+    border-bottom: 1px solid #fff;
+  }
+  .water-table tr.total td {
+    height: 39px;
+    font-weight: 700;
+    border-top: 1px solid #c7c7c7;
+    border-bottom: none;
+    background: #f5f6f8;
+  }
+  .water-table tr.total td.metric,
+  .water-table tr.total td.check {
+    background: #e6efff;
+  }
+  .water-table tr.total + tr td { border-bottom: none; }
+  .water-table tr.subtotal td { border-bottom: none; }
+
+  .golf-table th {
+    height: 89px;
+    padding: 5px 10px 9px;
+    background: #f1f2f4;
+    border-bottom: 1px solid #222;
+    text-align: center;
+    font-size: 19px;
+    line-height: 1.22;
+  }
+  .golf-table td {
+    height: 37px;
+    text-align: center;
+    vertical-align: middle;
+    background: #f5f6f8;
+    border-bottom: 1px solid #fff;
+    padding: 5px;
+    font-size: 18px;
+  }
+  .golf-table tr.subtotal td {
+    color: transparent;
+  }
+  .golf-table tr.total td {
+    height: 39px;
+    font-weight: 700;
+    color: #202124;
+    border-top: 1px solid #c7c7c7;
+  }
+  .legend {
+    margin-top: 39px;
+    display: flex;
+    align-items: center;
+    font-size: 19px;
+    color: #666;
+    white-space: nowrap;
+  }
+  .legend strong {
+    font-size: 21px;
+    color: #151515;
+    margin-right: 28px;
+  }
+  .legend .legend-check {
+    color: #32a363;
+    font-size: 31px;
+    line-height: 20px;
+    margin-right: 16px;
+  }
+  .legend a {
+    color: #5e5e5e;
+    text-decoration: underline;
+  }
+  footer {
+    position: absolute;
+    left: 80px;
+    bottom: 61px;
+    width: 1540px;
+    display: flex;
+    align-items: center;
+    color: #9a9a9a;
+    font-size: 16px;
+  }
+  .google-mark {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 49px;
+    font-weight: bold;
+    line-height: 1;
+    color: #fff;
+    background: conic-gradient(from 45deg, #4285f4 0 25%, #34a853 25% 49%, #fbbc05 49% 68%, #ea4335 68% 82%, #4285f4 82% 100%);
+    margin-right: 45px;
+  }
+  .footer-nav {
+    display: flex;
+    align-items: center;
+    gap: 34px;
+    flex: 1;
+    white-space: nowrap;
+  }
+  .footer-nav .active { color: #177338; }
+  .page-no {
+    margin-left: 27px;
+    color: #777;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <main class="report">
+    <div class="table-wrap">
+      <table class="water-table" aria-label="Water use by data center location">
+        <colgroup>
+          <col class="loc"><col class="unit">
+          <col class="num"><col class="tick">
+          <col class="num"><col class="tick">
+          <col class="num"><col class="tick">
+        </colgroup>
+        <thead>
+          <tr>
+            <th colspan="2" class="caption">Water use by data center location</th>
+            <th colspan="6" class="year">2024</th>
+          </tr>
+          <tr>
+            <th>Location</th>
+            <th>Unit</th>
+            <th colspan="2" class="metric-head">Withdrawal<sup>169</sup></th>
+            <th colspan="2" class="metric-head">Discharge</th>
+            <th colspan="2" class="metric-head">Consumption</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Omaha, NE</td><td>Million gallons</td>
+            <td class="metric">44.3</td><td class="check">✓</td>
+            <td class="metric">12.2</td><td class="check">✓</td>
+            <td class="metric">32.1</td><td class="check">✓</td>
+          </tr>
+          <tr>
+            <td>Papillion, NE</td><td>Million gallons</td>
+            <td class="metric">532.3</td><td class="check">✓</td>
+            <td class="metric">115.4</td><td class="check">✓</td>
+            <td class="metric">416.9</td><td class="check">✓</td>
+          </tr>
+          <tr>
+            <td>Pflugerville, TX<sup>171</sup></td><td>Million gallons</td>
+            <td class="metric">0.1</td><td class="check">✓</td>
+            <td class="metric">0.1</td><td class="check">✓</td>
+            <td class="metric">0.01</td><td class="check">✓</td>
+          </tr>
+          <tr>
+            <td>Phoenix, AZ<sup>172</sup></td><td>Million gallons</td>
+            <td class="metric">0.2</td><td class="check">✓</td>
+            <td class="metric">0.2</td><td class="check">✓</td>
+            <td class="metric">0.03</td><td class="check">✓</td>
+          </tr>
+          <tr>
+            <td>Quilicura, Chile</td><td>Million gallons</td>
+            <td class="metric">219.0</td><td class="check">✓</td>
+            <td class="metric">97.2</td><td class="check">✓</td>
+            <td class="metric">121.8</td><td class="check">✓</td>
+          </tr>
+          <tr>
+            <td>San Bernardo, Chile<sup>173</sup></td><td>Million gallons</td>
+            <td class="metric">0.3</td><td class="check">✓</td>
+            <td class="metric">0.3</td><td class="check">✓</td>
+            <td class="metric">0.03</td><td class="check">✓</td>
+          </tr>
+          <tr>
+            <td>St. Ghislain, Belgium</td><td>Million gallons</td>
+            <td class="metric">511.7</td><td class="check">✓</td>
+            <td class="metric">118.4</td><td class="check">✓</td>
+            <td class="metric">393.3</td><td class="check">✓</td>
+          </tr>
+          <tr class="subtotal">
+            <td class="sub">Potable water</td><td></td>
+            <td class="metric">13.7</td><td class="check"></td><td class="metric"></td><td class="check"></td><td class="metric"></td><td class="check"></td>
+          </tr>
+          <tr class="group-end">
+            <td class="sub">Non-potable water<sup>174</sup></td><td></td>
+            <td class="metric">498.0</td><td class="check"></td><td class="metric"></td><td class="check"></td><td class="metric"></td><td class="check"></td>
+          </tr>
+          <tr>
+            <td>Sterling, VA</td><td>Million gallons</td>
+            <td class="metric">201.2</td><td class="check">✓</td>
+            <td class="metric">43.0</td><td class="check">✓</td>
+            <td class="metric">158.2</td><td class="check">✓</td>
+          </tr>
+          <tr>
+            <td>Storey County, NV<sup>175</sup></td><td>Million gallons</td>
+            <td class="metric">14.9</td><td class="check">✓</td>
+            <td class="metric">13.4</td><td class="check">✓</td>
+            <td class="metric">1.5</td><td class="check">✓</td>
+          </tr>
+          <tr>
+            <td>Sydney, Australia<sup>176</sup></td><td>Million gallons</td>
+            <td class="metric">1.0</td><td class="check">✓</td>
+            <td class="metric">0.9</td><td class="check">✓</td>
+            <td class="metric">0.1</td><td class="check">✓</td>
+          </tr>
+          <tr>
+            <td>Wilmer, TX<sup>177</sup></td><td>Million gallons</td>
+            <td class="metric">1.9</td><td class="check">✓</td>
+            <td class="metric">1.7</td><td class="check">✓</td>
+            <td class="metric">0.2</td><td class="check">✓</td>
+          </tr>
+          <tr>
+            <td>Other data center locations</td><td>Million gallons</td>
+            <td class="metric">828.9</td><td class="check">✓</td>
+            <td class="metric">60.0</td><td class="check">✓</td>
+            <td class="metric">768.9</td><td class="check">✓</td>
+          </tr>
+          <tr class="subtotal">
+            <td class="sub">Potable water</td><td></td>
+            <td class="metric">10.7</td><td class="check"></td><td class="metric"></td><td class="check"></td><td class="metric"></td><td class="check"></td>
+          </tr>
+          <tr class="subtotal">
+            <td class="sub">Non-potable water</td><td></td>
+            <td class="metric">377.9</td><td class="check"></td><td class="metric"></td><td class="check"></td><td class="metric"></td><td class="check"></td>
+          </tr>
+          <tr class="group-end">
+            <td class="sub">Reclaimed wastewater</td><td></td>
+            <td class="metric">440.3</td><td class="check"></td><td class="metric"></td><td class="check"></td><td class="metric"></td><td class="check"></td>
+          </tr>
+          <tr class="total">
+            <td>Data centers total</td><td>Million gallons</td>
+            <td class="metric">9,866</td><td class="check">✓</td>
+            <td class="metric">2,079</td><td class="check">✓</td>
+            <td class="metric">7,787</td><td class="check">✓</td>
+          </tr>
+          <tr class="subtotal">
+            <td class="sub">Potable water</td><td></td>
+            <td class="metric">7,699</td><td class="check"></td><td class="metric"></td><td class="check"></td><td class="metric"></td><td class="check"></td>
+          </tr>
+          <tr class="subtotal">
+            <td class="sub">Non-potable water</td><td></td>
+            <td class="metric">1,289</td><td class="check"></td><td class="metric"></td><td class="check"></td><td class="metric"></td><td class="check"></td>
+          </tr>
+          <tr class="subtotal">
+            <td class="sub">Reclaimed wastewater</td><td></td>
+            <td class="metric">877</td><td class="check"></td><td class="metric"></td><td class="check"></td><td class="metric"></td><td class="check"></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="golf-table" aria-label="Golf course equivalents">
+        <thead>
+          <tr><th>Golf course<br>equivalents<br>(estimated)<sup>170</sup></th></tr>
+        </thead>
+        <tbody>
+          <tr><td>&lt;1</td></tr>
+          <tr><td>2.8</td></tr>
+          <tr><td>&lt;1</td></tr>
+          <tr><td>&lt;1</td></tr>
+          <tr><td>&lt;1</td></tr>
+          <tr><td>&lt;1</td></tr>
+          <tr><td>2.6</td></tr>
+          <tr class="subtotal"><td>&nbsp;</td></tr>
+          <tr><td>&nbsp;</td></tr>
+          <tr><td>1.1</td></tr>
+          <tr><td>&lt;1</td></tr>
+          <tr><td>&lt;1</td></tr>
+          <tr><td>&lt;1</td></tr>
+          <tr><td>5.1</td></tr>
+          <tr class="subtotal"><td>&nbsp;</td></tr>
+          <tr class="subtotal"><td>&nbsp;</td></tr>
+          <tr><td>&nbsp;</td></tr>
+          <tr class="total"><td>51</td></tr>
+          <tr class="subtotal"><td>&nbsp;</td></tr>
+          <tr class="subtotal"><td>&nbsp;</td></tr>
+          <tr class="subtotal"><td>&nbsp;</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="legend">
+      <strong>Legend</strong>
+      <span class="legend-check">✓</span>
+      <span>Subject to third-party limited assurance procedures. For more details, refer to our <a href="#">2025 (FY2024) Independent Accountants’ Review Report</a>.</span>
+    </div>
+  </main>
+
+  <footer>
+    <div class="google-mark">G</div>
+    <nav class="footer-nav" aria-label="Report navigation">
+      <span>Introduction</span>
+      <span>Age of AI</span>
+      <span>Data center energy</span>
+      <span>Supply chain energy</span>
+      <span>Resource efficiency</span>
+      <span>Research</span>
+      <span>Disaster response</span>
+      <span>Protecting the planet</span>
+      <span class="active">Appendix</span>
+    </nav>
+    <span class="page-no">111</span>
+  </footer>
+</div>
+</body>
+</html>

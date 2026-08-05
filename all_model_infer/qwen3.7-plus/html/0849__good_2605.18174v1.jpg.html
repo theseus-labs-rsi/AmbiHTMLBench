@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ringmaster LMO: Asynchronous Linear Minimization Oracle Momentum Method</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Computer+Modern+Serif&family=Latin+Modern+Roman&display=swap');
+
+  body {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 11pt;
+    line-height: 1.5;
+    color: #000;
+    background: #fff;
+    margin: 0;
+    padding: 0;
+    position: relative;
+  }
+
+  .page {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 60px 60px 40px 100px;
+    position: relative;
+  }
+
+  .sidebar-text {
+    position: fixed;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%) rotate(-90deg);
+    transform-origin: left center;
+    font-size: 10pt;
+    color: #555;
+    white-space: nowrap;
+    letter-spacing: 0.5px;
+  }
+
+  .top-rule {
+    border: none;
+    border-top: 2px solid #000;
+    margin: 0 0 15px 0;
+  }
+
+  .title {
+    font-size: 18pt;
+    font-weight: bold;
+    color: #c00000;
+    text-align: center;
+    line-height: 1.3;
+    margin: 0 0 15px 0;
+  }
+
+  .bottom-rule {
+    border: none;
+    border-top: 1px solid #000;
+    margin: 0 0 25px 0;
+  }
+
+  .authors-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 40px;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .author-block {
+    text-align: center;
+  }
+
+  .author-name {
+    font-weight: bold;
+    font-size: 11pt;
+    margin-bottom: 2px;
+  }
+
+  .author-affil {
+    font-size: 10pt;
+    margin-bottom: 2px;
+  }
+
+  .author-email {
+    font-size: 10pt;
+    font-family: "Courier New", Courier, monospace;
+  }
+
+  .abstract-heading {
+    font-weight: bold;
+    font-size: 12pt;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .abstract-text {
+    text-align: justify;
+    font-size: 10.5pt;
+    line-height: 1.55;
+    margin-bottom: 25px;
+    text-indent: 0;
+  }
+
+  .abstract-text .highlight {
+    color: #c00000;
+  }
+
+  .section-heading {
+    font-size: 12pt;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+
+  .section-text {
+    text-align: justify;
+    font-size: 10.5pt;
+    line-height: 1.55;
+    margin-bottom: 15px;
+  }
+
+  .footnote {
+    font-size: 9pt;
+    margin-top: 20px;
+    padding-top: 8px;
+    border-top: 1px solid #ccc;
+  }
+
+  .footnote code {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 9pt;
+  }
+
+  .preprint-label {
+    font-size: 9pt;
+    margin-top: 30px;
+    color: #333;
+  }
+
+  a {
+    color: #0000cc;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+</style>
+</head>
+<body>
+
+<div class="sidebar-text">arXiv:2605.18174v1 [cs.LG] 18 May 2026</div>
+
+<div class="page">
+
+  <hr class="top-rule">
+
+  <h1 class="title">Ringmaster LMO: Asynchronous Linear Minimization<br>Oracle Momentum Method</h1>
+
+  <hr class="bottom-rule">
+
+  <div class="authors-grid">
+    <div class="author-block">
+      <div class="author-name">Abdurakhmon Sadiev</div>
+      <div class="author-affil">KAUST</div>
+      <div class="author-email">abdurakhmon.sadiev@kaust.edu.sa</div>
+    </div>
+    <div class="author-block">
+      <div class="author-name">Artavazd Maranjyan</div>
+      <div class="author-affil">KAUST</div>
+      <div class="author-email">artavazd.maranjyan@kaust.edu.sa</div>
+    </div>
+    <div class="author-block">
+      <div class="author-name">Ivan Ilin</div>
+      <div class="author-affil">KAUST</div>
+      <div class="author-email">ivan.ilin@kaust.edu.sa</div>
+    </div>
+    <div class="author-block">
+      <div class="author-name">Peter Richtárik</div>
+      <div class="author-affil">KAUST</div>
+      <div class="author-email">peter.richtarik@kaust.edu.sa</div>
+    </div>
+  </div>
+
+  <div class="abstract-heading">Abstract</div>
+
+  <p class="abstract-text">
+    Muon has recently emerged as a strong alternative to AdamW for training neural networks, with encouraging large-scale pretraining results and growing evidence that matrix-structured updates can be faster in practice. Yet Muon, and more generally Linear Minimization Oracle (LMO) based methods, are typically used synchronously. This is problematic in heterogeneous distributed systems, where workers complete gradient computations at different speeds and synchronous training must repeatedly wait for slower workers. In this work, we introduce <span class="highlight">Ringmaster LMO</span>, an asynchronous LMO-based momentum method for unconstrained stochastic nonconvex optimization. Our method builds on the delay-thresholding idea of Ringmaster ASGD. For SGD-type methods, Ringmaster ASGD achieves optimal time complexity by discarding overly stale gradients. <span class="highlight">Ringmaster LMO</span> extends this mechanism to general LMO-based updates. We establish convergence guarantees under generalized $(L_0, L_1)$-smoothness and further develop a parameter-agnostic variant with decreasing stepsizes and adaptive delay thresholds. Finally, we translate our iteration guarantees into time complexity bounds under heterogeneous worker computation times. In the classical Euclidean smooth setting, these bounds recover the optimal time complexity of Ringmaster ASGD. Experiments on stochastic quadratic problems and NanoChat language-model pretraining show that the advantages of <span class="highlight">Ringmaster LMO</span> grow with system heterogeneity and that the method outperforms strong synchronous and asynchronous baselines.
+  </p>
+
+  <h2 class="section-heading">1 Introduction</h2>
+
+  <p class="section-text">
+    For more than a decade, Adam [Kingma and Ba, 2014] has been the default choice for training large neural networks, with its decoupled weight-decay variant AdamW [Loshchilov and Hutter, 2019] more recently becoming the default variant. For matrix-valued layers, however, these methods treat each weight matrix as a vector, rather than explicitly using its matrix structure. Recently, Jordan et al. [2024b] proposed the Muon optimizer, showing that using the matrix structure of hidden-layer weights can be beneficial. Muon forms the update direction from the matrix gradient via approximate orthogonalization. This matrix-structured update has led to strong empirical results, including the nanoGPT speedrun where Muon improves on the AdamW baseline [Jordan et al., 2024a]. Recent pretraining benchmarks also report that Muon can be substantially more compute-efficient than AdamW [Shah et al., 2025, Liu et al., 2025, Wen et al., 2026]. More generally, Muon fits into
+  </p>
+
+  <div class="footnote">
+    Code: <code>github.com/vectozavr/ringmaster-lmo</code>.
+  </div>
+
+  <div class="preprint-label">Preprint.</div>
+
+</div>
+
+</body>
+</html>

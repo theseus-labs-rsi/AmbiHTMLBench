@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RFC 9101 — OAuth JAR — Introduction (Page 4)</title>
+<script>
+window.MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] } };
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  :root{ --ink:#000; --rule:#9a9a9a; --link:#1b1bd6; --box:#d2d2d2; }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; background:#fff; }
+  body{ color:var(--ink); font-family:"Times New Roman",Times,serif; font-size:18px; line-height:1.34; }
+  .page{ width:min(1180px,100%); margin:0 auto; padding:34px 9.6% 46px; }
+  .topline,.botline{ display:flex; align-items:baseline; font-size:15px; line-height:1.2; }
+  .topline span,.botline span{ flex:1; }
+  .topline .l,.botline .l{ text-align:left; }
+  .topline .c,.botline .c{ text-align:center; }
+  .topline .r,.botline .r{ text-align:right; }
+  hr.rule{ border:0; border-top:1px solid var(--rule); margin:14px 0 0; }
+  hr.rulebot{ border:0; border-top:1px solid var(--rule); margin:0 0 12px; }
+  h1{ font-size:31px; line-height:1.15; font-weight:700; margin:48px 0 24px; }
+  p{ margin:0 0 1.02em; text-align:justify; }
+  .lnk{ color:var(--link); }
+  code{ font-family:"Courier New",Courier,monospace; font-size:0.92em; }
+  .codebox{ border:1px solid var(--box); margin:20px 0 26px; padding:16px 24px 16px 80px; }
+  .codebox pre{ margin:0; font-family:"Courier New",Courier,monospace; font-size:16px; line-height:1.28; white-space:pre; }
+  .hang{ margin:0 0 1.02em; }
+  .hang .row{ display:flex; margin:0 0 2px; }
+  .hang .lab{ flex:0 0 4.6em; }
+  .hang .txt{ flex:1; text-align:justify; }
+  .gap{ height:104px; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="topline"><span class="l">RFC 9101</span><span class="c">OAuth JAR</span><span class="r">August 2021</span></div>
+  <hr class="rule">
+
+  <h1>1.&nbsp;&nbsp;Introduction</h1>
+
+  <p>The authorization request in <span class="lnk">OAuth 2.0</span> [<span class="lnk">RFC6749</span>] utilizes query parameter serialization and is typically sent through user agents such as web browsers.</p>
+
+  <p>For example, the parameters <code>response_type</code>, <code>client_id</code>, <code>state</code>, and <code>redirect_uri</code> are encoded in the URI of the request:</p>
+
+  <div class="codebox"><pre>GET /authorize?response_type=code&amp;client_id=s6BhdRkqt3&amp;state=xyz
+&amp;redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb HTTP/1.1
+Host: server.example.com</pre></div>
+
+  <p>While it is easy to implement, the encoding in the URI does not allow application-layer security to be used to provide confidentiality and integrity protection. While TLS is used to offer communication security between the client and the user agent as well as the user agent and the authorization server, TLS sessions are terminated in the user agent. In addition, TLS sessions may be terminated prematurely at some middlebox (such as a load balancer).</p>
+
+  <p>As a result, the authorization request of [<span class="lnk">RFC6749</span>] has shortcomings in that:</p>
+
+  <div class="hang">
+    <div class="row"><span class="lab">(a)</span><span class="txt">the communication through the user agents is not integrity protected, and thus, the parameters can be tainted (integrity protection failure);</span></div>
+    <div class="row"><span class="lab">(b)</span><span class="txt">the source of the communication is not authenticated (source authentication failure);</span></div>
+    <div class="row"><span class="lab">(c)</span><span class="txt">the communication through the user agents can be monitored (containment/confidentiality failure).</span></div>
+  </div>
+
+  <p>Due to these inherent weaknesses, several attacks against the protocol, such as redirection URI rewriting, have been identified.</p>
+
+  <p>The use of application-layer security mitigates these issues.</p>
+
+  <p>The use of application-layer security allows requests to be prepared by a trusted third party so that a client application cannot request more permissions than previously agreed upon.</p>
+
+  <p>Furthermore, passing the request by reference allows the reduction of over-the-wire overhead.</p>
+
+  <p>The <span class="lnk">JWT</span> [<span class="lnk">RFC7519</span>] encoding has been chosen because of:</p>
+
+  <div class="hang">
+    <div class="row"><span class="lab">(1)</span><span class="txt">its close relationship with JSON, which is used as OAuth's response format</span></div>
+    <div class="row"><span class="lab">(2)</span><span class="txt">its developer friendliness due to its textual nature</span></div>
+    <div class="row"><span class="lab">(3)</span><span class="txt">its relative compactness compared to XML</span></div>
+    <div class="row"><span class="lab">(4)</span><span class="txt">its development status as a Proposed Standard, along with the associated signing and encryption methods [<span class="lnk">RFC7515</span>] [<span class="lnk">RFC7516</span>]</span></div>
+  </div>
+
+  <div class="gap"></div>
+  <hr class="rulebot">
+  <div class="botline"><span class="l">Sakimura, et al.</span><span class="c">Standards Track</span><span class="r">Page 4</span></div>
+</div>
+</body>
+</html>

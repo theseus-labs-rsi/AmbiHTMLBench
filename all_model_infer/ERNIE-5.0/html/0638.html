@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script>window.MathJax={tex:{inlineMath:[["$","$"]],displayMath:[["$$","$$"]]}};</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>晨读笔记</title>
+    <style>
+        :root {
+            --bg-color: #f4f1ea;
+            --border-color: #dcd6c9;
+            --text-color: #5a5a5a;
+            --header-bg: #cbb596;
+            --header-text: #fff;
+            --input-bg: #fff;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            background-color: #e0e0e0;
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .paper {
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--bg-color);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Navigation */
+        .nav-bar {
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+
+        .nav-item {
+            margin: 0 10px;
+            cursor: pointer;
+            opacity: 0.8;
+        }
+        
+        .nav-item:hover {
+            opacity: 1;
+        }
+
+        .nav-separator {
+            margin: 0 5px;
+            opacity: 0.5;
+        }
+
+        /* Main Content Area */
+        .content {
+            padding: 20px 30px;
+            flex: 1;
+        }
+
+        .page-title {
+            font-family: "Songti SC", "SimSun", serif;
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+            font-weight: normal;
+        }
+
+        /* Grid Layout for Form */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 70px 1fr;
+            gap: 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .form-row {
+            display: contents; /* Allows children to participate in the parent grid */
+        }
+
+        .label-cell {
+            padding: 12px 10px;
+            border-right: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            background-color: rgba(255,255,255,0.2);
+        }
+
+        .input-cell {
+            padding: 10px;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        /* Specific Row Adjustments */
+        
+        /* Checkboxes Row */
+        .checkbox-row {
+            grid-column: 2;
+            padding: 15px 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .checkbox-item input {
+            margin-right: 8px;
+            accent-color: #888;
+        }
+
+        /* Analysis Section */
+        .analysis-section {
+            grid-column: 2;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            border-bottom: 1px solid var(--border-color);
+            height: 300px;
+        }
+
+        .analysis-col {
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .analysis-col:last-child {
+            border-right: none;
+        }
+
+        .analysis-header {
+            text-align: center;
+            padding: 10px 0;
+            font-size: 13px;
+            border-bottom: 1px solid var(--border-color);
+            background-color: rgba(255,255,255,0.3);
+        }
+
+        .analysis-content {
+            flex: 1;
+            padding: 10px;
+        }
+
+        /* Bottom Rows */
+        .bottom-label {
+            padding: 15px 10px;
+            border-right: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+        }
+
+        .bottom-input {
+            padding: 10px;
+            border-bottom: 1px solid var(--border-color);
+            min-height: 40px;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: right;
+            padding: 10px 20px;
+            font-size: 12px;
+            color: #999;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Utility for empty inputs to look like lines */
+        .input-line {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: transparent;
+            outline: none;
+            resize: none;
+            font-family: inherit;
+            color: transparent; /* Hide text but keep space */
+            text-shadow: 0 0 0 #ccc; /* Faint line simulation if needed, mostly just empty space */
+        }
+        
+        /* Simulating the grid lines in the background for input areas */
+        .grid-bg {
+            background-image: linear-gradient(#e6e2d9 1px, transparent 1px);
+            background-size: 100% 24px;
+            background-position: 0 10px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="paper">
+        <!-- Top Navigation -->
+        <div class="nav-bar">
+            <span class="nav-item">行测</span>
+            <span class="nav-separator">&gt;</span>
+            <span class="nav-item">常识</span>
+            <span class="nav-item">言语</span>
+            <span class="nav-item">数量</span>
+            <span class="nav-item">判断</span>
+            <span class="nav-item">资料</span>
+            <span class="nav-item">申论</span>
+            <span class="nav-item">纸张</span>
+            <span class="nav-item">计划</span>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content">
+            <h1 class="page-title">· 晨读笔记</h1>
+
+            <div class="form-grid">
+                <!-- Row 1: Theme -->
+                <div class="form-row">
+                    <div class="label-cell">主题</div>
+                    <div class="input-cell"><textarea class="input-line grid-bg"></textarea></div>
+                </div>
+
+                <!-- Row 2: Application Area -->
+                <div class="form-row">
+                    <div class="label-cell">应用领域</div>
+                    <div class="input-cell"><textarea class="input-line grid-bg"></textarea></div>
+                </div>
+
+                <!-- Row 3: Hot Events -->
+                <div class="form-row">
+                    <div class="label-cell">热门事件</div>
+                    <div class="input-cell"><textarea class="input-line grid-bg"></textarea></div>
+                </div>
+
+                <!-- Row 4: Macro Policy -->
+                <div class="form-row">
+                    <div class="label-cell">宏观政策</div>
+                    <div class="input-cell"><textarea class="input-line grid-bg"></textarea></div>
+                </div>
+
+                <!-- Row 5: Media Commentary -->
+                <div class="form-row">
+                    <div class="label-cell">媒体评论</div>
+                    <div class="input-cell"><textarea class="input-line grid-bg"></textarea></div>
+                </div>
+
+                <!-- Row 6: Checkboxes -->
+                <div class="checkbox-row">
+                    <label class="checkbox-item">
+                        <input type="radio" name="analysis-type"> 意义
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="radio" name="analysis-type"> 原因
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="radio" name="analysis-type"> 问题
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="radio" name="analysis-type"> 危害
+                    </label>
+                </div>
+
+                <!-- Row 7: Analysis Grid -->
+                <div class="analysis-section">
+                    <div class="analysis-col">
+                        <div class="analysis-header">问题分析</div>
+                        <div class="analysis-content"></div>
+                    </div>
+                    <div class="analysis-col">
+                        <div class="analysis-header">原因分析</div>
+                        <div class="analysis-content"></div>
+                    </div>
+                    <div class="analysis-col">
+                        <div class="analysis-header">对策分析</div>
+                        <div class="analysis-content"></div>
+                    </div>
+                </div>
+
+                <!-- Row 8: Sentence Transfer -->
+                <div class="form-row">
+                    <div class="bottom-label">句子迁移</div>
+                    <div class="bottom-input"></div>
+                </div>
+
+                <!-- Row 9: Method Transfer -->
+                <div class="form-row">
+                    <div class="bottom-label">方法迁移</div>
+                    <div class="bottom-input"></div>
+                </div>
+
+                <!-- Row 10: Remarks -->
+                <div class="form-row">
+                    <div class="bottom-label">备注</div>
+                    <div class="bottom-input"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            FB 粉笔
+        </div>
+    </div>
+
+</body>
+</html>

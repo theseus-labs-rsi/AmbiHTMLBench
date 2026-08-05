@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sick Transit</title>
+<style>
+    body {
+        background-color: #f0f0f0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        padding: 40px;
+    }
+    .page {
+        background-color: white;
+        width: 8.5in;
+        position: relative;
+        box-sizing: border-box;
+        padding: 0.75in 0.6in;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        font-family: 'Times New Roman', Times, serif;
+        font-size: 10.5pt;
+        line-height: 1.25;
+        color: black;
+    }
+
+    /* Printer Marks */
+    .printer-meta {
+        position: absolute;
+        top: 0.35in;
+        left: 0.35in;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 7pt;
+        color: #444;
+        letter-spacing: -0.2px;
+    }
+    .crosshair {
+        position: absolute;
+        width: 0.5in;
+        height: 0.5in;
+    }
+    .crosshair::before, .crosshair::after {
+        content: '';
+        position: absolute;
+        background: black;
+    }
+    .crosshair::before { width: 100%; height: 0.5px; top: 50%; left: 0; transform: translateY(-50%); }
+    .crosshair::after { width: 0.5px; height: 100%; left: 50%; top: 0; transform: translateX(-50%); }
+    .crosshair .circle {
+        position: absolute;
+        width: 0.18in;
+        height: 0.18in;
+        border: 0.5px solid black;
+        border-radius: 50%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+    }
+    .ch-top { top: 0.05in; left: 50%; transform: translateX(-50%); }
+    .ch-bottom { bottom: 0.05in; left: 50%; transform: translateX(-50%); }
+    .ch-left { left: 0.05in; top: 50%; transform: translateY(-50%); }
+    .ch-right { right: 0.05in; top: 50%; transform: translateY(-50%); }
+    .corner-mark {
+        position: absolute;
+        width: 0.3in;
+        height: 0.3in;
+        border: 0.5px solid black;
+    }
+    .cm-tl { top: 0.1in; left: 0.1in; border-bottom: none; border-right: none; }
+    .cm-tr { top: 0.1in; right: 0.1in; border-bottom: none; border-left: none; }
+    .cm-bl { bottom: 0.1in; left: 0.1in; border-top: none; border-right: none; }
+    .cm-br { bottom: 0.1in; right: 0.1in; border-top: none; border-left: none; }
+
+    /* Header Section */
+    .header {
+        text-align: center;
+        margin-bottom: 25px;
+        margin-top: 20px;
+    }
+    .line-thick-top {
+        border-top: 4px solid black;
+        border-bottom: 1px solid black;
+        height: 2px;
+        margin-bottom: 15px;
+    }
+    .line-thick-bottom {
+        border-top: 1px solid black;
+        border-bottom: 4px solid black;
+        height: 2px;
+        margin-top: 15px;
+        margin-bottom: 20px;
+    }
+    .header h1.magazine-title {
+        font-size: 44pt;
+        margin: 0;
+        line-height: 1;
+        letter-spacing: -1px;
+        font-weight: normal;
+    }
+    .magazine-title .amp {
+        font-style: italic;
+        font-size: 1.15em;
+        vertical-align: -0.05em;
+    }
+    .header h2.article-title {
+        font-size: 34pt;
+        font-variant: small-caps;
+        margin: 5px 0 5px 0;
+        font-weight: normal;
+        letter-spacing: 1px;
+    }
+    .header h3.article-subtitle {
+        font-size: 20pt;
+        font-style: italic;
+        margin: 0 0 25px 0;
+        font-weight: normal;
+    }
+    .author-name {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 14pt;
+        font-weight: bold;
+        margin: 0;
+    }
+
+    /* Main Content Layout */
+    .content {
+        display: flex;
+        justify-content: space-between;
+        gap: 0.25in;
+    }
+    .column {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        text-align: justify;
+    }
+
+    /* Typography */
+    .column p {
+        margin: 0;
+        text-indent: 1.5em;
+    }
+    .column p.no-indent {
+        text-indent: 0;
+    }
+    .drop-cap {
+        float: left;
+        font-size: 3.8em;
+        line-height: 0.8;
+        padding-right: 5px;
+        padding-top: 3px;
+    }
+
+    /* Bio Note at bottom of Col 1 */
+    .bio-box {
+        margin-top: auto;
+        border-top: 0.5px solid black;
+        padding-top: 10px;
+        padding-bottom: 2px;
+    }
+    .bio-box p {
+        text-indent: 0;
+        font-size: 9.5pt;
+        line-height: 1.3;
+    }
+
+    /* Inset Book Block in Col 2 */
+    .inset-block {
+        text-align: center;
+        margin: 18px 0;
+    }
+    .inset-block p {
+        text-indent: 0;
+        margin: 0;
+        font-size: 9pt;
+        line-height: 1.3;
+        text-align: center;
+    }
+    .inset-block .spacer {
+        margin-top: 12px;
+    }
+    .divider-line {
+        width: 1.5in;
+        border-top: 0.5px solid black;
+        margin: 15px auto 0 auto;
+    }
+
+    /* Footer */
+    .footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-top: 35px;
+        font-weight: bold;
+        font-size: 9.5pt;
+        font-variant: small-caps;
+    }
+</style>
+</head>
+<body>
+
+<div class="page">
+    <div class="printer-meta">Iss.40/June 22 bob&nbsp;&nbsp;1/21/02&nbsp;2:21 PM&nbsp;&nbsp;Page 1</div>
+    
+    <div class="crosshair ch-top"><div class="circle"></div></div>
+    <div class="crosshair ch-bottom"><div class="circle"></div></div>
+    <div class="crosshair ch-left"><div class="circle"></div></div>
+    <div class="crosshair ch-right"><div class="circle"></div></div>
+    
+    <div class="corner-mark cm-tl"></div>
+    <div class="corner-mark cm-tr"></div>
+    <div class="corner-mark cm-bl"></div>
+    <div class="corner-mark cm-br"></div>
+
+    <div class="header">
+        <div class="line-thick-top"></div>
+        <h1 class="magazine-title">Books<span class="amp">&amp;</span>Arts</h1>
+        <div class="line-thick-bottom"></div>
+        <h2 class="article-title">Sick Transit</h2>
+        <h3 class="article-subtitle">The Bioethics of Big Brother</h3>
+        <p class="author-name">By Wesley J. Smith</p>
+    </div>
+
+    <div class="content">
+        <!-- Column 1 -->
+        <div class="column">
+            <p class="no-indent"><span class="drop-cap">P</span>eople who are elderly, disabled, prematurely born, or seriously ill have much to fear from the medical intelligentsia&mdash;those bioethicists and moral philosophers who have in recent years transformed medical ethics.</p>
+            <p>It was bioethicists and moral philosophers, after all, who made it acceptable to dehydrate to death people diagnosed as permanently unconscious&mdash;a practice that has already spread to brain-damaged people who are unquestionably conscious.</p>
+            <p>It was bioethicists and moral philosophers who made a distinction between &ldquo;human beings&rdquo; and &ldquo;persons,&rdquo; with only persons enjoying the right to life&mdash;a theory intended to pave the way for the legal killing of babies born with birth defects and involuntary euthanasia of legally incompetent patients. (Both forms of medicalized killing already occur in the Netherlands, a country some look to as a model for the United States.)</p>
+            <p>It was bioethicists and moral philosophers as well who promulgated &ldquo;Futile Care Theory,&rdquo; which allows doctors and health-insurance executives to deny not merely high-tech interventions but also such treatments as CPR and antibiotics to the profoundly disabled and people at the end of life. Even if the patient or the patient's family wants the care, what matters is the medical professional's assessment of the quality and worth of the patient's life. Little noticed by the mainstream media,</p>
+            
+            <div class="bio-box">
+                <p><i>Wesley J. Smith, an attorney for the International Anti-Euthanasia Task Force, is the author of</i> Forced Exit: The Slippery Slope from Assisted Suicide to Legalized Murder.</p>
+            </div>
+        </div>
+
+        <!-- Column 2 -->
+        <div class="column">
+            <p class="no-indent">Futile Care Theory is already being implemented in hospitals and nursing homes, both informally in clinical settings and formally through hospital protocols.</p>
+            <p>In short, with the exception of helping to create laws that permit people to refuse unwanted medical treatment, the attitudes and policies of most mainstream bioethicists and moral philosophers are very bad news for the medically defenseless and vulnerable among us.</p>
+            
+            <div class="inset-block">
+                <p><b>Daniel Callahan</b></p>
+                <p><b><i>False Hopes</i></b></p>
+                <p><i>Why America's Quest for Perfect Health is a Recipe for Failure</i></p>
+                <p>Simon &amp; Schuster, 336 pp., $24</p>
+                
+                <p class="spacer"><b>William B. Schwartz</b></p>
+                <p><b><i>Life Without Disease</i></b></p>
+                <p><i>The Pursuit of Medical Utopia</i></p>
+                <p>University of California Press, 204 pp., $22</p>
+                <div class="divider-line"></div>
+            </div>
+
+            <p class="no-indent">It is in this context that two new books, <i>False Hopes</i> by the noted bioethicist Daniel Callahan and <i>Life Without Disease</i> by physician William B. Schwartz, cause so much concern. Both authors urge the laudable reform of our currently dysfunctional health-care system in order to make it more widely accessible and cost efficient. Unfortunately, both authors choose methods that are unethical and immoral.</p>
+            <p>At first blush, Callahan and Schwartz seem mirror opposites: Callahan is nihilistic; Schwartz is utopian. Callahan is convinced that medical progress has advanced just about as far as it reasonably can. Schwartz sees a medically miraculous future where life expectancy will</p>
+        </div>
+
+        <!-- Column 3 -->
+        <div class="column">
+            <p class="no-indent">reach 130 years. Callahan would put more money into public-health education, while Schwartz would increase investment in medical research. Callahan writes too long. Schwartz writes too short.</p>
+            <p>Despite these differences, however, the authors have much in common. Both write in the passive prose so favored by the medical intelligentsia. Both attempt to appear rational and balanced as they grapple with health-care policy. And both surrender abjectly to medical utilitarianism.</p>
+            <p>Each enthusiastically espouses a rigid system of health-care rationing that would sacrifice the life and health of some people for the sake of health-care &ldquo;equity&rdquo;&mdash;which for both the authors represents a higher good than the fate of individual patients. And therein lies an acute and fast-approaching danger to the future of America as a moral nation.</p>
+            <p>Callahan disbelieves in medical utopia, and everywhere he looks, he sees only limits. People expect too much from their doctors. Medicine is too expensive and getting more so. Health care consumes 14 percent of the gross domestic product and takes resources away from other important community interests.</p>
+            <p>And what have we gotten for our huge investment in medicine? Not as much, according to Callahan, as might be supposed. It's true that life expectancy has increased by approximately thirty years during the twentieth century, but that has mostly to do with improved infant-mortality rates. And our increased lifespan is actually a bit of a curse. We used to die quickly from infectious disease. Now we die slowly from such chronic and debilitating conditions as Alz-</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div>June 22, 1998</div>
+        <div>The Weekly Standard / 31</div>
+    </div>
+</div>
+
+</body>
+</html>

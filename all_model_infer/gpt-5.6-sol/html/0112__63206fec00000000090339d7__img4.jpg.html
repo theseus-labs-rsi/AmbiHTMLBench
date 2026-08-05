@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>问题解决</title>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #ffffff;
+      color: #222;
+      font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .page {
+      width: 540px;
+      min-height: 720px;
+      margin: 0 auto;
+      padding: 48px 38px 22px;
+      position: relative;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .title {
+      height: 42px;
+      text-align: center;
+      color: #684b86;
+      font-family: "STKaiti", "KaiTi", serif;
+      font-size: 18px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      position: relative;
+      margin-bottom: 8px;
+    }
+
+    .title:before,
+    .title:after {
+      content: "";
+      position: absolute;
+      height: 24px;
+      width: 24px;
+      top: -4px;
+      background: #c6b2d8;
+      transform: rotate(18deg);
+    }
+
+    .title:before {
+      left: 126px;
+    }
+
+    .title:after {
+      right: 126px;
+      transform: rotate(0deg);
+    }
+
+    .title span {
+      display: inline-block;
+      border-bottom: 2px solid #9577ad;
+      padding: 0 15px 2px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .title span:before {
+      content: "";
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      background: #8060a3;
+      left: -66px;
+      top: -1px;
+      transform: rotate(45deg);
+    }
+
+    .question {
+      position: relative;
+      padding-left: 28px;
+      margin-bottom: 4px;
+      font-size: 12px;
+    }
+
+    .number {
+      position: absolute;
+      left: 0;
+      top: -2px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #e66b48;
+      color: #fff;
+      font-family: Georgia, serif;
+      font-size: 17px;
+      font-style: italic;
+      font-weight: bold;
+      text-align: center;
+      line-height: 24px;
+    }
+
+    .red {
+      color: #b24a4f;
+    }
+
+    .arrow {
+      color: #b24a4f;
+      font-size: 20px;
+      vertical-align: -2px;
+      margin: 0 5px;
+    }
+
+    .scene {
+      width: 370px;
+      height: 98px;
+      margin: 3px auto 0;
+      border: 1px solid #6f8d79;
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(155deg, transparent 0 34%, #a9c8c1 35% 36%, transparent 37%),
+        linear-gradient(180deg, #cde7e5 0 47%, #75a66c 48% 66%, #d9c18e 67% 100%);
+    }
+
+    .scene:before {
+      content: "▲ ▲ ▲ ▲ ▲ ▲ ▲ ▲";
+      position: absolute;
+      left: 3px;
+      top: 12px;
+      color: #1f674b;
+      font-size: 25px;
+      letter-spacing: -5px;
+      white-space: nowrap;
+    }
+
+    .scene:after {
+      content: "🚍";
+      position: absolute;
+      right: 76px;
+      bottom: 17px;
+      font-size: 40px;
+      filter: saturate(.8);
+    }
+
+    .scene-label {
+      position: absolute;
+      background: rgba(255,255,255,.78);
+      padding: 1px 5px;
+      border-radius: 8px;
+      font-size: 11px;
+      z-index: 2;
+    }
+
+    .scene-label.one {
+      left: 175px;
+      top: 48px;
+    }
+
+    .scene-label.two {
+      right: 10px;
+      top: 19px;
+    }
+
+    .scene-note {
+      text-align: center;
+      color: #b24a4f;
+      font-size: 10px;
+      margin-top: -1px;
+    }
+
+    .interpretation {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 2px 0 3px;
+    }
+
+    .bubble {
+      width: 105px;
+      min-height: 49px;
+      padding: 6px 8px;
+      border: 1px solid #8ea7a6;
+      border-radius: 48%;
+      text-align: center;
+      font-size: 10px;
+      line-height: 1.35;
+      background: #f8ffff;
+    }
+
+    .child {
+      width: 70px;
+      height: 60px;
+      text-align: center;
+      font-size: 37px;
+      line-height: 50px;
+    }
+
+    .child small {
+      display: block;
+      font-size: 9px;
+      line-height: 8px;
+    }
+
+    .middle {
+      flex: 1;
+      text-align: center;
+      padding: 0 4px;
+    }
+
+    .bracket {
+      position: relative;
+      height: 32px;
+      margin: 0 auto;
+      border-bottom: 1px solid #333;
+      width: 170px;
+    }
+
+    .bracket:before,
+    .bracket:after {
+      content: "";
+      position: absolute;
+      bottom: -1px;
+      height: 8px;
+      border-left: 1px solid #333;
+    }
+
+    .bracket:before { left: 0; }
+    .bracket:after { right: 0; }
+
+    .bracket span {
+      position: absolute;
+      width: 113px;
+      height: 8px;
+      left: 28px;
+      bottom: 0;
+      border-left: 1px solid #333;
+      border-right: 1px solid #333;
+      border-top: 1px solid #333;
+    }
+
+    .full-distance {
+      text-align: center;
+      margin-top: -1px;
+      font-size: 11px;
+    }
+
+    .calculation {
+      margin: 2px 0 0 72px;
+      font-size: 12px;
+      line-height: 1.9;
+    }
+
+    .answer {
+      margin: 0 0 2px 28px;
+      font-size: 11px;
+    }
+
+    .ask {
+      margin: 0 0 4px 28px;
+      color: #766023;
+      font-size: 11px;
+    }
+
+    .highlight {
+      display: inline-block;
+      color: #a2862d;
+      border: 1px solid #d0bd51;
+      border-radius: 9px;
+      padding: 0 3px;
+      margin-right: 3px;
+      font-weight: bold;
+    }
+
+    .problem-two {
+      margin-top: 4px;
+    }
+
+    .problem-text {
+      padding-left: 28px;
+      line-height: 1.75;
+      margin-bottom: 2px;
+    }
+
+    .diagram-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 2px 0 5px 43px;
+    }
+
+    .side-question {
+      width: 105px;
+      color: #6d6870;
+      text-align: center;
+      font-size: 10px;
+      line-height: 1.35;
+    }
+
+    .land-diagram {
+      width: 160px;
+      height: 79px;
+      position: relative;
+      border: 1px solid #555;
+      background:
+        repeating-linear-gradient(90deg, transparent 0 39px, #777 40px 41px),
+        repeating-linear-gradient(0deg, transparent 0 25px, #777 26px 27px);
+    }
+
+    .land-diagram .rose {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 62px;
+      background:
+        repeating-linear-gradient(45deg, rgba(165,72,126,.8) 0 1px, transparent 1px 6px),
+        repeating-linear-gradient(-45deg, rgba(165,72,126,.8) 0 1px, transparent 1px 6px),
+        rgba(231,192,218,.48);
+      border-top: 1px solid #555;
+    }
+
+    .diagram-top {
+      position: absolute;
+      top: -18px;
+      left: 46px;
+      white-space: nowrap;
+      font-size: 11px;
+    }
+
+    .diagram-label {
+      position: absolute;
+      right: -143px;
+      top: 39px;
+      width: 135px;
+      font-size: 10px;
+      line-height: 1.35;
+    }
+
+    .diagram-bottom {
+      position: absolute;
+      left: 5px;
+      bottom: -22px;
+      white-space: nowrap;
+      font-size: 10px;
+    }
+
+    .answer-two {
+      margin: 22px 0 0 72px;
+      font-size: 11px;
+    }
+
+    .formula-two {
+      text-align: center;
+      margin: 2px 0 0;
+      font-size: 13px;
+    }
+
+    .notice {
+      margin: 7px 0 0 28px;
+      color: #b24a4f;
+      font-size: 9px;
+      line-height: 1.4;
+    }
+
+    .fraction {
+      display: inline-block;
+      vertical-align: middle;
+      text-align: center;
+      line-height: 1;
+      margin: 0 1px;
+    }
+
+    .fraction .top {
+      display: block;
+      border-bottom: 1px solid currentColor;
+      padding: 0 2px;
+    }
+
+    .fraction .bottom {
+      display: block;
+      padding: 0 2px;
+    }
+
+    .placeholder {
+      color: transparent;
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="title"><span>问题解决</span></div>
+
+    <section class="problem-one">
+      <div class="question">
+        <span class="number">1</span>
+        汽车已经行了多少千米？
+        <span class="red">求一个数的几分之几的问题</span>
+        <span class="arrow">→</span>
+        <span class="red">用已知量乘分率</span>
+      </div>
+
+      <div class="scene" aria-label="汽车行驶示意图">
+        <div class="scene-label one">要行84千米。</div>
+        <div class="scene-label two">已经行了全程的 <span class="fraction"><span class="top">2</span><span class="bottom">3</span></span></div>
+      </div>
+
+      <div class="scene-note">
+        行了全程的 <span class="fraction"><span class="top">2</span><span class="bottom">3</span></span>，
+        就是把全程看作单位“1”，已经行了的路程是84km的 <span class="fraction"><span class="top">2</span><span class="bottom">3</span></span>
+      </div>
+
+      <div class="interpretation">
+        <div class="bubble">怎么理解“已经行了全程的 <span class="fraction"><span class="top">2</span><span class="bottom">3</span></span>”呢？</div>
+        <div class="child">👧</div>
+        <div class="middle">
+          <div>行了全程的 <span class="fraction"><span class="top">2</span><span class="bottom">3</span></span></div>
+          <div class="bracket"><span></span></div>
+          <div class="full-distance">全程84km</div>
+        </div>
+        <div class="bubble">全程平均分成3份，已经行了2份。</div>
+        <div class="child">🧒</div>
+      </div>
+
+      <div class="calculation">
+        可以这样算：84÷3×2＝56(km)<br>
+        也可以这样算：84×<span class="fraction"><span class="top">2</span><span class="bottom">3</span></span>＝56(km)
+      </div>
+
+      <div class="answer">答：汽车已经行了56km。</div>
+
+      <div class="ask">
+        <span class="highlight">说一说</span>
+        “84×<span class="fraction"><span class="top">2</span><span class="bottom">3</span></span>”这种列式，你是怎么想的？
+      </div>
+    </section>
+
+    <section class="problem-two">
+      <div class="question">
+        <span class="number">2</span>
+        张伯伯把20hm²土地的
+        <span class="fraction"><span class="top">3</span><span class="bottom">4</span></span>
+        用来种玫瑰，其中种红玫瑰的面积占玫瑰地面积的
+        <span class="fraction"><span class="top">3</span><span class="bottom">5</span></span>。
+        张伯伯种了多少公顷红玫瑰？
+      </div>
+
+      <div class="problem-text red">连续求一个数的几分之几的问题</div>
+
+      <div class="diagram-row">
+        <div class="side-question">
+          题中的
+          <span class="fraction"><span class="top">3</span><span class="bottom">4</span></span>
+          表示什么意义？
+          <br>
+          <span class="red">
+            <span class="fraction"><span class="top">3</span><span class="bottom">5</span></span>
+            呢？
+          </span>
+        </div>
+
+        <div class="land-diagram" aria-label="土地与玫瑰种植面积示意图">
+          <div class="diagram-top">20hm²土地</div>
+          <div class="rose"></div>
+          <div class="diagram-label">
+            20hm²土地的
+            <span class="fraction"><span class="top">3</span><span class="bottom">4</span></span>
+            种玫瑰
+          </div>
+          <div class="diagram-bottom">
+            玫瑰地的
+            <span class="fraction"><span class="top">3</span><span class="bottom">5</span></span>
+            种红玫瑰
+          </div>
+        </div>
+
+        <div class="bubble">还可以怎样解决呢？</div>
+      </div>
+
+      <div class="formula-two">
+        20×<span class="fraction"><span class="top">3</span><span class="bottom">4</span></span>×
+        <span class="fraction"><span class="top">3</span><span class="bottom">5</span></span>
+        ＝9(hm²)
+      </div>
+
+      <div class="answer-two">答：张伯伯种了9hm²红玫瑰。</div>
+
+      <div class="notice">
+        注意：做连乘题时要根据题意弄清楚单位“1”的量×分率＝分率对应的量，准确地找出单位“1”的关键在于明确题目中“整个量”或“整体”，相当于“哪个量的几分之几”，是哪个量的几分之几。
+      </div>
+    </section>
+
+    <div class="placeholder" aria-hidden="true">[Illustration]</div>
+  </main>
+</body>
+</html>

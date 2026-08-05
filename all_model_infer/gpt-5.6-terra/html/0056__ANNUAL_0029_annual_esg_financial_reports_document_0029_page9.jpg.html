@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Microsoft Digital Defense Report 2024</title>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    :root {
+      --ink: #f5f4f5;
+      --cream: #eeeae0;
+      --purple: #322044;
+      --gold: #f5d77e;
+      --yellow: #ffb900;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      overflow-x: hidden;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse 37% 18% at 36% 82%, rgba(39, 0, 255, .95) 0%, rgba(65, 6, 190, .7) 25%, rgba(13, 11, 30, 0) 72%),
+        radial-gradient(ellipse 25% 65% at 51% 76%, rgba(255, 17, 116, .9) 0%, rgba(255, 44, 32, .68) 25%, rgba(10, 8, 23, 0) 67%),
+        radial-gradient(ellipse 24% 48% at 58% 46%, rgba(255, 220, 47, .98) 0%, rgba(255, 82, 39, .86) 28%, rgba(99, 11, 60, .5) 52%, rgba(14, 10, 28, 0) 75%),
+        radial-gradient(ellipse 50% 32% at 51% 97%, rgba(255, 7, 140, .72), rgba(12, 10, 25, 0) 68%),
+        linear-gradient(110deg, #0b0c1b 0%, #111022 38%, #281531 72%, #49104f 100%);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .page {
+      position: relative;
+      min-height: 1500px;
+      padding-top: 78px;
+      isolation: isolate;
+    }
+
+    .page::before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      inset: 0;
+      opacity: .34;
+      background-image:
+        radial-gradient(circle, rgba(180, 182, 203, .55) 0 2px, transparent 2.5px);
+      background-size: 56px 56px;
+      background-position: 24px 164px;
+      mask-image: linear-gradient(to bottom, transparent 5%, black 18%, black 95%, transparent);
+    }
+
+    .page::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      top: 0;
+      bottom: 0;
+      left: 166px;
+      width: 2px;
+      background: rgba(247, 219, 119, .86);
+    }
+
+    .topbar {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: stretch;
+      height: 54px;
+      margin: 0 78px;
+      color: var(--purple);
+      background: var(--cream);
+      font-size: 24px;
+      white-space: nowrap;
+    }
+
+    .menu {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      font-size: 26px;
+      font-weight: bold;
+      letter-spacing: -3px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      padding: 0 18px 0 12px;
+      font-weight: bold;
+      font-size: 24px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      border-left: 1px solid rgba(47, 30, 65, .14);
+      font-size: 23px;
+    }
+
+    .nav-item.active {
+      color: #f7f5f1;
+      background: #4a3166;
+    }
+
+    .nav-item.grow {
+      flex: 1;
+    }
+
+    .page-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 54px;
+      color: #292039;
+      background: var(--yellow);
+      font-weight: bold;
+      font-size: 20px;
+    }
+
+    .gold-cross {
+      position: absolute;
+      top: 250px;
+      left: 0;
+      width: 168px;
+      height: 57px;
+      border-top: 2px solid var(--gold);
+    }
+
+    .gold-cross::after {
+      content: "";
+      position: absolute;
+      top: -2px;
+      right: 0;
+      width: 55px;
+      height: 57px;
+      background: var(--gold);
+    }
+
+    .gold-cross::before {
+      content: "⌟";
+      position: absolute;
+      z-index: 1;
+      top: 3px;
+      right: 11px;
+      color: #292039;
+      font-size: 42px;
+      font-weight: 200;
+      transform: rotate(90deg);
+    }
+
+    .content {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(600px, 1fr) 620px;
+      column-gap: 7.5%;
+      margin: 0 80px 0 208px;
+      padding-top: 207px;
+    }
+
+    .content::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -208px;
+      right: -80px;
+      border-top: 2px solid rgba(247, 219, 119, .72);
+    }
+
+    .intro {
+      position: relative;
+      z-index: 1;
+      max-width: 830px;
+      min-height: 835px;
+      padding-top: 35px;
+    }
+
+    .chapter {
+      margin: 0 0 36px;
+      color: var(--gold);
+      font-size: 31px;
+      line-height: 1;
+      font-weight: bold;
+    }
+
+    h1 {
+      max-width: 780px;
+      margin: 0;
+      color: #fafafa;
+      font-size: 76px;
+      line-height: 1.08;
+      font-weight: 300;
+      letter-spacing: -1px;
+    }
+
+    .question {
+      margin: 47px 0 0;
+      color: #f8f7f7;
+      font-size: 48px;
+      line-height: 1.12;
+      font-weight: 300;
+    }
+
+    .intro-panel {
+      position: absolute;
+      z-index: -1;
+      top: 0;
+      left: -32px;
+      width: 830px;
+      height: 830px;
+      background: rgba(16, 14, 32, .6);
+    }
+
+    .contents {
+      padding-top: 43px;
+      font-size: 27px;
+    }
+
+    .contents-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      border-top: 2px solid rgba(245, 244, 245, .86);
+    }
+
+    .contents-list li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 58px;
+      gap: 20px;
+      border-bottom: 1px solid rgba(245, 244, 245, .8);
+    }
+
+    .contents-list li span:last-child {
+      flex: 0 0 auto;
+      padding-left: 12px;
+      font-weight: bold;
+      font-size: 24px;
+    }
+
+    .contents-list li span:first-child {
+      line-height: 1.2;
+    }
+
+    .artwork {
+      position: absolute;
+      z-index: -2;
+      top: 96px;
+      left: 18%;
+      width: 66%;
+      height: 1390px;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .artwork::before,
+    .artwork::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      transform: rotate(-22deg);
+    }
+
+    .artwork::before {
+      top: 35px;
+      left: 20%;
+      width: 45%;
+      height: 118%;
+      border: 62px dotted rgba(255, 218, 77, .8);
+      box-shadow:
+        0 0 0 24px rgba(245, 73, 46, .42),
+        0 0 0 56px rgba(227, 20, 122, .24);
+    }
+
+    .artwork::after {
+      top: 720px;
+      left: -19%;
+      width: 102%;
+      height: 39%;
+      border: 55px dotted rgba(102, 18, 255, .78);
+      box-shadow:
+        0 0 0 19px rgba(244, 8, 177, .72),
+        0 0 0 46px rgba(255, 57, 75, .3);
+    }
+
+    .placeholder {
+      position: absolute;
+      inset: 0;
+      color: transparent;
+      background: transparent;
+    }
+
+    .placeholder figcaption {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+
+    @media (max-width: 1200px) {
+      .topbar {
+        margin: 0 35px;
+        font-size: 17px;
+      }
+
+      .brand,
+      .nav-item {
+        font-size: 17px;
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      .content {
+        grid-template-columns: 1fr 430px;
+        margin-left: 150px;
+        margin-right: 45px;
+        column-gap: 45px;
+      }
+
+      .intro-panel {
+        width: 680px;
+      }
+
+      h1 {
+        font-size: 61px;
+      }
+
+      .question {
+        font-size: 38px;
+      }
+
+      .contents {
+        font-size: 21px;
+      }
+    }
+
+    @media (max-width: 800px) {
+      .page {
+        min-height: 100vh;
+        padding-top: 20px;
+      }
+
+      .topbar {
+        height: auto;
+        min-height: 54px;
+        margin: 0 16px;
+        overflow: hidden;
+      }
+
+      .brand {
+        min-width: 190px;
+        white-space: normal;
+        font-size: 14px;
+      }
+
+      .nav-item {
+        display: none;
+      }
+
+      .page-number {
+        margin-left: auto;
+      }
+
+      .page::after {
+        left: 24px;
+      }
+
+      .gold-cross {
+        top: 180px;
+        width: 25px;
+      }
+
+      .gold-cross::after {
+        display: none;
+      }
+
+      .content {
+        display: block;
+        margin: 0 24px 0 48px;
+        padding-top: 150px;
+      }
+
+      .content::before {
+        left: -48px;
+        right: -24px;
+      }
+
+      .intro {
+        min-height: auto;
+        padding-top: 24px;
+      }
+
+      .intro-panel {
+        left: -18px;
+        width: calc(100vw - 54px);
+        height: 570px;
+      }
+
+      .chapter {
+        font-size: 22px;
+        margin-bottom: 25px;
+      }
+
+      h1 {
+        font-size: clamp(38px, 10vw, 58px);
+        letter-spacing: 0;
+      }
+
+      .question {
+        margin-top: 34px;
+        font-size: clamp(28px, 7vw, 40px);
+      }
+
+      .contents {
+        padding-top: 100px;
+        font-size: 19px;
+      }
+
+      .artwork {
+        top: 100px;
+        left: 10%;
+        width: 100%;
+        height: 900px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <nav class="topbar" aria-label="Report navigation">
+      <div class="menu" aria-label="Menu">☰</div>
+      <div class="brand">Microsoft Digital Defense Report 2024</div>
+      <div class="nav-item">Overview</div>
+      <div class="nav-item active">The evolving cyber threat landscape</div>
+      <div class="nav-item grow">Centering our organizations on security</div>
+      <div class="nav-item">Early insights: AI’s impact on cybersecurity</div>
+      <div class="nav-item">Appendix</div>
+      <div class="page-number">8</div>
+    </nav>
+
+    <div class="gold-cross" aria-hidden="true"></div>
+
+    <figure class="artwork placeholder" aria-label="Decorative abstract particle artwork">
+      <figcaption>[Image: abstract multicolored particle artwork]</figcaption>
+    </figure>
+
+    <section class="content">
+      <section class="intro">
+        <div class="intro-panel" aria-hidden="true"></div>
+        <p class="chapter">Chapter 1</p>
+        <h1>The evolving cyber<br>threat landscape</h1>
+        <p class="question">How have trends and<br>tactics changed?</p>
+      </section>
+
+      <aside class="contents" aria-label="Chapter contents">
+        <ul class="contents-list">
+          <li><span>Key developments</span><span>9</span></li>
+          <li><span>Introduction</span><span>10</span></li>
+          <li><span>Threat actors and motivations</span><span>11</span></li>
+          <li><span>Nation-state threats</span><span>12</span></li>
+          <li><span>Ransomware</span><span>27</span></li>
+          <li><span>Fraud</span><span>31</span></li>
+          <li><span>Identity and social engineering</span><span>39</span></li>
+          <li><span>Distributed denial of service (DDoS) attacks</span><span>50</span></li>
+        </ul>
+      </aside>
+    </section>
+  </main>
+</body>
+</html>

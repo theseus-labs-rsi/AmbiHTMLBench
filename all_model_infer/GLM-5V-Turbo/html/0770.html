@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script>window.MathJax={tex:{inlineMath:[["$","$"]],displayMath:[["$$","$$"]]}};</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>传媒公司春招倒计时</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "Microsoft YaHei", "SimHei", sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: linear-gradient(180deg, #fff5f5 0%, #ffe4e4 100%);
+            border: 4px solid #ff6b6b;
+            border-radius: 10px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header {
+            text-align: center;
+            position: relative;
+            margin-bottom: 20px;
+            padding-top: 10px;
+        }
+        
+        .main-title {
+            font-size: 48px;
+            font-weight: bold;
+            letter-spacing: 4px;
+            background: linear-gradient(180deg, #ff6b6b 30%, #4a90e2 70%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 2px 2px 0 rgba(255,107,107,0.2);
+            position: relative;
+            display: inline-block;
+            transform: skew(-5deg);
+        }
+        
+        .main-title::before,
+        .main-title::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 60px;
+            height: 20px;
+            background: repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 8px,
+                #ff6b6b 8px,
+                #ff6b6b 12px
+            );
+        }
+        
+        .main-title::before {
+            right: 100%;
+            margin-right: 15px;
+            transform: translateY(-50%);
+        }
+        
+        .main-title::after {
+            left: 100%;
+            margin-left: 15px;
+            transform: translateY(-50%) scaleX(-1);
+        }
+        
+        .decorative-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .heart-group {
+            position: absolute;
+            top: 80px;
+            left: 20px;
+            display: flex;
+            gap: 5px;
+        }
+        
+        .heart {
+            width: 24px;
+            height: 24px;
+            background: #ff6b9d;
+            clip-path: path('M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z');
+            opacity: 0.7;
+        }
+        
+        .star-decoration {
+            position: absolute;
+            top: 100px;
+            right: 40px;
+            width: 30px;
+            height: 30px;
+            background: #ffd700;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+        }
+        
+        .card {
+            background: white;
+            border: 3px solid #333;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            position: relative;
+            box-shadow: 4px 4px 0 rgba(0,0,0,0.1);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        .company-badge {
+            background: #87ceeb;
+            color: #003366;
+            font-size: 28px;
+            font-weight: bold;
+            padding: 5px 20px;
+            border-radius: 25px;
+            border: 3px solid #003366;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            position: relative;
+        }
+        
+        .company-badge::before {
+            content: '☀';
+            font-size: 20px;
+        }
+        
+        .logo-container {
+            flex-shrink: 0;
+            margin-left: 20px;
+        }
+        
+        .logo-placeholder {
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-style: italic;
+        }
+        
+        .logo-easyent {
+            color: #c41e3a;
+            font-size: 32px;
+            font-family: Arial, sans-serif;
+            letter-spacing: -1px;
+        }
+        
+        .logo-easyent span {
+            font-size: 16px;
+            vertical-align: middle;
+            margin-left: 2px;
+        }
+        
+        .logo-guangxian {
+            width: 45px;
+            height: 45px;
+            background: #e74c3c;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            font-family: serif;
+            font-style: italic;
+            border: 3px solid #c0392b;
+        }
+        
+        .logo-shidai {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .shidai-icon {
+            width: 0;
+            height: 0;
+            border-left: 25px solid transparent;
+            border-right: 25px solid transparent;
+            border-bottom: 40px solid #f39c12;
+            position: relative;
+        }
+        
+        .shidai-text {
+            font-family: "KaiTi", "STKaiti", serif;
+            font-size: 26px;
+            color: #333;
+            font-weight: bold;
+            font-style: italic;
+        }
+        
+        .content-section {
+            line-height: 1.6;
+        }
+        
+        .section-row {
+            margin-bottom: 8px;
+            display: flex;
+            gap: 5px;
+        }
+        
+        .label {
+            color: #e74c3c;
+            font-weight: bold;
+            font-size: 15px;
+            white-space: nowrap;
+        }
+        
+        .text-content {
+            color: #333;
+            font-size: 14px;
+            flex: 1;
+        }
+        
+        .highlight-label {
+            background: #ff6b6b;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            display: inline-block;
+            min-width: 90px;
+            text-align: center;
+        }
+        
+        @media (max-width: 600px) {
+            .main-title {
+                font-size: 32px;
+            }
+            
+            .company-badge {
+                font-size: 22px;
+                padding: 4px 15px;
+            }
+            
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="decorative-elements">
+            <div class="heart-group">
+                <div class="heart"></div>
+                <div class="heart"></div>
+                <div class="heart"></div>
+                <div class="heart"></div>
+            </div>
+            <div class="star-decoration"></div>
+        </div>
+        
+        <header class="header">
+            <h1 class="main-title">传媒公司春招倒计时</h1>
+        </header>
+
+        <!-- Card 1: 壹心娱乐 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="company-badge">壹心娱乐</div>
+                <div class="logo-container">
+                    <div class="logo-placeholder logo-easyent">
+                        easyent<span>薏心</span>
+                    </div>
+                </div>
+            </div>
+            <div class="content-section">
+                <div class="section-row">
+                    <span class="highlight-label">推荐理由：</span>
+                    <span class="text-content">是一家提供定制化服务的经纪公司，业务范围涉及艺人影视剧拍摄、广告代言、形象包装、演出、法律咨询等多项经纪业务。旗下艺人有白宇、朴冠今、李现、马思纯等。</span>
+                </div>
+                <div class="section-row">
+                    <span class="highlight-label">网申时间：</span>
+                    <span class="text-content">4月11日起-招满截止</span>
+                </div>
+                <div class="section-row">
+                    <span class="highlight-label">招聘岗位：</span>
+                    <span class="text-content">宣传主管、执行经纪、影视经纪、平面设计、段视频编导等</span>
+                </div>
+                <div class="section-row">
+                    <span class="highlight-label">工作地点：</span>
+                    <span class="text-content">北京</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 2: 光线传媒 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="company-badge">光线传媒</div>
+                <div class="logo-container">
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <div class="logo-guangxian">e</div>
+                        <span style="font-size:20px;font-weight:bold;color:#333;">光线传媒</span>
+                    </div>
+                </div>
+            </div>
+            <div class="content-section">
+                <div class="section-row">
+                    <span class="highlight-label">推荐理由：</span>
+                    <span class="text-content">中国最大的民营媒体娱乐集团。主营业务包括电视节目制作与发行，电影投资、制作、宣发，电视剧投资、发行，艺人经纪等。发行作品有《西游记之大圣归来》等动画电影，旗下艺人有任敏、孙千、胡先煦等。</span>
+                </div>
+                <div class="section-row">
+                    <span class="highlight-label">网申时间：</span>
+                    <span class="text-content">3月26日起-招满截止</span>
+                </div>
+                <div class="section-row">
+                    <span class="highlight-label">招聘岗位：</span>
+                    <span class="text-content">艺人宣传、人力资源、平面设计、预告片剪辑</span>
+                </div>
+                <div class="section-row">
+                    <span class="highlight-label">工作地点：</span>
+                    <span class="text-content">北京</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 3: 时代峰峻 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="company-badge">时代峰峻</div>
+                <div class="logo-container">
+                    <div class="logo-placeholder logo-shidai">
+                        <div class="shidai-icon"></div>
+                        <span class="shidai-text">时代峰峻</span>
+                    </div>
+                </div>
+            </div>
+            <div class="content-section">
+                <div class="section-row">
+                    <span class="highlight-label">推荐理由：</span>
+                    <span class="text-content">是中国领先的偶像艺人经济公司，现公司旗下所属艺人中拥有当红组合TFBOYS、时代少年团。</span>
+                </div>
+                <div class="section-row">
+                    <span class="highlight-label">网申时间：</span>
+                    <span class="text-content">2月9日起-招满截止</span>
+                </div>
+                <div class="section-row">
+                    <span class="highlight-label">招聘岗位：</span>
+                    <span class="text-content">音乐/舞台企划、平面美工设计、后期策划、后期精剪师等</span>
+                </div>
+                <div class="section-row">
+                    <span class="highlight-label">工作地点：</span>
+                    <span class="text-content">北京、重庆</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

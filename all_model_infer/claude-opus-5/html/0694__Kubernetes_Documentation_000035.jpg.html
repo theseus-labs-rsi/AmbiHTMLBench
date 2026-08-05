@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>kubeadm init phase bootstrap-token | Kubernetes</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #303030;
+    font-size: 16px;
+    line-height: 1.5;
+    background: #fff;
+  }
+  a { color: #326ce5; text-decoration: none; }
+
+  /* ---------- Top navigation ---------- */
+  header.topnav {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #d8d8d8;
+    padding: 10px 20px;
+    height: 66px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+    font-weight: 600;
+    color: #303030;
+    margin-right: 60px;
+  }
+  .brand .logo {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: #326ce5;
+    margin-right: 10px;
+    display: inline-block;
+  }
+  nav.mainmenu {
+    display: flex;
+    align-items: center;
+    gap: 42px;
+    font-weight: 600;
+    font-size: 15px;
+  }
+  nav.mainmenu a { color: #303030; }
+
+  /* ---------- Page 3-column layout ---------- */
+  .page {
+    display: flex;
+    align-items: stretch;
+  }
+  .sidebar-left {
+    width: 250px;
+    flex: 0 0 250px;
+    border-right: 1px solid #e3e3e3;
+    padding: 20px 16px;
+  }
+  .content {
+    flex: 1 1 auto;
+    padding: 0 24px 40px 24px;
+    min-width: 0;
+  }
+  .sidebar-right {
+    width: 250px;
+    flex: 0 0 250px;
+    border-left: 1px solid #e3e3e3;
+    padding: 22px 18px;
+  }
+
+  /* ---------- Left sidebar ---------- */
+  .searchbox {
+    width: 100%;
+    border: 1px solid #b8b8b8;
+    border-radius: 5px;
+    padding: 9px 12px;
+    color: #4a4a4a;
+    font-size: 15px;
+    margin-bottom: 22px;
+  }
+  .searchbox .mag { font-weight: 700; margin-right: 6px; }
+  ul.tree, ul.tree ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  ul.tree li { margin: 9px 0; font-size: 15px; }
+  ul.tree ul { padding-left: 22px; }
+  .caret { display: inline-block; width: 12px; color: #303030; font-size: 10px; }
+  .tree .leaf { color: #303030; }
+  .tree .current { font-weight: 700; }
+
+  /* ---------- Right sidebar ---------- */
+  .pagelinks a {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  .pagelinks .icon { margin-right: 6px; }
+  .toc { margin-top: 22px; }
+  .toc a {
+    display: block;
+    color: #326ce5;
+    margin-bottom: 6px;
+    line-height: 1.35;
+  }
+
+  /* ---------- Main content ---------- */
+  .card {
+    border: 1px solid #dcdcdc;
+    padding: 16px 18px 10px 18px;
+    margin-bottom: 40px;
+  }
+  h1 {
+    font-size: 34px;
+    font-weight: 400;
+    margin: 30px 0 12px 0;
+  }
+  h2 {
+    font-size: 27px;
+    font-weight: 400;
+    margin: 26px 0 12px 0;
+  }
+  .flagname {
+    background: #eeeeee;
+    padding: 9px 12px;
+    font-size: 15px;
+  }
+  .flagdesc {
+    padding: 12px 12px 14px 34px;
+    border-bottom: 1px solid #e6e6e6;
+    margin-bottom: 14px;
+  }
+  pre {
+    background: #f7f7f7;
+    padding: 12px 16px;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    font-size: 14px;
+    overflow: hidden;
+    white-space: pre;
+    margin: 16px 0;
+  }
+  .tabs {
+    margin-top: 24px;
+  }
+  .tab {
+    display: inline-block;
+    border: 1px solid #dcdcdc;
+    border-bottom: none;
+    padding: 10px 18px;
+    background: #fff;
+    position: relative;
+    top: 1px;
+    font-size: 16px;
+  }
+  .tabpanel {
+    border: 1px solid #dcdcdc;
+    padding: 12px 18px 20px 18px;
+  }
+  p { margin: 12px 0; }
+</style>
+</head>
+<body>
+
+<header class="topnav">
+  <div class="brand"><span class="logo"></span> kubernetes</div>
+  <nav class="mainmenu">
+    <a href="#">Documentation</a>
+    <a href="#">Kubernetes Blog</a>
+    <a href="#">Training</a>
+    <a href="#">Careers</a>
+    <a href="#">Partners</a>
+    <a href="#">Community</a>
+    <a href="#">Versions&#9662;</a>
+    <a href="#">English&#9662;</a>
+  </nav>
+</header>
+
+<div class="page">
+
+  <!-- ================= LEFT SIDEBAR ================= -->
+  <aside class="sidebar-left">
+    <div class="searchbox"><span class="mag">&#128269;</span>Search this site</div>
+    <ul class="tree">
+      <li><span class="caret">&#9656;</span>Documentation</li>
+      <li><span class="caret">&#9656;</span>Getting started</li>
+      <li><span class="caret">&#9656;</span>Concepts</li>
+      <li><span class="caret">&#9656;</span>Tasks</li>
+      <li><span class="caret">&#9656;</span>Tutorials</li>
+      <li><span class="caret">&#9662;</span>Reference
+        <ul>
+          <li class="leaf">Glossary</li>
+          <li><span class="caret">&#9656;</span>API Overview</li>
+          <li><span class="caret">&#9656;</span>API Access Control</li>
+          <li><span class="caret">&#9656;</span>Well-Known Labels, Annotations and Taints</li>
+          <li><span class="caret">&#9656;</span>Kubernetes API</li>
+          <li><span class="caret">&#9656;</span>Instrumentation</li>
+          <li><span class="caret">&#9656;</span>Kubernetes Issues and Security</li>
+          <li><span class="caret">&#9656;</span>Node Reference Information</li>
+          <li><span class="caret">&#9656;</span>Networking Reference</li>
+          <li><span class="caret">&#9662;</span>Setup tools
+            <ul>
+              <li><span class="caret">&#9662;</span>Kubeadm
+                <ul>
+                  <li class="leaf">kubeadm init</li>
+                  <li class="leaf">kubeadm join</li>
+                  <li class="leaf">kubeadm upgrade</li>
+                  <li class="leaf">kubeadm upgrade phases</li>
+                  <li class="leaf">kubeadm config</li>
+                  <li class="leaf">kubeadm reset</li>
+                  <li class="leaf">kubeadm token</li>
+                  <li class="leaf">kubeadm version</li>
+                  <li class="leaf">kubeadm alpha</li>
+                  <li class="leaf">kubeadm certs</li>
+                  <li class="leaf current">kubeadm init phase</li>
+                  <li class="leaf">kubeadm join phase</li>
+                  <li class="leaf">kubeadm kubeconfig</li>
+                  <li class="leaf">kubeadm reset phase</li>
+                  <li class="leaf">Implementation</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </aside>
+
+  <!-- ================= MAIN CONTENT ================= -->
+  <main class="content">
+
+    <!-- previous (mark-control-plane) card, cut off at top -->
+    <div class="card">
+      <div class="flagname">--dry-run</div>
+      <div class="flagdesc">Don't apply any changes; just output what would be done.</div>
+
+      <div class="flagname">-h, --help</div>
+      <div class="flagdesc">help for mark-control-plane</div>
+
+      <div class="flagname">--node-name string</div>
+      <div class="flagdesc">Specify the node name.</div>
+
+      <h2>Options inherited from parent commands</h2>
+
+      <div class="flagname">--rootfs string</div>
+      <div class="flagdesc">The path to the 'real' host root filesystem. This will cause kubeadm to chroot into the provided path.</div>
+    </div>
+
+    <h1>kubeadm init phase bootstrap-token</h1>
+    <p>Use the following phase to configure bootstrap tokens.</p>
+
+    <div class="tabs">
+      <div class="tab">bootstrap-token</div>
+      <div class="tabpanel">
+        <p style="margin-top:2px">Generates bootstrap tokens used to join a node to a cluster</p>
+
+        <h2>Synopsis</h2>
+        <p>Bootstrap tokens are used for establishing bidirectional trust between a node joining the cluster and a control-plane node.</p>
+        <p>This command makes all the configurations required to make bootstrap tokens works and then creates an initial token.</p>
+
+<pre>kubeadm init phase bootstrap-token [flags]</pre>
+
+        <h2>Examples</h2>
+
+<pre>  # Make all the bootstrap token configurations and create an initial token, f
+  # equivalent to what generated by kubeadm init.
+  kubeadm init phase bootstrap-token</pre>
+
+        <h2>Options</h2>
+
+        <div class="flagname">--config string</div>
+        <div class="flagdesc">Path to a kubeadm configuration file.</div>
+
+        <div class="flagname">--dry-run</div>
+        <div class="flagdesc">Don't apply any changes; just output what would be done.</div>
+
+        <div class="flagname">-h, --help</div>
+        <div class="flagdesc" style="border-bottom:none">help for bootstrap-token</div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ================= RIGHT SIDEBAR ================= -->
+  <aside class="sidebar-right">
+    <div class="pagelinks">
+      <a href="#"><span class="icon">&#9998;</span>Edit this page</a>
+      <a href="#"><span class="icon">&#9998;</span>Create child page</a>
+      <a href="#"><span class="icon">&#9737;</span>Create an issue</a>
+      <a href="#" style="margin-top:12px"><span class="icon">&#128424;</span>Print entire section</a>
+    </div>
+
+    <nav class="toc">
+      <a href="#">kubeadm init phase preflight</a>
+      <a href="#">kubeadm init phase certs</a>
+      <a href="#">kubeadm init phase kubeconfig</a>
+      <a href="#">kubeadm init phase etcd</a>
+      <a href="#">kubeadm init phase control-plane</a>
+      <a href="#">kubeadm init phase kubelet-start</a>
+      <a href="#">kubeadm init phase wait-control-plane</a>
+      <a href="#">kubeadm init phase upload-config</a>
+      <a href="#">kubeadm init phase upload-certs</a>
+      <a href="#">kubeadm init phase mark-control-plane</a>
+      <a href="#">kubeadm init phase bootstrap-token</a>
+      <a href="#">kubeadm init phase kubelet-finalize</a>
+      <a href="#">kubeadm init phase bootstrap-token</a>
+      <a href="#">kubeadm init phase addon</a>
+      <a href="#">kubeadm init phase show-join-command</a>
+      <a href="#">What's next</a>
+    </nav>
+  </aside>
+
+</div>
+
+</body>
+</html>

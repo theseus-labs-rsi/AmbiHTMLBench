@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script>window.MathJax={tex:{inlineMath:[["$","$"]],displayMath:[["$$","$$"]]}};</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RFC 9000 — QUIC Transport Protocol — Page 107</title>
+<style>
+  html, body { margin: 0; padding: 0; background: #ffffff; }
+  body {
+    font-family: "Times New Roman", Times, serif;
+    color: #000000;
+    font-size: 21px;
+    line-height: 1.55;
+  }
+  .page {
+    max-width: 1345px;
+    margin: 0 auto;
+    padding: 102px 0 0 0;
+  }
+  .rule {
+    border: 0;
+    border-top: 1px solid #8a8a8a;
+    margin: 0;
+  }
+  .head {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: baseline;
+    padding: 0 0 14px 0;
+    font-size: 21px;
+  }
+  .head .l { text-align: left; }
+  .head .c { text-align: center; }
+  .head .r { text-align: right; }
+  .content {
+    padding: 58px 30px 0 30px;
+    text-align: justify;
+  }
+  .codebox {
+    border: 1px solid #c7c7c7;
+    margin: 0 0 14px 0;
+    padding: 22px 20px 22px 28px;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 21px;
+    line-height: 1.45;
+    white-space: pre;
+    text-align: left;
+  }
+  .caption {
+    font-style: italic;
+    margin: 0 0 34px 0;
+    text-align: left;
+  }
+  p { margin: 0 0 34px 0; }
+  .field {
+    margin: 0 0 34px 0;
+    padding-left: 42px;
+    text-indent: -42px;
+  }
+  .field b { font-weight: bold; }
+  .formula {
+    border: 1px solid #c7c7c7;
+    margin: 26px 0 26px 0;
+    padding: 20px 20px 20px 76px;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 21px;
+    text-align: left;
+    white-space: pre;
+  }
+  .foot-rule { margin-top: 138px; }
+  .foot {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: baseline;
+    padding: 16px 0 0 0;
+    font-size: 21px;
+  }
+  .foot .l { text-align: left; }
+  .foot .c { text-align: center; }
+  .foot .r { text-align: right; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="head">
+    <span class="l">RFC 9000</span>
+    <span class="c">QUIC Transport Protocol</span>
+    <span class="r">May 2021</span>
+  </div>
+  <hr class="rule">
+  <div class="content">
+    <div class="codebox">ACK Range {
+  Gap (i),
+  ACK Range Length (i),
+}</div>
+    <div class="caption">Figure 26: ACK Ranges</div>
+
+    <p>The fields that form each ACK Range are:</p>
+
+    <p class="field"><b>Gap:</b>&nbsp;&nbsp; A variable-length integer indicating the number of contiguous unacknowledged packets preceding the packet number one lower than the smallest in the preceding ACK Range.</p>
+
+    <p class="field"><b>ACK Range Length:</b>&nbsp;&nbsp; A variable-length integer indicating the number of contiguous acknowledged packets preceding the largest packet number, as determined by the preceding Gap.</p>
+
+    <p>Gap and ACK Range Length values use a relative integer encoding for efficiency. Though each encoded value is positive, the values are subtracted, so that each ACK Range describes progressively lower-numbered packets.</p>
+
+    <p>Each ACK Range acknowledges a contiguous range of packets by indicating the number of acknowledged packets that precede the largest packet number in that range. A value of 0 indicates that only the largest packet number is acknowledged. Larger ACK Range values indicate a larger range, with corresponding lower values for the smallest packet number in the range. Thus, given a largest packet number for the range, the smallest value is determined by the following formula:</p>
+
+    <div class="formula">smallest = largest - ack_range</div>
+
+    <p>An ACK Range acknowledges all packets between the smallest packet number and the largest, inclusive.</p>
+
+    <p>The largest value for an ACK Range is determined by cumulatively subtracting the size of all preceding ACK Range Lengths and Gaps.</p>
+
+    <p>Each Gap indicates a range of packets that are not being acknowledged. The number of packets in the gap is one higher than the encoded value of the Gap field.</p>
+
+    <p>The value of the Gap field establishes the largest packet number value for the subsequent ACK Range using the following formula:</p>
+
+    <div class="formula">largest = previous_smallest - gap - 2</div>
+
+    <p>If any computed packet number is negative, an endpoint <b>MUST</b> generate a connection error of type FRAME_ENCODING_ERROR.</p>
+  </div>
+  <hr class="rule foot-rule">
+  <div class="foot">
+    <span class="l">Iyengar &amp; Thomson</span>
+    <span class="c">Standards Track</span>
+    <span class="r">Page 107</span>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>An Approximation Algorithm for Graph Label Selection</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            line-height: 1.35;
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 0.75in 0.75in 0.5in 0.75in;
+            background: white;
+            color: black;
+            font-size: 10pt;
+        }
+        
+        .paper-container {
+            position: relative;
+        }
+        
+        .arxiv-sidebar {
+            position: absolute;
+            left: -55px;
+            top: 160px;
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            font-size: 13px;
+            letter-spacing: 1.5px;
+            font-family: Arial, sans-serif;
+        }
+        
+        h1.title {
+            text-align: center;
+            font-size: 17pt;
+            font-weight: bold;
+            margin-bottom: 18pt;
+            border-bottom: 1.5px solid black;
+            padding-bottom: 8pt;
+        }
+        
+        .authors {
+            text-align: center;
+            font-size: 11pt;
+            margin-bottom: 16pt;
+        }
+        
+        .authors sup {
+            font-size: 8pt;
+        }
+        
+        h2.section-heading {
+            font-size: 11pt;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 18pt;
+            margin-bottom: 10pt;
+        }
+        
+        .two-column-layout {
+            display: flex;
+            gap: 22px;
+            align-items: flex-start;
+        }
+        
+        .column {
+            flex: 1;
+            text-align: justify;
+            hyphens: auto;
+        }
+        
+        p {
+            margin: 0 0 7pt 0;
+            text-indent: 0;
+        }
+        
+        .math-block {
+            text-align: center;
+            margin: 10pt 0;
+            overflow-x: auto;
+        }
+        
+        .theorem-env {
+            margin: 12pt 0;
+            font-size: 10pt;
+        }
+        
+        .theorem-label {
+            font-weight: bold;
+        }
+        
+        ul.thm-list {
+            margin: 6pt 0 6pt 18pt;
+            padding: 0;
+            list-style-type: disc;
+        }
+        
+        .thm-list li {
+            margin-bottom: 3pt;
+        }
+        
+        .section-header {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 18pt;
+            margin-bottom: 7pt;
+        }
+        
+        .footnote-area {
+            font-size: 8pt;
+            margin-top: 25pt;
+            border-top: 0.5px solid #999;
+            padding-top: 6pt;
+            line-height: 1.25;
+        }
+        
+        .page-num {
+            text-align: center;
+            font-size: 10pt;
+            margin-top: 15pt;
+        }
+        
+        em {
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="paper-container">
+        <div class="arxiv-sidebar">arXiv:2605.18623v1 [cs.DS] 18 May 2026</div>
+        
+        <h1 class="title">An Approximation Algorithm for Graph Label Selection</h1>
+        
+        <div class="authors">
+            Josia John<sup>1</sup>&nbsp;&nbsp;&nbsp;Maximilian Probst Gutenberg<sup>1</sup>&nbsp;&nbsp;&nbsp;Simon Meierhans<sup>1</sup>
+        </div>
+        
+        <h2 class="section-heading">Abstract</h2>
+        
+        <div class="two-column-layout">
+            <div class="column">
+                <p>In the graph label selection problem, one is given an $n$-vertex graph and a budget $k$, and seeks to select $k$ vertices whose labels enable accurate prediction of the labels on the remaining vertices. This problem formalizes distilling a small representative set from the whole graph.</p>
+                
+                <p>We present the first $\tilde{O}(\log^{1.5} n)$-approximation algorithm for graph label selection under the standard budget constraint. Prior work either relies on resource augmentation, allowing substantially more than $k$ labeled vertices, or consists primarily of heuristics without provable guarantees.</p>
+                
+                <p>Finally, we demonstrate that practical heuristic variants of our algorithm scale to significantly larger graphs than previous methods, while essentially retaining their quality.</p>
+            </div>
+            
+            <div class="column">
+                <p>ists. Formally, they focus on selecting a set of nodes $L$, under the cardinality constraint $|L| \leq k$, which maximize the objective</p>
+                
+                <div class="math-block">
+                    $$\Psi(L) := \min_{C \subseteq V \setminus L} \frac{w(C \setminus V \setminus C)}{|C|}.$$
+                </div>
+                
+                <p>This yields the Graph Label Selection Problem (GLS), which requires finding</p>
+                
+                <div class="math-block">
+                    $$\mathrm{OPT}_k := \max_{\substack{L \subseteq V \\ |L| \leq k}} \Psi(L),$$
+                </div>
+                
+                <p>Despite its early and natural formulation, algorithms with theoretical guarantees were lacking for a long time. Guillory & Bilmes (2009) give some practical heuristics to maximize $\Psi(L)$. Cesa-Bianchi et al. (2010) presented an algorithm with theoretical guarantees on unweighted trees.</p>
+                
+                <p>Recently, Cohen-Addad et al. (2025) showed that the problem is NP-hard. Therefore, it is natural to consider approximation algorithms for this problem. There are two natural notions of approximation for this problem. The weaker notion, an $\alpha$-resource augment algorithm, uses budget $\alpha \cdot k$ but is competitive with $\mathrm{OPT}_k$, i.e., the optimal value obtained with much smaller budget $k$. An $O(\log n)$-resource algorithm was recently given in (Cohen-Addad et al., 2025).</p>
+                
+                <p>In (Cohen-Addad et al., 2025), it is stated as an interesting open problem to achieve a stronger and more natural version of approximation: they ask whether an algorithm exists that uses the given $k$ and is $\beta$-competitive in $\mathrm{OPT}_k$, i.e. that solution has quality at least $\mathrm{OPT}_k/\beta$. In this article we resolve this question by presenting an efficient $\tilde{O}(\log^{1.5} n)$ approximation algorithm by maximizing $\tilde{\Psi}(L)$, which does not rely on resource augmentation. Additionally, a relaxed version of our new algorithm has better runtime and can thus be scaled to larger instances.</p>
+            </div>
+        </div>
+        
+        <div class="two-column-layout">
+            <div class="column">
+                <div class="section-header">1. Introduction</div>
+                
+                <p>Selecting a representative small subset of a large data set is a crucial task in various areas of machine learning, such as speeding up training (Nguyen et al., 2021; Yang et al., 2024) and selecting diverse additional context for passing to a large language model (LLM) for improved inference (Liskavets et al., 2025; Cheng et al., 2024; Bateni et al., 2025).</p>
+                
+                <p>In active learning, the training set, i.e. the <em>labeled set</em>, is not fixed but rather chosen by the learning algorithm itself to be as representative of the entire dataset as possible. For pairwise similarities between data points represented as a graph $G = (V, E, w)$, Guillory & Bilmes (2009) introduced a natural objective for selecting such a labeled set. They fix $k$ to be the maximum number of data points to be labeled, and aim to rule out that a large cluster of unlabeled points with few connections to the rest of the data set ex-</p>
+            </div>
+            
+            <div class="column">
+                <div class="theorem-env">
+                    <span class="theorem-label">Theorem 1.1.</span> Given a graph $G = (V, E, w)$ with weights in $[\mathrm{poly}(n)]$, and a budget $k \in \mathbb{N}$, there exists a polynomial-time algorithm that returns a set $L'$ with
+                    
+                    <ul class="thm-list">
+                        <li>$|L'| \leq k$ and</li>
+                        <li>$\beta \cdot \tilde{\Psi}(L') \geq \mathrm{OPT}_k$</li>
+                    </ul>
+                    
+                    where $\beta = \tilde{O}(\log^{1.5} n)$.
+                </div>
+            </div>
+        </div>
+        
+        <div class="footnote-area">
+            <p><sup>1</sup>Department of Computer Science, ETH Zürich, Zürich, Switzerland. Correspondence to: Josia John &lt;josia.john@ethz.ch&gt;, Maximilian Probst Gutenberg &lt;maximilian.probst@inf.ethz.ch&gt;, Simon Meierhans &lt;simon.meierhans@inf.ethz.ch&gt;.</p>
+            
+            <p style="margin-top: 6pt;"><em>Proceedings of the 43<sup>rd</sup> International Conference on Machine Learning, Seoul, South Korea. PMLR 306, 2026. Copyright 2026 by the author(s).</em></p>
+        </div>
+        
+        <div class="page-num">1</div>
+    </div>
+</body>
+</html>

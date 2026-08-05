@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>直播后数据复盘</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  html, body {
+    margin: 0;
+    width: 100%;
+    min-height: 100%;
+    background: #aebbd0;
+    font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", Arial, sans-serif;
+  }
+
+  .page {
+    position: relative;
+    width: 540px;
+    height: 720px;
+    margin: 0 auto;
+    overflow: hidden;
+    background: #aebbd0;
+    color: #3c4149;
+  }
+
+  .header {
+    position: relative;
+    width: 100%;
+    height: 68px;
+    background: #aebbd0;
+  }
+
+  .header-title {
+    position: absolute;
+    left: 198px;
+    top: 21px;
+    color: #354457;
+    font-family: "KaiTi", "STKaiti", "Microsoft YaHei", sans-serif;
+    font-size: 28px;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 36px;
+    white-space: nowrap;
+  }
+
+  .watermark {
+    position: absolute;
+    top: 25px;
+    right: 29px;
+    width: 134px;
+    color: rgba(255, 255, 255, 0.94);
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .watermark-main {
+    font-size: 12px;
+    line-height: 15px;
+    font-weight: 700;
+  }
+
+  .watermark-sub {
+    margin-top: 1px;
+    font-family: Arial, sans-serif;
+    font-size: 5px;
+    line-height: 7px;
+    font-style: italic;
+    letter-spacing: .2px;
+  }
+
+  .notes {
+    position: relative;
+    width: 100%;
+    height: 111px;
+    padding: 3px 7px 2px;
+    background: #ffe79b;
+    color: #66645d;
+  }
+
+  .notes-title {
+    height: 21px;
+    font-family: "SimSun", "Songti SC", serif;
+    font-size: 18px;
+    line-height: 21px;
+  }
+
+  .notes-intro {
+    font-family: "SimSun", "Songti SC", serif;
+    font-size: 14px;
+    line-height: 17px;
+    white-space: nowrap;
+  }
+
+  .notes ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: "SimSun", "Songti SC", serif;
+    font-size: 14px;
+    line-height: 16px;
+  }
+
+  .notes li {
+    position: relative;
+    padding-left: 22px;
+    height: 16px;
+    white-space: nowrap;
+  }
+
+  .notes li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #62625d;
+    font-size: 14px;
+  }
+
+  .diagram {
+    position: relative;
+    width: 540px;
+    height: 496px;
+    background: #fff;
+  }
+
+  .main-label {
+    position: absolute;
+    z-index: 5;
+    left: 0;
+    top: 237px;
+    width: 127px;
+    height: 41px;
+    border-radius: 0 6px 6px 0;
+    background: #f0f0f0;
+    color: #111;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 41px;
+    padding-left: 6px;
+    white-space: nowrap;
+  }
+
+  .connector {
+    position: absolute;
+    z-index: 0;
+    background: #111;
+  }
+
+  .main-horizontal {
+    left: 126px;
+    top: 257px;
+    width: 17px;
+    height: 2px;
+  }
+
+  .trunk {
+    left: 141px;
+    top: 82px;
+    width: 2px;
+    height: 353px;
+  }
+
+  .branch {
+    left: 141px;
+    width: 17px;
+    height: 2px;
+  }
+
+  .branch-1 { top: 82px; }
+  .branch-2 { top: 199px; }
+  .branch-3 { top: 316px; }
+  .branch-4 { top: 433px; }
+
+  .corner-mask {
+    position: absolute;
+    z-index: 1;
+    left: 141px;
+    width: 8px;
+    height: 12px;
+    background: #fff;
+    border-left: 2px solid #111;
+    border-top: 2px solid #111;
+    border-radius: 9px 0 0 0;
+  }
+
+  .corner-1 { top: 82px; }
+  .corner-2 { top: 199px; }
+  .corner-3 { top: 316px; }
+  .corner-4 { top: 433px; }
+
+  .item {
+    position: absolute;
+    left: 0;
+    width: 540px;
+    height: 112px;
+  }
+
+  .item-1 { top: 4px; }
+  .item-2 { top: 121px; }
+  .item-3 { top: 238px; }
+  .item-4 { top: 355px; }
+
+  .description {
+    position: absolute;
+    z-index: 4;
+    left: 174px;
+    top: 0;
+    min-height: 58px;
+    padding: 6px 10px 5px;
+    border-radius: 9px 9px 0 0;
+    background: #344dac;
+    color: #fff;
+    font-size: 16px;
+    line-height: 21px;
+    font-weight: 500;
+  }
+
+  .item-1 .description {
+    width: 309px;
+  }
+
+  .item-2 .description {
+    width: 326px;
+  }
+
+  .item-3 .description {
+    width: 326px;
+  }
+
+  .item-4 .description {
+    width: 326px;
+  }
+
+  .outline {
+    position: absolute;
+    z-index: 2;
+    left: 156px;
+    top: 49px;
+    height: 59px;
+    border: 2px dashed #3149a3;
+    border-radius: 17px;
+    background: rgba(255,255,255,.1);
+  }
+
+  .item-1 .outline {
+    width: 350px;
+  }
+
+  .item-2 .outline {
+    width: 364px;
+  }
+
+  .item-3 .outline {
+    width: 366px;
+  }
+
+  .item-4 .outline {
+    width: 376px;
+  }
+
+  .node-label {
+    position: absolute;
+    z-index: 3;
+    left: 168px;
+    top: 60px;
+    height: 37px;
+    padding: 0 8px;
+    border-radius: 8px;
+    background: #efefef;
+    box-shadow: 0 1px 7px rgba(0, 0, 0, .11);
+    color: #3f4145;
+    font-size: 16px;
+    line-height: 37px;
+    white-space: nowrap;
+  }
+
+  .item-1 .node-label {
+    width: 326px;
+  }
+
+  .item-2 .node-label {
+    width: 339px;
+  }
+
+  .item-3 .node-label {
+    width: 341px;
+  }
+
+  .item-4 .node-label {
+    width: 351px;
+  }
+
+  .blue-stem {
+    position: absolute;
+    z-index: 3;
+    left: 166px;
+    top: 48px;
+    width: 2px;
+    height: 13px;
+    background: #3149a3;
+  }
+
+  .footer {
+    width: 100%;
+    height: 45px;
+    background: #aebbd0;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="header">
+    <div class="header-title">三、直播后</div>
+    <div class="watermark">
+      <div class="watermark-main">@自律的营销学姐Renita</div>
+      <div class="watermark-sub">From 小红书</div>
+    </div>
+  </header>
+
+  <section class="notes">
+    <div class="notes-title">2、数据复盘</div>
+    <div class="notes-intro">进行直播数据复盘的时候，重点关注4个关键数据：</div>
+    <ul>
+      <li>人气峰值和平均在线</li>
+      <li>观众平均停留时长</li>
+      <li>带货转化率</li>
+      <li>UV价值</li>
+    </ul>
+  </section>
+
+  <main class="diagram">
+    <div class="main-label">2、数据复盘</div>
+
+    <div class="connector main-horizontal"></div>
+    <div class="connector trunk"></div>
+    <div class="connector branch branch-1"></div>
+    <div class="connector branch branch-2"></div>
+    <div class="connector branch branch-3"></div>
+    <div class="connector branch branch-4"></div>
+    <div class="corner-mask corner-1"></div>
+    <div class="corner-mask corner-2"></div>
+    <div class="corner-mask corner-3"></div>
+    <div class="corner-mask corner-4"></div>
+
+    <section class="item item-1">
+      <div class="description">
+        一般平均在线能稳定在50人左右直播就有<br>
+        基本的带货能力，能够赚到钱
+      </div>
+      <div class="outline"></div>
+      <div class="blue-stem"></div>
+      <div class="node-label">① 人气峰值和平均在线人数</div>
+    </section>
+
+    <section class="item item-2">
+      <div class="description">
+        通常停留时长超过2分钟算不错的数据，超<br>
+        过30s是一个及格线
+      </div>
+      <div class="outline"></div>
+      <div class="blue-stem"></div>
+      <div class="node-label">② 观众平均停留时长</div>
+    </section>
+
+    <section class="item item-3">
+      <div class="description">
+        一般带货转化率达到1%以上算合格，优秀的<br>
+        3%以上
+      </div>
+      <div class="outline"></div>
+      <div class="blue-stem"></div>
+      <div class="node-label">③ 带货转化率</div>
+    </section>
+
+    <section class="item item-4">
+      <div class="description">
+        单个用户给直播间贡献的价值，这个数值越<br>
+        高，说明用户在这个直播间的付费意愿更强
+      </div>
+      <div class="outline"></div>
+      <div class="blue-stem"></div>
+      <div class="node-label">④ UV价值</div>
+    </section>
+  </main>
+
+  <footer class="footer"></footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CUDA C++ Programming Guide</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            line-height: 1.5;
+            color: #333;
+            margin: 40px;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .header {
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            color: #559e33; /* Approximate green from docs */
+            font-size: 1.2em;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            font-weight: normal;
+        }
+
+        h3 {
+            color: #559e33;
+            font-size: 1.5em;
+            margin-top: 35px;
+            margin-bottom: 20px;
+            font-weight: normal;
+        }
+
+        .code-block {
+            background-color: #f2f2f2;
+            padding: 12px 15px;
+            font-family: "Courier New", Courier, monospace;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            border-radius: 2px;
+        }
+
+        /* Syntax highlighting approximation */
+        .kw { color: #a52a2a; } /* Keywords like device, int, void */
+        .type { color: #a52a2a; } /* Types like T */
+        .fn { color: black; }
+        .param { color: black; }
+        .default { color: black; }
+
+        p {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            text-align: justify;
+        }
+
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            padding-top: 15px;
+            border-top: 1px solid #000;
+            font-weight: bold;
+        }
+
+        .section-num {
+            color: #559e33;
+        }
+    </style>
+    <script>
+        window.MathJax = {
+          tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)'], ['$$', '$$'], ['\\[', '\\]']], 
+            displayMath: []
+          },
+          svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+<div class="header">CUDA C++ Programming Guide, Release 13.3</div>
+
+<h2><span class="section-num">10.14.1.15</span> <code>__nv_atomic_fetch_min()</code> and <code>__nv_atomic_min()</code></h2>
+
+<div class="code-block"><span class="kw">__device__</span> <span class="type">T</span> <span class="fn">__nv_atomic_fetch_min</span> (<span class="type">T*</span> <span class="param">ptr</span>, <span class="type">T</span> <span class="param">val</span>, <span class="kw">int</span> <span class="param">order</span>, <span class="kw">int</span> <span class="param">scope</span> = <span class="default">__NV_THREAD_SCOPE_SYSTEM</span>);
+<span class="kw">__device__</span> <span class="kw">void</span> <span class="fn">__nv_atomic_min</span> (<span class="type">T*</span> <span class="param">ptr</span>, <span class="type">T</span> <span class="param">val</span>, <span class="kw">int</span> <span class="param">order</span>, <span class="kw">int</span> <span class="param">scope</span> = <span class="default">__NV_THREAD_SCOPE_SYSTEM</span>);</div>
+
+<p>These two atomic functions are introduced in CUDA 12.8. It reads the value where ptr points to, compares with val, and stores the smaller value back to where ptr points to. <code>__nv_atomic_fetch_min</code> returns the old value where ptr points to. <code>__nv_atomic_min</code> does not have return value.</p>
+<p>T can only be unsigned int, int, unsigned long long or long long.</p>
+<p>The atomic operation with memory order and thread scope is supported on the architecture sm_60 and higher.</p>
+<p>The thread scope of cluster is supported on the architecture sm_90 and higher.</p>
+<p>The arguments order and scope need to be integer literals, i.e., the arguments cannot be variables.</p>
+
+<h2><span class="section-num">10.14.1.16</span> <code>__nv_atomic_fetch_max()</code> and <code>__nv_atomic_max()</code></h2>
+
+<div class="code-block"><span class="kw">__device__</span> <span class="type">T</span> <span class="fn">__nv_atomic_fetch_max</span> (<span class="type">T*</span> <span class="param">ptr</span>, <span class="type">T</span> <span class="param">val</span>, <span class="kw">int</span> <span class="param">order</span>, <span class="kw">int</span> <span class="param">scope</span> = <span class="default">__NV_THREAD_SCOPE_SYSTEM</span>);
+<span class="kw">__device__</span> <span class="kw">void</span> <span class="fn">__nv_atomic_max</span> (<span class="type">T*</span> <span class="param">ptr</span>, <span class="type">T</span> <span class="param">val</span>, <span class="kw">int</span> <span class="param">order</span>, <span class="kw">int</span> <span class="param">scope</span> = <span class="default">__NV_THREAD_SCOPE_SYSTEM</span>);</div>
+
+<p>These two atomic functions are introduced in CUDA 12.8. It reads the value where ptr points to, compares with val, and stores the bigger value back to where ptr points to. <code>__nv_atomic_fetch_max</code> returns the old value where ptr points to. <code>__nv_atomic_max</code> does not have return value.</p>
+<p>T can only be unsigned int, int, unsigned long long or long long.</p>
+<p>The atomic operation with memory order and thread scope is supported on the architecture sm_60 and higher.</p>
+<p>The thread scope of cluster is supported on the architecture sm_90 and higher.</p>
+<p>The arguments order and scope need to be integer literals, i.e., the arguments cannot be variables.</p>
+
+<h3><span class="section-num">10.14.2.</span> Bitwise Functions</h3>
+
+<h2><span class="section-num">10.14.2.1</span> atomicAnd()</h2>
+
+<div class="code-block"><span class="kw">int</span> <span class="fn">atomicAnd</span>(<span class="kw">int*</span> <span class="param">address</span>, <span class="kw">int</span> <span class="param">val</span>);
+<span class="kw">unsigned int</span> <span class="fn">atomicAnd</span>(<span class="kw">unsigned int*</span> <span class="param">address</span>,
+                     <span class="kw">unsigned int</span> <span class="param">val</span>);
+<span class="kw">unsigned long long int</span> <span class="fn">atomicAnd</span>(<span class="kw">unsigned long long int*</span> <span class="param">address</span>,
+                             <span class="kw">unsigned long long int</span> <span class="param">val</span>);</div>
+
+<p>reads the 32-bit or 64-bit word old located at the address address in global or shared memory, computes (old & val), and stores the result back to memory at the same address. These three operations are performed in one atomic transaction. The function returns old.</p>
+<p>The 64-bit version of atomicAnd() is only supported by devices of compute capability 5.0 and higher.</p>
+
+<div class="footer">
+    <span>10.14. Atomic Functions</span>
+    <span>193</span>
+</div>
+
+</body>
+</html>

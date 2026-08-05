@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>综合新闻 - 光明日报</title>
+<script>
+window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+  body {
+    font-family: "SimSun", "Songti SC", serif;
+    width: 1250px;
+    margin: 0 auto;
+    background: #fff;
+    color: #111;
+    font-size: 14px;
+    line-height: 1.65;
+  }
+  .header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    border-bottom: 3px solid #000;
+    padding-bottom: 6px;
+    margin-bottom: 10px;
+  }
+  .header-left {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .page-num {
+    font-size: 30px;
+    font-weight: bold;
+  }
+  .page-title {
+    font-size: 26px;
+    font-weight: bold;
+  }
+  .header-mid {
+    font-size: 13px;
+    padding-bottom: 4px;
+  }
+  .header-right {
+    font-size: 22px;
+    font-weight: bold;
+    letter-spacing: 2px;
+  }
+  .main-flex {
+    display: flex;
+    gap: 15px;
+  }
+  .left-col {
+    flex: 3;
+    padding-right: 5px;
+  }
+  .right-col {
+    flex: 1;
+    border-left: 1px solid #000;
+    padding-left: 12px;
+    text-align: center;
+  }
+  .section-title-icon {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 15px;
+    margin-bottom: 4px;
+  }
+  .icon-circle {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #333;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+  }
+  .subhead {
+    font-size: 15px;
+    margin-bottom: 2px;
+  }
+  h1.headline {
+    font-size: 28px;
+    font-weight: bold;
+    margin: 4px 0 8px 0;
+  }
+  .byline {
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+  .article-cols {
+    display: flex;
+    gap: 14px;
+  }
+  .article-cols .col {
+    flex: 1;
+  }
+  .article-cols .col h3 {
+    font-size: 14px;
+    margin: 6px 0 3px 0;
+  }
+  .article-cols .col p {
+    text-align: justify;
+    margin: 4px 0;
+    text-indent: 1em;
+  }
+  .rt-title-big {
+    font-size: 17px;
+    font-weight: bold;
+    line-height: 1.5;
+    margin: 10px 0;
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    height: 350px;
+    margin: 0 auto;
+  }
+  .rt-sub {
+    font-size: 22px;
+    font-weight: bold;
+    margin: 10px auto;
+  }
+  .right-col-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .rt-vert-title {
+    writing-mode: vertical-rl;
+    font-size: 15px;
+    letter-spacing: 4px;
+    margin: 10px auto;
+  }
+  .rt-vert-headline {
+    writing-mode: vertical-rl;
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: 6px;
+    margin: 10px auto;
+  }
+  .rt-byline {
+    font-size: 12px;
+    margin: 6px 0;
+  }
+  .rt-text {
+    writing-mode: vertical-rl;
+    display: none;
+  }
+  .rt-para {
+    text-align: justify;
+    font-size: 13px;
+    margin: 6px 0;
+    text-indent: 1em;
+  }
+  hr.section-divider {
+    border: none;
+    border-top: 1px solid #000;
+    margin: 14px 0;
+  }
+  .lower-section {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+  }
+  .col-left-small {
+    flex: 0 0 60px;
+    border-right: 1px solid #000;
+    text-align: center;
+    padding-right: 8px;
+  }
+  .col-left-small .vert-title {
+    writing-mode: vertical-rl;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 10px;
+    line-height: 1.6;
+  }
+  .col-mid {
+    flex: 1.8;
+    border-right: 1px solid #000;
+    padding-right: 12px;
+  }
+  .col-mid h2.title2 {
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    margin: 6px 0 10px 0;
+  }
+  .col-mid .subtitle2 {
+    font-size: 13px;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .col-mid .byline2 {
+    font-size: 12px;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .col-mid p {
+    text-align: justify;
+    text-indent: 1em;
+    margin: 5px 0;
+  }
+  .photo-block {
+    margin: 15px 0;
+    text-align: center;
+  }
+  .placeholder {
+    width: 100%;
+    height: 320px;
+    background: linear-gradient(135deg,#8fbfd6,#c8e6d0);
+    border: 1px solid #999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    font-size: 14px;
+    margin: 0 auto;
+  }
+  .photo-caption {
+    font-size: 12px;
+    text-align: left;
+    margin-top: 4px;
+    color: #333;
+  }
+  .col-right-small {
+    flex: 1.4;
+    padding-left: 4px;
+  }
+  .col-right-small p {
+    text-align: justify;
+    text-indent: 1em;
+    margin: 5px 0;
+  }
+  .side-note {
+    float: right;
+    width: 130px;
+    font-size: 12px;
+    text-align: justify;
+    margin-left: 8px;
+    border-left: 1px solid #666;
+    padding-left: 6px;
+  }
+  .bottom-box {
+    border: 1px solid #000;
+    padding: 15px 20px;
+    margin-top: 20px;
+  }
+  .bottom-box h2 {
+    text-align: center;
+    font-size: 15px;
+    margin: 0 0 4px 0;
+    font-weight: normal;
+  }
+  .bottom-box h1 {
+    text-align: center;
+    font-size: 24px;
+    margin: 4px 0 15px 0;
+  }
+  .bottom-flex {
+    display: flex;
+    gap: 20px;
+  }
+  .bottom-col {
+    flex: 1;
+    font-size: 13px;
+  }
+  .bottom-col p {
+    text-align: justify;
+    text-indent: 1em;
+    margin: 4px 0;
+  }
+  .bottom-col h4 {
+    font-size: 13px;
+    margin: 10px 0 3px 0;
+    font-weight: bold;
+  }
+  .credit-line {
+    text-align: right;
+    font-size: 12px;
+    margin-top: 10px;
+  }
+  .footer-mark {
+    text-align: right;
+    font-size: 12px;
+    margin-top: 6px;
+    color: #555;
+  }
+</style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="header-left">
+      <span class="page-num">04</span>
+      <span class="page-title">综合新闻</span>
+    </div>
+    <div class="header-mid">2025年1月9日&nbsp;&nbsp;星期四&nbsp;&nbsp;责任编辑：杨永磊、王旭东</div>
+    <div class="header-right">光明日报</div>
+  </div>
+
+  <div class="main-flex">
+    <div class="left-col">
+      <div class="section-title-icon">
+        <span class="icon-circle">G</span>
+        <span>来自国新办新闻发布会的报道</span>
+      </div>
+      <div class="subhead">保畜通、保安全、优服务——</div>
+      <h1 class="headline">护航百姓春运出行平安顺利</h1>
+      <div class="byline">本报记者&nbsp;&nbsp;訾&nbsp;谦</div>
+
+      <div class="article-cols">
+        <div class="col">
+          <p>随着春节临近，为期40天的春运即将拉开帷幕。今年春运从1月14日开始，2月22日结束。作为“流动的中国”的生动写照，今年春运有哪些新特点，百姓的回家路该如何保障？在国家办8日举行的新闻发布会上，国家发展改革委等部门相关负责人回答了相关问题。</p>
+          <h3>全社会跨区域人员流动量将创新高</h3>
+          <p>据交运运输部门预计，今年春运期间全国人员流动量将达90亿人次，其中铁路、民航客运量有望分别突破5.1亿人次和9000万人次，均将创历史新高。从出行结构看，自驾出行将逐渐占比重返高主体地位，预计今年出行占比达72亿人次，约占全社会跨区域人员流动量的八成，全国跨公路网流量将保持高位波动。</p>
+          <p>“从时空分布看，今年春节比往年偏早，节假日的返程可以为学生、务工、探亲、旅游等四类返程人流的集中程度较小。京津冀、长三角、粤港澳、成渝等城市群的返程运送时间跨度将主要集中在1月24日前后。”国家发展改革委副主任任张国家提到，考虑到春运周期跟今年春运将在短时间内提升至全负荷状态，保畏通、保安全、旅返游天气、统等各类返游能力方面面对较大压力。</p>
+          <p>作为旅客中运途出行的重要出行方式，铁路在春运出行看至今年比较去年增长16.2万公里，且中高铁路4.8万公里，铁路方将于旅运高路和装备容器最大限度提升出行能力，着力增加旅运运客高峰车次的重整量，每日安排旅客列车4.7万列，每日可增加旅列车运50万个大次，客量增能力同比预约4%左右，全力保障广大旅客出行安全。</p>
+        </div>
+
+        <div class="col">
+          <h3>让每一位旅客都能安全返乡</h3>
+          <p>春运关系着亿万家庭新春团圆、平安出行，顺利过节。为一位旅客都能安全返乡是首姓关心的重点。</p>
+          <p>公安部交通管理局局长王强表示，为保障春运期间出行平安、公安部已启动相关工作，全面部署防止运安全隐患基础上，全国各地公安交管部门重点在客流、车流、路网等重点道路阻塞情况进行整治，进一步提升车流、高铁的融安管队处理能力。</p>
+          <p>春运期间是低低雷雾天气的高发时期，对今年冬季公司民航天气运行计约与去年民航天气变化实际情况，铁民航天空气流对整年冷空气冷气流动比较较大，强度总体总体也比较高。</p>
+          <p>对此，应急管理部安全防治司司长武景晶表示，为进一步做好安全运期间灾害防范应对，应急管理部</p>
+        </div>
+
+        <div class="col">
+          <p>会同有关部门及时修订完善应急预案，强化物资队伍装备与培训体系，提前预置一批重点装备发货，装备物资防冷抗雪灾害等地区，及时组织抢险机制及旅客防治，进一步提升处理能力，高效融雪除冰能力。</p>
+          <p>“同时，国家综合性消防救援队伍前施补重防雪抗灾应对巡装队，提前预针对冬雪灾害地区值防，提前部部署力量，冲得上、打得赢，发生灾害事故后第一时间赴命救援，全力护好人民群众生命安全、财产安全。</p>
+          <h3>用心用情做好春运服务</h3>
+          <p>随着群众出行规模逐步增长，“服务”成为今年春运的一个关键词。</p>
+          <p>交通运输部综合运输司负责人陈韩表示，近年来，新能源汽车快速发展，更多的人选择新能源汽车自驾出游，为满足广大群众和一路车充电服务需求，大家十分关注。</p>
+          <p>数据显示，截至2024年11月底，全国高速公路服务区已（含在服务区）累计设立超充公桩3.31万个，充电车位年4.93万个，较2023年底新增1.21万个个，1.66万个个，比同比增长明显提升。</p>
+        </div>
+      </div>
+
+      <hr class="section-divider">
+
+      <div class="lower-section">
+        <div class="col-left-small">
+          <div class="vert-title">开展法律援助"安心行动"</div>
+        </div>
+        <div class="col-mid" style="flex:1.6; border-right:none; padding-right:8px;">
+          <p style="text-indent:0; font-size:12px; margin-bottom:6px;">本报北京1月8日电&nbsp;记者王金虎&nbsp;从司法部获悉，为帮助劳动者顺心正当权益、安心工作，近日司法部印发《关于组织开展维护劳动者合法权益援助"安心行动"的通知》。</p>
+          <p>通知强调，要紧要围绕服务保障民生、维护劳动者合法权益、维护社会稳定的目标，聚焦农民工、新就业形态人员等劳动者合法权益、企业职工等劳动人员多元化立解决就业问题，在劳动者就业和维权、创业等各类权益提供精准、便捷、优质的法律服务。</p>
+          <p>通知明确，围绕劳动关系，通过普法宣传、法律咨询等方式，讲清可能涉及的法律问题，帮助劳动者规范签订合作用协议。围绕劳动纠纷，组织开展专项法律服务活动，第一时间处理法律纠纷问题，对新就业形态人员结合具体特点提供服务。围绕保险纠纷，组织开展专项服务活动，帮助劳动者参加保险、申请救助。此外，通知还提及时响应援助需求、提供免费法律咨询、优化服务流程、组建专业化服务队伍、加强法律援助质效等七项行动举措。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="right-col">
+      <div class="rt-vert-title">二〇二五年我国加力扩围实施"两新"政策——</div>
+      <div class="rt-vert-headline">让优惠更便捷直达消费者</div>
+      <div class="rt-byline" style="writing-mode:vertical-rl; margin:0 auto;">本报记者&nbsp;&nbsp;刘&nbsp;坤</div>
+
+      <div style="writing-mode:vertical-rl; text-orientation: mixed; height:1200px; font-size:13px; text-align:left;">
+        2024年，大规模设备更新和消费品以旧换新（以下简称“两新”）政策取得了哪些成效，2025年“两新”政策今年如何加力扩围？1月8日，国务院新闻办举行国务院政策例行吹风会，围绕相关问题进行了回应。<br><br>
+        激发消费活力等方面效果明显<br><br>
+        会上，国家发展改革委主任赵后昕介绍，2024年"两新"工作效果明显。在激发消费活力方面，2024年国内汽车报废和置换更新超过650万辆，新能源乘用车全国内零售量超过1100万辆。2024年7月底，加力支持"两新"政策推出之后，8月份全国家电以旧换新的销售额比前一个月同比下降2.4%，迅速转变为同比增长3.4%，家庭在应对融雪除冰能力上得到显著提升。<br><br>
+        在立项投资增长方面，初步估算，2024年在"两新"政策带动下，全国国有企业设备更新总量比2000万台以上。<br><br>
+        "两新"政策推动设备更新和消费品行业生产迅猛增长，17.6%，对规模以上工业增加值贡献率超过50%。<br><br>
+        此外，在支撑绿色转型方面，2024年全国新增智能化设备加投运回收利用设备达1.1万台，1.60台能效家电销售额超过10亿台。<br><br>
+        增加资金规模，扩大支持范围<br><br>
+        推动大规模设备更新，事关我国产业转型升级和绿色低碳高质量发展。<br><br>
+        "2025年，我们将进一步加大对建设项目的资金支持力度，扩大支持范围，放大撬动效应，构建大规模设备更新和消费品以旧换新长效机制。"国家发展改革委投资和体制改革司司长刘澎春介绍，一"扩"方面，充分资金、安全生产、设施改建3个领域纳入招标制别领投资资金支持范围，在国家四项标准指导设备生产标准化中，增加术精精粮机、田间设备处置等5个大类目类，"提标"方面，提高设备提高农业机械大补贴标准，平均每辆车补贴6万元提高至8万元，提高农机具报废更新补贴标准至2万元，此外，将加大能提高补贴等，深挖潜力提升消费。<br><br>
+        加快提升回收循环利用水平<br><br>
+        回收循环利用是"两新"工作的重要一环。<br><br>
+        刘德春表示，废旧设备资源循环利用行动方案将出台后，2024年全国报废机动车回收量达846万辆，同比增长64%。<br><br>
+        "我们将加快加强废旧物资循环体系，做好废旧循环体系建设这篇大文章。"刘德春表示，为完善废旧设备资源循环利用体系，继续实施废旧家电以旧换新，完善废旧家电资金和奖惠激励政策，继续支持超家电以旧换新，改造升级回收利用体系，加大废旧钢铁、废电池等回收循环利用体系建设，将进一步淘汰低效率电池，改造升级回收利用体系，加大规模再制造产业，支持带动企业生产、第三方机构和废旧品，推动持续的服务规模效应，推动完善的机电产品，规范化的废机制发展。<br><br>
+        此外，国家市场监管总局标准技术管理司司长刘涨华表示，为完善废旧品标准体系，同有关部门2025年重要国家标准计划，在保证质量制订的基础上，成熟一项加快一项，完善再制标准，加快构建有关技术标准，同步推动地方标准体系配套，支撑"两新"工作取得更大成效。
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <div class="main-flex">
+    <div class="left-col" style="flex:1;">
+      <h3 style="text-align:center; font-size:15px; margin:6px 0;">财政部：</h3>
+      <h2 style="text-align:center; font-size:22px; margin:4px 0 12px 0;">建立全国行政事业单位国有资产调剂共享平台</h2>
+      <p style="text-align:center; font-size:12px;">本报北京1月8日电（记者鲁元珍）</p>
+      <div style="display:flex; gap:14px;">
+        <div style="flex:1;">
+          <p>为进一步提高行政事业单位国有资产配置和使用效益，国家资产使用效能提高统等，财政部近日发布《财政部关于组织开展行政事业单位国有资产调剂共享平台建设的通知》，依托预算管理一体化系统建立全国行政事业单位国有资产调剂共享平台（以下简称"平台"），打通中央和地方的资产单位资产信息通道，实现行政事业</p>
+        </div>
+        <div style="flex:1;">
+          <p>区调剂共享。<br>"资产调剂共享是实现资产模使便捷、延长使用寿命、做到物尽其用的有效手段，对于节约财政资金、支持效果均衡发展具有重要意义。"财政部资产管理司负责人介绍，平台分区域打分主平台，一体化地方分平台，工作要求等三方面十条内容，明确以2025年起，资产调剂共享平台将作为行政事业单位国有资产报告的重要内容予以反映。财政部还将运用平台优化完善行政事业单位资产管理和预算管理绩效评价，进一步推动做好资产调剂共享工作。</p>
+        </div>
+        <div style="flex:1;">
+          <p>分、配置分设查询资产信息、共享资产信息，单位提出资产供需要求，有效满足供需方信息。<br>通知明确了平台运行的整体架构、工作任务分工十条内容，明确2025年起，资产调剂共享平台将作为行政事业单位国有资产报告的重要内容予以反映。财政部还将运用平台优化完善行政事业单位资产管理和预算管理绩效评价，进一步推动做好资产调剂共享工作。</p>
+        </div>
+      </div>
+      <div style="display:flex; gap:12px; margin-top:8px; align-items:flex-start;">
+        <div style="flex:2;">
+          <div class="placeholder" style="height:280px;">[Photo: Aerial view of coastal wetland with boats leaving trails]</div>
+          <div class="photo-caption">曹永龙摄/光明图片</div>
+        </div>
+        <div style="flex:1; font-size:13px; text-align:justify;">
+          <p style="text-indent:1em;">近年来，重庆万盛经开区依托林特资源优势发展，把石山生态环境治理、山体栈道修复、道路改造与美丽乡村建设这两步推进，打造生态宜居的和美乡村。图为1月5日拍摄的万盛经开区青山湖湿地公园景色。</p>
+        </div>
+      </div>
+      <div style="margin-top:6px; font-size:13px;">
+        <p>财政部经济建设司司长金陵表示，2025年，财政部将进一步优化资产</p>
+      </div>
+    </div>
+
+    <div class="right-col" style="border-left:1px solid #000; text-align:left; flex:0.9;">
+      <p style="text-indent:1em;">分配、加大支持力度。对资产需求大、社会关注度高的部分领域，进一步扩大实施范围，提高补助标准，加大到12类。同时，进一步加强资产源治理的政策衔接，加大对废旧家电的回收利用效能力。</p>
+      <p style="text-indent:1em;">中国人民银行信贷市场司司长立昆表示，人民银行会与相关部门加大对大规模设备更新，进一步发挥碎降补贴作用，加大对个人消费者购贷贷款利率优惠力度，进一步优化个人贷款贷款流程，支持银行提升服务水平提升个人融资便捷性，降低资金融资成本，进一步优化个体经营及消费经营者支体贷款支持效率发展。</p>
+      <p style="text-indent:1em;">刘德春表示，2025年继续实施旧资金合支持提国家电回收处理，加快提升定废旧手机整体等有方案，推动手机整体机制品以旧换新，支持进一步扩大电池回收利用系统，工厂改造为回收利用生产标准化审批流程，依法依据合乎非法回收拆解报废机动车，取缔非法回收，废电池管理产品是否属于非法行为。</p>
+      <p style="text-indent:1em;">此外，国家市场监督局标准技术管理司司长刘涨华表示，同有关部门2025年重要国家标准制订计划，在保证质量的前提下，成熟一项加快一项，完善废旧品标准体系，强化政策标准衔接，加快构建更大成效。</p>
+    </div>
+  </div>
+
+  <div class="bottom-box">
+    <h2>西安电子科技大学机电工程学院</h2>
+    <h1>着力坚持"三个注重"&nbsp;&nbsp;多维度开展新生适应养成教育</h1>
+    <div class="bottom-flex">
+      <div class="bottom-col">
+        <p>新生适应教育是衔接中和大学的重要阶段，是大学学习生涯的起点，也是高校人才自主培养的重要环节。西安电子科技大学机电工程学院多年来聚焦新生适应养成教育工作的实际情况，为学生教育教学工作要点，统等各类工作的支柱之点，做出重点培育教学工作的关键。</p>
+        <h4>注重统筹谋划&nbsp;&nbsp;全员参与新生教育</h4>
+        <p>学院党委高度重视2024级新生适应养成教育，将其作为人才培养质量、夯实立德树人基础的关键工作。以出《机电工程学院2024级新生适应养成教育工作实施方案》，成立多级新生适应养成教育工作专班，统筹负责各项工作的策划、组织和落实推进等各项工作。</p>
+        <p>为确保各项措施有效实施，学院实现学生参与单位和人员的全覆盖。各系、室、中心及院机关分别对接15个新</p>
+      </div>
+      <div class="bottom-col">
+        <p>生班级，各选派1名骨干教师担任班主任，为高年级班提供专业认知、学习方分及心理健康等各方面全方位支持。学院党委委员和学院党组织领导子解人参与对新生适应养成教育的具体工作，新生辅导员积极带头各方面工作实施，确保全员参与、做好协同育人，加强学院组织领导，建立反馈交流协调机制。</p>
+        <p>学院加强新生教育过程培训，建立反馈交流协调机制。每2周定期召开专项工作会议；每2周届期1期《新生教育指引工作简报》发送院和学校相关部门。让更多关注了，学生参与新生教育养成教育，进而提升合力育人力度。</p>
+        <h4>注重价值引领&nbsp;&nbsp;夯实理想信念之基</h4>
+        <p>学院广泛开展理想信念教育，深入实施"时代新人铸魂工程"，强化新生理论武装教育，团结新生教育管理常规化，坚持读书学工程之统信，引导新生打好大学生进的"第一粒扣子"。</p>
+        <p>学院认真组织新生班级开好一次主题班会。组织系所支部书记、专业教师和辅导员各参加会议，从入学关认识、观点讲，认真、丰富理论对班规学中制订。</p>
+      </div>
+      <div class="bottom-col">
+        <p>应、身心健康、能力提升等角度充分阐述如何做好一名度和自我认识提升角度考虑各方面接入并支持支持。<br>学生课程讲座，让全体年级学生了解要求和期望；组织新生和学院形象宣传活动，激励新生坚定理想信念，勇于承担历史使命。</p>
+        <p>学院扎实开展形式生动、受欢迎教育。组织新生多观优质教育资源，用好学校红色资源，帮助新生了解学校历史和特色，传承红色血脉，磨炼红色血色，组织新生形和参加学校支持的"共产党人精神谱系宣传展巡循讲座报告会"，激发培育科学时代，坚定投身科技创新、服务国家发展的信念之愿心。</p>
+        <h4>注重学风养成&nbsp;&nbsp;营造优良学习氛围</h4>
+        <p>学院以提升学生自主学习能力和专业素养为核心，推动形成求真求实、乐学善学的良好学风。学院学习引导入新生课程和自主答疑情况，形成日常教学服务体系。</p>
+        <p>15个班级分别开展期间成绩分析主题活动，邀请班委对领导、班主任优秀学生代表进行分享,让新生认识专业发展方向，明确大学阶段学习目标；开展学情调研，收回545份有效问卷，详细掌握新生的学习状况和需求。</p>
+        <p>学院积极完善朋辈互助和帮扶体系，将每日集体晚自习和学习方案实施配套，动员成绩优异的学生组织参与帮扶实践队，对针对高等数学、程序设计等课程建立自愿组成师范和辅导班答疑20余次；建立小组长小组进和自主学习的小组进行交流和相互监督。</p>
+        <p>学院通过开展系列专业介绍会和专业认知讲座，提升学生的专业认知和情感认识。同学院、专业负责人为新生解读专业机制方案，人才培养企划案和各专业课程体系特点；辅导员先后组织参加班机动教育指导教师3场，为新生解读4年规划；组织新生参观国家重点实验室、工程中心和优秀毕业设计作品10余场，帮助新生了解专业学习兴趣。</p>
+        <p>面对新机遇，学院将继续坚持"三个注重"，聚焦为新生"扫盲"、为新生"导航"、为学生"帮扶"，帮助学生"入好门"、走好路、学好业、成好才"，努力培养学生成长为有理想，敢担当，能吃苦，肯奋斗的时代青年。</p>
+        <div class="credit-line">（梁玲赋 武 铭）</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-mark">·广告·</div>
+
+</body>
+</html>

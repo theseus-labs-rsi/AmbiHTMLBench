@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Part 2: 营销策略</title>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+    background: linear-gradient(180deg, #f6c3d9 0%, #e9c3ec 45%, #c9b8ec 100%);
+    min-height: 100vh;
+    padding: 18px 0 30px;
+    position: relative;
+    color: #333;
+  }
+  .side-watermark {
+    position: fixed;
+    left: 6px;
+    top: 40px;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    color: rgba(255,255,255,0.85);
+    font-size: 15px;
+    letter-spacing: 2px;
+    font-weight: 600;
+    z-index: 5;
+  }
+  .page {
+    width: 92%;
+    max-width: 560px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 6px;
+    box-shadow: 0 4px 18px rgba(160, 90, 160, 0.25);
+    padding: 26px 30px 22px;
+    position: relative;
+  }
+  .top-watermark {
+    position: absolute;
+    top: -14px;
+    right: 8px;
+    color: rgba(255,255,255,0.9);
+    font-size: 20px;
+    font-weight: 700;
+    text-shadow: 0 1px 2px rgba(200,120,180,0.4);
+    white-space: nowrap;
+  }
+  .top-watermark .brace { font-weight: 400; }
+
+  /* Header */
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border-bottom: 1px solid #e5e5e5;
+    padding-bottom: 14px;
+  }
+  .logo {
+    width: 150px;
+    height: 62px;
+    position: relative;
+    flex: 0 0 auto;
+  }
+  .logo .dot { position: absolute; border-radius: 50%; }
+  .logo .d1 { width: 26px; height: 26px; background: #1d9bd7; left: 22px; top: 2px; }
+  .logo .d2 { width: 26px; height: 26px; background: #e84393; left: 62px; top: 2px; }
+  .logo .d3 { width: 26px; height: 26px; background: #1d9bd7; left: 102px; top: 2px; }
+  .logo .cheek1 { width: 34px; height: 34px; background: #f6c6de; left: 0; top: 24px; }
+  .logo .cheek2 { width: 34px; height: 34px; background: #f6c6de; left: 116px; top: 24px; }
+  .logo .smile {
+    position: absolute;
+    left: 44px;
+    top: 26px;
+    width: 62px;
+    height: 30px;
+    border: 9px solid #d63384;
+    border-top: none;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    border-radius: 0 0 60px 60px;
+  }
+  .part-title {
+    font-size: 30px;
+    color: #222;
+    font-weight: 400;
+    white-space: nowrap;
+  }
+  .part-title strong { font-weight: 800; }
+
+  /* Strategy heading */
+  .strategy {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin: 16px 0 12px;
+    font-size: 17px;
+    font-weight: 800;
+    color: #1a1a1a;
+    line-height: 1.45;
+  }
+  .strategy .icon {
+    flex: 0 0 auto;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #e8341c;
+    color: #fff;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+    font-weight: 700;
+  }
+  .lead {
+    margin: 4px 0 14px 18px;
+    font-size: 14.5px;
+    line-height: 1.75;
+    color: #222;
+    position: relative;
+    padding-left: 14px;
+  }
+  .lead::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 9px;
+    width: 7px;
+    height: 7px;
+    background: #111;
+    transform: rotate(45deg);
+  }
+
+  /* Main two-column zone */
+  .main-row {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+  }
+  .left-col { flex: 1 1 58%; min-width: 0; }
+  .right-col { flex: 0 0 172px; }
+
+  .section-label {
+    font-size: 13px;
+    font-weight: 800;
+    color: #222;
+    margin: 2px 0 8px;
+  }
+  .action {
+    display: flex;
+    gap: 7px;
+    margin: 10px 0 4px;
+    font-size: 13.5px;
+    font-weight: 800;
+    color: #222;
+    align-items: flex-start;
+  }
+  .action .num {
+    flex: 0 0 auto;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #e8341c;
+    color: #fff;
+    font-size: 11px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+  }
+  .action .num.pink { background: #e84393; }
+  .action .num.orange { background: #f39c12; }
+  .sub-list {
+    list-style: none;
+    margin: 2px 0 4px 24px;
+  }
+  .sub-list li {
+    font-size: 12px;
+    line-height: 1.65;
+    color: #333;
+    padding-left: 12px;
+    position: relative;
+    margin-bottom: 2px;
+  }
+  .sub-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #666;
+  }
+
+  /* Right column */
+  .placeholder {
+    background: repeating-linear-gradient(45deg, #fbeef5, #fbeef5 10px, #f7e0ee 10px, #f7e0ee 20px);
+    border: 1px dashed #d9a8c8;
+    color: #a06a90;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 11px;
+    line-height: 1.5;
+    padding: 8px;
+  }
+  .char-img { width: 172px; height: 150px; border-radius: 4px; }
+  .game-panel {
+    margin-top: 8px;
+    width: 172px;
+    border: 1px solid #f0d2e4;
+    border-radius: 6px;
+    background: #fdf4fa;
+    padding: 8px 9px;
+    font-size: 10px;
+    color: #8a5a78;
+    line-height: 1.55;
+  }
+  .game-panel .gp-title { text-align: center; font-weight: 700; color: #b04d86; font-size: 11px; margin-bottom: 4px; }
+  .game-panel .gp-date { text-align: center; color: #b98aa8; margin-bottom: 5px; }
+  .game-panel .gp-join { color: #e84393; font-weight: 700; margin: 4px 0 5px; font-size: 10.5px; }
+  .gp-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #f3dbe9;
+    border-radius: 4px;
+    padding: 4px 6px;
+    margin-bottom: 5px;
+    color: #6d4a5e;
+  }
+  .gp-row .btn {
+    flex: 0 0 auto;
+    background: #f6a8cd;
+    color: #fff;
+    border-radius: 3px;
+    padding: 1px 6px;
+    font-size: 9px;
+    margin-left: 6px;
+  }
+
+  /* Bottom product strip */
+  .product-strip {
+    margin-top: 16px;
+    width: 100%;
+    height: 150px;
+    border-radius: 3px;
+  }
+  .caption {
+    text-align: center;
+    font-size: 13px;
+    color: #222;
+    margin-top: 8px;
+    font-weight: 500;
+  }
+  .credit {
+    text-align: right;
+    font-size: 11px;
+    color: #b8b8b8;
+    margin-top: 6px;
+  }
+</style>
+</head>
+<body>
+  <div class="side-watermark">@营销学姐Renita</div>
+
+  <div class="page">
+    <div class="top-watermark"><span class="brace">{</span>营销学姐Renita<span class="brace">}</span></div>
+
+    <div class="header">
+      <div class="logo" aria-hidden="true">
+        <span class="dot cheek1"></span>
+        <span class="dot cheek2"></span>
+        <span class="dot d1"></span>
+        <span class="dot d2"></span>
+        <span class="dot d3"></span>
+        <span class="smile"></span>
+      </div>
+      <div class="part-title">Part 2: <strong>营销策略</strong></div>
+    </div>
+
+    <div class="strategy">
+      <span class="icon">P</span>
+      <span>策略一: 热门IP产品强势联名,迅速形成破圈效应</span>
+    </div>
+
+    <p class="lead">近日,与全球知名IP品牌三丽鸥的联名,活动涉及的三款产品一经上线便秒售罄!行业地位和品牌调性的高度匹配,让此次联名活动迅速引爆两个圈层!</p>
+
+    <div class="main-row">
+      <div class="left-col">
+        <div class="section-label">营销动作</div>
+
+        <div class="action"><span class="num">1</span><span>联名合作IP高度契合</span></div>
+        <ul class="sub-list">
+          <li>RiCO是广受精致女性热爱的生活治愈类IP,“可爱”“阳光”“治愈”</li>
+          <li>合作方三丽鸥一直希望努力传达出“Small Gift, Big Smile”</li>
+          <li>双方在品牌调性、精神、理念,以及受众群体等方面都有着较高匹配度</li>
+        </ul>
+
+        <div class="action"><span class="num orange">2</span><span>用心的高水准产品设计</span></div>
+        <ul class="sub-list">
+          <li>高水准的设计工艺+配色+材质,将两类IP鲜明重要的特点进行深度融合</li>
+          <li>“联动IP+RiCO+RiCO FRIENDS”三个一组的玩具形象搭配</li>
+        </ul>
+
+        <div class="action"><span class="num pink">3</span><span>趣味性的联名活动玩法</span></div>
+        <ul class="sub-list">
+          <li>RiCO 伙伴扭蛋机</li>
+          <li>RiCO x 三丽鸥极速三连问</li>
+          <li>RiCO 记忆挑战等趣味小游戏</li>
+        </ul>
+      </div>
+
+      <div class="right-col">
+        <figure class="placeholder char-img">[图片: 三丽鸥角色群像<br>(右上)]</figure>
+        <div class="game-panel">
+          <div class="gp-title">「伙伴月游戏」</div>
+          <div class="gp-date">5月9日-5月16日 [illegible]</div>
+          <div class="gp-join">◎ 活动参与</div>
+          <div class="gp-row"><span>RiCO 伙伴扭蛋机</span><span class="btn">[illegible]</span></div>
+          <div class="gp-row"><span>RiCO × 三丽鸥 极速三连问</span><span class="btn">[illegible]</span></div>
+          <div class="gp-row"><span>RiCO 小伙伴记忆挑战</span><span class="btn">[illegible]</span></div>
+        </div>
+      </div>
+    </div>
+
+    <figure class="placeholder product-strip">[图片: RiCO x 三丽鸥联名产品图片(底部横排产品图)]</figure>
+    <div class="caption">RiCO x 三丽鸥联名产品图片</div>
+    <div class="credit">图片来自品牌官方媒体</div>
+  </div>
+</body>
+</html>

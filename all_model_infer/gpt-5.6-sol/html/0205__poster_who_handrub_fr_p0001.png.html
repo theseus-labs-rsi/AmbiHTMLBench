@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La friction hydro-alcoolique - Comment ?</title>
+  <style>
+    :root {
+      --orange: #fb6815;
+      --black: #231f20;
+      --panel: #f4f4f4;
+      --gray: #aaa8a8;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      background: #fff;
+      color: var(--black);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .poster {
+      width: min(100%, 1054px);
+      min-height: 1490px;
+      margin: 0 auto;
+      padding: 28px 35px 13px;
+      background: #fff;
+    }
+
+    header {
+      margin-bottom: 21px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 74px;
+      font-weight: 700;
+      line-height: 0.93;
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+
+    h1 .question {
+      display: block;
+      margin-top: 8px;
+      color: var(--orange);
+    }
+
+    .instruction {
+      margin: 20px 0 14px;
+      color: var(--orange);
+      font-size: 27px;
+      font-weight: 700;
+      line-height: 1.08;
+    }
+
+    .duration {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 0 0 16px;
+      font-size: 27px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .clock {
+      position: relative;
+      flex: 0 0 38px;
+      width: 38px;
+      height: 38px;
+      background: var(--orange);
+    }
+
+    .clock::before {
+      content: "";
+      position: absolute;
+      inset: 6px;
+      border: 2px solid #fff;
+      border-radius: 50%;
+    }
+
+    .clock::after {
+      content: "";
+      position: absolute;
+      left: 18px;
+      top: 8px;
+      width: 2px;
+      height: 15px;
+      background: #fff;
+      transform: rotate(7deg);
+      transform-origin: bottom center;
+    }
+
+    .duration strong {
+      color: var(--orange);
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      column-gap: 34px;
+      row-gap: 39px;
+    }
+
+    .step {
+      min-width: 0;
+    }
+
+    .step-wide {
+      grid-column: span 2;
+    }
+
+    .visual {
+      position: relative;
+      width: 100%;
+      height: 219px;
+      overflow: hidden;
+      background: var(--panel);
+    }
+
+    .step-wide .visual {
+      height: 219px;
+    }
+
+    .number {
+      position: absolute;
+      z-index: 2;
+      top: 0;
+      left: 0;
+      min-width: 38px;
+      height: 39px;
+      padding: 1px 6px 0;
+      background: var(--orange);
+      color: #fff;
+      font-size: 34px;
+      font-weight: 700;
+      line-height: 39px;
+      text-align: center;
+    }
+
+    .number sub {
+      position: relative;
+      bottom: 0;
+      font-size: 18px;
+      line-height: 1;
+      vertical-align: baseline;
+    }
+
+    .placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      padding: 28px;
+      border: 0;
+      color: #8f8f8f;
+      font-size: 13px;
+      font-style: italic;
+      line-height: 1.35;
+      text-align: center;
+    }
+
+    .step-wide .placeholder {
+      padding-left: 55px;
+    }
+
+    .step-text {
+      min-height: 66px;
+      margin: 11px 0 0;
+      color: #080808;
+      font-size: 15.5px;
+      font-weight: 700;
+      line-height: 1.18;
+    }
+
+    .footer {
+      margin-top: 35px;
+    }
+
+    .footer-main {
+      display: grid;
+      grid-template-columns: 1.25fr 1fr 0.93fr;
+      align-items: center;
+      min-height: 137px;
+      padding: 24px 65px;
+      background: var(--orange);
+      color: #fff;
+    }
+
+    .footer-main > div {
+      min-width: 0;
+    }
+
+    .who {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding-right: 32px;
+    }
+
+    .who-mark {
+      display: flex;
+      flex: 0 0 76px;
+      width: 76px;
+      height: 76px;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      color: #fff;
+      font-size: 9px;
+      font-style: italic;
+      text-align: center;
+    }
+
+    .who-name {
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1.05;
+    }
+
+    .patient-safety {
+      min-height: 76px;
+      padding: 14px 34px;
+      border-right: 2px solid rgba(255, 255, 255, 0.85);
+      border-left: 2px solid rgba(255, 255, 255, 0.85);
+      text-align: center;
+    }
+
+    .patient-safety .large {
+      font-size: 25px;
+      line-height: 1.1;
+    }
+
+    .patient-safety .small {
+      margin-top: 13px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .save-lives {
+      padding-left: 35px;
+    }
+
+    .save-lives .large {
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .save-lives .small {
+      margin-top: 5px;
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .disclaimer {
+      min-height: 51px;
+      padding: 9px 16px 7px;
+      background: var(--gray);
+      color: #fff;
+      font-size: 9.5px;
+      line-height: 1.18;
+      text-align: center;
+    }
+
+    .revision {
+      margin-top: 12px;
+      color: #b7b5b5;
+      font-size: 13px;
+      font-weight: 300;
+      text-align: center;
+    }
+
+    @media (max-width: 800px) {
+      .poster {
+        min-height: 0;
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: clamp(38px, 8vw, 74px);
+        white-space: normal;
+      }
+
+      .instruction,
+      .duration {
+        font-size: clamp(19px, 3.2vw, 27px);
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 28px 20px;
+      }
+
+      .step-wide {
+        grid-column: span 2;
+      }
+
+      .footer-main {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 28px;
+      }
+
+      .patient-safety {
+        border: 0;
+        border-top: 2px solid rgba(255, 255, 255, 0.85);
+        border-bottom: 2px solid rgba(255, 255, 255, 0.85);
+      }
+
+      .save-lives {
+        padding-left: 0;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .steps {
+        grid-template-columns: 1fr;
+      }
+
+      .step-wide {
+        grid-column: span 1;
+      }
+
+      .visual,
+      .step-wide .visual {
+        height: 245px;
+      }
+
+      .step-text {
+        min-height: 0;
+      }
+
+      .who {
+        flex-direction: column;
+        padding-right: 0;
+        text-align: center;
+      }
+    }
+  </style>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$']],
+        displayMath: [['$$', '$$']]
+      }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+  <main class="poster">
+    <header>
+      <h1>
+        La friction hydro-alcoolique
+        <span class="question">Comment ?</span>
+      </h1>
+
+      <p class="instruction">
+        Utiliser la friction hydro-alcoolique pour l’hygiène des mains !<br>
+        Laver vos mains au savon et à l’eau lorsqu’elles sont visiblement souillées.
+      </p>
+
+      <div class="duration">
+        <span class="clock" aria-hidden="true"></span>
+        <span>Durée de la procédure : <strong>20-30 secondes</strong></span>
+      </div>
+    </header>
+
+    <section class="steps" aria-label="Étapes de la friction hydro-alcoolique">
+      <article class="step step-wide">
+        <div class="visual">
+          <span class="number">1<sub>a</sub></span>
+          <div class="placeholder">[Illustration : produit hydro-alcoolique versé dans la paume d’une main]</div>
+        </div>
+        <p class="step-text">
+          Remplir la paume d’une main avec le produit hydro-alcoolique, recouvrir toutes les surfaces<br>
+          des mains et frictionner :
+        </p>
+      </article>
+
+      <article class="step">
+        <div class="visual">
+          <span class="number">2</span>
+          <div class="placeholder">[Illustration : paume contre paume avec mouvement de rotation]</div>
+        </div>
+        <p class="step-text">
+          Paume contre paume par mouvement de<br>
+          rotation ;
+        </p>
+      </article>
+
+      <article class="step">
+        <div class="visual">
+          <span class="number">3</span>
+          <div class="placeholder">[Illustration : friction du dos de la main gauche avec la paume droite]</div>
+        </div>
+        <p class="step-text">
+          Le dos de la main gauche avec un<br>
+          mouvement d’avant en arrière exercé par<br>
+          la paume de la main droite, et vice versa ;
+        </p>
+      </article>
+
+      <article class="step">
+        <div class="visual">
+          <span class="number">4</span>
+          <div class="placeholder">[Illustration : doigts entrelacés, paume contre paume]</div>
+        </div>
+        <p class="step-text">
+          Les espaces interdigitaux, paume contre<br>
+          paume et doigts entrelacés, en exerçant un<br>
+          mouvement d’avant en arrière ;
+        </p>
+      </article>
+
+      <article class="step">
+        <div class="visual">
+          <span class="number">5</span>
+          <div class="placeholder">[Illustration : dos des doigts dans la paume opposée]</div>
+        </div>
+        <p class="step-text">
+          Le dos des doigts dans la paume de la<br>
+          main opposée, avec un mouvement<br>
+          d’aller-retour latéral ;
+        </p>
+      </article>
+
+      <article class="step">
+        <div class="visual">
+          <span class="number">6</span>
+          <div class="placeholder">[Illustration : rotation du pouce dans la main opposée]</div>
+        </div>
+        <p class="step-text">
+          Le pouce de la main gauche par rotation<br>
+          dans la main droite, et vice versa ;
+        </p>
+      </article>
+
+      <article class="step">
+        <div class="visual">
+          <span class="number">7</span>
+          <div class="placeholder">[Illustration : friction rotative de la pulpe des doigts dans la paume opposée]</div>
+        </div>
+        <p class="step-text">
+          La pulpe des doigts de la main droite dans<br>
+          la paume de la main gauche, et vice et<br>
+          versa ;
+        </p>
+      </article>
+
+      <article class="step">
+        <div class="visual">
+          <span class="number">8</span>
+          <div class="placeholder">[Illustration : deux mains propres et sèches]</div>
+        </div>
+        <p class="step-text">
+          Une fois sèches, vos mains sont prêtes<br>
+          pour le soin.
+        </p>
+      </article>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-main">
+        <div class="who">
+          <div class="who-mark placeholder">[Emblème de l’OMS]</div>
+          <div class="who-name">
+            Organisation<br>
+            mondiale de la Santé
+          </div>
+        </div>
+
+        <div class="patient-safety">
+          <div class="large">Sécurité des patients</div>
+          <div class="small">Une Alliance mondiale pour des soins plus sûrs</div>
+        </div>
+
+        <div class="save-lives">
+          <div class="large">SAVE LIVES</div>
+          <div class="small">Clean Your Hands</div>
+        </div>
+      </div>
+
+      <div class="disclaimer">
+        L’Organisation Mondiale de la Santé (OMS) a pris toutes les dispositions nécessaires pour vérifier les informations contenues dans ce document. Toutefois, le document publié est diffusé sans aucune garantie, expresse ou implicite.<br>
+        La responsabilité de l’interprétation et de l’utilisation de ce document incombe au lecteur. En aucun cas, l’OMS ne saurait être tenue responsable des préjudices subis du fait de son utilisation.<br>
+        L’OMS remercie les Hôpitaux Universitaires de Genève (HUG), en particulier les collaborateurs du Service de Prévention et Contrôle de l’Infection, pour leur participation active à l’élaboration de ce matériel.
+      </div>
+
+      <div class="revision">Révision : Mai 2009</div>
+    </footer>
+  </main>
+</body>
+</html>

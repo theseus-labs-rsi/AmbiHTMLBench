@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>租房注意事项</title>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$']],
+        displayMath: [['$$', '$$']]
+      }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      background: #a6c8b4;
+      color: #151515;
+      font-family: "SimSun", "Songti SC", "STSong", serif;
+    }
+
+    .canvas {
+      position: relative;
+      width: 540px;
+      height: 718px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 9% 8%, rgba(255,255,255,.12), transparent 17%),
+        radial-gradient(circle at 87% 65%, rgba(255,255,255,.1), transparent 22%),
+        #a6c8b4;
+    }
+
+    .page {
+      position: absolute;
+      top: 24px;
+      left: 27px;
+      width: 483px;
+      height: 667px;
+      padding: 20px 8px 8px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 0 2px rgba(0, 0, 0, .08);
+    }
+
+    h1 {
+      margin: 0 0 11px;
+      color: #52745e;
+      text-align: center;
+      font-family: "STKaiti", "KaiTi", "Kaiti SC", serif;
+      font-size: 37px;
+      line-height: 1.25;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-shadow: 0 1px 2px rgba(50, 80, 60, .18);
+    }
+
+    .section-title {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      height: 43px;
+      margin: 0 0 4px 10px;
+      padding: 0 7px 2px 33px;
+      border-bottom: 3px solid #c52119;
+      font-family: "SimHei", "Heiti SC", sans-serif;
+      font-size: 31px;
+      line-height: 1;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    .section-title::before {
+      position: absolute;
+      top: 4px;
+      left: 0;
+      width: 25px;
+      height: 25px;
+      border: 5px solid #e11812;
+      border-radius: 50%;
+      content: "";
+    }
+
+    .list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-size: 22px;
+      line-height: 1.8;
+      letter-spacing: 0;
+    }
+
+    .list li {
+      white-space: nowrap;
+    }
+
+    .bedroom {
+      margin-left: 0;
+    }
+
+    .other-title {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+
+    .other {
+      font-size: 21px;
+      line-height: 1.72;
+    }
+
+    .first-other-line {
+      display: flex;
+      gap: 19px;
+      white-space: nowrap;
+    }
+
+    .watermark {
+      position: absolute;
+      top: 269px;
+      left: 278px;
+      width: 190px;
+      color: rgba(255, 255, 255, .66);
+      font-family: "Microsoft YaHei", sans-serif;
+      font-size: 17px;
+      line-height: 1.55;
+      text-shadow: 0 1px 4px rgba(170, 170, 170, .22);
+      transform: rotate(-1deg);
+    }
+
+    .watermark::before {
+      display: inline-block;
+      width: 37px;
+      height: 37px;
+      margin-right: 7px;
+      border: 4px solid rgba(255, 255, 255, .55);
+      border-top-color: transparent;
+      border-radius: 50% 50% 48% 52%;
+      vertical-align: middle;
+      content: "";
+      transform: rotate(38deg);
+    }
+
+    .watermark span {
+      display: block;
+      margin-left: 51px;
+      margin-top: -10px;
+    }
+
+    .placeholder {
+      position: absolute;
+      right: -3px;
+      top: 359px;
+      width: 92px;
+      height: 151px;
+      overflow: hidden;
+      color: transparent;
+      font-size: 1px;
+      user-select: none;
+    }
+
+    .cat {
+      position: absolute;
+      left: 11px;
+      top: 14px;
+      width: 66px;
+      height: 122px;
+      border: 1.5px solid #555;
+      border-radius: 43% 44% 35% 38% / 22% 23% 48% 48%;
+      background: #fff;
+      transform: rotate(-3deg);
+    }
+
+    .cat::before,
+    .cat::after {
+      position: absolute;
+      top: -9px;
+      width: 17px;
+      height: 21px;
+      border: 1.5px solid #555;
+      background: #fff;
+      content: "";
+    }
+
+    .cat::before {
+      left: 5px;
+      border-radius: 80% 10% 40% 30%;
+      transform: rotate(18deg);
+    }
+
+    .cat::after {
+      right: 5px;
+      border-radius: 10% 80% 30% 40%;
+      transform: rotate(-18deg);
+    }
+
+    .ear-color {
+      position: absolute;
+      top: 9px;
+      right: 7px;
+      z-index: 3;
+      width: 8px;
+      height: 18px;
+      border-radius: 60% 40%;
+      background: #e5552e;
+      transform: rotate(-16deg);
+    }
+
+    .face {
+      position: absolute;
+      top: 24px;
+      left: 23px;
+      z-index: 3;
+      width: 24px;
+      height: 10px;
+      border-bottom: 1px solid #555;
+      border-radius: 50%;
+    }
+
+    .face::before,
+    .face::after {
+      position: absolute;
+      top: 0;
+      width: 2px;
+      height: 2px;
+      border-radius: 50%;
+      background: #555;
+      content: "";
+    }
+
+    .face::before {
+      left: 3px;
+    }
+
+    .face::after {
+      right: 3px;
+    }
+
+    .paw {
+      position: absolute;
+      top: 67px;
+      left: 24px;
+      width: 27px;
+      height: 21px;
+      border: 1.3px solid #555;
+      border-radius: 30% 50% 45% 40%;
+      background: #fff;
+      transform: rotate(10deg);
+    }
+
+    .paw::before {
+      position: absolute;
+      top: -7px;
+      left: 4px;
+      width: 8px;
+      height: 10px;
+      border: 1.2px solid #555;
+      border-bottom: 0;
+      border-radius: 50%;
+      background: #fff;
+      content: "";
+    }
+
+    .tail {
+      position: absolute;
+      top: 87px;
+      right: -6px;
+      width: 31px;
+      height: 45px;
+      border: 3px solid #555;
+      border-bottom-color: transparent;
+      border-left-color: transparent;
+      border-radius: 50%;
+      transform: rotate(23deg);
+    }
+
+    .tail::after {
+      position: absolute;
+      top: 1px;
+      right: -2px;
+      width: 15px;
+      height: 20px;
+      border: 3px solid #555;
+      border-right-color: transparent;
+      border-bottom-color: transparent;
+      border-radius: 50%;
+      content: "";
+      transform: rotate(-44deg);
+    }
+
+    .feet {
+      position: absolute;
+      left: 26px;
+      bottom: 5px;
+      width: 42px;
+      height: 5px;
+      border-bottom: 1.5px solid #555;
+      border-radius: 50%;
+    }
+
+    @media (max-width: 540px) {
+      .canvas {
+        transform-origin: top center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="canvas">
+    <article class="page">
+      <h1>租房注意事项</h1>
+
+      <section>
+        <h2 class="section-title">卧室</h2>
+        <ol class="list bedroom">
+          <li>1.空调是否正常使用，空调排水位置，外机位置</li>
+          <li>2.所有电灯，插座是否ok</li>
+          <li>3.床是否OK，躺下翻身是否有响声</li>
+          <li>4.卧室地板情况</li>
+          <li>5.衣柜是否完好</li>
+          <li>6.各个房间是否能反锁</li>
+          <li>7.装修情况，不要太新，也不要太久</li>
+          <li>8.排查针孔摄像头</li>
+          <li>9.wifi信号情况</li>
+        </ol>
+      </section>
+
+      <div class="watermark">@带毛的翠子<span>From 小红书</span></div>
+
+      <figure class="placeholder" aria-label="Illustration: lower-right">
+        [Illustration: lower-right]
+        <div class="cat">
+          <i class="ear-color"></i>
+          <i class="face"></i>
+          <i class="paw"></i>
+        </div>
+        <i class="tail"></i>
+        <i class="feet"></i>
+      </figure>
+
+      <section>
+        <h2 class="section-title other-title">其他</h2>
+        <ol class="list other">
+          <li class="first-other-line">
+            <span>1.各类遥控器清点</span>
+            <span>2.所有钥匙清点</span>
+          </li>
+          <li>3.所有墙面情况，有无裂痕掉漆，脱皮</li>
+          <li>4.所有水龙头一起打开，看水压是否足够</li>
+          <li>5.如果是燃气热水器，也留意下安全使用情况</li>
+        </ol>
+      </section>
+    </article>
+  </main>
+</body>
+</html>

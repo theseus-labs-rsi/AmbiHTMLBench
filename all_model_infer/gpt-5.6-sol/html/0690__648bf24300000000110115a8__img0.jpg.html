@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Part 2：营销策略</title>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$']],
+        displayMath: [['$$', '$$']]
+      }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: #ead4ec;
+      font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+      color: #121929;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+    }
+
+    .canvas {
+      position: relative;
+      width: 540px;
+      min-height: 717px;
+      overflow: hidden;
+      background:
+        linear-gradient(
+          180deg,
+          #f3d2e2 0,
+          #f1d7e6 13%,
+          #e7daf0 49%,
+          #b8cfee 100%
+        );
+    }
+
+    .brand-top {
+      position: absolute;
+      top: 5px;
+      right: 17px;
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 21px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .brand-top-small {
+      position: absolute;
+      top: 31px;
+      right: 84px;
+      color: rgba(255, 255, 255, 0.68);
+      font-size: 7px;
+    }
+
+    .brand-side {
+      position: absolute;
+      top: 10px;
+      left: 8px;
+      color: rgba(255, 255, 255, 0.76);
+      font-size: 15px;
+      line-height: 1.05;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+    }
+
+    .page {
+      position: absolute;
+      top: 41px;
+      left: 33px;
+      width: 476px;
+      height: 650px;
+      padding: 25px 7px 0;
+      background: rgba(255, 255, 255, 0.97);
+      border: 1px solid rgba(228, 228, 234, 0.82);
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      height: 57px;
+      margin: 0 39px 17px 16px;
+      border-bottom: 2px solid #cfd0d4;
+    }
+
+    .logo-mark {
+      position: relative;
+      flex: 0 0 131px;
+      height: 55px;
+    }
+
+    .logo-dot {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      top: 7px;
+    }
+
+    .logo-dot.left {
+      left: 15px;
+      background: #1594c4;
+    }
+
+    .logo-dot.middle {
+      left: 56px;
+      background: #e85792;
+    }
+
+    .logo-dot.right {
+      left: 97px;
+      background: #1594c4;
+    }
+
+    .logo-cheek {
+      position: absolute;
+      top: 28px;
+      width: 34px;
+      height: 28px;
+      border-radius: 50%;
+      background: #f6d8e6;
+    }
+
+    .logo-cheek.left {
+      left: 0;
+      transform: rotate(-18deg);
+    }
+
+    .logo-cheek.right {
+      left: 103px;
+      transform: rotate(18deg);
+    }
+
+    .logo-smile {
+      position: absolute;
+      top: 31px;
+      left: 38px;
+      width: 57px;
+      height: 19px;
+      border-bottom: 8px solid #e51c81;
+      border-radius: 0 0 45px 45px;
+    }
+
+    h1 {
+      margin: -2px 0 0 6px;
+      white-space: nowrap;
+      font-size: 29px;
+      line-height: 1;
+      font-weight: 400;
+      letter-spacing: 0;
+      color: #16243d;
+    }
+
+    .strategy-title {
+      display: flex;
+      align-items: center;
+      margin: 0 0 12px;
+      font-size: 17px;
+      line-height: 1.35;
+      font-weight: 700;
+      color: #121212;
+    }
+
+    .flag-icon {
+      position: relative;
+      width: 18px;
+      height: 18px;
+      margin-right: 3px;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      background: #ec1f46;
+    }
+
+    .flag-icon::before {
+      content: "";
+      position: absolute;
+      left: 5px;
+      top: 3px;
+      width: 3px;
+      height: 12px;
+      background: white;
+    }
+
+    .flag-icon::after {
+      content: "";
+      position: absolute;
+      left: 8px;
+      top: 4px;
+      width: 7px;
+      height: 5px;
+      background: white;
+      clip-path: polygon(0 0, 100% 18%, 70% 100%, 0 85%);
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 306px 148px;
+      gap: 6px;
+      height: 361px;
+    }
+
+    .main-column {
+      padding-left: 4px;
+    }
+
+    .lead {
+      position: relative;
+      margin: 0 3px 13px 21px;
+      font-size: 15px;
+      line-height: 1.72;
+      color: #171717;
+    }
+
+    .lead::before {
+      content: "◆";
+      position: absolute;
+      left: -20px;
+      top: -1px;
+      font-size: 13px;
+      color: #050505;
+    }
+
+    .section-label {
+      margin: 0 0 4px;
+      font-size: 11px;
+      line-height: 1;
+      font-weight: 700;
+      color: #181818;
+    }
+
+    .action {
+      margin: 0 0 5px 2px;
+      color: #343434;
+      font-size: 9px;
+      line-height: 1.45;
+    }
+
+    .action-heading {
+      margin-bottom: 2px;
+      font-size: 10px;
+    }
+
+    .number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 12px;
+      height: 12px;
+      margin-right: 2px;
+      border-radius: 50%;
+      color: white;
+      font-size: 8px;
+      font-weight: 700;
+      vertical-align: 1px;
+    }
+
+    .number.red {
+      background: #ed3142;
+    }
+
+    .number.orange {
+      background: #efa327;
+    }
+
+    .number.yellow {
+      background: #d9bf00;
+    }
+
+    .action ul {
+      margin: 0 0 0 14px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .action li {
+      position: relative;
+      margin-bottom: 3px;
+      padding-left: 9px;
+      white-space: nowrap;
+    }
+
+    .action li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: #111;
+    }
+
+    .side-column {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: -2px;
+    }
+
+    .placeholder {
+      position: relative;
+      overflow: hidden;
+      color: #a16c8b;
+      text-align: center;
+      font-size: 8px;
+      background: #faedf4;
+    }
+
+    .poster {
+      width: 148px;
+      height: 188px;
+      border: 1px solid #f7e8f0;
+      background:
+        radial-gradient(circle at 26% 58%, #ffffff 0 12px, transparent 13px),
+        radial-gradient(circle at 52% 53%, #efbcd5 0 24px, transparent 25px),
+        radial-gradient(circle at 77% 48%, #bba4d4 0 27px, transparent 28px),
+        radial-gradient(circle at 72% 25%, #ed83b2 0 20px, transparent 21px),
+        radial-gradient(circle at 38% 28%, #c9a8de 0 17px, transparent 18px),
+        linear-gradient(#fffafd, #f7e6ef);
+    }
+
+    .poster span {
+      position: absolute;
+      left: 8px;
+      right: 8px;
+      bottom: 7px;
+      padding: 3px;
+      color: #d39ab8;
+      background: rgba(255, 255, 255, 0.83);
+    }
+
+    .screen {
+      width: 148px;
+      height: 165px;
+      padding-top: 15px;
+      border: 1px solid #f3e3eb;
+      background: linear-gradient(180deg, #fff 0, #fffafb 100%);
+    }
+
+    .screen-title {
+      margin-bottom: 8px;
+      color: #c38cae;
+      font-size: 8px;
+    }
+
+    .screen-row {
+      position: relative;
+      height: 31px;
+      margin: 0 7px 6px;
+      padding: 5px 37px 3px 5px;
+      border-radius: 2px;
+      background: #fff6fa;
+      color: #d1a8be;
+      text-align: left;
+      font-size: 5px;
+      line-height: 1.4;
+    }
+
+    .screen-button {
+      position: absolute;
+      right: 3px;
+      top: 9px;
+      width: 27px;
+      height: 10px;
+      border-radius: 6px;
+      background: #fac8dc;
+    }
+
+    .screen-caption {
+      position: absolute;
+      bottom: 3px;
+      left: 0;
+      right: 0;
+      color: #b999aa;
+      font-size: 6px;
+    }
+
+    .photo-strip {
+      display: grid;
+      grid-template-columns: 1.14fr 1.42fr 0.78fr;
+      width: 462px;
+      height: 126px;
+      margin-top: 8px;
+      border: 1px solid #bdc2bd;
+    }
+
+    .photo {
+      min-width: 0;
+      border-right: 2px solid white;
+      color: rgba(75, 61, 75, 0.72);
+      font-size: 8px;
+    }
+
+    .photo:last-child {
+      border-right: 0;
+    }
+
+    .photo-one {
+      background:
+        radial-gradient(circle at 55% 63%, #d8b8e7 0 29px, transparent 30px),
+        radial-gradient(circle at 37% 30%, #212c36 0 15px, transparent 16px),
+        linear-gradient(120deg, #9da78a 0, #e8cdda 45%, #c6d2dc 100%);
+    }
+
+    .photo-two {
+      background:
+        radial-gradient(circle at 66% 58%, #f3b5cd 0 29px, transparent 30px),
+        radial-gradient(circle at 37% 68%, #f1b5c8 0 20px, transparent 21px),
+        radial-gradient(circle at 71% 30%, #eb4d8a 0 20px, transparent 21px),
+        linear-gradient(135deg, #c48898, #f6e6cd);
+    }
+
+    .photo-three {
+      background:
+        radial-gradient(circle at 54% 66%, #eadde8 0 26px, transparent 27px),
+        radial-gradient(circle at 70% 40%, #edb1ca 0 12px, transparent 13px),
+        linear-gradient(120deg, #99aa8d, #eee4ea);
+    }
+
+    .photo span {
+      display: inline-block;
+      margin-top: 102px;
+      padding: 2px 4px;
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .strip-caption {
+      height: 21px;
+      padding-top: 2px;
+      color: #111;
+      text-align: center;
+      font-size: 13px;
+      line-height: 1.2;
+    }
+
+    .source {
+      position: absolute;
+      right: 5px;
+      bottom: 7px;
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 11px;
+    }
+  </style>
+</head>
+<body>
+  <main class="canvas">
+    <div class="brand-top">（营销学姐Renita）</div>
+    <div class="brand-top-small">[illegible]</div>
+    <div class="brand-side">营销学姐Renita</div>
+
+    <article class="page">
+      <header class="header">
+        <div class="logo-mark" aria-label="[Logo: three colored dots and smile]">
+          <span class="logo-dot left"></span>
+          <span class="logo-dot middle"></span>
+          <span class="logo-dot right"></span>
+          <span class="logo-cheek left"></span>
+          <span class="logo-cheek right"></span>
+          <span class="logo-smile"></span>
+        </div>
+        <h1>Part 2： 营销策略</h1>
+      </header>
+
+      <div class="strategy-title">
+        <span class="flag-icon"></span>
+        <span>策略一：热门IP产品强势联名，迅速形成破圈效应</span>
+      </div>
+
+      <div class="content-grid">
+        <section class="main-column">
+          <p class="lead">
+            近日，与全球知名Ip品牌三丽鸥的联名，活动涉及的三款产品一经上线便秒售罄！行业地位和品牌调性的高度匹配，让此次联名活动迅速引爆两个圈层！
+          </p>
+
+          <h2 class="section-label">营销动作</h2>
+
+          <div class="action">
+            <div class="action-heading">
+              <span class="number red">1</span>联合合作Ip高度契合
+            </div>
+            <ul>
+              <li>RiCO是广受精致女性热爱的生活治愈类IP，“可爱”“阳光”“治愈”</li>
+              <li>合作方三丽鸥一直希望努力传达出“Small Gift，Big Smile”</li>
+              <li>双方在品牌调性、精神、理念，以及受众群体等方面都有着较高匹配度</li>
+            </ul>
+          </div>
+
+          <div class="action">
+            <div class="action-heading">
+              <span class="number orange">2</span>用心的高水准产品设计
+            </div>
+            <ul>
+              <li>高水准的设计工艺+配色+材质，将两类IP鲜明重要的特点进行深度融合</li>
+              <li>“联动IP+RiCO+RiCO FRIENDS”三个一组的玩具形象搭配</li>
+            </ul>
+          </div>
+
+          <div class="action">
+            <div class="action-heading">
+              <span class="number yellow">3</span>趣味性的联名活动玩法
+            </div>
+            <ul>
+              <li>RiCO 伙伴团互动</li>
+              <li>RiCO x 三丽鸥快速三连问</li>
+              <li>RiCO 记忆挑战等趣味小游戏</li>
+            </ul>
+          </div>
+        </section>
+
+        <aside class="side-column">
+          <div class="placeholder poster">
+            <span>[海报：三丽鸥联名角色，右上]</span>
+          </div>
+
+          <div class="placeholder screen">
+            <div class="screen-title">【伙伴号游戏】</div>
+            <div class="screen-row">[illegible]<span class="screen-button"></span></div>
+            <div class="screen-row">[illegible]<span class="screen-button"></span></div>
+            <div class="screen-row">[illegible]<span class="screen-button"></span></div>
+            <div class="screen-caption">[界面截图：右侧]</div>
+          </div>
+        </aside>
+      </div>
+
+      <figure class="photo-strip placeholder">
+        <div class="photo photo-one"><span>[产品照片：左]</span></div>
+        <div class="photo photo-two"><span>[产品照片：中]</span></div>
+        <div class="photo photo-three"><span>[产品照片：右]</span></div>
+      </figure>
+
+      <div class="strip-caption">RiCO x 三丽鸥联名产品图片</div>
+    </article>
+
+    <div class="source">图片来自品牌官方媒体</div>
+  </main>
+</body>
+</html>

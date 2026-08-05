@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>All Up In The Biz - Showtime Original</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Oswald:wght@400;500;700&family=Roboto:wght@300;400;700&display=swap');
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    background: #1a1a1a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    font-family: 'Oswald', 'Roboto', sans-serif;
+  }
+  
+  .poster {
+    width: 100%;
+    max-width: 480px;
+    aspect-ratio: 2 / 3;
+    position: relative;
+    background: linear-gradient(to bottom, #e8e0d0 0%, #c8c0b0 35%, #8a8a8a 50%, #2a2a2a 70%, #000000 85%);
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+  }
+  
+  /* Top laurel + header */
+  .top-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 12%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 3.5%;
+    z-index: 10;
+  }
+  
+  .laurel {
+    position: absolute;
+    left: 4%;
+    top: 2.5%;
+    width: 58px;
+    height: 68px;
+    border: 1.5px solid #5a5040;
+    border-radius: 50% 50% 45% 45%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 7px;
+    color: #3a3020;
+    text-align: center;
+    line-height: 1.15;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    background: transparent;
+  }
+  
+  .laurel::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border: 1px solid #5a5040;
+    border-radius: 50% 50% 45% 45%;
+    opacity: 0.5;
+  }
+  
+  .laurel .year {
+    font-weight: 700;
+    font-size: 11px;
+    margin-top: 2px;
+  }
+  
+  .showtime-original {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: 4px;
+    color: #2a2a2a;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+  
+  .director {
+    position: absolute;
+    top: 9.5%;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: #3a3a3a;
+    text-transform: uppercase;
+    z-index: 10;
+  }
+  
+  /* Main photo placeholder area */
+  .photo-area {
+    position: absolute;
+    top: 14%;
+    left: 0;
+    right: 0;
+    bottom: 22%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    z-index: 5;
+  }
+  
+  .placeholder.photo {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, 
+      rgba(200,190,170,0.3) 0%, 
+      rgba(100,100,100,0.4) 40%, 
+      rgba(30,30,30,0.7) 70%,
+      rgba(0,0,0,0.9) 100%);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  
+  .placeholder.photo::after {
+    content: '[Photo: B&W close-up of Biz Markie looking upward from under a dark baseball cap]';
+    position: absolute;
+    bottom: 8%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    color: rgba(255,255,255,0.25);
+    font-family: monospace;
+    white-space: nowrap;
+    z-index: 1;
+  }
+  
+  /* Cap silhouette suggestion */
+  .cap-shape {
+    position: absolute;
+    top: 8%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 78%;
+    height: 42%;
+    background: #1a1a1a;
+    border-radius: 50% 50% 40% 40% / 60% 60% 40% 40%;
+    z-index: 2;
+    box-shadow: inset 0 -20px 40px rgba(0,0,0,0.5);
+  }
+  
+  .cap-brim {
+    position: absolute;
+    top: 38%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 92%;
+    height: 14%;
+    background: #111;
+    border-radius: 50%;
+    z-index: 3;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+  }
+  
+  .face-hint {
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70%;
+    height: 45%;
+    background: radial-gradient(ellipse at 50% 30%, #6a6a6a 0%, #3a3a3a 40%, #1a1a1a 80%);
+    border-radius: 40% 40% 30% 30%;
+    z-index: 2;
+  }
+  
+  .eyes-hint {
+    position: absolute;
+    bottom: 22%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 55%;
+    height: 12%;
+    display: flex;
+    justify-content: space-between;
+    z-index: 4;
+  }
+  
+  .eye {
+    width: 28%;
+    height: 100%;
+    background: radial-gradient(ellipse, #ddd 0%, #888 40%, #222 70%);
+    border-radius: 50%;
+    border: 2px solid #111;
+  }
+  
+  /* Title text overlaid on cap */
+  .title-block {
+    position: absolute;
+    top: 22%;
+    left: 0;
+    right: 0;
+    text-align: center;
+    z-index: 20;
+    pointer-events: none;
+  }
+  
+  .title-line1 {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: clamp(22px, 5.5vw, 28px);
+    letter-spacing: 3px;
+    color: #f5c518;
+    text-transform: uppercase;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+    margin-bottom: 0;
+    line-height: 1.1;
+  }
+  
+  .title-main {
+    font-family: 'Cinzel Decorative', 'Times New Roman', serif;
+    font-weight: 700;
+    font-size: clamp(72px, 18vw, 96px);
+    color: #f5c518;
+    line-height: 0.85;
+    text-shadow: 
+      0 3px 0 #b8860b,
+      0 6px 12px rgba(0,0,0,0.8),
+      0 0 40px rgba(245,197,24,0.3);
+    letter-spacing: -2px;
+    margin-top: -4px;
+  }
+  
+  .subtitle {
+    position: absolute;
+    top: 52%;
+    left: 0;
+    right: 0;
+    text-align: center;
+    z-index: 20;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 500;
+    font-size: clamp(13px, 3.2vw, 16px);
+    letter-spacing: 2.5px;
+    color: #f5c518;
+    text-transform: uppercase;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.9);
+    line-height: 1.4;
+  }
+  
+  /* Bottom black bar */
+  .bottom-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 23%;
+    background: #000;
+    z-index: 15;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 4%;
+  }
+  
+  .doc-info {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 500;
+    font-size: clamp(14px, 3.5vw, 17px);
+    letter-spacing: 4px;
+    color: #ffffff;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 1.55;
+  }
+  
+  .logos {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 3.5%;
+    width: 100%;
+  }
+  
+  .logo-showtime {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: clamp(18px, 4.5vw, 22px);
+    color: #fff;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+  
+  .logo-showtime .play-icon {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 7px 0 7px 12px;
+    border-color: transparent transparent transparent #fff;
+    margin-right: 3px;
+  }
+  
+  .logo-divider {
+    width: 1px;
+    height: 28px;
+    background: #555;
+  }
+  
+  .logo-streaming {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1.1;
+  }
+  
+  .logo-streaming .label {
+    font-family: 'Roboto', sans-serif;
+    font-size: 8px;
+    font-weight: 300;
+    color: #aaa;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+  
+  .logo-paramount {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: clamp(16px, 4vw, 20px);
+    color: #fff;
+    letter-spacing: 0.5px;
+  }
+  
+  .logo-paramount span {
+    color: #00a4e4;
+  }
+  
+  .fine-print {
+    position: absolute;
+    bottom: 3.5%;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    font-size: 8px;
+    font-weight: 300;
+    letter-spacing: 1.5px;
+    color: #888;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+  <div class="poster">
+    <!-- Laurel -->
+    <div class="laurel">
+      TRIBECA<br>FESTIVAL<br><span class="year">2023</span><br>OFFICIAL<br>SELECTION
+    </div>
+    
+    <!-- Top header -->
+    <div class="top-bar">
+      <div class="showtime-original">SHOWTIME ORIGINAL</div>
+    </div>
+    
+    <div class="director">A SACHA JENKINS JAMMIE</div>
+    
+    <!-- Photo / visual area -->
+    <div class="photo-area">
+      <div class="placeholder photo">
+        <div class="cap-shape"></div>
+        <div class="cap-brim"></div>
+        <div class="face-hint"></div>
+        <div class="eyes-hint">
+          <div class="eye"></div>
+          <div class="eye"></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Title -->
+    <div class="title-block">
+      <div class="title-line1">ALL UP IN THE</div>
+      <div class="title-main">BIZ</div>
+    </div>
+    
+    <div class="subtitle">THE LIFE AND RHYMES<br>OF BIZ MARKIE</div>
+    
+    <!-- Bottom -->
+    <div class="bottom-bar">
+      <div class="doc-info">
+        DOCUMENTARY FILM<br>AUGUST 11
+      </div>
+      
+      <div class="logos">
+        <div class="logo-showtime">
+          <span class="play-icon"></span>SHOWTIME
+        </div>
+        <div class="logo-divider"></div>
+        <div class="logo-streaming">
+          <span class="label">STREAMING ON</span>
+          <div class="logo-paramount">Paramount<span>+</span></div>
+        </div>
+      </div>
+      
+      <div class="fine-print">PARAMOUNT+ WITH SHOWTIME PLAN ONLY.</div>
+    </div>
+  </div>
+</body>
+</html>

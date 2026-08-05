@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>겹받침 - Double Final Consonants</title>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$']],
+        displayMath: [['$$', '$$']]
+      }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: #ececec;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      padding: 18px;
+      color: #111;
+      font-family: Arial, "Noto Sans KR", "Malgun Gothic", sans-serif;
+    }
+
+    .page {
+      position: relative;
+      width: 540px;
+      height: 738px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 1px 8px rgba(0, 0, 0, 0.16);
+    }
+
+    .header {
+      position: absolute;
+      top: 37px;
+      left: 39px;
+      width: 501px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      border-radius: 15px 0 0 15px;
+      overflow: hidden;
+      color: #fff;
+      background-color: #efa28f;
+      background-image:
+        linear-gradient(rgba(255,255,255,.28) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.28) 1px, transparent 1px);
+      background-size: 12px 12px;
+    }
+
+    .header-title {
+      height: 36px;
+      display: flex;
+      align-items: center;
+      padding-left: 22px;
+      padding-right: 9px;
+      background: rgba(239, 151, 133, .94);
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+
+    .header-en {
+      height: 36px;
+      display: flex;
+      align-items: center;
+      padding: 2px 15px 0 0;
+      background: rgba(239, 151, 133, .94);
+      color: #a95f54;
+      font-family: "Arial Narrow", Arial, sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .header-note {
+      position: absolute;
+      left: 262px;
+      top: 37px;
+      z-index: 2;
+      color: #141414;
+      font-family: "Comic Sans MS", "Segoe Print", cursive;
+      font-size: 20px;
+      font-style: italic;
+      transform: rotate(-4deg);
+      white-space: nowrap;
+    }
+
+    .page-no-top {
+      position: absolute;
+      top: 91px;
+      right: 43px;
+      width: 29px;
+      height: 12px;
+      color: #777;
+      font-size: 7px;
+      line-height: 12px;
+      text-align: center;
+      border-radius: 2px;
+      background: #f4f2d5;
+    }
+
+    .page-no-top::before {
+      content: "";
+      position: absolute;
+      left: -7px;
+      top: 3px;
+      border-top: 4px solid transparent;
+      border-bottom: 4px solid transparent;
+      border-right: 7px solid #e2ce72;
+    }
+
+    .lesson-area {
+      position: absolute;
+      top: 104px;
+      left: 42px;
+      width: 455px;
+      height: 308px;
+    }
+
+    .sound-table {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 181px;
+      height: 300px;
+      border-collapse: collapse;
+      table-layout: fixed;
+      background: rgba(251, 232, 229, .54);
+      font-size: 13px;
+    }
+
+    .sound-table tr {
+      height: 37px;
+    }
+
+    .sound-table td {
+      padding: 0;
+      vertical-align: middle;
+      border-bottom: 1px solid #f6deda;
+    }
+
+    .sound-table .letters {
+      width: 117px;
+      padding-left: 14px;
+      text-align: center;
+      font-weight: 700;
+      word-spacing: 7px;
+    }
+
+    .sound-table .sound {
+      width: 64px;
+      padding-left: 7px;
+      text-align: left;
+      white-space: nowrap;
+      background: rgba(255,255,255,.38);
+      font-size: 11px;
+    }
+
+    .examples {
+      position: absolute;
+      top: 0;
+      left: 219px;
+      width: 235px;
+      height: 300px;
+      display: grid;
+      grid-template-rows: repeat(8, 37px);
+      font-size: 13px;
+    }
+
+    .example-row {
+      position: relative;
+      display: flex;
+      align-items: center;
+      min-width: 0;
+      white-space: nowrap;
+    }
+
+    .words {
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    .pronunciation {
+      margin-left: auto;
+      font-size: 10px;
+      white-space: nowrap;
+    }
+
+    .hand {
+      position: absolute;
+      z-index: 4;
+      color: #bc176a;
+      font-family: "Comic Sans MS", "Segoe Print", cursive;
+      font-size: 15px;
+      font-style: italic;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .roman-1 { left: 231px; top: -9px; transform: rotate(-4deg); }
+    .roman-2 { left: 216px; top: 34px; transform: rotate(-2deg); }
+    .roman-3 { left: 224px; top: 76px; transform: rotate(-4deg); }
+    .roman-4 { left: 183px; top: 109px; transform: rotate(-5deg); }
+    .roman-5 { left: 192px; top: 148px; transform: rotate(-3deg); }
+    .roman-6 { left: 192px; top: 189px; transform: rotate(-2deg); }
+    .roman-7 { left: 201px; top: 226px; transform: rotate(-4deg); }
+    .roman-8 { left: 190px; top: 267px; transform: rotate(-4deg); }
+
+    .pink-k {
+      left: 97px;
+      top: 7px;
+      font-size: 22px;
+      transform: rotate(-5deg);
+    }
+
+    .pink-n {
+      left: 94px;
+      top: 44px;
+      font-size: 22px;
+      transform: rotate(-3deg);
+    }
+
+    .pink-t {
+      left: 94px;
+      top: 82px;
+      font-size: 22px;
+      transform: rotate(-4deg);
+    }
+
+    .pink-l {
+      left: 95px;
+      top: 119px;
+      font-size: 22px;
+      transform: rotate(-6deg);
+    }
+
+    .pink-p {
+      left: 97px;
+      top: 156px;
+      font-size: 22px;
+      transform: rotate(-2deg);
+    }
+
+    .pink-m {
+      left: 97px;
+      top: 193px;
+      font-size: 22px;
+      transform: rotate(-4deg);
+    }
+
+    .pink-p2 {
+      left: 96px;
+      top: 230px;
+      font-size: 22px;
+      transform: rotate(-3deg);
+    }
+
+    .pink-k2 {
+      left: 98px;
+      top: 267px;
+      font-size: 22px;
+      transform: rotate(-4deg);
+    }
+
+    .margin-note-1 {
+      left: -37px;
+      top: 57px;
+      font-size: 13px;
+      transform: rotate(-8deg);
+    }
+
+    .margin-note-2 {
+      left: -25px;
+      top: 218px;
+      font-size: 12px;
+      transform: rotate(-7deg);
+    }
+
+    .black-margin-note {
+      position: absolute;
+      left: -35px;
+      top: 242px;
+      z-index: 5;
+      width: 76px;
+      color: #111;
+      font-family: "Comic Sans MS", "Segoe Print", cursive;
+      font-size: 10px;
+      font-weight: 700;
+      line-height: 1.05;
+      text-align: center;
+      transform: rotate(-6deg);
+    }
+
+    .brace {
+      position: absolute;
+      left: 37px;
+      top: 221px;
+      z-index: 3;
+      width: 10px;
+      height: 76px;
+      border-left: 2px solid #bc176a;
+      border-radius: 50%;
+    }
+
+    .notes {
+      position: absolute;
+      left: 128px;
+      top: 397px;
+      width: 365px;
+      height: 55px;
+      font-family: "Comic Sans MS", "Segoe Print", cursive;
+      font-size: 14px;
+      font-style: italic;
+      line-height: 1.35;
+      transform: rotate(-2deg);
+    }
+
+    .notes div {
+      white-space: nowrap;
+    }
+
+    .word-heading {
+      position: absolute;
+      top: 459px;
+      left: 43px;
+      display: flex;
+      align-items: center;
+      height: 23px;
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .word-badge {
+      margin-left: 5px;
+      width: 29px;
+      height: 17px;
+      border-radius: 8px;
+      color: #fff;
+      background: #eea193;
+      font-family: Arial, sans-serif;
+      font-size: 6px;
+      font-weight: 700;
+      line-height: 17px;
+      text-align: center;
+    }
+
+    .cross-rule {
+      position: absolute;
+      top: 469px;
+      left: 106px;
+      width: 391px;
+      height: 8px;
+      opacity: .42;
+      background:
+        linear-gradient(45deg, transparent 44%, #aaa 45%, #aaa 54%, transparent 55%) 0 3px / 8px 8px repeat-x,
+        linear-gradient(-45deg, transparent 44%, #aaa 45%, #aaa 54%, transparent 55%) 0 3px / 8px 8px repeat-x;
+    }
+
+    .instruction {
+      position: absolute;
+      top: 496px;
+      left: 44px;
+      width: 455px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      font-size: 8px;
+      white-space: nowrap;
+    }
+
+    .bullet {
+      margin-right: 15px;
+      color: #aaa;
+      font-size: 17px;
+      line-height: 1;
+    }
+
+    .instruction-ko {
+      font-weight: 700;
+    }
+
+    .instruction-en {
+      margin-left: 4px;
+      color: #777;
+      font-size: 7px;
+    }
+
+    .audio {
+      position: relative;
+      margin-left: 13px;
+      width: 26px;
+      height: 12px;
+      color: #777;
+      background: #f4f2d5;
+      border-radius: 2px;
+      font-size: 6px;
+      line-height: 12px;
+      text-align: center;
+    }
+
+    .audio::before {
+      content: "";
+      position: absolute;
+      left: -7px;
+      top: 3px;
+      border-top: 4px solid transparent;
+      border-bottom: 4px solid transparent;
+      border-right: 7px solid #e2ce72;
+    }
+
+    .vocabulary {
+      position: absolute;
+      left: 43px;
+      top: 522px;
+      width: 455px;
+      height: 57px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-top: 1px solid #d9d9d9;
+      border-bottom: 1px solid #ead3d0;
+      background: rgba(251, 232, 229, .52);
+    }
+
+    .vocab-cell {
+      position: relative;
+      padding-top: 9px;
+      text-align: center;
+    }
+
+    .vocab-korean {
+      display: block;
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 19px;
+    }
+
+    .vocab-en {
+      display: block;
+      margin-top: 5px;
+      color: #777;
+      font-size: 6px;
+      line-height: 1;
+    }
+
+    .vocab-roman {
+      position: absolute;
+      top: -15px;
+      left: 0;
+      width: 100%;
+      color: #111;
+      font-family: "Comic Sans MS", "Segoe Print", cursive;
+      font-size: 19px;
+      font-style: italic;
+      line-height: 1;
+      transform: rotate(-2deg);
+    }
+
+    .practice {
+      position: absolute;
+      left: 43px;
+      top: 584px;
+      width: 455px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      color: #111;
+      font-family: "Comic Sans MS", "Segoe Print", cursive;
+      font-size: 22px;
+      font-style: italic;
+      text-align: center;
+    }
+
+    .practice span:nth-child(1) { transform: rotate(-5deg); }
+    .practice span:nth-child(2) { transform: rotate(-2deg); }
+    .practice span:nth-child(3) { transform: rotate(-4deg); }
+    .practice span:nth-child(4) { transform: rotate(-3deg); }
+
+    .footer {
+      position: absolute;
+      right: 43px;
+      bottom: 26px;
+      display: flex;
+      align-items: baseline;
+      gap: 7px;
+      font-size: 7px;
+      font-weight: 700;
+    }
+
+    .footer-page {
+      font-size: 10px;
+    }
+
+    @media (max-width: 576px) {
+      body {
+        padding: 0;
+        background: #fff;
+      }
+
+      .page {
+        width: 100vw;
+        height: calc(100vw * 1.3666667);
+        transform-origin: top left;
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="header">
+      <div class="header-title">겹받침</div>
+      <div class="header-en">Double Final Consonants</div>
+    </header>
+    <div class="header-note">注意 発音（規則音）</div>
+    <div class="page-no-top">033</div>
+
+    <section class="lesson-area">
+      <table class="sound-table" aria-label="Double final consonant pronunciation table">
+        <tbody>
+          <tr>
+            <td class="letters">ㄲ, ㅋ</td>
+            <td class="sound">[ㄱ][k]</td>
+          </tr>
+          <tr>
+            <td class="letters">ㅅ, ㅈ, ㅊ</td>
+            <td class="sound">[ㄷ][t]</td>
+          </tr>
+          <tr>
+            <td class="letters">ㅆ</td>
+            <td class="sound">[ㄷ][t]</td>
+          </tr>
+          <tr>
+            <td class="letters">ㄹ, ㄾ, ㅀ</td>
+            <td class="sound">[ㄹ][l]</td>
+          </tr>
+          <tr>
+            <td class="letters">ㅄ</td>
+            <td class="sound">[ㅂ][p]</td>
+          </tr>
+          <tr>
+            <td class="letters">ㄻ</td>
+            <td class="sound">[ㅁ][m] [ㄹ][l]</td>
+          </tr>
+          <tr>
+            <td class="letters">ㄿ</td>
+            <td class="sound">[ㅂ][p] [ㄹ][l]</td>
+          </tr>
+          <tr>
+            <td class="letters">ㄺ</td>
+            <td class="sound">[ㄱ][k] [ㄹ][l]</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="examples">
+        <div class="example-row">
+          <span class="words">밖&nbsp;&nbsp;못</span>
+          <span class="pronunciation">[박] [몯]</span>
+        </div>
+        <div class="example-row">
+          <span class="words">앉다&nbsp;&nbsp;많다</span>
+          <span class="pronunciation">[안따] [만타]</span>
+        </div>
+        <div class="example-row">
+          <span class="words">있다</span>
+          <span class="pronunciation">[읻따]</span>
+        </div>
+        <div class="example-row">
+          <span class="words">여덟&nbsp;&nbsp;넓다&nbsp;&nbsp;핥다&nbsp;&nbsp;싫다</span>
+          <span class="pronunciation">[여덜] [널따] [할따] [실타]</span>
+        </div>
+        <div class="example-row">
+          <span class="words">값&nbsp;&nbsp;없다&nbsp;&nbsp;없어</span>
+          <span class="pronunciation">[갑] [업따] [업써]</span>
+        </div>
+        <div class="example-row">
+          <span class="words">삶다&nbsp;&nbsp;삶아&nbsp;&nbsp;삶이</span>
+          <span class="pronunciation">[삼따] [살마] [살미]</span>
+        </div>
+        <div class="example-row">
+          <span class="words">읊다&nbsp;&nbsp;읊어</span>
+          <span class="pronunciation">[읍따] [을퍼]</span>
+        </div>
+        <div class="example-row">
+          <span class="words">읽다&nbsp;&nbsp;맑다&nbsp;&nbsp;닭이&nbsp;&nbsp;맑고</span>
+          <span class="pronunciation">[익따] [막따] [달기] [말꼬]</span>
+        </div>
+      </div>
+
+      <span class="hand pink-k">k</span>
+      <span class="hand pink-n">n</span>
+      <span class="hand pink-t">t</span>
+      <span class="hand pink-l">l</span>
+      <span class="hand pink-p">p</span>
+      <span class="hand pink-m">m</span>
+      <span class="hand pink-p2">P</span>
+      <span class="hand pink-k2">k</span>
+
+      <span class="hand roman-1">pak&nbsp;&nbsp;mok</span>
+      <span class="hand roman-2">an da&nbsp;&nbsp;man tu</span>
+      <span class="hand roman-3">it da</span>
+      <span class="hand roman-4">yop deol&nbsp;&nbsp;hal da&nbsp;&nbsp;sil ta&nbsp;&nbsp;neol da</span>
+      <span class="hand roman-5">kap&nbsp;&nbsp;op da&nbsp;&nbsp;op sso</span>
+      <span class="hand roman-6">sam da&nbsp;&nbsp;sam da&nbsp;&nbsp;sal mi</span>
+      <span class="hand roman-7">eup da&nbsp;&nbsp;eul peo</span>
+      <span class="hand roman-8">ik da&nbsp;&nbsp;mak da&nbsp;&nbsp;dal gi&nbsp;&nbsp;mal go</span>
+
+      <span class="hand margin-note-1">鈍口音た</span>
+      <span class="hand margin-note-2">鈍口音る</span>
+      <div class="black-margin-note">黙音る音<br>が変る音</div>
+      <div class="brace"></div>
+    </section>
+
+    <div class="notes">
+      <div>① ㄺ, ㄻ　合接て, と, ス 読む注意　k, t, C</div>
+      <div>② ㄴ, ㄹ 石接　아 響る音　次わ ㅏ・라</div>
+    </div>
+
+    <section aria-label="Vocabulary">
+      <div class="word-heading">
+        <span>단어</span>
+        <span class="word-badge">Word</span>
+      </div>
+      <div class="cross-rule"></div>
+
+      <div class="instruction">
+        <span class="bullet">•</span>
+        <span class="instruction-ko">다음 단어를 읽고 쓰십시오.</span>
+        <span class="instruction-en">Read the words and write.</span>
+        <span class="audio">034</span>
+      </div>
+
+      <div class="vocabulary">
+        <div class="vocab-cell">
+          <span class="vocab-roman">pak</span>
+          <span class="vocab-korean">밖</span>
+          <span class="vocab-en">outdoor</span>
+        </div>
+        <div class="vocab-cell">
+          <span class="vocab-roman">an da</span>
+          <span class="vocab-korean">앉다</span>
+          <span class="vocab-en">to sit</span>
+        </div>
+        <div class="vocab-cell">
+          <span class="vocab-roman">man ta</span>
+          <span class="vocab-korean">많다</span>
+          <span class="vocab-en">many, much</span>
+        </div>
+        <div class="vocab-cell">
+          <span class="vocab-roman">it da</span>
+          <span class="vocab-korean">있다</span>
+          <span class="vocab-en">to have, there is</span>
+        </div>
+      </div>
+
+      <div class="practice">
+        <span>밖</span>
+        <span>앉다</span>
+        <span>많다</span>
+        <span>있다</span>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>1-3 받침을 배워요 ③</span>
+      <span class="footer-page">53</span>
+    </footer>
+  </main>
+</body>
+</html>

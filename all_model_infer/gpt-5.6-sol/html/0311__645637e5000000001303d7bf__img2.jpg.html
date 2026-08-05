@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>高效背书</title>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      width: 100%;
+      min-height: 100%;
+    }
+
+    body {
+      background: #4c765e;
+      font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", Arial, sans-serif;
+      color: #222;
+    }
+
+    .canvas {
+      position: relative;
+      width: 540px;
+      height: 720px;
+      margin: 0 auto;
+      overflow: hidden;
+      background: #4c765e;
+    }
+
+    .card {
+      position: absolute;
+      top: 30px;
+      left: 24px;
+      width: 493px;
+      height: 661px;
+      overflow: hidden;
+      background: #fff;
+      border-radius: 46px;
+    }
+
+    .top-area {
+      position: relative;
+      height: 62px;
+      border-bottom: 1px solid #718078;
+    }
+
+    .title-bar {
+      position: absolute;
+      top: 9px;
+      left: 71px;
+      width: 349px;
+      height: 43px;
+      border-radius: 7px;
+      background: #4b765d;
+      color: #fff;
+      text-align: center;
+      font-size: 23px;
+      font-weight: 700;
+      line-height: 43px;
+      letter-spacing: 1px;
+    }
+
+    .content {
+      height: 526px;
+      padding: 9px 10px 0 10px;
+    }
+
+    .section {
+      margin: 0;
+    }
+
+    .section + .section {
+      margin-top: 24px;
+    }
+
+    .section.two {
+      margin-top: 24px;
+    }
+
+    .section.three {
+      margin-top: 23px;
+    }
+
+    .section.four {
+      margin-top: 24px;
+    }
+
+    .heading {
+      margin: 0;
+      color: #4d7863;
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 24px;
+    }
+
+    .body-text {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 24px;
+      white-space: nowrap;
+    }
+
+    .examples {
+      margin-top: 20px;
+      font-size: 18px;
+      line-height: 23px;
+      white-space: nowrap;
+    }
+
+    .example-row {
+      height: 23px;
+      display: flex;
+      align-items: center;
+    }
+
+    .label {
+      display: inline-block;
+      flex: 0 0 auto;
+      margin-right: 8px;
+      padding: 0 2px;
+      background: #fff000;
+      color: #151515;
+      font-weight: 700;
+      line-height: 22px;
+    }
+
+    .example-value {
+      font-weight: 500;
+    }
+
+    .bottom-strip {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 74px;
+      border-top: 1px solid #718078;
+      background: #fff;
+    }
+
+    .avatar {
+      position: absolute;
+      top: 9px;
+      left: 22px;
+      width: 49px;
+      height: 49px;
+      overflow: hidden;
+      border: 1px solid #a7aaa8;
+      border-radius: 50%;
+      background: #fafafa;
+    }
+
+    .avatar .hidden-caption,
+    .corner-mark .hidden-caption {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+
+    .avatar-art {
+      position: absolute;
+      left: 13px;
+      top: 8px;
+      width: 22px;
+      height: 30px;
+    }
+
+    .avatar-art::before {
+      content: "";
+      position: absolute;
+      left: 5px;
+      top: 0;
+      width: 13px;
+      height: 8px;
+      border-radius: 50%;
+      background: #f2cb72;
+      box-shadow:
+        -4px 6px 0 -1px #b4473e,
+        5px 7px 0 -1px #56836b,
+        0 14px 0 1px #d7ddd8,
+        3px 20px 0 -1px #728d80;
+      transform: rotate(-8deg);
+    }
+
+    .avatar-art::after {
+      content: "";
+      position: absolute;
+      left: 1px;
+      top: 13px;
+      width: 21px;
+      height: 3px;
+      background: #694f45;
+      transform: rotate(18deg);
+    }
+
+    .speech {
+      position: absolute;
+      top: 11px;
+      left: 87px;
+      width: 315px;
+      height: 44px;
+      border: 1px solid #aeb4b0;
+      background: #fff;
+      color: #252525;
+      font-size: 18px;
+      line-height: 42px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .speech::before {
+      content: "";
+      position: absolute;
+      top: 12px;
+      left: -10px;
+      width: 17px;
+      height: 17px;
+      border-left: 1px solid #aeb4b0;
+      border-bottom: 1px solid #aeb4b0;
+      background: #fff;
+      transform: rotate(45deg);
+    }
+
+    .speech span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .play {
+      position: absolute;
+      top: 16px;
+      left: 423px;
+      width: 0;
+      height: 0;
+      border-top: 18px solid transparent;
+      border-bottom: 18px solid transparent;
+      border-left: 35px solid #4b765d;
+    }
+
+    .corner-mark {
+      position: absolute;
+      right: 5px;
+      bottom: 3px;
+      width: 18px;
+      height: 12px;
+    }
+
+    .corner-mark::before,
+    .corner-mark::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid #6e8b7b;
+    }
+
+    .corner-mark::before {
+      right: 0;
+      top: 0;
+      width: 9px;
+      height: 7px;
+    }
+
+    .corner-mark::after {
+      right: 5px;
+      top: 4px;
+      width: 9px;
+      height: 7px;
+      background: #fff;
+    }
+
+    .account {
+      position: absolute;
+      right: 20px;
+      bottom: 11px;
+      color: #d9e3dd;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 18px;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <main class="canvas">
+    <article class="card">
+      <header class="top-area">
+        <div class="title-bar">高效背书</div>
+      </header>
+
+      <div class="content">
+        <section class="section one">
+          <h2 class="heading">01.理解背诵</h2>
+          <p class="body-text">还有几天考试，很多东西还没背。不要慌张，先理<br>解再背诵，考试运用得心应手</p>
+        </section>
+
+        <section class="section two">
+          <h2 class="heading">02.关键复述</h2>
+          <p class="body-text">边读边画关键词，再把关键词抄在草稿纸上。把内<br>容都遮住，然后就看自己写在草稿纸上的关键词，<br>进行复述</p>
+
+          <div class="examples">
+            <div class="example-row">
+              <span class="label">原文：</span>
+              <span class="example-value">德思礼夫妇总是得意地说他们是非常规矩的人家</span>
+            </div>
+            <div class="example-row">
+              <span class="label">关键：</span>
+              <span class="example-value">德思礼夫妇 + 得意 + 非常规矩</span>
+            </div>
+            <div class="example-row">
+              <span class="label">复述：</span>
+              <span class="example-value">德思礼夫妇得意地说他们是非常规矩的一家</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="section three">
+          <h2 class="heading">03.关键背诵</h2>
+          <p class="body-text">这样就背关键词，考试的时候也能顺利展开内容</p>
+        </section>
+
+        <section class="section four">
+          <h2 class="heading">04.睡前记忆</h2>
+          <p class="body-text">睡前30分钟再复习背诵的内容。睡醒后10分钟，再<br>看关键词进行复述，并默写出来</p>
+        </section>
+      </div>
+
+      <footer class="bottom-strip">
+        <div class="avatar placeholder">
+          <span class="hidden-caption">[Illustration: circular cartoon icon]</span>
+          <div class="avatar-art"></div>
+        </div>
+
+        <div class="speech"><span>这样背书，就像用了魔法，过目不忘</span></div>
+        <div class="play" aria-label="[Icon: play]"></div>
+
+        <div class="corner-mark placeholder">
+          <span class="hidden-caption">[Logo: bottom-right]</span>
+        </div>
+      </footer>
+    </article>
+
+    <div class="account">小红书号:4141895475</div>
+  </main>
+</body>
+</html>

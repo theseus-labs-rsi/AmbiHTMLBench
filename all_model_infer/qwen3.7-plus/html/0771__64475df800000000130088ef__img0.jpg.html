@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BOMBS ROCKETS</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #d0d0d0;
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 20px;
+    color: #333;
+  }
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #c8c8c8;
+    padding: 20px 30px 30px;
+    border: 1px solid #aaa;
+  }
+  h1 {
+    text-align: center;
+    font-size: 42px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    color: #444;
+    margin-bottom: 5px;
+  }
+  .subtitle {
+    text-align: center;
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 20px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px 20px;
+    align-items: start;
+  }
+  .item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+    min-height: 30px;
+  }
+  .item-img {
+    width: 100px;
+    height: 28px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .item-img.large {
+    width: 130px;
+    height: 35px;
+  }
+  .item-img.xlarge {
+    width: 160px;
+    height: 40px;
+  }
+  .item-img.atomic {
+    width: 140px;
+    height: 50px;
+  }
+  .item-img.fatman {
+    width: 150px;
+    height: 60px;
+  }
+  .placeholder {
+    background: #b0b0b0;
+    border: 1px solid #999;
+    border-radius: 3px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    color: #777;
+  }
+  .item-text {
+    font-size: 11px;
+    line-height: 1.3;
+    white-space: nowrap;
+  }
+  .item-text .flag {
+    font-size: 12px;
+    margin-left: 2px;
+  }
+  .col {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .watermark {
+    text-align: center;
+    font-size: 14px;
+    color: #888;
+    margin: 10px 0;
+    grid-column: 1 / -1;
+  }
+  .spacer { height: 10px; }
+  .item-wide {
+    grid-column: span 1;
+  }
+  .bomb-shape {
+    background: linear-gradient(180deg, #8a8a7a, #6a6a5a);
+    border-radius: 50% 50% 50% 50% / 40% 40% 40% 40%;
+  }
+  .bomb-shape.green {
+    background: linear-gradient(180deg, #7a8a6a, #5a6a4a);
+  }
+  .bomb-shape.dark {
+    background: linear-gradient(180deg, #5a5a4a, #3a3a2a);
+  }
+  .bomb-shape.silver {
+    background: linear-gradient(180deg, #c0c0c0, #a0a0a0);
+  }
+  .bomb-shape.yellow {
+    background: linear-gradient(180deg, #d4c840, #b8a820);
+  }
+  .bomb-shape.red {
+    background: linear-gradient(180deg, #8a4a3a, #6a2a1a);
+  }
+  .bomb-shape.blue-grey {
+    background: linear-gradient(180deg, #8a9aaa, #6a7a8a);
+  }
+  .rocket-shape {
+    background: linear-gradient(180deg, #9a9a8a, #7a7a6a);
+    border-radius: 4px 50% 50% 4px;
+  }
+  .rocket-shape.green {
+    background: linear-gradient(180deg, #7a8a6a, #5a6a4a);
+  }
+  .rocket-shape.dark {
+    background: linear-gradient(180deg, #4a4a3a, #2a2a1a);
+  }
+  .rocket-shape.silver {
+    background: linear-gradient(180deg, #b0b0b0, #909090);
+  }
+  .rocket-shape.yellow-band {
+    background: linear-gradient(180deg, #9a9a8a, #7a7a6a);
+    border-left: 4px solid #c8b830;
+  }
+  .rocket-shape.laser {
+    background: linear-gradient(180deg, #8a8a7a, #6a6a5a);
+    border-left: 3px solid #c8b830;
+  }
+  .rocket-shape.white {
+    background: linear-gradient(180deg, #d0d0d0, #b0b0b0);
+  }
+  .rocket-shape.atomic-white {
+    background: linear-gradient(180deg, #e0e0e0, #c0c0c0);
+    border-radius: 50% 30% 30% 50%;
+  }
+  .rocket-shape.atomic-yellow {
+    background: linear-gradient(180deg, #d4c840, #b8a820);
+    border-radius: 50% 40% 40% 50%;
+  }
+  .fin {
+    position: relative;
+  }
+  .fin::after {
+    content: '';
+    position: absolute;
+    right: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 14px;
+    background: inherit;
+    border-radius: 0 3px 3px 0;
+  }
+  .fin-large::after {
+    height: 20px;
+    right: -8px;
+  }
+  .item-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 0;
+  }
+  .bomb-visual {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+  }
+  .bomb-body {
+    height: 16px;
+    border-radius: 8px 4px 4px 8px;
+    position: relative;
+  }
+  .bomb-body.small { width: 50px; height: 12px; }
+  .bomb-body.medium { width: 70px; height: 16px; }
+  .bomb-body.large { width: 90px; height: 18px; }
+  .bomb-body.xlarge { width: 110px; height: 20px; }
+  .bomb-body.xxlarge { width: 130px; height: 22px; }
+  .bomb-body.atomic-lb { width: 100px; height: 30px; border-radius: 50% 30% 30% 50%; }
+  .bomb-body.atomic-fm { width: 110px; height: 40px; border-radius: 50% 40% 40% 50%; }
+  .bomb-body.rocket { width: 80px; height: 14px; border-radius: 4px 50% 50% 4px; }
+  .bomb-body.rocket-large { width: 100px; height: 16px; border-radius: 4px 50% 50% 4px; }
+  .bomb-body.rocket-xlarge { width: 120px; height: 18px; border-radius: 4px 50% 50% 4px; }
+  .bomb-body.guide { width: 100px; height: 20px; border-radius: 6px 4px 4px 6px; }
+  .bomb-body.laser { width: 120px; height: 20px; border-radius: 6px 4px 4px 6px; }
+  .bomb-body.depth { width: 40px; height: 10px; border-radius: 4px; }
+  .fin-visual {
+    width: 10px;
+    height: 20px;
+    border-radius: 0 3px 3px 0;
+    flex-shrink: 0;
+  }
+  .fin-visual.small { height: 14px; width: 8px; }
+  .fin-visual.large { height: 24px; width: 12px; }
+  .fin-visual.xlarge { height: 28px; width: 14px; }
+  .nose {
+    width: 8px;
+    height: 16px;
+    border-radius: 50% 0 0 50%;
+    flex-shrink: 0;
+  }
+  .nose.small { height: 12px; width: 6px; }
+  .nose.large { height: 20px; width: 10px; }
+  .nose.xlarge { height: 22px; width: 12px; }
+  .nose.atomic { width: 15px; height: 30px; border-radius: 50% 0 0 50%; }
+  .nose.atomic-fm { width: 18px; height: 40px; border-radius: 50% 0 0 50%; }
+  .tail {
+    width: 12px;
+    height: 22px;
+    border-radius: 0 4px 4px 0;
+    flex-shrink: 0;
+  }
+  .tail.small { height: 14px; width: 8px; }
+  .tail.large { height: 26px; width: 14px; }
+  .tail.xlarge { height: 30px; width: 16px; }
+  .tail.atomic { width: 20px; height: 30px; border-radius: 0 4px 4px 0; background: #c8b830; }
+  .tail.atomic-fm { width: 25px; height: 40px; border-radius: 0 4px 4px 0; background: #c8b830; }
+  .band {
+    position: absolute;
+    left: 20%;
+    top: 0;
+    width: 4px;
+    height: 100%;
+    background: #c8b830;
+  }
+  .band2 {
+    position: absolute;
+    left: 40%;
+    top: 0;
+    width: 3px;
+    height: 100%;
+    background: #c8b830;
+  }
+  .col-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+  .item-block {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 1px 0;
+  }
+  .visual-container {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .label-text {
+    font-size: 10.5px;
+    line-height: 1.25;
+    color: #333;
+  }
+  .flag-icon {
+    font-size: 11px;
+  }
+  .section-gap {
+    height: 6px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>BOMBS ROCKETS</h1>
+  <div class="subtitle">XIAOHONGSHU:5433348754</div>
+
+  <div class="grid">
+    <!-- LEFT COLUMN -->
+    <div class="col-section">
+      <div class="item-block">
+        <div class="visual-container">
+          <div class="nose small" style="background:#7a7a6a;"></div>
+          <div class="bomb-body small" style="background:linear-gradient(180deg,#8a8a7a,#6a6a5a);"></div>
+          <div class="fin-visual small" style="background:#6a6a5a;"></div>
+        </div>
+        <div class="label-text">20LB GENERAL 普通 <span class="flag-icon">🇬🇧</span></div>
+      </div>
+      <div class="item-block">
+        <div class="visual-container">
+          <div class="nose small" style="background:#7a7a6a;"></div>
+          <div class="bomb-body small" style="background:linear-gradient(180deg,#8a8a7a,#6a6a5a);"></div>
+          <div class="fin-visual small" style="background:#6a6a5a;"></div>
+        </div>
+        <div class="label-text">40LB GENERAL 普通 <span class="flag-icon">🇬🇧</span></div>
+      </div>
+      <div class="item-block">
+        <div class="visual-container">
+          <div class="nose" style="background:#7a7a6a;"></div>
+          <div class="bomb-body medium" style="background:linear-gradient(180deg,#8a8a7a,#6a6a5a);"></div>
+          <div class="fin-visual" style="background:#6a6a5a;"></div>
+        </div>
+        <div class="label-text">100LB GENERAL 普通 <span class="flag-icon">🇩🇪</span></div>
+      </div>
+      <div class="item-block">
+        <div class="visual-container">
+          <div class="nose" style="background:#7a8a6a;"></div>
+          <div class="bomb-body medium" style="background:linear-gradient(180deg,#7a8a6a,#5a6a4a);"></div>
+          <div class="fin-visual" style="background:#5a6a4a;"></div>
+        </div>
+        <div class="label-text">120LB HIGH EXPLOSIVE 高爆 <span class="flag-icon">🇬🇧</span></div>
+      </div>
+      <div class="item-block">
+        <div class="visual-container">
+          <div class="nose" style="background:#7a8a6a;"></div>
+          <div class="bomb-body medium" style="background:linear-gradient(180deg,#7a8a6a,#5a6a4a);"></div>
+          <div class="fin-visual" style="background:#5a6a4a;"></div>
+        </div>
+        <div class="label-text">120LB HIGH EXPLOSIVE 高爆 <span class="flag-icon">🇬🇧</span></div>
+      </div>
+      <div class="item-block">
+        <div class="visual-container">
+          <div class="nose" style="background:#8a8a7a;"></div>
+          <div class="bomb-body medium" style="background:linear-gradient(180deg,#9a9a8a,#7a7a6a);"></div>
+          <div class="fin-visual" style="background:#7a7a6a;"></div>
+        </div>
+        <div class="label-text">120LB GENERAL 普通 <span class="flag-icon">🇬🇧</span></div>
+      </div>
+      <div class="item-block">
+        <div class="visual-container">
+          <div class="nose" style="background:#8a8a7a;"></div>
+          <div class="bomb-body medium" style="background:linear-gradient(180deg,#9a9a8a,#7a7a6a);"></div>
+          <div class="fin-visual" style="background:#7a7a6a;"></div>
+        </div>
+        <div class="label-text">220LB GENERAL 普通 <span class="flag-icon">🇬🇧</span></div>
+      </div>
+      <div class="item-block">
+        <div class="visual-container">
+          <div class="nose" style="background:#8a8a7a;"></div>
+          <div class="bomb-body large" style="background:linear-gradient(180deg,#9a9a8a,#7a7a6a);"></div>
+          <div class="fin-visual" style="background:#7a7a6a;"></div>
+        </div>
+        <div class="label-text">250LB GENERAL 普通 <span class="flag-icon">🇬🇧</span></div>
+      </div>
+      <div class="item-block">
+        <div class="visual-container">
+          <div class="nose" style="background:#8a4a3a;"></div>
+          <div class="bomb-body large" style="background:linear-gradient(180deg,#8a4a3a,#6a2a1a);"></div>
+          <div class="fin-visual" style="background:#6a2a1a;"></div>
+        </div>
+        <div class="label-text">250LB TARGET INDICATOR 目标指示 <span class="flag-icon">🇬🇧</span></div>
+      </div>
+      <div class="item-block">
+        <div class="visual-container">
+          <div class="nose" style="background:#7a8a6a;"></div>
+          <div class="bomb-body large" style="background:linear-gradient(180deg,#7a8a6a,#5a6a4a);"></div>
+          <div class="fin-visual" style="background:#5a6a4a;"></div>
+        </div>
+        <div class="label-text">250LB SEMI ARMOUR PIERCING 半穿甲 <span class="flag-icon">🇬🇧</span></div>
+      </div>
+      <div class="item-block">
+        <div class="visual-container">
+          <div class="nose" style="background:#7a8a6a;"></div>
+          <div class="bomb-body large" style="background:linear-gradient(180deg,#7a8a6a,#5a6a4a);"></div>
+          <div class="fin-visual" style="background:#5a6a4a;"></div>
+        </div>
+        <div class="label-text">250LB GENERAL 普通 <span class="flag-icon">🇬🇧</span></div>
+      </div>
+      <div class="item-block">
+        <div class="visual-container">
+          <div class="nose" style="background:#7a8a6a;"></div>
+          <div class="bomb-body large" style="background:linear-gradient(180deg,#7a8a6a,#5a6a4a);"></div>
+          <div class="fin-visual" style="background:#5a6a4a;"></div>
+        </div>
+        <div class="label-text">250LB MEDIUM CAPACITY 中等 <span class="flag-icon">🇬🇧</span></div>
+      </div>
+      <div class="item-block">
+        <div class="visual-container">
+          <div class="nose" style="background:#7a8a6a;"></div>
+          <div class="bomb-body large" style="background:linear-gradient(180deg,#7a8a6a,#5a6a4a);"></div>
+          <div class="fin-visual" style="background:#5a6a4a;"></div>
+        </div>
+        <div class="label-text">250LB GENERAL 普通 <span class="flag-icon">🇬🇧</span></div>
+      </div>
+      <div class="item-block">
+        <div class="visual-container">
+          <div class="nose" style="background:#7a8a6a;"></div>
+          <div class="bomb-body large" style="background:linear-gradient(180deg,#7a8a6a,#5a6a4a);"></div>
+          <div class="fin-visual" style="background:#5a6a4a;"></div>
+        </div>
+        <div class="label-text">250LB GENERAL 普通 <span class="flag-icon">🇬🇧</span></div>
+      </div>
+      <div class="item-block">
+        <div class="visual-container">
+          <div class="nose small" style="background:#7a8a6a;"></div>
+          <div class="bomb-body depth" style="background:linear-gradient(180deg,#7a8a6a,#5a6a4a); width:45px; height:10px;"></div>
+          <div class="fin-visual small" style="background:#5a6a4a;"></div>
+        </div>
+        <div class="label-text">350LB DEPTH 深度 <span class="flag-icon">🇬🇧</span></div>
+      </div>
+      <div class="item-block">
+        <div class="visual-container">
+          <div class="nose small" style="background:#8a8a7a;"></div>
+          <div class="bomb-body rocket" style="background:linear-gradient(180deg,#9a9a8a,#7a7a6a); width:60px; height:10px;"></div>
+          <div class="fin-visual small" style="background:#7a7a6a;"></div>
+        </div>
+        <div class="label-text">3 INCH ROCKET 火箭 <span class="flag-icon">🇬🇧</span></div>
+      </div>
+    </div>
+
+    <!-- MIDDLE COLUMN -->
+    <div class="col-section">
+      <div class="item-block">
+        <div class="visual-container">
+          <div class="nose" style="background:#7a8a6a;"></div>
+          <div class="bomb-body large" style="background:linear-gradient(180deg,#7a8a6a,#5a6a4a);"></div>
+          <div class="fin-visual" style="background:#5a6a4a;"></div>
+        </div>
+        <div class="label-text">500LB SEMI ARMOUR PIERCING 半穿甲 <span class="flag-icon">🇬🇧</span></div>
+      </div>
+      <div class="item-block">
+        <div class="visual-container">
+          <div class="nose" style="background:#7a8a6a;"></div>
+          <div class="bomb-body large" style="background:linear-gradient(180deg,#7a8a6a,#5a6a4a);"></div>
+          <div class="fin-visual" style="background:#5a6a4a;"></div>
+        </div>
+        <div class="label-text">500LB MEDIUM CAPACITY 中等 <span class="flag-icon">🇬🇧</span></div>
+      </div>
+      <div class="item-block">
+        <div class="visual-container">
+          <div class="nose" style="background:#7a8a6a;"></div>
+          <div class="bomb-body large" style="background:linear-gradient(180deg,#7a8a6a,#5a6a4a);"></div>
+          <div class="fin-visual" style="background:#5a6a4a;"></div>
+        </div>
+        <div class="label-text">500LB GENERAL 普通 <span class="flag-icon">🇬🇧</span></div>
+      </div>
+      <div class="item-block">
+        <div class="visual-container">
+          <div class="nose" style="background:#7a8a6a;"></div>
+          <div class="bomb-body large" style="background:linear-gradient(180deg,#7a8a6a,#5a6a4a);"></div>
+          <div class="fin-visual" style="background:#5a6a4a;"></div>
+        </div>
+        <div class="label-text">500LB GENERAL 普通 <span class="flag-icon">🇬🇧</span></div>
+      </div>
+      <div class="item-block">
+        <div class="visual-container">
+          <div class="nose" style="background:#8a8a7a;"></div>
+          <div class="bomb-body rocket-large" style="background:linear-gradient(180deg,#9a9a8a,#7a7a6a);"></div>
+          <div class="fin-visual large" style="background:#7a7a6a;"></div>
+        </div>
+        <div class="label-text">14 INCH ROCKET 火箭 <span class="flag-icon">🇬🇧</span></div>
+      </div>
+      <div class="item-block">
+        <div class="visual-container">
+          <div class="nose" style="background:#8a8a7a;"></div>
+          <div class="bomb-body large" style="background:linear-gradient(180deg,#9a9a8a,#7a7a6a);"></div>
+          <div class="fin-visual" style="background:#7a7a6a;"></div>
+        </div>
+        <div class="label-text">500LB GENERAL 普通 <span class="flag-icon">🇺🇸</span></div>
+      </div>
+      <div class="item-block">
+        <div class="visual-container">
+          <div class="nose large" style="background:#8a9aaa;"></div>
+          <div class="bomb-body xlarge" style="background:linear-gradient(180deg,#8a9aaa,#6a7a8a);"></div>
+          <div class="fin-visual large" style="background:#6a7a8a;"></div>
+        </div>
+        <div class="label-text">1100LB GENERAL 普通 <span class="flag-icon">🇫🇷</span></div>
+      </div>
+      <div class="item-block">
+        <div class="visual-container">
+          <div class="nose large" style="background:#7a8a6a;"></div>
+          <div class="bomb-body xlarge" style="background:linear-gradient(180deg,#7a8a6a,#5a6a4a); position:relative;">
+            <div class="band"></div>
+          </div>
+          <div class="fin-visual large" style="background:#5a6a4a;"></div>
+        </div>
+        <div class="label-text">1000LB GENERAL 普通 <span class="flag-icon">🇬🇧</span></div>
+      </div>
+      <div class="item-block">
+        <div class="visual-container">
+          <div class="nose large" style="background:#7a8a6a;"></div>
+          <div class="bomb-body xlarge" style="background:linear-gradient(180deg,#7a8a6a,#5a6a4a);"></div>
+          <div class="fin-visual large" style="background:#5a6a4a;"></div>
+        </div>
+        <div class="label-text">1000LB GENERAL 普通 <span class="flag-icon">🇺🇸</span></div>
+      </div>
+      <div class="item-block">
+        <div class="visual-container">
+          <div class="nose large" style="background:#7a8a6a;"></div>
+          <div class="bomb-body xlarge" style="background:linear-gradient(180deg,#7a8a6a,#5a6a4a);"></div>
+          <div class="fin-visual large" style="background:#5a6a4a;"></div>
+        </div>
+        <div class="label-text">1100LB HIGH EXPLOSIVE 高爆 <span class="flag-icon">🇩🇪</span></div>
+      </div>
+      <div class="item-block">
+        <div class="visual-container">
+          <div class="nose large" style="background:#7a8a6a;"></div>
+          <div class="bomb-body xlarge" style="background:linear-gradient(180deg,#7a8a6a,#5a6a4a);"></div>
+          <div class="fin-visual large" style="background:#5a6a4a;"></div>
+        </div>
+        <div class="label-text">1900LB GENERAL 普通 <span class="flag-icon">🇬🇧</span></div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="col-section">
+      <div class="item-block">
+        <div class="visual-container">
+          <div class="nose large" style="background:#8a8a7a;"></div>
+          <div class="bomb-body xlarge" style="background:linear-gradient(180deg,#9a9a8a,#7a7a6a);"></div>
+          <div class="fin-visual large" style="background:#7a7a6a;"></div>
+        </div>
+        <div class="label-text">1100LB GUIDE BOMB 制导 <span class="flag-icon">🇩🇪</span></div>
+      </div>
+      <div class="item-block">
+        <div class="visual-container">
+          <div class="nose large" style="background:#7a8a6a;"></div>
+          <div class="bomb-body xlarge" style="background:linear-gradient(180deg,#7a8a6a,#5a6a4a);"></div>
+          <div class="fin-visual large" style="background:#5a6a4a;"></div>
+        </div>
+        <div class="label-text">1600LB ARMOUR PIERCING 穿甲 <span class="flag-icon">🇬🇧</span></div>
+      </div>
+      <div class="item-block">
+        <div class="visual-container">
+          <div class="nose large" style="background:#7a8a6a;"></div>
+          <div class="bomb-body xxlarge" style="background:linear-gradient(180deg,#7a8a6a,#5a6a4a);"></div>
+          <div class="fin-visual large" style="background:#5a6a4a;"></div>
+        </div>
+        <div class="label-text">2400LB ARMOUR PIERCING 穿甲 <span class="flag-icon">🇬🇧</span></div>
+      </div>
+      <div class="item-block">
+        <div class="visual-container">
+          <div class="nose large" style="background:#8a8a7a;"></div>
+          <div class="bomb-body xxlarge" style="background:linear-gradient(180deg,#9a9a8a,#7a7a6a);"></div>
+          <div class="fin-visual large" style="background:#7a7a6a;"></div>
+        </div>
+        <div class="label-text">2000LB GENERAL 普通 <span class="flag-icon">🇺🇸</span></div>
+      </div>
+      <div class="item-block">
+        <div class="visual-container">
+          <div class="nose large" style="background:#8a8a7a;"></div>
+          <div class="bomb-body xxlarge" style="background:linear-gradient(180deg,#9a9a8a,#7a7a6a); position:relative;">
+            <div class="band"></div>
+          </div>
+          <div class="fin-visual large" style="background:#7a7a6a;"></div>
+        </div>
+        <div class="label-text">2000LB LASER GUIDED 激光制导 <span class="flag-icon">🇺🇸</span></div>
+      </div>
+      <div class="item-block">
+        <div class="visual-container">
+          <div class="nose large" style="background:#8a9aaa;"></div>
+          <div class="bomb-body xxlarge" style="background:linear-gradient(180deg,#8a9aaa,#6a7a8a);"></div>
+          <div class="fin-visual large" style="background:#6a7a8a;"></div>
+        </div>
+        <div class="label-text">2200LB HIGH EXPLOSIVE 高爆 <span class="flag-icon">🇩🇪</span></div>
+      </div>
+      <div class="item-block">
+        <div class="visual-container">
+          <div class="nose large" style="background:#8a9aaa;"></div>
+          <div class="bomb-body xxlarge" style="background:linear-gradient(180deg,#8a9aaa,#6a7a8a);"></div>
+          <div class="fin-visual xlarge" style="background:#6a7a8a;"></div>
+        </div>
+        <div class="label-text">3080LB GUIDE BOMB 制导 <span class="flag-icon">🇩🇪</span></div>
+      </div>
+      <div class="item-block">
+        <div class="visual-container">
+          <div class="nose atomic" style="background:#c0c0c0;"></div>
+          <div class="bomb-body atomic-lb" style="background:linear-gradient(180deg,#d0d0d0,#b0b0b0);"></div>
+          <div class="tail atomic" style="background:#c8b830;"></div>
+        </div>
+        <div class="label-text">ATOMIC MK1 LITTLE BOY 小男孩 <span class="flag-icon">🇺🇸</span></div>
+      </div>
+      <div class="item-block">
+        <div class="visual-container">
+          <div class="nose atomic-fm" style="background:#d4c840;"></div>
+          <div class="bomb-body atomic-fm" style="background:linear-gradient(180deg,#d4c840,#b8a820);"></div>
+          <div class="tail atomic-fm" style="background:#c8b830;"></div>
+        </div>
+        <div class="label-text">ATOMIC MK3 FAT MAN 胖子 <span class="flag-icon">🇺🇸</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

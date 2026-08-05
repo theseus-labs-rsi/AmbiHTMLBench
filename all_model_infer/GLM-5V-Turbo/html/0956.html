@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>window.MathJax={tex:{inlineMath:[["$","$"]],displayMath:[["$$","$$"]]}};</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Django 4.1.12 release notes | Django documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fff;
+        }
+        
+        /* Header */
+        .header {
+            background-color: #0c4b33;
+            color: white;
+            padding: 15px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: -1px;
+        }
+        
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .nav a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.9;
+        }
+        
+        .nav a:hover {
+            opacity: 1;
+        }
+        
+        .donate-link {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .search-container {
+            position: relative;
+            margin-left: 10px;
+        }
+        
+        .search-input {
+            padding: 8px 35px 8px 12px;
+            border-radius: 4px;
+            border: none;
+            width: 200px;
+            font-size: 14px;
+        }
+        
+        .search-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #3eb370;
+            font-weight: bold;
+        }
+        
+        /* Documentation Banner */
+        .doc-banner {
+            background-color: #3eb370;
+            color: white;
+            padding: 20px 40px;
+            font-size: 28px;
+            font-weight: 300;
+        }
+        
+        /* Survey Section */
+        .survey-section {
+            background-color: #a8d5ba;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        
+        .survey-title {
+            font-size: 22px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            color: #222;
+        }
+        
+        .survey-text {
+            max-width: 900px;
+            margin: 0 auto 25px;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #222;
+        }
+        
+        .survey-button {
+            background-color: #4aba91;
+            color: #000;
+            border: none;
+            padding: 14px 60px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        
+        /* Main Content */
+        .main-container {
+            display: flex;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            gap: 50px;
+        }
+        
+        .content-area {
+            flex: 2;
+            max-width: 750px;
+        }
+        
+        .sidebar {
+            flex: 1;
+            min-width: 280px;
+        }
+        
+        h1 {
+            font-size: 32px;
+            font-weight: 400;
+            margin-bottom: 10px;
+            color: #222;
+        }
+        
+        .date {
+            font-style: italic;
+            color: #555;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        p {
+            margin-bottom: 16px;
+            font-size: 15px;
+            line-height: 1.7;
+            color: #333;
+        }
+        
+        h2 {
+            font-size: 24px;
+            font-weight: 400;
+            margin: 30px 0 15px;
+            color: #222;
+        }
+        
+        code {
+            background-color: #f5f5f5;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.9em;
+        }
+        
+        strong {
+            font-weight: 600;
+        }
+        
+        a {
+            color: #3eb370;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        .nav-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            font-size: 14px;
+        }
+        
+        .nav-links a {
+            color: #3eb370;
+        }
+        
+        /* Sidebar */
+        .sidebar-section {
+            margin-bottom: 30px;
+        }
+        
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: 400;
+            margin-bottom: 15px;
+            color: #222;
+        }
+        
+        .support-box {
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        
+        .heart-icon {
+            width: 48px;
+            height: 42px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23e91e63'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            flex-shrink: 0;
+        }
+        
+        .support-text {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #444;
+        }
+        
+        .support-text a {
+            color: #3eb370;
+        }
+        
+        ul {
+            list-style-type: disc;
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        ul li {
+            margin-bottom: 8px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        ul li ul {
+            list-style-type: circle;
+            margin-top: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .breadcrumb-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .breadcrumb-list li::before {
+            content: "•";
+            color: #3eb370;
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+        
+        .help-item {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .help-item:last-child {
+            border-bottom: none;
+        }
+        
+        .help-label {
+            font-size: 14px;
+            color: #3eb370;
+            margin-bottom: 5px;
+        }
+        
+        .help-desc {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        .badge {
+            display: inline-block;
+            background-color: #f0f0f0;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #555;
+            float: right;
+            margin-left: 10px;
+        }
+        
+        .clearfix::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="logo">django</div>
+    <nav class="nav">
+        <a href="#">OVERVIEW</a>
+        <a href="#">DOWNLOAD</a>
+        <a href="#" style="opacity: 0.7;">DOCUMENTATION</a>
+        <a href="#">NEWS</a>
+        <a href="#">CODE</a>
+        <a href="#">ISSUES</a>
+        <a href="#">COMMUNITY</a>
+        <a href="#">FOUNDATION</a>
+        <a href="#" class="donate-link">♥ DONATE</a>
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Search (⌘K)">
+            <span class="search-icon">🔍</span>
+        </div>
+        <span style="font-size: 16px;">ⓘ</span>
+    </nav>
+</header>
+
+<div class="doc-banner">
+    Documentation
+</div>
+
+<section class="survey-section">
+    <h2 class="survey-title">Django Developer Survey</h2>
+    <p class="survey-text">
+        The Django Software Foundation is once again partnering with JetBrains to run the 2026 Django Developer Survey 📊 Help us better understand how Django is being used around the world and guide future technical and community decisions. <strong>Read more on the Django blog.</strong>
+    </p>
+    <p class="survey-text">
+        Please help us spread the word by sharing the survey with your communities and on social media 📢 The more diverse the responses, the better the results for everyone.
+    </p>
+    <button class="survey-button">Take the survey ✨</button>
+</section>
+
+<main class="main-container">
+    <article class="content-area">
+        <h1>Django 4.1.12 release notes 📝</h1>
+        <div class="date">October 4, 2023</div>
+        
+        <p>Django 4.1.12 fixes a security issue with severity “moderate” in 4.1.11.</p>
+        
+        <h2>CVE-2023-43665: Denial-of-service possibility in django.utils.text.Truncator 🔒</h2>
+        
+        <p>Following the fix for <strong>CVE-2019-14232</strong>, the regular expressions used in the implementation of <code>django.utils.text.Truncator</code>'s <code>chars()</code> and <code>words()</code> methods (with <code>html=True</code>) were revised and improved. However, these regular expressions still exhibited linear backtracking complexity, so when given a very long, potentially malformed HTML input, the evaluation would still be slow, leading to a potential denial of service vulnerability.</p>
+        
+        <p>The <code>chars()</code> and <code>words()</code> methods are used to implement the <strong>truncatechars_html</strong> and <strong>truncatewords_html</strong> template filters, which were thus also vulnerable.</p>
+        
+        <p>The input processed by <strong>Truncator</strong>, when operating in HTML mode, has been limited to the first five million characters in order to avoid potential performance and memory issues.</p>
+        
+        <div class="nav-links">
+            <a href="#">‹ Django 4.1.13 release notes</a>
+            <a href="#">Django 4.1.11 release notes ›</a>
+        </div>
+    </article>
+    
+    <aside class="sidebar">
+        <section class="sidebar-section">
+            <h3 class="sidebar-title">Support Django!</h3>
+            <div class="support-box">
+                <div class="heart-icon"></div>
+                <div class="support-text">
+                    <a href="#">Agence Debord</a> donated to the Django Software Foundation to support Django development. <a href="#">Donate today!</a>
+                </div>
+            </div>
+        </section>
+        
+        <section class="sidebar-section">
+            <h3 class="sidebar-title">Contents</h3>
+            <ul class="breadcrumb-list">
+                <li><a href="#">Django 4.1.12 release notes</a></li>
+                <ul style="list-style-type: circle; margin-top: 8px;">
+                    <li><a href="#">CVE-2023-43665: Denial-of-service possibility in django.utils.text.Truncator</a></li>
+                </ul>
+            </ul>
+        </section>
+        
+        <section class="sidebar-section">
+            <h3 class="sidebar-title">Browse</h3>
+            <ul class="breadcrumb-list">
+                <li>Prev: <a href="#">Django 4.1.13 release notes</a></li>
+                <li>Next: <a href="#">Django 4.1.11 release notes</a></li>
+                <li><a href="#">Table of contents</a></li>
+                <li><a href="#">General Index</a></li>
+                <li><a href="#">Python Module Index</a></li>
+            </ul>
+        </section>
+        
+        <section class="sidebar-section">
+            <h3 class="sidebar-title">You are here:</h3>
+            <ul class="breadcrumb-list">
+                <li><a href="#">Django 5.2 documentation</a></li>
+                <ul style="list-style-type: circle; margin-top: 8px;">
+                    <li><a href="#">Release notes</a></li>
+                    <ul style="list-style-type: square; margin-top: 8px; margin-left: 15px;">
+                        <li>Django 4.1.12 release notes</li>
+                    </ul>
+                </ul>
+            </ul>
+        </section>
+        
+        <section class="sidebar-section">
+            <h3 class="sidebar-title">Getting help</h3>
+            
+            <div class="help-item clearfix">
+                <div class="help-label"><a href="#">FAQ</a></div>
+                <div class="help-desc">Try the FAQ — it's got answers to many common questions.</div>
+                <span class="badge">Getting Help</span>
+            </div>
+            
+            <div class="help-item clearfix">
+                <div class="help-label"><a href="#">Index, Module Index</a>, or <a href="#">Table of Contents</a></div>
+                <div class="help-desc">Handy when looking for specific information.</div>
+                <span class="badge">Language: en</span>
+            </div>
+            
+            <div class="help-item clearfix">
+                <div class="help-label"><a href="#">Django Discord Server</a></div>
+                <div class="help-desc">Join the Django Discord Community.</div>
+                <span class="badge">Documentation version: 5.2</span>
+            </div>
+        </section>
+    </aside>
+</main>
+
+</body>
+</html>

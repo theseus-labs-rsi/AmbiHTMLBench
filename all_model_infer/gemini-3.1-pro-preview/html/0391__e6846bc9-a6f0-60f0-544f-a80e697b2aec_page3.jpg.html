@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Invoice</title>
+<style>
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 12px;
+        color: #000;
+        margin: 0;
+        padding: 20px;
+        background-color: #fff;
+    }
+    .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        position: relative;
+    }
+    .watermark {
+        position: absolute;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 100px;
+        color: rgba(220, 220, 220, 0.4);
+        font-weight: bold;
+        z-index: 0;
+        letter-spacing: 2px;
+        pointer-events: none;
+    }
+    .header-top {
+        text-align: right;
+        margin-bottom: 10px;
+        position: relative;
+        z-index: 1;
+    }
+    .invoice-title {
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+        margin-top: -20px;
+        margin-bottom: 20px;
+        position: relative;
+        z-index: 1;
+    }
+    .header-main {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 30px;
+        position: relative;
+        z-index: 1;
+    }
+    .header-left {
+        display: flex;
+        flex-direction: column;
+    }
+    .placeholder {
+        width: 220px;
+        height: 70px;
+        background-color: #f0f0f0;
+        border: 1px dashed #999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        color: #666;
+        margin-bottom: 5px;
+    }
+    .address-block {
+        margin-left: 160px;
+        margin-top: -70px;
+        line-height: 1.3;
+    }
+    .website {
+        margin-top: 30px;
+        font-size: 11px;
+    }
+    .invoice-table {
+        border-collapse: collapse;
+        width: 450px;
+        font-size: 11px;
+        border: 2px solid black;
+    }
+    .invoice-table td {
+        border: 1px solid black;
+        padding: 3px 6px;
+        vertical-align: top;
+    }
+    .invoice-table td:nth-child(odd) {
+        width: 25%;
+    }
+    
+    /* Line Items Grid System */
+    .line-items-container {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .flex-row {
+        display: flex;
+        width: 100%;
+        align-items: flex-end;
+        padding: 2px 0;
+    }
+    .col-line { width: 4%; text-align: right; padding-right: 1%; }
+    .col-start { width: 9%; }
+    .col-end { width: 9%; }
+    .col-desc { width: 20%; }
+    .col-time { width: 15%; }
+    .col-days { width: 10%; }
+    .col-len { width: 6%; text-align: right; }
+    .col-spots { width: 8%; text-align: right; }
+    .col-rate { width: 10%; text-align: right; }
+    .col-type { width: 8%; text-align: right; }
+
+    .header-row {
+        font-size: 11px;
+        margin-bottom: 5px;
+    }
+    
+    .block-divider {
+        border-top: 2px solid black;
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .block-divider-bottom {
+        border-bottom: 2px solid black;
+        margin-bottom: 5px;
+    }
+
+    /* Spots Sub-table */
+    .spot-row {
+        display: flex;
+        width: 100%;
+        font-size: 11px;
+        padding: 1px 0;
+        font-style: italic;
+    }
+    .spot-row.header {
+        text-decoration: underline;
+        font-style: normal;
+    }
+    .spot-row:not(.header) {
+        font-style: normal;
+    }
+    .sc-num { width: 8%; text-align: right; padding-right: 1%; }
+    .sc-ch { width: 5%; text-align: center; }
+    .sc-day { width: 5%; text-align: center; }
+    .sc-date { width: 8%; text-align: center; }
+    .sc-time { width: 10%; text-align: center; }
+    .sc-desc { width: 18%; }
+    .sc-se { width: 14%; text-align: center; }
+    .sc-len { width: 6%; text-align: right; }
+    .sc-adid { width: 12%; text-align: center; }
+    .sc-rate { width: 8%; text-align: right; }
+    .sc-type { width: 6%; text-align: right; }
+
+    /* Weeks Sub-table */
+    .week-row {
+        display: flex;
+        width: 100%;
+        font-size: 11px;
+        padding: 1px 0;
+    }
+    .wc-label { width: 13%; text-align: right; padding-right: 1%; }
+    .wc-start { width: 9%; text-align: center; }
+    .wc-end { width: 9%; text-align: center; }
+    .wc-days { width: 15%; text-align: center; }
+    .wc-spots { width: 10%; text-align: right; }
+    .wc-rate { width: 10%; text-align: right; }
+
+    .summary-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-top: 20px;
+    }
+    .summary-left {
+        font-size: 16px;
+        font-weight: bold;
+    }
+    .summary-right table {
+        border-collapse: collapse;
+    }
+    .summary-right td {
+        padding: 4px 10px;
+        text-align: right;
+    }
+    .summary-right td:first-child {
+        text-decoration: underline;
+    }
+    
+    .fine-print {
+        font-size: 9px;
+        text-align: justify;
+        margin-top: 40px;
+        line-height: 1.2;
+    }
+    .footer {
+        text-align: right;
+        font-size: 10px;
+        margin-top: 20px;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="watermark">DUPLICATE</div>
+    
+    <div class="header-top">
+        Page 3 of 3
+    </div>
+    
+    <div class="invoice-title">
+        INVOICE
+    </div>
+
+    <div class="header-main">
+        <div class="header-left">
+            <div class="placeholder">[Logo: abc10 KXTV SACRAMENTO STOCKTON MODESTO]</div>
+            <div class="address-block">
+                <div style="font-size: 11px; margin-bottom: 2px;">Send Payment To:</div>
+                <strong>KXTV<br>
+                KXTV<br>
+                PO BOX: 637386<br>
+                Cincinnati, OH 45263-7386</strong>
+            </div>
+            <div class="website">abc10.com</div>
+        </div>
+        
+        <div class="header-right">
+            <table class="invoice-table">
+                <tr>
+                    <td>Invoice #</td>
+                    <td>1903525-1</td>
+                    <td>Invoice Month</td>
+                    <td>December 2019</td>
+                </tr>
+                <tr>
+                    <td>Invoice Date</td>
+                    <td>12/29/19</td>
+                    <td>Invoice Period</td>
+                    <td>11/25/19 - 12/29/19</td>
+                </tr>
+                <tr>
+                    <td>Advertiser</td>
+                    <td colspan="3">POL/ Tom Steyer / D / PRES / US</td>
+                </tr>
+                <tr>
+                    <td>Product</td>
+                    <td colspan="3">Political</td>
+                </tr>
+                <tr>
+                    <td>Estimate #</td>
+                    <td colspan="3">8196</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="line-items-container">
+        <!-- Header Row -->
+        <div class="flex-row header-row">
+            <div class="col-line">Line</div>
+            <div class="col-start">Start Date</div>
+            <div class="col-end">End Date</div>
+            <div class="col-desc">Description</div>
+            <div class="col-time">Start/End Time</div>
+            <div class="col-days">MTWTFSS</div>
+            <div class="col-len">Length</div>
+            <div class="col-spots">Spots/<br>Week</div>
+            <div class="col-rate">Rate</div>
+            <div class="col-type">Type</div>
+        </div>
+
+        <!-- Line 10 Block -->
+        <div class="block-divider">
+            <div class="flex-row">
+                <div class="col-line">10</div>
+                <div class="col-start">12/24/19</div>
+                <div class="col-end">12/25/19</div>
+                <div class="col-desc">Inside Edition</div>
+                <div class="col-time">430-5p</div>
+                <div class="col-days">-11----</div>
+                <div class="col-len">:30</div>
+                <div class="col-spots">2</div>
+                <div class="col-rate">$550.00</div>
+                <div class="col-type">NM</div>
+            </div>
+            
+            <div style="margin-top: 5px;">
+                <div class="spot-row header">
+                    <div class="sc-num">Spots: #</div>
+                    <div class="sc-ch">Ch</div>
+                    <div class="sc-day">Day</div>
+                    <div class="sc-date">Air Date</div>
+                    <div class="sc-time">Air Time</div>
+                    <div class="sc-desc">Description</div>
+                    <div class="sc-se">Start/End Time</div>
+                    <div class="sc-len">Length</div>
+                    <div class="sc-adid">Ad-ID</div>
+                    <div class="sc-rate">Rate</div>
+                    <div class="sc-type">Type</div>
+                </div>
+                <div class="spot-row">
+                    <div class="sc-num">1</div>
+                    <div class="sc-ch">KXTV</div>
+                    <div class="sc-day">Tu</div>
+                    <div class="sc-date">12/24/19</div>
+                    <div class="sc-time">4:45 PM</div>
+                    <div class="sc-desc">Inside Edition</div>
+                    <div class="sc-se">430-5p</div>
+                    <div class="sc-len">:30</div>
+                    <div class="sc-adid">TS20TV1937AH</div>
+                    <div class="sc-rate">$550.00</div>
+                    <div class="sc-type">NM</div>
+                </div>
+                <div class="spot-row">
+                    <div class="sc-num">2</div>
+                    <div class="sc-ch">KXTV</div>
+                    <div class="sc-day">W</div>
+                    <div class="sc-date">12/25/19</div>
+                    <div class="sc-time"></div>
+                    <div class="sc-desc">Inside Edition</div>
+                    <div class="sc-se">430-5p</div>
+                    <div class="sc-len">:00</div>
+                    <div class="sc-adid"></div>
+                    <div class="sc-rate"><span style="text-decoration: line-through;">$550.00</span></div>
+                    <div class="sc-type">NM</div>
+                </div>
+                <div class="spot-row" style="font-style: italic;">
+                    <div class="sc-num"></div>
+                    <div class="sc-ch"></div>
+                    <div class="sc-day"></div>
+                    <div class="sc-date"></div>
+                    <div class="sc-time"></div>
+                    <div class="sc-desc">See MG 9.5</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Line 12 Block -->
+        <div class="block-divider">
+            <div class="flex-row">
+                <div class="col-line">12</div>
+                <div class="col-start">12/24/19</div>
+                <div class="col-end">12/29/19</div>
+                <div class="col-desc">Sun 1205-105a</div>
+                <div class="col-time">1205-105a</div>
+                <div class="col-days">------1</div>
+                <div class="col-len">:30</div>
+                <div class="col-spots">1</div>
+                <div class="col-rate">$110.00</div>
+                <div class="col-type">NM</div>
+            </div>
+            
+            <div style="margin-top: 5px;">
+                <div class="week-row">
+                    <div class="wc-label">Weeks:</div>
+                    <div class="wc-start" style="text-decoration: underline;">Start Date</div>
+                    <div class="wc-end" style="text-decoration: underline;">End Date</div>
+                    <div class="wc-days" style="text-decoration: underline;">MTWTFSS</div>
+                    <div class="wc-spots" style="text-decoration: underline;">Spots/Week</div>
+                    <div class="wc-rate" style="text-decoration: underline;">Rate</div>
+                </div>
+                <div class="week-row">
+                    <div class="wc-label"></div>
+                    <div class="wc-start">12/23/19</div>
+                    <div class="wc-end">12/29/19</div>
+                    <div class="wc-days">------1</div>
+                    <div class="wc-spots">1</div>
+                    <div class="wc-rate">$110.00</div>
+                </div>
+            </div>
+
+            <div style="margin-top: 5px;">
+                <div class="spot-row header">
+                    <div class="sc-num">Spots: #</div>
+                    <div class="sc-ch">Ch</div>
+                    <div class="sc-day">Day</div>
+                    <div class="sc-date">Air Date</div>
+                    <div class="sc-time">Air Time</div>
+                    <div class="sc-desc">Description</div>
+                    <div class="sc-se">Start/End Time</div>
+                    <div class="sc-len">Length</div>
+                    <div class="sc-adid">Ad-ID</div>
+                    <div class="sc-rate">Rate</div>
+                    <div class="sc-type">Type</div>
+                </div>
+                <div class="spot-row">
+                    <div class="sc-num">1</div>
+                    <div class="sc-ch">KXTV</div>
+                    <div class="sc-day">Su</div>
+                    <div class="sc-date">12/29/19</div>
+                    <div class="sc-time">12:23 AM</div>
+                    <div class="sc-desc">Sun 1205-105a</div>
+                    <div class="sc-se">1205-105a</div>
+                    <div class="sc-len">:30</div>
+                    <div class="sc-adid">TS20TV1937AH</div>
+                    <div class="sc-rate">$110.00</div>
+                    <div class="sc-type">NM</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Spots -->
+        <div class="block-divider block-divider-bottom">
+            <div class="flex-row" style="justify-content: center; padding: 5px 0;">
+                <div style="width: 50%; text-align: right; padding-right: 20px; text-decoration: underline;">Total Spots</div>
+                <div style="width: 50%; text-align: left; padding-left: 20px; font-weight: bold;">21</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="summary-section">
+        <div class="summary-left">
+            Include Invoice # on Check - Payment Terms 30 Days
+        </div>
+        <div class="summary-right">
+            <table>
+                <tr>
+                    <td>Gross Total</td>
+                    <td>$4,215.00</td>
+                </tr>
+                <tr>
+                    <td>Agency Commission</td>
+                    <td>$632.25</td>
+                </tr>
+                <tr>
+                    <td>Net Amount Due</td>
+                    <td>$3,582.75</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="fine-print">
+        Standard Terms: Your purchase of advertising is subject to the TEGNA Media Standard Advertising Terms and Conditions (Standard Terms), which are available at http://bit.ly/2eyrbCA, as well as on the Advertise With Us section under the About tab of Station website. You will be deemed to have accepted our Standard Terms upon the earliest of (i) the date you sign the Insertion Order to which this invoice relates, (ii) the date the campaign contemplated by this invoice first launches, or (iii) the date on which you pay any amounts specified on this invoice. Any claims by Advertiser for a credit related to Campaigns run under this Agreement (e.g., billing disputes, claims that Campaigns ran in the wrong time slot, etc.) must be submitted in writing to Station within ninety (90) days of the invoice date or the claim will be waived. If Advertiser disputes any amounts owed hereunder, Advertiser will pay all amounts not in dispute no later than the due date for the applicable invoice. We warrant that the actual broadcast information shown on this invoice was taken from the program log. We warrant spots are posted within two minutes of actual airtime.<br><br>
+        Non-Discrimination: TEGNA Media and its stations do not discriminate in advertising contracts on the basis of race, gender or ethnicity. Any provision in any order or agreement for advertising that purports to discriminate on the basis of race, gender or ethnicity, even if handwritten, typed or otherwise made a part of the particular contract, is hereby rejected.
+    </div>
+
+    <div class="footer">
+        powered by WideOrbit
+    </div>
+
+</div>
+
+</body>
+</html>

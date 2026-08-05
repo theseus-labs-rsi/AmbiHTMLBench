@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>window.MathJax={tex:{inlineMath:[["$","$"]],displayMath:[["$$","$$"]]}};</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mozilla Support - Search Support</title>
+    <style>
+        :root {
+            --primary-blue: #0060df;
+            --text-dark: #1a1a1a;
+            --text-gray: #4a4a4a;
+            --text-light: #7a7a7a;
+            --bg-light: #f9f9fb;
+            --border-color: #dcdcdc;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            color: var(--text-dark);
+            background-color: #fff;
+            line-height: 1.5;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--primary-blue);
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            background: #fff;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 0.5rem 1.25rem;
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: white;
+            border: 1px solid var(--primary-blue);
+        }
+
+        .btn-secondary {
+            background-color: white;
+            color: var(--primary-blue);
+            border: 1px solid var(--primary-blue);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Search Hero */
+        .search-hero {
+            text-align: center;
+            padding: 4rem 0 2rem;
+            background-color: var(--bg-light);
+            margin: -2rem -2rem 3rem -2rem; /* Pull to edges of container padding */
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+
+        .search-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: #2c2c4e;
+        }
+
+        .search-box-wrapper {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.8rem 3rem 0.8rem 1rem;
+            font-size: 1rem;
+            border: 1px solid #999;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            cursor: pointer;
+        }
+
+        .popular-searches {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+        }
+
+        .popular-searches span {
+            margin-right: 0.5rem;
+        }
+
+        /* Get Help Section */
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #2c2c4e;
+        }
+
+        .section-subtitle {
+            font-size: 1rem;
+            color: var(--text-gray);
+            margin-bottom: 2rem;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .product-card {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            transition: box-shadow 0.2s;
+            background: white;
+        }
+
+        .product-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            font-size: 0.8rem;
+            color: #666;
+            font-weight: bold;
+        }
+        
+        /* Specific icon placeholders based on visual */
+        .icon-firefox { background: radial-gradient(circle at 30% 30%, #ff9500, #ff0000); }
+        .icon-android { background: #3ddc84; }
+        .icon-ios { background: #000; color: white; }
+        .icon-vpn { background: #000; color: white; border-radius: 50%; }
+        .icon-relay { background: #a64bf4; }
+        .icon-monitor { background: #ff006e; }
+        .icon-mdn { background: #000; color: white; }
+        .icon-focus { background: #8a2be2; }
+        .icon-enterprise { background: radial-gradient(circle at 30% 30%, #ff9500, #ff0000); }
+        .icon-thunderbird { background: #0061e0; }
+
+        .card-content h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+            color: var(--text-dark);
+        }
+
+        .card-content p {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+            line-height: 1.4;
+        }
+
+        /* Featured Articles */
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .article-card {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .article-icon {
+            width: 32px;
+            height: 32px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+        }
+
+        .article-card h4 {
+            font-size: 1rem;
+            color: var(--text-dark);
+            line-height: 1.4;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem;
+            }
+            .search-hero {
+                margin: -1rem -1rem 2rem -1rem;
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <span>Mozilla</span>
+            <span>Support</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#">Explore Help Articles</a></li>
+            <li><a href="#">Community Forums</a></li>
+            <li><a href="#">Ask a Question</a></li>
+            <li><a href="#">Contribute</a></li>
+        </ul>
+        <div class="header-actions">
+            <a href="#" class="btn btn-primary">Download Firefox</a>
+            <a href="#" class="btn btn-secondary">Sign In/Up</a>
+        </div>
+    </header>
+
+    <div class="search-hero">
+        <h1>Search Support</h1>
+        <div class="search-box-wrapper">
+            <input type="text" class="search-input" placeholder="Search questions, articles, or topics (example: saving passwords in Firefox)">
+            <span class="search-icon">🔍</span>
+        </div>
+        <div class="popular-searches">
+            <span>Popular Searches:</span>
+            <a href="#">Mozilla account</a>
+            <a href="#">VPN</a>
+            <a href="#">Tracking Protection</a>
+            <a href="#">Windows 10</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <section>
+            <h2 class="section-title">Get Help</h2>
+            <p class="section-subtitle">Pick your product</p>
+            
+            <div class="product-grid">
+                <!-- Card 1 -->
+                <div class="product-card">
+                    <div class="card-icon icon-firefox">[Logo]</div>
+                    <div class="card-content">
+                        <h3>Firefox</h3>
+                        <p>Web browser for Windows, Mac and Linux</p>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="product-card">
+                    <div class="card-icon icon-android">[Logo]</div>
+                    <div class="card-content">
+                        <h3>Firefox for Android</h3>
+                        <p>Web browser for Android smartphones and tablets</p>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="product-card">
+                    <div class="card-icon icon-ios">[Logo]</div>
+                    <div class="card-content">
+                        <h3>Firefox for iOS</h3>
+                        <p>Firefox for iPhone, iPad and iPod touch devices</p>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="product-card">
+                    <div class="card-icon icon-vpn">[Logo]</div>
+                    <div class="card-content">
+                        <h3>Mozilla VPN</h3>
+                        <p>VPN for Windows, Mac, Linux, Android, and iOS devices</p>
+                    </div>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="product-card">
+                    <div class="card-icon icon-relay">[Logo]</div>
+                    <div class="card-content">
+                        <h3>Firefox Relay</h3>
+                        <p>Service that lets you create email masks to hide your real email address</p>
+                    </div>
+                </div>
+
+                <!-- Card 6 -->
+                <div class="product-card">
+                    <div class="card-icon icon-monitor">[Logo]</div>
+                    <div class="card-content">
+                        <h3>Mozilla Monitor</h3>
+                        <p>Find out if your private information has been exposed in a known data breach</p>
+                    </div>
+                </div>
+
+                <!-- Card 7 -->
+                <div class="product-card">
+                    <div class="card-icon icon-mdn">M</div>
+                    <div class="card-content">
+                        <h3>MDN Plus</h3>
+                        <p>MDN Plus provides a custom user experience for MDN supporters</p>
+                    </div>
+                </div>
+
+                <!-- Card 8 -->
+                <div class="product-card">
+                    <div class="card-icon icon-focus">[Logo]</div>
+                    <div class="card-content">
+                        <h3>Firefox Focus</h3>
+                        <p>Automatic privacy browser and content blocker</p>
+                    </div>
+                </div>
+
+                <!-- Card 9 -->
+                <div class="product-card">
+                    <div class="card-icon icon-enterprise">[Logo]</div>
+                    <div class="card-content">
+                        <h3>Firefox for Enterprise</h3>
+                        <p>Firefox Quantum for businesses</p>
+                    </div>
+                </div>
+
+                <!-- Card 10 -->
+                <div class="product-card">
+                    <div class="card-icon icon-thunderbird">[Logo]</div>
+                    <div class="card-content">
+                        <h3>Thunderbird</h3>
+                        <p>Email software for Windows, Mac and Linux</p>
+                    </div>
+                </div>
+
+                <!-- Card 11 -->
+                <div class="product-card">
+                    <div class="card-icon icon-thunderbird">[Logo]</div>
+                    <div class="card-content">
+                        <h3>Thunderbird for Android</h3>
+                        <p>Email app for Android smartphones and tablets</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="section-title">Featured Articles</h2>
+            <div class="articles-grid">
+                <div class="article-card">
+                    <div class="article-icon">📄</div>
+                    <h4>What Windows 10 end of support means for Firefox users</h4>
+                </div>
+                <div class="article-card">
+                    <div class="article-icon">📄</div>
+                    <h4>Secure connection and security warning error pages in Firefox</h4>
+                </div>
+                <div class="article-card">
+                    <div class="article-icon">📄</div>
+                    <h4>Make Firefox your default browser on Windows</h4>
+                </div>
+                <div class="article-card">
+                    <div class="article-icon">📄</div>
+                    <h4>Insecure connection password warning in Firefox</h4>
+                </div>
+            </div>
+        </section>
+    </div>
+
+</body>
+</html>

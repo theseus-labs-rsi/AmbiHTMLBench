@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>window.MathJax={tex:{inlineMath:[["$","$"]],displayMath:[["$$","$$"]]}};</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mirror News Feed</title>
+    <style>
+        :root {
+            --bg-color: #12121c;
+            --text-color: #ffffff;
+            --secondary-text: #a0a0a0;
+            --accent-red: #d32f2f;
+            --nav-bg: #b71c1c;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            background-color: var(--bg-color);
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        /* Status Bar */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* Navigation */
+        .nav-bar {
+            display: flex;
+            background-color: var(--nav-bg);
+            padding: 10px 0;
+            overflow-x: auto;
+        }
+
+        .nav-item {
+            padding: 8px 16px;
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            white-space: nowrap;
+            cursor: pointer;
+            border-right: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .nav-item:first-child {
+            border-left: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .nav-icon {
+            display: inline-block;
+            width: 20px;
+            text-align: center;
+            margin-right: 5px;
+        }
+
+        /* Logo Area */
+        .logo-area {
+            padding: 15px 20px;
+        }
+
+        .logo {
+            background-color: var(--accent-red);
+            color: white;
+            font-family: "Arial Black", sans-serif;
+            font-size: 32px;
+            font-style: italic;
+            display: inline-block;
+            padding: 5px 10px;
+            transform: skew(-10deg);
+        }
+
+        /* Main Story */
+        .main-story {
+            padding: 0 20px 20px 20px;
+        }
+
+        .main-image-placeholder {
+            width: 100%;
+            height: 300px;
+            background-color: #333;
+            background-image: linear-gradient(45deg, #222 25%, #333 25%, #333 50%, #222 50%, #222 75%, #333 75%, #333 100%);
+            background-size: 20px 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #555;
+            font-weight: bold;
+            position: relative;
+        }
+        
+        /* Simulating the face in the image roughly */
+        .main-image-placeholder::after {
+            content: "[Image: Man with black eye]";
+            background: rgba(0,0,0,0.7);
+            padding: 10px;
+        }
+
+        .headline {
+            font-size: 22px;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 10px;
+        }
+
+        .byline {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--secondary-text);
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+        }
+
+        .byline span {
+            margin-left: 5px;
+        }
+
+        /* News Grid */
+        .news-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 0 20px 80px 20px;
+        }
+
+        .news-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .news-image-placeholder {
+            width: 100%;
+            height: 150px;
+            background-color: #444;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 12px;
+        }
+
+        .news-headline {
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 1.4;
+            margin-bottom: 5px;
+            color: var(--text-color);
+        }
+
+        .news-category {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--secondary-text);
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+        }
+        
+        .news-category span {
+            margin-left: 4px;
+        }
+
+        /* Specific adjustments for layout fidelity */
+        .item-gcse .news-image-placeholder {
+            height: 180px;
+        }
+        
+        .item-spy .news-headline {
+            font-size: 15px;
+        }
+
+        .item-rollercoaster .news-headline {
+             font-size: 15px;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            background-color: #000;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0 20px 0; /* Extra padding for the 'notch' area simulation */
+            border-top: 1px solid #333;
+            z-index: 100;
+        }
+
+        .nav-link {
+            color: var(--secondary-text);
+            text-align: center;
+            font-size: 12px;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .nav-link.active {
+            color: white;
+        }
+
+        .nav-icon-svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span>8:43</span>
+            <div style="display: flex; gap: 5px; align-items: center;">
+                <svg width="18" height="12" viewBox="0 0 18 12" fill="white"><path d="M1 9C1 9.55228 1.44772 10 2 10H4C4.55228 10 5 9.55228 5 9V1C5 0.447715 4.55228 0 4 0H2C1.44772 0 1 0.447715 1 1V9ZM7 6C7 6.55228 7.44772 7 8 7H10C10.5523 7 11 6.55228 11 6V1C11 0.447715 10.5523 0 10 0H8C7.44772 0 7 0.447715 7 1V6ZM13 3C13 3.55228 13.4477 4 14 4H16C16.5523 4 17 3.55228 17 3V1C17 0.447715 16.5523 0 16 0H14C13.4477 0 13 0.447715 13 1V3Z"/></svg>
+                <svg width="20" height="12" viewBox="0 0 24 12" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12H24C24 5.373 18.627 0 12 0ZM12 2C14.5 2 16.8 2.9 18.6 4.4L12 10.6L5.4 4.4C7.2 2.9 9.5 2 12 2Z"/></svg>
+                <svg width="24" height="12" viewBox="0 0 24 12" fill="white"><rect x="2" y="2" width="16" height="8" rx="2" stroke="white" stroke-width="2" fill="none"/><rect x="4" y="4" width="12" height="4" rx="1" fill="white"/><path d="M20 4H22V8H20V4Z" fill="white"/></svg>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-bar">
+            <div class="nav-item"><span class="nav-icon">+</span>Top Stories</div>
+            <div class="nav-item">News</div>
+            <div class="nav-item">Politics</div>
+        </div>
+
+        <!-- Logo -->
+        <div class="logo-area">
+            <div class="logo">Mirror</div>
+        </div>
+
+        <!-- Main Story -->
+        <div class="main-story">
+            <div class="main-image-placeholder">
+                <!-- Image of Alan Carr -->
+            </div>
+            <h1 class="headline">Alan Carr's husband says 'he never hit me' as he dismisses black eye pic rumours</h1>
+            <div class="byline">
+                Alan Carr <span>&#9658;</span>
+            </div>
+        </div>
+
+        <!-- News Grid -->
+        <div class="news-grid">
+            
+            <!-- Item 1: GCSE -->
+            <div class="news-item item-gcse">
+                <div class="news-image-placeholder">
+                    [Image: Students celebrating]
+                </div>
+                <div class="news-headline">GCSE results hit record high after cancelled exams - with 30% getting top grades</div>
+                <div class="news-category">
+                    GCSEs <span>&#9658;</span>
+                </div>
+            </div>
+
+            <!-- Item 2: Bus Crash -->
+            <div class="news-item item-bus">
+                <!-- No image visible in crop for this specific item, just text block -->
+                <div class="news-headline">Woman, 32, killed in horror bus crash described as 'kind and thoughtful soul'</div>
+                <div class="news-category">
+                    Transport for Lon...
+                </div>
+            </div>
+
+            <!-- Item 3: Rollercoaster -->
+            <div class="news-item item-rollercoaster">
+                <!-- Image likely above or cut off, text is at bottom -->
+                <div class="news-headline">Rollercoaster comes off tracks at UK theme park as emergency crews</div>
+            </div>
+
+            <!-- Item 4: Spy Suspect -->
+            <div class="news-item item-spy">
+                <div class="news-headline">Brit spy suspect is 'stocky bald man with right-wing views who drives a Fiesta'</div>
+                <div class="news-category">
+                    Military Intelligen...
+                </div>
+            </div>
+
+            <!-- Item 5: Two Women Image -->
+            <div class="news-item item-women">
+                <div class="news-image-placeholder" style="height: 120px;">
+                    [Image: Two women standing]
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <a href="#" class="nav-link active">
+                <svg class="nav-icon-svg" viewBox="0 0 24 24"><path d="M4 6h16v12H4z"/></svg>
+                My News
+            </a>
+            <a href="#" class="nav-link">
+                <svg class="nav-icon-svg" viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2zm0 3.5L18.5 20h-13L12 5.5z"/></svg>
+                Discover
+            </a>
+            <a href="#" class="nav-link">
+                <svg class="nav-icon-svg" viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2zm0 15l-5-2.18L7 18V5h10v13z"/></svg>
+                Bookmarks
+            </a>
+            <a href="#" class="nav-link">
+                <svg class="nav-icon-svg" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                My Account
+            </a>
+        </div>
+
+    </div>
+
+</body>
+</html>

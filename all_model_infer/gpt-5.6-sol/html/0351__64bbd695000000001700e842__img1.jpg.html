@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Film Subtitles</title>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+    background: #171713;
+  }
+
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  .page {
+    position: relative;
+    width: 540px;
+    height: 720px;
+    overflow: hidden;
+    background:
+      linear-gradient(90deg,
+        #77715b 0 5%,
+        #2a281f 5% 7%,
+        #aaa28c 7% 30%,
+        #5f594b 30% 33%,
+        #888170 33% 72%,
+        #312f27 72% 75%,
+        #9a8774 75% 100%);
+  }
+
+  .placeholder {
+    position: absolute;
+    inset: 0;
+    width: 540px;
+    height: 720px;
+    overflow: hidden;
+  }
+
+  .placeholder-caption {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+
+  /* Interior wall and doorway */
+  .wall-left {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 204px;
+    background:
+      linear-gradient(90deg,
+        rgba(45, 43, 31, .6) 0 5%,
+        rgba(155, 150, 126, .25) 5% 9%,
+        rgba(64, 61, 48, .35) 9% 12%,
+        rgba(184, 177, 151, .18) 12% 95%,
+        rgba(43, 42, 35, .55) 95% 100%),
+      linear-gradient(#9a927a, #847c66);
+  }
+
+  .wall-right {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 139px;
+    height: 348px;
+    background:
+      radial-gradient(circle at 73% 12%, rgba(111, 127, 107, .25) 0 3px, transparent 4px),
+      radial-gradient(circle at 35% 30%, rgba(111, 127, 107, .2) 0 4px, transparent 5px),
+      radial-gradient(circle at 78% 55%, rgba(139, 99, 91, .2) 0 5px, transparent 6px),
+      linear-gradient(110deg, rgba(181, 158, 137, .55), rgba(129, 116, 101, .42)),
+      #9b8b7b;
+  }
+
+  .frame-left {
+    position: absolute;
+    top: 0;
+    left: 24px;
+    width: 17px;
+    height: 350px;
+    border-left: 3px solid rgba(45, 43, 32, .7);
+    border-right: 2px solid rgba(182, 174, 146, .4);
+    background: #77725d;
+  }
+
+  .frame-right {
+    position: absolute;
+    top: 0;
+    left: 390px;
+    width: 15px;
+    height: 357px;
+    border-left: 3px solid rgba(35, 34, 28, .75);
+    border-right: 2px solid rgba(170, 158, 135, .35);
+    background: #59564a;
+  }
+
+  /* Seated figure */
+  .head {
+    position: absolute;
+    top: -34px;
+    left: 242px;
+    width: 81px;
+    height: 93px;
+    border-radius: 44% 48% 43% 48%;
+    transform: rotate(8deg);
+    background:
+      radial-gradient(ellipse at 63% 51%, #5c241d 0 3px, transparent 4px),
+      radial-gradient(ellipse at 42% 37%, #713329 0 4px, transparent 5px),
+      linear-gradient(135deg, #a35a47 5%, #b66a54 48%, #724033 100%);
+    box-shadow: inset 10px 2px 10px rgba(69, 32, 27, .55);
+  }
+
+  .neck {
+    position: absolute;
+    top: 32px;
+    left: 267px;
+    width: 45px;
+    height: 43px;
+    background: #995745;
+    transform: rotate(5deg);
+  }
+
+  .shirt {
+    position: absolute;
+    top: 33px;
+    left: 228px;
+    width: 105px;
+    height: 135px;
+    clip-path: polygon(14% 0, 85% 0, 100% 100%, 0 100%);
+    background:
+      repeating-linear-gradient(
+        0deg,
+        #c4bbb0 0 4px,
+        #625f58 4px 6px,
+        #d2c9be 6px 10px
+      );
+  }
+
+  .blanket-upper {
+    position: absolute;
+    top: -9px;
+    left: 173px;
+    width: 226px;
+    height: 306px;
+    clip-path: polygon(31% 0, 76% 0, 91% 22%, 87% 58%, 100% 100%, 2% 100%, 11% 39%);
+    background:
+      repeating-linear-gradient(33deg,
+        transparent 0 30px,
+        rgba(93, 38, 33, .8) 31px 41px,
+        transparent 42px 69px),
+      repeating-linear-gradient(122deg,
+        transparent 0 38px,
+        rgba(105, 47, 37, .72) 39px 50px,
+        transparent 51px 81px),
+      repeating-linear-gradient(0deg,
+        rgba(217, 137, 68, .75) 0 38px,
+        rgba(117, 61, 42, .48) 39px 49px,
+        rgba(190, 110, 60, .7) 50px 78px);
+    filter: saturate(.75) brightness(.82);
+  }
+
+  .hand-one,
+  .hand-two {
+    position: absolute;
+    z-index: 2;
+    background: linear-gradient(120deg, #a75c48, #71382e);
+    border-radius: 45%;
+    box-shadow: inset 4px -2px 5px rgba(58, 24, 20, .4);
+  }
+
+  .hand-one {
+    top: 72px;
+    left: 217px;
+    width: 37px;
+    height: 66px;
+    transform: rotate(-18deg);
+  }
+
+  .hand-two {
+    top: 97px;
+    left: 239px;
+    width: 25px;
+    height: 44px;
+    transform: rotate(18deg);
+  }
+
+  .bench {
+    position: absolute;
+    top: 133px;
+    left: -20px;
+    width: 580px;
+    height: 49px;
+    transform: rotate(.5deg);
+    background:
+      linear-gradient(0deg, rgba(39, 28, 20, .85), rgba(103, 73, 52, .8)),
+      repeating-linear-gradient(90deg, transparent 0 80px, rgba(32, 23, 18, .3) 81px 84px);
+    border-top: 2px solid rgba(44, 30, 22, .75);
+    border-bottom: 3px solid rgba(49, 32, 23, .6);
+  }
+
+  .blanket-lower {
+    position: absolute;
+    top: 176px;
+    left: 111px;
+    width: 360px;
+    height: 388px;
+    clip-path: polygon(22% 0, 76% 0, 100% 91%, 19% 100%, 0 56%);
+    background:
+      repeating-linear-gradient(38deg,
+        transparent 0 41px,
+        rgba(86, 38, 31, .72) 42px 56px,
+        transparent 57px 96px),
+      repeating-linear-gradient(132deg,
+        transparent 0 45px,
+        rgba(119, 52, 38, .7) 46px 60px,
+        transparent 61px 102px),
+      repeating-linear-gradient(0deg,
+        #b86d42 0 47px,
+        #703d34 48px 58px,
+        #c07b48 59px 103px);
+    filter: saturate(.66) brightness(.65);
+  }
+
+  .chair {
+    position: absolute;
+    left: 84px;
+    top: 365px;
+    width: 75px;
+    height: 355px;
+    background:
+      repeating-linear-gradient(0deg,
+        #4b321f 0 32px,
+        #21170f 33px 39px,
+        #5e4028 40px 72px);
+    border-left: 6px solid #291c13;
+    border-right: 5px solid #211710;
+    transform: skewY(-2deg);
+  }
+
+  .leg-left,
+  .leg-right {
+    position: absolute;
+    top: 355px;
+    height: 365px;
+    border-radius: 38% 38% 8% 8%;
+    background:
+      repeating-linear-gradient(15deg,
+        #322820 0 26px,
+        #181513 27px 49px,
+        #46352a 50px 71px);
+  }
+
+  .leg-left {
+    left: 174px;
+    width: 116px;
+    transform: rotate(6deg);
+  }
+
+  .leg-right {
+    left: 311px;
+    width: 144px;
+    transform: rotate(-5deg);
+  }
+
+  .floor {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 540px;
+    height: 165px;
+    background:
+      repeating-linear-gradient(0deg,
+        rgba(93, 80, 57, .76) 0 45px,
+        rgba(38, 32, 24, .8) 46px 50px),
+      #685b44;
+    opacity: .78;
+  }
+
+  .subtitles {
+    position: absolute;
+    z-index: 10;
+    top: 139px;
+    left: 0;
+    width: 540px;
+  }
+
+  .subtitle {
+    width: 100%;
+    height: 41px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    text-align: center;
+    color: #fff;
+    background: rgba(15, 14, 13, .48);
+  }
+
+  .subtitle:nth-child(even) {
+    background: rgba(18, 15, 14, .35);
+  }
+
+  .subtitle:nth-child(3n) {
+    background: rgba(12, 12, 12, .54);
+  }
+
+  .zh {
+    font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", SimHei, sans-serif;
+    font-size: 19px;
+    line-height: 21px;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-shadow:
+      -1px -1px 1px #111,
+       1px -1px 1px #111,
+      -1px  1px 1px #111,
+       1px  1px 1px #111,
+       0 2px 2px #000;
+  }
+
+  .en {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12.5px;
+    line-height: 15px;
+    font-weight: 400;
+    text-shadow:
+      -1px -1px 1px #111,
+       1px -1px 1px #111,
+      -1px  1px 1px #111,
+       1px  1px 1px #111,
+       0 1px 2px #000;
+  }
+</style>
+</head>
+<body>
+<main class="page">
+  <div class="placeholder">
+    <span class="placeholder-caption">[Photo: a seated woman wrapped in a plaid blanket indoors]</span>
+    <div class="wall-left"></div>
+    <div class="wall-right"></div>
+    <div class="frame-left"></div>
+    <div class="frame-right"></div>
+    <div class="floor"></div>
+    <div class="chair"></div>
+    <div class="leg-left"></div>
+    <div class="leg-right"></div>
+    <div class="head"></div>
+    <div class="neck"></div>
+    <div class="shirt"></div>
+    <div class="blanket-upper"></div>
+    <div class="hand-one"></div>
+    <div class="hand-two"></div>
+    <div class="bench"></div>
+    <div class="blanket-lower"></div>
+  </div>
+
+  <section class="subtitles">
+    <div class="subtitle">
+      <div class="zh">它不会像子弹射入胸腔</div>
+      <div class="en">It doesn't actually kill you,</div>
+    </div>
+    <div class="subtitle">
+      <div class="zh">或是迎面而来的车祸 那样真的杀了你</div>
+      <div class="en">like a bullet to the heart or a head-on car wreck.</div>
+    </div>
+    <div class="subtitle">
+      <div class="zh">但是它会让你死</div>
+      <div class="en">It should.</div>
+    </div>
+    <div class="subtitle">
+      <div class="zh">当你至死不逾的爱人对你说</div>
+      <div class="en">When someone you've promised to cherish till death do you part</div>
+    </div>
+    <div class="subtitle">
+      <div class="zh">我从未爱过你 你立刻就被杀死了</div>
+      <div class="en">says, "I never loved you," it should kill you instantly.</div>
+    </div>
+    <div class="subtitle">
+      <div class="zh">发生了这种事 你会成日混混沌沌</div>
+      <div class="en">You shouldn't have to wake up day after day after that,</div>
+    </div>
+    <div class="subtitle">
+      <div class="zh">试图去理解这世界为什么会这样</div>
+      <div class="en">trying to understand how in the world you didn't know.</div>
+    </div>
+    <div class="subtitle">
+      <div class="zh">好像从未有过光明</div>
+      <div class="en">The light just never went on, you know.</div>
+    </div>
+    <div class="subtitle">
+      <div class="zh">当然 我应该早就知道的</div>
+      <div class="en">I must have have known, of course,</div>
+    </div>
+    <div class="subtitle">
+      <div class="zh">但是我却如此害怕去看到事实</div>
+      <div class="en">but I was too scared to see the truth.</div>
+    </div>
+    <div class="subtitle">
+      <div class="zh">于是恐惧让你变得愚蠢</div>
+      <div class="en">Then fear just makes you so stupid.</div>
+    </div>
+    <div class="subtitle">
+      <div class="zh">不 这不愚蠢 梅丝夫人</div>
+      <div class="en">No. It's not stupid, Signora Mayes.</div>
+    </div>
+    <div class="subtitle">
+      <div class="zh">爱是盲目的</div>
+      <div class="en">L'amore è cieco.</div>
+    </div>
+    <div class="subtitle">
+      <div class="zh">每个人都知道 因为它是条真理</div>
+      <div class="en">Everybody has that saying because it's true everywhere.</div>
+    </div>
+  </section>
+</main>
+</body>
+</html>

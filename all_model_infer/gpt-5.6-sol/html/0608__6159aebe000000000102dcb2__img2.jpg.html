@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>山里的约会</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    min-height: 100%;
+    background: #d9e5dc;
+  }
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    font-family: "Noto Sans CJK SC", "Microsoft YaHei", "PingFang SC", sans-serif;
+  }
+  .page {
+    position: relative;
+    width: 540px;
+    height: 720px;
+    overflow: hidden;
+    color: #143d29;
+    background: #e5f2ef;
+    box-shadow: 0 0 12px rgba(16, 54, 37, 0.16);
+  }
+  .placeholder {
+    position: absolute;
+    inset: 0;
+    width: 540px;
+    height: 720px;
+    overflow: hidden;
+  }
+  .placeholder-caption {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .artwork {
+    display: block;
+    width: 540px;
+    height: 720px;
+  }
+  .side-strip {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    bottom: 0;
+    left: 2px;
+    width: 60px;
+    background: rgba(239, 250, 246, 0.58);
+  }
+  .category {
+    position: absolute;
+    z-index: 5;
+    top: -4px;
+    left: 28px;
+    margin: 0;
+    color: #123d27;
+    font-size: 25px;
+    line-height: 1.02;
+    font-weight: 900;
+    letter-spacing: 3px;
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+  }
+  .season-one,
+  .season-two {
+    position: absolute;
+    z-index: 5;
+    left: 48px;
+    margin: 0;
+    color: #143f2b;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 800;
+    line-height: 1;
+    white-space: nowrap;
+    transform: rotate(90deg);
+    transform-origin: left top;
+  }
+  .season-one {
+    top: 237px;
+    font-size: 24px;
+    letter-spacing: -0.6px;
+  }
+  .season-two {
+    top: 610px;
+    font-size: 24px;
+    letter-spacing: 0.2px;
+  }
+  .intro {
+    position: absolute;
+    z-index: 5;
+    top: 3px;
+    right: 19px;
+    width: 370px;
+    margin: 0;
+    color: #244b3a;
+    text-align: right;
+    font-family: "SimSun", "Songti SC", serif;
+    font-size: 13px;
+    line-height: 1.75;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .title {
+    position: absolute;
+    z-index: 5;
+    top: 52px;
+    left: 193px;
+    width: 165px;
+    height: 330px;
+    color: #113e25;
+    font-family: "STKaiti", "KaiTi", "Kaiti SC", "FangSong", serif;
+    font-weight: 900;
+  }
+  .title span {
+    position: absolute;
+    display: block;
+    line-height: 1;
+    text-shadow: 0.5px 0 #113e25, -0.5px 0 #113e25;
+  }
+  .title .shan {
+    top: 0;
+    left: 89px;
+    font-size: 74px;
+    transform: rotate(1deg) scaleX(0.9);
+  }
+  .title .li {
+    top: 86px;
+    left: 79px;
+    font-size: 78px;
+    transform: rotate(-1deg) scaleX(0.9);
+  }
+  .title .de {
+    top: 190px;
+    left: 81px;
+    font-size: 69px;
+    transform: rotate(1deg) scaleX(0.9);
+  }
+  .title .yue {
+    top: 115px;
+    left: 4px;
+    font-size: 72px;
+    transform: rotate(5deg) scaleX(0.9);
+  }
+  .title .hui {
+    top: 226px;
+    left: 9px;
+    font-size: 72px;
+    transform: rotate(-5deg) scaleX(0.92);
+  }
+  .watermark {
+    position: absolute;
+    z-index: 6;
+    top: 417px;
+    left: 290px;
+    display: flex;
+    align-items: flex-start;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(43, 76, 54, 0.42);
+  }
+  .heart {
+    position: relative;
+    width: 28px;
+    height: 28px;
+    margin: 4px 5px 0 0;
+  }
+  .heart::before,
+  .heart::after {
+    content: "";
+    position: absolute;
+    background: #fff;
+  }
+  .heart::before {
+    top: 3px;
+    left: 5px;
+    width: 18px;
+    height: 16px;
+    border-radius: 11px 11px 12px 2px;
+    transform: rotate(35deg);
+  }
+  .heart::after {
+    top: 17px;
+    left: 15px;
+    width: 4px;
+    height: 12px;
+    border-radius: 4px;
+    transform: rotate(24deg);
+  }
+  .watermark-main {
+    font-size: 15px;
+    line-height: 1.18;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .watermark-sub {
+    margin-top: 3px;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .bottom-copy {
+    position: absolute;
+    z-index: 6;
+    inset: 0;
+    color: #315140;
+    font-family: "SimSun", "Songti SC", serif;
+    font-size: 14px;
+    line-height: 1.75;
+    text-shadow: 0 1px rgba(255,255,255,0.32);
+  }
+  .copy-left,
+  .copy-middle,
+  .copy-right {
+    position: absolute;
+    margin: 0;
+    white-space: nowrap;
+  }
+  .copy-left {
+    top: 679px;
+    left: 95px;
+    text-align: center;
+  }
+  .copy-middle {
+    top: 679px;
+    left: 244px;
+    text-align: center;
+  }
+  .copy-right {
+    top: 655px;
+    right: 19px;
+    text-align: right;
+  }
+</style>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+<main class="page">
+  <figure class="placeholder">
+    <span class="placeholder-caption">[Illustration: watercolor mountain countryside with fields, trees, stone walls, and people]</span>
+    <svg class="artwork" viewBox="0 0 540 720" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#e5f4f0"/>
+          <stop offset="0.52" stop-color="#e9f5f2"/>
+          <stop offset="1" stop-color="#cddfc8"/>
+        </linearGradient>
+        <linearGradient id="field" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#b8c69b"/>
+          <stop offset="0.45" stop-color="#c6cf9c"/>
+          <stop offset="1" stop-color="#d4dda9"/>
+        </linearGradient>
+        <filter id="soft">
+          <feGaussianBlur stdDeviation="2.6"/>
+        </filter>
+        <filter id="rough">
+          <feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="2" seed="8" result="noise"/>
+          <feBlend in="SourceGraphic" in2="noise" mode="soft-light"/>
+        </filter>
+        <g id="tree">
+          <rect x="-2" y="17" width="4" height="20" fill="#685d39"/>
+          <circle cx="-8" cy="15" r="11" fill="#467b3f"/>
+          <circle cx="3" cy="10" r="13" fill="#2f6d39"/>
+          <circle cx="12" cy="17" r="10" fill="#3e793c"/>
+          <circle cx="-1" cy="21" r="13" fill="#558441"/>
+        </g>
+        <g id="person">
+          <circle cx="0" cy="0" r="3" fill="#d7a77e"/>
+          <path d="M-3 4 L3 4 L5 18 L-5 18 Z" fill="#eee8d7"/>
+          <path d="M-3 18 L-5 30 M3 18 L5 30" stroke="#3f493d" stroke-width="2"/>
+        </g>
+      </defs>
+
+      <rect width="540" height="720" fill="url(#sky)"/>
+
+      <g opacity=".42" filter="url(#soft)" fill="#b3dacf">
+        <path d="M0 26 C58 5 85 24 119 48 C151 69 172 39 211 50 C251 62 265 93 236 111 C194 137 136 113 102 116 C58 119 32 145 0 134 Z"/>
+        <path d="M215 3 C251 2 269 22 301 22 C350 22 359 1 405 4 C451 8 484 34 540 28 L540 82 C492 97 442 77 400 91 C354 106 315 119 273 98 C240 81 220 54 215 3 Z"/>
+        <path d="M0 151 C34 131 75 148 104 167 C139 188 177 181 198 208 C220 236 193 258 154 248 C108 237 79 210 41 222 C24 228 11 235 0 234 Z"/>
+        <path d="M289 150 C343 131 374 156 414 170 C459 186 492 165 540 174 L540 232 C509 244 473 229 438 239 C384 255 344 253 312 226 C288 205 277 177 289 150 Z"/>
+        <path d="M0 267 C45 245 93 260 135 279 C171 295 211 280 245 300 C277 319 274 346 231 355 C186 363 149 337 110 341 C65 346 38 372 0 360 Z"/>
+        <path d="M324 274 C364 245 409 257 443 277 C477 296 512 285 540 290 L540 351 C500 362 472 344 439 350 C398 358 358 354 329 331 C310 316 308 291 324 274 Z"/>
+      </g>
+
+      <g opacity=".22" fill="#83c5b4">
+        <path d="M54 0 C77 42 121 62 112 104 C105 140 55 149 0 137 L0 0 Z"/>
+        <path d="M483 72 C519 79 528 104 540 125 L540 216 C514 209 482 191 475 161 C469 129 486 107 483 72 Z"/>
+        <path d="M17 178 C64 179 82 202 72 236 C63 265 26 274 0 267 L0 190 Z"/>
+      </g>
+
+      <path d="M177 417 C222 389 255 378 294 395 C327 410 337 383 365 369 C388 357 412 377 432 394 L432 450 L168 450 Z"
+            fill="#74a992" opacity=".88"/>
+      <path d="M305 416 C343 381 354 363 377 361 C391 360 396 350 408 354 C420 340 430 359 440 359 C453 359 458 374 477 377 C499 381 517 398 540 418 L540 461 L294 458 Z"
+            fill="#547d54"/>
+      <path d="M376 383 L393 366 L404 369 L417 352 L431 361 L443 359 L463 381 L482 390 L467 405 Z"
+            fill="#898b42" opacity=".92"/>
+      <path d="M0 408 C49 404 75 417 103 425 C140 435 172 422 207 417 C250 411 289 428 323 430 C364 433 402 410 438 414 C482 419 510 437 540 451 L540 485 L0 485 Z"
+            fill="#4b8f59"/>
+      <path d="M0 435 C42 426 79 442 114 444 C162 447 192 429 236 435 C273 440 299 458 345 454 C391 449 422 427 466 435 C497 441 522 454 540 465 L540 512 L0 512 Z"
+            fill="#8ead70"/>
+
+      <g transform="translate(83 405) scale(.72)"><use href="#tree"/></g>
+      <g transform="translate(101 409) scale(.86)"><use href="#tree"/></g>
+      <g transform="translate(125 418) scale(.67)"><use href="#tree"/></g>
+      <g transform="translate(335 397) scale(.9)"><use href="#tree"/></g>
+      <g transform="translate(358 392) scale(1)"><use href="#tree"/></g>
+      <g transform="translate(386 398) scale(.8)"><use href="#tree"/></g>
+
+      <rect y="462" width="540" height="258" fill="url(#field)"/>
+
+      <g opacity=".8">
+        <path d="M0 463 C70 448 128 465 191 459 C268 451 327 473 391 461 C448 450 493 458 540 470"
+              fill="none" stroke="#7d9362" stroke-width="8"/>
+        <path d="M0 482 C80 468 147 489 218 477 C294 465 352 489 421 479 C467 472 507 477 540 485"
+              fill="none" stroke="#8ca06a" stroke-width="5"/>
+      </g>
+
+      <g fill="#a77250" opacity=".62">
+        <path d="M8 460 l2 30 M15 458 l3 31 M24 461 l-1 29 M35 458 l3 33 M44 460 l2 27 M55 458 l3 32"/>
+        <path d="M66 461 l2 28 M78 459 l2 30 M90 462 l-1 27 M103 460 l3 30 M116 459 l2 29"/>
+        <path d="M129 460 l1 31 M143 462 l2 27 M157 459 l3 31 M173 461 l1 28 M188 458 l2 32"/>
+        <path d="M206 462 l2 26 M220 459 l3 31 M237 461 l-1 29 M251 458 l3 32 M268 461 l2 28"/>
+        <path d="M284 460 l1 31 M300 462 l2 28 M316 459 l3 31 M334 460 l2 29 M351 458 l2 31"/>
+        <path d="M371 461 l2 27 M388 459 l2 31 M404 462 l-1 27 M420 458 l3 32 M438 460 l2 29"/>
+      </g>
+
+      <g fill="#d3c56b" opacity=".75">
+        <circle cx="31" cy="469" r="2"/><circle cx="66" cy="474" r="2"/><circle cx="96" cy="468" r="2"/>
+        <circle cx="139" cy="474" r="2"/><circle cx="178" cy="466" r="2"/><circle cx="216" cy="473" r="2"/>
+        <circle cx="259" cy="468" r="2"/><circle cx="303" cy="475" r="2"/><circle cx="347" cy="467" r="2"/>
+        <circle cx="390" cy="473" r="2"/><circle cx="432" cy="466" r="2"/><circle cx="471" cy="474" r="2"/>
+      </g>
+
+      <path d="M0 512 C88 498 162 522 239 512 C314 502 375 521 450 509 C486 504 514 507 540 515 L540 546
+               C468 533 400 549 333 539 C258 527 194 550 121 539 C73 532 33 537 0 541 Z"
+            fill="#8b9770"/>
+      <g fill="#aab19a" stroke="#6d7762" stroke-width=".7">
+        <ellipse cx="10" cy="521" rx="12" ry="5"/><ellipse cx="29" cy="516" rx="10" ry="6"/>
+        <ellipse cx="48" cy="523" rx="13" ry="5"/><ellipse cx="70" cy="517" rx="12" ry="6"/>
+        <ellipse cx="92" cy="524" rx="14" ry="6"/><ellipse cx="116" cy="516" rx="13" ry="5"/>
+        <ellipse cx="139" cy="523" rx="14" ry="6"/><ellipse cx="164" cy="517" rx="13" ry="5"/>
+        <ellipse cx="190" cy="524" rx="15" ry="6"/><ellipse cx="218" cy="517" rx="14" ry="6"/>
+        <ellipse cx="245" cy="523" rx="15" ry="6"/><ellipse cx="274" cy="516" rx="15" ry="5"/>
+        <ellipse cx="303" cy="524" rx="15" ry="6"/><ellipse cx="334" cy="517" rx="16" ry="5"/>
+        <ellipse cx="365" cy="524" rx="16" ry="6"/><ellipse cx="397" cy="516" rx="15" ry="5"/>
+        <ellipse cx="429" cy="523" rx="17" ry="6"/><ellipse cx="461" cy="516" rx="15" ry="5"/>
+        <ellipse cx="492" cy="523" rx="16" ry="6"/><ellipse cx="523" cy="517" rx="14" ry="5"/>
+      </g>
+
+      <g transform="translate(72 505) scale(.75)">
+        <use href="#person"/>
+        <path d="M-4 5 L4 5 L5 18 L-5 18 Z" fill="#4b9da0"/>
+      </g>
+      <g transform="translate(105 477) scale(.58)">
+        <use href="#person"/>
+        <path d="M-5 5 L5 5 L4 18 L-5 18 Z" fill="#34768d"/>
+      </g>
+      <g transform="translate(150 495) scale(.78)">
+        <use href="#person"/>
+        <path d="M-5 5 L5 5 L5 18 L-5 18 Z" fill="#a55b3f"/>
+      </g>
+      <g transform="translate(191 504) scale(.7)">
+        <use href="#person"/>
+        <path d="M-4 5 L4 5 L5 18 L-5 18 Z" fill="#e8e5d2"/>
+      </g>
+      <g transform="translate(289 471) scale(.5)">
+        <use href="#person"/>
+        <path d="M-5 5 L5 5 L4 18 L-5 18 Z" fill="#709bc1"/>
+      </g>
+      <g transform="translate(423 474) scale(.62)">
+        <use href="#person"/>
+        <path d="M-5 5 L5 5 L5 18 L-5 18 Z" fill="#2f7180"/>
+      </g>
+
+      <g transform="translate(125 554) scale(.72)">
+        <use href="#person"/>
+        <path d="M-5 5 L5 5 L5 18 L-5 18 Z" fill="#cfb33a"/>
+      </g>
+      <g transform="translate(151 542) scale(.83)">
+        <use href="#person"/>
+        <path d="M-5 5 L5 5 L5 19 L-5 19 Z" fill="#6a803c"/>
+      </g>
+      <g transform="translate(181 553) scale(1.02)">
+        <use href="#person"/>
+        <path d="M-6 5 L6 5 L7 19 L-7 19 Z" fill="#aa5969"/>
+      </g>
+      <g transform="translate(221 540) scale(.75)">
+        <use href="#person"/>
+        <path d="M-5 5 L5 5 L6 18 L-5 18 Z" fill="#b94f39"/>
+      </g>
+      <g transform="translate(260 559) scale(.9)">
+        <use href="#person"/>
+        <path d="M-5 5 L5 5 L6 19 L-6 19 Z" fill="#46a9ad"/>
+      </g>
+      <g transform="translate(304 540) scale(.8)">
+        <use href="#person"/>
+        <path d="M-6 5 L6 5 L5 19 L-5 19 Z" fill="#eee5d3"/>
+      </g>
+      <g transform="translate(350 531) scale(1)">
+        <use href="#person"/>
+        <path d="M-6 5 L6 5 L7 20 L-7 20 Z" fill="#eee9d9"/>
+        <path d="M7 7 L14 17" stroke="#704b30" stroke-width="2"/>
+      </g>
+      <g transform="translate(421 547) scale(.85)">
+        <use href="#person"/>
+        <path d="M-5 5 L5 5 L5 19 L-5 19 Z" fill="#d9bd3e"/>
+      </g>
+      <g transform="translate(499 538) scale(.88)">
+        <use href="#person"/>
+        <path d="M-5 5 L5 5 L6 19 L-6 19 Z" fill="#d8e2df"/>
+      </g>
+
+      <g transform="translate(455 399)">
+        <rect x="20" y="35" width="6" height="96" fill="#775c35"/>
+        <circle cx="12" cy="32" r="34" fill="#39733d"/>
+        <circle cx="42" cy="30" r="39" fill="#427e3d"/>
+        <circle cx="67" cy="50" r="35" fill="#4f8743"/>
+        <circle cx="25" cy="67" r="43" fill="#4f8340"/>
+        <circle cx="55" cy="79" r="35" fill="#558a43"/>
+        <g fill="#d97b3f">
+          <circle cx="1" cy="26" r="3"/><circle cx="24" cy="14" r="3"/><circle cx="51" cy="23" r="3"/>
+          <circle cx="71" cy="46" r="3"/><circle cx="39" cy="51" r="3"/><circle cx="12" cy="64" r="3"/>
+          <circle cx="51" cy="77" r="3"/><circle cx="76" cy="83" r="3"/><circle cx="25" cy="92" r="3"/>
+        </g>
+      </g>
+
+      <path d="M443 553 C450 535 463 526 481 528 C497 530 508 541 512 555 L512 583 L443 583 Z"
+            fill="#dcd8c3"/>
+      <path d="M456 582 L456 554 C456 542 467 536 477 536 C489 536 499 544 499 555 L499 582"
+            fill="#f1eee0"/>
+      <path d="M461 582 L461 557 C461 548 468 543 477 543 C486 543 493 550 493 558 L493 582"
+            fill="#998d73"/>
+
+      <g opacity=".35" fill="#7f9b63">
+        <circle cx="37" cy="590" r="2"/><circle cx="67" cy="614" r="2"/><circle cx="102" cy="574" r="2"/>
+        <circle cx="143" cy="626" r="2"/><circle cx="189" cy="598" r="2"/><circle cx="229" cy="638" r="2"/>
+        <circle cx="282" cy="606" r="2"/><circle cx="322" cy="647" r="2"/><circle cx="370" cy="596" r="2"/>
+        <circle cx="414" cy="631" r="2"/><circle cx="472" cy="612" r="2"/><circle cx="519" cy="649" r="2"/>
+      </g>
+    </svg>
+  </figure>
+
+  <div class="side-strip"></div>
+
+  <p class="category">大班综合</p>
+  <p class="season-one">TongCai&nbsp; 2021</p>
+  <p class="season-two">Autumn</p>
+
+  <p class="intro">
+    地上的路原来很平坦可是有太多人走过这些路过的人们太累了<br>
+    于是他们决定扔下一些东西
+  </p>
+
+  <div class="title" aria-label="山里的约会">
+    <span class="shan">山</span>
+    <span class="li">里</span>
+    <span class="de">的</span>
+    <span class="yue">约</span>
+    <span class="hui">会</span>
+  </div>
+
+  <div class="watermark">
+    <span class="heart" aria-hidden="true"></span>
+    <div>
+      <div class="watermark-main">@Hiro_豆豆老师</div>
+      <div class="watermark-sub">From 小红书</div>
+    </div>
+  </div>
+
+  <section class="bottom-copy">
+    <p class="copy-left">有的人扔下了悲伤<br>变成了路上的石头</p>
+    <p class="copy-middle">有的人留下快乐<br>变成了山上的树苗</p>
+    <p class="copy-right">我把装在瓶子里的思念<br>放在高高的山顶上<br>变成了黑夜的眼睛</p>
+  </section>
+</main>
+</body>
+</html>

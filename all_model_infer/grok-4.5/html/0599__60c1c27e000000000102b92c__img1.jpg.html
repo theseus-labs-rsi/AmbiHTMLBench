@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>宝宝米粉添加指南</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif;
+    background: #f5e6c8;
+    padding: 16px;
+    color: #333;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+  .page {
+    max-width: 860px;
+    margin: 0 auto;
+    background: linear-gradient(180deg, #ffe9b0 0%, #fff8e7 120px, #fff8e7 100%);
+    border-radius: 16px;
+    border: 3px solid #f0c060;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(200,140,40,0.25);
+  }
+  .header {
+    background: linear-gradient(90deg, #f5a623, #f7c948, #f5a623);
+    text-align: center;
+    padding: 14px 20px 16px;
+    position: relative;
+  }
+  .header h1 {
+    font-size: 32px;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: 4px;
+    text-shadow: 2px 2px 0 #e89010, -1px -1px 0 #e89010;
+    -webkit-text-stroke: 1px #e89010;
+  }
+  .header::before, .header::after {
+    content: "✦";
+    color: #fff8d0;
+    font-size: 18px;
+    position: absolute;
+    top: 22px;
+  }
+  .header::before { left: 18%; }
+  .header::after { right: 18%; }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 12px;
+  }
+  .card {
+    border-radius: 12px;
+    border: 2.5px solid;
+    background: #fffef9;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .card-header {
+    padding: 8px 12px;
+    font-size: 16px;
+    font-weight: 800;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .card-body {
+    padding: 10px 12px 12px;
+    flex: 1;
+  }
+  /* Card 1 - orange */
+  .card1 { border-color: #f0a030; }
+  .card1 .card-header { background: linear-gradient(90deg, #f5a023, #f7b84a); }
+  /* Card 2 - yellow */
+  .card2 { border-color: #e8c020; }
+  .card2 .card-header { background: linear-gradient(90deg, #e8b820, #f0d040); color: #5a3a00; }
+  /* Card 3 - green */
+  .card3 { border-color: #6cbc3f; }
+  .card3 .card-header { background: linear-gradient(90deg, #6cbc3f, #8ed05a); }
+  /* Card 4 - blue */
+  .card4 { border-color: #4aa8d8; }
+  .card4 .card-header { background: linear-gradient(90deg, #3a9ed0, #5cb8e0); }
+
+  .num-badge {
+    display: inline-flex;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: #fff;
+    color: #f5a023;
+    font-weight: 900;
+    font-size: 15px;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .card2 .num-badge { color: #d4a010; }
+  .card3 .num-badge { color: #5aa830; }
+  .card4 .num-badge { color: #3a9ed0; }
+
+  .intro {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 10px;
+    line-height: 1.6;
+  }
+
+  /* Stage blocks */
+  .stage {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+    align-items: flex-start;
+  }
+  .stage-badge {
+    flex-shrink: 0;
+    width: 52px;
+    text-align: center;
+  }
+  .stage-badge .circle {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    border: 2.5px solid;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 800;
+    background: #fff;
+    position: relative;
+  }
+  .stage-badge .circle .seg {
+    font-size: 14px;
+    font-weight: 900;
+    line-height: 1.1;
+  }
+  .stage-badge .circle .en {
+    font-size: 8px;
+    font-weight: 600;
+    opacity: 0.75;
+  }
+  .stage1 .circle { border-color: #f0a030; color: #e89010; }
+  .stage2 .circle { border-color: #e8b020; color: #c99010; }
+  .stage3 .circle { border-color: #6cbc3f; color: #4a9c20; }
+  .stage-title {
+    font-weight: 800;
+    font-size: 13px;
+    margin-bottom: 3px;
+  }
+  .stage1 .stage-title { color: #e89010; }
+  .stage2 .stage-title { color: #c99010; }
+  .stage3 .stage-title { color: #4a9c20; }
+  .stage-content {
+    font-size: 11.5px;
+    color: #444;
+    line-height: 1.55;
+    flex: 1;
+  }
+  .stage-content p { margin-bottom: 2px; }
+
+  /* Benefits list */
+  .benefit-item {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 9px;
+    align-items: flex-start;
+  }
+  .benefit-num {
+    flex-shrink: 0;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: #f0d040;
+    color: #5a3a00;
+    font-weight: 900;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .benefit-text { flex: 1; }
+  .benefit-text .btitle {
+    font-weight: 800;
+    font-size: 13px;
+    color: #333;
+    margin-bottom: 2px;
+  }
+  .benefit-text .bdesc {
+    font-size: 11.5px;
+    color: #555;
+  }
+  .nutrient-icons {
+    display: inline-flex;
+    gap: 4px;
+    margin-left: 4px;
+    vertical-align: middle;
+  }
+  .nutrient-icons span {
+    display: inline-flex;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: #f5e0a0;
+    border: 1.5px solid #e8c040;
+    font-size: 10px;
+    font-weight: 800;
+    color: #c07020;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Select list */
+  .select-item {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+    align-items: flex-start;
+  }
+  .select-num {
+    flex-shrink: 0;
+    font-weight: 800;
+    font-size: 12.5px;
+    color: #4a9c20;
+    white-space: nowrap;
+  }
+  .select-text {
+    font-size: 11.5px;
+    color: #444;
+  }
+  .select-text .stitle {
+    font-weight: 800;
+    color: #333;
+  }
+
+  /* Tips grid */
+  .tips-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .tip-box {
+    background: #f0f8fc;
+    border-radius: 8px;
+    padding: 8px;
+    border: 1px solid #d0e8f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-height: 100px;
+  }
+  .tip-box .tip-num {
+    font-weight: 800;
+    font-size: 12px;
+    color: #2a80b0;
+    margin-bottom: 4px;
+    width: 100%;
+    text-align: left;
+  }
+  .tip-box .tip-desc {
+    font-size: 11px;
+    color: #444;
+    margin-bottom: 6px;
+    text-align: left;
+    width: 100%;
+    flex: 1;
+  }
+  .tip-icons {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+  }
+  .tip-icon-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+  .icon-circle {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    background: #fff;
+    position: relative;
+  }
+  .icon-label {
+    font-size: 10px;
+    font-weight: 800;
+  }
+  .icon-label.no { color: #e05050; }
+  .icon-label.yes { color: #40a030; }
+  .icon-circle.no-border { border-color: #e05050; }
+  .icon-circle.yes-border { border-color: #40a030; }
+
+  .placeholder-icon {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    background: #f8f8f8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    color: #999;
+    text-align: center;
+    line-height: 1.1;
+  }
+
+  /* single tip full width */
+  .tip-box.full {
+    /* stays in grid */
+  }
+
+  .deco {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #f5c040;
+    margin: 0 2px;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <h1>宝宝米粉添加指南</h1>
+  </div>
+  <div class="grid">
+
+    <!-- Card 1 -->
+    <div class="card card1">
+      <div class="card-header">
+        <span class="num-badge">1</span>
+        不同阶段宝宝米粉选择
+      </div>
+      <div class="card-body">
+        <p class="intro">每个阶段宝宝对辅食的营养需求会存在差异，根据宝宝生长发育选择分阶段米粉，为宝宝提供更精准科学的营养。</p>
+
+        <div class="stage stage1">
+          <div class="stage-badge">
+            <div class="circle">
+              <span class="seg">1段</span>
+              <span class="en">Sitting</span>
+            </div>
+          </div>
+          <div class="stage-content">
+            <div class="stage-title">第一阶段 宝宝羞涩期</div>
+            <p>宝宝可以辅食量逐渐增加——这时可添加1段米粉。</p>
+            <p>1段米粉含铁高，粉质细腻好吸收。</p>
+            <p>适应后可添加蔬菜泥和水果泥。</p>
+          </div>
+        </div>
+
+        <div class="stage stage2">
+          <div class="stage-badge">
+            <div class="circle">
+              <span class="seg">2段</span>
+              <span class="en">Crawling</span>
+            </div>
+          </div>
+          <div class="stage-content">
+            <div class="stage-title">第二阶段 宝宝爬行期</div>
+            <p>宝宝萌牙期——这时可添加2段米粉。</p>
+            <p>2段米粉在1段基础上会添加一些蔬菜颗粒，用以启智喂养外伴着宝宝对促智的吸收。</p>
+          </div>
+        </div>
+
+        <div class="stage stage3">
+          <div class="stage-badge">
+            <div class="circle">
+              <span class="seg">3段</span>
+              <span class="en">Standing</span>
+            </div>
+          </div>
+          <div class="stage-content">
+            <div class="stage-title">第三阶段 宝宝能站立</div>
+            <p>宝宝会爬行——这时可添加3段米粉。</p>
+            <p>3段米粉相比2段米粉添加了多种更大的果蔬颗粒，以此强化锻炼宝宝咀嚼力；并与多种食材搭配，口感丰富，更能激发宝宝的味蕾，让宝宝爱上吃。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="card card2">
+      <div class="card-header">
+        <span class="num-badge">2</span>
+        宝宝吃米粉的好处
+      </div>
+      <div class="card-body">
+        <div class="benefit-item">
+          <div class="benefit-num">1</div>
+          <div class="benefit-text">
+            <div class="btitle">补充乳类中不足的营养
+              <span class="nutrient-icons">
+                <span>Fe</span><span>Va</span><span>Vd</span>
+              </span>
+            </div>
+            <div class="bdesc">添加米粉等辅食，可及时补充母乳中铁和维生素D的不足。</div>
+          </div>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-num">2</div>
+          <div class="benefit-text">
+            <div class="btitle">训练宝宝的吞咽能力</div>
+            <div class="bdesc">宝宝可以从糊状、细软的食品开始，逐步适应，接受成年人吃的固体食物。</div>
+          </div>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-num">3</div>
+          <div class="benefit-text">
+            <div class="btitle">为断奶做准备</div>
+            <div class="bdesc">辅食逐渐取代乳类，让宝宝逐渐由吸食乳类变为用成年人的方式咀嚼食物。</div>
+          </div>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-num">4</div>
+          <div class="benefit-text">
+            <div class="btitle">开启宝宝智力</div>
+            <div class="bdesc">添加辅食可以给予宝宝多种刺激，进而达到启迪智力的目的。</div>
+          </div>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-num">5</div>
+          <div class="benefit-text">
+            <div class="btitle">训练咀嚼能力</div>
+            <div class="bdesc">及时添加辅食有利于训练宝宝的咀嚼功能，有利于颌骨的发育和牙齿的萌出。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="card card3">
+      <div class="card-header">
+        <span class="num-badge">3</span>
+        如何挑选宝宝米粉
+      </div>
+      <div class="card-body">
+        <div class="select-item">
+          <div class="select-num">1.</div>
+          <div class="select-text">
+            <span class="stitle">选择品牌产品</span><br>
+            建议选择大品牌、口碑好的产品，其质量相对而言更有保障。
+          </div>
+        </div>
+        <div class="select-item">
+          <div class="select-num">2.</div>
+          <div class="select-text">
+            <span class="stitle">查看产品标识</span><br>
+            看一看正品商品应有的标识是否齐全，宝宝产品特有的标志以及说明书印在包装上。
+            <div style="margin-top:4px;display:flex;gap:12px;align-items:center;">
+              <div class="tip-icon-item">
+                <div class="placeholder-icon" style="border-color:#e05050;">📦</div>
+                <span class="icon-label no">No</span>
+              </div>
+              <div class="tip-icon-item">
+                <div class="placeholder-icon" style="border-color:#40a030;">📦✓</div>
+                <span class="icon-label yes">Yes</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="select-item">
+          <div class="select-num">3.</div>
+          <div class="select-text">
+            <span class="stitle">查清营养成分表</span><br>
+            查看所含的具体营养成分及其含量是否在合理范围内。
+          </div>
+        </div>
+        <div class="select-item">
+          <div class="select-num">4.</div>
+          <div class="select-text">
+            <span class="stitle">查看包装说明</span><br>
+            查看外包装上是否有提示性说明，比如纯奶期补充食物等。
+          </div>
+        </div>
+        <div class="select-item">
+          <div class="select-num">5.</div>
+          <div class="select-text">
+            <span class="stitle">看颜色与气味</span><br>
+            正常呈米白色，大小均匀，香味纯正，故发米粉独有的香味，且无其他异味。
+          </div>
+        </div>
+        <div class="select-item">
+          <div class="select-num">6.</div>
+          <div class="select-text">
+            <span class="stitle">看粗细形态和冲调性</span><br>
+            其性状松散无结块，冲调后为泥糊状。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="card card4">
+      <div class="card-header">
+        <span class="num-badge">4</span>
+        宝宝吃米粉的注意事项
+      </div>
+      <div class="card-body">
+        <div class="tips-grid">
+          <!-- tip 1 -->
+          <div class="tip-box">
+            <div class="tip-num">1.</div>
+            <div class="tip-desc">冲调米粉水温不宜过高，刚烧开的水晾到40-50度左右冲调米粉为宜</div>
+            <div class="tip-icons">
+              <div class="tip-icon-item">
+                <div class="placeholder-icon no-border" style="border-color:#e05050;">🔥💧</div>
+                <span class="icon-label no">No</span>
+              </div>
+              <div class="tip-icon-item">
+                <div class="placeholder-icon yes-border" style="border-color:#40a030;">🌡️💧</div>
+                <span class="icon-label yes">Yes</span>
+              </div>
+            </div>
+          </div>
+          <!-- tip 2 -->
+          <div class="tip-box">
+            <div class="tip-num">2.</div>
+            <div class="tip-desc">喂米粉时需要用小勺喂，不建议使用奶瓶</div>
+            <div class="tip-icons">
+              <div class="tip-icon-item">
+                <div class="placeholder-icon" style="border-color:#e05050;">🍼</div>
+                <span class="icon-label no">No</span>
+              </div>
+              <div class="tip-icon-item">
+                <div class="placeholder-icon" style="border-color:#40a030;">🥄</div>
+                <span class="icon-label yes">Yes</span>
+              </div>
+            </div>
+          </div>
+          <!-- tip 3 -->
+          <div class="tip-box">
+            <div class="tip-num">3.</div>
+            <div class="tip-desc">选择营养素含量多的配方米粉，不添加蔗糖和食盐</div>
+            <div class="tip-icons">
+              <div class="tip-icon-item">
+                <div class="placeholder-icon" style="border-color:#e05050;">🧂</div>
+                <span class="icon-label no">No</span>
+              </div>
+              <div class="tip-icon-item">
+                <div class="placeholder-icon" style="border-color:#40a030;">🥗</div>
+                <span class="icon-label yes">Yes</span>
+              </div>
+            </div>
+          </div>
+          <!-- tip 4 -->
+          <div class="tip-box">
+            <div class="tip-num">4.</div>
+            <div class="tip-desc">不宜把米粉当成正餐，以免无法满足婴儿生长发育需要</div>
+            <div class="tip-icons">
+              <div class="tip-icon-item">
+                <div class="placeholder-icon" style="border-color:#e05050;">🥣❌</div>
+                <span class="icon-label no">No</span>
+              </div>
+            </div>
+          </div>
+          <!-- tip 5 -->
+          <div class="tip-box">
+            <div class="tip-num">5.</div>
+            <div class="tip-desc">调制米粉应先稀后逐渐增加稠度</div>
+            <div class="tip-icons">
+              <div class="tip-icon-item">
+                <div class="placeholder-icon" style="border-color:#40a030;">🍲</div>
+                <span class="icon-label yes">Yes</span>
+              </div>
+            </div>
+          </div>
+          <!-- tip 6 -->
+          <div class="tip-box">
+            <div class="tip-num">6.</div>
+            <div class="tip-desc">首次喂1-2勺，宝宝适应后慢慢增加到3-4勺，每天喂1-2次</div>
+            <div class="tip-icons">
+              <div class="tip-icon-item">
+                <div class="placeholder-icon" style="border-color:#40a030;">👶🥄</div>
+                <span class="icon-label yes">Yes</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

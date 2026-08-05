@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>要闻</title>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      background: #fff;
+      color: #111;
+      font-family: "SimSun", "Songti SC", serif;
+    }
+
+    body {
+      width: 100%;
+      min-width: 780px;
+    }
+
+    .page {
+      width: 800px;
+      margin: 0 auto;
+      padding: 8px 9px 12px;
+      overflow: hidden;
+    }
+
+    .masthead {
+      height: 34px;
+      border-bottom: 2px solid #111;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      position: relative;
+      margin-bottom: 17px;
+    }
+
+    .paper-name {
+      font-family: "SimHei", "Microsoft YaHei", sans-serif;
+      font-size: 25px;
+      letter-spacing: 3px;
+      line-height: 27px;
+    }
+
+    .page-number {
+      font-family: "SimSun", serif;
+      font-size: 24px;
+      margin-left: 2px;
+      vertical-align: 2px;
+    }
+
+    .date {
+      font-size: 8px;
+      margin-left: 13px;
+      vertical-align: 4px;
+      letter-spacing: 1px;
+    }
+
+    .logo {
+      font-family: "STKaiti", "KaiTi", serif;
+      font-size: 22px;
+      font-weight: bold;
+      transform: rotate(-4deg);
+      margin-right: 2px;
+      line-height: 25px;
+    }
+
+    .top-grid {
+      display: grid;
+      grid-template-columns: 390px 185px 190px;
+      column-gap: 9px;
+      align-items: start;
+    }
+
+    .lead {
+      border-right: 1px solid #111;
+      padding-right: 8px;
+    }
+
+    .section-kicker {
+      text-align: center;
+      font-size: 13px;
+      font-weight: bold;
+      margin: 0 0 7px;
+    }
+
+    .lead h1 {
+      font-family: "SimHei", "Microsoft YaHei", sans-serif;
+      font-size: 24px;
+      line-height: 1.3;
+      letter-spacing: 2px;
+      text-align: center;
+      margin: 0 0 11px;
+      font-weight: 900;
+    }
+
+    .columns {
+      column-count: 3;
+      column-gap: 10px;
+      text-align: justify;
+      font-size: 8.3px;
+      line-height: 1.48;
+    }
+
+    .columns p,
+    .story p {
+      margin: 0 0 7px;
+      text-indent: 2em;
+    }
+
+    .columns p:first-child,
+    .story p:first-child {
+      text-indent: 0;
+    }
+
+    .vertical-news {
+      border-right: 1px solid #111;
+      padding-right: 8px;
+      min-height: 570px;
+    }
+
+    .vertical-title {
+      writing-mode: vertical-rl;
+      text-orientation: upright;
+      float: left;
+      font-family: "SimHei", "Microsoft YaHei", sans-serif;
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: 4px;
+      line-height: 1.2;
+      height: 278px;
+      margin: 4px 9px 5px 0;
+    }
+
+    .vertical-news .story {
+      font-size: 8.1px;
+      line-height: 1.48;
+      text-align: justify;
+    }
+
+    .vertical-news .story h2 {
+      font-family: "SimHei", "Microsoft YaHei", sans-serif;
+      font-size: 17px;
+      line-height: 1.25;
+      margin: 0 0 5px;
+      text-align: center;
+    }
+
+    .vertical-news .story h3 {
+      font-family: "SimHei", "Microsoft YaHei", sans-serif;
+      font-size: 13px;
+      line-height: 1.3;
+      margin: 8px 0 3px;
+    }
+
+    .right-column {
+      font-size: 8.1px;
+      line-height: 1.48;
+      text-align: justify;
+    }
+
+    .right-column p {
+      margin: 0 0 8px;
+      text-indent: 2em;
+    }
+
+    .right-column h2 {
+      font-family: "SimHei", "Microsoft YaHei", sans-serif;
+      font-size: 15px;
+      line-height: 1.25;
+      margin: 5px 0 5px;
+      border-left: 4px solid #111;
+      padding-left: 5px;
+    }
+
+    .right-column h3 {
+      font-family: "SimHei", "Microsoft YaHei", sans-serif;
+      font-size: 13px;
+      margin: 8px 0 3px;
+      line-height: 1.25;
+    }
+
+    .photo {
+      width: 100%;
+      height: 255px;
+      margin: 8px 0 6px;
+      border: 1px solid #222;
+      background:
+        linear-gradient(150deg, #98a2a4 0%, #e4e5e2 30%, #bdc2c0 50%, #e9e9e5 72%, #939b9b 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .photo:before {
+      content: "";
+      position: absolute;
+      width: 205px;
+      height: 205px;
+      border-radius: 50%;
+      background: #f5f5ec;
+      left: 89px;
+      top: -44px;
+      box-shadow: 0 0 0 19px rgba(164, 170, 168, .55);
+    }
+
+    .photo:after {
+      content: "";
+      position: absolute;
+      width: 75px;
+      height: 115px;
+      left: 147px;
+      bottom: -21px;
+      background: linear-gradient(90deg, #6d7472, #d0d0c5 45%, #616b68);
+      border: 2px solid #555;
+      border-radius: 42% 42% 8% 8%;
+      box-shadow: 0 0 0 8px rgba(77, 83, 80, .5);
+    }
+
+    .caption {
+      font-size: 7.7px;
+      line-height: 1.45;
+      text-align: justify;
+      margin: 0 5px 9px;
+    }
+
+    .separator {
+      border-top: 1px solid #111;
+      margin: 8px 0 10px;
+    }
+
+    .subheading {
+      font-family: "SimHei", "Microsoft YaHei", sans-serif;
+      font-size: 21px;
+      line-height: 1.25;
+      text-align: center;
+      margin: 0 0 3px;
+      letter-spacing: 1px;
+    }
+
+    .subheading strong {
+      font-weight: 900;
+    }
+
+    .byline {
+      text-align: right;
+      font-size: 7.5px;
+      margin: 0 12px 7px 0;
+    }
+
+    .bottom-left {
+      width: 390px;
+      padding-right: 8px;
+      border-right: 1px solid #111;
+    }
+
+    .bottom-left .columns {
+      column-count: 3;
+      font-size: 8px;
+      line-height: 1.48;
+    }
+
+    .red-title {
+      color: #a92f2d;
+      font-family: "SimHei", "Microsoft YaHei", sans-serif;
+      font-weight: bold;
+      font-size: 13px;
+      margin: 8px 0 3px;
+    }
+
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 390px 185px 190px;
+      gap: 9px;
+      align-items: start;
+      margin-top: 8px;
+    }
+
+    .middle-bottom {
+      border-right: 1px solid #111;
+      padding-right: 8px;
+    }
+
+    .middle-bottom .columns {
+      column-count: 2;
+      font-size: 8px;
+      line-height: 1.48;
+    }
+
+    .small-head {
+      font-family: "SimHei", "Microsoft YaHei", sans-serif;
+      font-size: 13px;
+      line-height: 1.25;
+      font-weight: bold;
+      margin: 5px 0 4px;
+    }
+
+    .infographic {
+      width: 100%;
+      height: 164px;
+      margin: 7px 0 8px;
+      border: 1px solid #e3c9a6;
+      background: #fff0de;
+      position: relative;
+      padding: 10px 7px;
+      font-family: "SimSun", serif;
+      font-size: 8px;
+      line-height: 1.35;
+    }
+
+    .infographic .bar {
+      height: 13px;
+      margin: 3px 0;
+      background: #e7a36d;
+      border-left: 4px solid #c46144;
+      padding-left: 4px;
+    }
+
+    .infographic .blue {
+      background: #c8e3ed;
+      border-left-color: #4c9db3;
+    }
+
+    .infographic .cart {
+      position: absolute;
+      right: 8px;
+      bottom: 10px;
+      width: 41px;
+      height: 48px;
+      border: 2px solid #7895a1;
+      transform: skewY(-12deg);
+      background: #e7edf0;
+    }
+
+    .infographic .cart:before,
+    .infographic .cart:after {
+      content: "";
+      position: absolute;
+      bottom: -9px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #5f7075;
+    }
+
+    .infographic .cart:before {
+      left: 5px;
+    }
+
+    .infographic .cart:after {
+      right: 5px;
+    }
+
+    .infographic .car {
+      position: absolute;
+      left: 18px;
+      bottom: 9px;
+      width: 48px;
+      height: 22px;
+      border: 2px solid #4f9ab4;
+      border-radius: 8px 12px 4px 4px;
+      background: #c6e8f2;
+    }
+
+    .infographic .car:before,
+    .infographic .car:after {
+      content: "";
+      position: absolute;
+      bottom: -7px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #4f6b73;
+    }
+
+    .infographic .car:before {
+      left: 7px;
+    }
+
+    .infographic .car:after {
+      right: 7px;
+    }
+
+    .bottom-right {
+      font-size: 8px;
+      line-height: 1.48;
+      text-align: justify;
+    }
+
+    .bottom-right h2 {
+      font-family: "SimHei", "Microsoft YaHei", sans-serif;
+      font-size: 14px;
+      line-height: 1.25;
+      margin: 4px 0 4px;
+      text-align: center;
+    }
+
+    .bottom-right p {
+      text-indent: 2em;
+      margin: 0 0 7px;
+    }
+
+    .quote {
+      font-family: "SimHei", "Microsoft YaHei", sans-serif;
+      font-size: 12px;
+      font-weight: bold;
+      line-height: 1.35;
+      margin: 7px 0 5px;
+    }
+
+    .bottom-story {
+      font-size: 8px;
+      line-height: 1.48;
+      text-align: justify;
+      margin-top: 7px;
+    }
+
+    .bottom-story p {
+      text-indent: 2em;
+      margin: 0 0 6px;
+    }
+
+    .placeholder {
+      display: block;
+      border: 1px solid #555;
+      background: #eee;
+      color: #555;
+      text-align: center;
+      font-size: 9px;
+      line-height: 1.3;
+      padding: 8px;
+    }
+
+    @media print {
+      body {
+        min-width: 0;
+      }
+
+      .page {
+        margin: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="masthead">
+      <div>
+        <span class="paper-name">要闻</span>
+        <span class="page-number">2</span>
+        <span class="date">2025年1月4日 星期六</span>
+      </div>
+      <div class="logo">人民日报</div>
+    </header>
+
+    <section class="top-grid">
+      <article class="lead">
+        <p class="section-kicker">国内印发意见</p>
+        <h1>全面深化药品医疗器械监管改革<br>促进医药产业高质量发展</h1>
+        <div class="columns">
+          <p>近日，中共中央办公厅、国务院办公厅印发《关于全面深化药品医疗器械监管改革促进医药产业高质量发展的意见》，并发出通知，要求各地区各部门结合实际认真贯彻落实。</p>
+          <p>《意见》从切实提升药品医疗器械监管能力和水平、加快推进医药产业创新发展、推动医药产业高质量发展等方面作出部署。</p>
+          <p>《意见》提出，要加强药品医疗器械全生命周期管理，完善审评审批制度，强化风险管理，保障人民群众用药用械安全。</p>
+          <p>要坚持人民至上、生命至上，持续深化药品医疗器械监管改革，着力提升监管的科学性、有效性和权威性。</p>
+          <p>要完善药品医疗器械标准体系，强化技术支撑，促进医药产业创新发展，推动医药产业更好满足人民群众健康需求。</p>
+          <p>各地区各部门要加强组织领导，细化工作措施，确保各项改革任务落地见效。</p>
+          <p>[illegible]</p>
+          <p>[illegible]</p>
+        </div>
+
+        <figure class="photo" aria-label="[照片：建筑内部穹顶及设备]"></figure>
+        <p class="caption">图为某处大型建筑内部。照片中可见穹顶、圆形天窗及中央设备结构。[illegible]</p>
+
+        <div class="separator"></div>
+        <p class="subheading">2023年度全国耕地面积19.29亿亩，耕地布局进一步优化</p>
+        <h2 class="subheading"><strong>“占优补优”</strong>，改革完善耕地占补平衡管理</h2>
+        <p class="byline">本报记者　[?]　[?]</p>
+      </article>
+
+      <article class="vertical-news">
+        <div class="vertical-title">对推动今年经济持续回升向好充满信心</div>
+        <div class="story">
+          <p>2024年，我国经济运行总体平稳、稳中有进，高质量发展扎实推进。面对复杂严峻的外部环境和多重困难挑战，各地区各部门认真贯彻落实党中央决策部署，推动经济持续回升向好。</p>
+          <p>今年是“十四五”规划收官之年。做好今年经济工作，要坚持稳中求进工作总基调，完整、准确、全面贯彻新发展理念，加快构建新发展格局，着力推动高质量发展。</p>
+          <p>经济实力、科技实力、综合国力持续增强，经济长期向好的基本面没有改变，发展新质生产力、扩大有效需求等重点任务正在有序推进。</p>
+          <p>我国经济基础稳、优势多、韧性强、潜能大，长期向好的支撑条件和基本趋势没有改变。</p>
+          <h3>把握发展机遇，坚定发展信心</h3>
+          <p>要坚定信心、保持定力，统筹好发展和安全，推动经济实现质的有效提升和量的合理增长。</p>
+          <p>要坚持问题导向、目标导向，突出重点、把握关键，推动各项政策协同发力、形成合力。</p>
+          <p>要着力扩大内需，充分发挥消费的基础性作用和投资的关键作用，增强经济发展内生动力。</p>
+          <p>[illegible]</p>
+          <p>[illegible]</p>
+        </div>
+      </article>
+
+      <aside class="right-column">
+        <p>[illegible]发展新质生产力，推动高质量发展。要进一步全面深化改革，扩大高水平对外开放，增强发展动力和活力。</p>
+        <p>[illegible]当前，国际环境复杂多变，国内经济恢复仍面临一些困难和挑战。我们要坚定必胜信心，保持战略定力。</p>
+        <p>[illegible]</p>
+
+        <h2>尽快巩固向好势头</h2>
+        <p>坚持稳中求进、以进促稳，进一步全面深化改革，推动经济持续回升向好。</p>
+
+        <h3>积极扩大有效投资</h3>
+        <p>[illegible]抓住机遇、乘势而上，推动经济运行持续向好。</p>
+        <p>[illegible]</p>
+
+        <h3>权威发布</h3>
+        <p class="quote">开创高质量发展新局面</p>
+        <p>[illegible]高质量发展是全面建设社会主义现代化国家的首要任务。</p>
+      </aside>
+    </section>
+
+    <section class="bottom-grid">
+      <article class="bottom-left">
+        <h3 class="red-title">R政策解读</h3>
+        <div class="columns">
+          <p>深化耕地占补平衡管理，是落实最严格的耕地保护制度、牢牢守住耕地红线的重要举措。近年来，我国严格落实耕地占补平衡制度，耕地保护取得积极成效。</p>
+          <p>调整完善占补平衡制度，要坚持数量、质量、生态并重，严格落实耕地保护责任，进一步提高补充耕地质量。</p>
+          <p>自然资源部门将强化耕地保护，严格控制建设占用耕地，健全补充耕地质量验收制度，确保补充耕地数量真实、质量可靠。</p>
+          <p>强化耕地总量管控和用途管制，严格落实耕地利用优先序，坚决遏制耕地“非农化”、防止“非粮化”。</p>
+          <p>强化刚性约束，确保补充地质量可量查。要完善占补平衡管理政策，严格补充耕地立项、验收、管护全过程监管。</p>
+          <p>坚持节约集约用地，盘活利用存量土地，提升土地利用效率，促进土地资源高效配置。</p>
+          <p>[illegible]</p>
+          <p>[illegible]</p>
+          <p>[illegible]</p>
+        </div>
+      </article>
+
+      <article class="middle-bottom">
+        <h3 class="small-head">调整完善占补平衡制度</h3>
+        <div class="columns">
+          <p>耕地占补平衡制度是我国加强耕地保护、保障国家粮食安全的重要制度安排。随着经济社会发展和城镇化进程加快，耕地保护面临新情况新问题。</p>
+          <p>要坚持数量、质量、生态“三位一体”保护，严格控制建设占用耕地，落实补充耕地责任。</p>
+          <p>各地要切实加强补充耕地项目管理，强化全过程监督，确保补充耕地质量。</p>
+          <p>[illegible]</p>
+        </div>
+
+        <div class="separator"></div>
+        <h3 class="small-head">去年民航客运量超7.3亿人次创历史新高</h3>
+        <p class="bottom-story">本报北京1月3日电　（记者[?]）记者从民航局获悉，2024年我国民航全行业完成运输总周转量、旅客运输量和货邮运输量，均创历史新高。全年旅客运输量超过7.3亿人次。[illegible]</p>
+      </article>
+
+      <article class="bottom-right">
+        <figure class="infographic" aria-label="[图表：政策数据及交通工具示意图]">
+          <div><strong>超额完成预期目标</strong></div>
+          <div class="bar">2024年：中央财政安排投资完成预期目标</div>
+          <div class="bar">新增地方政府专项债券额度</div>
+          <div class="bar blue">完成投资额及重点项目</div>
+          <div class="bar blue">2025年：重大项目清单</div>
+          <div class="car"></div>
+          <div class="cart"></div>
+        </figure>
+
+        <h2>首艘淮河航（片）水上保洁公报发布</h2>
+        <p>2023年淮河流域水上保洁率达92.85%。[illegible]淮河流域水环境质量持续改善，水生态保护修复取得积极进展。[illegible]</p>
+
+        <div class="separator"></div>
+        <h3 class="small-head">[illegible]</h3>
+        <p>[illegible]</p>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

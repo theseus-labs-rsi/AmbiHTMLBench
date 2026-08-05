@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advanced form styling - MDN</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: #1b1b1b;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      background: #fff;
+    }
+    a { color: #075a9f; text-decoration: underline; text-underline-offset: 2px; }
+    code {
+      color: #125388;
+      background: #edf0f2;
+      padding: 1px 4px;
+      border-radius: 2px;
+      font-family: "Courier New", monospace;
+      font-size: .95em;
+      white-space: nowrap;
+    }
+    .ad-top {
+      height: 56px;
+      display: flex;
+      align-items: center;
+      padding: 0 18px;
+      border-bottom: 1px solid #d3d3d3;
+      font-size: 12px;
+    }
+    .mongo { font-size: 9px; color: #26353b; margin-right: 22px; }
+    .mongo:before { content: "♦"; color: #126149; font-size: 13px; margin-right: 2px; }
+    .ad-top p { margin: 0; letter-spacing: .1px; }
+    .green-btn {
+      margin-left: 18px;
+      width: 148px;
+      height: 28px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 3px;
+      background: #00684a;
+      color: white;
+      font-weight: bold;
+    }
+    .ad-mark {
+      margin-left: auto;
+      border: 1px solid #777;
+      border-radius: 3px;
+      font-size: 9px;
+      line-height: 15px;
+      height: 16px;
+      padding: 0 3px;
+    }
+    .noads { position:absolute; right:17px; top:37px; font-size:10px; text-decoration:underline; }
+    .blank-ad { height: 35px; border-bottom: 1px solid #cfcfcf; background: #f6f6f6; }
+    .main-nav {
+      height: 67px;
+      display: flex;
+      align-items: center;
+      padding: 0 18px;
+      border-bottom: 1px solid #ccc;
+    }
+    .brand { width: 274px; font-size: 17px; }
+    .brand b { color: #1373b9; font-size: 29px; font-weight: normal; vertical-align: -2px; }
+    .brand span { border-bottom: 2px solid #1171b6; padding-bottom: 3px; }
+    .navlinks { display:flex; gap:28px; align-items:center; white-space:nowrap; }
+    .navlinks a { color:#111; text-decoration:none; }
+    .navlinks .down:after { content:"⌄"; padding-left:6px; font-size:21px; }
+    .navlinks .learn:before { content:"▱"; font-size:21px; margin-right:4px; }
+    .navlinks .tools:before { content:"♧"; font-size:24px; margin-right:5px; }
+    .navlinks .blog { text-decoration: underline; }
+    .search {
+      margin-left:auto;
+      width:122px; height:35px;
+      border:1px solid #c8c8c8; border-radius:18px;
+      display:flex; align-items:center; justify-content:flex-end;
+      padding-right:10px; font-size:28px;
+    }
+    .search:before { content:"—"; color:#0566aa; font-size:21px; margin-right:21px; }
+    .signin { font-size:24px; margin-left:26px; }
+    .crumb {
+      height: 32px;
+      border-bottom: 1px solid #c8c8c8;
+      display: flex;
+      align-items: center;
+      padding: 0 18px;
+      font-size: 16px;
+    }
+    .crumb span { margin: 0 10px; color:#666; font-size:25px; font-weight:300; }
+    .crumb .right { margin-left:auto; display:flex; align-items:center; gap:31px; }
+    .crumb .right span { margin:0; font-size:16px; color:#1b1b1b; }
+    .layout {
+      display: grid;
+      grid-template-columns: 290px 1fr 280px;
+      column-gap: 20px;
+      width: 100%;
+    }
+    aside.left {
+      padding: 8px 9px 30px 16px;
+      line-height: 1.45;
+    }
+    .filter {
+      height: 36px;
+      border: 1px solid #c7c7c7;
+      border-radius: 19px;
+      color:#666;
+      display:flex; align-items:center;
+      padding-left:11px;
+      margin-bottom: 0;
+    }
+    .filter:before { content:"▽"; font-size:24px; margin-right:8px; transform:rotate(60deg); color:#555; }
+    .side-muted { color:#999; padding:0 0 11px 3px; }
+    .side-item { padding:7px 0 7px 0; }
+    .arrow:before { content:"›"; font-size:25px; vertical-align:-2px; margin-right:7px; }
+    .nested { padding-left:16px; }
+    .nested .side-item { padding:8px 0; }
+    .side-title { font-weight:bold; padding-top:15px; padding-bottom:9px; }
+    .current {
+      margin-left:22px;
+      padding:5px 8px;
+      border-left:2px solid #e58d38;
+      background:#fff1e8;
+    }
+    main {
+      width: 768px;
+      padding-top: 6px;
+    }
+    h1 {
+      margin: 0 0 7px;
+      font-size: 40px;
+      line-height: 1.45;
+      letter-spacing: -1.2px;
+      font-weight: 500;
+    }
+    .article-nav {
+      height: 51px;
+      border-top: 1px solid #c9c9c9;
+      border-bottom: 1px solid #c9c9c9;
+      display:flex; align-items:center;
+      margin-bottom: 59px;
+      font-size:16px;
+    }
+    .article-nav .overview { margin:auto; }
+    .article-nav .next { margin-left:auto; margin-right:10px; }
+    p { margin: 0 0 13px; }
+    .intro { margin-bottom:16px; }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 13px 0 18px;
+      line-height: 1.7;
+    }
+    td { border:1px solid #c6c6c6; padding:9px 12px; vertical-align:middle; }
+    td:first-child { width:130px; font-weight:bold; }
+    .sectionp { margin-top: 4px; margin-bottom: 15px; }
+    .boldline { margin-bottom: 15px; }
+    ul { margin: 5px 0 16px 22px; padding-left:18px; }
+    li { padding-left: 2px; margin: 2px 0; }
+    .note {
+      margin: 17px 0 15px 40px;
+      width: 728px;
+      min-height: 120px;
+      padding: 17px 17px 17px 48px;
+      background: #eaf4ff;
+      border-left:2px solid #1976b8;
+      position:relative;
+    }
+    .note:before {
+      content:"ⓘ";
+      position:absolute;
+      left:17px; top:16px;
+      color:#17679d;
+      font-size:17px;
+    }
+    h2 {
+      margin: 28px 0 12px;
+      font-size: 31px;
+      line-height: 1.35;
+      font-weight: 500;
+      letter-spacing:-.4px;
+    }
+    h2 code { color:#111; font-size:.96em; padding:2px 5px; }
+    .example-table { margin-top: 16px; height: 80px; border:1px solid #bbb; border-radius:5px; }
+    aside.right {
+      padding-top: 13px;
+      border-left: 1px solid #ccc;
+      margin-top: 0;
+    }
+    .toc-title { font-size:24px; line-height:1.25; margin:0 0 19px 0; font-weight:500; }
+    .toc { border-left:2px solid #ddd; }
+    .toc div { padding:3px 8px; line-height:1.55; }
+    .toc .selected { background:#fff2e7; border-left:2px solid #e88938; margin-left:-2px; }
+    .ad-card {
+      width:177px; height:322px;
+      margin: 23px 0 0 0;
+      background:#0757d4;
+      color:white;
+      border-radius:9px;
+      position:relative;
+      overflow:hidden;
+      font-family:Arial, sans-serif;
+      padding:149px 15px 10px;
+    }
+    .ad-card:before {
+      content:"";
+      position:absolute;
+      width:155px; height:155px; left:10px; top:20px;
+      border:1px solid rgba(125,190,255,.25);
+      border-radius:50%;
+      box-shadow: 0 0 0 25px rgba(125,190,255,.04), 0 0 0 48px rgba(125,190,255,.03);
+    }
+    .ad-label { position:absolute; top:6px; right:6px; color:#333; background:#d6e0f4; border:1px solid #555; border-radius:3px; font-size:9px; line-height:14px; padding:0 3px; }
+    .ad-logo { position:absolute; top:61px; left:9px; font-size:33px; font-family:cursive; font-weight:bold; font-style:italic; }
+    .ad-card strong { display:block; font-size:13px; }
+    .ad-card p { margin:4px 0; font-size:12px; line-height:1.2; font-weight:bold; }
+    .start { margin-top:12px; width:97px; height:31px; border:2px solid white; border-radius:18px; text-align:center; line-height:27px; font-size:12px; font-weight:bold; }
+    .ad-foot { font-size:10px; margin-top:1px; }
+  </style>
+</head>
+<body>
+  <div class="ad-top">
+    <div class="mongo">MongoDB.</div>
+    <p>Simplify infrastructure with MongoDB Atlas, the most popular modern database.</p>
+    <div class="green-btn">Get started for free</div>
+    <div class="ad-mark">AD</div>
+    <div class="noads">Don't want to see ads?</div>
+  </div>
+  <div class="blank-ad"></div>
+
+  <header class="main-nav">
+    <div class="brand"><b>ᗰ</b> mdn<span>_</span></div>
+    <nav class="navlinks">
+      <a class="down">HTML</a>
+      <a class="down">CSS</a>
+      <a class="down">JavaScript</a>
+      <a class="down">Web APIs</a>
+      <a class="down">All</a>
+      <a class="learn down">Learn</a>
+      <a class="tools down">Tools</a>
+      <a class="down">About</a>
+      <a class="blog">Blog</a>
+    </nav>
+    <div class="search">⌕</div>
+    <div class="signin">↪</div>
+  </header>
+
+  <div class="crumb">
+    Learn <span>›</span> Extension modules <span>›</span> Web forms <span>›</span> Advanced form styling
+    <div class="right"><span>◉ Theme</span><span>文 English (US)</span></div>
+  </div>
+
+  <div class="layout">
+    <aside class="left">
+      <div class="filter">Filter</div>
+      <div class="side-muted">› CSS text styling</div>
+      <div class="side-item arrow">CSS layout</div>
+      <div class="side-item arrow">Dynamic scripting with<br><span class="nested">JavaScript</span></div>
+      <div class="side-item arrow">JavaScript frameworks and<br><span class="nested">libraries</span></div>
+      <div class="side-item arrow">Accessibility</div>
+      <div class="nested">
+        <div class="side-item">Design for developers</div>
+        <div class="side-item">Version control</div>
+      </div>
+
+      <div class="side-title">Extension modules</div>
+      <div class="side-item arrow">Advanced JavaScript objects</div>
+      <div class="side-item arrow">Client-side web APIs</div>
+      <div class="side-item arrow">Asynchronous JavaScript</div>
+      <div class="side-item">⌄ Web forms</div>
+      <div class="nested">
+        <div class="side-item">Your first form</div>
+        <div class="side-item">How to structure a web form</div>
+        <div class="side-item">Basic native form controls</div>
+        <div class="side-item">The HTML5 input types</div>
+        <div class="side-item">Other form controls</div>
+        <div class="side-item">Styling web forms</div>
+        <div class="current">Advanced form styling</div>
+        <div class="side-item">Customizable selects</div>
+        <div class="side-item">Customizable listboxes</div>
+        <div class="side-item">UI pseudo-classes</div>
+        <div class="side-item">Client-side form validation</div>
+        <div class="side-item">Sending form data</div>
+      </div>
+      <div class="side-item arrow">Additional tutorials</div>
+      <div class="side-item arrow">Understanding client-side tools</div>
+      <div class="side-item arrow">Server-side websites</div>
+      <div class="side-item arrow">Web performance</div>
+      <div class="side-item arrow">Testing</div>
+      <div class="side-title">Further resources</div>
+      <div class="side-item arrow">How to solve common problems</div>
+      <div class="nested">
+        <div class="side-item">About</div>
+        <div class="side-item">Resources for educators</div>
+      </div>
+    </aside>
+
+    <main>
+      <h1>Advanced form styling</h1>
+      <div class="article-nav">
+        <a>← Previous</a>
+        <a class="overview">Overview: Web forms</a>
+        <a class="next">Next →</a>
+      </div>
+
+      <p class="intro">In this article, we will see what can be done with CSS to style the types of form control that are more<br>
+      difficult to style — the "bad" and "ugly" categories. As we <a>saw in the previous article</a>, text fields and<br>
+      buttons are perfectly easy to style; now we will dig into styling the more problematic bits.</p>
+
+      <table>
+        <tr>
+          <td>Prerequisites:</td>
+          <td>A basic understanding of <a>HTML</a> and <a>CSS</a>.</td>
+        </tr>
+        <tr>
+          <td>Objective:</td>
+          <td>To understand what parts of forms are hard to style, and why; to learn what can<br>be done to customize them.</td>
+        </tr>
+      </table>
+
+      <p class="sectionp">To recap what we said in the previous article, we have:</p>
+      <p class="boldline"><strong>The bad:</strong> Some elements are more difficult to style, requiring more complex CSS or some more<br>specific tricks:</p>
+      <ul>
+        <li>Checkboxes and radio buttons</li>
+        <li><code>&lt;input type="search"&gt;</code></li>
+      </ul>
+
+      <p class="boldline"><strong>The ugly:</strong> Some elements can't be styled thoroughly using CSS. These include:</p>
+      <ul>
+        <li>Elements involved in creating dropdown widgets, including <code>&lt;select&gt;</code>, <code>&lt;option&gt;</code>, <code>&lt;optgroup&gt;</code><br>and <code>&lt;datalist&gt;</code>.</li>
+      </ul>
+
+      <div class="note"><strong>Note:</strong> Some browsers now support <a>Customizable select elements</a>, a set of HTML and<br>
+        CSS features that together enable full customization of <code>&lt;select&gt;</code> elements and their<br>
+        contents just like any regular DOM elements.</div>
+
+      <ul>
+        <li><code>&lt;input type="color"&gt;</code></li>
+        <li>Date-related controls such as <code>&lt;input type="datetime-local"&gt;</code></li>
+        <li><code>&lt;input type="range"&gt;</code></li>
+        <li><code>&lt;input type="file"&gt;</code></li>
+        <li><code>&lt;progress&gt;</code> and <code>&lt;meter&gt;</code></li>
+      </ul>
+
+      <p>Let's first talk about the <code>appearance</code> property, which is useful for making all of the above more<br>stylable.</p>
+
+      <h2><code>appearance</code>: controlling OS-level styling</h2>
+
+      <p>In the previous article, we mentioned that historically, the styling of web form controls was largely<br>
+      derived from the underlying operating system, which is part of the reason for the difficulty in<br>
+      customizing the look of these controls.</p>
+
+      <p>The <code>appearance</code> property was created as a way to control what OS- or system-level styling was<br>
+      applied to web form controls. By far the most helpful value, and probably the only one you'll use, is<br>
+      <code>none</code>. This stops any control you apply it to from using system-level styling, as much as possible, and<br>
+      lets you build up the styles yourself using CSS.</p>
+
+      <p>For example, let's take the following controls:</p>
+      <div class="example-table"></div>
+    </main>
+
+    <aside class="right">
+      <h2 class="toc-title">In this article</h2>
+      <div class="toc">
+        <div class="selected"><code style="background:none;color:#222;padding:0">appearance</code>: controlling OS-<br>level styling</div>
+        <div>What can be done about the<br>"ugly" elements?</div>
+        <div>Summary</div>
+      </div>
+      <div class="ad-card placeholder">
+        <div class="ad-label">AD</div>
+        <div class="ad-logo">imagekit.io</div>
+        <strong>Image &amp; Video API</strong>
+        <p>Real-time URL<br>transforms, global CDN<br>delivery &amp; easy<br>integration with existing<br>storage.</p>
+        <div class="start">Start Free ↗</div>
+      </div>
+      <div class="ad-foot">Don't want to see ads?</div>
+    </aside>
+  </div>
+</body>
+</html>

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Untitled Document</title>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      width: 100%;
+      min-height: 100%;
+    }
+    body {
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.08), transparent 36%),
+        #977044;
+      font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", serif;
+      overflow: hidden;
+    }
+    .photo {
+      position: relative;
+      width: 540px;
+      height: 720px;
+      margin: 0 auto;
+      background:
+        linear-gradient(110deg, rgba(70,43,17,.22), transparent 14%),
+        #bba581;
+      overflow: hidden;
+    }
+    .backing {
+      position: absolute;
+      left: 9px;
+      top: 5px;
+      width: 515px;
+      height: 700px;
+      border-radius: 9px 9px 15px 15px;
+      background: #bca882;
+      box-shadow: 3px 4px 9px rgba(40,25,10,.33);
+    }
+    .paper {
+      position: absolute;
+      left: 34px;
+      top: 13px;
+      width: 477px;
+      height: 681px;
+      overflow: hidden;
+      border-radius: 2px 12px 11px 2px;
+      background-color: #f1f3ef;
+      background-image:
+        linear-gradient(rgba(114,148,147,.22) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(114,148,147,.22) 1px, transparent 1px),
+        linear-gradient(rgba(114,148,147,.09) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(114,148,147,.09) 1px, transparent 1px);
+      background-size: 13px 13px, 13px 13px, 4.333px 4.333px, 4.333px 4.333px;
+      box-shadow:
+        inset 1px 0 rgba(255,255,255,.7),
+        3px 3px 4px rgba(65,47,29,.26);
+    }
+    .paper:after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(90deg, rgba(255,255,255,.24), transparent 8%, transparent 92%, rgba(130,130,120,.08));
+    }
+    .binding-shadow {
+      position: absolute;
+      left: 29px;
+      top: 12px;
+      width: 16px;
+      height: 684px;
+      background: linear-gradient(90deg, rgba(35,28,17,.26), transparent);
+      opacity: .55;
+      z-index: 3;
+    }
+    .holes {
+      position: absolute;
+      left: 2px;
+      top: 18px;
+      width: 65px;
+      height: 674px;
+      z-index: 8;
+      pointer-events: none;
+    }
+    .hole {
+      position: absolute;
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 42% 37%, #15120e 0 34%, #382b1c 38%, #c8b28a 67%, transparent 70%);
+      box-shadow: inset 1px 1px 2px rgba(255,255,255,.42);
+    }
+    .hole.left { left: 0; }
+    .hole.right { left: 49px; }
+    .ring {
+      position: absolute;
+      left: -10px;
+      width: 76px;
+      height: 29px;
+      border: 7px solid #a28b61;
+      border-left-color: #806b49;
+      border-right-color: #b9a277;
+      border-radius: 48% 42% 45% 48%;
+      transform: rotate(7deg);
+      box-shadow: 1px 2px 2px rgba(48,30,12,.38), inset 1px 1px 1px rgba(236,218,177,.65);
+      z-index: 10;
+    }
+    .r1 { top: 4px; }.r2 { top: 57px; }.r3 { top: 111px; }.r4 { top: 165px; }
+    .r5 { top: 219px; }.r6 { top: 273px; }.r7 { top: 327px; }.r8 { top: 381px; }
+    .r9 { top: 435px; }.r10 { top: 489px; }.r11 { top: 543px; }.r12 { top: 597px; }
+    .r13 { top: 651px; }
+
+    .diagram {
+      position: absolute;
+      left: 57px;
+      top: 49px;
+      width: 410px;
+      height: 300px;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .diagram svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .diagram path, .diagram line {
+      fill: none;
+      stroke: #4caaa2;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      opacity: .82;
+    }
+    .diagram figcaption {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+    }
+
+    .vtext {
+      position: absolute;
+      z-index: 4;
+      writing-mode: vertical-rl;
+      text-orientation: upright;
+      color: #3d3d39;
+      font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", serif;
+      font-size: 15px;
+      line-height: 1.5;
+      letter-spacing: .5px;
+      white-space: normal;
+      text-shadow: .15px .15px 0 rgba(40,40,35,.35);
+    }
+    .small { font-size: 12px; line-height: 1.45; }
+    .large { font-size: 18px; font-weight: 600; }
+    .red {
+      color: #9b4c59;
+      text-shadow: .15px .15px 0 rgba(100,30,40,.25);
+    }
+    .green {
+      color: #397d78;
+      font-weight: 600;
+    }
+
+    .c1 { left: 424px; top: 129px; height: 262px; }
+    .c2 { left: 388px; top: 132px; height: 282px; }
+    .c3 { left: 353px; top: 140px; height: 302px; }
+    .c4 { left: 317px; top: 145px; height: 270px; }
+    .c5 { left: 282px; top: 182px; height: 245px; }
+    .c6 { left: 246px; top: 186px; height: 286px; }
+    .c7 { left: 211px; top: 149px; height: 321px; }
+    .c8 { left: 176px; top: 143px; height: 348px; }
+    .c9 { left: 141px; top: 173px; height: 341px; }
+    .c10 { left: 106px; top: 223px; height: 367px; }
+    .c11 { left: 73px; top: 280px; height: 365px; }
+
+    .label1 { left: 447px; top: 73px; height: 130px; }
+    .label2 { left: 378px; top: 79px; height: 133px; }
+    .label3 { left: 286px; top: 87px; height: 122px; }
+    .label4 { left: 126px; top: 82px; height: 116px; }
+
+    .annotation {
+      position: absolute;
+      z-index: 5;
+      color: #9b4c59;
+      writing-mode: vertical-rl;
+      text-orientation: upright;
+      font-family: "Yu Mincho", "Hiragino Mincho ProN", serif;
+      font-size: 14px;
+      line-height: 1.35;
+      letter-spacing: .6px;
+    }
+    .a1 { left: 339px; top: 425px; height: 158px; }
+    .a2 { left: 364px; top: 452px; height: 105px; }
+    .a3 { left: 187px; top: 391px; height: 102px; }
+    .a4 { left: 151px; top: 481px; height: 89px; }
+
+    .correction {
+      position: absolute;
+      z-index: 6;
+      background: rgba(242,243,239,.82);
+      box-shadow: 0 0 1px rgba(120,120,110,.25);
+      transform: rotate(1deg);
+    }
+    .tape1 { left: 110px; top: 406px; width: 34px; height: 49px; }
+    .tape2 { left: 124px; top: 445px; width: 32px; height: 27px; transform: rotate(-2deg); }
+    .tape3 { left: 143px; top: 382px; width: 34px; height: 29px; opacity: .7; }
+
+    .faint-lines {
+      position: absolute;
+      z-index: 1;
+      opacity: .2;
+      left: 73px;
+      top: 595px;
+      width: 370px;
+      height: 70px;
+      background: repeating-linear-gradient(to bottom, transparent 0 17px, #65706c 18px 19px);
+      transform: rotate(-1deg);
+    }
+
+    .edge-mark {
+      position: absolute;
+      z-index: 7;
+      right: 3px;
+      top: 345px;
+      width: 13px;
+      height: 55px;
+      background: rgba(220,222,213,.32);
+      transform: skewY(-12deg);
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
+  </style>
+</head>
+<body>
+  <main class="photo" aria-label="Handwritten notebook page">
+    <div class="backing"></div>
+    <div class="paper">
+      <div class="binding-shadow"></div>
+
+      <figure class="diagram placeholder" aria-label="Diagram: branching green lines">
+        <svg viewBox="0 0 410 300" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M80 12 L392 18 L392 72" />
+          <path d="M221 14 L221 94 L170 94 L170 152" />
+          <path d="M310 16 L310 116 L273 116 L273 191" />
+          <path d="M80 12 L80 111 L22 111 L22 267" />
+          <path d="M22 111 L84 111 L84 146" />
+          <path d="M170 152 L118 152 L118 218" />
+          <path d="M273 191 L337 191 L337 253" />
+          <path d="M392 72 L357 72 L357 148" />
+        </svg>
+        <figcaption>[Diagram: branching green lines]</figcaption>
+      </figure>
+
+      <div class="vtext green large label1">[illegible]</div>
+      <div class="vtext green label2">[illegible]</div>
+      <div class="vtext green label3">[illegible]</div>
+      <div class="vtext green label4">[illegible]</div>
+
+      <div class="vtext c1">[illegible]　[illegible]　[illegible]</div>
+      <div class="vtext c2">[illegible]　[illegible]　[illegible]</div>
+      <div class="vtext c3">[illegible]　[illegible]　[illegible]</div>
+      <div class="vtext c4">[illegible]　[illegible]　[illegible]</div>
+      <div class="vtext c5">[illegible]　[illegible]　[illegible]</div>
+      <div class="vtext c6">[illegible]　[illegible]　[illegible]</div>
+      <div class="vtext c7">[illegible]　[illegible]　[illegible]</div>
+      <div class="vtext c8">[illegible]　[illegible]　[illegible]</div>
+      <div class="vtext c9">[illegible]　[illegible]　[illegible]</div>
+      <div class="vtext c10">[illegible]　[illegible]　[illegible]</div>
+      <div class="vtext c11 small">[illegible]　[illegible]　[illegible]　[illegible]</div>
+
+      <div class="annotation a1">[illegible]</div>
+      <div class="annotation a2">[illegible]</div>
+      <div class="annotation a3">[illegible]</div>
+      <div class="annotation a4">[illegible]</div>
+
+      <div class="correction tape1"></div>
+      <div class="correction tape2"></div>
+      <div class="correction tape3"></div>
+      <div class="faint-lines"></div>
+      <div class="edge-mark"></div>
+    </div>
+
+    <div class="holes">
+      <span class="hole left" style="top:0"></span><span class="hole right" style="top:0"></span>
+      <span class="hole left" style="top:53px"></span><span class="hole right" style="top:53px"></span>
+      <span class="hole left" style="top:107px"></span><span class="hole right" style="top:107px"></span>
+      <span class="hole left" style="top:161px"></span><span class="hole right" style="top:161px"></span>
+      <span class="hole left" style="top:215px"></span><span class="hole right" style="top:215px"></span>
+      <span class="hole left" style="top:269px"></span><span class="hole right" style="top:269px"></span>
+      <span class="hole left" style="top:323px"></span><span class="hole right" style="top:323px"></span>
+      <span class="hole left" style="top:377px"></span><span class="hole right" style="top:377px"></span>
+      <span class="hole left" style="top:431px"></span><span class="hole right" style="top:431px"></span>
+      <span class="hole left" style="top:485px"></span><span class="hole right" style="top:485px"></span>
+      <span class="hole left" style="top:539px"></span><span class="hole right" style="top:539px"></span>
+      <span class="hole left" style="top:593px"></span><span class="hole right" style="top:593px"></span>
+      <span class="hole left" style="top:647px"></span><span class="hole right" style="top:647px"></span>
+    </div>
+
+    <div class="ring r1"></div>
+    <div class="ring r2"></div>
+    <div class="ring r3"></div>
+    <div class="ring r4"></div>
+    <div class="ring r5"></div>
+    <div class="ring r6"></div>
+    <div class="ring r7"></div>
+    <div class="ring r8"></div>
+    <div class="ring r9"></div>
+    <div class="ring r10"></div>
+    <div class="ring r11"></div>
+    <div class="ring r12"></div>
+    <div class="ring r13"></div>
+  </main>
+</body>
+</html>

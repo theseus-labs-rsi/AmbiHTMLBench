@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CUDA C++ Programming Guide, Release 13.3</title>
+<style>
+  body {
+    font-family: 'DejaVu Sans', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 11pt;
+    line-height: 1.5;
+    color: #000;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 60px;
+  }
+  .header {
+    font-weight: bold;
+    font-size: 12pt;
+    margin-bottom: 4px;
+  }
+  .header-line {
+    border: none;
+    border-top: 1px solid #000;
+    margin-bottom: 20px;
+  }
+  .continued {
+    text-align: right;
+    font-size: 10pt;
+    color: #555;
+    margin-bottom: 10px;
+  }
+  .code-block {
+    background-color: #f5f5f5;
+    padding: 16px 20px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 10.5pt;
+    line-height: 1.6;
+    margin: 10px 0 20px 0;
+    border-radius: 2px;
+    overflow-x: auto;
+  }
+  .code-block .comment {
+    color: #5a9;
+    font-style: italic;
+  }
+  .code-block .keyword {
+    color: #008000;
+    font-weight: bold;
+  }
+  .code-block .type-red {
+    color: #c00;
+    font-weight: bold;
+  }
+  .code-block .func-name {
+    color: #0000cc;
+  }
+  .code-block .null-val {
+    color: #008000;
+    font-weight: bold;
+  }
+  .code-block .sizeof-val {
+    color: #008000;
+    font-weight: bold;
+  }
+  .section-heading {
+    color: #6b8e23;
+    font-size: 12pt;
+    font-weight: bold;
+    margin-top: 30px;
+    margin-bottom: 14px;
+  }
+  .text-paragraph {
+    text-align: justify;
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+  .code-block-wide {
+    background-color: #f5f5f5;
+    padding: 16px 20px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 10pt;
+    line-height: 1.6;
+    margin: 10px 0 20px 0;
+    border-radius: 2px;
+    overflow-x: auto;
+  }
+  .continues {
+    text-align: right;
+    font-size: 10pt;
+    color: #555;
+    margin-top: 10px;
+  }
+  .footer-line {
+    border: none;
+    border-top: 1px solid #000;
+    margin-top: 30px;
+    margin-bottom: 8px;
+  }
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11pt;
+  }
+  .footer .page-num {
+    font-weight: bold;
+  }
+  .footer .chapter {
+    font-weight: bold;
+  }
+  .wrap-arrow {
+    color: #c00;
+    font-size: 9pt;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">CUDA C++ Programming Guide, Release 13.3</div>
+<hr class="header-line">
+
+<div class="continued">(continued from previous page)</div>
+
+<div class="code-block">
+    desc.offset = offset;<br>
+    desc.size = size;<br>
+    <br>
+    <br>
+    cudaExternalMemoryGetMappedBuffer(&amp;ptr, extMem, &amp;desc);<br>
+    <br>
+    <br>
+    <span class="comment">// Note: 'ptr' must eventually be freed using cudaFree()</span><br>
+    <br>
+    <span class="keyword">return</span> ptr;<br>
+}<br>
+</div>
+
+<div class="section-heading">6.2.16.1.4 Mapping Mipmapped Arrays onto Imported Memory Objects</div>
+
+<p class="text-paragraph">
+A CUDA mipmapped array can be mapped onto an imported memory object as shown below. The offset, dimensions, format and number of mip levels must match that specified when creating the mapping using the corresponding Vulkan API. Additionally, if the mipmapped array is bound as a color target in Vulkan, the flagcudaArrayColorAttachment must be set. All mapped mipmapped arrays must be freed using cudaFreeMipmappedArray(). The following code sample shows how to convert Vulkan parameters into the corresponding CUDA parameters when mapping mipmapped arrays onto imported memory objects.
+</p>
+
+<div class="code-block-wide">
+cudaMipmappedArray_t <span class="func-name">mapMipmappedArrayOntoExternalMemory</span>(cudaExternalMemory_t extMem,<br>
+<span class="wrap-arrow">→</span><span class="type-red">unsigned long long</span> offset, cudaChannelFormatDesc *formatDesc, cudaExtent *extent,<br>
+<span class="wrap-arrow">→</span><span class="type-red">unsigned int</span> flags, <span class="type-red">unsigned int</span> numLevels) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cudaMipmappedArray_t mipmap = <span class="null-val">NULL</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cudaExternalMemoryMipmappedArrayDesc desc = {};<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;memset(&amp;desc, 0, <span class="sizeof-val">sizeof</span>(desc));<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;desc.offset = offset;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;desc.formatDesc = *formatDesc;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;desc.extent = *extent;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;desc.flags = flags;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;desc.numLevels = numLevels;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// Note: 'mipmap' must eventually be freed using cudaFreeMipmappedArray()</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;cudaExternalMemoryGetMappedMipmappedArray(&amp;mipmap, extMem, &amp;desc);<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> mipmap;<br>
+}<br>
+<br>
+cudaChannelFormatDesc <span class="func-name">getCudaChannelFormatDescForVulkanFormat</span>(VkFormat format)<br>
+{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cudaChannelFormatDesc d;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;memset(&amp;d, 0, <span class="sizeof-val">sizeof</span>(d));<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">switch</span> (format) {<br>
+</div>
+
+<div class="continues">(continues on next page)</div>
+
+<hr class="footer-line">
+<div class="footer">
+  <span class="page-num">112</span>
+  <span class="chapter">6. Programming Interface</span>
+</div>
+
+</body>
+</html>

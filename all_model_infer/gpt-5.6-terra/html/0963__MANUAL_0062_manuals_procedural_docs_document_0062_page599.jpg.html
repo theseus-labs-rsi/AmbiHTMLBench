@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alternator Frequency and Rating</title>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: #fff;
+    color: #080808;
+    font-family: Georgia, "Times New Roman", serif;
+  }
+  .page {
+    width: 1350px;
+    min-height: 2160px;
+    margin: 0 auto;
+    padding-top: 118px;
+    position: relative;
+  }
+  .columns {
+    display: grid;
+    grid-template-columns: 658px 658px;
+    column-gap: 34px;
+    align-items: start;
+  }
+  .left, .right { font-size: 27px; line-height: 1.28; }
+  p { margin: 0 0 29px; }
+  h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 28px;
+    line-height: 1.1;
+    margin: 30px 0 7px;
+    font-weight: 700;
+  }
+  .top-copy { margin-bottom: 31px; }
+  .formula {
+    text-align: center;
+    margin: 28px 0 32px;
+    font-size: 27px;
+    line-height: 1.35;
+  }
+  .where {
+    margin: 0 0 36px;
+    line-height: 1.34;
+  }
+  .where .label {
+    display: inline-block;
+    width: 96px;
+  }
+  .where .terms {
+    display: inline-block;
+    vertical-align: top;
+  }
+  .example { margin-bottom: 25px; }
+  .tight-formula {
+    text-align: center;
+    margin: 22px 0 39px;
+    font-size: 27px;
+  }
+  .figure {
+    margin: 6px 0 0;
+  }
+  .placeholder {
+    border: 2px solid #111;
+    border-radius: 14px;
+    position: relative;
+    overflow: hidden;
+    background: #fff;
+    color: #111;
+  }
+  .placeholder .caption {
+    position: absolute;
+    left: 10px;
+    bottom: 7px;
+    font: 15px Arial, sans-serif;
+    color: #555;
+    opacity: .75;
+  }
+  .top-diagram {
+    width: 658px;
+    height: 280px;
+  }
+  .top-diagram .wyedelta {
+    position: absolute;
+    inset: 22px 18px 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 36px;
+    font-family: Arial, sans-serif;
+  }
+  .circuit {
+    position: relative;
+    border-bottom: 2px solid #111;
+    height: 188px;
+  }
+  .circle {
+    position: absolute;
+    width: 130px;
+    height: 130px;
+    border: 2px solid #111;
+    border-radius: 50%;
+    top: 28px;
+    left: 4px;
+  }
+  .wire { position: absolute; background: #111; }
+  .wire.h { height: 2px; }
+  .wire.v { width: 2px; }
+  .node {
+    position: absolute;
+    width: 12px; height: 12px;
+    border-radius: 50%; background: #111;
+  }
+  .coil {
+    position: absolute;
+    font-size: 24px;
+    letter-spacing: -6px;
+    transform: rotate(90deg);
+  }
+  .phase {
+    position: absolute;
+    font-size: 19px;
+  }
+  .res {
+    position: absolute;
+    font-size: 19px;
+  }
+  .diagram-label {
+    position: absolute;
+    bottom: -38px;
+    left: 42px;
+    white-space: nowrap;
+    font: bold 19px Arial, sans-serif;
+  }
+  .badge {
+    display: inline-block;
+    margin-right: 8px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    color: #fff;
+    background: linear-gradient(135deg,#10a9d9,#122c9d);
+    font-size: 23px;
+  }
+  figcaption {
+    font-size: 23px;
+    line-height: 1.2;
+    margin-top: 21px;
+  }
+  figcaption b { font-family: Arial, Helvetica, sans-serif; }
+  .right .top-formula {
+    margin: 39px 0 39px;
+    text-align: center;
+    font-size: 26px;
+  }
+  .right h2:first-of-type { margin-top: 0; }
+  .rating { margin-top: 34px; }
+  .bottom-left {
+    margin-top: 101px;
+  }
+  .bottom-right {
+    margin-top: 42px;
+  }
+  .bottom-left .placeholder {
+    width: 658px;
+    height: 297px;
+  }
+  .bottom-right .placeholder {
+    width: 658px;
+    height: 348px;
+  }
+  .wave {
+    position: absolute;
+    right: 15px;
+    top: 48px;
+    width: 325px;
+    height: 200px;
+    background:
+      radial-gradient(ellipse at 0% 50%, transparent 44%, #111 45%, #111 47%, transparent 48%) 0 0/110px 92px repeat-x;
+    opacity: .9;
+  }
+  .schematic-circle {
+    position: absolute;
+    left: 54px; top: 57px;
+    width: 170px; height: 170px;
+    border: 2px solid #111;
+    border-radius: 50%;
+  }
+  .photo {
+    position: absolute;
+    inset: 25px 15px 25px;
+    background: linear-gradient(90deg,#1d2930 0 17%,#e5e5df 17% 35%,#42464a 35% 52%,#d8d8d0 52% 70%,#10202a 70% 100%);
+    filter: grayscale(1);
+  }
+  .photo:before {
+    content: "";
+    position: absolute;
+    left: 145px; top: 54px;
+    width: 338px; height: 136px;
+    border-radius: 40% 10% 10% 35%;
+    background: linear-gradient(90deg,#222,#bcbcbc 35%,#777 52%,#14232c 78%);
+    opacity: .9;
+  }
+  .photo:after {
+    content: "";
+    position: absolute;
+    left: 245px; top: 24px;
+    width: 66px; height: 180px;
+    border-left: 9px solid #303030;
+    border-right: 6px solid #555;
+  }
+  .page-number {
+    position: absolute;
+    right: -6px;
+    bottom: 94px;
+    font: 28px Arial, sans-serif;
+  }
+  i { font-style: italic; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="columns">
+    <section class="left">
+      <p class="top-copy">Voltage is built up by using permanent magnet interpoles in the exciter stator. The permanent magnets assure a voltage buildup, precluding the necessity of field flashing. The rotor of the alternator may be removed without causing loss of the alternator’s residual magnetism.</p>
+
+      <h2>Alternator Frequency</h2>
+      <p>The frequency of the alternator voltage depends upon the speed of rotation of the rotor and the number of poles. The faster the speed, the higher the frequency; the lower the speed, the lower the frequency. The more poles on the rotor, the higher the frequency for a given speed. When a rotor has rotated through an angle so that two adjacent rotor poles (a North and a South pole) have passed one winding, the voltage induced in that winding has varied through one complete cycle. For a given frequency, the greater the number of pairs of poles, the lower the speed of rotation. A two-pole alternator rotates at twice the speed of a four-pole alternator for the same frequency of generated voltage. The frequency of the alternator in cycles per minute (cpm) is related to the number of poles and the speed, as expressed by the equation:</p>
+
+      <div class="formula">$$\mathrm{F}=\frac{\mathrm{P}}{\mathrm{N}}\times\frac{\mathrm{N}}{60}=\frac{\mathrm{PN}}{120}$$</div>
+
+      <div class="where">
+        <span class="label">Where:</span>
+        <span class="terms">P is the number of poles per phase<br>f is the frequency in cps<br>N is the rated speed in rpm</span>
+      </div>
+
+      <p class="example">For example, a 2-pole, 3,600 rpm alternator has a frequency of:</p>
+      <div class="tight-formula">$$\frac{2\times3{,}600}{120}=60\ \mathrm{cps}$$</div>
+
+      <p class="example">A 4-pole, 1,800 rpm alternator has the same frequency; a 6-pole, 500 rpm alternator has a frequency of:</p>
+      <div class="tight-formula">$$\frac{6\times500}{120}=25\ \mathrm{cps}$$</div>
+
+      <p class="example">A 12-pole, 4,000 rpm alternator has a frequency of:</p>
+
+      <figure class="figure bottom-left">
+        <div class="placeholder">
+          <div class="schematic-circle"></div>
+          <div style="position:absolute;left:34px;top:60px;font:20px Arial;">○<br>A</div>
+          <div style="position:absolute;left:220px;top:74px;font:20px Arial;">○<br>B</div>
+          <div style="position:absolute;left:126px;top:224px;font:20px Arial;">C</div>
+          <div style="position:absolute;left:280px;top:18px;font:22px Arial;">+e</div>
+          <div style="position:absolute;left:293px;top:132px;font:20px Arial;">0</div>
+          <div style="position:absolute;left:281px;bottom:20px;font:22px Arial;">−e</div>
+          <div class="wave"></div>
+          <div style="position:absolute;left:388px;top:15px;font:21px Arial;">A</div>
+          <div style="position:absolute;left:472px;top:15px;font:21px Arial;">B</div>
+          <div style="position:absolute;left:552px;top:15px;font:21px Arial;">C</div>
+          <span class="caption">[Diagram: simplified schematic and output waveforms]</span>
+        </div>
+        <figcaption><b>Figure 12-320.</b> <i>Simplified schematic of three-phase alternator with<br>output waveforms.</i></figcaption>
+      </figure>
+    </section>
+
+    <section class="right">
+      <figure class="figure">
+        <div class="placeholder top-diagram">
+          <div class="wyedelta">
+            <div class="circuit">
+              <div class="circle"></div>
+              <div class="node" style="left:58px;top:23px"></div>
+              <div class="node" style="left:4px;top:116px"></div>
+              <div class="node" style="left:108px;top:116px"></div>
+              <div class="phase" style="left:17px;top:51px">C</div>
+              <div class="phase" style="left:77px;top:52px">A</div>
+              <div class="phase" style="left:94px;top:84px">B</div>
+              <div class="coil" style="left:57px;top:39px">))))</div>
+              <div class="coil" style="left:25px;top:105px;transform:rotate(27deg)">))))</div>
+              <div class="coil" style="left:83px;top:104px;transform:rotate(-27deg)">))))</div>
+              <div class="wire h" style="left:59px;top:4px;width:198px"></div>
+              <div class="wire v" style="left:254px;top:4px;height:179px"></div>
+              <div class="wire h" style="left:4px;top:182px;width:252px"></div>
+              <div class="wire v" style="left:57px;top:4px;height:22px"></div>
+              <div class="wire v" style="left:193px;top:4px;height:178px"></div>
+              <div class="res" style="left:188px;top:34px">〽 R<sub>AB</sub></div>
+              <div class="res" style="left:188px;top:122px">〽 R<sub>BC</sub></div>
+              <div class="res" style="left:244px;top:70px">〽 R<sub>AC</sub></div>
+              <div class="node" style="left:187px;top:0"></div>
+              <div class="node" style="left:187px;top:83px"></div>
+              <div class="diagram-label"><span class="badge">A</span>Wye connection</div>
+            </div>
+            <div class="circuit">
+              <div class="circle"></div>
+              <div class="node" style="left:58px;top:23px"></div>
+              <div class="node" style="left:4px;top:116px"></div>
+              <div class="node" style="left:108px;top:116px"></div>
+              <div class="phase" style="left:17px;top:51px">C</div>
+              <div class="phase" style="left:91px;top:51px">A</div>
+              <div class="phase" style="left:66px;top:101px">B</div>
+              <div style="position:absolute;left:33px;top:38px;font-size:48px">△</div>
+              <div class="wire h" style="left:59px;top:4px;width:198px"></div>
+              <div class="wire v" style="left:254px;top:4px;height:179px"></div>
+              <div class="wire h" style="left:4px;top:182px;width:252px"></div>
+              <div class="wire v" style="left:193px;top:4px;height:178px"></div>
+              <div class="res" style="left:188px;top:34px">〽 R<sub>A</sub></div>
+              <div class="res" style="left:188px;top:122px">〽 R<sub>B</sub></div>
+              <div class="res" style="left:244px;top:70px">〽 R<sub>C</sub></div>
+              <div class="node" style="left:187px;top:0"></div>
+              <div class="node" style="left:187px;top:83px"></div>
+              <div class="diagram-label"><span class="badge">B</span>Delta connection</div>
+            </div>
+          </div>
+          <span class="caption">[Diagram: wye and delta connected alternators]</span>
+        </div>
+        <figcaption><b>Figure 12-321.</b> <i>Wye and delta connected alternators.</i></figcaption>
+      </figure>
+
+      <div class="top-formula">$$\frac{12\times4{,}000}{120}=400\ \mathrm{cps}$$</div>
+
+      <h2>Starter Generator</h2>
+      <p>Many turbine-powered aircraft use a starter generator that acts like a starter during the start of the engine and when the engine is online it acts like a Generator. <i>[Figure 12-325]</i> The main advantage of the starter generator is saving weight by eliminating a separate starter that is only used during the start. Initially used on small turboprops and light jets but large units are now installed on the B787 aircraft engines to power the main engines and power the electrical system.</p>
+
+      <h2 class="rating">Alternator Rating</h2>
+      <p>The maximum current that can be supplied by an alternator depends upon the maximum heating loss (I<sup>2</sup>R power loss) that can be sustained in the armature and the maximum heating loss that can be sustained in the field. The armature current of an alternator varies with the load. This action is similar to that of A 12 pole, 4,000 rpm alternator has a frequency of DC generators. In AC generators, however, lagging power factor loads tend to demagnetize the field of an alternator, and terminal voltage is maintained only by increasing DC field current. For this reason, AC generators are usually rated according to kVA, power factor, phases, voltage, and frequency. One generator, for example, may be rated at 40 kVA, 208 volts, 400 cycles, three phase, at 75 percent power factor. The kVA indicates the apparent power. This is the kVA output, or the relationship between the current and voltage at which the generator is intended to operate. The power factor is the expression of the</p>
+
+      <figure class="figure bottom-right">
+        <div class="placeholder">
+          <div class="photo"></div>
+          <span class="caption">[Photo: exploded view of alternator rectifier]</span>
+        </div>
+        <figcaption><b>Figure 12-322.</b> <i>Exploded view of alternator rectifier.</i></figcaption>
+      </figure>
+    </section>
+  </div>
+  <div class="page-number">12-158</div>
+</div>
+</body>
+</html>

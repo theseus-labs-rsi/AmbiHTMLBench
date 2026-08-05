@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分数加减混合运算</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --q-color: #2e6db5;
+            --hw-color: #d32f2f;
+            --text-color: #333;
+        }
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            color: var(--text-color);
+        }
+        .page-container {
+            background-color: white;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 10px;
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--q-color);
+            font-weight: bold;
+            font-style: italic;
+        }
+        
+        /* Titles */
+        h1 {
+            text-align: center;
+            font-size: 1.6em;
+            margin: 10px 0;
+            font-weight: normal;
+        }
+        h2 {
+            text-align: center;
+            font-size: 1.4em;
+            margin: 10px 0 30px 0;
+            font-weight: normal;
+        }
+        .section-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .section-title span.tag1 {
+            background-color: #e0f0ff;
+            color: var(--q-color);
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-style: italic;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        .section-title span.tag2 {
+            background-color: var(--q-color);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-style: italic;
+            font-weight: bold;
+        }
+
+        /* Layout */
+        .content-columns {
+            display: flex;
+            gap: 40px;
+        }
+        .col-left, .col-right {
+            flex: 1;
+        }
+
+        /* Common Elements */
+        p {
+            margin: 10px 0;
+            line-height: 1.5;
+        }
+        .q-text {
+            color: var(--q-color);
+            font-weight: bold;
+        }
+        .handwriting {
+            color: var(--hw-color);
+            font-family: "Kaiti", "STKaiti", cursive;
+        }
+        .placeholder {
+            background-color: #eee;
+            border: 1px dashed #999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            color: #666;
+            text-align: center;
+        }
+        
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid var(--text-color);
+            text-align: center;
+            padding: 10px 5px;
+            font-size: 0.95em;
+        }
+        
+        /* Math Alignment */
+        .calc-table {
+            display: table;
+            border-collapse: collapse;
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        .calc-row {
+            display: table-row;
+        }
+        .calc-left, .calc-math, .calc-note {
+            display: table-cell;
+            padding: 4px;
+            vertical-align: middle;
+        }
+        .calc-left {
+            text-align: right;
+            padding-right: 8px;
+        }
+        .calc-note {
+            font-size: 0.9em;
+            color: #555;
+            padding-left: 10px;
+        }
+
+        /* Specific Graphics & Callouts */
+        .speech-bubble {
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 6px 10px;
+            background: white;
+            font-size: 0.85em;
+            position: relative;
+            display: inline-block;
+            line-height: 1.4;
+        }
+        .box-container {
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 0.9em;
+            background-color: #fafafa;
+        }
+        
+        /* Footer */
+        .footer {
+            margin-top: 50px;
+            font-weight: bold;
+            color: var(--q-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .page-num {
+            border: 2px solid var(--q-color);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+    
+    <div class="header">
+        <div class="header-left">
+            <span style="font-size: 1.2em;">\(\approx\)</span> 同步解析与测评
+        </div>
+        <div class="header-right">
+            数学 五年级 下册
+        </div>
+    </div>
+
+    <h1>3. 分数加减混合运算</h1>
+    <h2>第 1 课时&emsp;分数加减混合运算</h2>
+
+    <div class="section-title">
+        <span class="tag1">探究</span><span class="tag2">交流</span>
+    </div>
+
+    <div class="content-columns">
+        
+        <!-- Left Column -->
+        <div class="col-left">
+            <p>小华收集整理的全班同学在母亲节送给妈妈的礼物情况如下表。</p>
+            
+            <table>
+                <tr>
+                    <td>礼物类型</td>
+                    <td>贺卡</td>
+                    <td>鲜花</td>
+                    <td>自己画的画</td>
+                    <td>其他</td>
+                </tr>
+                <tr>
+                    <td>占全班人<br>数的几分<br>之几</td>
+                    <td>\( \frac{1}{4} \)</td>
+                    <td>\( \frac{3}{20} \)</td>
+                    <td>\( \frac{3}{10} \)</td>
+                    <td></td>
+                </tr>
+            </table>
+
+            <p class="q-text">1.送贺卡和送鲜花的同学比送自己画的画的同学多占全班人数的几分之几？</p>
+            
+            <p>方法一：</p>
+            <div class="calc-table">
+                <div class="calc-row">
+                    <div class="calc-left"></div>
+                    <div class="calc-math">\( \frac{1}{4} + \frac{3}{20} - \frac{3}{10} \)</div>
+                    <div class="calc-note"></div>
+                </div>
+                <div class="calc-row">
+                    <div class="calc-left">\( = \)</div>
+                    <div class="calc-math">\( \frac{(\color{red}{5})}{20} + \frac{3}{20} - \frac{3}{10} \)</div>
+                    <div class="calc-note">\( \longrightarrow \) 通分</div>
+                </div>
+                <div class="calc-row">
+                    <div class="calc-left">\( = \)</div>
+                    <div class="calc-math">\( \frac{(\color{red}{8})}{20} - \frac{3}{10} \)</div>
+                    <div class="calc-note"></div>
+                </div>
+                <div class="calc-row">
+                    <div class="calc-left">\( = \)</div>
+                    <div class="calc-math">\( \frac{(\color{red}{8})}{20} - \frac{(\color{red}{6})}{20} \)</div>
+                    <div class="calc-note">\( \longrightarrow \) 再次通分</div>
+                </div>
+                <div class="calc-row">
+                    <div class="calc-left">\( = \)</div>
+                    <div class="calc-math">\( \frac{(\color{red}{2})}{20} \)</div>
+                    <div class="calc-note"></div>
+                </div>
+                <div class="calc-row">
+                    <div class="calc-left">\( = \)</div>
+                    <div class="calc-math">\( \frac{(\color{red}{1})}{(\color{red}{10})} \)</div>
+                    <div class="calc-note"></div>
+                </div>
+            </div>
+
+            <p>方法二：</p>
+            <div class="calc-table">
+                <div class="calc-row">
+                    <div class="calc-left"></div>
+                    <div class="calc-math">\( \frac{1}{4} + \frac{3}{20} - \frac{3}{10} \)</div>
+                    <div class="calc-note"></div>
+                </div>
+                <div class="calc-row">
+                    <div class="calc-left">\( = \)</div>
+                    <div class="calc-math">\( \frac{(\color{red}{5})}{20} + \frac{3}{20} - \frac{(\color{red}{6})}{20} \)</div>
+                    <div class="calc-note">\( \longrightarrow \) 一次通分</div>
+                </div>
+                <div class="calc-row">
+                    <div class="calc-left">\( = \)</div>
+                    <div class="calc-math">\( \frac{(\color{red}{2})}{20} \)</div>
+                    <div class="calc-note"></div>
+                </div>
+                <div class="calc-row">
+                    <div class="calc-left">\( = \)</div>
+                    <div class="calc-math">\( \frac{(\color{red}{1})}{(\color{red}{10})} \)</div>
+                    <div class="calc-note"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="col-right">
+            
+            <div style="display: flex; align-items: flex-start; justify-content: center; gap: 15px; margin-bottom: 20px;">
+                <div class="placeholder" style="width: 50px; height: 60px; border-radius: 5px;">[Robot]</div>
+                <div>
+                    <div class="speech-bubble">这两种方法有什么<br>不同？哪一种简便？</div>
+                    <div class="handwriting" style="margin-top: 10px; font-size: 1.1em; transform: rotate(-5deg);">
+                        通分次数不同,<br>法二简便.
+                    </div>
+                </div>
+            </div>
+
+            <p class="q-text">2.送其他礼物的同学占全班人数的几分之几？</p>
+            
+            <p>方法一：</p>
+            <div class="calc-table">
+                <div class="calc-row">
+                    <div class="calc-left"></div>
+                    <div class="calc-math">\( 1 - \frac{1}{4} - \frac{3}{20} - \frac{3}{10} \)</div>
+                </div>
+                <div class="calc-row">
+                    <div class="calc-left">\( = \)</div>
+                    <div class="calc-math">\( \color{red}{1 - \frac{5}{20} - \frac{3}{20} - \frac{6}{20}} \)</div>
+                </div>
+                <div class="calc-row">
+                    <div class="calc-left">\( = \)</div>
+                    <div class="calc-math">\( \color{red}{\frac{20}{20} - \frac{5}{20} - \frac{3}{20} - \frac{6}{20}} \)</div>
+                </div>
+                <div class="calc-row">
+                    <div class="calc-left">\( = \)</div>
+                    <div class="calc-math">\( \color{red}{\frac{6}{20} = \frac{3}{10}} \)</div>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                <div>
+                    <p>方法二：</p>
+                    <div class="calc-table" style="margin-bottom: 0;">
+                        <div class="calc-row">
+                            <div class="calc-left"></div>
+                            <div class="calc-math">\( 1 - (\frac{1}{4} + \frac{3}{20} + \frac{3}{10}) \)</div>
+                        </div>
+                        <div class="calc-row">
+                            <div class="calc-left">\( = \)</div>
+                            <div class="calc-math">\( \color{red}{1 - (\frac{5}{20} + \frac{3}{20} + \frac{6}{20})} \)</div>
+                        </div>
+                        <div class="calc-row">
+                            <div class="calc-left">\( = \)</div>
+                            <div class="calc-math">\( \color{red}{1 - \frac{14}{20}} \)</div>
+                        </div>
+                        <div class="calc-row">
+                            <div class="calc-left">\( = \)</div>
+                            <div class="calc-math">\( \color{red}{\frac{6}{20} = \frac{3}{10}} \)</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 20px;">
+                    <div class="speech-bubble" style="margin-bottom: 5px;">这两个算式有<br>什么不同呢？</div>
+                    <div class="placeholder" style="width: 40px; height: 60px;">[Boy]</div>
+                </div>
+            </div>
+
+            <p class="q-text" style="margin-top: 20px;">3.通过前面的计算，你能说一说分数加减混合运算的运算顺序吗？</p>
+            
+            <div style="display: flex; align-items: flex-start; gap: 10px; margin-top: 15px;">
+                <div class="placeholder" style="width: 45px; height: 65px; flex-shrink: 0;">[Boy]</div>
+                <div class="box-container" style="flex-grow: 1; margin-top: 0;">
+                    分数加减混合运算的运算顺序和整数加减混合运算的运算顺序（<span class="handwriting" style="font-size: 1.2em;">相同</span>）。
+                </div>
+            </div>
+
+            <div style="display: flex; align-items: flex-start; gap: 10px; margin-top: 5px;">
+                <div class="box-container" style="flex-grow: 1; margin-top: 0;">
+                    没有括号的，按照（<span class="handwriting" style="font-size: 1.2em;">从左往右</span>）的顺序计算，有括号的，先算（<span class="handwriting" style="font-size: 1.2em;">括号里的</span>）再算（<span class="handwriting" style="font-size: 1.2em;">括号外的</span>）。
+                </div>
+                <div class="placeholder" style="width: 45px; height: 65px; flex-shrink: 0; align-self: flex-end;">[Girl]</div>
+            </div>
+
+        </div>
+    </div>
+    
+    <div class="footer">
+        <div class="page-num">70</div>
+        <hr style="flex-grow: 1; border: none; border-bottom: 2px solid var(--q-color); margin-left: 10px;">
+    </div>
+
+</div>
+
+</body>
+</html>

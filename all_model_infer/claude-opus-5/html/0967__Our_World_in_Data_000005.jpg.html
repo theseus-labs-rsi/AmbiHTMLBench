@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Global Education - Our World in Data</title>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #1d3d63;
+    background: #fff;
+    font-size: 16px;
+  }
+  a { color: #1d3d63; text-decoration: none; border-bottom: 1px solid #a3b4c6; }
+
+  /* ---------- Top navigation ---------- */
+  .topbar {
+    background: #002147;
+    border-bottom: 3px solid #c0392b;
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    height: 73px;
+    color: #fff;
+  }
+  .logo {
+    color: #fff;
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: bold;
+    font-size: 19px;
+    line-height: 1.15;
+    padding: 0 26px 0 40px;
+    border: none;
+  }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 26px;
+    font-size: 14.5px;
+    font-weight: bold;
+  }
+  .nav-links span { color: #fff; white-space: nowrap; }
+  .nav-icon { font-size: 13px; margin-right: 6px; }
+  .caret { font-size: 9px; margin-left: 4px; }
+  .nav-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-right: 30px;
+  }
+  .searchbox {
+    width: 300px;
+    height: 38px;
+    background: #143d6b;
+    border: 1px solid #3d5f8a;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+    color: #b7c6d8;
+    font-size: 14px;
+  }
+  .btn-outline {
+    height: 38px;
+    min-width: 112px;
+    border: 1px solid #fff;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14.5px;
+    font-weight: bold;
+  }
+  .btn-red {
+    height: 38px;
+    min-width: 100px;
+    background: #c0392b;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14.5px;
+    font-weight: bold;
+  }
+
+  /* ---------- Title band ---------- */
+  .title-band {
+    background: #ebeef2;
+    padding: 44px 0 52px;
+    text-align: left;
+  }
+  .band-inner { max-width: 1290px; margin: 0 auto; padding-left: 405px; }
+  h1 {
+    font-family: Georgia, "Playfair Display", serif;
+    font-size: 44px;
+    font-weight: bold;
+    margin: 0 0 22px;
+    color: #002147;
+  }
+  .byline { font-size: 15.5px; color: #4a6685; }
+
+  /* ---------- Body grid ---------- */
+  .page { max-width: 1440px; margin: 0 auto; }
+  .body-grid {
+    display: grid;
+    grid-template-columns: 405px 625px 1fr;
+    padding-top: 38px;
+  }
+  .sidebar { padding-left: 30px; }
+  .contents-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid #c5cdd7;
+    padding: 8px 14px;
+    font-size: 14px;
+    color: #1d3d63;
+  }
+  .article p {
+    margin: 0 0 22px;
+    line-height: 1.55;
+    font-size: 16.5px;
+  }
+
+  /* ---------- Contents block ---------- */
+  .contents-wrap {
+    background: #ebeef2;
+    margin: 45px 80px 0 80px;
+    padding: 55px 0 60px;
+  }
+  .contents-grid {
+    display: grid;
+    grid-template-columns: 325px 730px 1fr;
+  }
+  .contents-grid h2 {
+    font-family: Georgia, serif;
+    font-size: 26px;
+    margin: 0 0 22px;
+    color: #002147;
+  }
+  ul.toc { list-style: none; margin: 0; padding: 0; }
+  ul.toc li {
+    margin-bottom: 18px;
+    font-size: 16.5px;
+    display: flex;
+    gap: 12px;
+  }
+  ul.toc li .arrow { color: #c0392b; font-weight: bold; }
+  .work-label {
+    font-size: 12.5px;
+    font-weight: bold;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #1d3d63;
+    margin: 42px 0 12px;
+  }
+  .card {
+    background: #fff;
+    display: flex;
+    align-items: center;
+    padding: 16px 18px;
+    width: 292px;
+    margin-bottom: 14px;
+  }
+  .card-icon {
+    width: 38px; height: 38px;
+    background: #ebeef2;
+    display: flex; align-items: center; justify-content: center;
+    margin-right: 16px;
+    font-size: 16px;
+  }
+  .card-title {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 17px;
+    color: #002147;
+  }
+  .card-sub { font-size: 14px; color: #4a6685; }
+  .card-arrow { margin-left: auto; font-size: 17px; }
+
+  /* ---------- Divider ---------- */
+  hr.section-rule {
+    border: none;
+    border-top: 1px solid #dfe4ea;
+    margin: 48px 80px;
+  }
+
+  /* ---------- Section heading band ---------- */
+  .section-band {
+    background: #ebeef2;
+    margin: 0 80px;
+    padding: 42px 0 44px;
+  }
+  .section-band h2 {
+    font-family: Georgia, serif;
+    font-size: 33px;
+    line-height: 1.25;
+    margin: 0;
+    color: #002147;
+    max-width: 640px;
+    padding-left: 325px;
+  }
+
+  /* ---------- Floating buttons ---------- */
+  .float-btns {
+    position: fixed;
+    right: 20px;
+    bottom: 16px;
+    display: flex;
+    gap: 12px;
+  }
+  .float-btn {
+    background: #002147;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">Our World<br>in Data</div>
+  <div class="nav-links">
+    <span><span class="nav-icon">&#9776;</span>Browse by topic</span>
+    <span>Data</span>
+    <span>Insights</span>
+    <span>Resources<span class="caret">&#9660;</span></span>
+    <span>About<span class="caret">&#9660;</span></span>
+  </div>
+  <div class="nav-right">
+    <div class="searchbox"><span>Search for a topic, chart or article...</span><span>&#9906;</span></div>
+    <div class="btn-outline">Subscribe</div>
+    <div class="btn-red">Donate</div>
+  </div>
+</div>
+
+<div class="title-band">
+  <div class="band-inner">
+    <h1>Global Education</h1>
+    <div class="byline">By <a href="#">Hannah Ritchie</a>, <a href="#">Veronika Samborska</a>, <a href="#">Esteban Ortiz-Ospina</a>, and <a href="#">Max Roser</a></div>
+  </div>
+</div>
+
+<div class="page">
+
+  <div class="body-grid">
+    <div class="sidebar">
+      <div class="contents-btn"><span>&#9776;</span> Contents</div>
+    </div>
+    <div class="article">
+      <p>A good education offers individuals the opportunity to lead richer, more interesting lives. At a societal level, it <a href="#">creates opportunities</a> for humanity to solve its pressing problems.</p>
+
+      <p>The world has gone through a dramatic transition over the last few centuries, from one where very few had any basic education to one where most people do. This is not only reflected in the <em>inputs</em> to education — enrollment and attendance — but also in outcomes, where <a href="#">literacy</a> rates have greatly improved.</p>
+
+      <p>Getting children into school is also not enough: <em>what</em> they learn matters. There are large <a href="#">differences</a> in educational outcomes: in low-income countries, most children cannot read by the end of primary school. These inequalities in education exacerbate <a href="#">poverty</a> and existing inequalities in <a href="#">global incomes</a>.</p>
+
+      <p>On this page, you can find all of our writing and data on global education.</p>
+    </div>
+    <div></div>
+  </div>
+
+  <div class="contents-wrap">
+    <div class="contents-grid">
+      <div></div>
+      <div>
+        <h2>Contents</h2>
+        <ul class="toc">
+          <li><span class="arrow">&#8595;</span><span>The world has made substantial progress in increasing basic levels of education</span></li>
+          <li><span class="arrow">&#8595;</span><span>Despite being in school, many children don't learn basic literacy skills</span></li>
+          <li><span class="arrow">&#8595;</span><span>Children across the world receive very different amounts of quality learning</span></li>
+          <li><span class="arrow">&#8595;</span><span>Hundreds of millions of children worldwide do not go to school</span></li>
+          <li><span class="arrow">&#8595;</span><span>The gender gap in school attendance has closed across most of the world</span></li>
+          <li><span class="arrow">&#8595;</span><span>Explore the data</span></li>
+          <li><span class="arrow">&#8595;</span><span>Data insights</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="work-label">All our work on global education</div>
+        <div class="card">
+          <div class="card-icon">&#128202;</div>
+          <div>
+            <div class="card-title">Data</div>
+            <div class="card-sub">See all charts</div>
+          </div>
+          <div class="card-arrow">&#8594;</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#128441;</div>
+          <div>
+            <div class="card-title">Writing</div>
+            <div class="card-sub">See all articles and insights</div>
+          </div>
+          <div class="card-arrow">&#8594;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-rule">
+
+  <div class="section-band">
+    <h2>The world has made substantial progress<br>in increasing basic levels of education</h2>
+  </div>
+
+  <div class="body-grid">
+    <div></div>
+    <div class="article">
+      <p>Access to education is now seen as a fundamental right. In many cases, it's the government's duty to provide it.</p>
+
+      <p>But formal education is a very recent phenomenon. In the chart, we see the share of the adult population — those older than 15 — who has received some basic education and those who haven't.</p>
+
+      <p>In the early 1800s, fewer than 1 in 5 adults had some basic education. Education was a luxury; in all places, it was only available to a small elite.</p>
+
+      <p>But you can see that this share has grown dramatically, such that this ratio is now reversed. Less than 1 in 5 adults has not received any formal education.</p>
+    </div>
+    <div></div>
+  </div>
+
+</div>
+
+<div class="float-btns">
+  <div class="float-btn"><span>&#9993;</span> Subscribe</div>
+  <div class="float-btn"><span>&#128172;</span> Feedback</div>
+</div>
+
+</body>
+</html>

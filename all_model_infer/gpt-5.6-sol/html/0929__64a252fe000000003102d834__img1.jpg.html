@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>头孢菌素分类</title>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  html, body {
+    margin: 0;
+    width: 100%;
+    min-height: 100%;
+    background: #16785f;
+  }
+
+  body {
+    font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", Arial, sans-serif;
+  }
+
+  .page {
+    position: relative;
+    width: 540px;
+    height: 379px;
+    overflow: hidden;
+    color: #eef9df;
+    background:
+      radial-gradient(circle at 72% 12%, rgba(255,255,255,.035), transparent 25%),
+      radial-gradient(circle at 19% 75%, rgba(0,0,0,.04), transparent 30%),
+      linear-gradient(100deg, #14755c, #147e63 55%, #16735c);
+  }
+
+  .title {
+    position: relative;
+    height: 38px;
+    padding: 5px 0 0 10px;
+    color: #d7ef4d;
+    font-size: 20px;
+    line-height: 28px;
+    font-weight: 600;
+    text-shadow: 0 0 2px rgba(220,245,74,.5);
+  }
+
+  .doodle {
+    position: absolute;
+    left: 161px;
+    top: 3px;
+    width: 40px;
+    height: 33px;
+  }
+
+  .doodle span {
+    position: absolute;
+    display: block;
+    height: 2px;
+    background: #d9ef46;
+    border-radius: 2px;
+    box-shadow: 0 0 2px rgba(220,245,74,.5);
+    transform-origin: left center;
+  }
+
+  .doodle .a { left: 4px; top: 23px; width: 37px; transform: rotate(-29deg); }
+  .doodle .b { left: 12px; top: 2px; width: 31px; transform: rotate(68deg); }
+  .doodle .c { left: 3px; top: 16px; width: 34px; transform: rotate(17deg); }
+  .doodle .d { left: 20px; top: 4px; width: 29px; transform: rotate(112deg); }
+  .doodle .e { left: 10px; top: 28px; width: 27px; transform: rotate(-71deg); }
+
+  table {
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+
+  .classification {
+    position: absolute;
+    left: 4px;
+    top: 38px;
+    width: 536px;
+    height: 152px;
+    color: #eff8e7;
+    font-size: 19px;
+  }
+
+  .classification td {
+    border: 2px solid rgba(229,246,224,.78);
+    padding: 0 10px;
+    vertical-align: middle;
+    line-height: 1.32;
+    white-space: nowrap;
+  }
+
+  .classification .category {
+    width: 80px;
+    padding: 0 8px;
+    text-align: center;
+    white-space: normal;
+    font-size: 19px;
+    line-height: 1.45;
+  }
+
+  .classification .generation {
+    width: 80px;
+    text-align: center;
+    padding: 0 3px;
+    font-size: 19px;
+  }
+
+  .classification .details {
+    padding-left: 7px;
+    font-size: 18px;
+    letter-spacing: .1px;
+  }
+
+  .classification .r1,
+  .classification .r2 {
+    height: 38px;
+  }
+
+  .classification .r3 {
+    height: 75px;
+  }
+
+  .classification .r4 {
+    height: 38px;
+  }
+
+  .chalk {
+    color: #d9ef47;
+    font-weight: 600;
+    text-shadow: 0 0 2px rgba(217,239,71,.5);
+  }
+
+  .underline {
+    display: inline-block;
+    border-bottom: 2px solid #d9ef47;
+    line-height: 1.03;
+    transform: rotate(-1deg);
+  }
+
+  .circle {
+    display: inline-block;
+    position: relative;
+  }
+
+  .circle::after {
+    content: "";
+    position: absolute;
+    left: -5px;
+    right: -5px;
+    top: -4px;
+    bottom: -5px;
+    border: 2px solid #d9ef47;
+    border-radius: 50%;
+    transform: rotate(-10deg);
+    pointer-events: none;
+  }
+
+  .mnemonic {
+    position: absolute;
+    left: 4px;
+    top: 197px;
+    width: 346px;
+    height: 162px;
+    color: #d9ef47;
+    font-size: 19px;
+    font-weight: 600;
+    text-shadow: 0 0 2px rgba(217,239,71,.45);
+  }
+
+  .mnemonic td {
+    border: 2px solid rgba(229,246,224,.74);
+    padding: 0 7px;
+    vertical-align: middle;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+
+  .mnemonic .memory-title {
+    height: 31px;
+    color: #eff8e7;
+    text-align: center;
+    font-weight: 400;
+    font-size: 18px;
+  }
+
+  .mnemonic .label {
+    width: 91px;
+    text-align: left;
+    padding-left: 6px;
+  }
+
+  .mnemonic .phrase {
+    padding-left: 8px;
+  }
+
+  .mnemonic .memory-row {
+    height: 32px;
+  }
+
+  .image-grid {
+    position: absolute;
+    left: 356px;
+    top: 190px;
+    width: 184px;
+    height: 189px;
+    display: grid;
+    grid-template-columns: 92px 92px;
+    grid-template-rows: 113px 76px;
+    overflow: hidden;
+  }
+
+  .placeholder {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(31,91,73,.55);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 3px;
+    text-align: center;
+    font-size: 8px;
+    line-height: 1.1;
+  }
+
+  .placeholder .caption {
+    position: relative;
+    z-index: 3;
+    padding: 1px 3px;
+    color: rgba(255,255,255,.9);
+    background: rgba(0,0,0,.38);
+    border-radius: 2px;
+  }
+
+  .toilet {
+    background: #f5f4ee;
+  }
+
+  .toilet::before {
+    content: "";
+    position: absolute;
+    left: 20px;
+    bottom: 17px;
+    width: 28px;
+    height: 54px;
+    border: 2px solid #62645f;
+    border-radius: 48% 48% 42% 38%;
+    transform: rotate(-15deg);
+    box-shadow:
+      11px -29px 0 -8px #f5f4ee,
+      11px -29px 0 -6px #62645f;
+  }
+
+  .toilet::after {
+    content: "";
+    position: absolute;
+    right: 17px;
+    top: 19px;
+    width: 25px;
+    height: 30px;
+    border: 2px solid #74756f;
+    border-radius: 48%;
+    box-shadow: inset 0 -8px 0 -5px #74756f;
+  }
+
+  .grain {
+    background:
+      radial-gradient(ellipse at 64% 75%, #dbc170 0 2px, transparent 3px),
+      radial-gradient(ellipse at 33% 68%, #ead68e 0 2px, transparent 3px),
+      radial-gradient(ellipse at 74% 53%, #d6b762 0 2px, transparent 3px),
+      radial-gradient(ellipse at 20% 87%, #eed98e 0 2px, transparent 3px),
+      linear-gradient(145deg, #9a6757 0 26%, #dfc478 27% 100%);
+  }
+
+  .grain::before,
+  .grain::after {
+    content: "";
+    position: absolute;
+    background: #d2a78e;
+    border-radius: 45%;
+    transform: rotate(17deg);
+  }
+
+  .grain::before {
+    width: 48px;
+    height: 14px;
+    right: -4px;
+    top: 20px;
+  }
+
+  .grain::after {
+    width: 43px;
+    height: 13px;
+    left: 35px;
+    top: 43px;
+    transform: rotate(-19deg);
+  }
+
+  .dancers {
+    background:
+      radial-gradient(ellipse at 67% 38%, #ef87a2 0 31%, transparent 32%),
+      linear-gradient(145deg, #f9eee9, #f7ced8);
+  }
+
+  .dancers::before {
+    content: "";
+    position: absolute;
+    left: 25px;
+    top: 15px;
+    width: 15px;
+    height: 52px;
+    background: #181818;
+    border-radius: 50% 50% 35% 35%;
+    transform: rotate(-26deg);
+    box-shadow:
+      21px 4px 0 -2px #f6ddc8,
+      38px 16px 0 -5px #1b1b1b;
+  }
+
+  .animal {
+    background: #f4f0e7;
+  }
+
+  .animal::before {
+    content: "";
+    position: absolute;
+    left: 13px;
+    top: 20px;
+    width: 65px;
+    height: 30px;
+    background: #8b7565;
+    border: 2px solid #554c45;
+    border-radius: 48% 42% 38% 45%;
+    transform: rotate(-5deg);
+    box-shadow:
+      46px -10px 0 -8px #8b7565,
+      5px 31px 0 -12px #554c45,
+      47px 29px 0 -12px #554c45;
+  }
+
+  .animal::after {
+    content: "";
+    position: absolute;
+    right: 7px;
+    top: 13px;
+    width: 20px;
+    height: 16px;
+    background: #8b7565;
+    border: 2px solid #554c45;
+    border-radius: 40% 55% 45% 50%;
+    transform: rotate(13deg);
+  }
+</style>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+  <main class="page">
+    <div class="title">1.头孢菌素分类</div>
+    <div class="doodle" aria-label="[Doodle: yellow star-like mark]">
+      <span class="a"></span>
+      <span class="b"></span>
+      <span class="c"></span>
+      <span class="d"></span>
+      <span class="e"></span>
+    </div>
+
+    <table class="classification" aria-label="头孢菌素分类表">
+      <colgroup>
+        <col style="width:80px">
+        <col style="width:80px">
+        <col style="width:376px">
+      </colgroup>
+      <tr class="r1">
+        <td class="category" rowspan="4">头孢<br>菌素类</td>
+        <td class="generation">第一代</td>
+        <td class="details">头孢唑林、<span class="chalk">氨苄</span>、羟氨苄、<span class="chalk underline">拉定</span>、硫脒、<span class="chalk circle">噻吩</span></td>
+      </tr>
+      <tr class="r2">
+        <td class="generation">第二代</td>
+        <td class="details">头孢呋辛、<span class="chalk">孟多</span>、<span class="chalk">替安</span>、克洛、<span class="chalk">丙烯</span></td>
+      </tr>
+      <tr class="r3">
+        <td class="generation">第<span class="chalk circle">三</span>代</td>
+        <td class="details">
+          头孢他啶、他美、<span class="chalk underline">匹胺</span>、<span class="chalk">哌酮</span>、<span class="chalk underline">曲松</span>、<span class="chalk">噻肟</span>、<br>
+          克肟、唑肟、甲肟、泊肟、<span class="chalk circle">地尼</span>
+        </td>
+      </tr>
+      <tr class="r4">
+        <td class="generation">第四代</td>
+        <td class="details">头孢<span class="chalk underline">匹罗</span>、<span class="chalk">吡肟</span></td>
+      </tr>
+    </table>
+
+    <table class="mnemonic" aria-label="记忆口诀">
+      <colgroup>
+        <col style="width:91px">
+        <col style="width:255px">
+      </colgroup>
+      <tr>
+        <td class="memory-title" colspan="2">记忆一下</td>
+      </tr>
+      <tr class="memory-row">
+        <td class="label">第一代</td>
+        <td class="phrase">一头坐便<span class="underline">拉定</span>，<span class="underline">米粉</span>吃多了</td>
+      </tr>
+      <tr class="memory-row">
+        <td class="label">第二代</td>
+        <td class="phrase">二<span class="underline">呋孟多</span>，替俺克丙</td>
+      </tr>
+      <tr class="memory-row">
+        <td class="label">第三代</td>
+        <td class="phrase">他啶哌曲肟三姝地</td>
+      </tr>
+      <tr class="memory-row">
+        <td class="label">第四代</td>
+        <td class="phrase">四匹罗子吡肟牛</td>
+      </tr>
+    </table>
+
+    <section class="image-grid" aria-label="记忆辅助图片">
+      <figure class="placeholder toilet">
+        <figcaption class="caption">[Image: cartoon figure and toilet]</figcaption>
+      </figure>
+      <figure class="placeholder grain">
+        <figcaption class="caption">[Image: hands over grain]</figcaption>
+      </figure>
+      <figure class="placeholder dancers">
+        <figcaption class="caption">[Image: figures on pink background]</figcaption>
+      </figure>
+      <figure class="placeholder animal">
+        <figcaption class="caption">[Image: donkey]</figcaption>
+      </figure>
+    </section>
+  </main>
+</body>
+</html>

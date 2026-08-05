@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kubernetes Documentation</title>
+  <script>
+    window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: #252525;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 16px;
+      line-height: 1.45;
+      background: #fff;
+    }
+    .topbar {
+      height: 66px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #c8c8c8;
+      box-shadow: 0 1px 3px rgba(0,0,0,.14);
+      padding: 0 15px;
+      white-space: nowrap;
+    }
+    .brand {
+      width: 365px;
+      color: #326dc1;
+      font-weight: 700;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+    .wheel {
+      width: 29px;
+      height: 29px;
+      border-radius: 50%;
+      border: 2px solid #3473c8;
+      color: #3473c8;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      line-height: 1;
+    }
+    .nav {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 960px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .nav span { padding: 0 10px; }
+    .shell {
+      min-height: calc(100vh - 66px);
+      display: grid;
+      grid-template-columns: 296px minmax(660px, 907px) 1fr;
+    }
+    .sidebar {
+      background: #f7f7f7;
+      border-right: 1px solid #ddd;
+      padding: 14px 18px 32px 24px;
+      overflow: hidden;
+    }
+    .search {
+      height: 39px;
+      width: 203px;
+      border: 1px solid #d5d5d5;
+      border-radius: 7px;
+      background: white;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      margin-bottom: 16px;
+      color: #171717;
+    }
+    .search b { font-size: 25px; margin-right: 5px; font-weight: 400; line-height: 1; }
+    .tree { margin: 0; padding: 0 0 0 16px; list-style: none; }
+    .tree li { margin: 6px 0; }
+    .tree .folder { font-size: 16px; }
+    .tree .folder:before { content: "▸"; font-size: 14px; padding-right: 8px; }
+    .tree .open:before { content: "▾"; color: #3975c6; }
+    .tree .indent { margin-left: 24px; color: #515151; }
+    .tree .deeper { margin-left: 48px; color: #676767; }
+    .tree .current { color: #4a4a4a; font-weight: 700; }
+    .content {
+      border-right: 1px solid #ddd;
+      padding: 22px 22px 70px 22px;
+      max-width: 907px;
+      overflow: hidden;
+    }
+    .document {
+      width: 707px;
+      margin-left: 0;
+    }
+    .previous {
+      width: 707px;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 43px;
+      margin-top: 0;
+      padding: 7px 21px 16px;
+    }
+    .rule { height: 1px; background: #dedede; margin: 0 0 6px; }
+    .option { padding-bottom: 11px; }
+    .flag {
+      height: 42px;
+      background: #eee;
+      border-top: 1px solid #ddd;
+      border-bottom: 1px solid #ddd;
+      padding: 9px 8px;
+      margin-bottom: 12px;
+    }
+    .desc { margin-left: 29px; margin-bottom: 22px; }
+    .section-title {
+      font-size: 30px;
+      font-weight: 400;
+      line-height: 1.2;
+      margin: 0 0 17px;
+    }
+    .intro { margin: 0 0 16px; }
+    .tab {
+      display: inline-block;
+      padding: 9px 16px;
+      border: 1px solid #ddd;
+      border-bottom: none;
+      border-radius: 7px 7px 0 0;
+      color: #4c4c4c;
+      margin-bottom: -1px;
+      background: #fff;
+    }
+    .command-box {
+      border: 1px solid #ddd;
+      padding: 0 16px 22px;
+      min-height: 600px;
+    }
+    .command-box p { margin: 0 0 15px; }
+    h2 {
+      font-weight: 400;
+      font-size: 25px;
+      line-height: 1.2;
+      margin: 16px 0 5px;
+    }
+    pre {
+      background: #fafbfc;
+      margin: 12px 0 17px;
+      padding: 14px 16px;
+      font-family: "Courier New", monospace;
+      font-size: 14px;
+      line-height: 1.5;
+      overflow: hidden;
+      white-space: pre;
+    }
+    .option-list { margin-top: 11px; }
+    .option-list .desc { margin-bottom: 19px; }
+    .rightbar {
+      padding: 17px 15px 40px 12px;
+      color: #747474;
+      font-size: 16px;
+      line-height: 1.6;
+      min-width: 236px;
+    }
+    .actions {
+      color: #3473c8;
+      margin: 0 0 17px 8px;
+      line-height: 1.65;
+    }
+    .toc { margin: 0; padding: 0; list-style: none; }
+    .toc li { margin: 1px 0; }
+    @media (max-width: 900px) {
+      .brand { width: 190px; }
+      .nav span:nth-child(n+5) { display: none; }
+      .shell { grid-template-columns: 230px minmax(0,1fr); }
+      .rightbar { display: none; }
+      .content { padding-left: 18px; }
+      .document, .previous { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="wheel">✥</span>kubernetes</div>
+    <nav class="nav">
+      <span>Documentation</span>
+      <span>Kubernetes Blog</span>
+      <span>Training</span>
+      <span>Careers</span>
+      <span>Partners</span>
+      <span>Community</span>
+      <span>Versions⌄</span>
+      <span>English⌄</span>
+    </nav>
+  </header>
+
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="search"><b>⌕</b>Search this site</div>
+      <ul class="tree">
+        <li class="folder">Documentation</li>
+        <li class="folder">Getting started</li>
+        <li class="folder">Concepts</li>
+        <li class="folder">Tasks</li>
+        <li class="folder">Tutorials</li>
+        <li class="folder open">Reference</li>
+        <li class="indent">Glossary</li>
+        <li class="indent folder">API Overview</li>
+        <li class="indent folder">API Access Control</li>
+        <li class="indent folder">Well-Known<br><span class="deeper">Labels,</span><br><span class="deeper">Annotations and</span><br><span class="deeper">Taints</span></li>
+        <li class="indent folder">Kubernetes API</li>
+        <li class="indent folder">Instrumentation</li>
+        <li class="indent folder">Kubernetes Issues<br><span class="deeper">and Security</span></li>
+        <li class="indent folder">Node Reference<br><span class="deeper">Information</span></li>
+        <li class="indent folder">Networking<br><span class="deeper">Reference</span></li>
+        <li class="indent folder open">Setup tools</li>
+        <li class="deeper folder open">Kubeadm</li>
+        <li class="deeper">kubeadm<br>init</li>
+        <li class="deeper">kubeadm<br>join</li>
+        <li class="deeper">kubeadm<br>upgrade</li>
+        <li class="deeper">kubeadm<br>upgrade<br>phases</li>
+        <li class="deeper">kubeadm<br>config</li>
+        <li class="deeper">kubeadm<br>reset</li>
+        <li class="deeper">kubeadm<br>token</li>
+        <li class="deeper">kubeadm<br>version</li>
+        <li class="deeper">kubeadm<br>alpha</li>
+        <li class="deeper">kubeadm<br>certs</li>
+        <li class="deeper current">kubeadm<br>init phase</li>
+        <li class="deeper">kubeadm<br>join phase</li>
+        <li class="deeper">kubeadm<br>kubeconfig</li>
+        <li class="deeper">kubeadm<br>reset phase</li>
+        <li class="deeper">Implementation</li>
+      </ul>
+    </aside>
+
+    <main class="content">
+      <div class="document">
+        <section class="previous">
+          <div class="rule"></div>
+          <div class="option">
+            <div class="flag">--dry-run</div>
+            <div class="desc">Don't apply any changes; just output what would be done.</div>
+          </div>
+          <div class="rule"></div>
+          <div class="option">
+            <div class="flag">-h, --help</div>
+            <div class="desc">help for mark-control-plane</div>
+          </div>
+          <div class="rule"></div>
+          <div class="option">
+            <div class="flag">--node-name string</div>
+            <div class="desc">Specify the node name.</div>
+          </div>
+          <div class="rule"></div>
+          <h2>Options inherited from parent commands</h2>
+          <div class="flag">--rootfs string</div>
+          <div class="desc">The path to the 'real' host root filesystem. This will cause kubeadm to chroot into<br>the provided path.</div>
+          <div class="rule"></div>
+        </section>
+
+        <h1 class="section-title">kubeadm init phase bootstrap-token</h1>
+        <p class="intro">Use the following phase to configure bootstrap tokens.</p>
+        <div class="tab">bootstrap-token</div>
+        <section class="command-box">
+          <p>Generates bootstrap tokens used to join a node to a cluster</p>
+
+          <h2>Synopsis</h2>
+          <p>Bootstrap tokens are used for establishing bidirectional trust between a node joining the<br>cluster and a control-plane node.</p>
+          <p>This command makes all the configurations required to make bootstrap tokens works and<br>then creates an initial token.</p>
+
+          <pre>kubeadm init phase bootstrap-token [flags]</pre>
+
+          <h2>Examples</h2>
+          <pre>  # Make all the bootstrap token configurations and create an initial token, f
+  # equivalent to what generated by kubeadm init.
+  kubeadm init phase bootstrap-token</pre>
+
+          <h2>Options</h2>
+          <div class="option-list">
+            <div class="flag">--config string</div>
+            <div class="desc">Path to a kubeadm configuration file.</div>
+            <div class="rule"></div>
+            <div class="flag">--dry-run</div>
+            <div class="desc">Don't apply any changes; just output what would be done.</div>
+            <div class="rule"></div>
+            <div class="flag">-h, --help</div>
+            <div class="desc">help for bootstrap-token</div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <aside class="rightbar">
+      <div class="actions">
+        ▧&nbsp; Edit this page<br>
+        ▧&nbsp; Create child page<br>
+        ◉&nbsp; Create an issue<br>
+        ▣&nbsp; Print entire section
+      </div>
+      <ul class="toc">
+        <li>kubeadm init phase preflight</li>
+        <li>kubeadm init phase certs</li>
+        <li>kubeadm init phase kubeconfig</li>
+        <li>kubeadm init phase etcd</li>
+        <li>kubeadm init phase control-plane</li>
+        <li>kubeadm init phase kubelet-start</li>
+        <li>kubeadm init phase wait-control-plane</li>
+        <li>kubeadm init phase upload-config</li>
+        <li>kubeadm init phase upload-certs</li>
+        <li>kubeadm init phase mark-control-plane</li>
+        <li>kubeadm init phase bootstrap-token</li>
+        <li>kubeadm init phase kubelet-finalize</li>
+        <li>kubeadm init phase bootstrap-token</li>
+        <li>kubeadm init phase addon</li>
+        <li>kubeadm init phase show-join-command</li>
+        <li>What's next</li>
+      </ul>
+    </aside>
+  </div>
+</body>
+</html>

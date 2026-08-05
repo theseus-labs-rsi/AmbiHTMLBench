@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Podの優先度とプリエンプション | Kubernetes</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  min-width: 1180px;
+  color: #252525;
+  background: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans JP",
+               "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.52;
+}
+a {
+  color: #2873c7;
+  text-decoration: none;
+}
+a:hover { text-decoration: underline; }
+
+.top-area {
+  height: 252px;
+  color: #fff;
+  background: linear-gradient(105deg, #f5b91d 0%, #f6c24b 39%, #f8d69c 100%);
+}
+.global-header {
+  height: 66px;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  width: 490px;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: .1px;
+}
+.kube-mark {
+  width: 34px;
+  height: 34px;
+  margin-right: 9px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #3377d5;
+  color: #fff;
+  text-align: center;
+  line-height: 30px;
+  font-size: 21px;
+  transform: rotate(-8deg);
+}
+.top-nav {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 15px;
+  font-weight: 700;
+}
+.top-nav a { color: #fff; }
+.caret {
+  display: inline-block;
+  margin-left: 5px;
+  border: 4px solid transparent;
+  border-top-color: rgba(255,255,255,.9);
+  transform: translateY(3px);
+}
+.promo-row {
+  height: 186px;
+  display: flex;
+  align-items: center;
+}
+.promo-copy {
+  margin-left: 184px;
+  width: 820px;
+  color: #101010;
+  line-height: 1.4;
+}
+.promo-title {
+  font-size: 22px;
+  text-decoration: underline;
+  margin-bottom: 2px;
+}
+.promo-copy div:not(.promo-title) { font-size: 15px; }
+.promo-copy a {
+  color: #111;
+  text-decoration: underline;
+}
+.event-logo {
+  width: 270px;
+  height: 104px;
+  margin-left: 23px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #080808;
+}
+.event-half {
+  width: 128px;
+  height: 91px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  text-align: center;
+  font-weight: 800;
+}
+.event-half:first-child {
+  border-right: 1px solid rgba(0,0,0,.75);
+}
+.logo-symbol {
+  height: 52px;
+  font-size: 44px;
+  line-height: 45px;
+  font-weight: 900;
+}
+.cloud-symbol {
+  width: 43px;
+  height: 43px;
+  margin-bottom: 7px;
+  border: 7px solid #0b0b0b;
+  position: relative;
+}
+.cloud-symbol:after {
+  content: "";
+  position: absolute;
+  width: 50px;
+  height: 7px;
+  background: #0b0b0b;
+  left: -11px;
+  top: 12px;
+  transform: rotate(43deg);
+}
+.event-name {
+  font-size: 15px;
+  line-height: 1.05;
+}
+.india {
+  width: 220px;
+  position: absolute;
+  margin-top: 101px;
+  padding-top: 0;
+  border-top: 1px solid rgba(0,0,0,.45);
+  font-size: 12px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.page-layout {
+  display: grid;
+  grid-template-columns: 248px minmax(740px, 944px) 248px;
+  min-height: 1500px;
+}
+.left-sidebar {
+  background: #f5f5f5;
+  border-right: 1px solid #d7dce1;
+  padding: 80px 20px 30px 24px;
+}
+.search-box {
+  height: 39px;
+  margin-bottom: 15px;
+  padding: 7px 10px;
+  border: 1px solid #cfd3d7;
+  border-radius: 6px;
+  background: #fff;
+  color: #202020;
+  box-shadow: 0 1px 3px rgba(0,0,0,.04);
+  font-weight: 600;
+}
+.search-icon {
+  font-size: 19px;
+  margin-right: 6px;
+}
+.nav-tree, .nav-tree ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.nav-tree li {
+  position: relative;
+  margin: 6px 0;
+  padding-left: 17px;
+  line-height: 1.48;
+}
+.nav-tree li:before {
+  content: "";
+  position: absolute;
+  left: 1px;
+  top: 8px;
+  border: 5px solid transparent;
+  border-left-color: #30343a;
+}
+.nav-tree li.open:before {
+  left: 0;
+  top: 10px;
+  border-left-color: transparent;
+  border-top-color: #3476c9;
+}
+.nav-tree ul {
+  margin-top: 3px;
+  margin-left: 8px;
+}
+.nav-tree ul li {
+  margin: 5px 0;
+}
+.nav-tree .deep {
+  margin-left: 22px;
+  color: #60646a;
+}
+.nav-tree .deep li {
+  padding-left: 0;
+  margin: 6px 0;
+}
+.nav-tree .deep li:before { display: none; }
+
+.center-column {
+  min-width: 0;
+  padding: 31px 44px 80px 47px;
+}
+.breadcrumbs {
+  height: 57px;
+  white-space: nowrap;
+  font-size: 16px;
+  color: #555;
+}
+.breadcrumbs .slash {
+  margin: 0 8px;
+  color: #62666a;
+}
+.old-notice {
+  margin: 0 0 28px 32px;
+  padding: 24px 26px 23px;
+  max-width: 820px;
+  border: 3px solid #3f78cc;
+  background: #f7f8fa;
+}
+.old-notice strong {
+  display: block;
+  margin-bottom: 14px;
+}
+.main-content {
+  width: 708px;
+}
+h1 {
+  margin: 0 0 20px;
+  font-size: 39px;
+  line-height: 1.25;
+  letter-spacing: .3px;
+  font-weight: 750;
+}
+h2 {
+  margin: 42px 0 12px;
+  font-size: 31px;
+  line-height: 1.3;
+  font-weight: 500;
+}
+h3 {
+  margin: 43px 0 10px;
+  font-size: 31px;
+  line-height: 1.3;
+  font-weight: 500;
+}
+p { margin: 0 0 14px; }
+.feature-box {
+  margin: 0 0 20px;
+  padding: 17px 16px;
+  border-radius: 11px;
+  background: #dcebf8;
+  font-size: 18px;
+}
+.info-icon {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  margin-right: 6px;
+  border: 1px solid #2d75c7;
+  border-radius: 50%;
+  color: #2870bd;
+  text-align: center;
+  font-size: 13px;
+  line-height: 17px;
+  font-weight: 700;
+  vertical-align: 1px;
+}
+.feature-box strong { font-weight: 800; }
+.intro {
+  margin-bottom: 31px;
+}
+.warning {
+  margin: 0 0 45px;
+  padding: 13px 16px 18px;
+  border-left: 4px solid #eb6c60;
+}
+.warning-title {
+  margin: 0 0 3px;
+  color: #e45c52;
+  font-size: 22px;
+  font-weight: 800;
+}
+.warning p { margin-bottom: 14px; }
+.steps {
+  margin: 17px 0 13px 14px;
+  padding-left: 20px;
+}
+.steps li {
+  margin: 0 0 15px;
+  padding-left: 0;
+}
+code {
+  padding: 1px 4px;
+  background: #eef0f2;
+  color: #326cb4;
+  font-family: Consolas, Monaco, monospace;
+  font-size: .88em;
+}
+.note {
+  margin-top: 31px;
+  padding: 15px 16px 14px;
+  border-left: 4px solid #4f9bd1;
+}
+.note strong { display: block; }
+.note p {
+  margin: 0;
+  line-height: 1.48;
+}
+.mono {
+  font-family: Consolas, Monaco, monospace;
+  font-size: 14px;
+}
+.priority-text {
+  margin-top: 10px;
+}
+
+.right-sidebar {
+  border-left: 1px solid #d7dce1;
+  padding: 20px 13px 40px 13px;
+  color: #72767b;
+}
+.action-list {
+  margin: 0 0 21px 8px;
+  color: #2873c7;
+  font-size: 16px;
+  line-height: 1.43;
+}
+.action {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 3px;
+}
+.action-icon {
+  width: 25px;
+  color: #2873c7;
+  font-size: 18px;
+  font-weight: 800;
+}
+.toc-title {
+  margin: 0 0 4px;
+  font-size: 16px;
+  color: #686d72;
+}
+.toc {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  line-height: 1.47;
+}
+.toc li {
+  margin: 0 0 4px;
+}
+.toc .sub {
+  padding-left: 8px;
+}
+@media (max-width: 1250px) {
+  .page-layout { grid-template-columns: 230px minmax(700px, 1fr) 230px; }
+  .center-column { padding-left: 35px; padding-right: 30px; }
+}
+</style>
+</head>
+<body>
+<header class="top-area">
+  <div class="global-header">
+    <div class="brand">
+      <span class="kube-mark">⚙</span>
+      <span>kubernetes</span>
+    </div>
+    <nav class="top-nav">
+      <a href="#">ドキュメント</a>
+      <a href="#">ブログ</a>
+      <a href="#">トレーニング</a>
+      <a href="#">パートナー</a>
+      <a href="#">コミュニティ</a>
+      <a href="#">バージョン<span class="caret"></span></a>
+      <a href="#">日本語 (Japanese)<span class="caret"></span></a>
+    </nav>
+  </div>
+
+  <div class="promo-row">
+    <div class="promo-copy">
+      <div class="promo-title">KubeCon + CloudNativeCon India 2026</div>
+      <div>Join us for two days of incredible opportunities to collaborate, learn and share with the cloud native community.</div>
+      <div><a href="#">Buy your ticket now! 18 - 19 June | Mumbai, India</a></div>
+    </div>
+
+    <div class="event-logo" aria-label="KubeCon CloudNativeCon India 2026">
+      <div class="event-half">
+        <div class="logo-symbol">◈</div>
+        <div class="event-name">KubeCon</div>
+      </div>
+      <div class="event-half">
+        <div class="cloud-symbol"></div>
+        <div class="event-name">CloudNativeCon</div>
+      </div>
+      <div class="india">India 2026</div>
+    </div>
+  </div>
+</header>
+
+<div class="page-layout">
+  <aside class="left-sidebar">
+    <div class="search-box"><span class="search-icon">⌕</span>検索</div>
+
+    <ul class="nav-tree">
+      <li>ドキュメント</li>
+      <li>はじめに</li>
+      <li class="open">コンセプト
+        <ul>
+          <li>概要</li>
+          <li>クラスターのアーキテクチャ</li>
+          <li>コンテナ</li>
+          <li>Windows in Kubernetes</li>
+          <li>ワークロード</li>
+          <li>Service、負荷分散とネットワーク</li>
+          <li>ストレージ</li>
+          <li>設定</li>
+          <li>セキュリティ</li>
+          <li>ポリシー</li>
+          <li class="open">スケジューリング、プリエンプションと退避
+            <ul class="deep">
+              <li>Kubernetesのスケジューラー</li>
+              <li>Topology-Aware Workload Scheduling (EN)</li>
+              <li>ノード上へのPodのスケジューリング</li>
+              <li>Podのオーバーヘッド</li>
+              <li>Podトポロジー分散制約</li>
+              <li>Podのスケジューリング準備</li>
+              <li>TaintとToleration</li>
+              <li>スケジューリングフレームワーク</li>
+              <li>動的リソース割り当て</li>
+              <li>Gangスケジューリング</li>
+              <li>スケジューラーのパフォーマンス</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </aside>
+
+  <main class="center-column">
+    <div class="breadcrumbs">
+      <a href="#">Kubernetesドキュメント</a><span class="slash">/</span>
+      <a href="#">コンセプト</a><span class="slash">/</span>
+      <a href="#">スケジューリング、プリエンプションと退避</a><span class="slash">/</span>
+      <span>Podの優先度とプリエンプション</span>
+    </div>
+
+    <section class="old-notice">
+      <strong>このページに記載されている情報は古い可能性があります</strong>
+      <div>このページの更新日は英語版よりも古いため、記載されている情報が古い可能性があります。最新の情報をご覧になりたい方は英語版のページをご覧ください: <a href="#">Pod Priority and Preemption</a></div>
+    </section>
+
+    <article class="main-content">
+      <h1>Podの優先度とプリエンプション</h1>
+
+      <div class="feature-box">
+        <span class="info-icon">i</span><strong>FEATURE STATE:</strong> Kubernetes v1.14 [stable]
+      </div>
+
+      <p class="intro"><a href="#">Pod</a>は <em>priority</em>（優先度）を持つことができます。優先度は他のPodに対する相対的なPodの重要度を示します。もしPodをスケジューリングできないときには、スケジューラーはそのPodをスケジューリングできるようにするため、優先度の低いPodをプリエンプトする（追い出す）ことを試みます。</p>
+
+      <section class="warning">
+        <div class="warning-title">警告:</div>
+        <p>クラスターの全てのユーザーが信用されていない場合、悪意のあるユーザーが可能な範囲で最も高い優先度のPodを作成することが可能です。これは他のPodが追い出されたりスケジューリングできない状態を招きます。管理者はResourceQuotaを使用して、ユーザーがPodを高い優先度で作成することを防ぐことができます。</p>
+        <p>詳細は<a href="#">デフォルトで優先度クラスの消費を制限する</a> を参照してください。</p>
+      </section>
+
+      <h2>優先度とプリエンプションを使う方法</h2>
+      <p>優先度とプリエンプションを使うには、</p>
+
+      <ol class="steps">
+        <li>1つまたは複数の<a href="#">PriorityClass</a>を追加します</li>
+        <li>追加したPriorityClassを <code>priorityClassName</code> に設定したPodを作成します。もちろんPodを直接作る必要はありません。一般的には <code>priorityClassName</code> をDeploymentのようなコレクションオブジェクトのPodテンプレートに追加します。</li>
+      </ol>
+
+      <p>これらの手順のより詳しい情報については、この先を読み進めてください。</p>
+
+      <section class="note">
+        <strong>備考:</strong>
+        <p>Kubernetesには最初から既に2つのPriorityClassが設定された状態になっています。<span class="mono">system-cluster-critical</span>と<span class="mono">system-node-critical</span>です。これらは汎用のクラスであり、<a href="#">重要なコンポーネントが常に最初にスケジュールされることを保証する</a>ために使われます。</p>
+      </section>
+
+      <h3>PriorityClass</h3>
+      <p class="priority-text">PriorityClassはnamespaceによらないオブジェクトで、優先度クラスの名称から優先度を表す整数</p>
+    </article>
+  </main>
+
+  <aside class="right-sidebar">
+    <div class="action-list">
+      <div class="action"><span class="action-icon">↗</span><span>ページの編集</span></div>
+      <div class="action"><span class="action-icon">↗</span><span>子ページを作成</span></div>
+      <div class="action"><span class="action-icon">◉</span><span>ドキュメントのissueを<br>作成</span></div>
+      <div class="action"><span class="action-icon">▣</span><span>セクション全体を印刷</span></div>
+    </div>
+
+    <div class="toc-title">優先度とプリエンプションを使う方法</div>
+    <ul class="toc">
+      <li>PriorityClass</li>
+      <li class="sub">PodPriorityと既存のクラスターに関する注意</li>
+      <li class="sub">PriorityClassの例</li>
+      <li>非プリエンプトのPriorityClass</li>
+      <li class="sub">非プリエンプトのPriorityClassの例</li>
+      <li>Podの優先度</li>
+      <li class="sub">スケジューリング順序におけるPodの優先度の効果</li>
+      <li>プリエンプション</li>
+      <li class="sub">ユーザーへ開示される情報</li>
+      <li class="sub">プリエンプトの制限</li>
+      <li>トラブルシューティング</li>
+      <li class="sub">Podが不必要にプリエンプトされる</li>
+      <li class="sub">Podはプリエンプトされたが、プリエンプトさせたPodがスケジューリングされない</li>
+      <li class="sub">優先度の高いPodが優先度の低いPodより先にプリエンプトされる</li>
+      <li>Podの優先度とQoSの相互作用</li>
+      <li>次の項目</li>
+    </ul>
+  </aside>
+</div>
+</body>
+</html>

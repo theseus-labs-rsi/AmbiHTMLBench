@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WRGX Invoice</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: #fff; }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      color: #050505;
+    }
+    .page {
+      width: 1700px;
+      height: 2200px;
+      margin: 0 auto;
+      position: relative;
+      padding: 48px 49px 0;
+      background: white;
+    }
+    .page-number {
+      position: absolute;
+      top: 49px;
+      right: 67px;
+      font-size: 23px;
+      letter-spacing: .5px;
+    }
+    .header {
+      height: 366px;
+      position: relative;
+    }
+    .logo-area {
+      position: absolute;
+      top: 57px;
+      left: 17px;
+      width: 254px;
+      height: 250px;
+      text-align: center;
+    }
+    .logo-mark {
+      width: 224px;
+      height: 142px;
+      margin: 0 auto 4px;
+      border-radius: 50% 50% 23% 23%;
+      position: relative;
+      background:
+        radial-gradient(ellipse at 50% 100%, #fff 0 18%, transparent 19%),
+        linear-gradient(70deg, transparent 33%, #ffd100 34% 44%, transparent 45%),
+        linear-gradient(108deg, transparent 31%, #f36514 32% 42%, transparent 43%),
+        linear-gradient(83deg, transparent 39%, #e31b23 40% 51%, transparent 52%),
+        linear-gradient(97deg, transparent 49%, #7f20cf 50% 61%, transparent 62%),
+        linear-gradient(124deg, transparent 58%, #0089d0 59% 69%, transparent 70%),
+        linear-gradient(52deg, transparent 65%, #00a847 66% 77%, transparent 78%);
+      border-bottom: 6px solid #555;
+      opacity: .95;
+    }
+    .logo-text {
+      font-size: 66px;
+      line-height: 64px;
+      font-weight: 900;
+      font-style: italic;
+      letter-spacing: -5px;
+    }
+    .logo-rule {
+      height: 2px;
+      background: #555;
+      width: 225px;
+      margin: 8px auto 7px;
+    }
+    .logo-sub {
+      font-size: 17px;
+      color: #666;
+      letter-spacing: 2px;
+      white-space: nowrap;
+    }
+    .remit {
+      position: absolute;
+      top: 62px;
+      left: 284px;
+      font-size: 25px;
+      line-height: 1.34;
+    }
+    .remit strong {
+      display: block;
+      font-size: 28px;
+      line-height: 1.22;
+      margin-top: 9px;
+    }
+    h1 {
+      position: absolute;
+      top: 16px;
+      left: 0;
+      right: 0;
+      margin: 0;
+      text-align: center;
+      font-size: 45px;
+      letter-spacing: .5px;
+      font-weight: 800;
+    }
+    .info {
+      position: absolute;
+      top: 101px;
+      right: 5px;
+      width: 780px;
+      border-collapse: collapse;
+      font-size: 23px;
+      table-layout: fixed;
+    }
+    .info td {
+      border: 2px solid #111;
+      height: 34px;
+      padding: 2px 7px;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+    .info .label { background: #dedede; }
+    .invoice-block {
+      margin-top: 0;
+    }
+    .main-header {
+      display: grid;
+      grid-template-columns: 66px 132px 135px 255px 210px 198px 102px 145px 104px 1fr;
+      align-items: end;
+      height: 45px;
+      font-size: 23px;
+      white-space: nowrap;
+    }
+    .main-header div:nth-child(7),
+    .main-header div:nth-child(8) { text-align: center; }
+    .main-header div:nth-child(9),
+    .main-header div:nth-child(10) { text-align: center; }
+    .black-rule {
+      height: 8px;
+      background: #050505;
+      width: 100%;
+      border-radius: 1px;
+    }
+    .spot-box {
+      height: 264px;
+      border-left: 3px solid #111;
+      border-right: 3px solid #111;
+      border-bottom: 3px solid #111;
+      font-size: 23px;
+      overflow: hidden;
+    }
+    .line-row {
+      height: 57px;
+      display: grid;
+      grid-template-columns: 66px 132px 135px 255px 210px 198px 102px 145px 104px 1fr;
+      align-items: start;
+      padding-top: 4px;
+    }
+    .line-row div { white-space: nowrap; }
+    .line-row .center { text-align: center; }
+    .line-row .desc { line-height: 24px; }
+    .line-row .type { text-align: center; }
+    .subsection {
+      border-top: 2px solid #111;
+      padding: 0 14px;
+    }
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 64px 57px 80px 56px 119px 123px 333px 202px 73px 1fr 62px 54px;
+      align-items: baseline;
+      line-height: 1.33;
+      white-space: nowrap;
+    }
+    .detail-grid.headerline {
+      height: 27px;
+      align-items: end;
+    }
+    .detail-grid.headerline div {
+      text-decoration: underline;
+    }
+    .detail-grid .no-line { text-decoration: none !important; }
+    .detail-grid .right { text-align: right; }
+    .detail-grid .center { text-align: center; }
+    .weeks {
+      display: grid;
+      grid-template-columns: 128px 132px 127px 168px 234px 214px 1fr;
+      height: 52px;
+      padding-left: 39px;
+      font-size: 22px;
+      align-items: baseline;
+      white-space: nowrap;
+    }
+    .weeks .under { text-decoration: underline; }
+    .weeks .spw { text-align: center; }
+    .total-spots {
+      width: 100%;
+      height: 77px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 132px;
+      font-size: 23px;
+    }
+    .total-spots span:first-child { text-decoration: underline; }
+    .total-spots strong { font-size: 22px; }
+    .heavy-rule {
+      height: 8px;
+      background: #050505;
+      width: 100%;
+      margin-top: 0;
+    }
+    .summary {
+      position: relative;
+      height: 215px;
+      padding-top: 26px;
+    }
+    .terms {
+      font-size: 33px;
+      font-weight: 700;
+    }
+    .money {
+      position: absolute;
+      top: 25px;
+      right: 48px;
+      width: 425px;
+      font-size: 23px;
+    }
+    .money-row {
+      display: grid;
+      grid-template-columns: 1fr 127px;
+      min-height: 51px;
+      align-items: start;
+    }
+    .money-row .label {
+      text-decoration: underline;
+      text-align: right;
+      padding-right: 18px;
+    }
+    .money-row .value {
+      font-weight: 700;
+      text-align: right;
+    }
+    .balance {
+      position: absolute;
+      top: 182px;
+      right: 48px;
+      width: 680px;
+      display: grid;
+      grid-template-columns: 1fr 128px;
+      font-size: 23px;
+    }
+    .balance .label {
+      text-decoration: underline;
+      text-align: right;
+      padding-right: 18px;
+      white-space: nowrap;
+    }
+    .balance .value {
+      text-align: right;
+      font-weight: 700;
+    }
+    .footer-note {
+      position: absolute;
+      left: 64px;
+      right: 64px;
+      bottom: 143px;
+      text-align: center;
+      font-size: 16px;
+      line-height: 20px;
+    }
+    .powered {
+      position: absolute;
+      right: 62px;
+      bottom: 62px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="page-number">Page&nbsp;&nbsp; 2 of&nbsp; 2</div>
+
+    <section class="header">
+      <div class="logo-area" aria-label="WRGX logo">
+        <div class="logo-mark"></div>
+        <div class="logo-text">WRGX</div>
+        <div class="logo-rule"></div>
+        <div class="logo-sub">YOUR HOMETOWN NBC</div>
+      </div>
+
+      <div class="remit">
+        Send Payment To:
+        <strong>WRGX<br>P.O. Box 14200<br>Tallahassee, FL&nbsp;&nbsp;32317-4200</strong>
+      </div>
+
+      <h1>INVOICE</h1>
+
+      <table class="info">
+        <colgroup>
+          <col style="width:150px">
+          <col style="width:250px">
+          <col style="width:160px">
+          <col style="width:220px">
+        </colgroup>
+        <tr>
+          <td class="label">Invoice #</td>
+          <td>1501053-2</td>
+          <td class="label">Invoice Month</td>
+          <td>March 2020</td>
+        </tr>
+        <tr>
+          <td class="label">Invoice Date</td>
+          <td>03/29/20</td>
+          <td class="label">Invoice Period</td>
+          <td>02/24/20 - 03/02/20</td>
+        </tr>
+        <tr>
+          <td class="label">Advertiser</td>
+          <td colspan="3">Mary Windom Court of Criminal Appeals</td>
+        </tr>
+        <tr>
+          <td class="label">Product</td>
+          <td colspan="3">TV</td>
+        </tr>
+        <tr>
+          <td class="label">Estimate #</td>
+          <td colspan="3">6034</td>
+        </tr>
+      </table>
+    </section>
+
+    <section class="invoice-block">
+      <div class="main-header">
+        <div>Line</div>
+        <div>Start Date</div>
+        <div>End Date</div>
+        <div>Description</div>
+        <div>Start/End Time</div>
+        <div>MTWTFSS</div>
+        <div>Length</div>
+        <div>Spots/<br>Week</div>
+        <div>Rate</div>
+        <div>Type</div>
+      </div>
+      <div class="black-rule"></div>
+
+      <div class="spot-box">
+        <div class="line-row">
+          <div class="center">3</div>
+          <div>02/10/20</div>
+          <div>03/02/20</div>
+          <div class="desc">WTVY News 4 @10p Sil<br>mulca</div>
+          <div>9:59 PM-10:34 PM</div>
+          <div>1111---</div>
+          <div class="center">:30</div>
+          <div class="center">4</div>
+          <div class="center">$15.00</div>
+          <div class="type">NM</div>
+        </div>
+
+        <div class="subsection">
+          <div class="detail-grid headerline">
+            <div class="no-line">Spots:</div>
+            <div>#</div>
+            <div>Ch</div>
+            <div>Day</div>
+            <div>Air Date</div>
+            <div>Air Time</div>
+            <div>Description</div>
+            <div>Start/End Time</div>
+            <div>Length</div>
+            <div>Ad-ID</div>
+            <div>Rate</div>
+            <div>Type</div>
+          </div>
+          <div class="detail-grid">
+            <div></div><div class="center">11</div><div>WRGX</div><div class="center">W</div><div>02/26/20</div><div>10:33 PM</div><div>WTVY News 4 @10p Silmulca</div><div>9:59 PM-10:34 PM</div><div class="right">:30</div><div>TPALWIN2001H</div><div class="right">$15.00</div><div class="right">NM</div>
+          </div>
+          <div class="detail-grid">
+            <div></div><div class="center">12</div><div>WRGX</div><div class="center">Th</div><div>02/27/20</div><div>10:33 PM</div><div>WTVY News 4 @10p Silmulca</div><div>9:59 PM-10:34 PM</div><div class="right">:30</div><div>TPALWIN2001H</div><div class="right">$15.00</div><div class="right">NM</div>
+          </div>
+          <div class="weeks">
+            <div>Weeks:</div>
+            <div><span class="under">Start Date</span><br>03/02/20</div>
+            <div><span class="under">End Date</span><br>03/08/20</div>
+            <div><span class="under">MTWTFSS</span><br>1------</div>
+            <div class="spw"><span class="under">Spots/Week</span><br>1</div>
+            <div><span class="under">Rate</span><br>$15.00</div>
+            <div></div>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <div class="detail-grid headerline">
+            <div class="no-line">Spots:</div>
+            <div>#</div>
+            <div>Ch</div>
+            <div>Day</div>
+            <div>Air Date</div>
+            <div>Air Time</div>
+            <div>Description</div>
+            <div>Start/End Time</div>
+            <div>Length</div>
+            <div>Ad-ID</div>
+            <div>Rate</div>
+            <div>Type</div>
+          </div>
+          <div class="detail-grid">
+            <div></div><div class="center">13</div><div>WRGX</div><div class="center">M</div><div>03/02/20</div><div>10:00 PM</div><div>WTVY News 4 @10p Silmulca</div><div>9:59 PM-10:34 PM</div><div class="right">:30</div><div>TPALWIN2001H</div><div class="right">$15.00</div><div class="right">NM</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="total-spots">
+        <span>Total Spots</span>
+        <strong>15</strong>
+      </div>
+      <div class="heavy-rule"></div>
+
+      <div class="summary">
+        <div class="terms">Payment Terms 30 Days</div>
+        <div class="money">
+          <div class="money-row"><div class="label">Gross Total</div><div class="value">$325.00</div></div>
+          <div class="money-row"><div class="label">Agency Commission</div><div class="value">$48.75</div></div>
+          <div class="money-row"><div class="label">Net Amount Due</div><div class="value">$276.25</div></div>
+        </div>
+        <div class="balance">
+          <div class="label">Invoice Balance as of 03/31/20 3:25:15 PM ET</div>
+          <div class="value">$0.00</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer-note">
+      We warrant that the actual broadcast information shown on this invoice was taken from the program log. &nbsp;The station does not discriminate in its advertising contracts, and it will not accept advertising intended to<br>
+      discriminate on the basis of race or ethnicity. &nbsp;Advertiser hereto affirms that nothing in this Agreement is intended to discriminate on the basis of race or ethnicity. &nbsp;This Agreement is subject to the Standard Terms<br>
+      and Conditions available at the link located above on this invoice.
+    </div>
+    <div class="powered">powered by WideOrbit</div>
+  </div>
+</body>
+</html>

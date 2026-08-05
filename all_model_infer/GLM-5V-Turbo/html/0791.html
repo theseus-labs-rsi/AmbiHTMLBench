@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script>window.MathJax={tex:{inlineMath:[["$","$"]],displayMath:[["$$","$$"]]}};</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>步行游览区北线 - 游览指南</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            display: flex;
+            min-height: 800px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        /* 左侧边栏 */
+        .sidebar {
+            width: 100px;
+            background-color: #e8f4f8;
+            border-right: 2px solid #b0d4e3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 10px;
+            position: relative;
+        }
+        
+        .vertical-title {
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            font-size: 36px;
+            font-weight: bold;
+            color: #4a7c8c;
+            letter-spacing: 8px;
+            text-shadow: 2px 2px 0px rgba(74,124,140,0.1);
+        }
+        
+        .route-info {
+            margin-top: 40px;
+            text-align: center;
+            color: #4a7c8c;
+        }
+        
+        .route-char {
+            font-size: 28px;
+            font-weight: bold;
+            display: block;
+            margin: 5px 0;
+        }
+        
+        .arrow-down {
+            width: 0;
+            height: 0;
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-top: 18px solid #4a7c8c;
+            margin: 5px auto;
+        }
+        
+        .section-number {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 80px;
+            font-weight: bold;
+            color: #7ec8e3;
+            opacity: 0.6;
+            font-family: Arial, sans-serif;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        /* 主内容区 */
+        .main-content {
+            flex: 1;
+            padding: 20px 30px;
+            position: relative;
+        }
+        
+        /* 接上篇标识 */
+        .continuation-header {
+            text-align: right;
+            margin-bottom: 20px;
+            position: relative;
+            padding-right: 60px;
+        }
+        
+        .continuation-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            display: inline-block;
+            position: relative;
+        }
+        
+        .mountain-icon {
+            display: inline-block;
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-bottom: 25px solid #666;
+            margin-left: 5px;
+            position: relative;
+            top: -5px;
+        }
+        
+        .mountain-icon::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: -10px;
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 18px solid #666;
+        }
+        
+        .curved-arrow {
+            position: absolute;
+            top: -10px;
+            left: -40px;
+            width: 50px;
+            height: 30px;
+            border: 3px solid #999;
+            border-bottom: none;
+            border-radius: 50% 50% 0 0;
+            transform: rotate(-20deg);
+        }
+        
+        .curved-arrow::after {
+            content: '';
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 0;
+            height: 0;
+            border-top: 8px solid #999;
+            border-left: 8px solid transparent;
+            transform: rotate(45deg);
+        }
+        
+        /* 各个展区区块 */
+        .section {
+            display: flex;
+            margin-bottom: 35px;
+            position: relative;
+            align-items: flex-start;
+        }
+        
+        /* 招牌样式 */
+        .signboard {
+            background: white;
+            border: 3px solid #5a9ab0;
+            border-radius: 20px 20px 25px 25px;
+            padding: 15px 20px;
+            min-width: 140px;
+            text-align: center;
+            position: relative;
+            margin-right: 20px;
+            flex-shrink: 0;
+            box-shadow: 2px 2px 8px rgba(90,154,176,0.2);
+        }
+        
+        .signboard::before,
+        .signboard::after {
+            content: '';
+            position: absolute;
+            top: -12px;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #5a9ab0;
+            border-radius: 50%;
+            background: white;
+        }
+        
+        .signboard::before {
+            left: 20px;
+        }
+        
+        .signboard::after {
+            right: 20px;
+        }
+        
+        .sign-rope {
+            position: absolute;
+            top: -25px;
+            left: 30px;
+            right: 30px;
+            height: 15px;
+            border: 2px solid #5a9ab0;
+            border-bottom: none;
+            border-radius: 50% 50% 0 0;
+        }
+        
+        .sign-text {
+            font-size: 22px;
+            font-weight: bold;
+            color: #4a7c8c;
+            letter-spacing: 2px;
+        }
+        
+        /* 文本内容 */
+        .content-text {
+            flex: 1;
+            font-size: 16px;
+            color: #333;
+            line-height: 1.8;
+            padding-top: 5px;
+        }
+        
+        /* 图片占位符 */
+        .image-placeholder {
+            width: 180px;
+            height: 130px;
+            background: linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%);
+            border: 2px dashed #aaa;
+            margin-left: 20px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .image-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .placeholder-label {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            padding: 5px;
+        }
+        
+        /* 连接箭头 */
+        .connector-arrow {
+            position: absolute;
+            left: 90px;
+            width: 20px;
+            height: 40px;
+            z-index: 10;
+        }
+        
+        .connector-arrow svg {
+            fill: #666;
+        }
+        
+        .arrow-pos-1 {
+            top: 180px;
+        }
+        
+        .arrow-pos-2 {
+            top: 420px;
+        }
+        
+        /* 特殊强调 */
+        .highlight {
+            color: #d9534f;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 左侧边栏 -->
+        <div class="sidebar">
+            <div class="vertical-title">步行游览区</div>
+            
+            <div class="route-info">
+                <span class="route-char">北</span>
+                <div class="arrow-down"></div>
+                <span class="route-char">线</span>
+            </div>
+            
+            <div class="section-number">6</div>
+        </div>
+        
+        <!-- 主内容区 -->
+        <div class="main-content">
+            <!-- 接上篇 -->
+            <div class="continuation-header">
+                <span class="curved-arrow"></span>
+                <span class="continuation-text">接上篇<span class="mountain-icon"></span></span>
+            </div>
+            
+            <!-- 第一部分：环尾狐猴 -->
+            <div class="section">
+                <div class="signboard">
+                    <div class="sign-rope"></div>
+                    <div class="sign-text">环尾狐猴<br>丛林</div>
+                </div>
+                
+                <div class="content-text">
+                    环尾狐猴的天堂，成群结队的环尾狐猴在这里攀爬跳跃，在零距离投喂专属食物的时候有可能会跳到你的肩膀上哦，这时候就是拍照留念的最佳时机啦！
+                </div>
+                
+                <div class="image-placeholder">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 150'%3E%3Crect fill='%238B7355' width='200' height='150'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='14' fill='%23fff'%3E环尾狐猴照片%3C/text%3E%3C/svg%3E" alt="环尾狐猴">
+                </div>
+            </div>
+            
+            <!-- 连接箭头1 -->
+            <svg class="connector-arrow arrow-pos-1" viewBox="0 0 24 40">
+                <path d="M12 0 L12 30 M6 24 L12 32 L18 24" stroke="#666" stroke-width="2" fill="none"/>
+            </svg>
+            
+            <!-- 第二部分：小熊猫 -->
+            <div class="section">
+                <div class="signboard">
+                    <div class="sign-rope"></div>
+                    <div class="sign-text">小熊猫展区</div>
+                </div>
+                
+                <div class="content-text">
+                    北野里最受欢迎的网红打卡地之一，里面设有零食铺子可以购买竹叶和小熊猫互动，<span class="highlight">注：自带的食物不能给它吃哦！</span>
+                </div>
+                
+                <div class="image-placeholder">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 150'%3E%3Crect fill='%23D2691E' width='200' height='150'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='14' fill='%23fff'%3E小熊猫玩偶%3C/text%3E%3C/svg%3E" alt="小熊猫">
+                </div>
+            </div>
+            
+            <!-- 连接箭头2 -->
+            <svg class="connector-arrow arrow-pos-2" viewBox="0 0 24 40">
+                <path d="M12 0 L12 30 M6 24 L12 32 L18 24" stroke="#666" stroke-width="2" fill="none"/>
+            </svg>
+            
+            <!-- 第三部分：爬行动物 -->
+            <div class="section">
+                <div class="signboard">
+                    <div class="sign-rope"></div>
+                    <div class="sign-text">爬行动物馆</div>
+                </div>
+                
+                <div class="content-text">
+                    喜欢蟒蛇、蜥蜴的小伙伴们千万不要错过这里，黄金蟒、网纹蟒、红鬣蜥、绿鬣蜥、黑白泰迦等都有！<span class="highlight">PS：怕蛇的小伙伴就不要挑战自己啦！</span>
+                </div>
+                
+                <div class="image-placeholder">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 150'%3E%3Crect fill='%23DAA520' width='200' height='150'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='14' fill='%23fff'%3E黄金蟒照片%3C/text%3E%3C/svg%3E" alt="爬行动物">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

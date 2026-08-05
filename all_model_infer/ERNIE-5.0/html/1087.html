@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>window.MathJax={tex:{inlineMath:[["$","$"]],displayMath:[["$$","$$"]]}};</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Architecture Center - Google Cloud</title>
+    <style>
+        :root {
+            --primary-blue: #1a73e8;
+            --text-dark: #202124;
+            --text-gray: #5f6368;
+            --bg-light: #f8f9fa;
+            --border-color: #dadce0;
+            --font-family: 'Google Sans', Roboto, Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            color: var(--text-dark);
+            background-color: #fff;
+            line-height: 1.5;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--primary-blue);
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 24px;
+            height: 60px;
+            border-bottom: 1px solid transparent;
+        }
+
+        .header-left, .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            font-weight: 500;
+            font-size: 22px;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .logo span { color: #4285F4; }
+        .logo span:nth-child(2) { color: #EA4335; }
+        .logo span:nth-child(3) { color: #FBBC05; }
+        .logo span:nth-child(4) { color: #4285F4; }
+        .logo span:nth-child(5) { color: #34A853; }
+        .logo span:nth-child(6) { color: #EA4335; }
+
+        .nav-item {
+            font-size: 14px;
+            color: var(--text-dark);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .search-bar {
+            background: #f1f3f4;
+            border-radius: 8px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            width: 250px;
+        }
+
+        .search-bar input {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 100%;
+            margin-left: 8px;
+            font-size: 14px;
+        }
+
+        .header-btn {
+            background: #f8f9fa;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sign-in-btn {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 9px 23px;
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            background-color: #e8f0fe; /* Light blue tint */
+            padding: 60px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 600px;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 36px;
+            font-weight: 400;
+            margin-bottom: 16px;
+            color: var(--text-dark);
+        }
+
+        .hero p {
+            font-size: 16px;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .hero-link {
+            font-size: 14px;
+            font-weight: 500;
+            margin-top: 8px;
+            display: inline-block;
+        }
+
+        .hero-graphic {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 50%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0.8;
+        }
+        
+        /* Placeholder for the abstract graphic */
+        .graphic-placeholder {
+            width: 400px;
+            height: 300px;
+            position: relative;
+        }
+        .gp-cloud {
+            position: absolute;
+            top: 50px;
+            left: 100px;
+            width: 80px;
+            height: 50px;
+            border: 2px solid #4285F4;
+            border-radius: 40px;
+            background: white;
+        }
+        .gp-cloud::after {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 10px;
+            width: 40px;
+            height: 40px;
+            border: 2px solid #4285F4;
+            border-radius: 50%;
+            background: white;
+        }
+        .gp-hex {
+            position: absolute;
+            bottom: 20px;
+            right: 50px;
+            width: 200px;
+            height: 180px;
+            border: 3px solid #4285F4;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            background: rgba(66, 133, 244, 0.1);
+        }
+        .gp-circle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 100px;
+            height: 100px;
+            border: 3px solid #FBBC05;
+            border-radius: 50%;
+            background: rgba(251, 188, 5, 0.1);
+        }
+
+        /* Section: Foundational */
+        .section-foundational {
+            padding: 40px 24px;
+            background-color: #f8f9fa;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 400;
+            margin-bottom: 24px;
+            color: var(--text-dark);
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            transition: box-shadow 0.2s;
+        }
+
+        .card:hover {
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        }
+
+        .card h3 {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--primary-blue);
+            margin-bottom: 12px;
+        }
+
+        .card p {
+            font-size: 14px;
+            color: var(--text-dark);
+            line-height: 1.5;
+        }
+
+        /* Section: Domain Specific */
+        .section-domain {
+            padding: 40px 24px;
+            display: flex;
+            gap: 40px;
+        }
+
+        .sidebar {
+            width: 240px;
+            flex-shrink: 0;
+        }
+
+        .filter-header {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-list {
+            list-style: none;
+        }
+
+        .filter-list li {
+            padding: 8px 0;
+            font-size: 14px;
+            color: var(--text-dark);
+            cursor: pointer;
+        }
+        
+        .filter-list li:hover {
+            color: var(--primary-blue);
+        }
+
+        .main-content {
+            flex-grow: 1;
+        }
+
+        .filter-bar {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            color: var(--text-gray);
+            font-size: 14px;
+            background: white;
+        }
+
+        .domain-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .domain-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .domain-card h3 {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--primary-blue);
+            margin-bottom: 8px;
+        }
+
+        .update-date {
+            font-size: 12px;
+            color: var(--text-gray);
+            margin-bottom: 12px;
+        }
+
+        .domain-card p {
+            font-size: 14px;
+            color: var(--text-dark);
+            line-height: 1.5;
+            flex-grow: 1;
+        }
+
+        .external-link-icon {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-top: 2px solid currentColor;
+            border-right: 2px solid currentColor;
+            transform: rotate(45deg);
+            margin-left: 4px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .card-grid, .domain-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .hero-graphic {
+                display: none;
+            }
+        }
+        @media (max-width: 768px) {
+            .card-grid, .domain-grid {
+                grid-template-columns: 1fr;
+            }
+            .section-domain {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+            .header-left .nav-item span { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <div class="logo">
+                <span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span> Cloud
+            </div>
+            <div class="nav-item">Technology areas <span>&#9662;</span></div>
+            <div class="nav-item">Cross-product tools <span>&#9662;</span></div>
+        </div>
+        <div class="header-right">
+            <div class="search-bar">
+                <span>&#128269;</span>
+                <input type="text" placeholder="Search">
+                <span style="font-size: 12px; color: var(--text-gray);">/</span>
+            </div>
+            <button class="header-btn">
+                <span>&#9632;</span> Console
+            </button>
+            <button class="header-btn">
+                <span>&#127760;</span>
+            </button>
+            <button class="header-btn">
+                <span>&#127760;</span> English <span>&#9662;</span>
+            </button>
+            <button class="sign-in-btn">Sign in</button>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Cloud Architecture Center</h1>
+                <p>Discover reference architectures, design guidance, and best practices for building, migrating, and managing your cloud workloads.</p>
+                <a href="#" class="hero-link">See what's new!</a>
+            </div>
+            <div class="hero-graphic">
+                <div class="graphic-placeholder">
+                    <div class="gp-cloud"></div>
+                    <div class="gp-hex"></div>
+                    <div class="gp-circle"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-foundational">
+            <h2 class="section-title">Review foundational architecture guidance for enterprise deployments in Google Cloud</h2>
+            <div class="card-grid">
+                <div class="card">
+                    <h3>Google Cloud Well-Architected Framework</h3>
+                    <p>Design cloud topologies that are secure, efficient, resilient, high-performing, cost-effective, and sustainable.</p>
+                </div>
+                <div class="card">
+                    <h3>Deployment archetypes</h3>
+                    <p>Learn about basic archetypes for cloud deployments: zonal, regional, multi-regional, global, hybrid, and multicloud.</p>
+                </div>
+                <div class="card">
+                    <h3>Infrastructure reliability guide</h3>
+                    <p>Design and build infrastructure to run workloads reliably in Google Cloud.</p>
+                </div>
+                <div class="card">
+                    <h3>Landing zone design</h3>
+                    <p>Build a landing zone that includes identity onboarding, resource hierarchy, network design, and security controls.</p>
+                </div>
+                <div class="card">
+                    <h3>Enterprise foundations blueprint</h3>
+                    <p>Build a foundation for governance, security scale, visibility, and access.</p>
+                </div>
+                <div class="card">
+                    <h3>Delivery Navigator <span class="external-link-icon"></span></h3>
+                    <p>Accelerate cloud solution deployments with implementation plans and technical guides from Google Cloud Consulting.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-domain">
+            <aside class="sidebar">
+                <div class="filter-header">
+                    <span>&#9776;</span> FILTER BY
+                </div>
+                <ul class="filter-list">
+                    <li>AI and ML</li>
+                    <li>Application development</li>
+                    <li>Big data and analytics</li>
+                    <li>Databases</li>
+                    <li>Hybrid and multicloud</li>
+                    <li>Migration</li>
+                    <li>Monitoring and Logging</li>
+                    <li>Networking</li>
+                    <li>Reliability and DR</li>
+                    <li>Security and compliance</li>
+                    <li>Storage</li>
+                </ul>
+            </aside>
+
+            <div class="main-content">
+                <h2 class="section-title">Discover domain-specific architecture guidance</h2>
+                <div class="filter-bar">Filter results</div>
+                
+                <div class="domain-grid">
+                    <div class="domain-card">
+                        <h3>DevOps capabilities</h3>
+                        <div class="update-date">Updated May 21, 2026</div>
+                        <p>A set of capabilities that drive higher software delivery and organizational performance, as identified and validated by the DevOps Research and Assessment (DORA) team.</p>
+                    </div>
+                    <div class="domain-card">
+                        <h3>Networking for AI inference model serving on all backends</h3>
+                        <div class="update-date">Updated May 20, 2026</div>
+                        <p>Guidance to help you create a unified frontend for multiple AI models that are hosted on-premises or by any provider, including third-party and Google Cloud.</p>
+                    </div>
+                    <div class="domain-card">
+                        <h3>Networking for AI inference model serving on GKE</h3>
+                        <div class="update-date">Updated May 20, 2026</div>
+                        <p>Guidance to help you create a multiple-model inference service using GKE.</p>
+                    </div>
+                    <div class="domain-card">
+                        <h3>Build trusted AI agents with Google Maps Platform</h3>
+                        <div class="update-date">Updated May 1, 2026</div>
+                        <p>A high-level architecture to build trusted and effective AI agents by grounding them in real-world contextual data from Google Maps Platform and Google Calendar.</p>
+                    </div>
+                    <div class="domain-card">
+                        <h3>Deployment guidance for Gemini for Government</h3>
+                        <div class="update-date">Updated April 23, 2026</div>
+                        <p>This document provides technical guidance for US Federal agencies and DoD departments on deploying and using Gemini for Government in compliance with FedRAMP...</p>
+                    </div>
+                    <div class="domain-card">
+                        <h3>Agentic AI use case: Build a multicloud open data lakehouse</h3>
+                        <div class="update-date">Updated April 22, 2026</div>
+                        <p>A high-level architecture to build a multicloud open data lakehouse that establishes a highly governed, secure pipeline from raw multicloud silos to AI and agentic driven actions.</p>
+                    </div>
+                    <div class="domain-card">
+                        <h3>Choose your agentic AI architecture components</h3>
+                        <div class="update-date">Updated April 15, 2026</div>
+                        <p>Guidance to help you select the right architecture components for your agentic AI workloads.</p>
+                    </div>
+                    <div class="domain-card">
+                        <h3>FedRAMP and DoD compliance scope for Google Cloud</h3>
+                        <div class="update-date">Updated April 10, 2026</div>
+                        <p>Understand the compliance scope for Google Cloud services under FedRAMP and DoD IL4/IL5.</p>
+                    </div>
+                    <div class="domain-card">
+                        <h3>DoD compliance scope for Distributed Cloud on-prem</h3>
+                        <div class="update-date">Updated April 5, 2026</div>
+                        <p>Details on compliance scope for Distributed Cloud running on-premises.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+</body>
+</html>

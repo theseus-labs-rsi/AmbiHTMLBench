@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RFC 9101 — OAuth JAR — Introduction</title>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$']],
+    displayMath: [['$$', '$$']]
+  }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    color: #202020;
+  }
+
+  body {
+    font-family: "Times New Roman", Times, serif;
+  }
+
+  .page {
+    position: relative;
+    width: 1653px;
+    height: 2081px;
+    margin: 0 auto;
+    background: #fff;
+    overflow: hidden;
+  }
+
+  .header {
+    position: absolute;
+    top: 98px;
+    left: 155px;
+    width: 1342px;
+    font-size: 27px;
+    line-height: 32px;
+  }
+
+  .header-row,
+  .footer-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;
+  }
+
+  .header-row .center,
+  .footer-row .center {
+    text-align: center;
+  }
+
+  .header-row .right,
+  .footer-row .right {
+    text-align: right;
+  }
+
+  .rule {
+    height: 2px;
+    background: #d1d1d1;
+    width: 100%;
+  }
+
+  .header .rule {
+    margin-top: 24px;
+  }
+
+  main {
+    position: absolute;
+    top: 260px;
+    left: 182px;
+    width: 1288px;
+    font-size: 30px;
+    line-height: 1.22;
+  }
+
+  h1 {
+    display: grid;
+    grid-template-columns: 64px auto;
+    column-gap: 0;
+    align-items: baseline;
+    margin: 0 0 23px 0;
+    font-size: 43px;
+    line-height: 1.05;
+    font-weight: 700;
+  }
+
+  h1 .section-number {
+    display: block;
+  }
+
+  h1 .section-title {
+    display: block;
+  }
+
+  p {
+    margin: 0 0 28px 0;
+  }
+
+  a {
+    color: #1717d6;
+    text-decoration: none;
+  }
+
+  code.inline {
+    padding: 0 3px;
+    background: #fafafa;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 0.89em;
+    white-space: nowrap;
+  }
+
+  .code-block {
+    width: 100%;
+    min-height: 145px;
+    margin: 29px 0 28px 0;
+    padding: 27px 91px 24px 91px;
+    border: 2px solid #ededed;
+    background: #fbfbfb;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 27px;
+    line-height: 1.12;
+    white-space: pre;
+  }
+
+  .alpha-list,
+  .number-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .alpha-list {
+    margin: 58px 0 28px 0;
+  }
+
+  .number-list {
+    margin: 57px 0 0 0;
+  }
+
+  .alpha-list li,
+  .number-list li {
+    display: grid;
+    grid-template-columns: 84px 1fr;
+    margin: 0;
+  }
+
+  .alpha-list .marker,
+  .number-list .marker {
+    display: block;
+  }
+
+  .alpha-list .item-text,
+  .number-list .item-text {
+    display: block;
+  }
+
+  .footer {
+    position: absolute;
+    left: 155px;
+    bottom: 40px;
+    width: 1342px;
+    font-size: 27px;
+    line-height: 34px;
+  }
+
+  .footer .rule {
+    margin-bottom: 25px;
+  }
+
+  @media (max-width: 1653px) {
+    .page {
+      transform-origin: top left;
+    }
+  }
+
+  @media print {
+    @page {
+      size: 1653px 2081px;
+      margin: 0;
+    }
+
+    .page {
+      margin: 0;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="header">
+    <div class="header-row">
+      <div>RFC 9101</div>
+      <div class="center">OAuth JAR</div>
+      <div class="right">August 2021</div>
+    </div>
+    <div class="rule"></div>
+  </header>
+
+  <main>
+    <h1>
+      <span class="section-number">1.</span>
+      <span class="section-title">Introduction</span>
+    </h1>
+
+    <p>The authorization request in <a href="#">OAuth 2.0</a> [<a href="#">RFC6749</a>] utilizes query parameter serialization and is<br>
+    typically sent through user agents such as web browsers.</p>
+
+    <p>For example, the parameters <code class="inline">response_type</code>, <code class="inline">client_id</code>, <code class="inline">state</code>, and <code class="inline">redirect_uri</code> are encoded<br>
+    in the URI of the request:</p>
+
+    <pre class="code-block">GET /authorize?response_type=code&amp;client_id=s6BhdRkqt3&amp;state=xyz
+&amp;redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb HTTP/1.1
+Host: server.example.com</pre>
+
+    <p>While it is easy to implement, the encoding in the URI does not allow application-layer security to<br>
+    be used to provide confidentiality and integrity protection. While TLS is used to offer<br>
+    communication security between the client and the user agent as well as the user agent and the<br>
+    authorization server, TLS sessions are terminated in the user agent. In addition, TLS sessions<br>
+    may be terminated prematurely at some middlebox (such as a load balancer).</p>
+
+    <p>As a result, the authorization request of [<a href="#">RFC6749</a>] has shortcomings in that:</p>
+
+    <ol class="alpha-list">
+      <li>
+        <span class="marker">(a)</span>
+        <span class="item-text">the communication through the user agents is not integrity protected, and thus, the<br>
+        parameters can be tainted (integrity protection failure);</span>
+      </li>
+      <li>
+        <span class="marker">(b)</span>
+        <span class="item-text">the source of the communication is not authenticated (source authentication failure);</span>
+      </li>
+      <li>
+        <span class="marker">(c)</span>
+        <span class="item-text">the communication through the user agents can be monitored (containment/<br>
+        confidentiality failure).</span>
+      </li>
+    </ol>
+
+    <p>Due to these inherent weaknesses, several attacks against the protocol, such as redirection URI<br>
+    rewriting, have been identified.</p>
+
+    <p>The use of application-layer security mitigates these issues.</p>
+
+    <p>The use of application-layer security allows requests to be prepared by a trusted third party so<br>
+    that a client application cannot request more permissions than previously agreed upon.</p>
+
+    <p>Furthermore, passing the request by reference allows the reduction of over-the-wire overhead.</p>
+
+    <p>The <a href="#">JWT</a> [<a href="#">RFC7519</a>] encoding has been chosen because of:</p>
+
+    <ol class="number-list">
+      <li>
+        <span class="marker">(1)</span>
+        <span class="item-text">its close relationship with JSON, which is used as OAuth's response format</span>
+      </li>
+      <li>
+        <span class="marker">(2)</span>
+        <span class="item-text">its developer friendliness due to its textual nature</span>
+      </li>
+      <li>
+        <span class="marker">(3)</span>
+        <span class="item-text">its relative compactness compared to XML</span>
+      </li>
+      <li>
+        <span class="marker">(4)</span>
+        <span class="item-text">its development status as a Proposed Standard, along with the associated signing and<br>
+        encryption methods [<a href="#">RFC7515</a>] [<a href="#">RFC7516</a>]</span>
+      </li>
+    </ol>
+  </main>
+
+  <footer class="footer">
+    <div class="rule"></div>
+    <div class="footer-row">
+      <div>Sakimura, et al.</div>
+      <div class="center">Standards Track</div>
+      <div class="right">Page 4</div>
+    </div>
+  </footer>
+</div>
+</body>
+</html>

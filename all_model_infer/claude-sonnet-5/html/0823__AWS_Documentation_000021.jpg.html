@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What is Amazon DynamoDB? - AWS Documentation</title>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Amazon Ember", Helvetica, Arial, sans-serif;
+    color: #16191f;
+    font-size: 14px;
+  }
+  .topbar {
+    background: #0f1114;
+    color: #d5dbdb;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 6px 20px;
+    font-size: 12px;
+    gap: 18px;
+  }
+  .topbar a { color: #d5dbdb; text-decoration: none; }
+  .navbar {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    border-bottom: 1px solid #e9ebed;
+    gap: 30px;
+  }
+  .navbar .logo { font-weight: bold; margin-right: 20px; }
+  .navbar nav { display: flex; gap: 22px; font-size: 14px; flex-grow: 1; }
+  .navbar nav a { color: #16191f; text-decoration: none; }
+  .search-box {
+    border: 1px solid #aab7b8;
+    border-radius: 4px;
+    padding: 6px 10px;
+    width: 260px;
+    color: #545b64;
+    font-size: 13px;
+    margin-right: 16px;
+  }
+  .create-account {
+    background: #ec7211;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+  .main-container {
+    display: flex;
+  }
+  .sidebar {
+    width: 300px;
+    padding: 20px 20px 40px 20px;
+    border-right: 1px solid #e9ebed;
+    flex-shrink: 0;
+  }
+  .sidebar h2 {
+    font-size: 18px;
+    margin: 0 0 2px 0;
+  }
+  .sidebar .subtitle {
+    color: #687078;
+    font-size: 13px;
+    margin-bottom: 20px;
+  }
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .sidebar li {
+    padding: 6px 0;
+    font-size: 13.5px;
+  }
+  .sidebar li.active {
+    color: #0972d3;
+    font-weight: bold;
+  }
+  .sidebar li a {
+    color: #16191f;
+    text-decoration: none;
+  }
+  .sidebar li.link a {
+    color: #0972d3;
+  }
+  .content {
+    flex-grow: 1;
+    padding: 25px 40px;
+    max-width: 900px;
+  }
+  .breadcrumb {
+    font-size: 13px;
+    margin-bottom: 15px;
+  }
+  .breadcrumb a { color: #0972d3; text-decoration: none; }
+  h1 { font-size: 32px; margin: 0 0 20px 0; }
+  h2 { font-size: 24px; margin-top: 40px; }
+  h3 { font-size: 18px; margin-top: 30px; }
+  .btn-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 25px;
+  }
+  .btn-row button {
+    border: 1px solid #aab7b8;
+    background: #fff;
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .toggle-label {
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  p { line-height: 1.6; margin: 0 0 18px 0; }
+  a { color: #0972d3; text-decoration: none; }
+  ul.topics { margin: 0 0 20px 0; padding-left: 20px; }
+  ul.topics li { margin-bottom: 8px; }
+  .right-panel {
+    width: 280px;
+    padding: 25px 20px;
+    flex-shrink: 0;
+    font-size: 13px;
+    position: relative;
+  }
+  .close-x {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 18px;
+    color: #545b64;
+    cursor: pointer;
+  }
+  .right-panel h3 {
+    font-size: 15px;
+    margin-top: 0;
+  }
+  .onpage-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 25px 0;
+    border-left: 2px solid #e9ebed;
+  }
+  .onpage-list li {
+    padding: 4px 0 4px 12px;
+    margin-left: -2px;
+  }
+  .onpage-list li.active {
+    border-left: 2px solid #0972d3;
+    color: #0972d3;
+    font-weight: bold;
+  }
+  .onpage-list li a { color: #545b64; text-decoration: none; }
+  .onpage-list li.active a { color: #0972d3; }
+  .related-links {
+    margin-bottom: 30px;
+    line-height: 1.8;
+  }
+  .related-links a { display: block; }
+  .recommended-box {
+    border: 1px solid #e9ebed;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    overflow: hidden;
+  }
+  .recommended-header {
+    background: #fafafa;
+    padding: 10px 14px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #e9ebed;
+  }
+  .recommended-body {
+    padding: 10px 14px;
+  }
+  .recommended-body a {
+    display: block;
+    margin-bottom: 12px;
+    line-height: 1.4;
+  }
+  .feedback-buttons {
+    display: flex;
+    gap: 8px;
+    margin: 8px 0;
+  }
+  .feedback-buttons button {
+    border: 1px solid #aab7b8;
+    background: #fff;
+    border-radius: 4px;
+    padding: 5px 12px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a>English ▾</a>
+  <a>Preferences ▾</a>
+  <a>Contact Us</a>
+  <a>Feedback</a>
+</div>
+
+<div class="navbar">
+  <span class="logo">🔶 aws</span>
+  <nav>
+    <a>Get started</a>
+    <a>Service guides</a>
+    <a>Developer tools</a>
+    <a>AI resources</a>
+  </nav>
+  <input class="search-box" type="text" placeholder="Search in this guide">
+  <div class="create-account">Create an AWS Account</div>
+</div>
+
+<div class="main-container">
+
+  <div class="sidebar">
+    <h2>Amazon DynamoDB</h2>
+    <div class="subtitle">Developer Guide</div>
+    <ul>
+      <li class="active">What is Amazon DynamoDB?</li>
+      <li>▶ Getting started with DynamoDB</li>
+      <li>▶ How it works</li>
+      <li>▶ Reads and writes</li>
+      <li>▶ DynamoDB throughput capacity</li>
+      <li>▶ Programming with DynamoDB</li>
+      <li>▶ Working with DynamoDB</li>
+      <li>▶ In-memory acceleration with DAX</li>
+      <li>▶ Data modeling</li>
+      <li>Migrating to DynamoDB</li>
+      <li>▶ NoSQL Workbench</li>
+      <li>▶ Backup and restore</li>
+      <li>▶ Code examples</li>
+      <li>▶ Security</li>
+      <li>▶ Monitoring and logging</li>
+      <li>▶ Best practices</li>
+      <li>▶ Using DynamoDB with other AWS services</li>
+      <li>▶ Using agentic AI with DynamoDB</li>
+      <li>▶ Quotas and constraints</li>
+      <li>API reference</li>
+      <li>▶ Troubleshooting</li>
+      <li>▶ Appendix</li>
+      <li>Document history</li>
+      <li>▶ Legacy features</li>
+    </ul>
+  </div>
+
+  <div class="content">
+    <div class="breadcrumb">
+      <a>Documentation</a> &nbsp;›&nbsp; <a>Amazon DynamoDB</a> &nbsp;›&nbsp; Developer Guide
+    </div>
+
+    <h1>What is Amazon DynamoDB?</h1>
+
+    <div class="btn-row">
+      <button>⬇ PDF</button>
+      <button>⬇ RSS</button>
+      <button>⬇ Markdown</button>
+      <span class="toggle-label"><span>⭘</span> Focus mode</span>
+    </div>
+
+    <p>Amazon DynamoDB is a serverless, fully managed, distributed NoSQL database with single-digit millisecond performance at any scale.</p>
+
+    <p>DynamoDB addresses your needs to overcome scaling and operational complexities of relational databases. DynamoDB is purpose-built and optimized for operational workloads that require consistent performance at any scale. For example, DynamoDB delivers consistent single-digit millisecond performance for a shopping cart use case, whether you have 10 or 100 million users. <a href="#">Launched in 2012 ↗</a>, DynamoDB continues to help you move away from relational databases while reducing cost and improving performance at scale.</p>
+
+    <p>Customers across all sizes, industries, and geographies use DynamoDB to build modern, serverless applications that can start small and scale globally. DynamoDB scales to support tables of virtually any size while providing consistent single-digit millisecond performance and high availability.</p>
+
+    <p>For events, such as <a href="#">Amazon Prime Day ↗</a>, DynamoDB powers multiple high-traffic Amazon properties and systems, including <a href="#">Alexa ↗</a>, <a href="#">Amazon.com ↗</a> sites, and all <a href="#">Amazon fulfillment centers ↗</a>. For such events, DynamoDB APIs have handled trillions of calls from Amazon properties and systems. DynamoDB continuously serves hundreds of customers with tables that have peak traffic of over half a million requests per second. It also serves hundreds of customers whose table sizes exceed 200 TB, and processes over one billion requests per hour.</p>
+
+    <h3>Topics</h3>
+    <ul class="topics">
+      <li><a href="#">Characteristics of DynamoDB</a></li>
+      <li><a href="#">DynamoDB use cases</a></li>
+      <li><a href="#">Capabilities of DynamoDB</a></li>
+      <li><a href="#">Service integrations</a></li>
+      <li><a href="#">Security</a></li>
+      <li><a href="#">Resilience</a></li>
+      <li><a href="#">Accessing DynamoDB</a></li>
+      <li><a href="#">DynamoDB pricing</a></li>
+      <li><a href="#">Getting started with DynamoDB</a></li>
+    </ul>
+
+    <h2>Characteristics of DynamoDB</h2>
+
+    <h3>Serverless</h3>
+    <p>With DynamoDB, you don't need to provision any servers, or patch, manage, install, maintain, or operate any software. DynamoDB provides zero downtime maintenance. It has no versions (major, minor, or patch), and there are no maintenance windows.</p>
+
+    <p>DynamoDB's <a href="#">on-demand capacity mode</a> offers pay-as-you-go pricing for read and write requests so you only pay for what you use. With on-demand, DynamoDB instantly scales up or down your tables to adjust for capacity and maintains performance with zero administration. It also scales down to zero so you don't pay for throughput when your table doesn't have traffic and there are no cold starts.</p>
+
+    <h3>NoSQL</h3>
+    <p>As a NoSQL database, DynamoDB is purpose-built to deliver improved performance, scalability, manageability, and flexibility compared to traditional relational databases. To support a wide variety of use cases, DynamoDB supports both key-value and document data models.</p>
+
+    <p>Unlike relational databases, DynamoDB doesn't support a JOIN operator. We recommend that you [illegible]</p>
+  </div>
+
+  <div class="right-panel">
+    <span class="close-x">✕</span>
+    <h3>On this page</h3>
+    <ul class="onpage-list">
+      <li class="active"><a href="#">Characteristics</a></li>
+      <li><a href="#">Use cases</a></li>
+      <li><a href="#">Capabilities</a></li>
+      <li><a href="#">Service integrations</a></li>
+      <li><a href="#">Security</a></li>
+      <li><a href="#">Resilience</a></li>
+      <li><a href="#">Accessing DynamoDB</a></li>
+      <li><a href="#">Pricing</a></li>
+      <li><a href="#">Getting started</a></li>
+    </ul>
+
+    <h3>Related resources</h3>
+    <div class="related-links">
+      <a href="#">Amazon DynamoDB API Reference</a>
+      <a href="#">Cheat Sheet</a>
+      <a href="#">Using Amazon DynamoDB with an AWS SDK</a>
+    </div>
+
+    <h3>▾ Recommended tasks</h3>
+
+    <div class="recommended-box">
+      <div class="recommended-header">Learn about <span>⌃</span></div>
+      <div class="recommended-body">
+        <a href="#">Understand what AWS Lambda is and how it works</a>
+        <a href="#">Understand core components and data organization in DynamoDB</a>
+        <a href="#">Understand what Amazon Relational Database Service is</a>
+        <a href="#">Understand the features and capabilities of Amazon S3</a>
+        <a href="#">Understand what Amazon API Gateway is and its key features</a>
+      </div>
+    </div>
+
+    <div class="recommended-box">
+      <div class="recommended-header">How to <span>⌃</span></div>
+      <div class="recommended-body">
+        <a href="#">Create and manage DynamoDB tables for database development</a>
+        <a href="#">Use DynamoDB with AWS SDKs and CLI for basic operations</a>
+      </div>
+    </div>
+
+    <h3>Did this page help you?</h3>
+    <div class="feedback-buttons">
+      <button>👍 Yes</button>
+      <button>👎 No</button>
+    </div>
+    <a href="#">Provide feedback</a>
+  </div>
+
+</div>
+
+</body>
+</html>

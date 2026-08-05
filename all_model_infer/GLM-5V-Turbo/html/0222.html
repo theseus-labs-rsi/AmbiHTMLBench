@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Well Calibrated Simulation Study - StarBeast3</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #ffffff;
+            color: #000000;
+            line-height: 1.3;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+            border-bottom: 3px solid #4682B4;
+            padding-bottom: 10px;
+        }
+        
+        h1 {
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+        
+        .authors {
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        
+        .affiliations {
+            font-size: 11px;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+        
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .logo-placeholder {
+            width: 180px;
+            height: 60px;
+            border: 1px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #666;
+            background-color: #f9f9f9;
+        }
+        
+        .main-container {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .column {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .section-header {
+            background-color: #4682B4;
+            color: white;
+            padding: 6px 10px;
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .section-content {
+            font-size: 11px;
+            text-align: justify;
+            margin-bottom: 15px;
+        }
+        
+        .keywords {
+            font-weight: bold;
+            margin-top: 8px;
+        }
+        
+        figure {
+            margin: 10px 0;
+            border: 1px solid #999;
+            padding: 5px;
+            background-color: #fff;
+        }
+        
+        figcaption {
+            font-size: 9px;
+            text-align: left;
+            margin-top: 5px;
+            line-height: 1.3;
+        }
+        
+        .operators-section {
+            margin-bottom: 15px;
+        }
+        
+        .operators-intro {
+            font-size: 11px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .operators-grid {
+            display: flex;
+            gap: 5px;
+            align-items: stretch;
+            margin-bottom: 5px;
+        }
+        
+        .operator-box {
+            flex: 1;
+            border: 1px solid #333;
+            padding: 8px 4px;
+            font-size: 9px;
+            text-align: center;
+            font-weight: bold;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 50px;
+        }
+        
+        .starbeast-logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .arrow-placeholder {
+            width: 40px;
+            height: 30px;
+            background-color: #4682B4;
+            clip-path: polygon(0 0, 100% 50%, 0 100%);
+            position: relative;
+        }
+        
+        .starbeast-logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4682B4;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .plot-item {
+            text-align: center;
+        }
+        
+        .plot-title {
+            font-size: 9px;
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+        
+        .plot-subtitle {
+            font-size: 8px;
+            margin-bottom: 5px;
+        }
+        
+        .plot-image {
+            width: 100%;
+            height: 100px;
+            border: 1px solid #ccc;
+            background-color: #fafafa;
+            position: relative;
+        }
+        
+        .plot-caption-text {
+            font-size: 9px;
+            text-align: justify;
+            margin-top: 10px;
+            line-height: 1.4;
+        }
+        
+        .bottom-right {
+            font-size: 9px;
+            line-height: 1.4;
+        }
+        
+        .bottom-right strong {
+            display: block;
+            margin-top: 8px;
+            margin-bottom: 3px;
+        }
+        
+        .qr-code {
+            float: right;
+            width: 60px;
+            height: 60px;
+            border: 1px solid #000;
+            margin-left: 10px;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+        }
+        
+        a {
+            color: #0066cc;
+            word-break: break-all;
+        }
+        
+        ul {
+            margin-left: 15px;
+            font-size: 10px;
+        }
+        
+        li {
+            margin-bottom: 3px;
+        }
+    </style>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)'], ['$$', '$$'], ['\\[', '\\]']], 
+                displayMath: []
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+<div class="header">
+    <h1>WELL CALIBRATED SIMULATION STUDY OF A NOVEL ADAPTIVE<br>PARALLELISED BAYESIAN INFERENCE OF THE MULTISPECIES COALESCENT<br>MODEL TESTING A DIFFERENT NUMBER OF TAXA AND GENES.</h1>
+    
+    <div class="top-bar">
+        <div class="logo-placeholder">[University of Auckland Logo]</div>
+        <div style="text-align: right;">
+            <div style="font-size: 28px; font-weight: bold; color: #4682B4;">Beast2</div>
+        </div>
+    </div>
+    
+    <div class="authors">Hu Ge<sup>1</sup>, Jordan Douglas<sup>2</sup>, Remco Bouckaert<sup>2</sup></div>
+    <div class="affiliations">
+        (1) School of Biological Sciences, University of Auckland, Auckland 1010, New Zealand<br>
+        (2) School of Computer Science, University of Auckland, Auckland 1010, New Zealand
+    </div>
+</div>
+
+<div class="main-container">
+    <!-- LEFT COLUMN -->
+    <div class="column">
+        <div class="section-header">Introduction</div>
+        <div class="section-content">
+            A novel Parallelised Bayesian Inference of the Multispecies Coalescent with new MCMC proposals has been implemented in the open-source BEAST 2 platform as the StarBeasts package. This new approach avoids biases, such as being an inconsistent estimator of the tree topology Furthermore, it explores the state space much more efficiently, allowing the handle of data sets one and a half orders of magnitude larger than StarBEAST2 and more than two orders faster than *BEAST.
+            <br><br>
+            Our goal was to establish the correct implementation of StarBeast3 by testing different numbers of taxa and genes.
+            <br><br>
+            <span class="keywords">Key words:</span> multispecies coalescent; BEAST 2; phylogenetics; bayesian inference; high performance; adaptive; parallelisation.
+        </div>
+        
+        <div class="section-header">Methods</div>
+        <div class="section-content">
+            We performed well calibration studies by simulating alignments using parameters directly sampled from the prior distribution, and then we inferred the posterior estimates of these parameters using StarBeast3 (Figure 1).
+        </div>
+        
+        <figure>
+            <div style="width: 100%; height: 160px; background-color: #f5f5f5; border: 1px solid #999; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #666;">
+                [Figure 1: Pipeline Diagram - 5 steps workflow]
+            </div>
+            <figcaption>
+                <strong>FIGURE 1.</strong> Pipeline of 5 steps implemented by Experimenter package in BEAST 2 that assists in simulation studies to verify correctness of implementation. (1) Set up XML for desired model and sample from prior (2) Generate (MCMC) analysis for each of the Samples (support for multiple alignments) (3) Run the analyses using StarBEAST package in BEAST2. (4) Use loganalyser to summarise trace files (5) Run CoverageCalculator to summarise coverage of parameters. Source: https://github.com/bouckaert/DevelopManual.git
+            </figcaption>
+        </figure>
+        
+        <div class="section-content" style="margin-top: 10px;">
+            We evaluated a strict and relaxed clock model across varying tree sizes (4 species; 12 taxa; 16 species; 48 taxa), and multiple genes (10, 50, 100, and 200). With 100 independent runs, we estimated the coverage of the true value by the 95% highest probability density (HPD) estimates for various parameters in the model (Figure 2) and its newly developed efficient MCMC operators.
+        </div>
+        
+        <figure style="margin-top: 15px;">
+            <div style="width: 100%; height: 200px; background-color: #fff; border: 1px solid #999; overflow: hidden;">
+                [Figure 2: Simulated species trees diagram with node heights, branch rates, gene trees visualization]
+            </div>
+            <figcaption>
+                <strong>Figure 2.</strong> Simulated species trees S with n = 16 species with k = 100 gene trees embedded. Parameters in the multispecies coalescent model are indicated in the figure: Node heights (time) are shown on the y-axis, and effective population sizes on the x-axis. Species tree branch rates are indicated by line thickness. Colors show Gene trees. The tree was built from a Direct simulator in BEAST2 and visualized using UglyTrees (Douglas, 2020).
+            </figcaption>
+        </figure>
+    </div>
+    
+    <!-- RIGHT COLUMN -->
+    <div class="column">
+        <div class="operators-section">
+            <div class="operators-intro">Novel MCMC operators which generate proposals that explore the state space more efficiently implementing in Starbeast3:</div>
+            
+            <div class="operators-grid">
+                <div class="operator-box">Effective Population Size Gibbs Operator</div>
+                <div class="operator-box">Bacterian Operators for Trees</div>
+                <div class="operator-box">Adaptive variance multivariate normal (AMVN) operator</div>
+                <div class="operator-box">Parallel Gene Tree Operator</div>
+                <div class="operator-box">Species Tree Relaxed Clock Model Operators</div>
+            </div>
+            
+            <div class="starbeast-logo-container">
+                <div class="arrow-placeholder"></div>
+                <div class="starbeast-logo">StarBeast3</div>
+            </div>
+        </div>
+        
+        <div class="section-header">Results</div>
+        
+        <div class="results-grid">
+            <!-- Row 1 -->
+            <div class="plot-item">
+                <div class="plot-title">Species tree height</div>
+                <div class="plot-subtitle">Coverage: 96%</div>
+                <div class="plot-image" style="background: linear-gradient(to right bottom, transparent 48%, #000 49%, #000 51%, transparent 52%);"></div>
+            </div>
+            <div class="plot-item">
+                <div class="plot-title">Species tree birth rate</div>
+                <div class="plot-subtitle">Coverage: 94%</div>
+                <div class="plot-image" style="background: radial-gradient(circle at 30% 40%, rgba(70,130,180,0.3) 0%, transparent 30%);"></div>
+            </div>
+            <div class="plot-item">
+                <div class="plot-title">Gene tree height</div>
+                <div class="plot-subtitle">Coverage: 91%</div>
+                <div class="plot-image" style="background: linear-gradient(to right bottom, transparent 45%, #000 46%, #000 54%, transparent 55%);"></div>
+            </div>
+            
+            <!-- Row 2 -->
+            <div class="plot-item">
+                <div class="plot-title">Clock model standard deviation</div>
+                <div class="plot-subtitle">Coverage: 97%</div>
+                <div class="plot-image" style="background: radial-gradient(circle at 25% 35%, rgba(70,130,180,0.4) 0%, transparent 25%);"></div>
+            </div>
+            <div class="plot-item">
+                <div class="plot-title">Branch rate mean</div>
+                <div class="plot-subtitle">Coverage: 92%</div>
+                <div class="plot-image" style="background: radial-gradient(circle at 35% 45%, rgba(70,130,180,0.3) 0%, transparent 20%);"></div>
+            </div>
+            <div class="plot-item">
+                <div class="plot-title">Branch rate variance</div>
+                <div class="plot-subtitle">Coverage: 97%</div>
+                <div class="plot-image" style="background: radial-gradient(circle at 15% 55%, rgba(70,130,180,0.3) 0%, transparent 15%);"></div>
+            </div>
+            
+            <!-- Row 3 -->
+            <div class="plot-item">
+                <div class="plot-title">Transition-transversion ratio</div>
+                <div class="plot-subtitle">Coverage: 96%</div>
+                <div class="plot-image" style="background: radial-gradient(circle at 20% 80%, rgba(70,130,180,0.5) 0%, transparent 10%);"></div>
+            </div>
+            <div class="plot-item">
+                <div class="plot-title">Gene tree substitution rate</div>
+                <div class="plot-subtitle">Coverage: 94%</div>
+                <div class="plot-image" style="background: linear-gradient(to right bottom, transparent 47%, #000 48%, #000 52%, transparent 53%);"></div>
+            </div>
+            <div class="plot-item">
+                <div class="plot-title">Gene tree frequency</div>
+                <div class="plot-subtitle">Coverage: 94%</div>
+                <div class="plot-image" style="background: linear-gradient(to right bottom, transparent 42%, #000 43%, #000 57%, transparent 58%);"></div>
+            </div>
+            
+            <!-- Row 4 -->
+            <div class="plot-item">
+                <div class="plot-title">Effective population size</div>
+                <div class="plot-subtitle">Coverage: 82%</div>
+                <div class="plot-image" style="background: linear-gradient(to right bottom, transparent 44%, #000 45%, #000 55%, transparent 56%);"></div>
+            </div>
+            <div class="plot-item">
+                <div class="plot-title">Mean effective population size</div>
+                <div class="plot-subtitle">Coverage: 95%</div>
+                <div class="plot-image" style="background: radial-gradient(circle at 40% 40%, rgba(70,130,180,0.4) 0%, transparent 30%);"></div>
+            </div>
+            <div class="plot-item"></div>
+        </div>
+        
+        <div class="plot-caption-text">
+            Well-calibrated simulation study analysing $nS = 16$ species, $nG = 48$ taxa, and $k = 50$ genes. One hundred simulations were performed to recover the coverage between "true" simulated values and their estimates under the posterior distribution. Vertical lines represent 95% highest posterior density (HPD) intervals of parameters. Each line represents a single simulation and is colored blue when the true value was contained within the 95% interval, or red otherwise. The top of each plot shows the coverage of each parameter (i.e., the number of MCMC simulations for which the "true" parameter value was contained within the 95% HPD). This result was coherent when we tested 100 and 200 genes, respectively.
+        </div>
+        
+        <div class="section-header" style="margin-top: 15px;">Conclusion</div>
+        <div class="section-content">
+            Our results show all coverage observed is in the expected range, from 90 to 99 inclusive, suggesting the correct implementation of StarBeast3 for all experiments performed. Furthermore, these experiments evidence that starbeast3 is suitable for multispecies coalescent inference on large datasets (100+ genes).
+        </div>
+        
+        <div class="bottom-right">
+            <div style="float: right; text-align: right; margin-bottom: 10px;">
+                <strong>StarBeast3 preprint:</strong>
+                <div class="qr-code">[QR Code]</div>
+            </div>
+            
+            <strong>Software Availability:</strong> StarBeast3 is available as an open-source BEAST 2 package with an easy-to-use graphical user interface.Instructions for downloading and running StarBeast3 can be found at https://github.com/bouckaert/starbeast3
+            
+            <strong>Acknowledgments:</strong> The study was supported by a Marsden grant 18-UOA-096 from the Royal Society of New Zealand. Software packages were benchmarked using the New Zealand Science Infrastructure (NeSI) cluster, funded by the New Zealand Ministry of Business, Innovation, and Employment.
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

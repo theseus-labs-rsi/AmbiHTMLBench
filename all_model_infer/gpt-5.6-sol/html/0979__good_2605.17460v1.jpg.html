@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GRMHD Simulations of Magnetized Accretion Disk/Jet</title>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$']],
+    displayMath: [['$$', '$$']]
+  }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    color: #111;
+    font-family: "Times New Roman", Times, serif;
+  }
+
+  .page {
+    position: relative;
+    width: 826px;
+    height: 1170px;
+    margin: 0 auto;
+    overflow: hidden;
+    background: #fff;
+    padding: 45px 49px 35px;
+  }
+
+  .journal-header {
+    position: relative;
+    height: 68px;
+    border-bottom: 1px solid #777;
+  }
+
+  .universe-logo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 50px;
+    display: flex;
+    align-items: center;
+  }
+
+  .universe-mark {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    margin-right: 6px;
+    overflow: hidden;
+    background: #a9c1c7;
+  }
+
+  .universe-mark span {
+    position: absolute;
+    left: 8px;
+    width: 32px;
+    height: 16px;
+    background: #143d4c;
+    clip-path: polygon(50% 50%, 0 0, 100% 0);
+  }
+
+  .universe-mark .m1 {
+    top: 2px;
+  }
+
+  .universe-mark .m2 {
+    top: 14px;
+    transform: rotate(180deg);
+  }
+
+  .universe-mark .m3 {
+    top: 25px;
+  }
+
+  .universe-mark .m4 {
+    top: 31px;
+    transform: rotate(180deg);
+  }
+
+  .universe-word {
+    color: #123746;
+    font-size: 24px;
+    font-weight: bold;
+    font-style: italic;
+    letter-spacing: -1px;
+  }
+
+  .mdpi-logo {
+    position: absolute;
+    top: 10px;
+    right: 0;
+    width: 61px;
+    padding-top: 10px;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    line-height: 18px;
+    font-weight: 800;
+    border-left: 2px solid #111;
+    border-right: 2px solid #111;
+  }
+
+  .mdpi-logo::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 3px;
+    width: 25px;
+    height: 13px;
+    border-top: 1.5px solid #111;
+    border-left: 1.5px solid #111;
+    transform: skewY(-30deg);
+  }
+
+  .mdpi-logo::after {
+    content: "";
+    position: absolute;
+    right: 3px;
+    bottom: -6px;
+    width: 25px;
+    height: 8px;
+    border-right: 1.5px solid #111;
+    border-bottom: 1.5px solid #111;
+    transform: skewY(-24deg);
+  }
+
+  .article-label {
+    margin-top: 22px;
+    font-size: 14px;
+    font-style: italic;
+  }
+
+  h1 {
+    width: 720px;
+    margin: 2px 0 15px;
+    font-size: 26px;
+    line-height: 29px;
+    font-weight: 700;
+    letter-spacing: 0.05px;
+  }
+
+  .authors {
+    width: 720px;
+    margin-bottom: 31px;
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 700;
+  }
+
+  .authors sup {
+    font-size: 9px;
+    vertical-align: 4px;
+  }
+
+  .orcid {
+    position: relative;
+    top: -1px;
+    display: inline-flex;
+    width: 11px;
+    height: 11px;
+    margin-left: 1px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #a6ce39;
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 6px;
+    font-weight: bold;
+    vertical-align: middle;
+  }
+
+  .document-grid {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    column-gap: 21px;
+  }
+
+  .sidebar {
+    position: relative;
+    min-height: 820px;
+  }
+
+  .arxiv {
+    position: absolute;
+    top: 530px;
+    left: -29px;
+    width: 565px;
+    color: #777;
+    font-size: 26px;
+    line-height: 28px;
+    white-space: nowrap;
+    transform: rotate(-90deg);
+    transform-origin: top left;
+    letter-spacing: 0.1px;
+  }
+
+  .side-metadata {
+    position: absolute;
+    top: 458px;
+    left: 0;
+    width: 157px;
+    font-size: 10px;
+    line-height: 15px;
+  }
+
+  .update-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  .update-icon {
+    position: relative;
+    flex: 0 0 auto;
+    width: 23px;
+    height: 23px;
+    margin-right: 5px;
+    border-radius: 50%;
+    background: #f5c525;
+  }
+
+  .update-icon::after {
+    content: "";
+    position: absolute;
+    left: 6px;
+    top: 4px;
+    width: 8px;
+    height: 12px;
+    border-right: 3px solid #fff;
+    border-bottom: 3px solid #fff;
+    transform: rotate(43deg);
+  }
+
+  .update-text {
+    font-size: 9px;
+    line-height: 9px;
+    font-weight: bold;
+  }
+
+  .side-line {
+    margin-bottom: 3px;
+  }
+
+  .side-label {
+    font-weight: bold;
+  }
+
+  .citation {
+    margin-top: 10px;
+    line-height: 15px;
+  }
+
+  .copyright {
+    margin-top: 25px;
+    line-height: 16px;
+  }
+
+  .main-column {
+    min-width: 0;
+  }
+
+  .affiliations {
+    position: relative;
+    margin-top: 0;
+    margin-bottom: 21px;
+    font-size: 11.7px;
+    line-height: 15px;
+  }
+
+  .aff-row {
+    display: grid;
+    grid-template-columns: 19px 1fr;
+  }
+
+  .aff-num {
+    font-size: 8px;
+    padding-top: 1px;
+  }
+
+  .section-heading {
+    margin: 0 0 11px;
+    font-size: 14px;
+    line-height: 17px;
+    font-weight: bold;
+  }
+
+  .abstract {
+    margin: 0;
+    font-size: 14.7px;
+    line-height: 19.4px;
+    text-align: left;
+  }
+
+  .keywords {
+    margin-top: 16px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #777;
+    font-size: 14px;
+    line-height: 19px;
+  }
+
+  .keywords strong {
+    margin-right: 5px;
+  }
+
+  .introduction {
+    padding-top: 31px;
+  }
+
+  .introduction h2 {
+    margin: 0 0 4px;
+    font-size: 16px;
+    line-height: 19px;
+  }
+
+  .introduction p {
+    margin: 0 0 3px;
+    font-size: 14.5px;
+    line-height: 19.4px;
+    text-align: justify;
+    text-indent: 31px;
+  }
+
+  .reference {
+    color: #1453a3;
+  }
+
+  .footer {
+    position: absolute;
+    left: 49px;
+    right: 49px;
+    bottom: 39px;
+    height: 21px;
+    padding-top: 6px;
+    border-top: 1px solid #888;
+    font-size: 11px;
+    font-style: italic;
+  }
+
+  .footer-left {
+    float: left;
+  }
+
+  .footer-right {
+    float: right;
+    font-style: normal;
+  }
+</style>
+</head>
+<body>
+<main class="page">
+  <header class="journal-header">
+    <div class="universe-logo">
+      <div class="universe-mark" aria-hidden="true">
+        <span class="m1"></span>
+        <span class="m2"></span>
+        <span class="m3"></span>
+        <span class="m4"></span>
+      </div>
+      <div class="universe-word">universe</div>
+    </div>
+    <div class="mdpi-logo">MDPI</div>
+  </header>
+
+  <div class="article-label">Article</div>
+
+  <h1>GRMHD Simulations of Magnetized Accretion Disk/Jet:<br>
+    Variabilities of Black Holes and Spectral Energy Distributions in<br>
+    Magnetic States
+  </h1>
+
+  <div class="authors">
+    Rohan Raha <sup>1,*</sup><span class="orcid">iD</span>,
+    Banibrata Mukhopadhyay <sup>1,*</sup><span class="orcid">iD</span> and
+    Koushik Chatterjee <sup>2,*</sup><span class="orcid">iD</span>
+  </div>
+
+  <div class="document-grid">
+    <aside class="sidebar">
+      <div class="arxiv">arXiv:2605.17460v1&nbsp; [astro-ph.HE]&nbsp; 17 May 2026</div>
+
+      <div class="side-metadata">
+        <div class="update-row">
+          <div class="update-icon" aria-hidden="true"></div>
+          <div class="update-text">check for<br>updates</div>
+        </div>
+
+        <div class="side-line">Academic Editor:</div>
+        <div class="side-line">Received: 31 March 2026</div>
+        <div class="side-line">Revised: 6 May 2026</div>
+        <div class="side-line">Accepted: 8 May 2026</div>
+        <div class="side-line">Published: 12 May 2026</div>
+
+        <div class="citation">
+          <span class="side-label">Citation:</span>&nbsp; . <i>Universe</i> 2026, <i>1</i>, 0.<br>
+          https://doi.org/10.3390/universe12050142
+        </div>
+
+        <div class="copyright">
+          <span class="side-label">Copyright:</span> © 2026 by the authors.<br>
+          Licensee MDPI, Basel, Switzerland.<br>
+          This article is an open access article<br>
+          distributed under the terms and<br>
+          conditions of the Creative Commons<br>
+          Attribution (CC BY) license<br>
+          (https://creativecommons.org/<br>
+          licenses/by/4.0/).
+        </div>
+      </div>
+    </aside>
+
+    <article class="main-column">
+      <section class="affiliations">
+        <div class="aff-row">
+          <div class="aff-num">1</div>
+          <div>Department of Physics, Indian Institute of Science, Bangalore 560012, India</div>
+        </div>
+        <div class="aff-row">
+          <div class="aff-num">2</div>
+          <div>Canadian Institute of Theoretical Astrophysics, University of Toronto, 60 St. George Street,<br>
+            Toronto, ON M5S 3H8, Canada
+          </div>
+        </div>
+        <div class="aff-row">
+          <div class="aff-num">*</div>
+          <div>Correspondence: raharohan@iisc.ac.in (R.R.), bm@iisc.ac.in (B.M.), kchatt@cita.utoronto.ca (K.C.)</div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-heading">Abstract</h2>
+        <p class="abstract">
+          We perform three-dimensional general relativistic magnetohydrodynamic (GRMHD) simulations of a near-maximally spinning black hole (spin parameter $a = 0.998$) with varying initial magnetic field geometries, systematically exploring the parameter space connecting magnetically arrested disk (MAD), intermediate (INT), and standard and normal evolution (SANE) accretion states. The magnetic flux threading the black hole horizon emerges as the fundamental state variable controlling jet efficiency, flow magnetization, and radiative output across all three states. We introduce complementary diagnostics—broadband spectral energy distributions spanning radio through hard X-ray frequencies and time-resolved X-ray light curves—that together connect simulation dynamics directly to multiwavelength observables. The radiative output follows a clear MAD &gt; INT &gt; SANE hierarchy in time-averaged luminosity, mean X-ray emission, as well as variability. Furthermore, MAD exhibits the highest fractional variability through quasi-periodic magnetic flux eruption events, and INT and SANE show moderate variability driven by episodic reconnection and stochastic MRI turbulence, respectively. Scaling to GRS 1915+105, Cyg X-1, and HLX-1, we demonstrate that all twelve temporal classes of GRS 1915+105 map naturally onto our three magnetic states, Cyg X-1’s persistent hard state is reproduced by a sustained INT configuration, and HLX-1’s extreme luminosities arise through efficient Blandford–Znajek extraction in MAD states scaled to higher black hole mass.
+        </p>
+
+        <div class="keywords">
+          <strong>Keywords:</strong> X-ray binaries;&nbsp; Black hole physics;&nbsp; Accretion disks;&nbsp; General Relativity;<br>
+          magnetohydrodynamics; simulations; luminosity
+        </div>
+      </section>
+
+      <section class="introduction">
+        <h2>1. Introduction</h2>
+        <p>
+          Black hole X-ray binaries (BHXRBs) exhibit remarkable spectral and temporal variability, cycling through distinct accretion states characterized by different X-ray spectral shapes, timing properties, and radio jet activity <span class="reference">[1,2]</span>. Understanding the physical mechanisms that drive these state transitions and govern jet launching remains one of the central challenges in high-energy astrophysics. Traditional phenomenological classifications into “hard,” “soft,” and “intermediate” states based on spectral hardness provide useful observational categories but offer limited physical insight into the underlying accretion physics.
+        </p>
+        <p>
+          Among BHXRBs, GRS 1915+105 stands out as exceptionally complex, displaying twelve distinct temporal classes with unique combinations of variability patterns, spectral
+        </p>
+      </section>
+    </article>
+  </div>
+
+  <footer class="footer">
+    <span class="footer-left">Universe 2026, 1, 0</span>
+    <span class="footer-right">https://doi.org/10.3390/universe1010000</span>
+  </footer>
+</main>
+</body>
+</html>

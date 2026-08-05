@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>An Approximation Algorithm for Graph Label Selection</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            background-color: #e0e0e0;
+        }
+        .page {
+            width: 8.5in;
+            height: 11in;
+            background-color: white;
+            position: relative;
+            box-sizing: border-box;
+            padding: 1in;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        .arxiv-sidebar {
+            position: absolute;
+            left: 0.6in;
+            bottom: 1.5in;
+            transform-origin: left bottom;
+            transform: rotate(-90deg);
+            font-size: 14pt;
+            color: #666;
+            white-space: nowrap;
+            letter-spacing: 0.5px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 2em;
+        }
+        .header hr {
+            border: 0;
+            border-top: 1px solid black;
+            margin: 1.2em 0;
+        }
+        .title {
+            font-size: 16pt;
+            font-weight: bold;
+            margin: 0.5em 0;
+        }
+        .authors {
+            font-size: 11pt;
+            margin-top: 1.5em;
+        }
+        .authors sup {
+            font-size: 7pt;
+        }
+        .content {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.3in;
+            text-align: justify;
+            font-size: 10pt;
+            line-height: 1.25;
+            height: 7.5in; /* Fixed height to force footnote to bottom */
+        }
+        .column {
+            width: 48%;
+            display: flex;
+            flex-direction: column;
+        }
+        .abstract-title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 11pt;
+            margin-bottom: 0.5em;
+        }
+        .abstract-text {
+            margin: 0 0.15in 1.5em 0.15in;
+        }
+        .abstract-text p {
+            text-indent: 0;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+        h1 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 1em;
+            margin-bottom: 0.5em;
+        }
+        p {
+            margin-top: 0;
+            margin-bottom: 0;
+            text-indent: 1.2em;
+        }
+        h1 + p {
+            text-indent: 0;
+        }
+        .cite {
+            color: #000080;
+        }
+        .footnote-area {
+            margin-top: auto;
+            padding-top: 0.5em;
+            font-size: 8pt;
+            line-height: 1.15;
+        }
+        .footnote-area::before {
+            content: "";
+            display: block;
+            width: 1.5in;
+            border-top: 1px solid black;
+            margin-bottom: 0.5em;
+        }
+        .footnote-area p {
+            text-indent: 0;
+            margin-bottom: 0.5em;
+        }
+        .math-display {
+            text-align: center;
+            margin: 1em 0;
+        }
+        .theorem {
+            margin-top: 1em;
+            margin-bottom: 0.5em;
+        }
+        .theorem-title {
+            font-weight: bold;
+        }
+        .theorem-body {
+            font-style: italic;
+        }
+        ul {
+            margin-top: 0;
+            margin-bottom: 1em;
+            padding-left: 2em;
+        }
+        li {
+            margin-bottom: 0.5em;
+        }
+        .page-number {
+            position: absolute;
+            bottom: 0.6in;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 10pt;
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <div class="arxiv-sidebar">arXiv:2605.18623v1 [cs.DS] 18 May 2026</div>
+        
+        <div class="header">
+            <hr>
+            <div class="title">An Approximation Algorithm for Graph Label Selection</div>
+            <hr>
+            <div class="authors">
+                <b>Josia John</b><sup>1</sup> &nbsp;&nbsp;&nbsp; <b>Maximilian Probst Gutenberg</b><sup>1</sup> &nbsp;&nbsp;&nbsp; <b>Simon Meierhans</b><sup>1</sup>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="column">
+                <div class="abstract-title">Abstract</div>
+                <div class="abstract-text">
+                    <p>In the graph label selection problem, one is given an $n$-vertex graph and a budget $k$, and seeks to select $k$ vertices whose labels enable accurate prediction of the labels on the remaining vertices. This problem formalizes distilling a small representative set from the whole graph.</p>
+                    <p>We present the first $\tilde{O}(\log^{1.5} n)$-approximation algorithm for graph label selection under the standard budget constraint. Prior work either relies on resource augmentation, allowing substantially more than $k$ labeled vertices, or consists primarily of heuristics without provable guarantees.</p>
+                    <p>Finally, we demonstrate that practical heuristic variants of our algorithm scale to significantly larger graphs than previous methods, while essentially retaining their quality.</p>
+                </div>
+
+                <h1>1. Introduction</h1>
+                <p>Selecting a representative small subset of a large data set is a crucial task in various areas of machine learning, such as speeding up training <span class="cite">(Nguyen et al., 2021; Yang et al., 2024)</span> and selecting diverse additional context for passing to a large language model (LLM) for improved inference <span class="cite">(Liskavets et al., 2025; Cheng et al., 2024; Bateni et al., 2025)</span>.</p>
+                <p>In active learning, the training set, i.e. the <i>labeled set</i>, is not fixed but rather chosen by the learning algorithm itself to be as representative of the entire dataset as possible. For pairwise similarities between data points represented as a graph $G = (V, E, w)$, <span class="cite">Guillory & Bilmes (2009)</span> introduced a natural objective for selecting such a labeled set. They fix $k$ to be the maximum number of data points to be labeled, and aim to rule out that a large cluster of unlabeled points with few connections to the rest of the data set ex-</p>
+
+                <div class="footnote-area">
+                    <p><sup>1</sup>Department of Computer Science, ETH Zurich, Zurich, Switzerland. Correspondence to: Josia John &lt;jojohn@ethz.ch&gt;, Maximilian Probst Gutenberg &lt;maximilian.probst@inf.ethz.ch&gt;, Simon Meierhans &lt;simon.meierhans@inf.ethz.ch&gt;.</p>
+                    <p><i>Proceedings of the 43<sup>rd</sup> International Conference on Machine Learning</i>, Seoul, South Korea. PMLR 306, 2026. Copyright 2026 by the author(s).</p>
+                </div>
+            </div>
+
+            <div class="column">
+                <p style="text-indent: 0;">ists. Formally, they focus on selecting a set of nodes $L$, under the cardinality constraint $|L| \le k$, which maximize the objective</p>
+                <div class="math-display">
+                    $$ \Psi(L) := \min_{C \subseteq V \setminus L} \frac{w(C, V \setminus C)}{|C|}. $$
+                </div>
+                <p style="text-indent: 0;">This yields the Graph Label Selection Problem (GLS), which requires finding</p>
+                <div class="math-display">
+                    $$ \text{OPT}_k := \max_{L \subset V : |L| \le k} \Psi(L). $$
+                </div>
+                <p>Despite its early and natural formulation, algorithms with theoretical guarantees were lacking for a long time. <span class="cite">Guillory & Bilmes (2009)</span> give some practical heuristics to maximize $\Psi(L)$. <span class="cite">Cesa-Bianchi et al. (2010)</span> presented an algorithm with theoretical guarantees on unweighted trees.</p>
+                <p>Recently, <span class="cite">Cohen-Addad et al. (2025)</span> showed that the problem is NP-hard. Therefore, it is natural to consider approximation algorithms for this problem. There are two natural notions of approximation for this problem. The weaker notion, an $\alpha$-resource augment algorithm, uses budget $\alpha \cdot k$ but is competitive with $\text{OPT}_k$, i.e., the optimal value obtained with much smaller budget $k$. An $O(\log n)$-resource algorithm was recently given in <span class="cite">(Cohen-Addad et al., 2025)</span>.</p>
+                <p>In <span class="cite">(Cohen-Addad et al., 2025)</span>, it is stated as an interesting open problem to achieve a stronger and more natural version of approximation: they ask whether an algorithm exists that uses the given $k$ and is $\beta$-competitive in $\text{OPT}_k$, i.e. the solution has quality at least $\text{OPT}_k / \beta$. In this article we resolve this question by presenting an efficient $\tilde{O}(\log^{1.5} n)$ approximation algorithm for maximizing $\Psi(L)$, which does not rely on resource augmentation. Additionally, a relaxed version of our new algorithm has better runtime and can thus be scaled to larger instances.</p>
+                
+                <div class="theorem">
+                    <span class="theorem-title">Theorem 1.1.</span> <span class="theorem-body">Given a graph $G = (V, E, w)$ with weights in $[1, \text{poly}(n)]$, and a budget $k \in \mathbb{N}$, there exists a polynomial-time algorithm that returns a set $L'$ with</span>
+                </div>
+                <ul>
+                    <li><span class="theorem-body">$|L'| \le k$ and</span></li>
+                    <li><span class="theorem-body">$\beta \cdot \Psi(L') \ge \text{OPT}_k$</span></li>
+                </ul>
+                <p style="text-indent: 0;"><span class="theorem-body">where $\beta \in \tilde{O}(\log^{1.5} n)$.</span></p>
+            </div>
+        </div>
+        <div class="page-number">1</div>
+    </div>
+</body>
+</html>

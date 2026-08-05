@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Micro-controller vs. Micro-processor</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .header {
+    background: linear-gradient(to right, #1a1a6e, #4a4a9e, #8a8ac4, #c8c8e8, #f0f0f8);
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .header-squares {
+    display: flex;
+    gap: 2px;
+    align-items: flex-end;
+  }
+
+  .header-squares .sq {
+    width: 14px;
+    height: 14px;
+    background: #2a2a7e;
+  }
+
+  .header-squares .sq:nth-child(2) {
+    width: 10px;
+    height: 10px;
+    background: #5a5aae;
+  }
+
+  .header-squares .sq:nth-child(3) {
+    width: 8px;
+    height: 8px;
+    background: #8a8ace;
+  }
+
+  .header h1 {
+    color: #fff;
+    font-size: 22px;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+  }
+
+  .content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 40px;
+  }
+
+  .main-box {
+    background: #e8e8ec;
+    border-radius: 16px;
+    border: 1px solid #ccc;
+    padding: 30px 40px;
+    width: 100%;
+    max-width: 1050px;
+    display: flex;
+    gap: 40px;
+  }
+
+  .column {
+    flex: 1;
+  }
+
+  .column-title {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: underline;
+    margin-bottom: 16px;
+    color: #111;
+  }
+
+  /* Left column - Microcontroller */
+  .mcu-box {
+    background: #2196F3;
+    border: 3px solid #1565C0;
+    border-radius: 4px;
+    padding: 12px;
+  }
+
+  .mcu-title {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: #111;
+    margin-bottom: 10px;
+  }
+
+  .mcu-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 8px;
+  }
+
+  .mcu-cell {
+    background: #fff;
+    border: 2px solid #333;
+    border-radius: 3px;
+    padding: 10px 12px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #111;
+    text-align: center;
+  }
+
+  .mcu-cell.full {
+    grid-column: 1 / -1;
+  }
+
+  /* Right column - Many chips */
+  .chips-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 0.7fr 0.8fr;
+    gap: 10px;
+  }
+
+  .chip-cell {
+    border: 2px solid #333;
+    border-radius: 3px;
+    padding: 14px 16px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .chip-cell.microprocessor {
+    background: #4CAF50;
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .chip-cell.clock {
+    background: #A0724A;
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .chip-cell.usart {
+    background: #A8D8EA;
+    color: #111;
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .chip-cell.memory {
+    background: #2196F3;
+    grid-column: 1 / 2;
+    grid-row: 2;
+  }
+
+  .chip-cell.io {
+    background: #F5E6A0;
+    color: #111;
+    grid-column: 2 / 4;
+    grid-row: 2;
+  }
+
+  .chip-cell.timer {
+    background: #B0B0B0;
+    color: #111;
+    grid-column: 1 / 2;
+    grid-row: 3;
+  }
+
+  .chip-cell.other {
+    grid-column: 2 / 4;
+    grid-row: 3;
+    padding: 0;
+    display: flex;
+    overflow: hidden;
+  }
+
+  .other-inner {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #333;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .other-segment {
+    flex: 1;
+    height: 100%;
+    min-height: 50px;
+  }
+
+  .other-segment:nth-child(1) { background: #C8B8E8; }
+  .other-segment:nth-child(2) { background: #E8D8A0; }
+  .other-segment:nth-child(3) { background: #A0E840; }
+  .other-segment:nth-child(4) { background: #F8A8C8; }
+
+  .other-label {
+    position: absolute;
+    font-size: 18px;
+    font-weight: bold;
+    color: #111;
+  }
+
+  .chip-cell.other-wrapper {
+    position: relative;
+    grid-column: 2 / 4;
+    grid-row: 3;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .other-peripherals-box {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    border: 2px solid #333;
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .other-peripherals-box .seg {
+    flex: 1;
+  }
+
+  .other-peripherals-box .seg:nth-child(1) { background: #C8B8E8; }
+  .other-peripherals-box .seg:nth-child(2) { background: #E8D8A0; }
+  .other-peripherals-box .seg:nth-child(3) { background: #A0E840; }
+  .other-peripherals-box .seg:nth-child(4) { background: #F8A8C8; }
+
+  .other-peripherals-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 18px;
+    font-weight: bold;
+    color: #111;
+    white-space: nowrap;
+    z-index: 2;
+  }
+
+  .footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 40px;
+    position: relative;
+  }
+
+  .footer-text {
+    font-size: 14px;
+    color: #333;
+  }
+
+  .footer-page {
+    position: absolute;
+    right: 40px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #111;
+  }
+
+  /* Right column grid layout */
+  .right-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.7fr 0.8fr;
+    grid-template-rows: auto auto auto;
+    gap: 10px;
+  }
+
+  .right-grid .cell-mp {
+    grid-column: 1;
+    grid-row: 1;
+    background: #4CAF50;
+    color: #fff;
+    border: 2px solid #333;
+    border-radius: 3px;
+    padding: 16px;
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .right-grid .cell-clock {
+    grid-column: 2;
+    grid-row: 1;
+    background: #A0724A;
+    color: #fff;
+    border: 2px solid #333;
+    border-radius: 3px;
+    padding: 16px;
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .right-grid .cell-usart {
+    grid-column: 3;
+    grid-row: 1;
+    background: #A8D8EA;
+    color: #111;
+    border: 2px solid #333;
+    border-radius: 3px;
+    padding: 16px;
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .right-grid .cell-mem {
+    grid-column: 1;
+    grid-row: 2;
+    background: #2196F3;
+    color: #fff;
+    border: 2px solid #333;
+    border-radius: 3px;
+    padding: 16px;
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .right-grid .cell-io {
+    grid-column: 2 / 4;
+    grid-row: 2;
+    background: #F0E6A0;
+    color: #111;
+    border: 2px solid #333;
+    border-radius: 3px;
+    padding: 16px;
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .right-grid .cell-timer {
+    grid-column: 1;
+    grid-row: 3;
+    background: #B8B8B8;
+    color: #111;
+    border: 2px solid #333;
+    border-radius: 3px;
+    padding: 16px;
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .right-grid .cell-other {
+    grid-column: 2 / 4;
+    grid-row: 3;
+    border: 2px solid #333;
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+  }
+
+  .right-grid .cell-other .seg {
+    flex: 1;
+    min-height: 52px;
+  }
+
+  .right-grid .cell-other .seg:nth-child(1) { background: #C8B8E8; }
+  .right-grid .cell-other .seg:nth-child(2) { background: #E8D8A0; }
+  .right-grid .cell-other .seg:nth-child(3) { background: #A0E840; }
+  .right-grid .cell-other .seg:nth-child(4) { background: #F8A8C8; }
+
+  .right-grid .cell-other .label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 18px;
+    font-weight: bold;
+    color: #111;
+    white-space: nowrap;
+    z-index: 2;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-squares">
+    <div class="sq"></div>
+    <div class="sq"></div>
+    <div class="sq"></div>
+  </div>
+  <h1>Micro-controller vs. Micro-processor</h1>
+</div>
+
+<div class="content">
+  <div class="main-box">
+    <!-- Left Column: One Chip -->
+    <div class="column">
+      <div class="column-title">One Chip</div>
+      <div class="mcu-box">
+        <div class="mcu-title">Microcontroller</div>
+        <div class="mcu-grid">
+          <div class="mcu-cell">CPU</div>
+          <div class="mcu-cell">Timer/Counter</div>
+          <div class="mcu-cell">Memory</div>
+          <div class="mcu-cell">Clock</div>
+          <div class="mcu-cell">I/O Interface</div>
+          <div class="mcu-cell">USART</div>
+          <div class="mcu-cell full">Other Peripherals</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Many Different Chips -->
+    <div class="column">
+      <div class="column-title">Many Different Chips</div>
+      <div class="right-grid">
+        <div class="cell-mp">Microprocessor</div>
+        <div class="cell-clock">Clock</div>
+        <div class="cell-usart">USART</div>
+        <div class="cell-mem">Memory</div>
+        <div class="cell-io">I/O Interfaces</div>
+        <div class="cell-timer">Timer/Counter</div>
+        <div class="cell-other">
+          <div class="seg"></div>
+          <div class="seg"></div>
+          <div class="seg"></div>
+          <div class="seg"></div>
+          <div class="label">Other Peripherals</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <span class="footer-text">© 2015 by Eng. Mohamed Tarek.</span>
+  <span class="footer-page">7</span>
+</div>
+
+</body>
+</html>

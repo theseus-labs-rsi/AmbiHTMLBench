@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>100+页MAPK信号通路详解</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+* {
+  box-sizing: border-box;
+}
+html, body {
+  margin: 0;
+  min-height: 100%;
+  background: #ffffff;
+}
+body {
+  display: flex;
+  justify-content: center;
+  font-family: Arial, "Microsoft YaHei", "PingFang SC", sans-serif;
+  color: #111;
+}
+.page {
+  position: relative;
+  width: 540px;
+  height: 752px;
+  overflow: hidden;
+  background: #fff;
+}
+.document-title {
+  position: absolute;
+  top: 32px;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  text-align: center;
+  font-size: 23px;
+  line-height: 30px;
+  font-weight: 400;
+  letter-spacing: .2px;
+}
+.introduction {
+  position: absolute;
+  top: 80px;
+  left: 46px;
+  width: 454px;
+  margin: 0;
+  font-size: 18px;
+  line-height: 25px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.slide {
+  position: absolute;
+  left: 64px;
+  width: 414px;
+}
+.slide-one {
+  top: 201px;
+  height: 222px;
+}
+.slide-two {
+  top: 480px;
+  height: 221px;
+  left: 72px;
+  width: 398px;
+}
+.slide-heading {
+  position: relative;
+  height: 22px;
+  padding-left: 11px;
+  border-bottom: 2px solid #a7c8c8;
+  font-size: 14px;
+  line-height: 19px;
+  font-weight: 700;
+}
+.slide-two .slide-heading {
+  padding-left: 4px;
+  font-size: 15px;
+}
+.brand {
+  position: absolute;
+  top: 2px;
+  left: 191px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  color: #666;
+  font-size: 5px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+.brand-mark {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50% 50% 45% 45%;
+  background: radial-gradient(circle at 60% 40%, #ffe0d7 0 25%, #ef9b8e 50%, #d66d6c 100%);
+  box-shadow: 0 0 3px rgba(218, 105, 100, .45);
+}
+.slide-two .brand {
+  left: 193px;
+}
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* First slide: four experimental bar charts */
+.chart-placeholder {
+  position: relative;
+  width: 414px;
+  height: 140px;
+  border: 1px solid #cbd4d5;
+  background: #fff;
+  padding: 8px 8px 11px;
+}
+.chart-row {
+  display: grid;
+  grid-template-columns: 96px 96px 96px 88px;
+  column-gap: 5px;
+  height: 118px;
+}
+.chart-panel {
+  position: relative;
+  height: 113px;
+  border: 1px solid #8e9495;
+  background: #fff;
+}
+.axis-y {
+  position: absolute;
+  left: 12px;
+  top: 9px;
+  bottom: 20px;
+  width: 1px;
+  background: #444;
+}
+.axis-x {
+  position: absolute;
+  left: 12px;
+  right: 5px;
+  bottom: 20px;
+  height: 1px;
+  background: #444;
+}
+.axis-caption {
+  position: absolute;
+  left: 1px;
+  top: 20px;
+  color: #222;
+  font-size: 4.7px;
+  line-height: 5px;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+.panel-letter {
+  position: absolute;
+  left: 4px;
+  top: 2px;
+  font-size: 7px;
+  font-weight: 700;
+}
+.tick {
+  position: absolute;
+  left: 4px;
+  color: #222;
+  font-size: 4.5px;
+}
+.tick.t1 { top: 8px; }
+.tick.t2 { top: 32px; }
+.tick.t3 { top: 57px; }
+.tick.t4 { top: 81px; }
+.bar {
+  position: absolute;
+  bottom: 21px;
+  width: 11px;
+  border: 1px solid #555;
+  background: #777;
+}
+.white-bar {
+  background: #fff;
+}
+.black-bar {
+  background: #050505;
+}
+.error {
+  position: absolute;
+  width: 1px;
+  background: #555;
+}
+.error::before,
+.error::after {
+  content: "";
+  position: absolute;
+  left: -3px;
+  width: 7px;
+  height: 1px;
+  background: #555;
+}
+.error::before { top: 0; }
+.error::after { bottom: 0; }
+.p1 .b1 { left: 20px; height: 8px; }
+.p1 .b2 { left: 38px; height: 58px; }
+.p1 .b3 { left: 56px; height: 12px; }
+.p1 .b4 { left: 73px; height: 22px; }
+.p1 .e2 { left: 43px; bottom: 76px; height: 15px; }
+
+.p2 .b1 { left: 20px; height: 67px; }
+.p2 .b2 { left: 40px; height: 32px; }
+.p2 .b3 { left: 58px; height: 39px; }
+.p2 .b4 { left: 76px; height: 35px; }
+.p2 .e1 { left: 25px; bottom: 86px; height: 12px; }
+.p2 .e2 { left: 45px; bottom: 53px; height: 8px; }
+.p2 .e3 { left: 63px; bottom: 61px; height: 9px; }
+.p2 .e4 { left: 81px; bottom: 57px; height: 8px; }
+
+.p3 .b1 { left: 20px; height: 66px; }
+.p3 .b2 { left: 40px; height: 17px; }
+.p3 .b3 { left: 59px; height: 27px; }
+.p3 .b4 { left: 77px; height: 31px; }
+.p3 .e1 { left: 25px; bottom: 87px; height: 8px; }
+.p3 .e2 { left: 45px; bottom: 38px; height: 7px; }
+.p3 .e3 { left: 64px; bottom: 48px; height: 6px; }
+.p3 .e4 { left: 82px; bottom: 52px; height: 7px; }
+
+.p4 .b1 { left: 24px; height: 65px; width: 17px; }
+.p4 .b2 { left: 57px; height: 3px; width: 17px; }
+.p4 .e1 { left: 32px; bottom: 86px; height: 7px; }
+
+.labels {
+  position: absolute;
+  left: 13px;
+  right: 1px;
+  bottom: 0;
+  height: 19px;
+  color: #111;
+  font-size: 4.4px;
+  line-height: 5px;
+}
+.labels span {
+  position: absolute;
+  bottom: 0;
+  transform: rotate(-47deg);
+  transform-origin: left bottom;
+  white-space: nowrap;
+}
+.labels .l1 { left: 4px; }
+.labels .l2 { left: 22px; }
+.labels .l3 { left: 40px; }
+.labels .l4 { left: 59px; }
+.simple-labels {
+  position: absolute;
+  left: 12px;
+  right: 3px;
+  bottom: 6px;
+  display: flex;
+  justify-content: space-around;
+  font-size: 4.7px;
+  white-space: nowrap;
+}
+.chart-source {
+  position: absolute;
+  left: 2px;
+  top: 181px;
+  font-family: "Times New Roman", serif;
+  font-size: 6.8px;
+  line-height: 9px;
+  white-space: nowrap;
+}
+.findings {
+  position: absolute;
+  left: 110px;
+  top: 174px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: #696969;
+  font-size: 8px;
+  line-height: 18px;
+}
+.findings li::before,
+.bullet-list li::before {
+  content: "◆";
+  display: inline-block;
+  margin-right: 4px;
+  color: #111;
+  font-size: 7px;
+}
+.speaker {
+  position: absolute;
+  width: 25px;
+  height: 22px;
+}
+.slide-one .speaker {
+  right: -8px;
+  bottom: -2px;
+}
+.slide-two .speaker {
+  right: -17px;
+  bottom: -3px;
+}
+.speaker-box {
+  position: absolute;
+  left: 4px;
+  top: 8px;
+  width: 6px;
+  height: 7px;
+  background: #aaa;
+  clip-path: polygon(0 25%, 45% 25%, 100% 0, 100% 100%, 45% 75%, 0 75%);
+}
+.wave {
+  position: absolute;
+  border: 1px solid #b0b0b0;
+  border-left-color: transparent;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+}
+.wave-one {
+  left: 9px;
+  top: 6px;
+  width: 8px;
+  height: 11px;
+}
+.wave-two {
+  left: 10px;
+  top: 3px;
+  width: 12px;
+  height: 17px;
+}
+
+/* Second slide */
+.slide-two-content {
+  display: grid;
+  grid-template-columns: 178px 1fr;
+  column-gap: 35px;
+  padding-top: 10px;
+}
+.diagram-placeholder {
+  position: relative;
+  width: 178px;
+  height: 184px;
+  border: 1px solid #d2d9d9;
+  background: #fff;
+  overflow: hidden;
+}
+.membrane {
+  position: absolute;
+  top: 16px;
+  left: 8px;
+  width: 160px;
+  height: 5px;
+  border-top: 2px dotted #edc4a5;
+  border-bottom: 2px dotted #edc4a5;
+}
+.receptor {
+  position: absolute;
+  top: 11px;
+  width: 8px;
+  height: 22px;
+  border-radius: 5px;
+  background: #6ba4dd;
+}
+.receptor.r1 { left: 15px; }
+.receptor.r2 { left: 91px; background: #988ed0; }
+.node {
+  position: absolute;
+  min-width: 18px;
+  height: 9px;
+  padding: 1px 2px;
+  border-radius: 8px;
+  color: #fff;
+  text-align: center;
+  font-size: 4px;
+  line-height: 7px;
+}
+.n1 { left: 35px; top: 32px; background: #d55745; }
+.n2 { left: 48px; top: 48px; background: #edbc36; }
+.n3 { left: 67px; top: 63px; background: #d54c34; }
+.n4 { left: 28px; top: 67px; background: #746db5; }
+.n5 { left: 101px; top: 40px; background: #63a1a6; }
+.n6 { left: 119px; top: 57px; background: #37aeb1; }
+.n7 { left: 139px; top: 56px; background: #dc4033; }
+.n8 { left: 84px; top: 77px; background: #cf6a31; }
+.n9 { left: 110px; top: 88px; background: #b8382f; }
+.n10 { left: 55px; top: 91px; background: #edb62a; }
+.connector {
+  position: absolute;
+  height: 1px;
+  background: #777;
+  transform-origin: left center;
+}
+.c1 { left: 20px; top: 31px; width: 25px; transform: rotate(20deg); }
+.c2 { left: 45px; top: 42px; width: 21px; transform: rotate(43deg); }
+.c3 { left: 60px; top: 58px; width: 21px; transform: rotate(32deg); }
+.c4 { left: 98px; top: 30px; width: 25px; transform: rotate(46deg); }
+.c5 { left: 112px; top: 48px; width: 23px; transform: rotate(31deg); }
+.c6 { left: 130px; top: 62px; width: 18px; }
+.c7 { left: 76px; top: 72px; width: 27px; transform: rotate(18deg); }
+.c8 { left: 92px; top: 83px; width: 25px; transform: rotate(15deg); }
+.nucleus {
+  position: absolute;
+  left: 29px;
+  top: 104px;
+  width: 124px;
+  height: 66px;
+  border: 1px solid #8e7679;
+  border-radius: 50%;
+}
+.nuclear-node {
+  position: absolute;
+  width: 13px;
+  height: 7px;
+  border-radius: 50%;
+  background: #b35aa3;
+}
+.nn1 { left: 47px; top: 125px; }
+.nn2 { left: 69px; top: 142px; background: #dc933e; }
+.nn3 { left: 94px; top: 122px; background: #6c7cbd; }
+.nn4 { left: 118px; top: 145px; background: #d66c67; }
+.diagram-text {
+  position: absolute;
+  color: #666;
+  font-size: 3.7px;
+  white-space: nowrap;
+}
+.dt1 { left: 10px; top: 5px; }
+.dt2 { left: 35px; top: 22px; }
+.dt3 { left: 82px; top: 98px; }
+.dt4 { left: 46px; top: 172px; }
+.output-arrow {
+  position: absolute;
+  left: 85px;
+  top: 169px;
+  width: 8px;
+  height: 13px;
+  background: #45aeb4;
+  clip-path: polygon(30% 0, 70% 0, 70% 55%, 100% 55%, 50% 100%, 0 55%, 30% 55%);
+}
+.bullet-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: #444;
+  font-size: 9px;
+  line-height: 35px;
+  white-space: nowrap;
+}
+.second-source {
+  position: absolute;
+  left: 188px;
+  bottom: 1px;
+  font-family: "Times New Roman", serif;
+  font-size: 6.2px;
+  white-space: nowrap;
+}
+</style>
+</head>
+<body>
+<main class="page">
+  <h1 class="document-title">100+页MAPK信号通路详解</h1>
+
+  <p class="introduction">
+    丝裂原活化蛋白激酶(mitogen-activated protein kinase,<br>
+    MAPK)，一种丝氨酸-苏氨酸蛋白激酶。 丝裂原，顾名思<br>
+    义，最早发现该激酶参与细胞有丝分裂。所有的真核细胞<br>
+    都能表达MAPK，从酵母到人类都高度保守。
+  </p>
+
+  <section class="slide slide-one">
+    <header class="slide-heading">
+      细胞凋亡与MAPK
+      <span class="brand"><span class="brand-mark"></span>[?]</span>
+    </header>
+
+    <figure class="placeholder chart-placeholder">
+      <figcaption class="visually-hidden">[Charts: four experimental bar graphs]</figcaption>
+      <div class="chart-row">
+        <div class="chart-panel p1">
+          <span class="axis-caption">Apoptotic cells (%)</span>
+          <span class="axis-y"></span><span class="axis-x"></span>
+          <span class="tick t1">20</span><span class="tick t2">15</span>
+          <span class="tick t3">10</span><span class="tick t4">5</span>
+          <span class="bar b1"></span><span class="bar b2"></span>
+          <span class="bar b3"></span><span class="bar b4"></span>
+          <span class="error e2"></span>
+          <div class="labels">
+            <span class="l1">Control</span>
+            <span class="l2">Anti-NGF</span>
+            <span class="l3">[illegible]</span>
+            <span class="l4">[illegible]</span>
+          </div>
+        </div>
+
+        <div class="chart-panel p2">
+          <span class="panel-letter">D</span>
+          <span class="axis-caption">Relative JNK activity</span>
+          <span class="axis-y"></span><span class="axis-x"></span>
+          <span class="tick t1">200</span><span class="tick t2">150</span>
+          <span class="tick t3">100</span><span class="tick t4">50</span>
+          <span class="bar white-bar b1"></span><span class="bar white-bar b2"></span>
+          <span class="bar white-bar b3"></span><span class="bar white-bar b4"></span>
+          <span class="error e1"></span><span class="error e2"></span>
+          <span class="error e3"></span><span class="error e4"></span>
+          <div class="labels">
+            <span class="l1">Control</span>
+            <span class="l2">Anti-NGF</span>
+            <span class="l3">[illegible]</span>
+            <span class="l4">[illegible]</span>
+          </div>
+        </div>
+
+        <div class="chart-panel p3">
+          <span class="panel-letter">E</span>
+          <span class="axis-caption">Relative p38 activity</span>
+          <span class="axis-y"></span><span class="axis-x"></span>
+          <span class="tick t1">300</span><span class="tick t2">200</span>
+          <span class="tick t3">100</span>
+          <span class="bar white-bar b1"></span><span class="bar white-bar b2"></span>
+          <span class="bar white-bar b3"></span><span class="bar white-bar b4"></span>
+          <span class="error e1"></span><span class="error e2"></span>
+          <span class="error e3"></span><span class="error e4"></span>
+          <div class="labels">
+            <span class="l1">Control</span>
+            <span class="l2">Anti-NGF</span>
+            <span class="l3">[illegible]</span>
+            <span class="l4">[illegible]</span>
+          </div>
+        </div>
+
+        <div class="chart-panel p4">
+          <span class="axis-caption">Surviving cells</span>
+          <span class="axis-y"></span><span class="axis-x"></span>
+          <span class="tick t1">0.30</span><span class="tick t2">0.20</span>
+          <span class="tick t3">0.10</span>
+          <span class="bar black-bar b1"></span><span class="bar black-bar b2"></span>
+          <span class="error e1"></span>
+          <div class="simple-labels"><span>Control</span><span>Anti-NGF</span></div>
+        </div>
+      </div>
+    </figure>
+
+    <div class="chart-source">Zhengui Xia et al., <i>Science</i>, 1995</div>
+    <ul class="findings">
+      <li>[illegible]，ERK抑制细胞凋亡</li>
+      <li>p38与JNK促进凋亡</li>
+    </ul>
+
+    <div class="placeholder speaker" aria-label="[Audio icon]">
+      <span class="visually-hidden">[Audio icon]</span>
+      <span class="speaker-box"></span>
+      <span class="wave wave-one"></span>
+      <span class="wave wave-two"></span>
+    </div>
+  </section>
+
+  <section class="slide slide-two">
+    <header class="slide-heading">
+      MAPK信号通路
+      <span class="brand"><span class="brand-mark"></span>[?]</span>
+    </header>
+
+    <div class="slide-two-content">
+      <figure class="placeholder diagram-placeholder">
+        <figcaption class="visually-hidden">[Diagram: MAPK signaling cascade]</figcaption>
+        <div class="membrane"></div>
+        <div class="receptor r1"></div>
+        <div class="receptor r2"></div>
+
+        <div class="node n1">[?]</div>
+        <div class="node n2">[?]</div>
+        <div class="node n3">[?]</div>
+        <div class="node n4">[?]</div>
+        <div class="node n5">[?]</div>
+        <div class="node n6">[?]</div>
+        <div class="node n7">[?]</div>
+        <div class="node n8">[?]</div>
+        <div class="node n9">[?]</div>
+        <div class="node n10">[?]</div>
+
+        <span class="connector c1"></span>
+        <span class="connector c2"></span>
+        <span class="connector c3"></span>
+        <span class="connector c4"></span>
+        <span class="connector c5"></span>
+        <span class="connector c6"></span>
+        <span class="connector c7"></span>
+        <span class="connector c8"></span>
+
+        <div class="nucleus"></div>
+        <span class="nuclear-node nn1"></span>
+        <span class="nuclear-node nn2"></span>
+        <span class="nuclear-node nn3"></span>
+        <span class="nuclear-node nn4"></span>
+
+        <span class="diagram-text dt1">[illegible]</span>
+        <span class="diagram-text dt2">[illegible]</span>
+        <span class="diagram-text dt3">[illegible]</span>
+        <span class="diagram-text dt4">[illegible]</span>
+        <span class="output-arrow"></span>
+      </figure>
+
+      <ul class="bullet-list">
+        <li>多级调控，级联放大</li>
+        <li>基于磷酸化的信号传导形式</li>
+        <li>相对简单、直线、单一的传导方式</li>
+      </ul>
+    </div>
+
+    <div class="second-source">Jing Yuan Fang and Bruce C Richardson, <i>Lancet Oncol</i>, 2005</div>
+
+    <div class="placeholder speaker" aria-label="[Audio icon]">
+      <span class="visually-hidden">[Audio icon]</span>
+      <span class="speaker-box"></span>
+      <span class="wave wave-one"></span>
+      <span class="wave wave-two"></span>
+    </div>
+  </section>
+</main>
+</body>
+</html>

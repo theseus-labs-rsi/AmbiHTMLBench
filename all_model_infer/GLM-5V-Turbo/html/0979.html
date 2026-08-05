@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GRMHD Simulations of Magnetized Accretion Disk/Jet</title>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)'], ['$$', '$$'], ['\\[', '\\]']], 
+                displayMath: []
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 11pt;
+            line-height: 1.4;
+            color: #000;
+            background-color: #fff;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .logo-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 24pt;
+            font-weight: bold;
+            font-style: italic;
+            font-family: Arial, sans-serif;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #4a7c9e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28pt;
+            font-weight: normal;
+        }
+        
+        .logo-right {
+            border: 2px solid #333;
+            padding: 2px 6px;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            font-size: 14pt;
+        }
+        
+        .article-type {
+            font-style: italic;
+            font-size: 11pt;
+            margin-bottom: 8px;
+        }
+        
+        .title {
+            font-size: 18pt;
+            font-weight: bold;
+            line-height: 1.3;
+            margin-bottom: 20px;
+            color: #222;
+        }
+        
+        .authors {
+            font-size: 12pt;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .author-name {
+            font-weight: bold;
+        }
+        
+        sup {
+            font-size: 8pt;
+        }
+        
+        .email-icon {
+            color: #6b8e23;
+            cursor: pointer;
+        }
+        
+        .affiliations {
+            font-size: 9pt;
+            line-height: 1.4;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .affiliation-item {
+            margin-bottom: 3px;
+        }
+        
+        .correspondence {
+            font-size: 9pt;
+            margin-top: 5px;
+            font-style: italic;
+        }
+        
+        .section-title {
+            font-weight: bold;
+            font-size: 11pt;
+            margin-top: 20px;
+            margin-bottom: 8px;
+        }
+        
+        .abstract-text, .content-text {
+            text-align: justify;
+            text-justify: inter-word;
+            line-height: 1.45;
+        }
+        
+        .keywords {
+            font-size: 10pt;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .keywords strong {
+            font-weight: bold;
+        }
+        
+        .sidebar-left {
+            position: absolute;
+            left: -60px;
+            top: 200px;
+            width: 50px;
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            font-size: 9pt;
+            font-family: Arial, sans-serif;
+            color: #666;
+            letter-spacing: 1px;
+        }
+        
+        .update-check {
+            position: absolute;
+            left: -55px;
+            top: 520px;
+            width: 45px;
+            text-align: center;
+        }
+        
+        .update-icon {
+            width: 35px;
+            height: 35px;
+            background-color: #d4a017;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16pt;
+            margin-bottom: 3px;
+        }
+        
+        .update-text {
+            font-size: 7pt;
+            font-family: Arial, sans-serif;
+            line-height: 1.2;
+            color: #333;
+        }
+        
+        .metadata-box {
+            font-size: 9pt;
+            line-height: 1.5;
+            margin-top: 25px;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+            color: #444;
+        }
+        
+        .metadata-row {
+            margin-bottom: 2px;
+        }
+        
+        .copyright {
+            font-size: 8pt;
+            line-height: 1.4;
+            margin-top: 15px;
+            color: #666;
+            border-top: 1px solid #eee;
+            padding-top: 8px;
+        }
+        
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 10px;
+            border-top: 1px solid #ccc;
+            font-size: 9pt;
+            color: #666;
+        }
+        
+        h2.section-heading {
+            font-size: 13pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="sidebar-left">
+    arXiv:2605.17460v1 [astro-ph.HE] 17 May 2026
+</div>
+
+<div class="update-check">
+    <div class="update-icon">✓</div>
+    <div class="update-text"><strong>check for<br>updates</strong></div>
+</div>
+
+<header class="header">
+    <div class="logo-left">
+        <div class="logo-icon">✦</div>
+        <span>universe</span>
+    </div>
+    <div class="logo-right">MDPI</div>
+</header>
+
+<div class="article-type">Article</div>
+
+<h1 class="title">GRMHD Simulations of Magnetized Accretion Disk/Jet:<br>Variabilities of Black Holes and Spectral Energy Distributions in<br>Magnetic States</h1>
+
+<div class="authors">
+    <span class="author-name">Rohan Raha</span><sup>1,*<span class="email-icon">✉</span></sup>, 
+    <span class="author-name">Banibrata Mukhopadhyay</span><sup>1,*<span class="email-icon">✉</span></sup> and 
+    <span class="author-name">Koushik Chatterjee</span><sup>2,*<span class="email-icon">✉</span></sup>
+</div>
+
+<div class="affiliations">
+    <div class="affiliation-item"><sup>1</sup> Department of Physics, Indian Institute of Science, Bangalore 560012, India</div>
+    <div class="affiliation-item"><sup>2</sup> Canadian Institute for Theoretical Astrophysics, University of Toronto, 60 St. George Street,<br>Toronto, ON M5S 3H8, Canada</div>
+    <div class="correspondence"><sup>*</sup> Correspondence: raharohan@iisc.ac.in (R.R.); bm@iisc.ac.in (B.M.), khatti@cita.utoronto.ca (K.C.)</div>
+</div>
+
+<div class="section-title">Abstract</div>
+
+<div class="abstract-text">
+We perform three-dimensional general relativistic magnetohydrodynamic (GRMHD) simulations of a near-maximally spinning black hole (spin parameter $a = 0.998$) with varying initial magnetic field geometries, systematically exploring the parameter space connecting magnetically arrested disk (MAD), intermediate (INT), and standard and normal evolution (SANE) accretion states. The magnetic flux threading the black hole horizon emerges as the fundamental state variable controlling jet efficiency, flow magnetization, and radiative output across all three states. We introduce complementary diagnostics—broadband spectral energy distributions spanning radio through hard X-ray frequencies and time-resolved X-ray light curves—that together connect simulation dynamics directly to multiwavelength observables. The radiative output follows a clear MAD > INT > SANE hierarchy in time-averaged luminosity, mean X-ray emission, as well as variability. Furthermore, MAD exhibits the highest fractional variability through quasi-periodic magnetic flux eruption events, and INT and SANE show moderate variability driven by episodic reconnection and stochastic MRI turbulence, respectively. Scaling to GRS 1915+105, Cyg X-1, and HLX-1, we demonstrate that all twelve temporal classes of GRS 1915+105 map naturally onto our three magnetic states, Cyg X-1's persistent hard state is reproduced by a sustained INT configuration, and HLX-1's extreme luminosities arise through efficient Blandford–Znajek extraction in MAD states scaled to higher black hole mass.
+</div>
+
+<div class="keywords">
+<strong>Keywords:</strong> X-ray binaries; Black hole physics; Accretion disks; General Relativity; magnetohydrodynamics; simulations; luminosity
+</div>
+
+<div class="metadata-box">
+    <div class="metadata-row"><em>Academic Editor:</em></div>
+    <div class="metadata-row"><em>Received:</em> 31 March 2026</div>
+    <div class="metadata-row"><em>Revised:</em> 6 May 2026</div>
+    <div class="metadata-row"><em>Accepted:</em> 8 May 2026</div>
+    <div class="metadata-row"><em>Published:</em> 12 May 2026</div>
+    <div class="metadata-row"><em>Citation:</em> .. <em>Universe</em> 2026, 1, 0</div>
+    <div class="metadata-row"><em>https://doi.org/10.3390/universe1010000</em></div>
+</div>
+
+<div class="copyright">
+Copyright © 2026 by the authors. Licensee MDPI, Basel, Switzerland.<br>
+This article is an open access article distributed under the terms and conditions of the Creative Commons Attribution (CC BY) license (<a href="https://creativecommons.org/licenses/by/4.0/" style="color:#666;">https://creativecommons.org/licenses/by/4.0/</a>).
+</div>
+
+<h2 class="section-heading">1. Introduction</h2>
+
+<div class="content-text">
+Black hole X-ray binaries (BHXBs) exhibit remarkable spectral and temporal variability, cycling through distinct accretion states characterized by different X-ray spectral shapes, timing properties, and radio jet activity [1,2]. Understanding the physical mechanisms that drive these state transitions and govern jet launching remains one of the central challenges in high-energy astrophysics. Traditional phenomenological classifications into “hard,” “soft,” and “intermediate” states based on spectral hardness provide useful observational categories but offer limited physical insight into the underlying accretion physics.
+</div>
+
+<div class="content-text" style="margin-top: 10px;">
+Among BHXBs, GRS 1915+105 stands out as exceptionally complex, displaying twelve distinct temporal classes with unique combinations of variability patterns, spectral
+</div>
+
+<footer class="footer">
+    <span><em>Universe</em> 2026, 1, 0</span>
+    <span>https://doi.org/10.3390/universe1010000</span>
+</footer>
+
+</body>
+</html>
