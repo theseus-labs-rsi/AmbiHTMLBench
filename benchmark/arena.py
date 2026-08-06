@@ -275,8 +275,124 @@ def _confidence_weight(confidence: int) -> float:
     return 0.5 + 0.125 * bounded
 
 
-def _compute_elo_once(
+@dataclass(frozen=True)
+class EloEvidence:
+    sample_id: str
+    model_a: str
+    model_b: str
+    score_a: float
+    update_weight: float
+    round_count: int
+    consistency: float
+
+
+def _decision_to_evidence(d: ArenaDecision) -> EloEvidence:
+    score_a, _ = _winner_scores(d.winner)
+
+    if d.model_a <= d.model_b:
+        model_a = d.model_a
+        model_b = d.model_b
+        canonical_score_a = score_a
+    else:
+        model_a = d.model_b
+        model_b = d.model_a
+        canonical_score_a = 1.0 - score_a
+
+    return EloEvidence(
+        sample_id=d.sample_id,
+        model_a=model_a,
+        model_b=model_b,
+        score_a=canonical_score_a,
+        update_weight=_confidence_weight(d.confidence),
+        round_count=1,
+        consistency=1.0,
+    )
+
+
+def _aggregate_round_evidence(
     decisions: list[ArenaDecision],
+    consistency_floor: float,
+) -> list[EloEvidence]:
+    if not 0.0 <= consistency_floor <= 1.0:
+        raise ValueError("consistency_floor must be between 0 and 1")
+
+    grouped: dict[tuple[str, str, str], list[tuple[float, float]]] = {}
+
+    for d in decisions:
+        evidence = _decision_to_evidence(d)
+        key = (evidence.sample_id, evidence.model_a, evidence.model_b)
+        grouped.setdefault(key, []).append(
+            (evidence.score_a, evidence.update_weight)
+        )
+
+    aggregated: list[EloEvidence] = []
+
+    for (sample_id, model_a, model_b), rounds in grouped.items():
+        total_weight = sum(weight for _, weight in rounds)
+        score_a = sum(
+            score * weight
+            for score, weight in rounds
+        ) / total_weight
+
+        variance = sum(
+            weight * (score - score_a) ** 2
+            for score, weight in rounds
+        ) / total_weight
+
+        consistency = max(0.0, min(1.0, 1.0 - 4.0 * variance))
+        mean_confidence_weight = total_weight / len(rounds)
+
+        round_bonus = (
+            1.0
+            + 0.5 * (1.0 - 1.0 / len(rounds))
+        )
+
+        reliability = (
+            consistency_floor
+            + (1.0 - consistency_floor) * consistency
+        )
+
+        aggregated.append(
+            EloEvidence(
+                sample_id=sample_id,
+                model_a=model_a,
+                model_b=model_b,
+                score_a=score_a,
+                update_weight=(
+                    mean_confidence_weight
+                    * round_bonus
+                    * reliability
+                ),
+                round_count=len(rounds),
+                consistency=consistency,
+            )
+        )
+
+    return aggregated
+
+
+def _prepare_elo_evidence(
+    decisions: list[ArenaDecision],
+    round_aggregation: str,
+    consistency_floor: float,
+) -> list[EloEvidence]:
+    if round_aggregation == "none":
+        return [_decision_to_evidence(d) for d in decisions]
+
+    if round_aggregation == "sample_pair":
+        return _aggregate_round_evidence(
+            decisions=decisions,
+            consistency_floor=consistency_floor,
+        )
+
+    raise ValueError(
+        f"unknown round aggregation: {round_aggregation!r}; "
+        "expected 'none' or 'sample_pair'"
+    )
+
+
+def _compute_elo_once(
+    evidence: list[EloEvidence],
     k_factor: float,
     init_rating: float,
 ) -> dict[str, float]:
@@ -286,35 +402,34 @@ def _compute_elo_once(
         if name not in ratings:
             ratings[name] = init_rating
 
-    for d in decisions:
-        ensure(d.model_a)
-        ensure(d.model_b)
+    for item in evidence:
+        ensure(item.model_a)
+        ensure(item.model_b)
 
-        ra = ratings[d.model_a]
-        rb = ratings[d.model_b]
+        ra = ratings[item.model_a]
+        rb = ratings[item.model_b]
         ea = logistic_expected(ra, rb)
         eb = 1.0 - ea
 
-        sa, sb = _winner_scores(d.winner)
-        k = k_factor * _confidence_weight(d.confidence)
+        sa = item.score_a
+        sb = 1.0 - sa
+        k = k_factor * item.update_weight
 
-        ratings[d.model_a] = ra + k * (sa - ea)
-        ratings[d.model_b] = rb + k * (sb - eb)
+        ratings[item.model_a] = ra + k * (sa - ea)
+        ratings[item.model_b] = rb + k * (sb - eb)
 
     return ratings
 
 
-def _decision_order_key(d: ArenaDecision) -> tuple[Any, ...]:
+def _evidence_order_key(item: EloEvidence) -> tuple[Any, ...]:
     return (
-        d.sample_id,
-        d.model_a,
-        d.model_b,
-        d.round_idx,
-        d.winner,
-        d.confidence,
-        d.judge_model,
-        d.reason,
-        d.swapped,
+        item.sample_id,
+        item.model_a,
+        item.model_b,
+        item.score_a,
+        item.update_weight,
+        item.round_count,
+        item.consistency,
     )
 
 
@@ -325,15 +440,23 @@ def compute_elo(
     mode: str = "shuffle_ensemble",
     shuffle_repeats: int = 64,
     seed: int = 42,
+    round_aggregation: str = "sample_pair",
+    consistency_floor: float = 0.25,
 ) -> dict[str, float]:
     if not decisions:
         return {}
     if k_factor <= 0:
         raise ValueError("k_factor must be greater than 0")
 
+    evidence = _prepare_elo_evidence(
+        decisions=list(decisions),
+        round_aggregation=round_aggregation,
+        consistency_floor=consistency_floor,
+    )
+
     if mode == "online":
         ratings = _compute_elo_once(
-            decisions=list(decisions),
+            evidence=evidence,
             k_factor=k_factor,
             init_rating=init_rating,
         )
@@ -341,18 +464,18 @@ def compute_elo(
         if shuffle_repeats <= 0:
             raise ValueError("shuffle_repeats must be greater than 0")
 
-        canonical_decisions = sorted(decisions, key=_decision_order_key)
+        canonical_evidence = sorted(evidence, key=_evidence_order_key)
         rng = random.Random(seed)
         rating_sum: dict[str, float] = {}
         run_count = 0
 
         for _ in range(shuffle_repeats):
-            shuffled = list(canonical_decisions)
+            shuffled = list(canonical_evidence)
             rng.shuffle(shuffled)
 
             for current_order in (shuffled, list(reversed(shuffled))):
                 current_ratings = _compute_elo_once(
-                    decisions=current_order,
+                    evidence=current_order,
                     k_factor=k_factor,
                     init_rating=init_rating,
                 )
@@ -372,7 +495,9 @@ def compute_elo(
             "expected 'online' or 'shuffle_ensemble'"
         )
 
-    return dict(sorted(ratings.items(), key=lambda kv: kv[1], reverse=True))
+    return dict(
+        sorted(ratings.items(), key=lambda kv: kv[1], reverse=True)
+    )
 
 def load_decisions_file(path: str | Path) -> list[ArenaDecision]:
     raw = json.loads(Path(path).read_text(encoding="utf-8-sig"))

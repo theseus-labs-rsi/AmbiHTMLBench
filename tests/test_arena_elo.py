@@ -146,6 +146,107 @@ class ArenaEloTests(unittest.TestCase):
 
         self.assertGreater(ratings["model_a"], ratings["model_b"])
 
+    def test_v2_single_round_equals_no_aggregation(self) -> None:
+        decisions = [
+            make_decision("01", "A", confidence=4),
+        ]
+
+        none = compute_elo(
+            decisions,
+            mode="online",
+            round_aggregation="none",
+        )
+
+        aggregated = compute_elo(
+            decisions,
+            mode="online",
+            round_aggregation="sample_pair",
+        )
+
+        self.assertEqual(none, aggregated)
+
+    def test_v2_consistent_rounds_do_not_stack_linearly(self) -> None:
+        one = compute_elo(
+            [
+                make_decision("01", "A", confidence=5),
+            ],
+            mode="online",
+            round_aggregation="none",
+        )
+
+        three = compute_elo(
+            [
+                make_decision("01", "A", confidence=5, round_idx=0),
+                make_decision("01", "A", confidence=5, round_idx=1),
+                make_decision("01", "A", confidence=5, round_idx=2),
+            ],
+            mode="online",
+            round_aggregation="sample_pair",
+        )
+
+        stacked = compute_elo(
+            [
+                make_decision("01", "A", confidence=5, round_idx=0),
+                make_decision("01", "A", confidence=5, round_idx=1),
+                make_decision("01", "A", confidence=5, round_idx=2),
+            ],
+            mode="online",
+            round_aggregation="none",
+        )
+
+        self.assertLess(
+            three["model_a"] - 1000,
+            3 * (one["model_a"] - 1000),
+        )
+        self.assertGreater(
+            three["model_a"],
+            one["model_a"],
+        )
+
+    def test_v2_conflicting_rounds_reduce_update(self) -> None:
+        consistent = compute_elo(
+            [
+                make_decision("01", "A", confidence=5),
+                make_decision("01", "A", confidence=5, round_idx=1),
+            ],
+            mode="online",
+            round_aggregation="sample_pair",
+        )
+
+        conflict = compute_elo(
+            [
+                make_decision("01", "A", confidence=5),
+                make_decision("01", "B", confidence=5, round_idx=1),
+            ],
+            mode="online",
+            round_aggregation="sample_pair",
+        )
+
+        self.assertGreater(
+            consistent["model_a"] - 1000,
+            conflict["model_a"] - 1000,
+        )
+
+    def test_v2_round_aggregation_changes_result(self) -> None:
+        decisions = [
+            make_decision("01", "A", confidence=5),
+            make_decision("01", "B", confidence=5, round_idx=1),
+        ]
+
+        none = compute_elo(
+            decisions,
+            mode="online",
+            round_aggregation="none",
+        )
+
+        aggregated = compute_elo(
+            decisions,
+            mode="online",
+            round_aggregation="sample_pair",
+        )
+
+        self.assertNotEqual(none, aggregated)
+
 
 if __name__ == "__main__":
     unittest.main()
