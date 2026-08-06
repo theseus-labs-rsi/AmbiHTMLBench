@@ -487,6 +487,89 @@ def _evidence_order_key(item: EloEvidence) -> tuple[Any, ...]:
     )
 
 
+def _compute_batch_elo(
+    evidence: list[EloEvidence],
+    k_factor: float,
+    init_rating: float,
+    max_iterations: int,
+    tolerance: float,
+    regularization: float,
+) -> dict[str, float]:
+    if max_iterations <= 0:
+        raise ValueError("batch_iterations must be greater than 0")
+    if tolerance <= 0:
+        raise ValueError("batch_tolerance must be greater than 0")
+    if regularization < 0:
+        raise ValueError("batch_regularization must be non-negative")
+
+    models = sorted(
+        {
+            model
+            for item in evidence
+            for model in (item.model_a, item.model_b)
+        }
+    )
+
+    ratings = {model: init_rating for model in models}
+    exposure = {model: 0.0 for model in models}
+
+    for item in evidence:
+        exposure[item.model_a] += item.update_weight
+        exposure[item.model_b] += item.update_weight
+
+    for _ in range(max_iterations):
+        gradient = {model: 0.0 for model in models}
+
+        for item in evidence:
+            expected_a = logistic_expected(
+                ratings[item.model_a],
+                ratings[item.model_b],
+            )
+            weighted_error = (
+                item.update_weight
+                * (item.score_a - expected_a)
+            )
+
+            gradient[item.model_a] += weighted_error
+            gradient[item.model_b] -= weighted_error
+
+        updated: dict[str, float] = {}
+
+        for model in models:
+            normalized_gradient = (
+                gradient[model]
+                / max(exposure[model], 1e-12)
+            )
+            shrinkage = (
+                regularization
+                * (ratings[model] - init_rating)
+                / 400.0
+            )
+
+            updated[model] = (
+                ratings[model]
+                + k_factor
+                * (normalized_gradient - shrinkage)
+            )
+
+        mean_rating = sum(updated.values()) / len(updated)
+        recenter = init_rating - mean_rating
+
+        for model in models:
+            updated[model] += recenter
+
+        max_change = max(
+            abs(updated[model] - ratings[model])
+            for model in models
+        )
+
+        ratings = updated
+
+        if max_change < tolerance:
+            break
+
+    return ratings
+
 def _run_elo_trials(
     evidence: list[EloEvidence],
     k_factor: float,
@@ -494,6 +577,9 @@ def _run_elo_trials(
     mode: str,
     shuffle_repeats: int,
     seed: int,
+    batch_iterations: int,
+    batch_tolerance: float,
+    batch_regularization: float,
 ) -> list[dict[str, float]]:
     if mode == "online":
         return [
@@ -504,10 +590,22 @@ def _run_elo_trials(
             )
         ]
 
+    if mode == "batch":
+        return [
+            _compute_batch_elo(
+                evidence=list(evidence),
+                k_factor=k_factor,
+                init_rating=init_rating,
+                max_iterations=batch_iterations,
+                tolerance=batch_tolerance,
+                regularization=batch_regularization,
+            )
+        ]
+
     if mode != "shuffle_ensemble":
         raise ValueError(
             f"unknown Elo mode: {mode!r}; "
-            "expected 'online' or 'shuffle_ensemble'"
+            "expected 'online', 'shuffle_ensemble', or 'batch'"
         )
 
     if shuffle_repeats <= 0:
@@ -604,6 +702,9 @@ def compute_elo(
     round_aggregation: str = "sample_pair",
     consistency_floor: float = 0.25,
     sample_balance: str = "per_model_exposure",
+    batch_iterations: int = 1500,
+    batch_tolerance: float = 1e-5,
+    batch_regularization: float = 0.05,
 ) -> dict[str, float]:
     if not decisions:
         return {}
@@ -629,6 +730,9 @@ def compute_elo(
         mode=mode,
         shuffle_repeats=shuffle_repeats,
         seed=seed,
+        batch_iterations=batch_iterations,
+        batch_tolerance=batch_tolerance,
+        batch_regularization=batch_regularization,
     )
     ratings = _mean_trial_ratings(trials)
 
@@ -651,6 +755,9 @@ def compute_elo_stats(
     round_aggregation: str = "sample_pair",
     consistency_floor: float = 0.25,
     sample_balance: str = "per_model_exposure",
+    batch_iterations: int = 1500,
+    batch_tolerance: float = 1e-5,
+    batch_regularization: float = 0.05,
 ) -> dict[str, EloStats]:
     if not decisions:
         return {}
@@ -676,6 +783,9 @@ def compute_elo_stats(
         mode=mode,
         shuffle_repeats=shuffle_repeats,
         seed=seed,
+        batch_iterations=batch_iterations,
+        batch_tolerance=batch_tolerance,
+        batch_regularization=batch_regularization,
     )
 
     models = sorted(trials[0])

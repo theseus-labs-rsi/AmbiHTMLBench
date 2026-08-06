@@ -426,6 +426,124 @@ class ArenaEloTests(unittest.TestCase):
                 sample_balance="invalid",
             )
 
+    def test_v5_batch_is_order_independent(self) -> None:
+        decisions = [
+            make_decision("01", "A", model_a="a", model_b="b"),
+            make_decision("02", "A", model_a="a", model_b="c"),
+            make_decision("03", "A", model_a="b", model_b="c"),
+        ]
+
+        forward = compute_elo(decisions, mode="batch")
+        backward = compute_elo(
+            list(reversed(decisions)),
+            mode="batch",
+        )
+
+        for model in forward:
+            self.assertAlmostEqual(
+                forward[model],
+                backward[model],
+                places=9,
+            )
+
+    def test_v5_batch_clear_winner_ranking(self) -> None:
+        decisions = [
+            make_decision("01", "A", model_a="a", model_b="b"),
+            make_decision("02", "A", model_a="a", model_b="c"),
+            make_decision("03", "A", model_a="b", model_b="c"),
+        ]
+
+        ratings = compute_elo(decisions, mode="batch")
+
+        self.assertGreater(ratings["a"], ratings["b"])
+        self.assertGreater(ratings["b"], ratings["c"])
+
+    def test_v5_batch_cycle_remains_balanced(self) -> None:
+        decisions = [
+            make_decision("01", "A", model_a="a", model_b="b"),
+            make_decision("02", "A", model_a="b", model_b="c"),
+            make_decision("03", "A", model_a="c", model_b="a"),
+        ]
+
+        ratings = compute_elo(decisions, mode="batch")
+
+        self.assertAlmostEqual(ratings["a"], 1000.0, places=9)
+        self.assertAlmostEqual(ratings["b"], 1000.0, places=9)
+        self.assertAlmostEqual(ratings["c"], 1000.0, places=9)
+
+    def test_v5_batch_preserves_mean_rating(self) -> None:
+        decisions = [
+            make_decision("01", "A", model_a="a", model_b="b"),
+            make_decision("02", "B", model_a="a", model_b="c"),
+            make_decision("03", "A", model_a="b", model_b="c"),
+        ]
+
+        ratings = compute_elo(decisions, mode="batch")
+
+        self.assertAlmostEqual(
+            sum(ratings.values()),
+            1000.0 * len(ratings),
+            places=9,
+        )
+
+    def test_v5_regularization_reduces_rating_spread(self) -> None:
+        decisions = [
+            make_decision("01", "A", model_a="a", model_b="b"),
+            make_decision("02", "A", model_a="a", model_b="c"),
+            make_decision("03", "A", model_a="b", model_b="c"),
+        ]
+
+        weak = compute_elo(
+            decisions,
+            mode="batch",
+            batch_regularization=0.01,
+        )
+        strong = compute_elo(
+            decisions,
+            mode="batch",
+            batch_regularization=0.20,
+        )
+
+        weak_spread = max(weak.values()) - min(weak.values())
+        strong_spread = max(strong.values()) - min(strong.values())
+
+        self.assertLess(strong_spread, weak_spread)
+
+    def test_v5_batch_stats_have_one_trial(self) -> None:
+        decisions = [
+            make_decision("01", "A", model_a="a", model_b="b"),
+        ]
+
+        stats = compute_elo_stats(decisions, mode="batch")
+
+        for item in stats.values():
+            self.assertEqual(item.trial_count, 1)
+            self.assertAlmostEqual(item.elo_std, 0.0, places=12)
+
+    def test_v5_invalid_batch_parameters_raise(self) -> None:
+        decisions = [make_decision("01", "A")]
+
+        with self.assertRaises(ValueError):
+            compute_elo(
+                decisions,
+                mode="batch",
+                batch_iterations=0,
+            )
+
+        with self.assertRaises(ValueError):
+            compute_elo(
+                decisions,
+                mode="batch",
+                batch_tolerance=0.0,
+            )
+
+        with self.assertRaises(ValueError):
+            compute_elo(
+                decisions,
+                mode="batch",
+                batch_regularization=-0.1,
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

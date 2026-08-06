@@ -304,6 +304,9 @@ def _cmd_arena_elo(args: argparse.Namespace) -> None:
         "round_aggregation": args.round_aggregation,
         "consistency_floor": args.consistency_floor,
         "sample_balance": args.sample_balance,
+        "batch_iterations": args.batch_iterations,
+        "batch_tolerance": args.batch_tolerance,
+        "batch_regularization": args.batch_regularization,
     }
 
     if args.include_stats:
@@ -437,7 +440,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--init-rating", type=float, default=1000.0)
     p.add_argument(
         "--elo-mode",
-        choices=["online", "shuffle_ensemble"],
+        choices=["online", "shuffle_ensemble", "batch"],
         default="shuffle_ensemble",
         help=(
             "online uses the stored evidence order; "
@@ -477,6 +480,24 @@ def build_parser() -> argparse.ArgumentParser:
             "normalize each model's total Elo exposure "
             "within a sample"
         ),
+    )
+    p.add_argument(
+        "--batch-iterations",
+        type=int,
+        default=1500,
+        help="maximum synchronous batch Elo iterations",
+    )
+    p.add_argument(
+        "--batch-tolerance",
+        type=float,
+        default=1e-5,
+        help="batch Elo convergence tolerance",
+    )
+    p.add_argument(
+        "--batch-regularization",
+        type=float,
+        default=0.05,
+        help="L2 shrinkage toward the initial Elo rating",
     )
     p.add_argument(
         "--include-stats",
