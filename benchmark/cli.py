@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import argparse
 import csv
@@ -294,14 +294,24 @@ def _cmd_arena_judge(args: argparse.Namespace) -> None:
 
 def _cmd_arena_elo(args: argparse.Namespace) -> None:
     decisions = load_decisions_file(args.decisions_json)
-    elo = compute_elo(decisions, k_factor=args.k_factor, init_rating=args.init_rating)
+    elo = compute_elo(
+        decisions,
+        k_factor=args.k_factor,
+        init_rating=args.init_rating,
+        mode=args.elo_mode,
+        shuffle_repeats=args.shuffle_repeats,
+        seed=args.elo_seed,
+    )
 
     rows = [{"model": k, "elo": round(v, 2)} for k, v in elo.items()]
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(rows, ensure_ascii=False, indent=2), encoding="utf-8")
 
-    print("Elo ranking:")
+    print(
+        f"Elo ranking: mode={args.elo_mode}, "
+        f"shuffle_repeats={args.shuffle_repeats}, seed={args.elo_seed}"
+    )
     for i, r in enumerate(rows, start=1):
         print(f"{i:>2}. {r['model']:<20} {r['elo']:.2f}")
     print(f"saved: {out}")
@@ -376,6 +386,24 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--out", default="outputs/arena_elo.json")
     p.add_argument("--k-factor", type=float, default=24.0)
     p.add_argument("--init-rating", type=float, default=1000.0)
+    p.add_argument(
+        "--elo-mode",
+        choices=["online", "shuffle_ensemble"],
+        default="shuffle_ensemble",
+        help="online uses the stored decision order; shuffle_ensemble averages deterministic shuffled forward/reverse runs",
+    )
+    p.add_argument(
+        "--shuffle-repeats",
+        type=int,
+        default=64,
+        help="number of shuffled orders used by shuffle_ensemble",
+    )
+    p.add_argument(
+        "--elo-seed",
+        type=int,
+        default=42,
+        help="random seed used by shuffle_ensemble",
+    )
     p.set_defaults(func=_cmd_arena_elo)
 
     return parser

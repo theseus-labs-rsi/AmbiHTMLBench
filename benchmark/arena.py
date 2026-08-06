@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import base64
 from dataclasses import dataclass
@@ -262,7 +262,24 @@ def run_arena(
 
 
 
-def compute_elo(decisions: list[ArenaDecision], k_factor: float = 24.0, init_rating: float = 1000.0) -> dict[str, float]:
+def _winner_scores(winner: str) -> tuple[float, float]:
+    if winner == "A":
+        return 1.0, 0.0
+    if winner == "B":
+        return 0.0, 1.0
+    return 0.5, 0.5
+
+
+def _confidence_weight(confidence: int) -> float:
+    bounded = max(1, min(5, int(confidence)))
+    return 0.5 + 0.125 * bounded
+
+
+def _compute_elo_once(
+    decisions: list[ArenaDecision],
+    k_factor: float,
+    init_rating: float,
+) -> dict[str, float]:
     ratings: dict[str, float] = {}
 
     def ensure(name: str) -> None:
@@ -278,22 +295,84 @@ def compute_elo(decisions: list[ArenaDecision], k_factor: float = 24.0, init_rat
         ea = logistic_expected(ra, rb)
         eb = 1.0 - ea
 
-        if d.winner == "A":
-            sa, sb = 1.0, 0.0
-        elif d.winner == "B":
-            sa, sb = 0.0, 1.0
-        else:
-            sa, sb = 0.5, 0.5
-
-        weight = 0.5 + 0.125 * d.confidence
-        k = k_factor * weight
+        sa, sb = _winner_scores(d.winner)
+        k = k_factor * _confidence_weight(d.confidence)
 
         ratings[d.model_a] = ra + k * (sa - ea)
         ratings[d.model_b] = rb + k * (sb - eb)
 
+    return ratings
+
+
+def _decision_order_key(d: ArenaDecision) -> tuple[Any, ...]:
+    return (
+        d.sample_id,
+        d.model_a,
+        d.model_b,
+        d.round_idx,
+        d.winner,
+        d.confidence,
+        d.judge_model,
+        d.reason,
+        d.swapped,
+    )
+
+
+def compute_elo(
+    decisions: list[ArenaDecision],
+    k_factor: float = 24.0,
+    init_rating: float = 1000.0,
+    mode: str = "shuffle_ensemble",
+    shuffle_repeats: int = 64,
+    seed: int = 42,
+) -> dict[str, float]:
+    if not decisions:
+        return {}
+    if k_factor <= 0:
+        raise ValueError("k_factor must be greater than 0")
+
+    if mode == "online":
+        ratings = _compute_elo_once(
+            decisions=list(decisions),
+            k_factor=k_factor,
+            init_rating=init_rating,
+        )
+    elif mode == "shuffle_ensemble":
+        if shuffle_repeats <= 0:
+            raise ValueError("shuffle_repeats must be greater than 0")
+
+        canonical_decisions = sorted(decisions, key=_decision_order_key)
+        rng = random.Random(seed)
+        rating_sum: dict[str, float] = {}
+        run_count = 0
+
+        for _ in range(shuffle_repeats):
+            shuffled = list(canonical_decisions)
+            rng.shuffle(shuffled)
+
+            for current_order in (shuffled, list(reversed(shuffled))):
+                current_ratings = _compute_elo_once(
+                    decisions=current_order,
+                    k_factor=k_factor,
+                    init_rating=init_rating,
+                )
+
+                for model, rating in current_ratings.items():
+                    rating_sum[model] = rating_sum.get(model, 0.0) + rating
+
+                run_count += 1
+
+        ratings = {
+            model: total / run_count
+            for model, total in rating_sum.items()
+        }
+    else:
+        raise ValueError(
+            f"unknown Elo mode: {mode!r}; "
+            "expected 'online' or 'shuffle_ensemble'"
+        )
+
     return dict(sorted(ratings.items(), key=lambda kv: kv[1], reverse=True))
-
-
 
 def load_decisions_file(path: str | Path) -> list[ArenaDecision]:
     raw = json.loads(Path(path).read_text(encoding="utf-8-sig"))
