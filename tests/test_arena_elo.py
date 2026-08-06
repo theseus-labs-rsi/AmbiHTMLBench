@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import unittest
 
-from benchmark.arena import ArenaDecision, compute_elo
+from benchmark.arena import ArenaDecision, compute_elo, compute_elo_stats
 
 
 def make_decision(
@@ -246,6 +246,104 @@ class ArenaEloTests(unittest.TestCase):
         )
 
         self.assertNotEqual(none, aggregated)
+
+    def test_v3_stats_mean_matches_compute_elo(self) -> None:
+        decisions = [
+            make_decision("01", "A", model_a="a", model_b="b"),
+            make_decision("02", "A", model_a="a", model_b="c"),
+            make_decision("03", "A", model_a="b", model_b="c"),
+        ]
+
+        ratings = compute_elo(
+            decisions,
+            mode="shuffle_ensemble",
+            shuffle_repeats=32,
+            seed=11,
+        )
+        stats = compute_elo_stats(
+            decisions,
+            mode="shuffle_ensemble",
+            shuffle_repeats=32,
+            seed=11,
+        )
+
+        for model, rating in ratings.items():
+            self.assertAlmostEqual(
+                stats[model].elo,
+                rating,
+                places=9,
+            )
+
+    def test_v3_online_stats_have_zero_std(self) -> None:
+        stats = compute_elo_stats(
+            [make_decision("01", "A")],
+            mode="online",
+        )
+
+        self.assertAlmostEqual(stats["model_a"].elo_std, 0.0)
+        self.assertAlmostEqual(stats["model_b"].elo_std, 0.0)
+        self.assertEqual(stats["model_a"].trial_count, 1)
+        self.assertEqual(stats["model_a"].rank_stability, 1.0)
+
+    def test_v3_stats_ranges_are_valid(self) -> None:
+        decisions = [
+            make_decision("01", "A", model_a="a", model_b="b"),
+            make_decision("02", "A", model_a="b", model_b="c"),
+            make_decision("03", "A", model_a="c", model_b="a"),
+        ]
+
+        stats = compute_elo_stats(
+            decisions,
+            shuffle_repeats=32,
+            seed=42,
+        )
+
+        for item in stats.values():
+            self.assertGreaterEqual(item.elo_std, 0.0)
+            self.assertGreaterEqual(item.mean_rank, 1.0)
+            self.assertLessEqual(item.mean_rank, len(stats))
+            self.assertGreaterEqual(item.rank_stability, 0.0)
+            self.assertLessEqual(item.rank_stability, 1.0)
+            self.assertGreaterEqual(
+                item.top_rank_probability,
+                0.0,
+            )
+            self.assertLessEqual(
+                item.top_rank_probability,
+                1.0,
+            )
+
+    def test_v3_cyclic_results_have_nonzero_uncertainty(self) -> None:
+        decisions = [
+            make_decision("01", "A", model_a="a", model_b="b"),
+            make_decision("02", "A", model_a="b", model_b="c"),
+            make_decision("03", "A", model_a="c", model_b="a"),
+        ]
+
+        stats = compute_elo_stats(
+            decisions,
+            shuffle_repeats=64,
+            seed=42,
+        )
+
+        self.assertTrue(
+            any(item.elo_std > 0.0 for item in stats.values())
+        )
+
+    def test_v3_clear_winner_has_full_top_probability(self) -> None:
+        decisions = [
+            make_decision("01", "A", confidence=5, model_a="a", model_b="b"),
+            make_decision("02", "A", confidence=5, model_a="a", model_b="c"),
+            make_decision("03", "A", confidence=5, model_a="b", model_b="c"),
+        ]
+
+        stats = compute_elo_stats(
+            decisions,
+            shuffle_repeats=64,
+            seed=42,
+        )
+
+        self.assertAlmostEqual(stats["a"].top_rank_probability, 1.0)
 
 
 if __name__ == "__main__":

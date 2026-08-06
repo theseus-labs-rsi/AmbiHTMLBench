@@ -391,6 +391,16 @@ def _prepare_elo_evidence(
     )
 
 
+@dataclass(frozen=True)
+class EloStats:
+    elo: float
+    elo_std: float
+    mean_rank: float
+    rank_stability: float
+    top_rank_probability: float
+    trial_count: int
+
+
 def _compute_elo_once(
     evidence: list[EloEvidence],
     k_factor: float,
@@ -433,6 +443,113 @@ def _evidence_order_key(item: EloEvidence) -> tuple[Any, ...]:
     )
 
 
+def _run_elo_trials(
+    evidence: list[EloEvidence],
+    k_factor: float,
+    init_rating: float,
+    mode: str,
+    shuffle_repeats: int,
+    seed: int,
+) -> list[dict[str, float]]:
+    if mode == "online":
+        return [
+            _compute_elo_once(
+                evidence=list(evidence),
+                k_factor=k_factor,
+                init_rating=init_rating,
+            )
+        ]
+
+    if mode != "shuffle_ensemble":
+        raise ValueError(
+            f"unknown Elo mode: {mode!r}; "
+            "expected 'online' or 'shuffle_ensemble'"
+        )
+
+    if shuffle_repeats <= 0:
+        raise ValueError("shuffle_repeats must be greater than 0")
+
+    canonical_evidence = sorted(evidence, key=_evidence_order_key)
+    rng = random.Random(seed)
+    trials: list[dict[str, float]] = []
+
+    for _ in range(shuffle_repeats):
+        shuffled = list(canonical_evidence)
+        rng.shuffle(shuffled)
+
+        trials.append(
+            _compute_elo_once(
+                evidence=shuffled,
+                k_factor=k_factor,
+                init_rating=init_rating,
+            )
+        )
+        trials.append(
+            _compute_elo_once(
+                evidence=list(reversed(shuffled)),
+                k_factor=k_factor,
+                init_rating=init_rating,
+            )
+        )
+
+    return trials
+
+
+def _mean_trial_ratings(
+    trials: list[dict[str, float]],
+) -> dict[str, float]:
+    if not trials:
+        return {}
+
+    rating_sum: dict[str, float] = {}
+
+    for trial in trials:
+        for model, rating in trial.items():
+            rating_sum[model] = rating_sum.get(model, 0.0) + rating
+
+    trial_count = len(trials)
+
+    return {
+        model: total / trial_count
+        for model, total in rating_sum.items()
+    }
+
+
+def _rating_ranks(
+    ratings: dict[str, float],
+    tie_tolerance: float = 1e-12,
+) -> dict[str, float]:
+    ordered = sorted(
+        ratings,
+        key=lambda model: (-ratings[model], model),
+    )
+    ranks: dict[str, float] = {}
+    index = 0
+
+    while index < len(ordered):
+        end = index + 1
+
+        while (
+            end < len(ordered)
+            and abs(
+                ratings[ordered[end]]
+                - ratings[ordered[index]]
+            ) <= tie_tolerance
+        ):
+            end += 1
+
+        first_rank = index + 1
+        last_rank = end
+        average_rank = (first_rank + last_rank) / 2.0
+
+        for position in range(index, end):
+            ranks[ordered[position]] = average_rank
+
+        index = end
+
+    return ranks
+
+
 def compute_elo(
     decisions: list[ArenaDecision],
     k_factor: float = 24.0,
@@ -445,6 +562,7 @@ def compute_elo(
 ) -> dict[str, float]:
     if not decisions:
         return {}
+
     if k_factor <= 0:
         raise ValueError("k_factor must be greater than 0")
 
@@ -454,50 +572,121 @@ def compute_elo(
         consistency_floor=consistency_floor,
     )
 
-    if mode == "online":
-        ratings = _compute_elo_once(
-            evidence=evidence,
-            k_factor=k_factor,
-            init_rating=init_rating,
+    trials = _run_elo_trials(
+        evidence=evidence,
+        k_factor=k_factor,
+        init_rating=init_rating,
+        mode=mode,
+        shuffle_repeats=shuffle_repeats,
+        seed=seed,
+    )
+    ratings = _mean_trial_ratings(trials)
+
+    return dict(
+        sorted(
+            ratings.items(),
+            key=lambda kv: kv[1],
+            reverse=True,
         )
-    elif mode == "shuffle_ensemble":
-        if shuffle_repeats <= 0:
-            raise ValueError("shuffle_repeats must be greater than 0")
+    )
 
-        canonical_evidence = sorted(evidence, key=_evidence_order_key)
-        rng = random.Random(seed)
-        rating_sum: dict[str, float] = {}
-        run_count = 0
 
-        for _ in range(shuffle_repeats):
-            shuffled = list(canonical_evidence)
-            rng.shuffle(shuffled)
+def compute_elo_stats(
+    decisions: list[ArenaDecision],
+    k_factor: float = 24.0,
+    init_rating: float = 1000.0,
+    mode: str = "shuffle_ensemble",
+    shuffle_repeats: int = 64,
+    seed: int = 42,
+    round_aggregation: str = "sample_pair",
+    consistency_floor: float = 0.25,
+) -> dict[str, EloStats]:
+    if not decisions:
+        return {}
 
-            for current_order in (shuffled, list(reversed(shuffled))):
-                current_ratings = _compute_elo_once(
-                    evidence=current_order,
-                    k_factor=k_factor,
-                    init_rating=init_rating,
-                )
+    if k_factor <= 0:
+        raise ValueError("k_factor must be greater than 0")
 
-                for model, rating in current_ratings.items():
-                    rating_sum[model] = rating_sum.get(model, 0.0) + rating
+    evidence = _prepare_elo_evidence(
+        decisions=list(decisions),
+        round_aggregation=round_aggregation,
+        consistency_floor=consistency_floor,
+    )
 
-                run_count += 1
+    trials = _run_elo_trials(
+        evidence=evidence,
+        k_factor=k_factor,
+        init_rating=init_rating,
+        mode=mode,
+        shuffle_repeats=shuffle_repeats,
+        seed=seed,
+    )
 
-        ratings = {
-            model: total / run_count
-            for model, total in rating_sum.items()
-        }
-    else:
-        raise ValueError(
-            f"unknown Elo mode: {mode!r}; "
-            "expected 'online' or 'shuffle_ensemble'"
+    models = sorted(trials[0])
+    ratings_by_model: dict[str, list[float]] = {
+        model: []
+        for model in models
+    }
+    ranks_by_model: dict[str, list[float]] = {
+        model: []
+        for model in models
+    }
+    top_count: dict[str, int] = {
+        model: 0
+        for model in models
+    }
+
+    for trial in trials:
+        ranks = _rating_ranks(trial)
+        highest_rating = max(trial.values())
+
+        for model in models:
+            ratings_by_model[model].append(trial[model])
+            ranks_by_model[model].append(ranks[model])
+
+            if abs(trial[model] - highest_rating) <= 1e-12:
+                top_count[model] += 1
+
+    stats: dict[str, EloStats] = {}
+    trial_count = len(trials)
+
+    for model in models:
+        rating_values = ratings_by_model[model]
+        rank_values = ranks_by_model[model]
+
+        elo = sum(rating_values) / trial_count
+        variance = sum(
+            (rating - elo) ** 2
+            for rating in rating_values
+        ) / trial_count
+        elo_std = variance ** 0.5
+        mean_rank = sum(rank_values) / trial_count
+
+        rank_counts: dict[float, int] = {}
+        for rank in rank_values:
+            rank_counts[rank] = rank_counts.get(rank, 0) + 1
+
+        modal_rank_count = max(rank_counts.values())
+        rank_stability = modal_rank_count / trial_count
+        top_rank_probability = top_count[model] / trial_count
+
+        stats[model] = EloStats(
+            elo=elo,
+            elo_std=elo_std,
+            mean_rank=mean_rank,
+            rank_stability=rank_stability,
+            top_rank_probability=top_rank_probability,
+            trial_count=trial_count,
         )
 
     return dict(
-        sorted(ratings.items(), key=lambda kv: kv[1], reverse=True)
+        sorted(
+            stats.items(),
+            key=lambda kv: kv[1].elo,
+            reverse=True,
+        )
     )
+
 
 def load_decisions_file(path: str | Path) -> list[ArenaDecision]:
     raw = json.loads(Path(path).read_text(encoding="utf-8-sig"))

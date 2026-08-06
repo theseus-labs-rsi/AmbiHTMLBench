@@ -90,7 +90,7 @@
 以下方向尚未实现，将逐版选择和验证：
 
 - V2：已完成，多轮裁判结果聚合后再执行 Elo。
-- V3：输出 Elo 均值、标准差和排名稳定性指标。
+- V3：已完成，输出 Elo 均值、标准差和排名稳定性指标。
 - V4：根据裁判一致性动态校准 confidence 权重。
 - V5：引入样本难度和信息量加权。
 - V6：尝试 Bradley-Terry 全局能力拟合，与在线 Elo 对照。
@@ -216,3 +216,72 @@ V2 将每一次裁判结果转换为 Elo evidence，而不是直接作为独立�
 - 不同参考图片的信息量默认相同。
 - confidence 仍来自裁判模型自报告，没有额外校准。
 - 尚未输出 Elo 稳定性指标。
+
+## V3：Uncertainty-Aware Elo
+
+### 状态
+
+已完成代码实现、自动测试和 CLI 端到端验证。
+
+### 动机
+
+V1 和 V2 提高了评分稳定性，但最终结果仍只包含一个平均 Elo。单一数值无法表达模型排名对比赛排列顺序的敏感程度，也无法说明模型的领先是否稳定。
+
+### 核心设计
+
+V3 将 shuffle ensemble 的每一次正序或倒序计算保留为一个独立 trial，再根据全部 trial 计算排名不确定性。
+
+新增 `EloStats`，包含：
+
+- `elo`：所有 trial 的平均 Elo。
+- `elo_std`：不同 trial 下 Elo 的总体标准差。
+- `mean_rank`：模型在所有 trial 中的平均名次。
+- `rank_stability`：模型最常出现名次的出现比例。
+- `top_rank_probability`：模型在 trial 中并列或独占最高 Elo 的比例。
+- `trial_count`：参与统计的 trial 数量。
+
+### 代码重构
+
+新增统一的 `_run_elo_trials`：
+
+- `compute_elo` 使用各 trial 的平均评分；
+- `compute_elo_stats` 使用相同 trial 计算不确定性；
+- 避免复制 shuffle ensemble 实现；
+- 保证普通 Elo 与统计 Elo 使用完全相同的比赛排列。
+
+新增并列名次处理：
+
+- Elo 差异在容差内时视为并列；
+- 并列模型使用平均名次；
+- top rank probability 允许多个模型同时处于第一组。
+
+### CLI 改进
+
+新增：
+
+- `--include-stats`
+- `--round-aggregation`
+- `--consistency-floor`
+
+使用 `--include-stats` 时，输出平均 Elo、标准差、平均名次、排名稳定度和第一名概率。
+
+### 已通过测试
+
+在 V2 的 12 项测试基础上新增：
+
+- 统计平均 Elo 与 `compute_elo` 完全一致。
+- 单次 online trial 的 Elo 标准差为零。
+- 所有统计指标处于合法范围。
+- 循环胜负关系产生非零 Elo 不确定性。
+- 明确的传递性胜负关系保持稳定第一名。
+
+总测试：
+
+- 17 / 17 passed。
+
+### 当前限制
+
+- 当前不确定性主要反映比赛排列顺序，而不是数据集采样误差。
+- 尚未使用 bootstrap 对 sample 进行重采样。
+- 排名稳定度不是统计显著性检验。
+- 样本难度和信息量仍未参与 Elo 更新。

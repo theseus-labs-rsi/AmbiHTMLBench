@@ -7,7 +7,7 @@ import os
 from pathlib import Path
 from typing import Any
 
-from .arena import compute_elo, load_decisions_file, load_records, run_arena
+from .arena import compute_elo, compute_elo_stats, load_decisions_file, load_records, run_arena
 from .html_extractor import extract_html_as_page
 from .render import image_size
 from .schema import dump_page_json, parse_page_json
@@ -294,28 +294,75 @@ def _cmd_arena_judge(args: argparse.Namespace) -> None:
 
 def _cmd_arena_elo(args: argparse.Namespace) -> None:
     decisions = load_decisions_file(args.decisions_json)
-    elo = compute_elo(
-        decisions,
-        k_factor=args.k_factor,
-        init_rating=args.init_rating,
-        mode=args.elo_mode,
-        shuffle_repeats=args.shuffle_repeats,
-        seed=args.elo_seed,
-    )
 
-    rows = [{"model": k, "elo": round(v, 2)} for k, v in elo.items()]
+    common_args = {
+        "k_factor": args.k_factor,
+        "init_rating": args.init_rating,
+        "mode": args.elo_mode,
+        "shuffle_repeats": args.shuffle_repeats,
+        "seed": args.elo_seed,
+        "round_aggregation": args.round_aggregation,
+        "consistency_floor": args.consistency_floor,
+    }
+
+    if args.include_stats:
+        stats = compute_elo_stats(decisions, **common_args)
+        rows = [
+            {
+                "model": model,
+                "elo": round(item.elo, 2),
+                "elo_std": round(item.elo_std, 4),
+                "mean_rank": round(item.mean_rank, 4),
+                "rank_stability": round(item.rank_stability, 4),
+                "top_rank_probability": round(
+                    item.top_rank_probability,
+                    4,
+                ),
+                "trial_count": item.trial_count,
+            }
+            for model, item in stats.items()
+        ]
+    else:
+        elo = compute_elo(decisions, **common_args)
+        rows = [
+            {
+                "model": model,
+                "elo": round(rating, 2),
+            }
+            for model, rating in elo.items()
+        ]
+
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps(rows, ensure_ascii=False, indent=2), encoding="utf-8")
+    out.write_text(
+        json.dumps(rows, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
 
     print(
         f"Elo ranking: mode={args.elo_mode}, "
-        f"shuffle_repeats={args.shuffle_repeats}, seed={args.elo_seed}"
+        f"round_aggregation={args.round_aggregation}, "
+        f"shuffle_repeats={args.shuffle_repeats}, "
+        f"seed={args.elo_seed}"
     )
-    for i, r in enumerate(rows, start=1):
-        print(f"{i:>2}. {r['model']:<20} {r['elo']:.2f}")
-    print(f"saved: {out}")
 
+    for index, row in enumerate(rows, start=1):
+        if args.include_stats:
+            print(
+                f"{index:>2}. {row['model']:<20} "
+                f"{row['elo']:.2f} "
+                f"std={row['elo_std']:.4f} "
+                f"mean_rank={row['mean_rank']:.4f} "
+                f"stability={row['rank_stability']:.4f} "
+                f"top_prob={row['top_rank_probability']:.4f}"
+            )
+        else:
+            print(
+                f"{index:>2}. {row['model']:<20} "
+                f"{row['elo']:.2f}"
+            )
+
+    print(f"saved: {out}")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -390,7 +437,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--elo-mode",
         choices=["online", "shuffle_ensemble"],
         default="shuffle_ensemble",
-        help="online uses the stored decision order; shuffle_ensemble averages deterministic shuffled forward/reverse runs",
+        help=(
+            "online uses the stored evidence order; "
+            "shuffle_ensemble averages deterministic shuffled "
+            "forward/reverse trials"
+        ),
     )
     p.add_argument(
         "--shuffle-repeats",
@@ -404,7 +455,25 @@ def build_parser() -> argparse.ArgumentParser:
         default=42,
         help="random seed used by shuffle_ensemble",
     )
+    p.add_argument(
+        "--round-aggregation",
+        choices=["none", "sample_pair"],
+        default="sample_pair",
+        help="aggregate repeated rounds for the same sample/model pair",
+    )
+    p.add_argument(
+        "--consistency-floor",
+        type=float,
+        default=0.25,
+        help="minimum reliability retained for conflicting round evidence",
+    )
+    p.add_argument(
+        "--include-stats",
+        action="store_true",
+        help="output Elo uncertainty and rank stability statistics",
+    )
     p.set_defaults(func=_cmd_arena_elo)
+
 
     return parser
 
