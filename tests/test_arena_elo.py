@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import unittest
 
-from benchmark.arena import ArenaDecision, compute_elo, compute_elo_stats
+from benchmark.arena import ArenaDecision, compute_bootstrap_elo_stats, compute_elo, compute_elo_stats
 
 
 def make_decision(
@@ -542,6 +542,135 @@ class ArenaEloTests(unittest.TestCase):
                 decisions,
                 mode="batch",
                 batch_regularization=-0.1,
+            )
+
+    def test_v6_bootstrap_is_reproducible(self) -> None:
+        decisions = [
+            make_decision("01", "A", model_a="a", model_b="b"),
+            make_decision("02", "B", model_a="a", model_b="b"),
+            make_decision("03", "A", model_a="a", model_b="b"),
+        ]
+
+        first = compute_bootstrap_elo_stats(
+            decisions,
+            bootstrap_repeats=64,
+            bootstrap_seed=7,
+        )
+        second = compute_bootstrap_elo_stats(
+            decisions,
+            bootstrap_repeats=64,
+            bootstrap_seed=7,
+        )
+
+        self.assertEqual(first, second)
+
+    def test_v6_bootstrap_ignores_input_order(self) -> None:
+        decisions = [
+            make_decision("01", "A", model_a="a", model_b="b"),
+            make_decision("02", "B", model_a="a", model_b="b"),
+            make_decision("03", "A", model_a="a", model_b="b"),
+        ]
+
+        forward = compute_bootstrap_elo_stats(
+            decisions,
+            bootstrap_repeats=64,
+            bootstrap_seed=11,
+        )
+        backward = compute_bootstrap_elo_stats(
+            list(reversed(decisions)),
+            bootstrap_repeats=64,
+            bootstrap_seed=11,
+        )
+
+        self.assertEqual(forward, backward)
+
+    def test_v6_single_sample_has_zero_bootstrap_std(self) -> None:
+        stats = compute_bootstrap_elo_stats(
+            [make_decision("01", "A")],
+            bootstrap_repeats=32,
+        )
+
+        for item in stats.values():
+            self.assertAlmostEqual(
+                item.bootstrap_std,
+                0.0,
+                places=12,
+            )
+
+    def test_v6_mixed_samples_have_nonzero_uncertainty(self) -> None:
+        decisions = [
+            make_decision("01", "A", model_a="a", model_b="b"),
+            make_decision("02", "B", model_a="a", model_b="b"),
+        ]
+
+        stats = compute_bootstrap_elo_stats(
+            decisions,
+            bootstrap_repeats=128,
+            bootstrap_seed=42,
+        )
+
+        self.assertGreater(stats["a"].bootstrap_std, 0.0)
+        self.assertGreater(stats["b"].bootstrap_std, 0.0)
+
+    def test_v6_point_estimate_matches_compute_elo(self) -> None:
+        decisions = [
+            make_decision("01", "A", model_a="a", model_b="b"),
+            make_decision("02", "A", model_a="a", model_b="c"),
+            make_decision("03", "A", model_a="b", model_b="c"),
+        ]
+
+        ratings = compute_elo(decisions, mode="batch")
+        stats = compute_bootstrap_elo_stats(
+            decisions,
+            mode="batch",
+            bootstrap_repeats=64,
+        )
+
+        for model in ratings:
+            self.assertAlmostEqual(
+                stats[model].elo,
+                ratings[model],
+                places=9,
+            )
+
+    def test_v6_bootstrap_ranges_are_valid(self) -> None:
+        decisions = [
+            make_decision("01", "A", model_a="a", model_b="b"),
+            make_decision("02", "B", model_a="a", model_b="b"),
+        ]
+
+        stats = compute_bootstrap_elo_stats(
+            decisions,
+            bootstrap_repeats=64,
+        )
+
+        for item in stats.values():
+            self.assertGreaterEqual(item.bootstrap_std, 0.0)
+            self.assertLessEqual(item.ci_lower, item.ci_upper)
+            self.assertGreaterEqual(item.rank_stability, 0.0)
+            self.assertLessEqual(item.rank_stability, 1.0)
+            self.assertGreaterEqual(
+                item.top_rank_probability,
+                0.0,
+            )
+            self.assertLessEqual(
+                item.top_rank_probability,
+                1.0,
+            )
+
+    def test_v6_invalid_bootstrap_parameters_raise(self) -> None:
+        decisions = [make_decision("01", "A")]
+
+        with self.assertRaises(ValueError):
+            compute_bootstrap_elo_stats(
+                decisions,
+                bootstrap_repeats=0,
+            )
+
+        with self.assertRaises(ValueError):
+            compute_bootstrap_elo_stats(
+                decisions,
+                confidence_level=1.0,
             )
 
 

@@ -446,3 +446,76 @@ V3 的统计接口同样支持 Batch 模式。由于 Batch 模式只有一个确
 - Batch 模式的零标准差只表示没有排列顺序波动。
 - 数据集采样误差仍需要 sample bootstrap 估计。
 - 尚未用人工偏好排名验证 Batch 模式的实际相关性提升。
+
+## V6：Sample Bootstrap Elo
+
+### 状态
+
+已完成代码实现、自动测试和 CLI 验证。
+
+### 动机
+
+V3 的不确定性主要反映 Elo 对比赛排列顺序的敏感性。V5 Batch 模式消除了排列顺序影响，但仍无法回答换一批 benchmark 样本后排名是否稳定。
+
+V6 使用 sample bootstrap 估计数据集采样不确定性。
+
+### 核心设计
+
+1. 按 `sample_id` 将全部裁判结果分组。
+2. 从原有 sample 集合中有放回抽取相同数量的 sample。
+3. 每个被重复抽中的 sample 使用新的合成 sample ID，避免多次抽样被 V2 再次聚合为同一个证据。
+4. 每个 bootstrap replicate 重新运行完整 Elo 流程。
+5. 汇总每个模型的 Elo 分布、排名分布和第一名概率。
+
+### 输出指标
+
+- `elo`：完整数据集上的点估计。
+- `bootstrap_mean`：Bootstrap Elo 均值。
+- `bootstrap_std`：Bootstrap Elo 标准差。
+- `ci_lower`：百分位置信区间下界。
+- `ci_upper`：百分位置信区间上界。
+- `mean_rank`：Bootstrap 平均名次。
+- `rank_stability`：最常见名次的出现比例。
+- `top_rank_probability`：Bootstrap 中处于第一组的概率。
+- `bootstrap_repeats`：重采样次数。
+- `sample_count`：原始独立样本数量。
+
+### 新增参数
+
+- `bootstrap_repeats`
+- `bootstrap_seed`
+- `confidence_level`
+
+CLI 新增：
+
+- `--include-bootstrap-stats`
+- `--bootstrap-repeats`
+- `--bootstrap-seed`
+- `--bootstrap-confidence`
+
+### 推荐使用
+
+Bootstrap 默认配合 `mode=batch`，从而让不确定性主要来自 sample 重采样，而不是比赛排列顺序。
+
+### 已通过测试
+
+在 V5 的 28 项测试基础上新增：
+
+- Bootstrap 固定随机种子时结果可复现。
+- Bootstrap 不依赖输入 decisions 的原始排列。
+- 只有一个 sample 时 Bootstrap 标准差为零。
+- 胜负不一致的多个 sample 产生非零不确定性。
+- 完整数据点估计与普通 Elo 完全一致。
+- 置信区间和排名概率处于合法范围。
+- 非法 Bootstrap 参数会抛出异常。
+
+总测试：
+
+- 35 / 35 passed。
+
+### 当前限制
+
+- 使用普通百分位 Bootstrap 区间，没有进行 BCa 校正。
+- 缺失模型在某次重采样中使用初始 Elo 补齐。
+- Bootstrap 估计依赖 sample 之间近似独立的假设。
+- 小样本数据集需要更多 replicate 才能得到稳定区间。

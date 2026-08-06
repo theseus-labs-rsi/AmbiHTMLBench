@@ -7,7 +7,7 @@ import os
 from pathlib import Path
 from typing import Any
 
-from .arena import compute_elo, compute_elo_stats, load_decisions_file, load_records, run_arena
+from .arena import compute_bootstrap_elo_stats, compute_elo, compute_elo_stats, load_decisions_file, load_records, run_arena
 from .html_extractor import extract_html_as_page
 from .render import image_size
 from .schema import dump_page_json, parse_page_json
@@ -295,6 +295,12 @@ def _cmd_arena_judge(args: argparse.Namespace) -> None:
 def _cmd_arena_elo(args: argparse.Namespace) -> None:
     decisions = load_decisions_file(args.decisions_json)
 
+    if args.include_stats and args.include_bootstrap_stats:
+        raise ValueError(
+            "--include-stats and --include-bootstrap-stats "
+            "cannot be used together"
+        )
+
     common_args = {
         "k_factor": args.k_factor,
         "init_rating": args.init_rating,
@@ -309,7 +315,34 @@ def _cmd_arena_elo(args: argparse.Namespace) -> None:
         "batch_regularization": args.batch_regularization,
     }
 
-    if args.include_stats:
+    if args.include_bootstrap_stats:
+        stats = compute_bootstrap_elo_stats(
+            decisions,
+            bootstrap_repeats=args.bootstrap_repeats,
+            bootstrap_seed=args.bootstrap_seed,
+            confidence_level=args.bootstrap_confidence,
+            **common_args,
+        )
+        rows = [
+            {
+                "model": model,
+                "elo": round(item.elo, 2),
+                "bootstrap_mean": round(item.bootstrap_mean, 4),
+                "bootstrap_std": round(item.bootstrap_std, 4),
+                "ci_lower": round(item.ci_lower, 4),
+                "ci_upper": round(item.ci_upper, 4),
+                "mean_rank": round(item.mean_rank, 4),
+                "rank_stability": round(item.rank_stability, 4),
+                "top_rank_probability": round(
+                    item.top_rank_probability,
+                    4,
+                ),
+                "bootstrap_repeats": item.bootstrap_repeats,
+                "sample_count": item.sample_count,
+            }
+            for model, item in stats.items()
+        ]
+    elif args.include_stats:
         stats = compute_elo_stats(decisions, **common_args)
         rows = [
             {
@@ -346,20 +379,26 @@ def _cmd_arena_elo(args: argparse.Namespace) -> None:
     print(
         f"Elo ranking: mode={args.elo_mode}, "
         f"round_aggregation={args.round_aggregation}, "
-        f"sample_balance={args.sample_balance}, "
-        f"shuffle_repeats={args.shuffle_repeats}, "
-        f"seed={args.elo_seed}"
+        f"sample_balance={args.sample_balance}"
     )
 
     for index, row in enumerate(rows, start=1):
-        if args.include_stats:
+        if args.include_bootstrap_stats:
+            print(
+                f"{index:>2}. {row['model']:<20} "
+                f"{row['elo']:.2f} "
+                f"bootstrap_std={row['bootstrap_std']:.4f} "
+                f"CI=[{row['ci_lower']:.2f}, "
+                f"{row['ci_upper']:.2f}] "
+                f"top_prob={row['top_rank_probability']:.4f}"
+            )
+        elif args.include_stats:
             print(
                 f"{index:>2}. {row['model']:<20} "
                 f"{row['elo']:.2f} "
                 f"std={row['elo_std']:.4f} "
                 f"mean_rank={row['mean_rank']:.4f} "
-                f"stability={row['rank_stability']:.4f} "
-                f"top_prob={row['top_rank_probability']:.4f}"
+                f"stability={row['rank_stability']:.4f}"
             )
         else:
             print(
@@ -498,6 +537,29 @@ def build_parser() -> argparse.ArgumentParser:
         type=float,
         default=0.05,
         help="L2 shrinkage toward the initial Elo rating",
+    )
+    p.add_argument(
+        "--bootstrap-repeats",
+        type=int,
+        default=500,
+        help="number of sample bootstrap replicates",
+    )
+    p.add_argument(
+        "--bootstrap-seed",
+        type=int,
+        default=2026,
+        help="random seed for sample bootstrap",
+    )
+    p.add_argument(
+        "--bootstrap-confidence",
+        type=float,
+        default=0.95,
+        help="percentile confidence interval level",
+    )
+    p.add_argument(
+        "--include-bootstrap-stats",
+        action="store_true",
+        help="output sample bootstrap Elo uncertainty",
     )
     p.add_argument(
         "--include-stats",

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import base64
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import datetime, timezone
 from itertools import combinations
 import json
@@ -445,6 +445,19 @@ def _apply_sample_balance(
 
     return balanced
 
+@dataclass(frozen=True)
+class BootstrapEloStats:
+    elo: float
+    bootstrap_mean: float
+    bootstrap_std: float
+    ci_lower: float
+    ci_upper: float
+    mean_rank: float
+    rank_stability: float
+    top_rank_probability: float
+    bootstrap_repeats: int
+    sample_count: int
+
 def _compute_elo_once(
     evidence: list[EloEvidence],
     k_factor: float,
@@ -853,6 +866,197 @@ def compute_elo_stats(
         )
     )
 
+
+def _bootstrap_decision_key(
+    decision: ArenaDecision,
+) -> tuple[Any, ...]:
+    return (
+        decision.sample_id,
+        decision.model_a,
+        decision.model_b,
+        decision.round_idx,
+        decision.winner,
+        decision.confidence,
+        decision.judge_model,
+        decision.reason,
+        decision.swapped,
+    )
+
+
+def _bootstrap_resample_decisions(
+    decisions: list[ArenaDecision],
+    rng: random.Random,
+    replicate_idx: int,
+) -> list[ArenaDecision]:
+    grouped: dict[str, list[ArenaDecision]] = {}
+
+    for decision in sorted(decisions, key=_bootstrap_decision_key):
+        grouped.setdefault(decision.sample_id, []).append(decision)
+
+    sample_ids = sorted(grouped)
+    resampled: list[ArenaDecision] = []
+
+    for draw_idx in range(len(sample_ids)):
+        selected_id = sample_ids[rng.randrange(len(sample_ids))]
+        synthetic_id = (
+            f"bootstrap-{replicate_idx:06d}-"
+            f"{draw_idx:06d}-{selected_id}"
+        )
+
+        for decision in grouped[selected_id]:
+            resampled.append(
+                replace(
+                    decision,
+                    sample_id=synthetic_id,
+                )
+            )
+
+    return resampled
+
+
+def _percentile(
+    values: list[float],
+    probability: float,
+) -> float:
+    ordered = sorted(values)
+
+    if len(ordered) == 1:
+        return ordered[0]
+
+    position = (len(ordered) - 1) * probability
+    lower = int(position)
+    upper = min(lower + 1, len(ordered) - 1)
+    fraction = position - lower
+
+    return (
+        ordered[lower] * (1.0 - fraction)
+        + ordered[upper] * fraction
+    )
+
+
+def compute_bootstrap_elo_stats(
+    decisions: list[ArenaDecision],
+    k_factor: float = 24.0,
+    init_rating: float = 1000.0,
+    mode: str = "batch",
+    shuffle_repeats: int = 64,
+    seed: int = 42,
+    round_aggregation: str = "sample_pair",
+    consistency_floor: float = 0.25,
+    sample_balance: str = "per_model_exposure",
+    batch_iterations: int = 1500,
+    batch_tolerance: float = 1e-5,
+    batch_regularization: float = 0.05,
+    bootstrap_repeats: int = 500,
+    bootstrap_seed: int = 2026,
+    confidence_level: float = 0.95,
+) -> dict[str, BootstrapEloStats]:
+    if not decisions:
+        return {}
+    if bootstrap_repeats <= 0:
+        raise ValueError(
+            "bootstrap_repeats must be greater than 0"
+        )
+    if not 0.0 < confidence_level < 1.0:
+        raise ValueError(
+            "confidence_level must be between 0 and 1"
+        )
+
+    common_args = {
+        "k_factor": k_factor,
+        "init_rating": init_rating,
+        "mode": mode,
+        "shuffle_repeats": shuffle_repeats,
+        "seed": seed,
+        "round_aggregation": round_aggregation,
+        "consistency_floor": consistency_floor,
+        "sample_balance": sample_balance,
+        "batch_iterations": batch_iterations,
+        "batch_tolerance": batch_tolerance,
+        "batch_regularization": batch_regularization,
+    }
+
+    point_ratings = compute_elo(decisions, **common_args)
+    models = sorted(point_ratings)
+    sample_count = len({d.sample_id for d in decisions})
+
+    rating_values = {model: [] for model in models}
+    rank_values = {model: [] for model in models}
+    top_count = {model: 0 for model in models}
+
+    rng = random.Random(bootstrap_seed)
+
+    for replicate_idx in range(bootstrap_repeats):
+        resampled = _bootstrap_resample_decisions(
+            decisions=decisions,
+            rng=rng,
+            replicate_idx=replicate_idx,
+        )
+
+        replicate_args = dict(common_args)
+        replicate_args["seed"] = seed + replicate_idx
+
+        replicate_ratings = compute_elo(
+            resampled,
+            **replicate_args,
+        )
+
+        complete_ratings = {
+            model: replicate_ratings.get(model, init_rating)
+            for model in models
+        }
+        ranks = _rating_ranks(complete_ratings)
+        highest = max(complete_ratings.values())
+
+        for model in models:
+            rating = complete_ratings[model]
+            rating_values[model].append(rating)
+            rank_values[model].append(ranks[model])
+
+            if abs(rating - highest) <= 1e-12:
+                top_count[model] += 1
+
+    alpha = (1.0 - confidence_level) / 2.0
+    stats: dict[str, BootstrapEloStats] = {}
+
+    for model in models:
+        values = rating_values[model]
+        ranks = rank_values[model]
+
+        bootstrap_mean = sum(values) / bootstrap_repeats
+        variance = sum(
+            (value - bootstrap_mean) ** 2
+            for value in values
+        ) / bootstrap_repeats
+
+        rank_counts: dict[float, int] = {}
+        for rank in ranks:
+            rank_counts[rank] = rank_counts.get(rank, 0) + 1
+
+        stats[model] = BootstrapEloStats(
+            elo=point_ratings[model],
+            bootstrap_mean=bootstrap_mean,
+            bootstrap_std=variance ** 0.5,
+            ci_lower=_percentile(values, alpha),
+            ci_upper=_percentile(values, 1.0 - alpha),
+            mean_rank=sum(ranks) / bootstrap_repeats,
+            rank_stability=(
+                max(rank_counts.values()) / bootstrap_repeats
+            ),
+            top_rank_probability=(
+                top_count[model] / bootstrap_repeats
+            ),
+            bootstrap_repeats=bootstrap_repeats,
+            sample_count=sample_count,
+        )
+
+    return dict(
+        sorted(
+            stats.items(),
+            key=lambda item: item[1].elo,
+            reverse=True,
+        )
+    )
 
 def load_decisions_file(path: str | Path) -> list[ArenaDecision]:
     raw = json.loads(Path(path).read_text(encoding="utf-8-sig"))
