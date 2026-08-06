@@ -345,6 +345,87 @@ class ArenaEloTests(unittest.TestCase):
 
         self.assertAlmostEqual(stats["a"].top_rank_probability, 1.0)
 
+    def test_v4_two_model_sample_is_unchanged(self) -> None:
+        decisions = [
+            make_decision("01", "A", confidence=5),
+        ]
+
+        none = compute_elo(
+            decisions,
+            mode="online",
+            sample_balance="none",
+        )
+        balanced = compute_elo(
+            decisions,
+            mode="online",
+            sample_balance="per_model_exposure",
+        )
+
+        self.assertEqual(none, balanced)
+
+    def test_v4_dense_sample_reduces_total_movement(self) -> None:
+        decisions = [
+            make_decision("01", "A", model_a="a", model_b="b"),
+            make_decision("01", "A", model_a="a", model_b="c"),
+            make_decision("01", "A", model_a="a", model_b="d"),
+            make_decision("01", "A", model_a="b", model_b="c"),
+            make_decision("01", "A", model_a="b", model_b="d"),
+            make_decision("01", "A", model_a="c", model_b="d"),
+        ]
+
+        none = compute_elo(
+            decisions,
+            mode="shuffle_ensemble",
+            shuffle_repeats=32,
+            seed=42,
+            sample_balance="none",
+        )
+        balanced = compute_elo(
+            decisions,
+            mode="shuffle_ensemble",
+            shuffle_repeats=32,
+            seed=42,
+            sample_balance="per_model_exposure",
+        )
+
+        none_movement = sum(
+            abs(rating - 1000.0)
+            for rating in none.values()
+        )
+        balanced_movement = sum(
+            abs(rating - 1000.0)
+            for rating in balanced.values()
+        )
+
+        self.assertLess(balanced_movement, none_movement)
+
+    def test_v4_sample_balance_preserves_total_rating(self) -> None:
+        decisions = [
+            make_decision("01", "A", model_a="a", model_b="b"),
+            make_decision("01", "B", model_a="a", model_b="c"),
+            make_decision("01", "A", model_a="b", model_b="c"),
+        ]
+
+        ratings = compute_elo(
+            decisions,
+            shuffle_repeats=32,
+            seed=42,
+            sample_balance="per_model_exposure",
+        )
+
+        self.assertAlmostEqual(
+            sum(ratings.values()),
+            1000.0 * len(ratings),
+            places=9,
+        )
+
+    def test_v4_invalid_sample_balance_raises(self) -> None:
+        with self.assertRaises(ValueError):
+            compute_elo(
+                [make_decision("01", "A")],
+                sample_balance="invalid",
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

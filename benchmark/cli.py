@@ -303,6 +303,7 @@ def _cmd_arena_elo(args: argparse.Namespace) -> None:
         "seed": args.elo_seed,
         "round_aggregation": args.round_aggregation,
         "consistency_floor": args.consistency_floor,
+        "sample_balance": args.sample_balance,
     }
 
     if args.include_stats:
@@ -342,6 +343,7 @@ def _cmd_arena_elo(args: argparse.Namespace) -> None:
     print(
         f"Elo ranking: mode={args.elo_mode}, "
         f"round_aggregation={args.round_aggregation}, "
+        f"sample_balance={args.sample_balance}, "
         f"shuffle_repeats={args.shuffle_repeats}, "
         f"seed={args.elo_seed}"
     )
@@ -466,6 +468,15 @@ def build_parser() -> argparse.ArgumentParser:
         type=float,
         default=0.25,
         help="minimum reliability retained for conflicting round evidence",
+    )
+    p.add_argument(
+        "--sample-balance",
+        choices=["none", "per_model_exposure"],
+        default="per_model_exposure",
+        help=(
+            "normalize each model's total Elo exposure "
+            "within a sample"
+        ),
     )
     p.add_argument(
         "--include-stats",

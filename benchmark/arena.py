@@ -401,6 +401,50 @@ class EloStats:
     trial_count: int
 
 
+def _apply_sample_balance(
+    evidence: list[EloEvidence],
+    sample_balance: str,
+) -> list[EloEvidence]:
+    if sample_balance == "none":
+        return list(evidence)
+
+    if sample_balance != "per_model_exposure":
+        raise ValueError(
+            f"unknown sample balance: {sample_balance!r}; "
+            "expected 'none' or 'per_model_exposure'"
+        )
+
+    degree_by_sample: dict[str, dict[str, int]] = {}
+
+    for item in evidence:
+        degree = degree_by_sample.setdefault(item.sample_id, {})
+        degree[item.model_a] = degree.get(item.model_a, 0) + 1
+        degree[item.model_b] = degree.get(item.model_b, 0) + 1
+
+    balanced: list[EloEvidence] = []
+
+    for item in evidence:
+        degree = degree_by_sample[item.sample_id]
+        degree_a = degree[item.model_a]
+        degree_b = degree[item.model_b]
+        denominator = degree_a + degree_b
+
+        scale = 1.0 if denominator <= 0 else 2.0 / denominator
+
+        balanced.append(
+            EloEvidence(
+                sample_id=item.sample_id,
+                model_a=item.model_a,
+                model_b=item.model_b,
+                score_a=item.score_a,
+                update_weight=item.update_weight * scale,
+                round_count=item.round_count,
+                consistency=item.consistency,
+            )
+        )
+
+    return balanced
+
 def _compute_elo_once(
     evidence: list[EloEvidence],
     k_factor: float,
@@ -559,6 +603,7 @@ def compute_elo(
     seed: int = 42,
     round_aggregation: str = "sample_pair",
     consistency_floor: float = 0.25,
+    sample_balance: str = "per_model_exposure",
 ) -> dict[str, float]:
     if not decisions:
         return {}
@@ -570,6 +615,11 @@ def compute_elo(
         decisions=list(decisions),
         round_aggregation=round_aggregation,
         consistency_floor=consistency_floor,
+    )
+
+    evidence = _apply_sample_balance(
+        evidence=evidence,
+        sample_balance=sample_balance,
     )
 
     trials = _run_elo_trials(
@@ -600,6 +650,7 @@ def compute_elo_stats(
     seed: int = 42,
     round_aggregation: str = "sample_pair",
     consistency_floor: float = 0.25,
+    sample_balance: str = "per_model_exposure",
 ) -> dict[str, EloStats]:
     if not decisions:
         return {}
@@ -611,6 +662,11 @@ def compute_elo_stats(
         decisions=list(decisions),
         round_aggregation=round_aggregation,
         consistency_floor=consistency_floor,
+    )
+
+    evidence = _apply_sample_balance(
+        evidence=evidence,
+        sample_balance=sample_balance,
     )
 
     trials = _run_elo_trials(
