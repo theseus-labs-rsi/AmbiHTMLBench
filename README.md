@@ -1,15 +1,24 @@
-﻿# HTML Reconstruction Benchmark
+# AmbiHTMLBench
 
-用于评测「模型输出 HTML 对原页面的还原能力」。提供两条评测路径：
+用于评测模型输出 HTML 对参考页面的还原能力，提供两条互补路径：
 
-1. `JSON vs HTML`：对比 ground truth JSON 和预测 HTML 的结构/内容差异。
-2. `Image + HTML (VLM Arena)`：将 HTML 渲染为图像，通过 VLM 竞技场打分并用 Elo 排名模型。
+1. `JSON vs HTML`：用结构化 GT 评估内容、语义标签与布局，是可重复的客观测量。
+2. `Reference + rendered HTML`：用 VLM Judge 近似正常人的整体视觉判断，弥补结构指标难以表达的可见重建质量。
+
+客观路径保持不变；主观路径已升级为可预检、可恢复、双方向复核，并采用顺序无关的 Batch Bradley--Terry 聚合。
 
 ## 1. 环境安装
 
 ```bash
-python -m pip install -r requirements.txt
+python -m pip install -e .
 python -m playwright install chromium
+```
+
+运行测试时再安装开发依赖：
+
+```bash
+python -m pip install -r requirements-dev.txt
+python -m pytest
 ```
 
 入口命令：
@@ -45,7 +54,7 @@ python main.py -h
 - 坐标字段支持 `x,y,w,h` 或 `left,top,width,height` 或 `x1,y1,x2,y2`
 - 若坐标是绝对像素，需提供 `width,height`，程序会自动归一化
 
-完整示例见 [ground_truth_schema_example.json](./ground_truth_schema_example.json)。
+上面的内联 JSON 即为最小示例。
 
 额外兼容 `Quality_inspection/submitted_108_gt_final_submit.json` 这种聚合 GT 格式：
 - 顶层是数组
@@ -153,75 +162,106 @@ python main.py eval-quality-inspection \
 - 用原图尺寸归一化 GT 坐标
 - 用原图尺寸作为 HTML 渲染视口
 
-## 3. 路径2：Image + HTML 的 VLM 竞技场 Elo
+## 3. 路径2：Reference-anchored 主观评测
 
-### 3.1 机制
+### 3.1 为什么需要主观评测
 
-- 对每个样本，把每个模型的 HTML 渲染成图片。
-- 对同一样本里的模型两两对战（A/B）。
-- 输入给 VLM：`参考原图 + 候选A图 + 候选B图`。
-- VLM 输出：`winner: A/B/TIE`、`confidence: 1..5`。
-- 聚合全部对战结果，计算 Elo 排名。
+结构化指标可以稳定度量文字、标签和几何关系，却不能完整回答“这个页面在正常人眼中是否像参考页、是否完整重建”这一整体问题。明显缺失的图表、表格或图片区块，严重的页面高度和布局失真，以及破坏阅读体验的文本区域错误，都应进入视觉判断；反之，肉眼几乎不可见的细小 OCR 字符差异不应主导结论。
 
-### 3.2 判决 Prompt 设计
+因此，主观路径评估的是 **human-visible reconstruction fidelity to the Reference**，而不是扣除客观指标后的残差。七个 GT 引导轴只负责定位和诊断关键视觉对象，不构成固定加权公式：
 
-内置评审维度权重：
-- 版面结构与几何布局 40%
-- 文本内容正确性 35%
-- 视觉样式 20%
-- 关键元素保留 5%
+1. 图片视觉保真度（`IMAGE_VISUAL_FIDELITY`）
+2. 表格视觉结构（`TABLE_VISUAL_STRUCTURE`）
+3. 图表视觉编码（`CHART_VISUAL_ENCODING`）
+4. 公式二维布局（`FORMULA_2D_LAYOUT`）
+5. 算法块结构（`ALGORITHM_BLOCK_STRUCTURE`）
+6. 竖排文字呈现（`VERTICAL_TEXT_PRESENTATION`）
+7. 列表层级呈现（`LIST_HIERARCHY_PRESENTATION`）
 
-防偏置策略：
-- 每场随机交换 A/B 顺序。
-- 支持 `TIE`。
-- 强制严格 JSON 输出，便于自动解析。
+### 3.2 评测流程
 
-### 3.3 使用你当前目录直接跑
+主观评测分为三个显式阶段：
 
-默认已适配：
-- `ocr_html_experiment_four_models/logs/records.json`
-- `ocr_html_experiment_four_models/assets/images/*.jpg`
-- `ocr_html_experiment_four_models/rendered_html/<model>/*.html`
-
-执行：
-
-```bash
-# Windows PowerShell
-$env:VLM_API_KEY="你的key"
-$env:VLM_API_BASE="https://api.vectorengine.cn/v1"
-
-python main.py arena-judge \
-  --judge-model gpt-4o \
-  --rounds 1 \
-  --decisions-out outputs/arena_decisions.json
-
-python main.py arena-elo \
-  --decisions-json outputs/arena_decisions.json \
-  --out outputs/arena_elo.json
+```text
+public manifest
+  -> arena-preflight：渲染、请求体积检查、候补页替换、平衡调度
+  -> arena-run：Reference + A + B，canonical / swapped 双方向判决，断点续跑
+  -> arena-report：方向归一化、pair collapse、Batch Bradley--Terry、bootstrap 与可靠性报告
 ```
 
-输出：
-- `outputs/arena_renders/`：每个样本每个模型的渲染图
-- `outputs/arena_decisions.json`：逐场对战判决
-- `outputs/arena_elo.json`：最终 Elo 排名
+每个物理模型对都以两种展示顺序各评一次：
+
+- `canonical`：Reference + A + B
+- `swapped`：Reference + B + A
+
+归一化到相同物理模型顺序后：两次同向胜者保留胜者；`TIE / TIE` 记为感知平局（`perceptual`）；任何方向不一致记为可靠性平局（`reliability`）。可靠性平局表示 Judge 未能在换序后复现同一方向偏好，不表示两个候选在视觉上不可区分。
+
+主排行榜对每个物理模型对只使用一个折叠结果，以未加权、顺序无关的 Batch Bradley--Terry 最大似然模型联合拟合，评分中心为 1000、尺度为 400。置信度加权和未折叠双方向拟合只作为敏感性诊断。
+
+### 3.3 使用方法
+
+输入格式见 [`docs/MANIFEST.md`](docs/MANIFEST.md)；也可用 `scripts/build_manifest_from_dirs.py` 从目录生成 manifest。运行仓库内的示例前，请先把示例路径替换为实际 Reference、GT 和候选 HTML 路径。
+
+先运行不产生 Judge API 费用的预检：
+
+```bash
+python main.py arena-preflight \
+  --manifest examples/subjective_manifest.example.json \
+  --out-dir outputs/preflight
+```
+
+仅将预检产出的 `resolved_manifest.json` 交给正式评测：
+
+```bash
+export VLM_API_BASE='https://your-provider.example/v1'
+export VLM_API_KEY='...'
+export VLM_JUDGE_MODEL='your-judge-model'
+
+python main.py arena-run \
+  --manifest outputs/preflight/resolved_manifest.json \
+  --decisions-out outputs/arena/decisions.json \
+  --concurrency 4
+```
+
+最后折叠双方向结果并生成排行榜、bootstrap 区间和可靠性诊断：
+
+```bash
+python main.py arena-report \
+  --manifest outputs/preflight/resolved_manifest.json \
+  --decisions-json outputs/arena/decisions.json \
+  --out-dir outputs/arena/report \
+  --bootstrap-replicates 1000
+```
 
 ## 4. 目录结构
 
 ```text
 benchmark/
-  arena.py
-  cli.py
-  html_extractor.py
-  render.py
+  arena.py                 # 主观评测编排、预检与断点续跑
+  arena_audit.py           # pair collapse、可靠性与 bootstrap
+  arena_schedule.py        # 平衡 round-robin 调度
+  rating.py                # Batch Bradley--Terry
+  subjective.py            # 七轴、Prompt、解析与方向归一化
+  prompts/subjective_v1.md # 冻结 Prompt；代码在导入时校验 SHA256
+  render.py                # Chromium 复用与有界回退
+  cli.py                   # 客观命令 + 主观三阶段命令
+  html_extractor.py        # 原客观路径，保持不变
   schema.py
   scorer.py
   utils.py
+configs/                   # 主观评测默认配置
+docs/                      # 方法、架构、复现与结论边界
+examples/                  # manifest 示例
+scripts/                   # manifest 构建工具
+tests/                     # unit / regression / integration / golden replay
 main.py
+pyproject.toml
 requirements.txt
-ground_truth_schema_example.json
+requirements-dev.txt
 ```
 
-## 5. 说明
+## 5. 验证结论与表述边界
 
-- 当前实现是工程化 baseline，重点是可运行和可扩展。
-- 如果你后续给出固定的 GT 标注 schema，我可以再加一个更严格的匹配器（例如标签类型约束、匈牙利匹配、区域层级一致性等）。
+系统级方案已通过冻结 Final Arena90 重放、Fresh45 端到端留出验证、历史顺序依赖回归、双方向一致性检查和盲审面板。验证支持主观评测规范、可靠性协议、聚合算法和工程链路的改进。
+
+盲审结果**不能证明**新版 Prompt 的人类一致性准确率高于旧 Prompt，也不能把 VLM 判决等同于人类判决。新版 Prompt 被保留，是因为它落实了修正后的评测目标，并与双方向可靠性和 Batch Bradley--Terry 系统完整集成。详见 [`docs/FINAL_SYSTEM_VALIDATION_REPORT.md`](docs/FINAL_SYSTEM_VALIDATION_REPORT.md) 与 [`docs/VALIDATION_CLAIMS.md`](docs/VALIDATION_CLAIMS.md)。
