@@ -179,68 +179,41 @@ layout_graph_similarity = 0.55 * edge_score + 0.30 * node_score + 0.15 * coverag
 
 ## 3. 主观评测
 
-### 3.1 评测目标
+### 3.1 当前论文协议：冻结 OLS5 代理
 
-主观评测关注 human-visible reconstruction fidelity to the Reference。它不是客观指标的替代品，而是补充客观指标难以表达的整体视觉质量、阅读体验和感知保真度。
+主观评测比较 Reference 与两个候选页面的视觉还原质量。全局布局、文本呈现是固定诊断轴；表格、公式、算法、竖排文本、列表层级按参考结构激活。轴分数用于解释差异，不进入总体代理。
 
-七个 GT 引导轴只用于定位和诊断关键视觉对象，不构成固定加权公式：
+人工校准集包含 1,872 个物理比较。五位裁判各做双方向、两次重复，共 37,440 个判断；每裁判四个 canonical overall 判断的均值作为 OLS 特征。冻结后，部署改为每题每裁判单方向、单次：10,000 个比较、50,000 个判断。五个 overall 判断按固定系数组合，得到连续偏好分数，再拟合 soft Bradley–Terry 排名；区间来自 2,000 次整页 bootstrap。
 
-1. `IMAGE_VISUAL_FIDELITY`
-2. `TABLE_VISUAL_STRUCTURE`
-3. `CHART_VISUAL_ENCODING`
-4. `FORMULA_2D_LAYOUT`
-5. `ALGORITHM_BLOCK_STRUCTURE`
-6. `VERTICAL_TEXT_PRESENTATION`
-7. `LIST_HIERARCHY_PRESENTATION`
+原始单次部署与候选更新版分别保留：GPT-5.6-Sol 的 BT 分数为 154.34 和 154.70。当前论文使用后者。更新接受 54 个 model-page 候选，影响 98 个比较，其中 21 个属于旧人工子集；旧标签不能验证这些更新后的候选。全 10,000 场均由代理评分，不能声称获得了全量人工 Accuracy/Recall/F1。
 
-### 3.2 三阶段流程
+### 3.2 离线验证与复现
 
-```text
-public manifest
-  -> arena-preflight: 渲染、体积检查、候补页替换、平衡调度
-  -> arena-run: Reference + A + B，canonical / swapped 双方向判决，支持断点续跑
-  -> arena-report: 方向归一化、pair collapse、Batch Bradley--Terry、bootstrap 和可靠性报告
-```
-
-每个物理模型对会以两种展示顺序各评一次：
-
-- `canonical`: Reference + A + B
-- `swapped`: Reference + B + A
-
-归一化到同一物理模型顺序后，两次同向胜者保留胜者；`TIE / TIE` 视作感知平局；方向不一致记为可靠性平局。
-
-### 3.3 使用方法
-
-先运行不产生 Judge API 费用的预检：
+新入口 `benchmark.frozen_proxy_cli` **不联网、不调用裁判 API**；仅使用该离线层不需要安装或启动浏览器，也不需要 API key。本次同步包含代码、冻结配置、轻量证据与两版汇总榜单，不包含完整原始判断、图片或人工标注。以下 `artifacts/` 路径是用户另行提供的外置数据，不是仓库已附文件。
 
 ```bash
-python main.py arena-preflight `
-  --manifest examples/subjective_manifest.example.json `
-  --out-dir outputs/preflight
+python -m benchmark.frozen_proxy_cli validate \
+  --results artifacts/candidate_refresh/single_results.jsonl \
+  --config configs/subjective_ols5_frozen.json \
+  --artifact-manifest evidence/subjective/dataset_versions.json \
+  --dataset candidate_refresh
+
+python -m benchmark.frozen_proxy_cli replay \
+  --results artifacts/candidate_refresh/single_results.jsonl \
+  --config configs/subjective_ols5_frozen.json \
+  --artifact-manifest evidence/subjective/dataset_versions.json \
+  --dataset candidate_refresh \
+  --out-dir outputs/candidate_refresh_replay \
+  --bootstrap 2000
 ```
 
-正式评测：
+输出目录必须是新目录，不覆盖冻结结果。省略 artifact manifest 时只能验证输入结构，不能认证为论文发布数据；`--fixture` 仅用于小型测试，不是论文复现。校准数据的离线 OLS/留一题卷复现见 [冻结代理说明](docs/FROZEN_PROXY.md)。
 
-```bash
-export VLM_API_BASE='https://your-provider.example/v1'
-export VLM_API_KEY='...'
-export VLM_JUDGE_MODEL='your-judge-model'
+本次迁移没有提供新的图片→渲染→API 全流程。仓库现有 `all_model_infer/` 仍是原始候选集，并未包含上述 54 个更新；当前客观 GT v5 也不能替代冻结主观实验的旧快照。详见 [版本与来源说明](docs/SUBJECTIVE_SYNC_PROVENANCE.md)。
 
-python main.py arena-run `
-  --manifest outputs/preflight/resolved_manifest.json `
-  --decisions-out outputs/arena/decisions.json `
-  --concurrency 4
-```
+### 3.3 历史 Arena v1
 
-生成报告：
-
-```bash
-python main.py arena-report `
-  --manifest outputs/preflight/resolved_manifest.json `
-  --decisions-json outputs/arena/decisions.json `
-  --out-dir outputs/arena/report `
-  --bootstrap-replicates 1000
-```
+`arena-preflight`、`arena-run`、`arena-report` 及旧配置继续保留，用于历史单裁判双方向实验；其中 `arena-run` 会调用付费 API。方向不一致折为 reliability TIE、1000 中心 BT、round-robin block bootstrap 等旧语义不属于当前 OLS5 部署。历史方法和验证边界见 [Method v1](docs/METHOD.md) 与 [旧验证记录](docs/REPRODUCIBILITY.md)，旧测试和冻结 prompt 均不改写。
 
 ## 4. 目录结构
 
@@ -248,14 +221,15 @@ python main.py arena-report `
 benchmark/
   objective_v3.py          # 当前客观评测：匹配、指标、leaderboard、可视化
   html_extractor.py        # Chromium 渲染后的 block 抽取
-  cli.py                   # 客观 eval-objective-v3 + 主观三阶段命令
+  cli.py                   # 客观 eval-objective-v3 + 历史 Arena v1 命令
+  frozen_proxy_cli.py      # 当前主观代理：离线 validate / replay / calibrate
   schema.py                # 页面元素数据结构
   scorer.py                # 旧版基础 scorer，非当前主客观榜单入口
-  arena.py                 # 主观评测编排、预检与断点续跑
-  arena_audit.py           # pair collapse、可靠性与 bootstrap
-  arena_schedule.py        # 平衡 round-robin 调度
-  rating.py                # Batch Bradley--Terry
-  subjective.py            # 七轴、Prompt、解析与方向归一化
+  arena.py                 # 历史 v1：编排、预检与断点续跑
+  arena_audit.py           # 历史 v1：pair collapse、可靠性与 block bootstrap
+  arena_schedule.py        # 历史 v1：平衡 round-robin 调度
+  rating.py                # 历史 v1：离散结果的 Batch Bradley--Terry
+  subjective.py            # 历史 v1：七轴、Prompt、解析与方向归一化
   render.py                # Chromium 复用与有界回退
 scripts/
   convert_json_infer_to_model_dirs.py
@@ -264,6 +238,9 @@ scripts/
   update_paper_objective_eval.py
 tests/
   unit/test_objective_v3.py
+configs/
+  subjective_ols5_frozen.json
+evidence/subjective/       # 脱敏轻量证据、两版榜单和来源哈希；不含原始判断全集
 main.py
 pyproject.toml
 requirements.txt
