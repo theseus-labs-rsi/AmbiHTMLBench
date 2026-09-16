@@ -14,6 +14,9 @@ class Element:
     text: str
     bbox: BBox
     source_id: str = ""
+    raw_html: str = ""
+    latex: str = ""
+    visual_bbox: BBox | None = None
 
 
 @dataclass
