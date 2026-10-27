@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>30天学会自然拼读 - Syllable Counting & Division</title>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    background: #eee;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    margin: 0;
+  }
+  .poster {
+    width: 540px;
+    min-height: 750px;
+    background: linear-gradient(90deg, #e8735f 0 6px, transparent 6px) left,
+                linear-gradient(90deg, transparent calc(100% - 6px), #f2c94c calc(100% - 6px)) right,
+                linear-gradient(0deg, #4a90d9 0 6px, transparent 6px) bottom,
+                linear-gradient(0deg, transparent calc(100% - 6px), #e8735f calc(100% - 6px)) top;
+    background-repeat: no-repeat;
+    background-color: #ffffff;
+    position: relative;
+    border: 6px solid transparent;
+    outline: 3px solid #e8544a;
+    padding: 10px;
+    overflow: hidden;
+  }
+  .side-bars {
+    position: absolute;
+    top: 0; bottom: 0; left: 0;
+    width: 18px;
+    display: flex;
+    flex-direction: column;
+  }
+  .side-bars.left { left: 0; }
+  .side-bars.right { right: 0; left: auto; }
+  .bar-red { background: #e8735f; flex: 1; }
+  .bar-yellow { background: #f2c94c; flex: 1; }
+  .bar-blue { background: #4a90d9; flex: 1; }
+
+  .inner {
+    margin: 8px 24px;
+    border: 2px solid #333;
+    padding: 15px 18px 10px 18px;
+    position: relative;
+    min-height: 710px;
+  }
+
+  .top-blue-bar {
+    height: 14px;
+    background: #6fa8dc;
+    border-radius: 3px;
+    width: 90%;
+    margin: 6px auto 20px auto;
+  }
+
+  .title-box {
+    background: #f6b8c4;
+    color: #333;
+    text-align: center;
+    font-size: 26px;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 6px;
+    width: 70%;
+    margin: -18px auto 20px auto;
+    border: 2px solid #333;
+    position: relative;
+    z-index: 2;
+  }
+
+  .flower {
+    position: absolute;
+    top: 5px;
+    right: 15px;
+    width: 55px;
+    height: 55px;
+  }
+
+  .section {
+    margin-bottom: 25px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+    margin-bottom: 10px;
+  }
+
+  .cn-header {
+    font-size: 20px;
+    font-weight: bold;
+    padding: 2px 6px;
+    display: inline-block;
+  }
+  .cn-header.yellow { background: #f7e07a; }
+  .cn-header.green { background: #c9e8a0; }
+
+  .en-header {
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    font-size: 19px;
+    font-weight: bold;
+    color: #222;
+    background: #fdf3d3;
+    padding: 2px 6px;
+  }
+
+  .content-row {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .left-col {
+    width: 42%;
+  }
+  .right-col {
+    width: 54%;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .word-pair {
+    display: flex;
+    justify-content: space-between;
+  }
+  .word-pair span {
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    font-weight: bold;
+    font-size: 19px;
+    color: #d84330;
+    width: 48%;
+  }
+
+  .people-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .placeholder {
+    background: #f5f5f5;
+    border: 1px dashed #999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #888;
+    font-size: 11px;
+    border-radius: 6px;
+  }
+  .person {
+    width: 55px;
+    height: 60px;
+  }
+
+  .text-box {
+    border: 1.5px solid #333;
+    background: #fdece9;
+    padding: 10px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #333;
+  }
+
+  .text-lines {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #333;
+    margin-bottom: 10px;
+  }
+
+  .boy-figure {
+    width: 100%;
+    height: 190px;
+    margin-top: 10px;
+  }
+
+  .heart-deco {
+    position: absolute;
+    right: 12px;
+    width: 40px;
+    height: 60px;
+  }
+
+  .bottom-bar {
+    height: 12px;
+    background: #e3ee9c;
+    border-radius: 3px;
+    width: 92%;
+    margin: 10px auto 5px auto;
+  }
+
+  .footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 5px;
+  }
+  .good-badge {
+    width: 55px;
+    height: 30px;
+  }
+  .bear {
+    width: 60px;
+    height: 55px;
+  }
+  .footer-text {
+    font-size: 12px;
+    color: #444;
+    text-align: left;
+  }
+  .footer-text .bold {
+    font-weight: bold;
+    font-size: 13px;
+  }
+</style>
+</head>
+<body>
+
+<div class="poster">
+  <div class="side-bars left">
+    <div class="bar-red"></div>
+    <div class="bar-blue"></div>
+    <div class="bar-yellow"></div>
+    <div class="bar-red"></div>
+  </div>
+  <div class="side-bars right">
+    <div class="bar-yellow"></div>
+    <div class="bar-red"></div>
+    <div class="bar-blue"></div>
+    <div class="bar-yellow"></div>
+  </div>
+
+  <div class="inner">
+
+    <div class="top-blue-bar"></div>
+
+    <div class="flower placeholder">[flower deco]</div>
+
+    <div class="title-box">30天学会自然拼读</div>
+
+    <!-- Section 1 -->
+    <div class="section">
+      <div class="section-header">
+        <span class="cn-header yellow">数音节</span>
+        <span class="en-header">Syllable Counting</span>
+      </div>
+      <div class="content-row">
+        <div class="left-col">
+          <div class="people-row">
+            <div class="person placeholder">[person]</div>
+            <div class="person placeholder">[person]</div>
+            <div class="person placeholder">[person]</div>
+            <div class="person placeholder">[person]</div>
+          </div>
+          <div class="text-box">
+            有几个发音的元音（或元音组合）就有几个音节。
+          </div>
+        </div>
+        <div class="right-col">
+          <div class="word-pair"><span>cat</span><span>cake</span></div>
+          <div class="word-pair"><span>rain</span><span>row</span></div>
+          <div class="word-pair"><span>robot</span><span>teacher</span></div>
+          <div class="word-pair"><span>table</span><span>apple</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 2 -->
+    <div class="section" style="position:relative;">
+      <div class="section-header">
+        <span class="cn-header green">划分音节</span>
+        <span class="en-header">Syllable Division</span>
+      </div>
+      <div class="content-row">
+        <div class="left-col">
+          <div class="text-lines">
+            有时一靠后，<br>
+            常常二分手。<br>
+            组合共发声，<br>
+            一起被分走。<br>
+            词根词缀分离，<br>
+            多音节词不易，<br>
+            还请多练多听。
+          </div>
+          <div class="boy-figure placeholder">[Illustration: boy character]</div>
+        </div>
+        <div class="right-col">
+          <div class="word-pair"><span>rabbit</span><span>basket</span></div>
+          <div class="word-pair"><span>baby</span><span>robot</span></div>
+          <div class="word-pair"><span>closet</span><span>planet</span></div>
+          <div class="word-pair"><span>destroy</span><span>complex</span></div>
+          <div class="word-pair"><span>unhappy</span><span>hopefully</span></div>
+          <div class="heart-deco placeholder" style="position:absolute; top:10px; right:0;">[hearts deco]</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-bar"></div>
+
+    <div class="footer">
+      <div class="good-badge placeholder">[GOOD badge]</div>
+      <div class="bear placeholder">[bear illustration]</div>
+      <div class="footer-text">
+        <div class="bold">淅淅来啦爱学习</div>
+        <div>From 小红书</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

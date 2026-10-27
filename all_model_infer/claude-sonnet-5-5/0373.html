@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Custom Docs UI Static Assets (Self-Hosting) - FastAPI</title>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$']],
+    displayMath: [['$$', '$$']]
+  }
+};
+</script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: #333;
+    font-size: 15px;
+  }
+  .top-bar {
+    background: #1a1a1a;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 20px;
+    font-size: 13px;
+  }
+  .sponsor-box {
+    background: #fdf3c4;
+    border-radius: 6px;
+    padding: 6px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #333;
+  }
+  .sponsor-box .sponsor-label {
+    font-size: 9px;
+    position: absolute;
+    top: -14px;
+    right: 10px;
+    color: #888;
+  }
+  .sponsor-wrapper { position: relative; }
+  .sponsor-box b { font-size: 13px; }
+
+  nav.main-nav {
+    background: #009485;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    justify-content: space-between;
+  }
+  nav.main-nav .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    font-weight: 500;
+  }
+  nav.main-nav .logo-circle {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    display: inline-block;
+  }
+  nav.main-nav .search-box {
+    background: #fff;
+    color: #333;
+    border-radius: 4px;
+    padding: 6px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    width: 180px;
+  }
+  nav.main-nav .right-icons {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 13px;
+  }
+  .sub-nav {
+    background: #009485;
+    display: flex;
+    gap: 25px;
+    padding: 0 20px 10px 20px;
+    font-size: 14px;
+    color: #e0f2ef;
+  }
+  .sub-nav a { color: #e0f2ef; text-decoration: none; }
+  .sub-nav a.active { color: #fff; font-weight: 600; border-bottom: 2px solid #fff; padding-bottom: 2px; }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 230px 1fr 220px;
+    gap: 20px;
+    padding: 20px 20px;
+    align-items: start;
+  }
+
+  /* Left sidebar */
+  .sidebar-left {
+    font-size: 13.5px;
+    line-height: 1.8;
+  }
+  .sidebar-left .section-title {
+    font-weight: 600;
+    font-size: 15px;
+    color: #111;
+    margin-bottom: 8px;
+  }
+  .sidebar-left a {
+    display: block;
+    color: #333;
+    text-decoration: none;
+    padding: 2px 0;
+  }
+  .sidebar-left a.active {
+    color: #009485;
+    font-weight: 500;
+  }
+  .sidebar-left .indent {
+    padding-left: 12px;
+  }
+  .sidebar-left .has-arrow {
+    position: relative;
+  }
+
+  /* Main content */
+  .content {
+    min-width: 0;
+    max-width: 850px;
+  }
+  .breadcrumb {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 15px;
+  }
+  .breadcrumb a { color: #666; text-decoration: none; }
+  h1.page-title {
+    font-size: 32px;
+    color: #555;
+    font-weight: 500;
+    margin: 10px 0 25px 0;
+  }
+  h2.section-h2 {
+    font-size: 24px;
+    font-weight: 500;
+    color: #222;
+    margin-top: 35px;
+    margin-bottom: 15px;
+  }
+  h3.section-h3 {
+    font-size: 19px;
+    font-weight: 500;
+    color: #222;
+    margin-top: 30px;
+    margin-bottom: 12px;
+  }
+  p { line-height: 1.6; margin: 12px 0; }
+  code.inline {
+    background: #eee;
+    padding: 2px 5px;
+    border-radius: 4px;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 13px;
+    color: #c0341d;
+  }
+  .url-block {
+    background: #272822;
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 13px;
+    display: inline-block;
+    margin: 5px 0;
+  }
+
+  .tab-bar {
+    border-bottom: 1px solid #ddd;
+    margin-top: 20px;
+  }
+  .tab-bar span {
+    display: inline-block;
+    padding: 8px 5px;
+    font-size: 14px;
+    border-bottom: 2px solid #009485;
+    color: #009485;
+    font-weight: 500;
+  }
+
+  .code-block {
+    background: #272822;
+    color: #f8f8f2;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 12.5px;
+    line-height: 1.6;
+    padding: 15px;
+    border-radius: 0 0 6px 6px;
+    overflow-x: auto;
+    position: relative;
+    white-space: pre;
+  }
+  .code-block .highlight-line {
+    display: block;
+    background: rgba(255,255,255,0.08);
+    margin: 0 -15px;
+    padding: 0 15px;
+    border-left: 3px solid #88a;
+  }
+  .kw { color: #f92672; }
+  .fn { color: #a6e22e; }
+  .str { color: #e6db74; }
+  .copy-btn {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    color: #aaa;
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  /* right sidebar */
+  .sidebar-right {
+    font-size: 13px;
+    line-height: 1.7;
+    color: #333;
+    border-left: 1px solid #eee;
+    padding-left: 15px;
+  }
+  .sidebar-right .title {
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 10px;
+  }
+  .sidebar-right a {
+    display: block;
+    color: #555;
+    text-decoration: none;
+    margin-bottom: 8px;
+  }
+  .sidebar-right .indent {
+    padding-left: 10px;
+  }
+
+  .placeholder {
+    border: 1px dashed #999;
+    background: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #777;
+    font-size: 12px;
+  }
+
+  .ask-ai {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #222;
+    color: #fff;
+    border-radius: 50%;
+    width: 55px;
+    height: 55px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div>📅 FastAPI Conf '26 — Oct 28, 2026, Amsterdam 🚀</div>
+  <div class="sponsor-wrapper">
+    <div class="sponsor-label">sponsor</div>
+    <div class="sponsor-box">
+      <span>🟡</span>
+      <b>BlockBee</b>
+      <span>Effortless crypto payments<br>with instant payouts</span>
+    </div>
+  </div>
+</div>
+
+<nav class="main-nav">
+  <div class="logo-area">
+    <span class="logo-circle"></span>
+    FastAPI
+  </div>
+  <div style="display:flex; align-items:center; gap:20px; flex:1; justify-content:center;">
+    <div style="display:flex; gap:25px; font-size:14px;">
+      <span>FastAPI</span>
+      <span>Features</span>
+      <span>Learn</span>
+      <span>Reference</span>
+      <span>FastAPI People</span>
+      <span>Resources</span>
+      <span>About</span>
+      <span>Release Notes</span>
+    </div>
+  </div>
+  <div class="right-icons">
+    <span>👤</span>
+    <span>🌐</span>
+    <div class="search-box">🔍 Search &nbsp;&nbsp;⌘K</div>
+    <div style="display:flex; align-items:center; gap:5px;">
+      <span>⭐</span>
+      <div style="font-size:12px;">
+        fastapi/fastapi<br>
+        <span style="font-size:11px;">⬇0.136.1 ☆98.4k 🍴9.3k</span>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="layout">
+  <!-- LEFT SIDEBAR -->
+  <div class="sidebar-left">
+    <div class="section-title">Learn</div>
+    <a href="#">Python Types Intro</a>
+    <a href="#">Concurrency and async / await</a>
+    <a href="#">Environment Variables</a>
+    <a href="#">Virtual Environments</a>
+    <a href="#">Tutorial - User Guide &nbsp;&gt;</a>
+    <a href="#">Advanced User Guide &nbsp;&gt;</a>
+    <a href="#">FastAPI CLI</a>
+    <a href="#">Editor Support</a>
+    <a href="#">Deployment &nbsp;&gt;</a>
+    <a href="#" class="active">How To - Recipes &nbsp;˅</a>
+    <div class="indent">
+      <a href="#">General - How To - Recipes</a>
+      <a href="#">Migrate from Pydantic v1 to Pydantic v2</a>
+      <a href="#">GraphQL</a>
+      <a href="#">Custom Request and APIRoute class</a>
+      <a href="#">Conditional OpenAPI</a>
+      <a href="#">Extending OpenAPI</a>
+      <a href="#">Separate OpenAPI Schemas for Input and Output or Not</a>
+      <a href="#" class="active">Custom Docs UI Static Assets (Self-Hosting)</a>
+      <a href="#">Configure Swagger UI</a>
+      <a href="#">Testing a Database</a>
+      <a href="#">Use Old 403 Authentication Error Status Codes</a>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="content">
+    <div class="breadcrumb">
+      <a href="#">FastAPI ⧉</a> &gt; <a href="#">Learn ⧉</a> &gt; <a href="#">How To - Recipes ⧉</a>
+    </div>
+    <h1 class="page-title">Custom Docs UI Static Assets (Self-Hosting)</h1>
+
+    <p>The API docs use <b>Swagger UI</b> and <b>ReDoc</b>, and each of those need some JavaScript and CSS files.</p>
+
+    <p>By default, those files are served from a <u>CDN</u>.</p>
+
+    <p>But it's possible to customize it, you can set a specific CDN, or serve the files yourself.</p>
+
+    <h2 class="section-h2">Custom CDN for JavaScript and CSS</h2>
+
+    <p>Let's say that you want to use a different <u>CDN</u>, for example you want to use<br>
+    <span class="url-block">https://unpkg.com/</span>.</p>
+
+    <p>This could be useful if for example you live in a country that restricts some URLs.</p>
+
+    <h3 class="section-h3">Disable the automatic docs</h3>
+
+    <p>The first step is to disable the automatic docs, as by default, those use the default CDN.</p>
+
+    <p>To disable them, set their URLs to <code class="inline">None</code> when creating your <code class="inline">FastAPI</code> app:</p>
+
+    <div class="tab-bar"><span>Python 3.10+</span></div>
+
+    <div class="code-block"><span class="copy-btn">📋</span><span class="kw">from</span> fastapi <span class="kw">import</span> FastAPI
+<span class="kw">from</span> fastapi.openapi.docs <span class="kw">import</span> (
+    get_redoc_html,
+    get_swagger_ui_html,
+    get_swagger_ui_oauth2_redirect_html,
+)
+
+<span class="highlight-line">app = FastAPI(docs_url=<span class="kw">None</span>, redoc_url=<span class="kw">None</span>)</span>
+
+
+<span class="fn">@app.get</span>(<span class="str">"/docs"</span>, include_in_schema=<span class="kw">False</span>)
+<span class="kw">async def</span> <span class="fn">custom_swagger_ui_html</span>():
+    <span class="kw">return</span> get_swagger_ui_html(
+        openapi_url=app.openapi_url,
+        title=app.title + <span class="str">" - Swagger UI"</span>,
+        oauth2_redirect_url=app.swagger_ui_oauth2_redirect_url,
+        swagger_js_url=<span class="str">"https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"</span>,
+        swagger_css_url=<span class="str">"https://unpkg.com/swagger-ui-dist@5/swagger-ui.css"</span>,
+    )
+
+
+<span class="fn">@app.get</span>(app.swagger_ui_oauth2_redirect_url, include_in_schema=<span class="kw">False</span>)
+<span class="kw">async def</span> <span class="fn">swagger_ui_redirect</span>():
+    <span class="kw">return</span> get_swagger_ui_oauth2_redirect_html()
+
+
+<span class="fn">@app.get</span>(<span class="str">"/redoc"</span>, include_in_schema=<span class="kw">False</span>)
+<span class="kw">async def</span> <span class="fn">redoc_html</span>():
+    <span class="kw">return</span> get_redoc_html(
+        openapi_url=app.openapi_url,
+        title=app.title + <span class="str">" - ReDoc"</span>,
+        redoc_js_url=<span class="str">"https://unpkg.com/redoc@2/bundles/redoc.standalone.js"</span>,
+    )
+
+
+<span class="fn">@app.get</span>(<span class="str">"/users/{username}"</span>)
+<span class="kw">async def</span> <span class="fn">read_user</span>(username: <span class="kw">str</span>):
+    <span class="kw">return</span> {<span class="str">"message"</span>: f<span class="str">"Hello {username}"</span>}</div>
+
+  </div>
+
+  <!-- RIGHT SIDEBAR -->
+  <div class="sidebar-right">
+    <div class="title">On this page</div>
+    <a href="#">Custom CDN for JavaScript and CSS</a>
+    <a href="#" class="indent">Disable the automatic docs</a>
+    <a href="#" class="indent">Include the custom docs</a>
+    <a href="#" class="indent">Create a <i>path operation</i> to test it</a>
+    <a href="#" class="indent">Test it</a>
+    <a href="#">Self-hosting JavaScript and CSS for docs</a>
+    <a href="#" class="indent">Project file structure</a>
+    <a href="#" class="indent">Download the files</a>
+    <a href="#" class="indent">Serve the static files</a>
+    <a href="#" class="indent">Test the static files</a>
+    <a href="#" class="indent">Disable the automatic docs for static files</a>
+    <a href="#" class="indent">Include the custom docs for static files</a>
+    <a href="#" class="indent">Create a <i>path operation</i> to test static files</a>
+    <a href="#" class="indent">Test Static Files UI</a>
+  </div>
+</div>
+
+<div class="ask-ai">🤖<br>Ask AI</div>
+
+</body>
+</html>

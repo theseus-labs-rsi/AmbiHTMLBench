@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Micro-controller vs. Micro-processor</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  .slide-container {
+    width: 960px;
+    height: 720px;
+    background-color: #ffffff;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  /* Header Banner */
+  .header-bar {
+    position: relative;
+    height: 42px;
+    margin-top: 15px;
+    background: linear-gradient(to right, #1c2b66 0%, #304184 35%, #596ca6 65%, #c5d0e6 90%, #ffffff 100%);
+    display: flex;
+    align-items: center;
+  }
+  /* Decorative tiles on the left of header */
+  .deco-tile-1 {
+    position: absolute;
+    top: -12px;
+    left: 14px;
+    width: 14px;
+    height: 14px;
+    background-color: #1a2a6c;
+  }
+  .deco-tile-2 {
+    position: absolute;
+    top: -4px;
+    left: 28px;
+    width: 28px;
+    height: 28px;
+    background-color: #8c9ac9;
+    opacity: 0.8;
+  }
+  .deco-tile-3 {
+    position: absolute;
+    top: 24px;
+    left: 28px;
+    width: 15px;
+    height: 15px;
+    background-color: #7b8bc4;
+  }
+  .header-title {
+    color: #ffffff;
+    font-size: 26px;
+    font-weight: bold;
+    margin-left: 82px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+    letter-spacing: -0.2px;
+  }
+
+  /* Main Card */
+  .main-content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 20px;
+  }
+  .comparison-box {
+    width: 805px;
+    height: 380px;
+    background: #f0f0f0;
+    border: 1.5px solid #b8b8b8;
+    border-radius: 20px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    padding: 20px 30px;
+  }
+
+  /* Left Column: One Chip */
+  .col-one-chip {
+    width: 310px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .section-title {
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: underline;
+    margin-bottom: 18px;
+    color: #000;
+  }
+  .microcontroller-chip {
+    width: 250px;
+    background-color: #00a0e9;
+    border: 2px solid #000;
+    padding: 8px 10px 10px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .chip-title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 17px;
+    color: #000;
+    margin-bottom: 2px;
+  }
+  .row-flex {
+    display: flex;
+    gap: 6px;
+  }
+  .inner-block {
+    background-color: #ffffff;
+    border: 1.5px solid #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: #000;
+    height: 38px;
+  }
+
+  /* Right Column: Many Different Chips */
+  .col-many-chips {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-left: 20px;
+  }
+  .grid-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    max-width: 435px;
+  }
+  .chip-row {
+    display: flex;
+    gap: 12px;
+    height: 64px;
+  }
+  .chip-item {
+    border: 1.5px solid #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 18px;
+  }
+
+  /* Specific Chip Colors & Dimensions */
+  .chip-microprocessor {
+    background-color: #22ac38;
+    color: #ffffff;
+    flex: 1.95;
+    font-size: 19px;
+  }
+  .chip-clock {
+    background-color: #b97a57;
+    color: #ffffff;
+    flex: 0.85;
+  }
+  .chip-usart {
+    background-color: #99d9ea;
+    color: #000000;
+    flex: 1.15;
+  }
+
+  .chip-memory {
+    background-color: #00a0e9;
+    color: #ffffff;
+    flex: 1.95;
+    font-size: 19px;
+  }
+  .chip-io {
+    background-color: #fff2cc;
+    color: #000000;
+    flex: 2;
+  }
+
+  .chip-timer {
+    background-color: #b5b5b5;
+    color: #000000;
+    flex: 1.95;
+  }
+  .chip-other {
+    flex: 2;
+    position: relative;
+    border: 1.5px solid #000;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .stripe-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    z-index: 1;
+  }
+  .stripe-bg span {
+    flex: 1;
+    height: 100%;
+  }
+  .stripe-1 { background-color: #b4a7d6; }
+  .stripe-2 { background-color: #ffe599; }
+  .stripe-3 { background-color: #93c47d; }
+  .stripe-4 { background-color: #ea9999; }
+
+  .chip-other-text {
+    position: relative;
+    z-index: 2;
+    font-weight: bold;
+    font-size: 18px;
+    color: #000000;
+  }
+
+  /* Footer */
+  .footer {
+    height: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 45px 15px 45px;
+    font-size: 14px;
+    color: #000;
+  }
+  .copyright {
+    flex: 1;
+    text-align: center;
+  }
+  .slide-number {
+    font-weight: bold;
+    font-size: 16px;
+  }
+</style>
+</head>
+<body>
+
+<div class="slide-container">
+  <!-- Top Decorative Header -->
+  <div class="deco-tile-1"></div>
+  <div class="deco-tile-2"></div>
+  <div class="deco-tile-3"></div>
+  <div class="header-bar">
+    <div class="header-title">Micro-controller vs. Micro-processor</div>
+  </div>
+
+  <!-- Main Content Card -->
+  <div class="main-content">
+    <div class="comparison-box">
+      <!-- One Chip Section -->
+      <div class="col-one-chip">
+        <div class="section-title">One Chip</div>
+        <div class="microcontroller-chip">
+          <div class="chip-title">Microcontroller</div>
+          <div class="row-flex">
+            <div class="inner-block" style="width: 58px;">CPU</div>
+            <div class="inner-block" style="flex: 1;">Timer/Counter</div>
+          </div>
+          <div class="row-flex">
+            <div class="inner-block" style="flex: 1.3;">Memory</div>
+            <div class="inner-block" style="flex: 0.85;">Clock</div>
+          </div>
+          <div class="row-flex">
+            <div class="inner-block" style="flex: 1.35; font-size: 15px;">I/O Interface</div>
+            <div class="inner-block" style="flex: 0.9;">USART</div>
+          </div>
+          <div class="inner-block" style="width: 100%;">Other Peripherals</div>
+        </div>
+      </div>
+
+      <!-- Many Different Chips Section -->
+      <div class="col-many-chips">
+        <div class="section-title">Many Different Chips</div>
+        <div class="grid-container">
+          <!-- Row 1 -->
+          <div class="chip-row">
+            <div class="chip-item chip-microprocessor">Microprocessor</div>
+            <div class="chip-item chip-clock">Clock</div>
+            <div class="chip-item chip-usart">USART</div>
+          </div>
+          <!-- Row 2 -->
+          <div class="chip-row">
+            <div class="chip-item chip-memory">Memory</div>
+            <div class="chip-item chip-io">I/O Interfaces</div>
+          </div>
+          <!-- Row 3 -->
+          <div class="chip-row">
+            <div class="chip-item chip-timer">Timer/Counter</div>
+            <div class="chip-other">
+              <div class="stripe-bg">
+                <span class="stripe-1"></span>
+                <span class="stripe-2"></span>
+                <span class="stripe-3"></span>
+                <span class="stripe-4"></span>
+              </div>
+              <div class="chip-other-text">Other Peripherals</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="copyright">&copy; 2015 by Eng. Mohamed Tarek.</div>
+    <div class="slide-number">7</div>
+  </div>
+</div>
+
+</body>
+</html>

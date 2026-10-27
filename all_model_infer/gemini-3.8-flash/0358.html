@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Confirmation Contract - 4349283</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 8.5pt;
+    color: #000;
+    background-color: #fff;
+    padding: 15px;
+  }
+  .page-container {
+    width: 1020px;
+    margin: 0 auto;
+  }
+  .main-border {
+    border: 1px solid #444;
+    padding: 8px 10px 4px 10px;
+  }
+  
+  /* Top Section */
+  .top-section {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  
+  /* Logo and Address Box */
+  .left-col {
+    width: 220px;
+    flex-shrink: 0;
+  }
+  .logo-area {
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+    margin-top: 15px;
+  }
+  .fox-box {
+    background: #1a1a1a;
+    color: #fff;
+    font-weight: 900;
+    font-size: 20pt;
+    padding: 2px 6px;
+    border-radius: 4px;
+    letter-spacing: -1px;
+    display: inline-block;
+  }
+  .eleven-box {
+    font-weight: 900;
+    font-size: 26pt;
+    margin-left: 4px;
+    letter-spacing: -2px;
+    line-height: 1;
+    display: inline-block;
+  }
+  .station-address {
+    font-size: 7.5pt;
+    margin-left: 8px;
+    line-height: 1.25;
+    color: #333;
+  }
+  .client-box {
+    border: 1px solid #777;
+    border-right: 4px solid #444;
+    padding: 10px 8px;
+    font-size: 8pt;
+    line-height: 1.35;
+    height: 75px;
+    width: 200px;
+  }
+
+  /* Contract Info Grid */
+  .mid-col {
+    flex-grow: 1;
+    margin-left: 20px;
+    margin-right: 15px;
+  }
+  .contract-header {
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 4px;
+  }
+  .contract-title {
+    font-size: 11pt;
+    font-weight: bold;
+    width: 75px;
+  }
+  .contract-num {
+    font-size: 13pt;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+  }
+  .contract-details {
+    display: flex;
+    font-size: 7.5pt;
+  }
+  .details-col1 {
+    width: 255px;
+  }
+  .details-col2 {
+    width: 175px;
+  }
+  .field-row {
+    display: flex;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+  .field-label {
+    font-weight: bold;
+    color: #222;
+  }
+  .col1-label {
+    width: 75px;
+    flex-shrink: 0;
+  }
+  .col2-label {
+    width: 65px;
+    flex-shrink: 0;
+  }
+  .field-value {
+    color: #000;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Calendar Summary Box */
+  .right-col {
+    width: 190px;
+    flex-shrink: 0;
+    border: 1px solid #666;
+    height: 215px;
+    font-size: 7.5pt;
+  }
+  .cal-header {
+    font-weight: bold;
+    padding: 3px 5px;
+  }
+  .cal-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 7.5pt;
+  }
+  .cal-table th {
+    text-align: right;
+    font-weight: normal;
+    text-decoration: underline;
+    padding: 2px 5px;
+  }
+  .cal-table th:first-child {
+    text-align: left;
+  }
+  .cal-table td {
+    padding: 2px 5px;
+    text-align: right;
+  }
+  .cal-table td:first-child {
+    text-align: left;
+  }
+  .cal-table .border-top td {
+    border-top: 1px solid #444;
+  }
+
+  /* Main Items Table */
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 7pt;
+    margin-top: 4px;
+  }
+  .items-table th, .items-table td {
+    border: 1px solid #888;
+    padding: 2px 2px;
+    text-align: center;
+    height: 15px;
+  }
+  .items-table th {
+    font-weight: normal;
+    background-color: #fff;
+    color: #222;
+    padding: 3px 1px;
+  }
+  .items-table td.left {
+    text-align: left;
+    padding-left: 3px;
+  }
+  .items-table td.right {
+    text-align: right;
+    padding-right: 3px;
+  }
+  .items-table tr.data-row td {
+    font-size: 7pt;
+  }
+  
+  /* Space below line items */
+  .blank-space {
+    height: 180px;
+    border-left: 1px solid #888;
+    border-right: 1px solid #888;
+    display: flex;
+  }
+  .blank-space .col {
+    border-right: 1px solid #888;
+    height: 100%;
+  }
+
+  /* Confirmation Banner */
+  .confirm-banner {
+    border: 1px solid #888;
+    border-top: none;
+    text-align: center;
+    font-size: 11pt;
+    font-weight: normal;
+    letter-spacing: 2px;
+    color: #555;
+    padding: 2px 0;
+  }
+
+  /* Signatures Section */
+  .sig-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 7pt;
+    margin-top: 4px;
+    margin-bottom: 8px;
+  }
+  .sig-table td {
+    border: 1px solid #888;
+    padding: 3px 4px 18px 4px;
+    color: #444;
+    vertical-align: top;
+  }
+
+  /* Disclaimer */
+  .disclaimer {
+    font-size: 6.5pt;
+    text-align: center;
+    color: #222;
+    margin-bottom: 4px;
+    line-height: 1.2;
+  }
+
+  /* Page Footer */
+  .page-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 7.5pt;
+    margin-top: 8px;
+    padding: 0 2px;
+  }
+  .footer-left {
+    line-height: 1.4;
+  }
+  .footer-right {
+    text-align: right;
+  }
+</style>
+</head>
+<body>
+
+<div class="page-container">
+  <div class="main-border">
+    <!-- Top Information Section -->
+    <div class="top-section">
+      <!-- Left Column: Logo & Address Box -->
+      <div class="left-col">
+        <div class="logo-area">
+          <div class="fox-box">FOX</div>
+          <div class="eleven-box">11</div>
+          <div class="station-address">
+            WVAH<br>
+            1301 Piedmont Rd<br>
+            Charleston, WV 25301
+          </div>
+        </div>
+        <div class="client-box">
+          BlueWest Media<br>
+          5130 E 18th Ave<br>
+          Denver, CO 80220
+        </div>
+      </div>
+
+      <!-- Middle Column: Contract Metadata -->
+      <div class="mid-col">
+        <div class="contract-header">
+          <span class="contract-title">Contract #</span>
+          <span class="contract-num">4349283</span>
+        </div>
+        <div class="contract-details">
+          <!-- Sub-column 1 -->
+          <div class="details-col1">
+            <div class="field-row">
+              <span class="field-label col1-label">Schedule Dates</span>
+              <span class="field-value">04/24/20-05/03/20</span>
+            </div>
+            <div class="field-row">
+              <span class="field-label col1-label">Advertiser</span>
+              <span class="field-value">Committee to Elect Judge Joanna Tabit (127490)</span>
+            </div>
+            <div class="field-row">
+              <span class="field-label col1-label">Agency</span>
+              <span class="field-value">BlueWest Media (16865)</span>
+            </div>
+            <div class="field-row">
+              <span class="field-label col1-label">Product</span>
+              <span class="field-value">POLITICAL CANDIDATE (ns) (1186)</span>
+            </div>
+            <div class="field-row">
+              <span class="field-label col1-label">Brand</span>
+              <span class="field-value">tabit wvah April 2020 (1375835)</span>
+            </div>
+            <div class="field-row">
+              <span class="field-label col1-label">Salesperson</span>
+              <span class="field-value">Wilson, Diane (1157)</span>
+            </div>
+            <div class="field-row">
+              <span class="field-label col1-label">Sales Office</span>
+              <span class="field-value">WCHS/WVAH</span>
+            </div>
+            <div class="field-row">
+              <span class="field-label col1-label">Buyer Name</span>
+              <span class="field-value"></span>
+            </div>
+            <div class="field-row">
+              <span class="field-label col1-label">Phone/Fax</span>
+              <span class="field-value">/</span>
+            </div>
+            <div class="field-row">
+              <span class="field-label col1-label">CPE</span>
+              <span class="field-value">96/100/2039</span>
+            </div>
+            <div class="field-row">
+              <span class="field-label col1-label">Account Types</span>
+              <span class="field-value">Local/Political Candidate Agency BRD</span>
+            </div>
+            <div class="field-row">
+              <span class="field-label col1-label">Billing Type</span>
+              <span class="field-value">Calendar</span>
+            </div>
+            <div class="field-row">
+              <span class="field-label col1-label">Comments</span>
+              <span class="field-value">Separation: 30</span>
+            </div>
+          </div>
+
+          <!-- Sub-column 2 -->
+          <div class="details-col2">
+            <div class="field-row">
+              <span class="field-label col2-label">Date Entered</span>
+              <span class="field-value">04/23/20</span>
+            </div>
+            <div class="field-row">
+              <span class="field-label col2-label">Last Modified</span>
+              <span class="field-value">04/24/20</span>
+            </div>
+            <div class="field-row">
+              <span class="field-label col2-label">Entered By</span>
+              <span class="field-value">Diane Wilson</span>
+            </div>
+            <div class="field-row">
+              <span class="field-label col2-label">CO-OP</span>
+              <span class="field-value">No</span>
+            </div>
+            <div class="field-row">
+              <span class="field-label col2-label">External #</span>
+              <span class="field-value">7863079</span>
+            </div>
+            <div class="field-row">
+              <span class="field-label col2-label">Demo</span>
+              <span class="field-value">A35+R</span>
+            </div>
+            <div class="field-row">
+              <span class="field-label col2-label">Order Type</span>
+              <span class="field-value">Normal</span>
+            </div>
+            <div class="field-row">
+              <span class="field-label col2-label">Package Deal</span>
+              <span class="field-value"></span>
+            </div>
+            <div class="field-row">
+              <span class="field-label col2-label">Commission %</span>
+              <span class="field-value">15.00</span>
+            </div>
+            <div class="field-row">
+              <span class="field-label col2-label">Commission</span>
+              <span class="field-value">$201.75</span>
+            </div>
+            <div class="field-row">
+              <span class="field-label col2-label">Net Total</span>
+              <span class="field-value">$1,143.25</span>
+            </div>
+            <div class="field-row">
+              <span class="field-label col2-label">Sales Tax</span>
+              <span class="field-value"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Calendar Month Summary -->
+      <div class="right-col">
+        <div class="cal-header">Charleston WV (WVAH)</div>
+        <table class="cal-table">
+          <thead>
+            <tr>
+              <th>By Calendar Month</th>
+              <th>Spots</th>
+              <th>Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Apr. 2020</td>
+              <td>21</td>
+              <td>$915.00</td>
+            </tr>
+            <tr>
+              <td>May. 2020</td>
+              <td>6</td>
+              <td>$430.00</td>
+            </tr>
+            <tr class="border-top">
+              <td>Grand Total:</td>
+              <td>27</td>
+              <td>$1,345.00</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Main Table -->
+    <table class="items-table">
+      <colgroup>
+        <col style="width: 25px;">
+        <col style="width: 125px;">
+        <col style="width: 82px;">
+        <col style="width: 18px;">
+        <col style="width: 28px;">
+        <col style="width: 90px;">
+        <col style="width: 24px;">
+        <col style="width: 16px;">
+        <col style="width: 16px;">
+        <col style="width: 16px;">
+        <col style="width: 16px;">
+        <col style="width: 16px;">
+        <col style="width: 16px;">
+        <col style="width: 16px;">
+        <col style="width: 26px;">
+        <col style="width: 48px;">
+        <col style="width: 52px;">
+        <col style="width: 110px;">
+        <col style="width: 55px;">
+        <col style="width: 42px;">
+      </colgroup>
+      <thead>
+        <tr>
+          <th>Line</th>
+          <th>Line Type / Break Type (Ref #)</th>
+          <th>Dates</th>
+          <th>Sec</th>
+          <th>Length</th>
+          <th>Run Times</th>
+          <th>SPW</th>
+          <th>Mo</th>
+          <th>Tu</th>
+          <th>We</th>
+          <th>Th</th>
+          <th>Fr</th>
+          <th>Sa</th>
+          <th>Su</th>
+          <th>Spots</th>
+          <th>Rate</th>
+          <th>Total</th>
+          <th>Station</th>
+          <th>Comments</th>
+          <th>Entered</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="data-row">
+          <td>1.0</td>
+          <td class="left">Normal Line / News</td>
+          <td>04/24/20-05/01/20</td>
+          <td>3</td>
+          <td>:30</td>
+          <td class="left">6A- 7A (EST)</td>
+          <td></td>
+          <td></td>
+          <td>1</td>
+          <td>1</td>
+          <td>1</td>
+          <td>1</td>
+          <td></td>
+          <td></td>
+          <td>5</td>
+          <td class="right">$10.00</td>
+          <td class="right">$50.00</td>
+          <td class="left">Charleston WV (WVAH)</td>
+          <td></td>
+          <td>4/23/20</td>
+        </tr>
+        <tr class="data-row">
+          <td>2.0</td>
+          <td class="left">Normal Line / News</td>
+          <td>04/24/20-04/30/20</td>
+          <td>3</td>
+          <td>:30</td>
+          <td class="left">7A- 8A (EST)</td>
+          <td></td>
+          <td></td>
+          <td>1</td>
+          <td>1</td>
+          <td>1</td>
+          <td>1</td>
+          <td></td>
+          <td></td>
+          <td>5</td>
+          <td class="right">$20.00</td>
+          <td class="right">$100.00</td>
+          <td class="left">Charleston WV (WVAH)</td>
+          <td></td>
+          <td>4/23/20</td>
+        </tr>
+        <tr class="data-row">
+          <td>3.0</td>
+          <td class="left">Normal Line / News</td>
+          <td>04/24/20-05/01/20</td>
+          <td>3</td>
+          <td>:30</td>
+          <td class="left">6:30P- 7P (EST)</td>
+          <td></td>
+          <td>1</td>
+          <td>1</td>
+          <td></td>
+          <td>1</td>
+          <td>1</td>
+          <td></td>
+          <td></td>
+          <td>5</td>
+          <td class="right">$30.00</td>
+          <td class="right">$150.00</td>
+          <td class="left">Charleston WV (WVAH)</td>
+          <td></td>
+          <td>4/23/20</td>
+        </tr>
+        <tr class="data-row">
+          <td>4.0</td>
+          <td class="left">Normal Line / News</td>
+          <td>04/24/20-05/01/20</td>
+          <td>3</td>
+          <td>:30</td>
+          <td class="left">10P- 11P (EST)</td>
+          <td></td>
+          <td>1</td>
+          <td>1</td>
+          <td>1</td>
+          <td>1</td>
+          <td>1</td>
+          <td></td>
+          <td></td>
+          <td>6</td>
+          <td class="right">$100.00</td>
+          <td class="right">$600.00</td>
+          <td class="left">Charleston WV (WVAH)</td>
+          <td></td>
+          <td>4/23/20</td>
+        </tr>
+        <tr class="data-row">
+          <td>5.0</td>
+          <td class="left">Normal Line / News</td>
+          <td>05/02/20-05/03/20</td>
+          <td>3</td>
+          <td>:30</td>
+          <td class="left">10P- 11P (EST)</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>1</td>
+          <td>1</td>
+          <td>2</td>
+          <td class="right">$125.00</td>
+          <td class="right">$250.00</td>
+          <td class="left">Charleston WV (WVAH)</td>
+          <td></td>
+          <td>4/23/20</td>
+        </tr>
+        <tr class="data-row">
+          <td>6.0</td>
+          <td class="left">Normal Line / SPOT</td>
+          <td>04/29/20-04/29/20</td>
+          <td>3</td>
+          <td>:30</td>
+          <td class="left">7P- 7:30P (EST)</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>1</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>1</td>
+          <td class="right">$75.00</td>
+          <td class="right">$75.00</td>
+          <td class="left">Charleston WV (WVAH)</td>
+          <td></td>
+          <td>4/23/20</td>
+        </tr>
+        <tr class="data-row">
+          <td>7.0</td>
+          <td class="left">Normal Line / SPOT</td>
+          <td>04/27/20-05/01/20</td>
+          <td>2</td>
+          <td>:30</td>
+          <td class="left">5P- 6P (EST)</td>
+          <td></td>
+          <td>1</td>
+          <td></td>
+          <td>1</td>
+          <td></td>
+          <td>1</td>
+          <td></td>
+          <td></td>
+          <td>3</td>
+          <td class="right">$40.00</td>
+          <td class="right">$120.00</td>
+          <td class="left">Charleston WV (WVAH)</td>
+          <td></td>
+          <td>4/23/20</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Table vertical line continuation / Blank space -->
+    <div class="blank-space">
+      <div class="col" style="width: 25px;"></div>
+      <div class="col" style="width: 125px;"></div>
+      <div class="col" style="width: 82px;"></div>
+      <div class="col" style="width: 18px;"></div>
+      <div class="col" style="width: 28px;"></div>
+      <div class="col" style="width: 90px;"></div>
+      <div class="col" style="width: 24px;"></div>
+      <div class="col" style="width: 16px;"></div>
+      <div class="col" style="width: 16px;"></div>
+      <div class="col" style="width: 16px;"></div>
+      <div class="col" style="width: 16px;"></div>
+      <div class="col" style="width: 16px;"></div>
+      <div class="col" style="width: 16px;"></div>
+      <div class="col" style="width: 16px;"></div>
+      <div class="col" style="width: 26px;"></div>
+      <div class="col" style="width: 48px;"></div>
+      <div class="col" style="width: 52px;"></div>
+      <div class="col" style="width: 110px;"></div>
+      <div class="col" style="width: 55px;"></div>
+      <div class="col" style="flex-grow: 1; border-right: none;"></div>
+    </div>
+
+    <!-- Confirmation Contract Banner -->
+    <div class="confirm-banner">
+      CONFIRMATION CONTRACT
+    </div>
+
+    <!-- Acceptance / Signature Section -->
+    <table class="sig-table">
+      <colgroup>
+        <col style="width: 32%;">
+        <col style="width: 9%;">
+        <col style="width: 32%;">
+        <col style="width: 9%;">
+        <col style="width: 18%;">
+      </colgroup>
+      <tbody>
+        <tr>
+          <td>Accepted-Agency/Advertiser:</td>
+          <td>Date:</td>
+          <td>Accepted-Station:</td>
+          <td>Date:</td>
+          <td>Comments:</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Disclaimer -->
+    <div class="disclaimer">
+      The parties intend for the Standard Advertiser Terms and Conditions ("Terms") located at... http://sbgi.net/?p=1224 ... to be part of their agreement, and the sale of advertising is expressly subject to said Terms.
+    </div>
+  </div>
+
+  <!-- Page Footer (Outside Main Border) -->
+  <div class="page-footer">
+    <div class="footer-left">
+      <div>B/E Bookend &nbsp;P/B Piggy Back</div>
+      <div>Printed At: 02:21 PM on Friday, April 24 2020</div>
+    </div>
+    <div class="footer-right">
+      <div>Page 1 of 1</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

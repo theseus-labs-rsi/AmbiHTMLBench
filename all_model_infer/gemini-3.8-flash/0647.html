@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第一章 教育与教育学</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    background-color: #f7f9fa;
+    font-family: "KaiTi", "STKaiti", "楷体", "Microsoft YaHei", sans-serif;
+    color: #222;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+  }
+  .notebook-page {
+    width: 900px;
+    min-height: 1200px;
+    background: #fff;
+    background-image: repeating-linear-gradient(
+      transparent,
+      transparent 27px,
+      #9fc3e8 27px,
+      #9fc3e8 28px
+    );
+    background-position: 0 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    position: relative;
+    padding: 20px 20px 40px 10px;
+    line-height: 28px;
+    font-size: 15px;
+  }
+  .header-tag {
+    display: table;
+    margin: 0 auto 15px auto;
+    background-color: #e5a86a;
+    color: #111;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 2px 14px;
+    border-radius: 4px;
+    line-height: 24px;
+  }
+  .hl-yellow {
+    background-color: #fff275;
+    padding: 1px 4px;
+    font-weight: bold;
+  }
+  .hl-purple {
+    background-color: #e2b4e8;
+    padding: 0 2px;
+    border-radius: 2px;
+  }
+  .text-red {
+    color: #c93b3b;
+  }
+  .dot-blue {
+    color: #4b6cb7;
+    margin-right: 2px;
+  }
+  .dot-purple {
+    color: #9b51e0;
+    margin-right: 2px;
+  }
+
+  /* Tree Diagram & Brackets */
+  .tree-container {
+    display: flex;
+    position: relative;
+    margin-top: 10px;
+  }
+
+  /* Left vertical bracket */
+  .left-bracket-col {
+    position: relative;
+    width: 32px;
+    margin-right: 6px;
+  }
+  .main-vertical-line {
+    position: absolute;
+    left: 20px;
+    top: 14px;
+    bottom: 20px;
+    width: 3px;
+    background-color: #1b5299;
+  }
+  .main-vertical-line::before {
+    content: "";
+    position: absolute;
+    top: -4px;
+    left: 0;
+    width: 14px;
+    height: 14px;
+    border-top: 3px solid #1b5299;
+    border-left: 3px solid #1b5299;
+    transform: rotate(45deg);
+    transform-origin: top left;
+  }
+  .main-vertical-line::after {
+    content: "";
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 14px;
+    height: 14px;
+    border-bottom: 3px solid #1b5299;
+    border-left: 3px solid #1b5299;
+    transform: rotate(-45deg);
+    transform-origin: bottom left;
+  }
+  /* Left spine cusp/bracket label */
+  .cusp-tag {
+    position: absolute;
+    top: 325px;
+    left: -2px;
+    background-color: #fff275;
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    padding: 4px 1px;
+    font-size: 13px;
+    font-weight: bold;
+    color: #2b542c;
+    letter-spacing: 2px;
+    line-height: 14px;
+    z-index: 2;
+    border: 1px solid rgba(0,0,0,0.05);
+  }
+  .cusp-notch {
+    position: absolute;
+    top: 335px;
+    left: 12px;
+    width: 8px;
+    height: 8px;
+    border-top: 3px solid #1b5299;
+    border-left: 3px solid #1b5299;
+    transform: rotate(-45deg);
+    background: #fff;
+    z-index: 1;
+  }
+
+  .content-tree {
+    flex: 1;
+  }
+
+  /* Node 1 */
+  .node-1 {
+    height: 56px;
+    padding-left: 8px;
+    font-weight: bold;
+  }
+
+  /* Node 2 */
+  .node-2-wrap {
+    display: flex;
+    position: relative;
+  }
+  .node-2-label {
+    width: 70px;
+    font-weight: bold;
+    line-height: 20px;
+    padding-top: 50px;
+  }
+  .node-2-bracket {
+    width: 16px;
+    position: relative;
+    border-left: 1.5px solid #336699;
+    margin-top: -14px;
+    margin-bottom: 40px;
+  }
+  .sub-tree {
+    flex: 1;
+    padding-left: 6px;
+  }
+
+  .branch-line-1 {
+    position: relative;
+    height: 28px;
+  }
+  .branch-line-1::before {
+    content: "—";
+    position: absolute;
+    left: -22px;
+    color: #336699;
+  }
+
+  .branch-line-2 {
+    position: relative;
+  }
+  .branch-line-2::before {
+    content: "—";
+    position: absolute;
+    left: -22px;
+    top: 0;
+    color: #336699;
+  }
+  .branch-line-2-content {
+    display: flex;
+  }
+  .history-bracket-label {
+    writing-mode: vertical-lr;
+    width: 24px;
+    letter-spacing: 2px;
+    line-height: 18px;
+    padding-top: 4px;
+  }
+  .history-bracket-line {
+    width: 12px;
+    border-left: 1.5px solid #336699;
+    margin-top: 14px;
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  .history-content {
+    flex: 1;
+    padding-left: 6px;
+  }
+
+  /* Sub items & sub brackets */
+  .sub-bracket-block {
+    display: flex;
+    align-items: stretch;
+    margin: 0;
+  }
+  .sub-bracket-left {
+    min-width: 170px;
+    padding-right: 4px;
+    display: flex;
+    align-items: center;
+  }
+  .sub-bracket-divider {
+    border-left: 1.5px solid #333;
+    margin: 2px 8px 2px 0;
+  }
+  .sub-bracket-right {
+    flex: 1;
+    line-height: 28px;
+  }
+
+  .indented-list {
+    margin-left: 16px;
+  }
+</style>
+</head>
+<body>
+
+<div class="notebook-page">
+  <div class="header-tag">第一章 教育与教育学</div>
+
+  <div class="tree-container">
+    <!-- Left Main Bracket -->
+    <div class="left-bracket-col">
+      <div class="main-vertical-line"></div>
+      <div class="cusp-notch"></div>
+      <div class="cusp-tag">教育与教育学</div>
+    </div>
+
+    <!-- Right Content Hierarchy -->
+    <div class="content-tree">
+      <!-- 1、教育及其产生与发展 -->
+      <div class="node-1">
+        1、教育及其产生与发展
+      </div>
+
+      <!-- 2、教育学的产生与发展 -->
+      <div class="node-2-wrap">
+        <div class="node-2-label">
+          2、教育学<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;的产生<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;与发展
+        </div>
+        <div class="node-2-bracket"></div>
+        <div class="sub-tree">
+          <!-- 产生和发展历程 / 研究对象和任务 -->
+          <div class="branch-line-1">
+            研究对象和任务
+          </div>
+          <div class="branch-line-2">
+            <div class="branch-line-2-content">
+              <div class="history-bracket-label">产生和<br>发展历程</div>
+              <div class="history-bracket-line"></div>
+              <div class="history-content">
+                <!-- (四) 发展多样化阶段 -->
+                <div>
+                  <span class="hl-yellow">(四) 发展多样化阶段 (19世纪末——20世纪初)</span>
+                </div>
+                <div>
+                  <span class="dot-blue">●</span>杜威——“现代教育”代言人，实用主义代表
+                </div>
+                
+                <!-- 杜威 ① -->
+                <div class="sub-bracket-block">
+                  <div class="sub-bracket-left" style="align-items: flex-start; padding-top: 2px;">
+                    ①《民主主义与教育》
+                  </div>
+                  <div class="sub-bracket-divider"></div>
+                  <div class="sub-bracket-right">
+                    活动课程：从做中学<br>
+                    五步教学法：困难、问题、假设、验证、结论<br>
+                    儿童中心论：<span class="text-red">儿童、活动、经验</span><br>
+                    教育无目的论
+                  </div>
+                </div>
+
+                <!-- 杜威 ② -->
+                <div class="sub-bracket-block">
+                  <div class="sub-bracket-left" style="align-items: center;">
+                    ②论教育的本质——什么是教育?
+                  </div>
+                  <div class="sub-bracket-divider"></div>
+                  <div class="sub-bracket-right">
+                    教育即生长<br>
+                    教育即生活<br>
+                    教育即经验的改组和改造
+                  </div>
+                </div>
+
+                <div><span class="dot-blue">●</span>梅伊曼、拉伊——<span class="hl-purple">首次提出实验教育学</span></div>
+                <div><span class="dot-blue">●</span>斯宾塞——教育的任务是教导人们怎样生活</div>
+                <div><span class="dot-blue">●</span><span class="hl-purple">凯洛夫</span>——<span class="hl-purple">世界上第一部马克思主义教育学著作</span></div>
+                <div><span class="dot-blue">●</span>福禄贝尔——世界“幼儿教育之父”</div>
+                <div><span class="dot-blue">●</span>马卡连柯——集体主义教育思想</div>
+
+                <!-- (五) 教育学的分化与拓展阶段 -->
+                <div style="margin-top: 4px;">
+                  <span class="hl-yellow">(五) 教育学的分化与拓展阶段 (20世纪中期至今)</span>
+                </div>
+                <div><span class="dot-purple">●</span>布卢姆(美国)《教育目标的分类系统》—认知、情感、动作、技能目标</div>
+                <div><span class="dot-purple">●</span>巴班斯基(苏联)《教学过程最优化》</div>
+                <div><span class="dot-purple">●</span>苏霍姆林斯基(苏联)《给教师的一百条建议》《把整个心灵献给孩子》</div>
+
+                <!-- 现代教学理论三大流派 -->
+                <div class="sub-bracket-block">
+                  <div class="sub-bracket-left" style="min-width: 90px; width: 90px; align-items: center;">
+                    现代教学理<br>论三大流派
+                  </div>
+                  <div class="sub-bracket-divider"></div>
+                  <div class="sub-bracket-right">
+                    ①赞可夫《教学与发展》五大教学原则<br>
+                    <div style="padding-left: 50px;">
+                      <span class="text-red">高难度、高速度、理论起指导作用、理解学习过程、使所有学生得到一般发展</span>
+                    </div>
+                    ②布鲁纳《教学过程》——结构教学论、发现法<br>
+                    ③瓦·根舍因——范例教学
+                  </div>
+                </div>
+
+                <!-- (六) 中国近现代的教育思想 -->
+                <div style="margin-top: 4px;">
+                  <span class="hl-yellow">(六) 中国近现代的教育思想</span>
+                </div>
+
+                <!-- 蔡元培 -->
+                <div class="sub-bracket-block">
+                  <div class="sub-bracket-left" style="min-width: 65px; width: 65px; align-items: center;">
+                    <span class="dot-purple">●</span><span class="hl-purple">蔡元培</span>
+                  </div>
+                  <div class="sub-bracket-divider"></div>
+                  <div class="sub-bracket-right">
+                    ①学界泰斗，人世楷模——毛泽东<br>
+                    ②“五育并举”——美育第一人<br>
+                    ③完全人格<br>
+                    ④北大改革——思想自由，兼容并包
+                  </div>
+                </div>
+
+                <!-- 陶行知 -->
+                <div class="sub-bracket-block">
+                  <div class="sub-bracket-left" style="min-width: 65px; width: 65px; align-items: center;">
+                    <span class="dot-purple">●</span>陶行知
+                  </div>
+                  <div class="sub-bracket-divider"></div>
+                  <div class="sub-bracket-right">
+                    ①伟大的人民教育家——毛泽东，万世师表——宋庆龄<br>
+                    ②捧着一颗心来，不带半根草去<br>
+                    ③生活教育论——生活即教育：<span class="text-red">核心思想</span><br>
+                    <div style="padding-left: 96px;">
+                      社会即学校：<span class="text-red">范围论、重要命题</span><br>
+                      教学做合一：<span class="text-red">方法论</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 陈鹤琴 -->
+                <div class="sub-bracket-block">
+                  <div class="sub-bracket-left" style="min-width: 65px; width: 65px; align-items: center;">
+                    <span class="dot-purple">●</span><span class="hl-purple">陈鹤琴</span>
+                  </div>
+                  <div class="sub-bracket-divider"></div>
+                  <div class="sub-bracket-right">
+                    ①中国幼儿教育奠基人(之父)<br>
+                    ②创办了中国第一所实验幼稚园——南京鼓楼幼稚园<br>
+                    ③活教育体系—四个步骤:实验观察/阅读思考/创作发表/批评研讨
+                  </div>
+                </div>
+
+                <!-- 其他人物 -->
+                <div><span class="dot-purple">●</span>杨贤江《新教育大纲》1930年是我国第一部马克思主义的教育学著作</div>
+                <div><span class="dot-purple">●</span><span class="hl-purple">黄炎培</span>——中国职业教育之父</div>
+                <div><span class="dot-purple">●</span><span class="hl-purple">晏阳初</span>——国际平民教育之父</div>
+                <div><span class="dot-purple">●</span><span class="hl-purple">梁漱溟</span>——中国最后一位大儒</div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

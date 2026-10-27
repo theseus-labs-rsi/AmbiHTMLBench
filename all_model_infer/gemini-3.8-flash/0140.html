@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulation-Based Validation for Autonomous Driving Systems</title>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    background-color: #f0f0f0;
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+    color: #111;
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+  }
+  .poster {
+    width: 900px;
+    background: #ffffff;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #e64a00 0%, #ff7700 50%, #ffa500 100%);
+    color: white;
+    padding: 20px 40px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom-left-radius: 50% 20px;
+    border-bottom-right-radius: 50% 20px;
+    position: relative;
+  }
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  .logo-text {
+    font-size: 38px;
+    font-weight: 900;
+    font-style: italic;
+    letter-spacing: -1px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+  }
+  .header-title-zh {
+    font-size: 15px;
+    line-height: 1.35;
+    font-weight: 600;
+  }
+  .header-title-zh span.year {
+    font-size: 20px;
+    font-weight: 800;
+    color: #fffb00;
+  }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .star-icon {
+    font-size: 26px;
+    line-height: 1;
+  }
+  .academic-paper-title {
+    font-size: 26px;
+    font-weight: bold;
+    letter-spacing: 2px;
+  }
+
+  /* Main content container */
+  .content {
+    padding: 25px 40px 40px;
+  }
+
+  /* Title block */
+  .title-block {
+    text-align: center;
+    margin-bottom: 25px;
+  }
+  .main-title {
+    font-size: 32px;
+    font-weight: 900;
+    line-height: 1.25;
+    color: #000;
+    margin-bottom: 15px;
+  }
+  .authors {
+    font-size: 17px;
+    color: #222;
+    margin-bottom: 16px;
+  }
+  .meta-info {
+    font-size: 15px;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .meta-row {
+    display: flex;
+    justify-content: flex-start;
+  }
+  .meta-label {
+    font-weight: bold;
+    letter-spacing: 4px;
+    width: 100px;
+    text-align: left;
+  }
+  .meta-val {
+    flex: 1;
+    text-align: left;
+  }
+  .meta-contacts {
+    display: flex;
+    justify-content: space-between;
+    flex: 1;
+  }
+
+  /* Section banner */
+  .section-banner {
+    background-color: #fcebd2;
+    color: #111;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    padding: 6px 15px;
+    border-radius: 4px;
+    margin: 20px 0 12px;
+  }
+
+  /* Abstract */
+  .abstract-text {
+    font-size: 12.5px;
+    line-height: 1.45;
+    text-align: justify;
+    color: #222;
+  }
+
+  /* Framework section */
+  .framework-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    gap: 20px;
+    align-items: center;
+    margin-top: 5px;
+  }
+  .component-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .component-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .comp-icon {
+    font-size: 20px;
+    line-height: 1.2;
+    color: #555;
+    width: 24px;
+    text-align: center;
+  }
+  .comp-body {
+    flex: 1;
+  }
+  .comp-title {
+    font-weight: bold;
+    font-size: 13.5px;
+    margin-bottom: 2px;
+    color: #000;
+  }
+  .comp-desc {
+    font-size: 11.5px;
+    line-height: 1.35;
+    color: #333;
+  }
+
+  /* RvADS Architecture Diagram */
+  .diagram-rvads {
+    border: 1.5px solid #333;
+    padding: 12px 10px;
+    position: relative;
+    background: #fff;
+  }
+  .rvads-label {
+    text-align: center;
+    font-weight: bold;
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
+  .diag-inner {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: relative;
+  }
+  .diag-left-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+  .diag-box {
+    border: 1px solid #333;
+    padding: 6px 10px;
+    text-align: center;
+    font-size: 11px;
+    line-height: 1.2;
+    background: #fff;
+    width: 100px;
+  }
+  .arrow-down {
+    text-align: center;
+    font-size: 10px;
+    line-height: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .arrow-label {
+    font-size: 10px;
+    margin-left: 5px;
+  }
+  .diag-right-box {
+    border: 1px solid #333;
+    padding: 15px 12px;
+    text-align: center;
+    font-size: 11px;
+    background: #fff;
+    width: 90px;
+  }
+  .connector-h {
+    display: flex;
+    align-items: center;
+    font-size: 10px;
+    margin: 0 5px;
+  }
+  .prop-spec-box {
+    position: absolute;
+    bottom: -45px;
+    right: 25px;
+    border: 1px solid #333;
+    padding: 6px 8px;
+    font-size: 10.5px;
+    text-align: center;
+    background: #fff;
+    width: 105px;
+  }
+  .diag-out-text {
+    font-size: 10.5px;
+    line-height: 1.25;
+    width: 80px;
+    margin-left: 10px;
+  }
+
+  /* Two Column Main Body */
+  .two-column-layout {
+    display: grid;
+    grid-template-columns: 0.95fr 1.05fr;
+    gap: 25px;
+    margin-top: 35px;
+  }
+  .col-left, .col-right {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .col-desc {
+    font-size: 11.5px;
+    line-height: 1.4;
+    text-align: justify;
+    margin-bottom: 8px;
+  }
+
+  /* Placeholder / Figures */
+  .placeholder {
+    width: 100%;
+    background: #fdfdfd;
+    border: 1px dashed #bbb;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    font-size: 11px;
+    margin: 10px 0;
+  }
+
+  /* Property Specification Box */
+  .prop-spec-container {
+    border: 1px solid #ddd;
+    border-top: 1.5px solid #aaa;
+    border-bottom: 1.5px solid #aaa;
+    padding: 6px 8px;
+    font-size: 9.5px;
+    line-height: 1.35;
+    background: #fafafa;
+  }
+  .spec-section-header {
+    font-style: italic;
+    font-weight: 500;
+    border-bottom: 1px solid #ddd;
+    padding: 2px 0;
+    margin-top: 4px;
+    margin-bottom: 3px;
+    color: #222;
+  }
+  .spec-rule {
+    margin-bottom: 5px;
+  }
+  .spec-desc {
+    font-style: italic;
+    color: #222;
+  }
+  .spec-formula {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 9px;
+    margin-left: 8px;
+    color: #000;
+  }
+
+  /* Examples of Property Violation Grid */
+  .violation-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .violation-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .violation-caption {
+    font-size: 8.5px;
+    color: #333;
+    margin-top: 2px;
+    text-align: center;
+  }
+
+  /* SVG / Diagram CSS */
+  svg.diagram {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* Footer */
+  .footer {
+    height: 45px;
+    background: linear-gradient(135deg, #e64a00 0%, #ff7700 50%, #ffa500 100%);
+    border-top-left-radius: 50% 20px;
+    border-top-right-radius: 50% 20px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .footer-decor {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 14px;
+    letter-spacing: 5px;
+  }
+</style>
+</head>
+<body>
+
+<div class="poster">
+  <!-- Header Banner -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo-text">ISCAS</div>
+      <div class="header-title-zh">
+        中国科学院软件研究所学术年会'<span class="year"> 2023</span><br>
+        暨计算机科学国家重点实验室开放周
+      </div>
+    </div>
+    <div class="header-right">
+      <span class="star-icon">☼</span>
+      <span class="academic-paper-title">学术论文</span>
+    </div>
+  </header>
+
+  <!-- Body Content -->
+  <div class="content">
+
+    <!-- Title and Metadata -->
+    <section class="title-block">
+      <h1 class="main-title">
+        Simulation-Based Validation for<br>
+        Autonomous Driving Systems
+      </h1>
+      <div class="authors">
+        Changwen Li, Joseph Sifakis, Qiang Wang, Rongjie Yan, Jian Zhang
+      </div>
+      <div class="meta-info">
+        <div class="meta-row">
+          <span class="meta-label">学术会议:</span>
+          <span class="meta-val">International Symposium on Software Testing and Analysis</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">联系方式:</span>
+          <div class="meta-contacts">
+            <span>晏荣杰 yrj@ios.ac.cn</span>
+            <span>李昌文 licw@ios.ac.cn</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Abstract -->
+    <div class="section-banner">Abstract</div>
+    <p class="abstract-text">
+      We investigate a rigorous simulation and testing-based validation method for autonomous driving systems that integrates an existing industrial simulator and a formally defined testing environment. The environment includes a scenario generator that drives the simulation process and a monitor that checks at runtime the observed behavior of the system against a set of system properties to be validated. The validation method consists in extracting from the simulator a semantic model of the simulated system including a metric graph, which is a mathematical model of the environment in which the vehicles of the system evolve. The monitor can verify properties formalized in a first-order linear temporal logic and provide diagnostics explaining their non-satisfaction. Instead of exploring the system behavior randomly as many simulators do, we propose a method to systematically generate sets of scenarios that cover potentially risky situations, especially for different types of junctions where specific traffic rules must be respected. We show that the systematic exploration of risky situations has uncovered many flaws in the real simulator that would have been very difficult to discover by a random exploration process.
+    </p>
+
+    <!-- The Validation Framework RvADS -->
+    <div class="section-banner">The Validation Framework RvADS</div>
+    <div class="framework-grid">
+      <div class="component-list">
+        <div class="component-item">
+          <div class="comp-icon">⚙</div>
+          <div class="comp-body">
+            <div class="comp-title">Scenario Generator</div>
+            <div class="comp-desc">The Scenario Generator drives the simulation process. It generates scenarios as the coordinated sequences of actions executed by the agents in the Simulator.</div>
+          </div>
+        </div>
+        <div class="component-item">
+          <div class="comp-icon">🚗</div>
+          <div class="comp-body">
+            <div class="comp-title">Simulator</div>
+            <div class="comp-desc">The Simulator executes an ADS model obtained as the composition of the world model and the behavior model.</div>
+          </div>
+        </div>
+        <div class="component-item">
+          <div class="comp-icon">🎯</div>
+          <div class="comp-body">
+            <div class="comp-title">Monitor</div>
+            <div class="comp-desc">The Monitor observes the system behavior as sequences of global states and applies a runtime verification method of the properties</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RvADS Architecture Box -->
+      <div style="position: relative; padding-bottom: 25px;">
+        <div style="display: flex; align-items: center;">
+          <div class="diagram-rvads" style="flex: 1;">
+            <div class="rvads-label">RvADS</div>
+            <div class="diag-inner">
+              <div class="diag-left-col">
+                <div class="diag-box">Scenario<br>Generator</div>
+                <div style="font-size: 10px; display: flex; align-items: center; gap: 4px;">
+                  <span>↓</span>
+                  <span>scenario</span>
+                </div>
+                <div class="diag-box">Extended<br>Simulator</div>
+              </div>
+              <div class="connector-h">
+                <span style="display: inline-block; text-align: center;">
+                  <span style="font-size: 9.5px; display: block;">semantic<br>model</span>
+                  <span>───────►</span>
+                </span>
+              </div>
+              <div class="diag-right-box">
+                Monitor
+              </div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; margin-left: 6px;">
+            <span style="font-size: 14px; margin-right: 4px;">►</span>
+            <div class="diag-out-text">verdict for each run and property</div>
+          </div>
+        </div>
+        <!-- Connected Property Specification box -->
+        <div style="position: absolute; right: 90px; bottom: 0;">
+          <div style="text-align: center; font-size: 11px; margin-bottom: 2px;">▲</div>
+          <div style="border: 1px solid #333; padding: 4px 8px; font-size: 10px; background: #fff; text-align: center; width: 90px;">
+            Property<br>Specification
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Two-Column Section: Semantic Model & Scenario Generation | Property Specification & Violations -->
+    <div class="two-column-layout">
+      <!-- Left Column -->
+      <div class="col-left">
+        <div class="section-banner">Semantic Model</div>
+        <p class="col-desc">
+          The system is modeled as a semantic model with a well-defined notion of system state as the distribution of vehicles and objects on a map with all their kinetic and time attributes.
+        </p>
+
+        <!-- Semantic Graph Diagram -->
+        <div style="border: 1px solid #eee; padding: 10px 5px; margin-bottom: 15px; background: #fff;">
+          <svg class="diagram" viewBox="0 0 380 120">
+            <!-- Edges -->
+            <path d="M 40 100 L 70 80 L 100 65 L 140 50 L 175 40" fill="none" stroke="#2b5c8f" stroke-width="1.5" />
+            <path d="M 70 80 L 110 80 L 160 85 L 210 90 L 260 95 L 310 105" fill="none" stroke="#2b5c8f" stroke-width="1.5" />
+            <path d="M 140 50 L 180 70 L 220 80" fill="none" stroke="#2b5c8f" stroke-width="1" stroke-dasharray="2,2" />
+
+            <!-- Nodes -->
+            <circle cx="40" cy="100" r="3.5" fill="#2b5c8f" />
+            <text x="30" y="105" font-size="8" fill="#333">v6</text>
+
+            <circle cx="70" cy="80" r="3.5" fill="#2b5c8f" />
+            <text x="46" y="80" font-size="7" fill="#333">s5: 76.07</text>
+
+            <circle cx="100" cy="65" r="3.5" fill="#2b5c8f" />
+            <text x="75" y="66" font-size="7" fill="#333">s4: 29.19</text>
+
+            <circle cx="140" cy="50" r="3.5" fill="#2b5c8f" />
+            <text x="110" y="47" font-size="7" fill="#333">s1: 36.24</text>
+
+            <circle cx="175" cy="40" r="3.5" fill="#2b5c8f" />
+            <text x="180" y="42" font-size="8" fill="#333">v1</text>
+
+            <circle cx="125" cy="78" r="3.5" fill="#2b5c8f" />
+            <text x="115" y="88" font-size="7" fill="#333">s3: 24.29</text>
+
+            <circle cx="150" cy="65" r="4" fill="#388e3c" />
+            <text x="135" y="64" font-size="7.5" fill="#2e7d32" font-weight="bold">v2(lt2: green)</text>
+
+            <circle cx="180" cy="70" r="4" fill="#d32f2f" />
+            <text x="175" y="68" font-size="7.5" fill="#c62828">v4(lt1: red)</text>
+
+            <circle cx="210" cy="80" r="3.5" fill="#2b5c8f" />
+            <text x="195" y="78" font-size="7" fill="#333">a1: s5(-, 110.05)</text>
+
+            <circle cx="235" cy="85" r="3.5" fill="#2b5c8f" />
+            <text x="220" y="85" font-size="7" fill="#333">a2: s3(-, 95.01)</text>
+
+            <circle cx="260" cy="95" r="3.5" fill="#2b5c8f" />
+            <text x="195" y="98" font-size="7" fill="#333">s2: 117.72</text>
+            <text x="265" y="91" font-size="7" fill="#333">a3: s2(-, 35.13)</text>
+
+            <circle cx="310" cy="105" r="3.5" fill="#2b5c8f" />
+            <text x="280" y="101" font-size="7" fill="#333">a4: s1(-, 20.12)</text>
+            <text x="315" y="110" font-size="8" fill="#333">v3</text>
+          </svg>
+        </div>
+
+        <div class="section-banner">Scenario Generation</div>
+        <p class="col-desc">
+          We define structurally equivalent abstract scenarios by simply rotating the inputs and preserving the symbolic directions based on the assumption that the traffic rules do not particularize the inputs of the junction according to their positions.
+        </p>
+        <p class="col-desc">
+          It is sufficient to apply one test case per equivalence class for the system that is assumed to be consistent. If equivalent test scenarios differ in the properties tested, it means that test process is inconsistent.
+        </p>
+
+        <!-- Equivalence Classes Diagrams -->
+        <div style="border: 1px solid #eee; padding: 10px 5px; background: #fff;">
+          <svg class="diagram" viewBox="0 0 360 200">
+            <!-- Class 1 -->
+            <g transform="translate(10, 5)">
+              <rect x="15" y="15" width="40" height="40" fill="none" stroke="#333" stroke-width="1"/>
+              <text x="35" y="10" font-size="7" text-anchor="middle">2ds</text>
+              <text x="10" y="38" font-size="7" text-anchor="middle">0ds</text>
+              <text x="35" y="65" font-size="7" text-anchor="middle">1ds</text>
+              <path d="M 20 50 L 50 20" stroke="#0077b6" stroke-width="1.2" marker-end="url(#arrow)" />
+              <path d="M 50 50 L 20 20" stroke="#0077b6" stroke-width="1.2" marker-end="url(#arrow)" />
+              <text x="35" y="77" font-size="7.5" font-weight="bold" text-anchor="middle">Class 1</text>
+            </g>
+            <!-- Class 2 -->
+            <g transform="translate(100, 5)">
+              <rect x="15" y="15" width="40" height="40" fill="none" stroke="#333" stroke-width="1"/>
+              <text x="35" y="10" font-size="7" text-anchor="middle">2ds</text>
+              <text x="60" y="38" font-size="7" text-anchor="middle">0ds</text>
+              <text x="35" y="65" font-size="7" text-anchor="middle">1ds</text>
+              <path d="M 20 50 L 50 20" stroke="#0077b6" stroke-width="1.2" />
+              <path d="M 25 25 L 48 45" stroke="#0077b6" stroke-width="1.2" />
+              <text x="35" y="77" font-size="7.5" font-weight="bold" text-anchor="middle">Class 2</text>
+            </g>
+            <!-- Class 3 -->
+            <g transform="translate(10, 100)">
+              <circle cx="35" cy="35" r="20" fill="none" stroke="#333" stroke-width="1"/>
+              <text x="35" y="10" font-size="7" text-anchor="middle">2ds</text>
+              <text x="10" y="38" font-size="7" text-anchor="middle">0ds</text>
+              <text x="60" y="38" font-size="7" text-anchor="middle">2ds</text>
+              <text x="35" y="65" font-size="7" text-anchor="middle">1ds</text>
+              <path d="M 25 45 L 45 25" stroke="#0077b6" stroke-width="1.2" />
+              <path d="M 45 45 L 25 25" stroke="#0077b6" stroke-width="1.2" />
+              <text x="35" y="77" font-size="7.5" font-weight="bold" text-anchor="middle">Class 3</text>
+            </g>
+            <!-- Class 4 -->
+            <g transform="translate(100, 100)">
+              <circle cx="35" cy="35" r="20" fill="none" stroke="#333" stroke-width="1"/>
+              <text x="35" y="10" font-size="7" text-anchor="middle">2ds</text>
+              <text x="10" y="38" font-size="7" text-anchor="middle">0ds</text>
+              <text x="60" y="38" font-size="7" text-anchor="middle">2ds</text>
+              <text x="35" y="65" font-size="7" text-anchor="middle">1ds</text>
+              <path d="M 25 45 L 45 25" stroke="#0077b6" stroke-width="1.2" />
+              <path d="M 45 25 L 25 45" stroke="#0077b6" stroke-width="1.2" />
+              <text x="35" y="77" font-size="7.5" font-weight="bold" text-anchor="middle">Class 4</text>
+            </g>
+            <!-- Connecting arrows / labels between classes -->
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#0077b6"/>
+              </marker>
+            </defs>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Right Column -->
+      <div class="col-right">
+        <div class="section-banner">Property Specification</div>
+        
+        <div class="prop-spec-container">
+          <div class="spec-section-header">Properties for a stop junction j:</div>
+          
+          <div class="spec-rule">
+            <div class="spec-desc">\(p_1\): If a vehicle is in the junction, then no other vehicle can be in the junction:</div>
+            <div class="spec-formula">
+              \(\forall a. \forall a'. \ \Box [ [a@j \land a \neq a'] \to \neg a'@j ]\)
+            </div>
+          </div>
+
+          <div class="spec-rule">
+            <div class="spec-desc">\(p_2\): If a vehicle arrives at the same time as another vehicle, the vehicle on the right has the right-of-way:</div>
+            <div class="spec-formula">
+              \(\forall j.en. \forall j.en'. \forall a. \forall a'. \ \Box [[a@j.en \land a'@j.en' \land a.wt = a'.wt' \land j.en\text{ right-of }j.en'] \to [[\mathbf{N}\ a'@j.en']\ \mathbf{U}\ a@j]]\)
+            </div>
+          </div>
+
+          <div class="spec-rule">
+            <div class="spec-desc">\(p_3\): The vehicle that arrives first at the entrance will pass before other vehicles:</div>
+            <div class="spec-formula">
+              \(\forall j.en. \forall j.en'. \forall a. \forall a'. \ \Box [[a@j.en \land a'@j.en' \land a.wt &lt; a'.wt] \to [[\mathbf{N}\ a@j.en]\ \mathbf{U}\ a'@j]]\)
+            </div>
+          </div>
+
+          <div class="spec-section-header">Properties for a traffic light junction j:</div>
+
+          <div class="spec-rule">
+            <div class="spec-desc">\(p_4\): Any vehicle facing a red light must stop until the traffic light turns green, unless the vehicle is turning right.</div>
+            <div class="spec-formula">
+              \(\forall j.en. \forall a. \forall lt. \ \Box [[a@j.en \land lt@j.en \land lt.cl = red \land \neg take(a, j.en, right)] \to [a@j.en\ \mathbf{U}\ lt.cl = green]]\)
+            </div>
+          </div>
+
+          <div class="spec-rule">
+            <div class="spec-desc">\(p_5\): If a vehicle facing a red light is turning right, then the vehicle should wait until there is no vehicle on the left.</div>
+            <div class="spec-formula">
+              \(\forall j.en. \forall j.en'. \forall a. \forall a'. \forall lt. \ \Box [[a@j.en \land a'@j.en' \land (j.en\text{ right-of }j.en') \land lt@j.en \land (lt.cl = red) \land take(a, j.en, right)] \to [[\mathbf{N}\ a@j.en]\ \mathbf{U}\ a'@j]]\)
+            </div>
+          </div>
+
+          <div class="spec-rule">
+            <div class="spec-desc">\(p_6\): If two vehicles arrive at the entrances of a junction opposite each other and the traffic lights are green, the vehicle turning left must give way to the other.</div>
+            <div class="spec-formula">
+              \(\forall j.en. \forall j.en'. \forall a. \forall a'. \ \Box [[a@j.en \land a'@j.en' \land j.en\text{ opposite }j.en' \land take(a, j.en, left) \land \neg take(a', j.en', left)] \to [[\mathbf{N}\ a@j.en]\ \mathbf{U}\ a'@j]]\)
+            </div>
+          </div>
+        </div>
+
+        <div class="section-banner">Examples of Property Violation</div>
+
+        <!-- Screenshots Grid -->
+        <div class="violation-grid">
+          <!-- a -->
+          <div class="violation-item">
+            <div class="placeholder" style="height: 85px; margin: 0; background: #2a2a2a; color: #eee; position: relative;">
+              <span style="position: absolute; top: 12px; left: 35px; color: #fff; font-size: 11px;">a'</span>
+              <span style="position: absolute; bottom: 15px; right: 65px; color: #fff; font-size: 11px;">a</span>
+              <div style="font-size: 9px; color: #aaa;">[Simulation View]</div>
+            </div>
+            <div class="violation-caption">(a) Violation of \(p_2\) (at time \(t-1\))</div>
+          </div>
+          <!-- b -->
+          <div class="violation-item">
+            <div class="placeholder" style="height: 85px; margin: 0; background: #2a2a2a; color: #eee; position: relative;">
+              <span style="position: absolute; top: 18px; right: 40px; color: #fff; font-size: 11px;">a'</span>
+              <span style="position: absolute; bottom: 25px; right: 55px; color: #fff; font-size: 11px;">a</span>
+              <div style="font-size: 9px; color: #aaa;">[Simulation View]</div>
+            </div>
+            <div class="violation-caption">(b) Violation of \(p_2\) (at time \(t\))</div>
+          </div>
+          <!-- c -->
+          <div class="violation-item">
+            <div class="placeholder" style="height: 85px; margin: 0; background: #2a2a2a; color: #eee; position: relative;">
+              <span style="position: absolute; top: 22px; left: 25px; color: #fff; font-size: 11px;">a'</span>
+              <span style="position: absolute; bottom: 15px; right: 60px; color: #fff; font-size: 11px;">a</span>
+              <div style="font-size: 9px; color: #aaa;">[Simulation View]</div>
+            </div>
+            <div class="violation-caption">(c) Violation of \(p_5\) (at time \(t-1\))</div>
+          </div>
+          <!-- d -->
+          <div class="violation-item">
+            <div class="placeholder" style="height: 85px; margin: 0; background: #2a2a2a; color: #eee; position: relative;">
+              <span style="position: absolute; bottom: 20px; left: 80px; color: #fff; font-size: 11px;">a'</span>
+              <span style="position: absolute; bottom: 20px; right: 40px; color: #fff; font-size: 11px;">a</span>
+              <div style="font-size: 9px; color: #aaa;">[Simulation View]</div>
+            </div>
+            <div class="violation-caption">(d) Violation of \(p_5\) (at time \(t\))</div>
+          </div>
+          <!-- e -->
+          <div class="violation-item">
+            <div class="placeholder" style="height: 85px; margin: 0; background: #2a2a2a; color: #eee; position: relative;">
+              <span style="position: absolute; top: 15px; left: 20px; color: #fff; font-size: 11px;">a</span>
+              <div style="font-size: 9px; color: #aaa;">[Simulation View]</div>
+            </div>
+            <div class="violation-caption">(e) Violation of \(p_6\) (at time \(t-1\))</div>
+          </div>
+          <!-- f -->
+          <div class="violation-item">
+            <div class="placeholder" style="height: 85px; margin: 0; background: #2a2a2a; color: #eee; position: relative;">
+              <span style="position: absolute; top: 15px; right: 40px; color: #fff; font-size: 11px;">a'</span>
+              <span style="position: absolute; bottom: 18px; left: 45px; color: #fff; font-size: 11px;">a</span>
+              <div style="font-size: 9px; color: #aaa;">[Simulation View]</div>
+            </div>
+            <div class="violation-caption">(f) Violation of \(p_6\) (at time \(t\))</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer Banner -->
+  <footer class="footer">
+    <div class="footer-decor">&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</div>
+  </footer>
+</div>
+
+</body>
+</html>

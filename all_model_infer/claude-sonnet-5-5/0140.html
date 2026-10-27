@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulation-Based Validation for Autonomous Driving Systems</title>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #fff;
+    color: #111;
+  }
+  .header {
+    background: linear-gradient(90deg, #e85c00, #ffb347, #ff8c00);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .header-left {
+    display: flex;
+    align-items: center;
+  }
+  .iscas-logo {
+    font-size: 48px;
+    font-weight: 900;
+    color: #003a70;
+    font-style: italic;
+    margin-right: 15px;
+  }
+  .header-titles {
+    color: white;
+  }
+  .header-titles .cn-title {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  .header-titles .cn-sub {
+    font-size: 16px;
+  }
+  .header-right {
+    color: #003a70;
+    font-weight: bold;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .content {
+    padding: 20px 60px;
+  }
+  .main-title {
+    text-align: center;
+    font-size: 42px;
+    font-weight: bold;
+    margin: 20px 0 10px 0;
+    line-height: 1.2;
+  }
+  .authors {
+    text-align: center;
+    font-size: 24px;
+    margin: 15px 0;
+  }
+  .info-row {
+    font-size: 19px;
+    margin: 6px 0;
+  }
+  .info-label {
+    font-weight: bold;
+    display: inline-block;
+    width: 110px;
+  }
+  .section-header {
+    background: #fde0b3;
+    border: 1px solid #f0a848;
+    text-align: center;
+    font-size: 26px;
+    font-weight: bold;
+    padding: 8px 0;
+    margin: 25px 0 10px 0;
+    border-radius: 3px;
+  }
+  .abstract-text {
+    font-size: 17px;
+    text-align: justify;
+    line-height: 1.5;
+    padding: 5px 10px;
+  }
+  .framework-section {
+    display: flex;
+    gap: 30px;
+  }
+  .framework-left {
+    flex: 0 0 40%;
+  }
+  .framework-right {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  .sub-heading {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 15px;
+    margin-bottom: 5px;
+  }
+  .icon-text {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 5px;
+  }
+  .icon-text .icon {
+    font-size: 22px;
+    margin-top: 2px;
+  }
+  .icon-text p {
+    margin: 0;
+    font-size: 16px;
+    text-align: justify;
+    line-height: 1.4;
+  }
+  .two-col {
+    display: flex;
+    gap: 20px;
+  }
+  .two-col > div {
+    flex: 1;
+  }
+  .small-text {
+    font-size: 16px;
+    text-align: justify;
+    line-height: 1.4;
+  }
+  .placeholder {
+    border: 1px solid #999;
+    background: #fafafa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+    font-size: 14px;
+    text-align: center;
+  }
+  .rvads-diagram {
+    border: 1px solid #999;
+    background: #f0f0f0;
+    padding: 15px;
+    width: 480px;
+  }
+  .rvads-title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+  .box {
+    border: 1px solid #000;
+    background: white;
+    text-align: center;
+    padding: 8px;
+    font-size: 15px;
+  }
+  .prop-table {
+    border: 1px solid #000;
+    font-size: 13px;
+    padding: 8px;
+    line-height: 1.5;
+  }
+  .prop-table .divider {
+    border-top: 1px solid #000;
+    margin: 6px 0;
+  }
+  .caption-small {
+    font-size: 12px;
+    text-align: center;
+    margin-top: 3px;
+    font-style: italic;
+  }
+  .examples-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .footer-strip {
+    height: 60px;
+    background: linear-gradient(90deg, #ff9a00, #e85c00);
+    margin-top: 40px;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div class="iscas-logo">ISCAS</div>
+    <div class="header-titles">
+      <div class="cn-title">中国科学院软件研究所学术年会'2023</div>
+      <div class="cn-sub">暨计算机科学国家重点实验室开放周</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <span>&#x2600;</span>
+    <span>学术论文</span>
+  </div>
+</div>
+
+<div class="content">
+
+  <div class="main-title">Simulation-Based Validation for<br>Autonomous Driving Systems</div>
+
+  <div class="authors">Changwen Li, Joseph Sifakis, Qiang Wang, Rongjie Yan, Jian Zhang</div>
+
+  <div class="info-row"><span class="info-label">学术会议：</span>International Symposium on Software Testing and Analysis</div>
+  <div class="info-row" style="display:flex; align-items:center;">
+    <span class="info-label">联系方式：</span>
+    <span style="margin-right:60px;">晏荣杰 yrj@ios.ac.cn</span>
+    <span>李昌文 licw@ios.ac.cn</span>
+  </div>
+
+  <div class="section-header">Abstract</div>
+  <div class="abstract-text">
+    We investigate a rigorous simulation and testing-based validation method for autonomous driving systems that
+    integrates an existing industrial simulator and a formally defined testing environment. The environment includes
+    a scenario generator that drives the simulation process and a monitor that checks at runtime the observed
+    behavior of the system against a set of system properties to be validated. The validation method consists in
+    extracting from the simulator a semantic model of the simulated system including a metric graph, which is a
+    mathematical model of the environment in which the vehicles of the system evolve. The monitor can verify
+    properties formalized in a first-order linear temporal logic and provide diagnostics explaining their non-
+    satisfaction. Instead of exploring the system behavior randomly as many simulators do, we propose a method to
+    systematically generate sets of scenarios that cover potentially risky situations, especially for different types of
+    junctions where specific traffic rules must be respected. We show that the systematic exploration of risky
+    situations has uncovered many flaws in the real simulator that would have been very difficult to discover by a
+    random exploration process.
+  </div>
+
+  <div class="section-header">The Validation Framework RvADS</div>
+  <div class="framework-section">
+    <div class="framework-left">
+      <div class="sub-heading">Scenario Generator</div>
+      <div class="icon-text">
+        <div class="icon">&#9881;</div>
+        <p>The Scenario Generator drives the simulation process. It generates scenarios as the coordinated sequences of actions executed by the agents in the Simulator.</p>
+      </div>
+      <div class="sub-heading">Simulator</div>
+      <div class="icon-text">
+        <div class="icon">&#128663;</div>
+        <p>The Simulator executes an ADS model obtained as the composition of the world model and the behavior model.</p>
+      </div>
+      <div class="sub-heading">Monitor</div>
+      <div class="icon-text">
+        <div class="icon">&#128269;</div>
+        <p>The Monitor observes the system behavior as sequences of global states and applies a runtime verification method of the properties</p>
+      </div>
+    </div>
+    <div class="framework-right">
+      <div class="rvads-diagram">
+        <div class="rvads-title">RvADS</div>
+        <table style="width:100%; border-collapse:collapse;">
+          <tr>
+            <td style="width:35%; vertical-align:top;">
+              <div class="box">Scenario<br>Generator</div>
+              <div style="text-align:center; font-size:13px; margin:5px 0;">scenario &#8595;</div>
+              <div class="box">Extended<br>Simulator</div>
+            </td>
+            <td style="width:5%; text-align:center; font-size:12px; vertical-align:middle;">semantic<br>model &#8594;</td>
+            <td style="width:35%; vertical-align:top;">
+              <div style="height:38px;"></div>
+              <div class="box">Monitor</div>
+            </td>
+            <td style="width:25%; font-size:13px; text-align:left; vertical-align:middle; padding-left:8px;">verdict for<br>each run and<br>property</td>
+          </tr>
+        </table>
+        <div style="text-align:center; margin-top:10px;">
+          <div class="box" style="width:150px; margin:0 auto;">Property<br>Specification</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <div class="section-header">Semantic Model</div>
+      <div class="small-text">
+        The system is modeled as a semantic model with a well-defined notion of system state as the distribution of vehicles and objects on a map with all their kinetic and time attributes.
+      </div>
+      <div class="placeholder" style="width:100%; height:200px; margin-top:10px;">
+        [Diagram: metric graph with vertices v1-v6, nodes s1-s6 with distance labels, a1/a2/a3 markers, green/red traffic light nodes]
+      </div>
+    </div>
+    <div>
+      <div class="section-header">Property Specification</div>
+      <div class="prop-table">
+        <div><b>Properties for a stop junction j:</b></div>
+        <div><i>p1</i>: If a vehicle is in the junction, then no other vehicle can be in the junction:<br>
+        &forall;a.&forall;a'. &#9633;[[a@j &and; a &ne; a'] &rarr; &not;a'@j]</div>
+        <div><i>p2</i>: If a vehicle arrives at the same time as another vehicle, the vehicle on the right has the right-of-way:<br>
+        &forall;j.en.&forall;j.en'.&forall;a.&forall;a'. &#9633;[[a@j.en &and; a'@j.en' &and; a.wt = a'.wt' &and; j.en right-of j.en'] &rarr; [[N a'@j.en'] U a@j]]</div>
+        <div><i>p3</i>: The vehicle that arrives first at the entrance will pass before other vehicles:<br>
+        &forall;j.en.&forall;j.en'.&forall;a.&forall;a'. &#9633;[[a@j.en &and; a'@j.en' &and; a.wt &lt; a'.wt] &rarr; [[N a@j.en] U a'@j]]</div>
+        <div class="divider"></div>
+        <div><b>Properties for a traffic light junction j:</b></div>
+        <div><i>p4</i>: Any vehicle facing a red light must stop until the traffic light turns green, unless the vehicle is turning right.<br>
+        &forall;j.en.&forall;a.&forall;lt. &#9633;[[a@j.en &and; lt@j.en &and; lt.cl = red &and; &not;take(a, j.en, right)] &rarr; [a@j.en U lt.cl = green]]</div>
+        <div><i>p5</i>: If a vehicle facing a red light is turning right, then the vehicle should wait until there is no vehicle on the left.<br>
+        &forall;j.en.&forall;j.en'.&forall;a.&forall;a'.&forall;lt. &#9633;[[a@j.en &and; a'@j.en' &and; (j.en right-of j.en') &and; lt@j.en &and; (lt.cl = red) &and; take(a,j.en,right)] &rarr; [[N a@j.en] U a'@j]]</div>
+        <div><i>p6</i>: If two vehicles arrive at the entrances of a junction opposite each other and the traffic lights are green, the vehicle turning left must give way to the other.<br>
+        &forall;j.en.&forall;j.en'.&forall;a.&forall;a'.&#9633;[[a@j.en&and;a'@j.en'&and;j.en opposite j.en'&and;take(a, j.en, left)&and;&not;take(a', j.en', left)] &rarr; [[N a@j.en] U a'@j]]</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col" style="margin-top:20px;">
+    <div style="flex:0.9;">
+      <div class="section-header">Scenario Generation</div>
+      <div class="small-text">
+        We define structurally equivalent abstract scenarios by simply rotating the inputs and preserving the symbolic directions based on the assumption that the traffic rules do not particularize the inputs of the junction according to their positions.<br><br>
+        It is sufficient to apply one test case per equivalence class for the system that is assumed to be consistent. If equivalent test scenarios differ in the properties tested, it means that test process is inconsistent.
+      </div>
+      <div class="placeholder" style="width:100%; height:260px; margin-top:15px;">
+        [Diagram: 4 classes of equivalent junction scenarios with rotated directional arrows labeled Class 1, Class 2, Class 3, Class 4]
+      </div>
+    </div>
+    <div style="flex:1.1;">
+      <div class="section-header">Examples of Property Violation</div>
+      <div class="examples-grid">
+        <div>
+          <div class="placeholder" style="width:100%; height:160px;">[Photo: simulation screenshot - intersection with cars a, a']</div>
+          <div class="caption-small">(a) Violation of p<sub>2</sub> (at time t &minus; 1)</div>
+        </div>
+        <div>
+          <div class="placeholder" style="width:100%; height:160px;">[Photo: simulation screenshot - intersection with cars a, a']</div>
+          <div class="caption-small">(b) Violation of p<sub>2</sub> (at time t)</div>
+        </div>
+        <div>
+          <div class="placeholder" style="width:100%; height:160px;">[Photo: simulation screenshot - street with vehicle a']</div>
+          <div class="caption-small">(c) Violation of p<sub>5</sub> (at time t &minus; 1)</div>
+        </div>
+        <div>
+          <div class="placeholder" style="width:100%; height:160px;">[Photo: simulation screenshot - street with vehicles a, a']</div>
+          <div class="caption-small">(d) Violation of p<sub>5</sub> (at time t)</div>
+        </div>
+        <div>
+          <div class="placeholder" style="width:100%; height:160px;">[Photo: simulation screenshot - intersection with car a']</div>
+          <div class="caption-small">(e) Violation of p<sub>6</sub> (at time t &minus; 1)</div>
+        </div>
+        <div>
+          <div class="placeholder" style="width:100%; height:160px;">[Photo: simulation screenshot - intersection with cars a, a']</div>
+          <div class="caption-small">(f) Violation of p<sub>6</sub> (at time t)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer-strip"></div>
+
+</body>
+</html>

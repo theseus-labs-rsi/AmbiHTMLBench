@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>分数加减混合运算</title>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  body {
+    margin: 0;
+    padding: 20px;
+    background-color: #f7f9fa;
+    font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "SimSun", sans-serif;
+    color: #222;
+  }
+  .page {
+    max-width: 850px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 30px 40px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    box-sizing: border-box;
+    position: relative;
+  }
+  /* Header */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #3b82f6;
+    padding-bottom: 6px;
+    margin-bottom: 15px;
+    color: #1d4ed8;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .header-title-box {
+    background: #1d4ed8;
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 13px;
+  }
+  .header-right {
+    color: #333;
+    font-size: 13px;
+  }
+
+  /* Main Title */
+  .title-unit {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 5px;
+    margin-bottom: 4px;
+    letter-spacing: 1px;
+  }
+  .title-lesson {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 12px;
+  }
+  .section-tag {
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  .tag-bubble {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #0284c7;
+    border: 1px dashed #38bdf8;
+    border-radius: 20px;
+    padding: 2px 14px;
+    background: #f0f9ff;
+  }
+  .tag-bubble span.highlight {
+    background: #0284c7;
+    color: #fff;
+    border-radius: 12px;
+    padding: 0 8px;
+    margin-left: 2px;
+  }
+
+  /* Two Column Layout */
+  .content-columns {
+    display: flex;
+    gap: 30px;
+  }
+  .column {
+    flex: 1;
+  }
+
+  /* Section Titles inside content */
+  .section-heading {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 8px;
+    color: #0369a1;
+    font-weight: bold;
+  }
+  .section-text {
+    font-size: 13.5px;
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+
+  /* Table styling */
+  table.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 12px;
+    font-size: 12px;
+    text-align: center;
+  }
+  table.data-table th, table.data-table td {
+    border: 1px solid #666;
+    padding: 4px 2px;
+  }
+  table.data-table th {
+    background-color: #f8fafc;
+    font-weight: normal;
+  }
+
+  /* Math Steps */
+  .step-label {
+    font-size: 13.5px;
+    font-weight: bold;
+    margin-top: 6px;
+    margin-bottom: 4px;
+  }
+  .math-block {
+    font-size: 14px;
+    line-height: 2;
+    margin-left: 20px;
+    margin-bottom: 10px;
+  }
+  .math-row {
+    display: flex;
+    align-items: center;
+    margin: 4px 0;
+  }
+  .arrow-note {
+    font-size: 12px;
+    color: #222;
+    margin-left: 10px;
+    white-space: nowrap;
+  }
+
+  /* Handwritten Red Text */
+  .handwritten {
+    color: #b91c1c;
+    font-family: "KaiTi", "STKaiti", cursive, sans-serif;
+    font-weight: bold;
+  }
+  .handwritten-paren {
+    display: inline-block;
+    color: #b91c1c;
+    font-family: "KaiTi", "STKaiti", cursive, sans-serif;
+    font-weight: bold;
+    border-bottom: 1px solid #b91c1c;
+    padding: 0 4px;
+    min-width: 18px;
+    text-align: center;
+  }
+
+  /* Dialogue / Speech Bubble section */
+  .dialogue-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .speech-box {
+    border: 1px solid #64748b;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 12.5px;
+    line-height: 1.4;
+    background: #fff;
+    position: relative;
+    max-width: 80%;
+  }
+
+  /* Right column notes */
+  .written-answer {
+    margin: 6px 0 12px 35px;
+    font-size: 15px;
+    line-height: 1.4;
+  }
+
+  /* Footer */
+  .footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 30px;
+    padding-top: 10px;
+    border-top: 1px solid #e2e8f0;
+  }
+  .page-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #0284c7;
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+    margin-right: 8px;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <span class="header-title-box">同步解析与测评</span>
+    </div>
+    <div class="header-right">
+      数学 五年级 下册
+    </div>
+  </div>
+
+  <!-- Lesson Titles -->
+  <div class="title-unit">3. 分数加减混合运算</div>
+  <div class="title-lesson">第 1 课时 分数加减混合运算</div>
+
+  <!-- Section Tag -->
+  <div class="section-tag">
+    <span class="tag-bubble">
+      探究 <span class="highlight">交流</span> 🗨️
+    </span>
+  </div>
+
+  <!-- Main Content Columns -->
+  <div class="content-columns">
+    <!-- Left Column -->
+    <div class="column">
+      <div class="section-text">
+        小华收集整理的全班同学在母亲节送给妈妈的礼物情况如下表。
+      </div>
+
+      <table class="data-table">
+        <tr>
+          <th>礼物类型</th>
+          <td>贺卡</td>
+          <td>鲜花</td>
+          <td>自己画的画</td>
+          <td>其他</td>
+        </tr>
+        <tr>
+          <th>占全班人数的几分之几</th>
+          <td>$\frac{1}{4}$</td>
+          <td>$\frac{3}{20}$</td>
+          <td>$\frac{3}{10}$</td>
+          <td></td>
+        </tr>
+      </table>
+
+      <div class="section-heading">
+        1. 送贺卡和送鲜花的同学比送自己画的画的同学多占全班人数的几分之几？
+      </div>
+
+      <div class="step-label">方法一：</div>
+      <div class="math-block">
+        <div>$\frac{1}{4} + \frac{3}{20} - \frac{3}{10}$</div>
+        <div class="math-row">
+          $= \left(\frac{\text{\small\color{#b91c1c}{( 5 )}}}{20} + \frac{3}{20}\right) - \frac{3}{10}$
+          <span class="arrow-note">$\longrightarrow$ 通分</span>
+        </div>
+        <div class="math-row">
+          $= \frac{\text{\small\color{#b91c1c}{( 8 )}}}{20} - \frac{3}{10}$
+        </div>
+        <div class="math-row">
+          $= \frac{\text{\small\color{#b91c1c}{( 8 )}}}{20} - \frac{\text{\small\color{#b91c1c}{( 6 )}}}{20}$
+          <span class="arrow-note">$\longrightarrow$ 再次通分</span>
+        </div>
+        <div class="math-row">
+          $= \frac{\text{\small\color{#b91c1c}{( 2 )}}}{20}$
+        </div>
+        <div class="math-row">
+          $= \frac{\text{\small\color{#b91c1c}{( 1 )}}}{\text{\small\color{#b91c1c}{( 10 )}}}$
+        </div>
+      </div>
+
+      <div class="step-label">方法二：</div>
+      <div class="math-block">
+        <div>$\frac{1}{4} + \frac{3}{20} - \frac{3}{10}$</div>
+        <div class="math-row">
+          $= \frac{\text{\small\color{#b91c1c}{( 5 )}}}{20} + \frac{3}{20} - \frac{\text{\small\color{#b91c1c}{( 6 )}}}{20}$
+          <span class="arrow-note">$\longrightarrow$ 一次通分</span>
+        </div>
+        <div class="math-row">
+          $= \frac{\text{\small\color{#b91c1c}{( 2 )}}}{20}$
+        </div>
+        <div class="math-row">
+          $= \frac{\text{\small\color{#b91c1c}{( 1 )}}}{\text{\small\color{#b91c1c}{( 10 )}}}$
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column -->
+    <div class="column">
+      <!-- Question robot bubble -->
+      <div class="dialogue-card" style="justify-content: flex-end; margin-bottom: 2px;">
+        <div class="avatar">🤖</div>
+        <div class="speech-box">
+          这两种方法有什么不同？哪一种简便？
+        </div>
+      </div>
+
+      <!-- Handwritten Red Answer -->
+      <div class="written-answer handwritten">
+        通分次数不同，<br>
+        方法二简便。
+      </div>
+
+      <div class="section-heading">
+        2. 送其他礼物的同学占全班人数的几分之几？
+      </div>
+
+      <div class="step-label">方法一：</div>
+      <div class="math-block">
+        <div>$1 - \frac{1}{4} - \frac{3}{20} - \frac{3}{10}$</div>
+        <div class="handwritten" style="font-size: 15px; line-height: 1.8;">
+          $= 1 - \frac{5}{20} - \frac{3}{20} - \frac{6}{20}$<br>
+          $= \frac{20}{20} - \frac{5}{20} - \frac{3}{20} - \frac{6}{20}$<br>
+          $= \frac{6}{20} = \frac{3}{10}$
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+          <div class="step-label">方法二：</div>
+          <div class="math-block" style="margin-bottom: 4px;">
+            <div>$1 - \left(\frac{1}{4} + \frac{3}{20} + \frac{3}{10}\right)$</div>
+            <div class="handwritten" style="font-size: 15px; line-height: 1.8;">
+              $= 1 - \left(\frac{5}{20} + \frac{3}{20} + \frac{6}{20}\right)$<br>
+              $= 1 - \frac{14}{20}$<br>
+              $= \frac{6}{20} = \frac{3}{10}$
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; align-items: center; margin-top: 10px;">
+          <div class="speech-box" style="font-size: 12px; margin-bottom: 4px;">
+            这两个算式有什么不同呢？
+          </div>
+          <div class="avatar" style="width: 40px; height: 40px; font-size: 24px;">👦</div>
+        </div>
+      </div>
+
+      <div class="section-heading" style="margin-top: 10px;">
+        3. 通过前面的计算，你能说一说分数加减混合运算的运算顺序吗？
+      </div>
+
+      <!-- Dialogue 1 -->
+      <div class="dialogue-card" style="margin-top: 8px;">
+        <div class="avatar" style="width: 36px; height: 36px; font-size: 20px;">👦</div>
+        <div class="speech-box" style="max-width: 85%;">
+          分数加减混合运算的运算顺序和整数加减混合运算的运算顺序<span class="handwritten-paren">相同</span>。
+        </div>
+      </div>
+
+      <!-- Dialogue 2 -->
+      <div class="dialogue-card" style="justify-content: flex-end;">
+        <div class="speech-box" style="max-width: 85%;">
+          没有括号的，按照<span class="handwritten-paren">从左往右</span>的顺序计算，有括号的，先算<span class="handwritten-paren">括号里面的</span>，再算<span class="handwritten-paren">括号外面的</span>。
+        </div>
+        <div class="avatar" style="width: 36px; height: 36px; font-size: 20px;">👧</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer / Page Number -->
+  <div class="footer">
+    <span class="page-num">70</span>
+  </div>
+</div>
+
+</body>
+</html>

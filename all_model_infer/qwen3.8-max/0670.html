@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NavigationDestination: getState() 方法 - Web API | MDN</title>
+    <style>
+        :root {
+            --text-color: #1b1b1b;
+            --bg-color: #ffffff;
+            --code-bg: #f4f4f4;
+            --border-color: #cfcfd2;
+            --link-color: #0066cc;
+            --table-header-bg: #f9f9fb;
+            --green-check: #2e7d32;
+            --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+        }
+
+        body {
+            font-family: var(--font-main);
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px 40px;
+            line-height: 1.5;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #333;
+            margin-bottom: 20px;
+            border-bottom: 1px solid transparent; /* Placeholder for spacing */
+        }
+
+        /* Code Blocks */
+        .code-container {
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .code-lang {
+            background-color: #fff;
+            padding: 8px 16px;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .code-content {
+            background-color: #f0f0f4; /* Slightly greyish bg for code area in image */
+            padding: 16px;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            overflow-x: auto;
+            white-space: pre;
+        }
+
+        .token-func { color: #d73a49; } /* Reddish for function names like addEventListener */
+        .token-string { color: #032f62; } /* Dark blue for strings */
+        .token-keyword { color: #d73a49; }
+        
+        /* Actually looking closer at the image:
+           navigation.addEventListener -> addEventListener is red/pink
+           "navigate" -> green
+           console.log -> log is red/pink
+           getState -> red/pink
+        */
+        .c-red { color: #d63384; }
+        .c-green { color: #22863a; }
+        .c-blue { color: #005cc5; }
+
+        /* Headings */
+        h2 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            border-bottom: none;
+        }
+
+        /* Tables General */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 12px 16px;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        /* Spec Table */
+        .spec-table th {
+            background-color: #fff;
+            font-weight: bold;
+        }
+        .spec-table td {
+            background-color: #f9f9fb;
+        }
+        .spec-link {
+            color: var(--link-color);
+            text-decoration: none;
+            display: block;
+            margin-top: 5px;
+        }
+        .spec-link:hover { text-decoration: underline; }
+
+        /* Browser Compat Section */
+        .compat-links {
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+        .compat-links a {
+            color: var(--link-color);
+            text-decoration: underline;
+            margin-right: 10px;
+        }
+
+        .compat-table {
+            font-size: 0.85rem;
+            text-align: center;
+        }
+        
+        .compat-table th {
+            background-color: #fff;
+            padding: 8px 4px;
+            vertical-align: bottom;
+            height: 120px; /* Force height for vertical text */
+        }
+
+        .compat-table td {
+            padding: 8px 4px;
+        }
+
+        .compat-table .row-header {
+            text-align: left;
+            font-family: var(--font-mono);
+            background-color: #f9f9fb;
+            width: 150px;
+        }
+
+        .vertical-text {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            white-space: nowrap;
+            display: inline-block;
+            height: 100px;
+            margin: 0 auto;
+            font-weight: 500;
+        }
+
+        .browser-icon {
+            display: block;
+            margin-bottom: 5px;
+            width: 20px;
+            height: 20px;
+            background-color: #ccc; /* Placeholder for icon */
+            border-radius: 50%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* Simulating icons with text/emoji for fidelity without external assets */
+        .icon-chrome { background: radial-gradient(circle, #fff 30%, #4285f4 30%, #4285f4 60%, #ea4335 60%, #ea4335 80%, #fbbc05 80%); }
+        .icon-edge { background: #0078d7; }
+        .icon-firefox { background: #ff7139; }
+        .icon-opera { background: #ff1b2d; }
+        .icon-safari { background: #006cff; }
+        .icon-android { background: #3ddc84; }
+
+        .check-mark {
+            color: var(--green-check);
+            font-size: 1.2rem;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .version-num {
+            color: var(--green-check);
+            font-weight: bold;
+        }
+
+        .legend {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        /* See Also Section */
+        .see-also ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+        .see-also li {
+            margin-bottom: 8px;
+        }
+        .see-also a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+        .see-also a:hover { text-decoration: underline; }
+        
+        .inline-code {
+            background-color: #e6e6e6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.9em;
+            color: #333;
+        }
+
+        /* Footer */
+        .site-footer {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            background-color: #f4f4f4;
+            padding: 30px;
+            margin-left: -40px;
+            margin-right: -40px;
+            padding-left: 40px;
+        }
+
+        .mdn-logo {
+            font-weight: bold;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .mdn-logo span {
+            font-family: serif; /* Approximating the logo font */
+            letter-spacing: -1px;
+        }
+        .footer-tagline {
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        .bottom-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: #333;
+        }
+
+        /* Helper for external link icon */
+        .ext-icon {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            margin-left: 2px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230066cc'%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            vertical-align: baseline;
+        }
+
+        /* Desktop/Mobile Icons in Table Header */
+        .device-icon {
+            width: 24px;
+            height: 24px;
+            margin: 0 auto 10px auto;
+            display: block;
+            opacity: 0.6;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="page-header">
+        <span>2026/6/29 02:28</span>
+        <span>NavigationDestination: getState() 方法 - Web API | MDN</span>
+    </div>
+
+    <div class="code-container">
+        <div class="code-lang">JS</div>
+        <div class="code-content"><span class="c-blue">navigation</span>.<span class="c-red">addEventListener</span>(<span class="c-green">"navigate"</span>, (event) => {
+  console.<span class="c-red">log</span>(event.destination.<span class="c-red">getState</span>());
+});</div>
+    </div>
+
+    <h2>规范</h2>
+    <table class="spec-table">
+        <thead>
+            <tr>
+                <th>规范</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <div style="color: #0066cc; font-weight: 500;">HTML</div>
+                    <a href="#" class="spec-link"># the-navigationdestination-interface:dom-navigationdestination-getstate-2 <span class="ext-icon"></span></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>浏览器兼容性</h2>
+    <div class="compat-links">
+        <a href="#">报告此兼容性数据的问题 <span class="ext-icon"></span></a> • 
+        <a href="#">在 GitHub 上查看数据 <span class="ext-icon"></span></a>
+    </div>
+
+    <table class="compat-table">
+        <thead>
+            <tr>
+                <th rowspan="2" style="border-right: none;"></th>
+                <th colspan="5" style="border-bottom: none;">
+                    <!-- Desktop Icon Placeholder -->
+                    <svg class="device-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M21 2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7v2H8v2h8v-2h-2v-2h7c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H3V4h18v12z"/></svg>
+                </th>
+                <th colspan="6" style="border-bottom: none; border-left: 1px solid var(--border-color);">
+                    <!-- Mobile Icon Placeholder -->
+                    <svg class="device-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg>
+                </th>
+            </tr>
+            <tr>
+                <!-- Desktop Browsers -->
+                <th>
+                    <div class="vertical-text">
+                        <span style="display:inline-block; width:16px; height:16px; background:#4285f4; border-radius:50%; margin-bottom:5px;"></span>
+                        Chrome
+                    </div>
+                </th>
+                <th>
+                    <div class="vertical-text">
+                        <span style="display:inline-block; width:16px; height:16px; background:#0078d7; border-radius:50%; margin-bottom:5px;"></span>
+                        Edge
+                    </div>
+                </th>
+                <th>
+                    <div class="vertical-text">
+                        <span style="display:inline-block; width:16px; height:16px; background:#ff7139; border-radius:50%; margin-bottom:5px;"></span>
+                        Firefox
+                    </div>
+                </th>
+                <th>
+                    <div class="vertical-text">
+                        <span style="display:inline-block; width:16px; height:16px; background:#ff1b2d; border-radius:50%; margin-bottom:5px;"></span>
+                        Opera
+                    </div>
+                </th>
+                <th>
+                    <div class="vertical-text">
+                        <span style="display:inline-block; width:16px; height:16px; background:#006cff; border-radius:50%; margin-bottom:5px;"></span>
+                        Safari
+                    </div>
+                </th>
+                
+                <!-- Mobile Browsers -->
+                <th style="border-left: 1px solid var(--border-color);">
+                    <div class="vertical-text">
+                        <span style="display:inline-block; width:16px; height:16px; background:#4285f4; border-radius:50%; margin-bottom:5px;"></span>
+                        Chrome Android
+                    </div>
+                </th>
+                <th>
+                    <div class="vertical-text">
+                        <span style="display:inline-block; width:16px; height:16px; background:#ff7139; border-radius:50%; margin-bottom:5px;"></span>
+                        Firefox for Android
+                    </div>
+                </th>
+                <th>
+                    <div class="vertical-text">
+                        <span style="display:inline-block; width:16px; height:16px; background:#ff1b2d; border-radius:50%; margin-bottom:5px;"></span>
+                        Opera Android
+                    </div>
+                </th>
+                <th>
+                    <div class="vertical-text">
+                        <span style="display:inline-block; width:16px; height:16px; background:#006cff; border-radius:50%; margin-bottom:5px;"></span>
+                        Safari on iOS
+                    </div>
+                </th>
+                <th>
+                    <div class="vertical-text">
+                        <span style="display:inline-block; width:16px; height:16px; background:#7c4dff; border-radius:50%; margin-bottom:5px;"></span>
+                        Samsung Internet
+                    </div>
+                </th>
+                <th>
+                    <div class="vertical-text">
+                        <span style="display:inline-block; width:16px; height:16px; background:#3ddc84; border-radius:50%; margin-bottom:5px;"></span>
+                        WebView Android
+                    </div>
+                </th>
+                <th>
+                    <div class="vertical-text">
+                        <span style="display:inline-block; width:16px; height:16px; background:#006cff; border-radius:50%; margin-bottom:5px;"></span>
+                        WebView on iOS
+                    </div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="row-header">getState</td>
+                <td><span class="check-mark">✓</span><span class="version-num">102</span></td>
+                <td><span class="check-mark">✓</span><span class="version-num">102</span></td>
+                <td><span class="check-mark">✓</span><span class="version-num">147</span></td>
+                <td><span class="check-mark">✓</span><span class="version-num">88</span></td>
+                <td><span class="check-mark">✓</span><span class="version-num">26.2</span></td>
+                <td style="border-left: 1px solid var(--border-color);"><span class="check-mark">✓</span><span class="version-num">102</span></td>
+                <td><span class="check-mark">✓</span><span class="version-num">147</span></td>
+                <td><span class="check-mark">✓</span><span class="version-num">70</span></td>
+                <td><span class="check-mark">✓</span><span class="version-num">26.2</span></td>
+                <td><span class="check-mark">✓</span><span class="version-num">19</span></td>
+                <td><span class="check-mark">✓</span><span class="version-num">102</span></td>
+                <td><span class="check-mark">✓</span><span class="version-num">26.2</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="legend">
+        <span class="check-mark" style="margin:0; font-size: 1rem;">✓</span> 完全支持
+    </div>
+
+    <h2>参见</h2>
+    <div class="see-also">
+        <ul>
+            <li><a href="#">现代客户端路由：导航 API <span class="ext-icon"></span></a></li>
+            <li><a href="#">导航 API 说明 <span class="ext-icon"></span></a></li>
+            <li>Domenic Denicola 的<a href="#">导航 API 在线演示 <span class="ext-icon"></span></a></li>
+            <li>允许更新状态的方法——<span class="inline-code">Navigation.navigate()</span>、<span class="inline-code">Navigation.reload()</span> 和 <span class="inline-code">Navigation.updateCurrentEntry()</span></li>
+        </ul>
+    </div>
+
+    <div class="site-footer">
+        <div class="mdn-logo">
+            <svg width="30" height="30" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 80 L30 20 L50 80 L70 20 L90 80" stroke="#333" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>mdn_</span>
+        </div>
+        <div class="footer-tagline">构建更美好互联网的蓝图。</div>
+    </div>
+
+    <div class="bottom-bar">
+        <span>https://developer.mozilla.org/zh-CN/docs/Web/API/NavigationDestination/getState</span>
+        <span>2/2</span>
+    </div>
+
+</body>
+</html>

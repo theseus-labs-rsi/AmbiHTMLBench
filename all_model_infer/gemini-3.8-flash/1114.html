@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>什么是审计？</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #f7dd64;
+      background-image: 
+        linear-gradient(#f1d454 1px, transparent 1px),
+        linear-gradient(90deg, #f1d454 1px, transparent 1px);
+      background-size: 30px 30px;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 40px 10px;
+    }
+
+    /* Outer Wrapper representing the yellow backing sheet */
+    .notepad-container {
+      position: relative;
+      width: 100%;
+      max-width: 480px;
+    }
+
+    /* Top Binder Clips */
+    .binder-clip {
+      position: absolute;
+      top: -24px;
+      width: 46px;
+      height: 48px;
+      z-index: 20;
+    }
+    .binder-clip.left {
+      left: 105px;
+    }
+    .binder-clip.right {
+      right: 125px;
+    }
+    .binder-clip .wire {
+      width: 22px;
+      height: 24px;
+      border: 3px solid #231815;
+      border-bottom: none;
+      border-radius: 12px 12px 0 0;
+      margin: 0 auto;
+    }
+    .binder-clip .base {
+      width: 46px;
+      height: 20px;
+      background: #231815;
+      border-radius: 3px;
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-end;
+      padding-bottom: 2px;
+    }
+    .binder-clip .base span {
+      width: 8px;
+      height: 5px;
+      background: #7b7b7b;
+      border-radius: 1px;
+    }
+
+    /* Yellow background card offset */
+    .yellow-card {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: -10px;
+      bottom: -10px;
+      background-color: #ffd43f;
+      border: 2.5px solid #231815;
+      border-radius: 18px;
+      z-index: 1;
+    }
+
+    /* Main White Sheet */
+    .white-sheet {
+      position: relative;
+      background: #ffffff;
+      border: 2.5px solid #231815;
+      border-radius: 18px;
+      padding: 40px 28px 45px 36px;
+      z-index: 2;
+      overflow: visible;
+    }
+
+    /* Binder Rings on the Left */
+    .rings-column {
+      position: absolute;
+      left: -16px;
+      top: 60px;
+      bottom: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      z-index: 10;
+      pointer-events: none;
+    }
+    .ring {
+      width: 46px;
+      height: 18px;
+      background: #ffe169;
+      border: 2.5px solid #231815;
+      border-radius: 10px;
+      position: relative;
+    }
+    .ring::after {
+      content: "";
+      position: absolute;
+      left: 6px;
+      top: 2.5px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #ffffff;
+      opacity: 0.6;
+    }
+
+    /* Main Title */
+    .title-wrapper {
+      position: relative;
+      text-align: center;
+      margin-top: 10px;
+      margin-bottom: 30px;
+    }
+    .title-highlight {
+      position: absolute;
+      bottom: -2px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 88%;
+      height: 18px;
+      background-color: #ffe685;
+      border-radius: 8px;
+      z-index: 1;
+    }
+    .title-text {
+      position: relative;
+      font-size: 38px;
+      font-weight: 900;
+      color: #1a1a1a;
+      letter-spacing: 2px;
+      z-index: 2;
+    }
+
+    /* Sections */
+    .section-block {
+      margin-bottom: 24px;
+    }
+    .section-block:last-child {
+      margin-bottom: 10px;
+    }
+
+    /* Section Headers */
+    .section-title {
+      display: flex;
+      align-items: center;
+      font-size: 19px;
+      font-weight: 900;
+      color: #df9e26;
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+    }
+    .section-title .star-icon {
+      font-size: 20px;
+      margin-right: 6px;
+      color: #f7b52c;
+      text-shadow: 1px 1px 0 #231815, -1px -1px 0 #231815, 1px -1px 0 #231815, -1px 1px 0 #231815;
+    }
+
+    /* Content Typography */
+    .content-p {
+      font-size: 14.5px;
+      line-height: 1.6;
+      color: #231815;
+      font-weight: 500;
+      text-align: justify;
+      margin-bottom: 6px;
+    }
+
+    /* Sub-items in Section 2 */
+    .sub-item {
+      font-size: 14.5px;
+      line-height: 1.55;
+      color: #231815;
+      margin-bottom: 8px;
+      text-align: justify;
+    }
+    .sub-label {
+      color: #797db8;
+      font-weight: 700;
+    }
+
+    /* Decorative Illustrations */
+    .pencil-decor {
+      position: absolute;
+      right: -25px;
+      top: 42%;
+      width: 60px;
+      height: 85px;
+      z-index: 15;
+      transform: rotate(-15deg);
+    }
+
+    .plane-decor {
+      position: absolute;
+      left: -20px;
+      bottom: -25px;
+      width: 70px;
+      height: 60px;
+      z-index: 15;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="notepad-container">
+    <!-- Top Clips -->
+    <div class="binder-clip left">
+      <div class="wire"></div>
+      <div class="base"><span></span><span></span></div>
+    </div>
+    <div class="binder-clip right">
+      <div class="wire"></div>
+      <div class="base"><span></span><span></span></div>
+    </div>
+
+    <!-- Background yellow sheet shadow -->
+    <div class="yellow-card"></div>
+
+    <!-- Ring Binder on the Left -->
+    <div class="rings-column">
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+    </div>
+
+    <!-- Pencil Doodle (Right edge) -->
+    <svg class="pencil-decor" viewBox="0 0 80 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10 50 L40 10 L70 30 L40 70 Z" fill="#ffde59" stroke="#231815" stroke-width="3"/>
+      <path d="M40 70 L70 30 L75 80 L30 110 Z" fill="#8480d1" stroke="#231815" stroke-width="3"/>
+      <polygon points="10,50 40,10 0,35" fill="#f8e7c9" stroke="#231815" stroke-width="3"/>
+      <polygon points="0,35 7,30 5,45" fill="#231815"/>
+    </svg>
+
+    <!-- Paper Plane Doodle (Bottom left) -->
+    <svg class="plane-decor" viewBox="0 0 100 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10 50 L90 10 L45 70 L35 52 Z" fill="#e2e8f0" stroke="#231815" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M90 10 L35 52 L55 56 Z" fill="#a4b3d6" stroke="#231815" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M45 70 L35 52 L38 65 Z" fill="#687399" stroke="#231815" stroke-width="3" stroke-linejoin="round"/>
+    </svg>
+
+    <!-- White Paper Content -->
+    <main class="white-sheet">
+      <!-- Main Title -->
+      <header class="title-wrapper">
+        <div class="title-highlight"></div>
+        <h1 class="title-text">什么是审计？</h1>
+      </header>
+
+      <!-- Section 1: 审计定义 -->
+      <section class="section-block">
+        <h2 class="section-title">
+          <span class="star-icon">★</span> 审计定义
+        </h2>
+        <p class="content-p">
+          审计是对资料作出证据搜集及分析，以评估企业财务状况，然后就资料及一般公认准则之间的相关程度作出结论及报告。
+        </p>
+      </section>
+
+      <!-- Section 2: 审计的基本要素 -->
+      <section class="section-block">
+        <h2 class="section-title">
+          <span class="star-icon">★</span> 审计的基本要素
+        </h2>
+        <p class="content-p">
+          任何审计都具有三个基本要素，即审计主体、审计客体和审计授权或委托人。
+        </p>
+        <div class="sub-item">
+          <span class="sub-label">审计主体：</span>指审计行为的执行者，即审计机构和审计人员，为审计第一关系人；
+        </div>
+        <div class="sub-item">
+          <span class="sub-label">审计客体：</span>指审计行为的接受者，即指被审计的资产代管或经营者，为审计第二关系人；
+        </div>
+        <div class="sub-item">
+          <span class="sub-label">审计授权或委托人：</span>指依法授权或委托审计主体行使审计职责的单位或人员，为审计第三关系人。
+        </div>
+      </section>
+
+      <!-- Section 3: 审计本质 -->
+      <section class="section-block">
+        <h2 class="section-title">
+          <span class="star-icon">★</span> 审计本质
+        </h2>
+        <p class="content-p">
+          审计本质是一项具有独立性的经济监督活动。
+        </p>
+      </section>
+    </main>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internationale Poster</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Roboto+Slab:wght@700&display=swap');
+
+        :root {
+            --bg-yellow: #e6c845;
+            --bg-red: #b32428;
+            --text-yellow: #e6c845;
+            --ink-dark: #2a1a10;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Courier Prime', monospace;
+        }
+
+        .poster-container {
+            width: 100%;
+            max-width: 900px;
+            aspect-ratio: 2 / 3;
+            background-color: var(--bg-yellow);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 12px solid var(--bg-yellow); /* Simulating the yellow border */
+            box-sizing: border-box;
+        }
+
+        /* The Red Background Shape */
+        .red-zone {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 25%; /* Stops where the bottom crowd starts */
+            width: 65%;
+            background-color: var(--bg-red);
+            clip-path: polygon(15% 0, 100% 0, 100% 100%, 0% 100%);
+            z-index: 1;
+        }
+
+        /* Layout Grid */
+        .content-grid {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            height: 100%;
+            width: 100%;
+        }
+
+        /* Left Column - Images */
+        .left-column {
+            width: 38%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding-right: 10px;
+            position: relative;
+            z-index: 3;
+        }
+
+        .image-block {
+            flex: 1;
+            position: relative;
+            margin-bottom: 2px;
+            background-color: var(--bg-yellow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .image-placeholder {
+            flex-grow: 1;
+            background-color: var(--ink-dark);
+            opacity: 0.8;
+            position: relative;
+            /* Simulating halftone texture with CSS gradients */
+            background-image: radial-gradient(var(--bg-yellow) 1px, transparent 1px);
+            background-size: 4px 4px;
+            mix-blend-mode: multiply;
+        }
+        
+        /* Specific adjustments for image placeholders to look like photos */
+        .img-1 .image-placeholder { background: linear-gradient(to bottom, #3a2a1a, #1a1005); }
+        .img-2 .image-placeholder { background: linear-gradient(to bottom, #4a3a2a, #2a1a10); }
+        .img-3 .image-placeholder { background: linear-gradient(to bottom, #3a2a1a, #1a1005); }
+        .img-4 .image-placeholder { background: linear-gradient(to bottom, #2a1a10, #0a0500); }
+
+        .caption {
+            background-color: var(--bg-yellow);
+            color: var(--ink-dark);
+            font-size: 0.85rem;
+            font-weight: bold;
+            padding: 2px 5px;
+            border-top: 2px solid var(--ink-dark);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Right Column - Text */
+        .right-column {
+            width: 62%;
+            height: 75%; /* Text stops before the bottom image */
+            padding: 40px 40px 20px 60px;
+            color: var(--text-yellow);
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1 {
+            font-family: 'Roboto Slab', serif;
+            font-size: 2.8rem;
+            margin: 0 0 20px 0;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--text-yellow);
+            text-shadow: 1px 1px 0px rgba(0,0,0,0.2);
+        }
+
+        .lyrics {
+            font-size: 1.1rem;
+            line-height: 1.3;
+            margin-bottom: 25px;
+            white-space: pre-wrap;
+        }
+
+        .indent {
+            padding-left: 4em;
+        }
+
+        /* Bottom Section - Crowd Image */
+        .bottom-section {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 28%;
+            z-index: 4;
+            background-color: var(--bg-yellow);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .crowd-image {
+            flex-grow: 1;
+            background-color: var(--ink-dark);
+            position: relative;
+            overflow: hidden;
+            /* Simulating the crowd texture */
+            background: 
+                radial-gradient(circle at 50% 120%, var(--bg-yellow) 10%, transparent 60%),
+                repeating-radial-gradient(circle at 50% 50%, var(--ink-dark) 0, var(--ink-dark) 2px, var(--bg-yellow) 3px, var(--bg-yellow) 4px);
+            background-size: 100% 100%, 8px 8px;
+            opacity: 0.9;
+        }
+        
+        /* Overlay to darken the crowd image slightly and add the flag shape hint */
+        .crowd-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(42, 26, 16, 0.8), transparent);
+        }
+
+        .flag-shape {
+            position: absolute;
+            bottom: 20%;
+            left: 45%;
+            width: 0;
+            height: 0;
+            border-left: 50px solid transparent;
+            border-right: 50px solid transparent;
+            border-bottom: 150px solid var(--bg-red);
+            transform: rotate(-10deg);
+            opacity: 0.8;
+            mix-blend-mode: multiply;
+        }
+
+        .bottom-caption {
+            background-color: var(--bg-yellow);
+            color: var(--ink-dark);
+            font-size: 0.85rem;
+            font-weight: bold;
+            padding: 2px 5px;
+            border-top: 2px solid var(--ink-dark);
+            align-self: flex-start;
+            width: auto;
+            min-width: 200px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8rem; }
+            .lyrics { font-size: 0.8rem; }
+            .caption, .bottom-caption { font-size: 0.6rem; }
+            .right-column { padding: 20px 10px 10px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="poster-container">
+        <!-- Red Background Shape -->
+        <div class="red-zone"></div>
+
+        <div class="content-grid">
+            <!-- Left Column: Historical Images -->
+            <div class="left-column">
+                <div class="image-block img-1">
+                    <div class="image-placeholder" title="1871 Paris Commune"></div>
+                    <div class="caption">1871 Paris Commune</div>
+                </div>
+                <div class="image-block img-2">
+                    <div class="image-placeholder" title="1889 London Dockers Strike"></div>
+                    <div class="caption">1889 London Dockers Strike</div>
+                </div>
+                <div class="image-block img-3">
+                    <div class="image-placeholder" title="1916 Irish Citizens Army"></div>
+                    <div class="caption">1916 Irish Citizens Army</div>
+                </div>
+                <div class="image-block img-4">
+                    <div class="image-placeholder" title="1917 the Red Army, USSR"></div>
+                    <div class="caption">1917 the Red Army, USSR</div>
+                </div>
+            </div>
+
+            <!-- Right Column: Lyrics -->
+            <div class="right-column">
+                <h1>INTERNATIONALE</h1>
+                
+                <div class="lyrics">arise you prisoners of starvation
+arise you wretched of the earth,
+for justice thunders condemnation,
+a better worlds in birth.
+no more traditions chains shall bind us
+arise you slaves,no more in thrall
+the earth shall rise on new foundations
+we have been naught,we shall,be all.</div>
+
+                <div class="lyrics indent">tis the final conflict,
+let each stand in his place
+the internationale
+shall be the human race.</div>
+
+                <div class="lyrics">we want no condesending saviours
+to rule us from their judgement hall
+we workers ask not for their favours
+let us consult for all.
+to make the theif disgorge his booty
+to free the spirit from its cell
+we must ourselves decide our duty
+decide and do it well.</div>
+                
+                <div class="lyrics indent">tis the final conflict.......</div>
+
+                <div class="lyrics">toilers from shop and field united
+the union of all who work,
+the earth belongs to us as workers
+no room for those who shirk.
+how many on our flesh have fattened
+but if the bloody birds of prey
+shall vanish from the sky one morning
+the golden sun will stay.</div>
+
+                <div class="lyrics indent">tis the final conflict.......</div>
+            </div>
+        </div>
+
+        <!-- Bottom Section: Crowd Image -->
+        <div class="bottom-section">
+            <div class="crowd-image">
+                <div class="crowd-overlay"></div>
+                <div class="flag-shape"></div>
+            </div>
+            <div class="bottom-caption">1919 the Red Clyde, Glasgow</div>
+        </div>
+    </div>
+
+</body>
+</html>

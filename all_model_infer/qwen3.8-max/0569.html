@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIPS 197 - Mathematical Preliminaries</title>
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$']],
+                displayMath: [['$$', '$$']],
+                tags: 'none'
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+            line-height: 1.4;
+            color: #000;
+            background-color: #fff;
+            margin: 0;
+            padding: 40px;
+            max-width: 850px;
+            margin-left: auto;
+            margin-right: auto;
+            font-size: 16px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            text-transform: uppercase;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            margin-bottom: 40px;
+        }
+        h1 {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+        h2 {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        p {
+            margin-top: 0;
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        .equation-block {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+            position: relative;
+        }
+        .equation-content {
+            flex-grow: 1;
+            text-align: center;
+        }
+        .equation-number {
+            position: absolute;
+            right: 0;
+        }
+        .blue-link {
+            color: #0000cc;
+            text-decoration: none;
+        }
+        .superscript-link {
+            color: #0000cc;
+            font-size: 0.8em;
+            vertical-align: super;
+            text-decoration: none;
+            margin-left: 2px;
+        }
+        .footnote-section {
+            margin-top: 40px;
+            border-top: 1px solid #000;
+            padding-top: 5px;
+            font-size: 14px;
+        }
+        .footnote-text {
+            margin: 0;
+            text-align: left;
+        }
+        .page-number {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        .indent-eq-group {
+            display: table;
+            margin: 20px auto;
+            width: 100%;
+            max-width: 700px;
+        }
+        .eq-row {
+            display: table-row;
+        }
+        .eq-math {
+            display: table-cell;
+            text-align: left;
+            padding-right: 20px;
+        }
+        .eq-label {
+            display: table-cell;
+            text-align: right;
+            padding-right: 40px;
+            white-space: nowrap;
+        }
+        .eq-num-cell {
+            display: table-cell;
+            text-align: right;
+            width: 50px;
+            vertical-align: middle;
+        }
+        sup {
+            font-size: 0.75em;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <span>FIPS 197</span>
+        <span>ADVANCED ENCRYPTION STANDARD (AES)</span>
+    </div>
+
+    <h1>4. &nbsp;&nbsp;Mathematical Preliminaries</h1>
+
+    <p>For some transformations of the AES algorithms specified in Sec. <a href="#" class="blue-link">5</a>, each byte in the state array is interpreted as one of the 256 elements of a finite field, also known as a Galois Field, denoted by GF(2<sup>8</sup>). <a href="#" class="superscript-link">1</a></p>
+
+    <p>In order to define addition and multiplication in GF(2<sup>8</sup>), each byte $\{b_7 \ b_6 \ b_5 \ b_4 \ b_3 \ b_2 \ b_1 \ b_0\}$ is interpreted as a polynomial, denoted by $b(x)$, as follows:</p>
+
+    <div class="equation-block">
+        <div class="equation-content">
+            $$b(x) = b_7 x^7 + b_6 x^6 + b_5 x^5 + b_4 x^4 + b_3 x^3 + b_2 x^2 + b_1 x + b_0.$$
+        </div>
+        <div class="equation-number">(4.1)</div>
+    </div>
+
+    <p>For example, $\{01100011\}$ is represented by the polynomial $x^6 + x^5 + x + 1$.</p>
+
+    <h2>4.1 &nbsp;&nbsp;Addition in GF(2<sup>8</sup>)</h2>
+
+    <p>In order to add two elements in the finite field GF(2<sup>8</sup>), the coefficients of the polynomials that represent the elements are added modulo 2 (i.e., with the exclusive-OR operation, denoted by $\oplus$), so that $1 \oplus 1 = 0$, $1 \oplus 0 = 1$, and $0 \oplus 0 = 0$.</p>
+
+    <p>Equivalently, two bytes can be added by applying the exclusive-OR operation to each pair of corresponding bits in the bytes. Thus, the sum of $\{a_7 \ a_6 \ a_5 \ a_4 \ a_3 \ a_2 \ a_1 \ a_0\}$ and $\{b_7 \ b_6 \ b_5 \ b_4 \ b_3 \ b_2 \ b_1 \ b_0\}$ is $\{a_7 \oplus b_7 \ \ a_6 \oplus b_6 \ \ a_5 \oplus b_5 \ \ a_4 \oplus b_4 \ \ a_3 \oplus b_3 \ \ a_2 \oplus b_2 \ \ a_1 \oplus b_1 \ \ a_0 \oplus b_0\}$. (In Section <a href="#" class="blue-link">5.1.4</a>, this definition is extended to words.)</p>
+
+    <p>For example, the following three representations of addition are equivalent:</p>
+
+    <div class="indent-eq-group">
+        <div class="eq-row">
+            <div class="eq-math">$$(x^6 + x^4 + x^2 + x + 1) + (x^7 + x + 1) = x^7 + x^6 + x^4 + x^2$$</div>
+            <div class="eq-label">(polynomial)</div>
+            <div class="eq-num-cell" rowspan="3" style="display: table-cell; vertical-align: middle;">(4.2)</div>
+        </div>
+        <div class="eq-row">
+            <div class="eq-math">$$\{01010111\} \oplus \{10000011\} = \{11010100\}$$</div>
+            <div class="eq-label">(binary)</div>
+        </div>
+        <div class="eq-row">
+            <div class="eq-math">$$\{57\} \oplus \{83\} = \{\text{d4}\}$$</div>
+            <div class="eq-label">(hexadecimal).</div>
+        </div>
+    </div>
+
+    <p>Because the coefficients of the polynomials are reduced modulo 2, the coefficient 1 is equivalent to the coefficient $-1$, so addition is equivalent to subtraction. For example, $x^4 + x^2$ represents the same finite field element as $x^4 - x^2$, $-x^4 + x^2$, and $-x^4 - x^2$. Similarly, the sum of any element with itself is the zero element.</p>
+
+    <h2>4.2 &nbsp;&nbsp;Multiplication in GF(2<sup>8</sup>)</h2>
+
+    <p>The symbol $\bullet$ denotes multiplication in GF$\left(2^8\right)$. Conceptually, this multiplication is defined on two bytes in two steps: 1) the two polynomials that represent the bytes are multiplied as polynomials, and 2) the resulting polynomial is reduced modulo the following fixed polynomial:</p>
+
+    <div class="equation-block">
+        <div class="equation-content">
+            $$m(x) = x^8 + x^4 + x^3 + x + 1.$$
+        </div>
+        <div class="equation-number">(4.3)</div>
+    </div>
+
+    <p>Within both steps, the individual coefficients of the polynomials are reduced modulo 2.</p>
+
+    <div class="footnote-section">
+        <p class="footnote-text"><sup>1</sup>Information about the properties of finite fields can be found in textbooks, such as Michael Artin's <i>Algebra</i> [<a href="#" class="blue-link">4</a>].</p>
+    </div>
+
+    <div class="page-number">8</div>
+
+</body>
+</html>

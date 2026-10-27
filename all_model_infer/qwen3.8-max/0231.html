@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>光明日报 - 评论 03</title>
+    <style>
+        body {
+            font-family: "Songti SC", "SimSun", "STSong", serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+            color: #000;
+            line-height: 1.6;
+        }
+        .page-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px 40px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        /* Header Styles */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .logo {
+            font-family: "Kaiti SC", "KaiTi", serif;
+            font-size: 32px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        .header-info {
+            text-align: right;
+            font-size: 14px;
+        }
+        .section-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .date-info {
+            color: #333;
+        }
+
+        /* Main Grid Layout */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        /* Article Styles */
+        article {
+            break-inside: avoid;
+        }
+        h1.article-title {
+            font-size: 28px;
+            font-weight: bold;
+            line-height: 1.3;
+            margin-bottom: 10px;
+            font-family: "Heiti SC", "SimHei", sans-serif;
+        }
+        h2.article-subtitle {
+            font-size: 22px;
+            font-weight: bold;
+            line-height: 1.3;
+            margin-bottom: 10px;
+            font-family: "Heiti SC", "SimHei", sans-serif;
+        }
+        .author {
+            font-size: 14px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        .author::before {
+            content: "□ ";
+        }
+        p {
+            text-indent: 2em;
+            margin-bottom: 10px;
+            font-size: 15px;
+            text-align: justify;
+        }
+        .no-indent {
+            text-indent: 0;
+        }
+        .bold-text {
+            font-weight: bold;
+        }
+        .source-note {
+            font-size: 13px;
+            font-weight: bold;
+            margin-top: 10px;
+            text-indent: 0;
+        }
+
+        /* Specific Layout Adjustments */
+        .col-1 {
+            grid-column: 1 / 2;
+        }
+        .col-2 {
+            grid-column: 2 / 3;
+        }
+        .col-3 {
+            grid-column: 3 / 4;
+        }
+        
+        /* Spanning articles */
+        .article-top-left {
+            grid-column: 1 / 3;
+            grid-row: 1 / 2;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .article-top-left .title-area {
+            grid-column: 1 / -1;
+        }
+        
+        .article-vertical-right {
+            grid-column: 3 / 4;
+            grid-row: 1 / 3;
+            border-left: 1px solid #eee;
+            padding-left: 20px;
+        }
+        .vertical-title {
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            font-size: 28px;
+            font-weight: bold;
+            font-family: "Heiti SC", "SimHei", sans-serif;
+            float: right;
+            margin-left: 10px;
+            letter-spacing: 5px;
+        }
+
+        .article-mid-left {
+            grid-column: 1 / 2;
+            grid-row: 2 / 3;
+        }
+        
+        .article-mid-center {
+            grid-column: 2 / 3;
+            grid-row: 2 / 3;
+        }
+
+        .article-mid-right {
+            grid-column: 3 / 4;
+            grid-row: 3 / 4; /* Adjusted based on visual flow */
+        }
+        
+        /* Re-evaluating grid based on image structure */
+        /* Row 1: Top Left (Big), Top Right (Vertical) */
+        /* Row 2: Mid Left, Mid Center, Mid Right (Elderly) */
+        /* Row 3: Bottom Ad */
+        
+        .layout-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: auto auto auto;
+            gap: 20px 30px;
+        }
+
+        .item-1 { grid-column: 1 / 3; grid-row: 1 / 2; }
+        .item-2 { grid-column: 3 / 4; grid-row: 1 / 3; border-left: 1px solid #ddd; padding-left: 15px; }
+        .item-3 { grid-column: 1 / 2; grid-row: 2 / 3; }
+        .item-4 { grid-column: 2 / 3; grid-row: 2 / 3; } /* Wait, looking closer at image */
+        
+        /* Correction: 
+           Col 1 & 2 top: "坚持以质取胜..."
+           Col 3 top & mid: "古镇如何带给..." (Vertical title on far right)
+           Col 1 mid: "做好党建工作..."
+           Col 2 mid: (Continuation of top left? No, looks like separate flow or continuation) -> Actually, the top left article spans col 1 and 2.
+           Col 3 mid/bottom: "老年用品市场..."
+           
+           Let's trace columns strictly.
+           Column 1: Top part of Art 1, Bottom part Art 3.
+           Column 2: Top part of Art 1, Bottom part Art 3 (continued? No, Art 3 is only col 1). 
+           Actually, Art 1 spans Col 1 & 2.
+           Art 3 is Col 1 only.
+           Art 4 (Elderly) is Col 3 only (below Art 2).
+           Wait, Art 2 (Ancient Town) is Col 3 top.
+           Art 4 (Elderly) is Col 3 bottom.
+           
+           Where is the middle column bottom?
+           Ah, Art 1 text flows into Col 2.
+           Art 3 is Col 1.
+           Is there an article in Col 2 bottom? 
+           Looking at "做好党建工作", it seems to span Col 1 and maybe part of Col 2? 
+           No, "做好党建工作" title is wide. Text is in Col 1.
+           Wait, the text under "做好党建工作" is in Col 1.
+           The text under "坚持以质取胜" is in Col 1 and Col 2.
+           
+           Let's look at the bottom ad. It spans all 3 columns.
+           
+           Refined Grid:
+           Row 1: Art 1 (Col 1-2), Art 2 (Col 3)
+           Row 2: Art 3 (Col 1), Art 4 (Col 3) ... What is in Col 2 Row 2?
+           Actually, Art 1 text continues down Col 2.
+           Art 3 is below Art 1 in Col 1.
+           Art 4 is below Art 2 in Col 3.
+           Is Col 2 Row 2 empty? Or does Art 3 span Col 1-2?
+           Title "做好党建工作..." is very wide. It likely spans Col 1 and Col 2.
+           Text for Art 3 seems to be in Col 1 and Col 2? 
+           Let's check text alignment. 
+           "近日，第二十八次全国高校党的..." starts in Col 1.
+           Next column of text for Art 3 is in Col 2.
+           So Art 3 spans Col 1 and Col 2.
+           
+           So:
+           Row 1: Art 1 (Col 1-2), Art 2 (Col 3)
+           Row 2: Art 3 (Col 1-2), Art 4 (Col 3)
+           Row 3: Ad (Col 1-3)
+        */
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px 30px;
+        }
+
+        .art-1 { grid-column: 1 / 3; grid-row: 1 / 2; }
+        .art-2 { grid-column: 3 / 4; grid-row: 1 / 2; position: relative; }
+        .art-3 { grid-column: 1 / 3; grid-row: 2 / 3; }
+        .art-4 { grid-column: 3 / 4; grid-row: 2 / 3; }
+        .ad-section { grid-column: 1 / 4; grid-row: 3 / 4; border: 1px solid #000; padding: 20px; margin-top: 20px; }
+
+        /* Multi-column text within articles */
+        .multi-col-text {
+            column-count: 2;
+            column-gap: 30px;
+            text-align: justify;
+        }
+        .single-col-text {
+            text-align: justify;
+        }
+
+        /* Sidebar Logo */
+        .sidebar-logo {
+            margin: 20px 0;
+            text-align: center;
+            border: 1px solid #ccc;
+            padding: 10px;
+            display: inline-block;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .sidebar-logo h3 {
+            margin: 0;
+            font-size: 18px;
+            font-family: "Heiti SC", sans-serif;
+        }
+        .sidebar-logo p {
+            margin: 5px 0 0;
+            font-size: 12px;
+            text-indent: 0;
+            text-align: center;
+        }
+
+        /* Vertical Title specific */
+        .vertical-wrapper {
+            display: flex;
+            flex-direction: row-reverse;
+            height: 100%;
+        }
+        .v-title {
+            writing-mode: vertical-rl;
+            font-size: 32px;
+            font-weight: bold;
+            font-family: "Heiti SC", "SimHei", sans-serif;
+            margin-left: 10px;
+            letter-spacing: 8px;
+            text-align: center;
+        }
+        .v-content {
+            flex: 1;
+        }
+
+        /* Ad Section Styles */
+        .ad-header {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            font-family: "Heiti SC", sans-serif;
+        }
+        .ad-title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            font-family: "Heiti SC", sans-serif;
+            letter-spacing: 5px;
+        }
+        .ad-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            font-size: 14px;
+        }
+        .ad-col h4 {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+        .ad-col p {
+            font-size: 13px;
+            line-height: 1.5;
+            text-indent: 2em;
+        }
+        .ad-footer {
+            text-align: right;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        /* Guangming Forum Box */
+        .forum-box {
+            border: 1px solid #000;
+            padding: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            background: #f0f0f0;
+        }
+        .forum-box h4 {
+            margin: 0 0 5px 0;
+            font-size: 16px;
+        }
+        .forum-box p {
+            margin: 2px 0;
+            font-size: 12px;
+            text-indent: 0;
+        }
+
+        /* Guangming Time Comment Box */
+        .time-comment-box {
+            border: 2px solid #000;
+            padding: 10px;
+            margin-top: 20px;
+            text-align: center;
+            background: #eee;
+        }
+        .time-comment-box h4 {
+            margin: 0;
+            font-size: 18px;
+            font-style: italic;
+        }
+        .time-comment-box p {
+            margin: 5px 0 0;
+            font-size: 12px;
+            text-indent: 0;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+    <header>
+        <div class="logo">光明日報</div>
+        <div class="header-info">
+            <div class="section-title">评论 03</div>
+            <div class="date-info">2025年1月2日 星期四 一版编辑:吴晓杰、樊荣 本版编辑:项锋、杨心悦</div>
+        </div>
+    </header>
+
+    <div class="grid-container">
+        <!-- Article 1: Top Left (Spans 2 cols) -->
+        <article class="art-1">
+            <h1 class="article-title">坚持以质取胜<br>和发挥规模效应相统一</h1>
+            <div class="author">魏琪嘉 沈 立</div>
+            
+            <div class="forum-box" style="width: 200px; float: left; margin-right: 15px; margin-bottom: 10px;">
+                <h4>光明论坛</h4>
+                <p>中国新闻奖名专栏</p>
+                <p>评论投稿邮箱</p>
+                <p>gmpinglun@163.com</p>
+            </div>
+
+            <div class="multi-col-text">
+                <p>近年来，我国新能源汽车产业发展呈现市场规模、发展质量双提升的良好势头，年度产量首次达成1000万辆，自主品牌得以充分发展。成绩的取得，得益于国内消费市场的发展、企业自主创新能力的提升，更得益于我国强大的产业链支撑，在有效统筹处理好质量和总量的关系、发展规模效应的前提下，实现以质取胜的效果。2024年中央经济工作会议明确指出，必须统筹好提升质量和做大总量的关系，夯实中国式现代化的物质基础。这既是对当前我国经济发展阶段的精准把握，也为今后经济高质量发展指明了方向、提供了遵循。</p>
+                <p>在经济快速发展过程中，量和质的关系是辩证统一、量变通常表现为经济发展的规模和速度，质变则表现为经济结构优化和经济效率提升。量的增长为质的提升创造条件，没有量的增加，高质量发展就缺乏物质技术基础；而没有质的提升，则谈不上高质量发展。只有统筹好提升质量和做大总量的关系，既发挥规模效应，又以质取胜，才能实现更高质量、更有效率、更可持续的发展，从而夯实中国式现代化的物质基础。</p>
+                <p>党的十八大以来，我国经济发展在质和量两方面都取得了显著成就。从量的方面看，我国经济持续快速发展，2023年，我国国内生产总值达126万亿元，稳居世界第二位，工业基础和贸易大国地位持续巩固，经济实力显著增强。从质的方面看，创新活力持续迸发，2023年我国研发投入强度达到2.64%，全球创新指数升至第12名。重大科技成果竞相涌现，国产首艘大型邮轮投入运营，国产大飞机C919翱翔天空，人工智能、云计算等新技术快速发展，新兴产业和未来产业发展壮大，新动能日益成为经济增长的新引擎。这些成绩的取得，离不开坚持以质取胜和发挥规模效应相统一，有效统筹提升质量和做大总量这一科学方法论。</p>
+                <p>坚持以质取胜和发挥规模效应相统一，也是当前和今后一个时期做好经济工作的迫切需求。从当前看，无论是稳就业、防风险、惠民生，还是优结构、促转型、保安全，都需要我们在保持经济规模合理增长的同时，实现以质取胜，以自身发展的确定性来应对外部经济发展的不确定性。从长远看，中国式现代化是人口规模巨大的现代化，也是全体人民共同富裕的现代化，这就对我国经济发展的质量、结构、规模提出了更高要求。面对这一艰巨繁重的任务，只有是在更长时间内保持经济总量的合理增长，才能进一步扩大蛋糕，以量的积累稳住经济发展基本盘，也只有不断提高发展质效，提升创新能力，才能做优蛋糕，以质的提升促进经济可持续发展。总的来说，坚持以质取胜和发挥规模效应相统一，既是应对当前困难挑战、推动经济持续回升向好的重要着力点，也是促进经济结构转型升级、推动高质量发展的科学方法论。</p>
+                <p>打好宏观调控“组合拳”。推动经济量质齐升，不仅要关注当下稳增长、稳预期、稳就业，更要着眼长远调结构、提质量、增效益，这需要不断精准有效的宏观调控。打好政策“组合拳”，必须强化宏观政策的系统性和协调性，注重各项政策之间的系统集成、协同配合，增强宏观政策取向的一致性，确保同向发力、形成合力。把准政策“组合拳”的方向和力度，遵循国家政策或更加积极有为这一主线，完善宏观政策框架，丰富政策调控工具，在执行过程中发挥激励机制作用，提升宏观调控的精准性和有效性。</p>
+                <p>用好改革开放关键一招。改革开放是党和人民事业大踏步赶上时代的重要法宝，同样也是统筹提升质量和做大总量、推动高质量发展的必由之路。用好改革开放关键一招，重点是要坚决破除市场准入壁垒，维护公平竞争秩序，让地方经济的“小局”服从于全国统一大市场建设这个“大局”，打造市场化法治化国际化的一流营商环境。比如，辽宁开展综合窗口改革，群众办事所需时间比法定要求提速78.9%；贵州全力推进“一窗通办”，窗口人员缩减63%，各地排队时长减少56%；江西搭建“惠企通”平台，惠企政策从梳理到兑现全链条线上办理……这些都是各地区、各部门优化营商环境取得的实效。同时，注重瞄准重点领域推进高水平开放，稳步扩大规则、规制、管理、标准等制度型开放，以扩大开放凝聚互补互学互鉴的力量和势能。</p>
+                <p>激发科技创新的充沛动力。发挥科技创新的根本支撑作用，关键是坚持把科技创新这个关键变量转化为高质量发展的最大增量。要聚焦人工智能、绿色低碳等前沿技术领域，促进创新链产业链深度融合，加快培育壮大新产业和未来产业。引导与因地制宜发展新质生产力，建设具有本地特色和优势的产业体系。引导企业把主要精力放到科技创新上来，不断激发内生动能，提升核心竞争力。</p>
+                <p>在我国经济向高质量发展迈进的过程中，要不断深化对经济工作的规律性认识，统筹好提升质量和做大总量的关系，坚持以质取胜和发挥规模效应相统一，促进国内经济实现更高水平的均衡发展，为实现中国式现代化奠定坚实基础。</p>
+                <p class="source-note">（作者分别系国家信息中心经济预测部产业室主任、研究员，国家信息中心经济预测部副研究员）</p>
+            </div>
+        </article>
+
+        <!-- Article 2: Top Right (Vertical Title) -->
+        <article class="art-2">
+            <div class="vertical-wrapper">
+                <div class="v-title">古镇如何带给游客新体验</div>
+                <div class="v-content">
+                    <div class="author" style="text-align: right; margin-top: 20px;">邓智团</div>
+                    <div class="single-col-text" style="font-size: 14px;">
+                        <p>散落在中华大地上的座座古镇，宛如一颗颗遗世明珠，承载着历史和文化的记忆。中国旅游研究院发布的《2024年中国古镇旅游发展报告》显示，古镇旅游已成为游客重要的出游选择，超过九成的受访者表示曾参与过古镇旅游。</p>
+                        <p>古镇旅游的兴起，离不开古镇保护与发展的积极探索。古建筑的物质形态得以留存，传统手工艺、民俗文化等非物质文化遗产也得以传承。比如，有着1300多年历史的江苏太仓沙溪镇坚持原格局、原生态、原风貌和原住民的“四原”保护，依托古镇原始肌理，打造沙溪古镇数字文化产业创新基地，还结合本土民俗推进农业项目，帮助村民增收致富。皖南宏村落实封，作为联合国教科文组织世界文化遗产名录中的瑰宝，在妥善保存古建筑和历史信息的基础上，通过发展旅游业、文化产业和现代农业，巧妙推动文化浸润经济、经济融入文化，实现了古镇与产业的深度融合。成都以“天府古镇”为统一品牌，利用主题创意场景+地域文化+特色互动”的方式，依托绿色低碳的生态本底、古色古香的街道、历史悠久的建筑以及传统的地方文化，打造不同主题的创意场景，推动古镇整体联动发展。</p>
+                        <p>事实上，这种“古镇+”模式，不仅为古镇带来了源源不断的客流和收入，也有力支持了古镇的可持续发展。不过也需要看到，古镇在资源禀赋上难免存在差异，尤其是对于那些相对“资质平平”的古镇来说，要在激烈竞争中突围确实容易。笔者认为，关键是要找准自身定位和核心资源，着力打造自身差异化特色，以历史文化为魂守护古镇的千年记忆，以人间烟火为脉永葆古镇的生机与活力，以特色产业为筋带支撑古镇的可持续发展。</p>
+                        <p>坚守历史文化之魂，深挖古镇特色资源。深入挖掘古镇的历史文化资源，不仅让我们更好地了解过去，还能为古镇的发展注入独特魅力。保护和修缮历史建筑，使其重现昔日的风貌，让游客能够领略并触摸并感受到古风古韵；传承传统手工艺和民俗文化，让这些古老的技艺和习俗融入现代生活，重新焕发生机与活力。</p>
+                        <p>以特色产业为筋骨，支撑古镇可持续发展。在妥善保护古镇的同时，善于引入与古镇文化相契合的产业，丰富古镇文旅业态，提升游客在地体验，增加古镇的神秘感和吸引力。一些古镇拥有独特的传统手工艺，如陶瓷制作、刺绣、木雕等，可精心谋划、特色招商、创新业态，打造具有地方特色的文化产业品牌。同时，利用古镇的自然风光和人文景观，推进文旅深度融合，善用新信息技术，提供丰富多样的旅游体验。</p>
+                        <p>古镇的保护发展离不开社会参与和多元共赢。当地居民是古镇的主人，他们习用的生活方式和操持的文化传统是古镇的魅力所在。理应鼓励居民积极参与古镇的保护和发展，保护本土文化，传承传统技艺。可通过开展培训活动，增强当地居民的文化保护意识和旅游服务能力，让他们更好地参与到古镇的发展中。同时，吸引企业、社会组织等多元主体参与其中，协同努力，优化服务格局，丰富产品供给，让古镇更好连接过去与未来，成为既具有历史韵味又充满现代活力之地。</p>
+                        <p>期待更多古镇找到适合自己的发展模式，让古老文化与现代生活相互辉映，为游客带来极致体验和感受。相信汇聚而成的古镇保护与发展之力，将更好护佑中华民族的文化瑰宝。</p>
+                        <p class="source-note">（作者系上海社会科学院研究员）</p>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- Article 3: Mid Left (Spans 2 cols) -->
+        <article class="art-3">
+            <h2 class="article-subtitle">做好党建工作<br>为高等教育改革提供强大动能</h2>
+            <div class="author">刘海峰</div>
+            <div class="multi-col-text">
+                <p>近日，第二十八次全国高校党的建设工作会议在北京召开。会议强调，推动党建和业务深度融合，发挥党建工作在把准方向、整合资源、支持保障等方面的重要作用，以党建引领高等教育改革，落实学科专业结构优化调整、拔尖创新人才培养、关键核心技术攻关等重点任务。在民族复兴、强国建设新征程上，高等教育发挥着重要的支撑作用，而要实现高等教育高质量发展，就必须进一步推动高等教育改革。以党建引领高等教育改革，是党的全面领导深入贯彻到高等教育领域的必然结果，是扎实抓好高校党建工作的内在要求，是我国高等教育发展壮大的宝贵经验。</p>
+                <p>党的十八大以来，我国高等教育改革取得历史性成就，建成世界最大规模的高等教育体系，高等教育毛入学率从2012年的30%提升到2023年的60.2%，实现了历史性跨越。《2023年全国教育事业发展统计公报》显示，我国高等教育总规模达4655万人，居世界第一位，高等教育实力显著增强。通过“211工程”“985工程”和“双一流”建设，一批大学和一大批学科已经跻身世界先进水平。高等教育服务国家重大战略的能力持续增强，高校获得了60%以上的国家科技三大奖励，承担了全国60%以上的基础研究和80%以上的国家自然科学基金项目，参与研制了超级计算机、北斗卫星导航系统、神舟系列等国家之重器。高等教育促进经济社会发展的作用越来越突出，高校成为新质生产力的重要生长极。</p>
+                <p>当前，我国高等教育改革不断推进，在提升高等教育改革匹配社会需求的精准度、确保人才培养与市场需求耦合、完善高等教育政策联动机制、加强有效措施适应性等方面持续发力。主要包括：推进提高高等教育助力活力的“放管服”改革落实，深化教育、科技、人才一体化战略的科教融合体制机制改革，加大高校人事人才体制机制改革力度，推动适应新发展格局的高等教育供给侧改革，创新适应知识生产新模式的教学科研组织方式等。解决这些问题，既需要不断深化对高等教育改革规律的认识，更需要发挥高校党建工作的重要作用。</p>
+                <p>以党建保证高等教育改革的方向。中国高等教育改革有着世界高等教育改革的一般规律与特性，也有自身独特的改革逻辑和发展脉络，最重要的一点就是要确保社会主义办学方向。高等教育改革要以党的政治建设为统领，落实好党领导下下的校长负责制，确保党的教育方针在高校得到贯彻。要把“为党育人、为国育才”作为理念、责任和使命贯彻到高等教育改革全过程，培养社会主义的建设者和接班人。要坚持不懈用习近平新时代中国特色社会主义思想铸魂育人，坚持思政课建设与党的创新理论武装同步推进，促进高等教育形成强大思政引领力。以党建加强高等教育改革的顶层设计，加快体制机制建设，从全局着手、整体布局、系统集成、协同推进，努力做到统分力量、整合资源、凝聚共识，引领高校顶层设计的建立和完善，为高等教育改革保驾护航。</p>
+                <p>以党建提高高等教育改革的难题。做好高校党建工作，为破解高等教育改革难题提供精神动力。改革没有完成时，只有进行时，必须有敢于冲破利益固化藩篱、将改革进行到底的决心。做好高校党建工作，就是要将改革精神贯彻下去，让高等教育在改革的激流中获得高质量发展。做好高校党建工作，为破解高等教育改革难题提供人才支持。近年来，教育部组织2800余名全国普通高校党委书记和校长、8万余名领导班子成员和中层骨干、8.8万名学生党支部书记开展全覆盖集中培训，全国高校“双带头人”教师党支部书记配备比例超过97%，高校3.2万名高层次人才担任党员占比超过60%。这些都是新的历史时期推动高等教育改革所依靠的人才力量。坚持持续增强高校党组织政治功能和组织功能，引育广大师生积极投身改革。</p>
+                <p>高等教育改革是一项复杂的系统工程，需要绵绵用力、久久为功。要切实发挥好高校党建工作在保证方向、整合资源、汇聚共识方面的作用，持续为高等教育改革注入强大内生动能。</p>
+                <p class="source-note">（作者系西南石油大学马克思主义学院副教授）</p>
+            </div>
+        </article>
+
+        <!-- Article 4: Mid Right (Elderly Market) -->
+        <article class="art-4">
+            <h2 class="article-subtitle" style="font-size: 24px;">老年用品市场大有潜力</h2>
+            <div class="author">欧阳铮</div>
+            <div class="single-col-text" style="font-size: 14px;">
+                <p>支持企业加大老年人服装服饰、老花镜等老年日用及辅助产品创新研发力度，引导开发适合老年人食用、营养丰富的特色食品，聚焦智能传感、信息通信、人工智能等技术领域研发一批养老科技创新产品……近来，各地纷纷出台相关政策，引导、鼓励企业加强老年用品研发和推广，大力发展银发经济，满足多层次、多样化、多代化的产品和服务需求。</p>
+                <p>随着老年群体不断扩大，老年用品消费将持续增长，且更加多样化、个性化。从镇县使用来看，《第五次中国城乡老年人生活状况抽样调查基本数据公报》，2021年，我国75.8%的老年人使用了辅具用品。中国老龄科学研究中心预测，2035年我国银发经济规模将达30万亿元。</p>
+                <p>丰富老年用品种类、发展老年用品产业，不仅是发展银发经济的重要一环，也是应对人口老龄化的必由之路。2024年年初，国务院办公厅印发我国首个支持银发经济发展的专门文件，提出了4方面26项举措，加快银发经济规模化、标准化、集群化、品牌化发展。2024年《政府工作报告》提出，加强老年用品和服务供给，大力发展银发经济。这一系列政策为我们大力发展银发经济、释放养老消费潜力提供了有力政策牵引和制度保障。</p>
+                <p>当前老年用品产业快速发展，能较好满足老年人的基础需求，但仍存在供需矛盾。客观上，对老年人有效需求的挖掘还不够充分，老年用品产业整体适老化水平、创新能力也有待进一步提升，创新产品供给能力尚显不足。如何更好促进老年用品产业发展？首先，需加强调研，了解老年人对老年用品的需求及变化趋势。老龄群体特殊的身心特点和行为习惯，决定了老年用品需求通常有以下特点：一是健康主导；二是对产品的安全性和便利性要求较高；三是注重产品的长期性和稳定性。还有部分老年人对产品价格较为敏感，注重产品质量和价格间的平衡。此外，老年人对科技化和智能化产品的需求也在加重，个性化和定制化需求强烈。</p>
+                <p>以需求牵引供给，充分挖掘并满足老年人的有效需求。一方面，多渠道推广健康管理理念，激发并释放老年用品消费需求。可采用政府购买服务等形式，在社区为老年人提供中高端老年用品租赁服务；另一方面，探索扩大长期护理保险和民政居家养老补贴范围，支持老年人更便利获得所需的老年用品和服务。</p>
+                <p>以供给创造需求，通过多方面的支持力度推动老年用品产业发展。老年用品产业投入大、投资回报周期长，很多产品具有一定的福利性质，其经济效益低但社会效益高。可通过加强相关政策扶持和税收优惠等，鼓励更多市场主体进入老年用品市场，开展老年用品关键技术和产品的研发推广，丰富市场供给。培育壮大骨干企业，打造老年用品品牌，推出更多老百姓用得起、用得好的产品与服务，不断释放引领示范效应，激发市场发展活力。</p>
+                <p>同时，还可鼓励老年用品企业创新线下体验、线上的买模式，优化老年用品消费方式和环境。老年人的健康水平和自理能力有较大的异质性，老年用品的适用性等也存在差异，应进一步细分老年产品市场，依技术含量的产品可以进行网络销售，价格高昂的高科技产品可以提供上门试用服务。鼓励企业为老年人提供个性化服务，多渠道提升老年用品可及性，提升老年人消费体验。</p>
+                <p class="source-note">（作者系中国老龄科学研究中心副研究员）</p>
+                
+                <div class="time-comment-box">
+                    <h4>光明时评</h4>
+                    <p>中国新闻奖名专栏</p>
+                </div>
+            </div>
+        </article>
+
+        <!-- Ad Section: Bottom -->
+        <div class="ad-section">
+            <div class="ad-header">西南石油大学石油与天然气工程学院</div>
+            <div class="ad-title">凝聚思政之光 传承石油精神</div>
+            <div class="ad-grid">
+                <div class="ad-col">
+                    <p>思政教育重在培养学生的理想信念和价值观，为社会主义现代化建设提供强有力的人才支撑。西南石油大学石油与天然气工程学院积极响应号召，发扬“为祖国加油，为民族争气”的大学精神，致力将石油精神融入育人实践，培养具有兴国报国理想、勇担民族复兴重任的时代新人。</p>
+                    <p>学院党委紧紧围绕服务国家能源安全战略推行教育教学改革，构建“钻—采—输”全链条思政育人新模式，将石油精神融入教育教学实践，彰显学院思政教育的育人特色，培养“油气精英”铁人先锋，形成“头雁效应”，激活“红色细胞”，形成“一支部一特色”，实现党建与思政育人的有机统一。推进“文化育人”工程，打造“石油魂”雕塑、油气开发3D展示馆等文化场所，运营“西南小石头”等新媒体平台，构建多元融通的文化育人体系，培养学生的石油精神和奉献精神。</p>
+                    <p>学院党委加强支部标准化、规范化、特色化建设，深入推进新时代高校党建示范创建和质量创优工作。构建思政育人的坚强阵地，让党建“双创”工作再上新台阶。学院入选全国党建工作标杆院系、“双带头人”党支部书记样板党支部等全国、省级高校党建“双创”集体建设项目。</p>
+                    <h4>红色导向 党建育人与文化传承</h4>
+                    <p>学院党委坚持以党建为引领，用好党建引领定向“钻”，构建“两大工程”育人新机制，把牢思政育人总方向，确保教育工作始终沿着正确的政治方向前进。</p>
+                    <p>学院深入实施“油马引航”工程。秉承和弘扬“三老四严”的优良传统，加强党建教育工作的全面领导，确保教育工作顺利开展。学院通过评选“师德标兵”铁人名师和“油气精英”铁人先锋，形成“头雁效应”，激活“红色细胞”，形成“一支部一特色”，实现党建与思政育人的有机统一。推进“文化育人”工程，打造“石油魂”雕塑、油气开发3D展示馆等文化场所，运营“西南小石头”等新媒体平台，构建多元融通的文化育人体系，培养学生的石油精神和奉献精神。</p>
+                </div>
+                <div class="ad-col">
+                    <h4>教育为本 人才培养与思政融合</h4>
+                    <p>在西南石油大学石油与天然气工程学院，“采”不仅是石油工业中油气开采的重要环节，更是学院人才培养模式的核心。象征着知识的汲取与能力的提升。学院积极构建高水平人才培养体系，强化教育家精神，激发教师的教学热情和学生的内在学习动力。通过建立教师培养机制，开展青年教师“过五关”培养计划，帮助青年教师通过“信念关”“师德关”“学术关”“教学关”“实践关”等环节，实施晋升、绩效、职级晋级等多维度激励措施，构建“师德师风、教学实绩、科研质量、社会服务”的“四位一体”综合评价体系，实现教师“乐教、善教、优教”的新局面。</p>
+                    <p>学院深入挖掘石油文化和能源强国战略中的思政元素，将其融入教学各环节。通过“三晋四化”课程思政教学模式，实现课堂教学的关键概念通俗化、抽象理论形象化、知识来源故事化、学科发展榜样化，有效激发学生的学习动力。通过课外思政教育改革，实施多维度思政教育培养体系，举办“思政大讲堂”“拓展训练营”“石油红色基因寻访”“先进典型宣讲会”等活动，培养学生兴油报国和科技报国志向，构建网络思政生态圈，全方位融入社会主义核心价值观。</p>
+                    <h4>立足发展 产学研融合与实践育人</h4>
+                    <p>学院大力搭建科产教融合，以实践育人为核心，构建“1+3+6”人才培养新模式，旨在贯通能源强国的集“输”管道，解决校企人才培养目标错位和教育教学过程与生产过程脱节的问题。该模式深化了校企合作，促进学生就业与企业需求的精准对接。</p>
+                    <p>学院“1+3+6”人才培养模式中，“1”代表校企“红色1+1”支部共建，通过党建联盟，推动资源共享、工作共融、活动共办、发展共促；“3”指依托三大科教平台（中石油、中石化、中海油等企业共建教学实践实训基地，构筑全链条全尺寸“钻采输”实习实训系统，联设实践育人物理平台；“6”是聚焦校企合作六个环节，从专业建设指导委员会的成立到企业专家参与授课，从实习实训指导到毕业设计学科竞赛的校企“双导师”制，全面提升学生的工程实践能力。通过多途径评价学生培养质量，确保人才培养与企业需求精准对接，有效解决学生就业与企业选才难题。</p>
+                    <p>西南石油大学石油与天然气工程学院构建了“钻—采—输”全链条思政育人新模式，成功培养了一批具备专业能力与家国情怀的能源领域人才。面向未来，学院将继续优化这一模式，为实现中华民族伟大复兴的中国梦贡献教育力量。</p>
+                    <p style="text-align: right; font-size: 12px;">（曾明友）</p>
+                </div>
+            </div>
+            <div class="ad-footer">·广告·</div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

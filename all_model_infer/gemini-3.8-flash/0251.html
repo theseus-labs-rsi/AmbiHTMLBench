@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>光明日报 - 评论版</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    font-family: "SimSun", "Songti SC", "Source Han Serif SC", serif;
+    color: #1a1a1a;
+    background-color: #f7f7f7;
+    line-height: 1.45;
+    font-size: 11.5px;
+  }
+  .newspaper-page {
+    width: 1240px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 24px 32px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+
+  /* Header */
+  .page-header {
+    border-bottom: 2px solid #000;
+    padding-bottom: 8px;
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .header-left {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .page-num {
+    font-family: "Arial", sans-serif;
+    font-size: 42px;
+    font-weight: 900;
+    line-height: 0.9;
+    letter-spacing: -2px;
+  }
+  .page-section-title {
+    font-family: "SimHei", "Heiti SC", sans-serif;
+    font-size: 26px;
+    font-weight: bold;
+    border-left: 2px solid #000;
+    padding-left: 10px;
+  }
+  .header-meta {
+    font-size: 11px;
+    color: #333;
+    margin-left: 20px;
+  }
+  .header-right {
+    text-align: right;
+  }
+  .newspaper-logo {
+    font-family: "STKaiti", "KaiTi", "Kaiti SC", serif;
+    font-size: 38px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    line-height: 1;
+    color: #111;
+  }
+
+  /* Main Layout */
+  .main-content {
+    display: grid;
+    grid-template-columns: 875px 1fr;
+    column-gap: 24px;
+  }
+
+  /* Left 3/4 Column */
+  .left-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .article-block {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 14px;
+  }
+  .article-block:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .article-title-row {
+    margin-bottom: 6px;
+  }
+  .main-article-title {
+    font-family: "SimHei", "Heiti SC", sans-serif;
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    color: #000;
+    line-height: 1.2;
+  }
+  .article-author {
+    font-size: 11.5px;
+    color: #222;
+    margin: 4px 0 8px 0;
+  }
+
+  .four-cols {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 14px;
+    text-align: justify;
+    line-height: 1.45;
+  }
+  .four-cols p {
+    text-indent: 2em;
+    margin-bottom: 6px;
+  }
+  .author-affiliation {
+    text-align: right;
+    font-weight: bold;
+    margin-top: 4px;
+    font-size: 11px;
+  }
+
+  /* Guangming Forum Box */
+  .gm-forum-box {
+    border: 1px solid #111;
+    margin-top: 10px;
+    padding: 10px 8px;
+    text-align: center;
+    background: #fff;
+  }
+  .gm-forum-box h4 {
+    font-family: "SimHei", "Heiti SC", sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-bottom: 2px;
+  }
+  .gm-forum-box .sub {
+    font-size: 10px;
+    color: #444;
+    margin-bottom: 6px;
+  }
+  .gm-forum-box .contact {
+    font-size: 10px;
+    line-height: 1.3;
+    color: #222;
+  }
+
+  /* Culture Badge */
+  .culture-badge-wrap {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 8px;
+  }
+  .culture-badge {
+    border: 2px solid #555;
+    border-radius: 14px;
+    padding: 2px 14px;
+    font-family: "SimHei", "Heiti SC", sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    color: #222;
+    letter-spacing: 1px;
+  }
+
+  /* Right 1/4 Column */
+  .right-section {
+    border-left: 1px solid #ddd;
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* Right Top Article */
+  .right-top-article {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 14px;
+  }
+  .column-brand {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .column-brand-title {
+    font-family: "SimHei", "Heiti SC", sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    display: inline-block;
+    position: relative;
+    padding: 0 16px;
+  }
+  .column-brand-title::before, .column-brand-title::after {
+    content: "❖";
+    font-size: 10px;
+    position: absolute;
+    top: 2px;
+  }
+  .column-brand-title::before { left: 0; }
+  .column-brand-title::after { right: 0; }
+  .column-brand-sub {
+    font-size: 10px;
+    color: #555;
+    letter-spacing: 1px;
+  }
+
+  .vertical-layout {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .vertical-title-area {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    display: flex;
+    align-items: center;
+    border-left: 1px solid #eee;
+    padding-left: 6px;
+  }
+  .vertical-title {
+    font-family: "SimHei", "Heiti SC", sans-serif;
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    line-height: 1.15;
+    color: #000;
+  }
+  .vertical-author {
+    margin-top: 14px;
+    font-size: 11px;
+    letter-spacing: 2px;
+  }
+  .vertical-content {
+    flex: 1;
+    text-align: justify;
+    line-height: 1.45;
+  }
+  .vertical-content p {
+    text-indent: 2em;
+    margin-bottom: 6px;
+  }
+
+  /* Right Bottom Article */
+  .right-bottom-article {
+    display: flex;
+    flex-direction: column;
+  }
+  .rb-title {
+    font-family: "SimHei", "Heiti SC", sans-serif;
+    font-size: 22px;
+    font-weight: bold;
+    line-height: 1.25;
+    margin-bottom: 4px;
+  }
+  .rb-author {
+    font-size: 11.5px;
+    margin-bottom: 8px;
+  }
+  .rb-banner-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .rb-badge {
+    border: 1px solid #333;
+    padding: 1px 6px;
+    font-family: "SimHei", "Heiti SC", sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+  }
+  .placeholder-img {
+    width: 60px;
+    height: 40px;
+    background: #eaeaea;
+    border: 1px dashed #999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    color: #666;
+  }
+  .two-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 10px;
+    text-align: justify;
+    line-height: 1.42;
+  }
+  .two-cols p {
+    text-indent: 2em;
+    margin-bottom: 6px;
+  }
+</style>
+</head>
+<body>
+
+<div class="newspaper-page">
+  <!-- Top Header -->
+  <header class="page-header">
+    <div class="header-left">
+      <span class="page-num">02</span>
+      <span class="page-section-title">评论</span>
+      <span class="header-meta">2025年1月13日 星期一 责任编辑:项锋、杨心悦 新闻版美术编辑:袁昕</span>
+    </div>
+    <div class="header-right">
+      <div class="newspaper-logo">光明日报</div>
+    </div>
+  </header>
+
+  <!-- Main Content Layout -->
+  <main class="main-content">
+    <!-- Left 3/4 Column -->
+    <div class="left-section">
+      
+      <!-- Article 1 -->
+      <article class="article-block">
+        <div class="article-title-row">
+          <h1 class="main-article-title">加快融入和服务全国统一大市场建设</h1>
+          <div class="article-author">□ 魏琪嘉</div>
+        </div>
+        <div class="four-cols">
+          <div>
+            <p>近日，《全国统一大市场建设指引（试行）》（以下简称《指引》）印发，这是推动全国统一大市场建设走深走实的务实举措，为市场发挥配置资源决定性作用、统筹好有效市场和有为政府的关系提供了重要制度保障。</p>
+            <p>党的二十届三中全会提出，构建高水平社会主义市场经济体制，强调“放得活”又“管得住”，这也成为理解《指引》各项内容的关键点。“放得活”，关键是使市场在资源配置中起决定性作用。通过健全市场准入、产权保护、设施联通、要素流动交易等方面的规则制度，畅通市场配置资源的路径和渠道，提高要素配置总体效率。“管得住”，关键就是更好发挥政府作用，在尊重市场规律的基础上，用改革激发市场活力，用政策引导市场预期，在优化市场环境方面运用经济手段、法律手段和必要的行政手段，对影响公平竞争、形成市场分割、扰乱市场秩序的行为加以规范治理。政府和市场应职责明确、边界清楚，监管既不越位、也不缺位。“放得活”与“管得住”两者辩证统</p>
+          </div>
+          <div>
+            <p>一、相互联系，市场决定资源配置、法治经济两方面共同构成了在推进全国统一大市场建设过程当中的核心“底座”。</p>
+            <p>市场是各类微观主体运行的大平台、大环境，市场本身也有不同的类型。因此，抓重点、抓主要矛盾是关键。首先，制度规则是最核心的。其规范性、有效性直接决定了后面其他各个环节的运转配合效果。既然是制度，就要更明确，更好落实《指引》的落地也就更明确了，就是把制度和规范落实到底，推动形成更好遵守市场规则、制度规范的良好环境。比如，《指引》中明确提到，要不断完善依法平等长久保护各种所有制经济产权的制度体系，清晰释放了强化市场基础制度规则统一的信号。</p>
+            <p>要素和资源市场建设是重点。形成统一大市场的特征就是促进要素自由流动、资源按照供求能够充分配置。在已经取得积极进展的基础上，应坚持推动形成要素、资源按照市场供求实际情况合理有序进行定价的长期机制，让灵敏的价格信号成为全国统一大市场中的</p>
+          </div>
+          <div>
+            <p>“交通信号灯”。理想价格形成机制，发挥价格信号机制作用，对要素市场和资源市场建设成效具有“牵一发动全身”的作用。价格信号如果被扭曲，资源配置就可能是低效甚至无效的；价格信号要有用、处受、普遍的交易、流动，确权、定价都带有不可置否的基础条件。</p>
+            <p>对不当行为及时、有力规范是必要一环。干扰秩序、破坏竞争的行为如果得不到制度的规范，产生的负面作用是巨大的，对预期的破坏也是巨大的。从及时发现，对存在的突出表现通过建章立制着力加以破解。一个以点带面的做法就是受切实把《公平竞争审查条例》落实周期，形成可反馈、可检查、可评估的闭环。</p>
+            <p>此外，各地的发展条件不同，要素资意禀赋不同，对有条件的地区鼓励开展区域市场一体化建设，因此探索具有全局放大效应等一体化进程，这对破解</p>
+          </div>
+          <div>
+            <p>市场建设过程中的深层次难题具有重要示范意义。当然，其中涉及地方事权范围内政策的协调，这些都具有以点带面的性质，有益经验也将对深化全国统一大市场建设提供重要参考和借鉴。</p>
+            <p>在推动《指引》落地的过程中，还应持续密切与经营主体的沟通，侧重于从三个方面进一步提高各方掌握信息、校准信息的程度。其一，发挥好行业协会广泛联系企业的信用，定期针对企业在全国统一大市场建设中心关切的情况进行沟通，形成专业意见。其二，切实保障政策落实落地，对不同行业的企业提供精准政策咨询，做好政策解读，用好各地信息化平台做好政策宣传发布。其三，建议定期通过发布案例的形式，把典型经验做法、政策适用的具体场景直观表达出来，进一步提高与经营主体进行沟通交流的效果。</p>
+            <div class="author-affiliation">（作者系国家信息中心经济预测部产业经济研究室主任、研究员）</div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Article 2 -->
+      <article class="article-block">
+        <div class="article-title-row">
+          <h1 class="main-article-title">更好保障老有所养、老有所依</h1>
+          <div class="article-author">□ 唐任伍</div>
+        </div>
+        <div class="four-cols">
+          <div>
+            <p>近日，国务院新闻办公室举行“中国经济高质量发展成效”系列新闻发布会，有关负责人表示，将聚焦老年人的多样化需求，培育潜力产业，扩大老年助餐、居家助老、社区便民、机构养老等服务，让智能辅具、银发专列、老年游学等新研等新产品更多走进老年人生活。</p>
+            <p>当前，人口老龄化给我国经济社会发展带来一系列挑战，也蕴藏着宝贵机遇和希望。从挑战中寻找机遇，于变局中打开新局，大力培育潜力产业，增进老年福祉，成为当下全社会需要面对的重大问题。《银发经济蓝皮书：中国银发经济发展报告（2024）》显示，目前我国银发经济规模在7万亿元左右，预计到2035年为30万亿元。银发经济作为老龄化社会的潜力产业，具有产业辐射面广、产业链长、受益规模大等发展优势。</p>
+            <p>我国60岁以上的老年人已经超过2.9亿人，人口老龄化是今后较长时期内所面临的基本国情，让所有老年人都能</p>
+          </div>
+          <div>
+            <p>有一个幸福美满的晚年，使千千万万老年人实现老有所养、老有所为、老有所乐，是家事，也是国事。围绕服务老年人，做大做强银发产业，延长活力产业链，大力发展养老服务业，扩大银发经济形态，培育老年用品开发创新、智慧康养、康复辅助器具、抗衰老、养老金融、旅游观光、适老化改造等新产品、潜力大的产业，促进银发产业多元业态深度融合，有利于满足老年群体多元化、差异化、个性化需求。还应实施银发产业的要素保障，加强老年群体服务用地用房保障、财政金融支持、数据要素支持等，切实把增进老年人福祉的好事办实、把实事办好。</p>
+            <p>让老年人吃得好、吃得健康，少生病、就医便捷，是老年人安享幸福晚年的关键要素。因此，应针对老年人衣、食、住、行、医等不同的场景需求，聚焦一些“关键小事”，大力培育养老服务经营主体，发挥市场前沿明确的潜力产</p>
+          </div>
+          <div>
+            <p>业，丰富和扩大高品质老年产品和服务供给，鼓励和引导生产企业开发更多个性化、品质化的老年用品。比如，贵州省贵阳市南明区开办“幸福里长照之家”，引入市场主体参与共同建设，以老年公寓为基础，将社区居家、医护康养等融为一体，为老年人提供居养服务、术后照护、高龄抚养、失能照护等服务，成为当地探索“集团企立+区县”模式的典型代表。未来，应充分发挥我国产业基础雄厚、老年消费潜力巨大的优势，打造银发经济产业集群，促进养老、健康、家政、体育、文化、旅游等老年人服务业以及相关产品制造业创新融合发展。</p>
+            <p>老年人数量日益增加，其多元化、差异化、个性化的需求越来越旺盛。这就需要打破制约老年人消费的“数字鸿沟”，推动银发经济高质量发展。具体来说，需要实施智能化老年服务。合理运用智能化设备，为老年人提供助餐服</p>
+          </div>
+          <div>
+            <p>务、居家助老服务、社区便民服务、老年健康服务、养老照护服务、老年文体服务等老年人急需的高频服务，实现资源整合与共享，从“人找服务”到“服务找人”，以智能化增进“关键小事”上的民生福祉。比如，老年人可以借助智能家居设备，对身体状况进行实时分析；开启“长辈模式”，将手机、电脑上的字体图标一键放大；收看智能技术教学视频，线上“微课堂”，获取更为广博的知识等。</p>
+            <div class="author-affiliation">（作者系北京师范大学政府管理学院教授、博士生导师）</div>
+            
+            <div class="gm-forum-box">
+              <h4>光明论坛</h4>
+              <div class="sub">中国新闻奖名专栏</div>
+              <div class="contact">
+                评论投稿邮箱<br>
+                gmpinglun@163.com
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Article 3 -->
+      <article class="article-block">
+        <div class="article-title-row">
+          <h1 class="main-article-title">解决“屏摄”难题需要更多创新举措</h1>
+          <div class="article-author">□ 王升</div>
+        </div>
+        <div class="four-cols">
+          <div>
+            <p>2024年，我国电影票房超425亿元，更有3部国产电影入围全球年度电影票房榜前十名。不过，伴随影片的热映，屏摄的争议也始终未断，甚至有网友戏称这一年为“屏摄元年”。最近，有观众因屏摄而遭电影著作权人投诉，事件最终以当事人公开道歉并删除已上传至社交平台的屏摄图片而收场。</p>
+            <p>何为屏摄？也许你对这个名词不太熟悉，但对这样的场面应该并不陌生：当你正在影院沉浸式观影时，有人用手机或相机等设备对屏幕上的画面进行拍照和录制。不少人明知屏摄可能存在版权纠纷，但仍选择通过屏摄记录下自认为难忘的观影瞬间和影片“名场面”。</p>
+            <p>对于屏摄，很多人逐渐认识到这是</p>
+          </div>
+          <div>
+            <p>一种不文明行为，但仍有部分人坚持认为这“不算啥事”，部分片方的态度也是模棱两可。</p>
+            <p>片方对屏摄态度模棱，背后的原因不单纯。当前，短视频成为影视作品的一大宣传方式，其重要性不言而喻，并不断反向影响和重塑影视产业的宣传发布形式。在此背景下，影视的屏摄和传播行为，有助于电影的宣传，片方受益，乐见其成。</p>
+            <p>不过，对于悬疑类等影片来说，对核心画面和剧情的屏摄不免会造成剧透，打破官方预售留下的悬念。再考虑到大多数人的电影消费是一次性的，屏摄对电影票房的负面影响也不容小觑。电影人既不想激化与观众的矛盾，又害怕</p>
+          </div>
+          <div>
+            <p>案的担忧，陷入了进退两难的境地。</p>
+            <p>人们希望通过法治能成为规范屏摄行为的关键点，但目前学界对此尚存分歧。有专业人士指出，屏摄行为的法律定性需要根据形式、目的等不同情形具体分析，不可一概而论。如果观众只拍图几张照片或录制几秒短视频，没有进行商业利益性质的传播，那么可视作“合理使用”。而如果利用屏摄视频进行切片视频制作等，则另当别论。</p>
+            <p>屏摄作为一种不文明行为，对其应说“不”。拒绝屏摄应和不踢椅背一样，成为人们普遍认同和遵守的观影规则。其实，“拒绝屏摄”已出现在每场电影放映前的宣传引导片和电影屏幕底面的提示文字中，但这种信息提示的触</p>
+          </div>
+          <div>
+            <p>达率尚且不足。培育观众文明还需相向发力、创新传播，利用好每一次的社会关注和讨论，推动观念普及，达成社会共识。</p>
+            <p>同样值得深思的是，当观影日益成为一种生活方式，当屏摄分享日益作为一种数字交往实践而存在，要彻底遏制此类行为并不是一件容易的事。或许是时候探索一条新路，这条路既不损害电影版权，又能满足人们蓬勃的观影“打卡”需求和分享欲望。在国内外，已经有一些有益探索。比如，制作更高清精彩的定帧图供影院在影片开始前和结束后的专属时段播放，供观众集中拍照记录留念。要想圆满解决屏摄难题，则需要更多创新举措。</p>
+            <div class="author-affiliation">（作者系复旦大学马克思主义学院讲师）</div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Article 4 -->
+      <article class="article-block">
+        <div class="article-title-row">
+          <h1 class="main-article-title">“背诗免门票”，让文气与人气相得益彰</h1>
+          <div class="article-author">□ 李晚</div>
+        </div>
+        <div class="four-cols">
+          <div>
+            <p>近年来，“背诗免门票”活动在众多景区广泛开展。成都市青羊区文物馆花样翻新，推出了国庆迎双节——“背诵《诗词若干首》中83首咏四川诗词，便可获得景区永久免票。消息一出，不少游客跃跃欲试，数据显示，成都市高校师生参与比例最为突出，成功率达到31%左右。不仅在成都，在四川剑阁、广元剑门关、在南岳衡山等景区也纷纷推出此类活动，吸引不少游客慕名而来。</p>
+            <p>背诗，是每个人读书时不可或缺的人生记忆。这种创意营销令人耳目一新，游客的记忆在景区景点被唤醒，从而自发在</p>
+          </div>
+          <div>
+            <p>社交平台上传播，并吸引更多人尝试打卡。通过背诗游景点，游客切身体会到的，是李唐盛世前“安得广厦千万间，大庇天下寒士俱欢颜”的民生情怀，是剑门关上李白“一夫当关，万夫莫开”的沛然豪气，是北固山下辛弃疾“廉颇老矣，尚能饭否”的慷慨悲歌……正是这些映衬山河、气吞万千的磅礴诗词，以及那些在浪漫挥洒间激昂的传奇故事，让游客对这些名胜古迹有了更深刻的感悟。</p>
+            <p>景区有了好策展，“藏在深闺人未识”不行，或是坐等有缘人“慧眼识珠”也不可取，得走出来。一些景区在类似活动中主</p>
+          </div>
+          <div>
+            <p>动作为，让游客提前阅读书籍，于记忆与吟诵间增进对景区历史人文的了解，在攀山、临江、凭栏远眺的过程中经历诗心古韵的洗礼，着实是一件好事、美事。</p>
+            <p>当下，文旅融合向纵深发展，“背诗免门票”的方式产生了以小博大的效果。作为一种丰富旅游体验、增进互动体验的巧思妙笔，它让景区人气与文气相得益彰、融为一体。于景区而言，它擦亮了文化品牌、激活了文化味；于游客而言，“背诗免门票”不仅享受“知识变现”的自豪感，又可在身临其中拥有一场跨越时空、与古人神交的体验。尤其在社交媒体发达的今天，来</p>
+          </div>
+          <div>
+            <p>景区“营销”甚至成了不少青年人热衷的打卡风尚，这种风尚能够使更广范围传播，将对弘扬中华优秀传统文化大有裨益。</p>
+            <p>作为文旅融合的一种有益尝试，“背诗免门票”的方式还需不断完善和更新，各地要根据实际情况进行差异化发展。人气高了、流量来了，景区更应跟进预期，通过细致入微的服务，衍生出更多特色鲜明、老少咸宜的文旅产品。</p>
+            <div class="culture-badge-wrap">
+              <div class="culture-badge">文化评析</div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Right 1/4 Column -->
+    <div class="right-section">
+      
+      <!-- Right Top Article -->
+      <article class="right-top-article">
+        <div class="column-brand">
+          <div class="column-brand-title">光明评论</div>
+          <div class="column-brand-sub">中国新闻奖名专栏</div>
+        </div>
+
+        <div class="vertical-layout">
+          <div class="vertical-title-area">
+            <h2 class="vertical-title">长三角一体化助力智慧医疗“破圈”</h2>
+            <div class="vertical-author">□ 王雪梅</div>
+          </div>
+          <div class="vertical-content">
+            <p>医疗改革是百姓最关心、最期盼的民生事项之一。如今,在长三角,上海青浦、浙江湖州、江苏昆山三地的患者,可以通过医疗联合体远程门诊共享三甲医院专家面对面诊疗服务。</p>
+            <p>作为我国经济发展活跃度最高、创新能力最强、开放程度最高、协同优势最显著的区域之一,长三角地区政府部门社会治理能力不断提升,企业创新能力增强,数字经济发达,医疗资源富集,这为智慧医疗提供了扎实的制度环境和“破圈”动力,具备了形成“智慧医疗生态圈”的社会土壤。</p>
+            <p>政府承担着协调协调的相关职能,引导智慧医疗实体落地,协助市场主体打破地域壁垒。《健康上海2030行动计划》指出,推动智慧医疗在市内普及,为医疗资源辐射、下沉其他省市做好平台保障;在“健康浙江”战略推动下,省级一体化智慧医疗云平台实现“功能迭代升级,引导各省科技企业加速跨省合作;江苏构建“智慧医疗云平台”、安徽落实“智慧健康安徽”战略,完成与上海、浙江医疗资源的互通共享。这些政策与产业布局,均为智慧医疗跨省协同提供了基本条件。</p>
+            <p>医疗机构和科研企业,则是智慧医疗产品的提供者。在“长三角智慧医疗联合体”平台上,政府担保安约,将“八盟”医院、科研院所、医疗创新企业整合起来,打通产学研全链条。平台通过远程诊断、AI辅助医疗等新技术,紧密对接医院需求。医院充分利用这些拓展后的方案信息协同,推动以技术为支撑、以服务为核心、医疗教育为辅助的智慧医疗产业集群。2023年,浙江已有1700万余人次体验智慧医疗。放行前,智慧医疗还涉及专家诊疗思维,为患者提供AI诊前评估,协助预约挂号;就诊时,患者得AI预问诊内容投放同步给医生,提升问诊效率。</p>
+            <p>以上海为中心优质医疗资源下移,是智慧医疗跨城联动的建设看。上海有辐射全国的医疗能力,优质完备的医院、医生、医疗产业;江南传统有着数量具备智慧医疗基础建设的医院,都可从中推入进“长三角智慧医疗联合体”。在省级平台完成信息接入,在联合体平台对接专家,打通城乡智慧医疗最后一公里,加速基层医疗体系升级。</p>
+            <p>数字经济是长三角智慧医疗扩容增效的底层基座。依托大数据、通用平台、物联网的产业化发展,智慧医疗应用已经贴上了江湖沪皖密集布的“数据水网”,通过手机终端与平常百姓联通。江苏徐州的患者即便在杭州住院也不等周折,通过“浙里办”可以完成异地医保报备,申请跨省互认的“电子医保凭证”可以实现医保结算,用智慧医疗平台可以为家属便签医院附近食宿。</p>
+            <p>2019年长三角一体化示范区成立以来,智慧医疗发展按下快进键,“长三角智慧医疗联合体”的扩容、丰容,是实现区域协同的标志性事件。目前,平台已集成沪、苏、浙三地医疗数据,接入部分安徽省医疗数据,基本实现跨省、跨机构、跨领域的多线程合作,成为优化区域医疗资源配置的提升行。凡此各方面亮点的涌动发展,反过来也推动了长三角一体化进展。</p>
+            <p>智慧医疗的“破圈”整合,从各方面顺理了政府、医疗机构、研发企业、医疗产业之间的关系,使长三角跨城合作机制实现综合升级。通过“长三角智慧医疗联合体”的硬件建设、软件联通与数据共享,政策制度壁垒、产业技术与互信息壁垒被逐一打破,各方围绕“一体化”目标,不断细化合作层级、优化合作机制、扩展协同领域。</p>
+            <p>智慧医疗促成了一揽子制度创新与跨地域政策互通,为接下来更多制度创新提供操作指导。“长三角智慧医疗联合体”以双评服务为核心,先期示范了数据标准、医疗检查标准互认问题。沪苏浙从数据处理技术标准、医疗数据使用法规入手,建立查标为“一套”,“就高”制定互认要求,确保了各地医疗信息可靠共享等。这种以制定标准来推动创新的办法,还复制扩展到健康管理、医保备案、买药体验业务等方面,催生了更多优质创新服务。</p>
+            <p>长三角城乡医疗资源分布并不均衡,各地区医疗服务差异同样存在。通过“长三角智慧医疗联合体”,三甲医院与基层医院、乡镇卫生所还能实现信息互联互通;专家团队、新技术技术逐步落实共享共享。患者就诊难、重特病诊断难、基层医生规培难、基层医疗监管难等困境被打破,群众生活幸福感、保障感增强了。</p>
+            <div class="author-affiliation">（作者系嘉兴大学马克思主义学院讲师）</div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Right Bottom Article -->
+      <article class="right-bottom-article">
+        <h2 class="rb-title">给寒假里的孩子全方位的爱</h2>
+        <div class="rb-author">□ 李思辉</div>
+        
+        <div class="rb-banner-row">
+          <div class="rb-badge">新闻笔谈</div>
+          <div class="placeholder-img">[插图: 陪伴]</div>
+        </div>
+
+        <div class="two-cols">
+          <div>
+            <p>“把爱带回家，同心护成长。”日前，全国妇联、中央网信办、最高人民法院、最高人民检察院、教育部、公安部等16部门印发通知，联合部署开展2025寒假儿童关爱服务活动，旨在帮助广大儿童度过一个健康、安全、快乐、有意义的假期。</p>
+            <p>寒假前夕，16部门联合部署儿童关爱服务活动，体现了党和政府对少年儿童的关心和重视，对接的是广大儿童和家长的现实需求。</p>
+            <p>寒假期间，未成年人从学校回归家庭，有了更充裕的活动时间。当地依托儿童活动中心等机构，带领儿童走进博物馆、纪念馆、科技馆等场所，开展参观研学活动，有助于开阔眼界，培育家国情怀；同时也能破解家长忙于工作、分身乏术的难题。利用喜迎春节的契机，广泛开展写春联、剪窗花、游园会、闹元宵等传统文化体验活动，有利于厚植中华传统文化情感；以生动活泼的形式开展生命教育、安全</p>
+          </div>
+          <div>
+            <p>教育、普法教育，可以让浓烈的意义得到延伸与拓展。寒假是一个完成课外教育的契机，这样的教育内容是对校园学科教育的补充，对儿童成长大有助益。</p>
+            <p>每到过年，一些特殊儿童群体就成了全社会共同的牵挂。各级各地各部门应按照寒假儿童关爱服务活动的要求，对留守儿童、孤儿等开展关爱活动，组织“爱心妈妈”、爱心小伙伴、守护责任人给他们带去家的温暖，确保每一个孩子都吃得饱、穿得暖，为他们带去社会的善意和滋养。尤其需要建立健全全面、完备、可靠的援助机制，确保每一个身处困境或难处的儿童都得到及时照料，享受社会大家庭给予的呵护与关爱。</p>
+            <p>在落实儿童关爱服务活动部署，开展一系列课外教育的同时也应当看到，寒假不是“第三学期”，其直接作用在于让少年儿童放松休息、舒缓疲劳。因此，开展各类活动，还需尊重未成年人意愿，给予他们更多自主选择权。</p>
+            <div class="author-affiliation">（作者系华中科技大学新闻评论研究中心特聘研究员）</div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

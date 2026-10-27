@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Reproduction</title>
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+    </script>
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+            background-color: #ffffff;
+            color: #000000;
+            margin: 0;
+            padding: 40px;
+            line-height: 1.35;
+            font-size: 16px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+        }
+        .column {
+            flex: 1;
+            text-align: justify;
+        }
+        .math-block {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+        }
+        .equation-number {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        h2 {
+            text-align: center;
+            font-size: 18px;
+            font-weight: normal;
+            text-transform: uppercase;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+        h3 {
+            font-size: 16px;
+            font-style: italic;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        p {
+            margin-bottom: 15px;
+            text-indent: 20px;
+        }
+        p.no-indent {
+            text-indent: 0;
+        }
+        .figure-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .placeholder {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-family: sans-serif;
+            font-size: 14px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+        /* Simulating the grid of images for Fig 3a */
+        .fig3a-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 2px;
+            width: 100%;
+            height: 220px;
+            background-color: #333;
+        }
+        .fig3a-item {
+            background-color: #555;
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 5px;
+        }
+        .fig3a-label {
+            background-color: rgba(30, 60, 120, 0.8);
+            color: white;
+            font-size: 10px;
+            padding: 2px 5px;
+            border-radius: 3px;
+            text-align: center;
+            font-family: sans-serif;
+            line-height: 1.1;
+        }
+        
+        /* Simulating the grid of images for Fig 3b */
+        .fig3b-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2px;
+            width: 100%;
+            height: 140px;
+            background-color: #333;
+        }
+        .fig3b-item {
+            background-color: #666;
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 5px;
+        }
+        .fig3b-label {
+            background-color: rgba(30, 60, 120, 0.8);
+            color: white;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 3px;
+            text-align: center;
+            font-family: sans-serif;
+        }
+
+        .caption {
+            font-size: 15px;
+            text-align: justify;
+            margin-top: 10px;
+            line-height: 1.4;
+        }
+        .caption-title {
+            font-weight: bold;
+        }
+        .sub-caption {
+            text-align: center;
+            font-size: 15px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+        }
+        
+        /* Specific styling for the robot arm simulation placeholders to look less empty */
+        .sim-bg {
+            background: linear-gradient(to bottom, #2c3e50 0%, #2c3e50 40%, #d4a373 40%, #d4a373 100%);
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+        .robot-arm {
+            width: 60%;
+            height: 70%;
+            background-color: rgba(200, 200, 200, 0.5);
+            border-radius: 10px;
+            position: absolute;
+            bottom: 10%;
+            left: 20%;
+            z-index: 1;
+            /* Simple shape to suggest a robot */
+            clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
+        }
+        
+        .bold-text {
+            font-weight: bold;
+        }
+        .italic-text {
+            font-style: italic;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Left Column -->
+    <div class="column">
+        <p class="no-indent">layer. The model is trained using a cross-entropy loss:</p>
+
+        <div class="math-block">
+            $$ \mathcal{L}_{\text{cls}} = - \sum_{k \in \{pos, rot, open\}} \sum_{b=1}^{B_k} y_{k,b} \log(\hat{y}_{k,b}) $$
+            <span class="equation-number">(7)</span>
+        </div>
+
+        <p class="no-indent">where $B_k$ denotes the number of bins for each action component. This approach allows the model to leverage the point cloud as a spatial anchor for localization.</p>
+
+        <h2>IV. EXPERIMENTS</h2>
+
+        <h3>A. Implementation Details</h3>
+
+        <p>We utilize Qwen2.5-VL [3] as the VLM backbone. To initialize from the pretrained PTv3 model [69], we use the same model configuration as PTv3-Large. Specifically, there are 5 hierarchical stages with $(3, 3, 3, 12, 3)$ layers and feature dimensionality of $(64, 128, 256, 512, 768)$ per stage. The PointACT module, including the hierarchical interaction blocks and the action head, comprises approximately 300M trainable parameters. To maintain the knowledge of the VLM, we keep the VLM backbone frozen if not otherwise mentioned. We crop the input point cloud using a workspace bounding box defined relative to the robot base frame [57, 11], and perform voxelization with size of 1cm. We set the maximum number of points as 4096.</p>
+
+        <p>Across our experimental benchmarks, the model is trained with a total batch size of 128 distributed across 2 NVIDIA H100 GPUs. We optimize the model for 20K to 50K gradient steps using the AdamW optimizer with a learning rate of $5 \times 10^{-5}$ and a cosine decay schedule. We apply standard point cloud augmentations, including random rotation around the gravity axis, alongside image-level augmentations for the VLM input during training.</p>
+
+        <h3>B. Evaluation Benchmarks</h3>
+    </div>
+
+    <!-- Right Column -->
+    <div class="column">
+        
+        <!-- Figure 3a -->
+        <div class="figure-container">
+            <div class="placeholder fig3a-grid">
+                <!-- Row 1 -->
+                <div class="fig3a-item">
+                    <div class="sim-bg"></div>
+                    <div class="robot-arm" style="clip-path: polygon(30% 10%, 70% 10%, 60% 90%, 40% 90%);"></div>
+                    <div class="fig3a-label" style="z-index: 2;">Water<br>plants</div>
+                </div>
+                <div class="fig3a-item">
+                    <div class="sim-bg"></div>
+                    <div class="robot-arm" style="clip-path: polygon(10% 20%, 90% 20%, 80% 80%, 20% 80%);"></div>
+                    <div class="fig3a-label" style="z-index: 2;">Frame off<br>hanger</div>
+                </div>
+                <div class="fig3a-item">
+                    <div class="sim-bg"></div>
+                    <div class="robot-arm" style="clip-path: circle(40% at 50% 50%);"></div>
+                    <div class="fig3a-label" style="z-index: 2;">Toilet seat<br>down</div>
+                </div>
+                <div class="fig3a-item">
+                    <div class="sim-bg"></div>
+                    <div class="robot-arm" style="clip-path: polygon(40% 0%, 60% 0%, 50% 100%);"></div>
+                    <div class="fig3a-label" style="z-index: 2;">Umbrella<br>out</div>
+                </div>
+                <div class="fig3a-item">
+                    <div class="sim-bg"></div>
+                    <div class="robot-arm" style="clip-path: polygon(20% 30%, 80% 30%, 70% 70%, 30% 70%);"></div>
+                    <div class="fig3a-label" style="z-index: 2;">Close<br>fridge</div>
+                </div>
+                <!-- Row 2 -->
+                <div class="fig3a-item">
+                    <div class="sim-bg"></div>
+                    <div class="robot-arm" style="clip-path: polygon(0% 50%, 100% 50%, 80% 100%, 20% 100%);"></div>
+                    <div class="fig3a-label" style="z-index: 2;">Close<br>laptop lid</div>
+                </div>
+                <div class="fig3a-item">
+                    <div class="sim-bg"></div>
+                    <div class="robot-arm" style="clip-path: polygon(30% 0%, 70% 0%, 60% 100%, 40% 100%);"></div>
+                    <div class="fig3a-label" style="z-index: 2;">Wine at<br>rack</div>
+                </div>
+                <div class="fig3a-item">
+                    <div class="sim-bg"></div>
+                    <div class="robot-arm" style="clip-path: polygon(10% 10%, 90% 10%, 50% 90%);"></div>
+                    <div class="fig3a-label" style="z-index: 2;">Close box</div>
+                </div>
+                <div class="fig3a-item">
+                    <div class="sim-bg"></div>
+                    <div class="robot-arm" style="clip-path: polygon(40% 20%, 60% 20%, 50% 80%);"></div>
+                    <div class="fig3a-label" style="z-index: 2;">Phone on<br>base</div>
+                </div>
+                <div class="fig3a-item">
+                    <div class="sim-bg"></div>
+                    <div class="robot-arm" style="clip-path: polygon(20% 0%, 80% 0%, 70% 100%, 30% 100%);"></div>
+                    <div class="fig3a-label" style="z-index: 2;">Sweep to<br>dustpan</div>
+                </div>
+            </div>
+            <div class="sub-caption">(a) RLBench 10 tasks.</div>
+        </div>
+
+        <!-- Figure 3b -->
+        <div class="figure-container">
+            <div class="placeholder fig3b-grid">
+                <div class="fig3b-item">
+                    <div class="sim-bg" style="background: linear-gradient(to bottom, #444 0%, #444 30%, #888 30%, #888 100%);"></div>
+                    <div class="robot-arm" style="width: 50%; left: 25%; background-color: rgba(220,220,220,0.8);"></div>
+                    <div class="fig3b-label" style="z-index: 2;">Spatial</div>
+                </div>
+                <div class="fig3b-item">
+                    <div class="sim-bg" style="background: linear-gradient(to bottom, #555 0%, #555 30%, #999 30%, #999 100%);"></div>
+                    <div class="robot-arm" style="width: 50%; left: 25%; background-color: rgba(220,220,220,0.8);"></div>
+                    <div class="fig3b-label" style="z-index: 2;">Object</div>
+                </div>
+                <div class="fig3b-item">
+                    <div class="sim-bg" style="background: linear-gradient(to bottom, #333 0%, #333 30%, #777 30%, #777 100%);"></div>
+                    <div class="robot-arm" style="width: 50%; left: 25%; background-color: rgba(220,220,220,0.8);"></div>
+                    <div class="fig3b-label" style="z-index: 2;">Goal</div>
+                </div>
+                <div class="fig3b-item">
+                    <div class="sim-bg" style="background: linear-gradient(to bottom, #666 0%, #666 30%, #aaa 30%, #aaa 100%);"></div>
+                    <div class="robot-arm" style="width: 50%; left: 25%; background-color: rgba(220,220,220,0.8);"></div>
+                    <div class="fig3b-label" style="z-index: 2;">Long</div>
+                </div>
+            </div>
+            <div class="sub-caption">(b) LIBERO 4 task suites.</div>
+        </div>
+
+        <div class="caption">
+            Fig. 3: <span class="caption-title">Illustration of the simulated benchmarks.</span> (a) Examples of tasks from the RLBench 10 tasks benchmark [42], covering a diverse set of manipulation skills such as object placement, articulated object interaction and tool use. (b) Representative tasks from the LIBERO benchmark [41], including spatial reasoning, object pick-and-place, goal-conditioned tasks, and long-horizon manipulation.
+        </div>
+
+        <p class="no-indent" style="margin-top: 25px;">
+            <span class="bold-text">RLBench.</span> We use the same 10 RLBench tabletop manipulation tasks as HybridVLA [42], including <span class="italic-text">Close box, Close laptop, Toilet seat down, Sweep to dustpan, Close fridge, Phone on base, Take umbrella out, Frame off hanger, Wine at rack,</span> and <span class="italic-text">Water plants</span>. We train a unified multi-task policy using 100 demonstrations per task, and use the keypoint action space following prior work [42, 57, 11, 22, 17, 52]. The classification head is used for keypoint prediction with action chunk size $H = 1$ since the action is already long-horizon. An RRT-based motion planner is used to compute collision-free trajectories to the predicted keypoint. Following
+        </p>
+
+    </div>
+</div>
+
+</body>
+</html>

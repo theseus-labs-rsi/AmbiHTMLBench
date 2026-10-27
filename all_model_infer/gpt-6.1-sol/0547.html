@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Experiments and Simulated Benchmarks</title>
+<script>
+window.MathJax = {tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]}};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+* { box-sizing: border-box; }
+body { margin: 0; background: white; color: #000; font-family: "Times New Roman", Times, serif; }
+.page { width: 1460px; min-height: 1152px; padding: 24px 42px 0 46px; }
+.columns { display: grid; grid-template-columns: 670px 671px; gap: 31px; align-items: start; }
+p { margin: 0; font-size: 27px; line-height: 32px; text-align: justify; }
+.left { padding-top: 7px; }
+.equation { height: 125px; display: flex; align-items: center; justify-content: center; position: relative; font-size: 26px; margin-top: 1px; }
+.equation .number { position: absolute; right: 0; top: 47px; }
+.equation mjx-container { margin: 0 !important; }
+.definition { margin-top: 3px; }
+h1 { font-size: 28px; font-weight: normal; font-variant: small-caps; text-align: center; margin: 27px 0 15px; line-height: 34px; }
+h2 { font-size: 27px; font-weight: normal; font-style: italic; margin: 0 0 12px; line-height: 33px; }
+.indented { text-indent: 27px; }
+.evaluation { margin-top: 26px; }
+figure { margin: 0; }
+.placeholder { position: relative; width: 671px; overflow: hidden; background: #e5e5e5; font-family: Arial, sans-serif; }
+.rlbench { height: 267px; display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(2, 1fr); }
+.scene { position: relative; border-right: 1px solid #ccc; border-bottom: 1px solid #ccc; background: #deddd7; }
+.scene-label { display: block; width: fit-content; min-width: 94px; max-width: 118px; margin: 0 auto; text-align: center; color: white; background: #24466e; font-size: 18px; line-height: 21px; }
+.description { position: absolute; left: 0; right: 0; top: 63%; text-align: center; font-size: 12px; color: #626262; }
+figcaption { font-size: 25px; line-height: 34px; text-align: center; }
+.libero { height: 166px; display: grid; grid-template-columns: repeat(4, 1fr); }
+.libero .scene-label { font-size: 22px; line-height: 28px; min-width: 117px; }
+.figure-caption { margin-top: 14px; }
+.benchmark { margin-top: 37px; }
+</style>
+</head>
+<body>
+<main class="page">
+<div class="columns">
+<section class="left">
+<p>layer. The model is trained using a cross-entropy loss:</p>
+<div class="equation">
+<div>$$\mathcal{L}_{\mathrm{cls}}=-\sum_{k\in\{pos,rot,open\}}\sum_{b=1}^{B_k}y_{k,b}\log(\hat{y}_{k,b})$$</div>
+<span class="number">(7)</span>
+</div>
+<p class="definition">where $B_k$ denotes the number of bins for each action com-<br>ponent. This approach allows the model to leverage the point cloud as a spatial anchor for localization.</p>
+<h1>IV. Experiments</h1>
+<h2>A. Implementation Details</h2>
+<p class="indented">We utilize Qwen2.5-VL [3] as the VLM backbone. To initialize from the pretrained PTv3 model [69], we use the same model configuration as PTv3-Large. Specifically, there are 5 hierarchical stages with $(3, 3, 3, 12, 3)$ layers and feature dimensionality of $(64, 128, 256, 512, 768)$ per stage. The PointACT module, including the hierarchical interaction blocks and the action head, comprises approximately 300M trainable parameters. To maintain the knowledge of the VLM, we keep the VLM backbone frozen if not otherwise mentioned. We crop the input point cloud using a workspace bounding box defined relative to the robot base frame [57, 11], and perform voxelization with size of 1cm. We set the maximum number of points as 4096.</p>
+<p class="indented">Across our experimental benchmarks, the model is trained with a total batch size of 128 distributed across 2 NVIDIA H100 GPUs. We optimize the model for 20K to 50K gradient steps using the AdamW optimizer with a learning rate of $5 \times 10^{-5}$ and a cosine decay schedule. We apply standard point cloud augmentations, including random rotation around the gravity axis, alongside image-level augmentations for the VLM input during training.</p>
+<h2 class="evaluation">B. Evaluation Benchmarks</h2>
+</section>
+<section class="right">
+<figure>
+<div class="placeholder rlbench" role="img" aria-label="Ten simulated RLBench robot manipulation tasks in two rows">
+<div class="scene"><span class="scene-label">Water<br>plants</span></div>
+<div class="scene"><span class="scene-label">Frame off<br>hanger</span></div>
+<div class="scene"><span class="scene-label">Toilet seat<br>down</span></div>
+<div class="scene"><span class="scene-label">Umbrella<br>out</span></div>
+<div class="scene"><span class="scene-label">Close<br>fridge</span></div>
+<div class="scene"><span class="scene-label">Close<br>laptop lid</span></div>
+<div class="scene"><span class="scene-label">Wine at<br>rack</span></div>
+<div class="scene"><span class="scene-label">Close box</span></div>
+<div class="scene"><span class="scene-label">Phone on<br>base</span></div>
+<div class="scene"><span class="scene-label">Sweep to<br>dustpan</span></div>
+<span class="description">[Images: simulated RLBench robot manipulation tasks, two rows of five]</span>
+</div>
+<figcaption>(a) RLBench 10 tasks.</figcaption>
+<div class="placeholder libero" role="img" aria-label="Four simulated LIBERO task suites">
+<div class="scene"><span class="scene-label">Spatial</span></div>
+<div class="scene"><span class="scene-label">Object</span></div>
+<div class="scene"><span class="scene-label">Goal</span></div>
+<div class="scene"><span class="scene-label">Long</span></div>
+<span class="description">[Images: simulated LIBERO robot task suites, four side-by-side panels]</span>
+</div>
+<figcaption>(b) LIBERO 4 task suites.</figcaption>
+</figure>
+<p class="figure-caption">Fig. 3: <strong>Illustration of the simulated benchmarks.</strong> (a) Ex-<br>amples of tasks from the RLBench 10 tasks benchmark [42], covering a diverse set of manipulation skills such as object placement, articulated object interaction and tool use. (b) Rep-<br>resentative tasks from the LIBERO benchmark [41], includ-<br>ing spatial reasoning, object pick-and-place, goal-conditioned tasks, and long-horizon manipulation.</p>
+<p class="benchmark"><strong>RLBench.</strong> We use the same 10 RLBench tabletop manipula-<br>tion tasks as HybridVLA [42], including <em>Close box, Close laptop, Toilet seat down, Sweep to dustpan, Close fridge, Phone on base, Take umbrella out, Frame off hanger, Wine at rack,</em> and <em>Water plants.</em> We train a unified multi-task policy using 100 demonstrations per task, and use the keypoint action space following prior work [42, 57, 11, 22, 17, 52]. The classification head is used for keypoint prediction with action chunk size $H = 1$ since the action is already long-<br>horizon. An RRT-based motion planner is used to compute collision-free trajectories to these keypoints for robot control</p>
+</section>
+</div>
+</main>
+</body>
+</html>

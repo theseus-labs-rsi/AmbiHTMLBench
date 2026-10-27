@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BOMBS ROCKETS</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    background-color: #d6d6d4;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    color: #2b2b2b;
+  }
+  .poster {
+    background-color: #c4c5c0;
+    width: 600px;
+    padding: 24px 20px;
+    border: 1.5px solid #666;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  h1 {
+    font-family: "Arial Black", Impact, sans-serif;
+    font-size: 38px;
+    letter-spacing: 2px;
+    color: #3e4448;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .divider {
+    width: 96%;
+    height: 1.5px;
+    background-color: #4a4e52;
+    margin-bottom: 6px;
+  }
+  .watermark-top {
+    font-size: 10px;
+    color: #555;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .grid-container {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1.05fr 1.15fr 1.35fr;
+    gap: 8px;
+    align-items: end;
+  }
+  .column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+  .item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 8px;
+    width: 100%;
+    text-align: center;
+  }
+  .caption {
+    font-size: 8.5px;
+    font-weight: 700;
+    color: #2e3033;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    white-space: nowrap;
+    margin-top: 2px;
+    line-height: 1.1;
+  }
+  .flag {
+    display: inline-block;
+    width: 11px;
+    height: 7px;
+    vertical-align: middle;
+    margin-left: 2px;
+    border-radius: 0.5px;
+  }
+  .flag-uk {
+    background: #012169;
+    position: relative;
+    overflow: hidden;
+  }
+  .flag-uk::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 4px; width: 3px; height: 100%;
+    background: #fff;
+  }
+  .flag-uk::after {
+    content: "";
+    position: absolute;
+    top: 2px; left: 0; width: 100%; height: 3px;
+    background: #fff;
+  }
+  .flag-us {
+    background: repeating-linear-gradient(#b22234, #b22234 1px, #fff 1px, #fff 2px);
+    position: relative;
+  }
+  .flag-us::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; width: 5px; height: 4px;
+    background-color: #3c3b6e;
+  }
+  .flag-de {
+    background: linear-gradient(to bottom, #000 33%, #d00 33%, #d00 66%, #ffce00 66%);
+  }
+  .flag-fr {
+    background: linear-gradient(to right, #002395 33%, #fff 33%, #fff 66%, #ed2939 66%);
+  }
+  .flag-su {
+    background-color: #cd0000;
+    position: relative;
+  }
+  .flag-su::before {
+    content: "★";
+    position: absolute;
+    top: -2px; left: 1px;
+    font-size: 5px;
+    color: #ffde00;
+  }
+
+  /* Bomb visual placeholders */
+  .placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  /* Stylized CSS silhouettes of ordnance */
+  .bomb-body {
+    border: 1px solid rgba(0,0,0,0.35);
+    box-shadow: inset 0 1px 2px rgba(255,255,255,0.4), inset 0 -1px 2px rgba(0,0,0,0.4);
+  }
+
+  /* Specific bomb shapes */
+  .b-20 { width: 28px; height: 7px; background: #5c6258; border-radius: 4px 1px 1px 4px; }
+  .b-40 { width: 34px; height: 8px; background: #585d53; border-radius: 5px 1px 1px 5px; }
+  .b-100 { width: 44px; height: 11px; background: #686958; border-radius: 6px 1px 1px 6px; }
+  .b-120-1 { width: 50px; height: 10px; background: #737868; border-radius: 6px 2px 2px 6px; }
+  .b-120-2 { width: 52px; height: 11px; background: #6b756d; border-radius: 6px 2px 2px 6px; }
+  .b-120-uk { width: 50px; height: 9px; background: #998a72; border-radius: 6px 1px 1px 6px; }
+  .b-220-ru { width: 46px; height: 14px; background: #a6b1b5; border-radius: 7px 1px 1px 7px; }
+  .b-250-us { width: 54px; height: 13px; background: #61665a; border-radius: 8px 1px 1px 8px; }
+  .b-250-ti { width: 70px; height: 12px; background: #2f3333; border-radius: 6px 1px 1px 6px; border-left: 3px solid #b83b32; }
+  .b-250-sap { width: 58px; height: 12px; background: #545c50; border-radius: 8px 1px 1px 8px; }
+  .b-250-uk { width: 60px; height: 12px; background: #555d52; border-radius: 8px 1px 1px 8px; }
+  .b-250-mc { width: 62px; height: 13px; background: #51594e; border-radius: 8px 1px 1px 8px; }
+  .b-250-us-thin { width: 80px; height: 9px; background: #5c6258; border-radius: 7px 1px 1px 7px; }
+  .b-250-us-fat { width: 82px; height: 13px; background: #5a6156; border-radius: 9px 1px 1px 9px; }
+  .b-350-dp { width: 62px; height: 16px; background: #5e6659; border-radius: 3px; }
+  .r-3in { width: 75px; height: 5px; background: #5e6456; border-radius: 3px 0 0 3px; position: relative; }
+  .r-3in::after { content: ""; position: absolute; right: 0; top: -3px; width: 8px; height: 11px; background: #404439; }
+
+  /* Col 2 */
+  .b-500-sap { width: 72px; height: 14px; background: #535a4d; border-radius: 9px 1px 1px 9px; }
+  .b-500-mc { width: 70px; height: 18px; background: #4f574a; border-radius: 11px 1px 1px 11px; }
+  .b-500-gp1 { width: 76px; height: 16px; background: #4d574d; border-radius: 10px 1px 1px 10px; border-left: 3px solid #8e3831; }
+  .b-500-gp2 { width: 65px; height: 17px; background: #5b6255; border-radius: 11px 1px 1px 11px; }
+  .r-14in { width: 135px; height: 14px; background: #5c6655; border-radius: 8px 0 0 8px; position: relative; }
+  .r-14in::after { content: ""; position: absolute; right: 0; top: -6px; width: 34px; height: 26px; background: #8e9598; border: 1px solid #777; }
+  .b-500-gp3 { width: 95px; height: 12px; background: #555b4e; border-radius: 9px 1px 1px 9px; }
+  .b-1100-fr { width: 96px; height: 22px; background: #858b8f; border-radius: 14px 2px 2px 14px; }
+  .b-1000-gp1 { width: 160px; height: 14px; background: #4f554c; border-radius: 8px 1px 1px 8px; position: relative; }
+  .b-1000-gp2 { width: 130px; height: 21px; background: #535a50; border-radius: 12px 1px 1px 12px; }
+  .b-1100-de { width: 86px; height: 21px; background: #8f9aa0; border-radius: 12px 2px 2px 12px; border: 1px solid #758087; }
+  .b-1900-gp { width: 110px; height: 20px; background: #4f584e; border-radius: 12px 1px 1px 12px; }
+
+  /* Col 3 */
+  .b-fritz-x { width: 140px; height: 32px; background: #8d989f; border-radius: 16px 4px 4px 16px; position: relative; }
+  .b-fritz-x::after { content: ""; position: absolute; right: -8px; top: 0px; width: 26px; height: 32px; background: #7c8890; clip-path: polygon(0 20%, 60% 0, 100% 10%, 90% 90%, 60% 100%, 0 80%); }
+  .b-1600-ap { width: 92px; height: 17px; background: #575e52; border-radius: 11px 1px 1px 11px; }
+  .b-2400-ap { width: 122px; height: 16px; background: #454d43; border-radius: 10px 1px 1px 10px; border-left: 10px solid #7db455; }
+  .b-2000-gp { width: 140px; height: 23px; background: #6b6f67; border-radius: 14px 1px 1px 14px; }
+  .b-2000-laser { width: 190px; height: 19px; background: #545b53; border-radius: 8px 1px 1px 8px; position: relative; }
+  .b-2000-laser::before { content: ""; position: absolute; left: -26px; top: -7px; width: 35px; height: 32px; background: #3c423d; clip-path: polygon(0 50%, 70% 35%, 100% 0, 100% 100%, 70% 65%); }
+  .b-2200-he { width: 125px; height: 26px; background: #a2adb4; border-radius: 15px 2px 2px 15px; border: 1px solid #7c8891; }
+  .b-3080-gb { width: 140px; height: 34px; background: #96a5ac; border-radius: 18px 4px 4px 18px; position: relative; }
+  .b-3080-gb::after { content: ""; position: absolute; left: 30px; top: -8px; width: 22px; height: 50px; background: #76868e; clip-path: polygon(0 30%, 100% 0, 100% 100%, 0 70%); }
+  .b-littleboy { width: 128px; height: 30px; background: #525a4d; border-radius: 12px 1px 1px 12px; position: relative; }
+  .b-littleboy::after { content: ""; position: absolute; right: -12px; top: -3px; width: 16px; height: 36px; background: #454c41; }
+  .b-fatman { width: 140px; height: 54px; background: #f2bf06; border-radius: 27px 16px 16px 27px; position: relative; border-left: 10px solid #202020; }
+  .b-fatman::after { content: ""; position: absolute; right: -24px; top: -4px; width: 28px; height: 62px; background: #eab200; border: 1px solid #bda014; }
+
+  /* Subtitle watermark in center column */
+  .center-watermark {
+    margin: 8px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    opacity: 0.6;
+  }
+  .center-watermark .brand {
+    font-size: 16px;
+    font-weight: 900;
+    color: #4b5258;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .center-watermark .sub {
+    font-size: 7px;
+    color: #555;
+  }
+</style>
+</head>
+<body>
+
+<div class="poster">
+  <h1>BOMBS ROCKETS</h1>
+  <div class="divider"></div>
+  <div class="watermark-top">XIAOHONGSHU:5433348754</div>
+
+  <div class="grid-container">
+    <!-- COLUMN 1 -->
+    <div class="column">
+      <div class="item">
+        <div class="placeholder"><div class="bomb-body b-20"></div></div>
+        <div class="caption">20LB GENERAL 普通 <span class="flag flag-uk"></span></div>
+      </div>
+
+      <div class="item">
+        <div class="placeholder"><div class="bomb-body b-40"></div></div>
+        <div class="caption">40LB GENERAL 普通 <span class="flag flag-uk"></span></div>
+      </div>
+
+      <div class="item">
+        <div class="placeholder"><div class="bomb-body b-100"></div></div>
+        <div class="caption">100LB GENERAL 普通 <span class="flag flag-us"></span></div>
+      </div>
+
+      <div class="item">
+        <div class="placeholder"><div class="bomb-body b-120-1"></div></div>
+        <div class="caption">120LB HIGH EXPLOSIVE 高爆 <span class="flag flag-de"></span></div>
+      </div>
+
+      <div class="item">
+        <div class="placeholder"><div class="bomb-body b-120-2"></div></div>
+        <div class="caption">120LB HIGH EXPLOSIVE 高爆 <span class="flag flag-de"></span></div>
+      </div>
+
+      <div class="item">
+        <div class="placeholder"><div class="bomb-body b-120-uk"></div></div>
+        <div class="caption">120LB GENERAL 普通 <span class="flag flag-uk"></span></div>
+      </div>
+
+      <div class="item">
+        <div class="placeholder"><div class="bomb-body b-220-ru"></div></div>
+        <div class="caption">220LB GENERAL 普通 <span class="flag flag-su"></span></div>
+      </div>
+
+      <div class="item">
+        <div class="placeholder"><div class="bomb-body b-250-us"></div></div>
+        <div class="caption">250LB GENERAL 普通 <span class="flag flag-us"></span></div>
+      </div>
+
+      <div class="item">
+        <div class="placeholder"><div class="bomb-body b-250-ti"></div></div>
+        <div class="caption">250LB TARGET INDICATOR 目标指示 <span class="flag flag-uk"></span></div>
+      </div>
+
+      <div class="item">
+        <div class="placeholder"><div class="bomb-body b-250-sap"></div></div>
+        <div class="caption">250LB SEMI ARMOUR PIERCING 半穿甲 <span class="flag flag-uk"></span></div>
+      </div>
+
+      <div class="item">
+        <div class="placeholder"><div class="bomb-body b-250-uk"></div></div>
+        <div class="caption">250LB GENERAL 普通 <span class="flag flag-uk"></span></div>
+      </div>
+
+      <div class="item">
+        <div class="placeholder"><div class="bomb-body b-250-mc"></div></div>
+        <div class="caption">250LB MEDIUM CAPACITY 中等 <span class="flag flag-uk"></span></div>
+      </div>
+
+      <div class="item">
+        <div class="placeholder"><div class="bomb-body b-250-us-thin"></div></div>
+        <div class="caption">250LB GENERAL 普通 <span class="flag flag-us"></span></div>
+      </div>
+
+      <div class="item">
+        <div class="placeholder"><div class="bomb-body b-250-us-fat"></div></div>
+        <div class="caption">250LB GENERAL 普通 <span class="flag flag-us"></span></div>
+      </div>
+
+      <div class="item">
+        <div class="placeholder"><div class="bomb-body b-350-dp"></div></div>
+        <div class="caption">350LB DEPTH 深度 <span class="flag flag-uk"></span></div>
+      </div>
+
+      <div class="item">
+        <div class="placeholder"><div class="r-3in"></div></div>
+        <div class="caption">3 INCH ROCKET 火箭 <span class="flag flag-uk"></span></div>
+      </div>
+    </div>
+
+    <!-- COLUMN 2 -->
+    <div class="column">
+      <div class="item">
+        <div class="placeholder"><div class="bomb-body b-500-sap"></div></div>
+        <div class="caption">500LB SEMI ARMOUR PIERCING 半穿甲 <span class="flag flag-uk"></span></div>
+      </div>
+
+      <div class="item">
+        <div class="placeholder"><div class="bomb-body b-500-mc"></div></div>
+        <div class="caption">500LB MEDIUM CAPACITY 中等 <span class="flag flag-uk"></span></div>
+      </div>
+
+      <div class="item">
+        <div class="placeholder"><div class="bomb-body b-500-gp1"></div></div>
+        <div class="caption">500LB GENERAL 普通 <span class="flag flag-uk"></span></div>
+      </div>
+
+      <div class="item">
+        <div class="placeholder"><div class="bomb-body b-500-gp2"></div></div>
+        <div class="caption">500LB GENERAL 普通 <span class="flag flag-us"></span></div>
+      </div>
+
+      <div class="item">
+        <div class="placeholder"><div class="r-14in"></div></div>
+        <div class="caption">14 INCH ROCKET 火箭 <span class="flag flag-us"></span></div>
+      </div>
+
+      <div class="item">
+        <div class="placeholder"><div class="bomb-body b-500-gp3"></div></div>
+        <div class="caption">500LB GENERAL 普通 <span class="flag flag-us"></span></div>
+      </div>
+
+      <div class="item">
+        <div class="placeholder"><div class="bomb-body b-1100-fr"></div></div>
+        <div class="caption">1100LB GENERAL 普通 <span class="flag flag-fr"></span></div>
+      </div>
+
+      <div class="item">
+        <div class="placeholder"><div class="bomb-body b-1000-gp1"></div></div>
+        <div class="caption">1000LB GENERAL 普通 <span class="flag flag-us"></span></div>
+      </div>
+
+      <div class="center-watermark">
+        <div class="brand">燥3岁</div>
+        <div class="sub">小红书号: 5433348754</div>
+      </div>
+
+      <div class="item">
+        <div class="placeholder"><div class="bomb-body b-1000-gp2"></div></div>
+        <div class="caption">1000LB GENERAL 普通 <span class="flag flag-us"></span></div>
+      </div>
+
+      <div class="item">
+        <div class="placeholder"><div class="bomb-body b-1100-de"></div></div>
+        <div class="caption">1100LB HIGH EXPLOSIVE 高爆 <span class="flag flag-de"></span></div>
+      </div>
+
+      <div class="item">
+        <div class="placeholder"><div class="bomb-body b-1900-gp"></div></div>
+        <div class="caption">1900LB GENERAL 普通 <span class="flag flag-uk"></span></div>
+      </div>
+    </div>
+
+    <!-- COLUMN 3 -->
+    <div class="column">
+      <div class="item">
+        <div class="placeholder"><div class="bomb-body b-fritz-x"></div></div>
+        <div class="caption">1100LB GUIDE BOMB 制导 <span class="flag flag-de"></span></div>
+      </div>
+
+      <div class="item">
+        <div class="placeholder"><div class="bomb-body b-1600-ap"></div></div>
+        <div class="caption">1600LB ARMOUR PIERCING 穿甲 <span class="flag flag-us"></span></div>
+      </div>
+
+      <div class="item">
+        <div class="placeholder"><div class="bomb-body b-2400-ap"></div></div>
+        <div class="caption">2400LB ARMOUR PIERCING 穿甲 <span class="flag flag-uk"></span></div>
+      </div>
+
+      <div class="item">
+        <div class="placeholder"><div class="bomb-body b-2000-gp"></div></div>
+        <div class="caption">2000LB GENERAL 普通 <span class="flag flag-us"></span></div>
+      </div>
+
+      <div class="item">
+        <div class="placeholder"><div class="bomb-body b-2000-laser"></div></div>
+        <div class="caption">2000LB LASER GUIDED 激光制导 <span class="flag flag-us"></span></div>
+      </div>
+
+      <div class="item">
+        <div class="placeholder"><div class="bomb-body b-2200-he"></div></div>
+        <div class="caption">2200LBHIGH EXPLOSIVE 高爆 <span class="flag flag-de"></span></div>
+      </div>
+
+      <div class="item">
+        <div class="placeholder"><div class="bomb-body b-3080-gb"></div></div>
+        <div class="caption">3080LB GUIDE BOMB 制导 <span class="flag flag-de"></span></div>
+      </div>
+
+      <div class="item">
+        <div class="placeholder"><div class="bomb-body b-littleboy"></div></div>
+        <div class="caption">ATOMIC MK1 LITTLE BOY 小男孩 <span class="flag flag-us"></span></div>
+      </div>
+
+      <div class="item">
+        <div class="placeholder"><div class="bomb-body b-fatman"></div></div>
+        <div class="caption">ATOMIC MK3 FAT MAN 胖子 <span class="flag flag-us"></span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

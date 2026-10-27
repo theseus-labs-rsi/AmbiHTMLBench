@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CUDA C++ Programming Guide, Release 13.3</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: #333333;
+    line-height: 1.5;
+    margin: 0;
+    padding: 30px 40px;
+    background-color: #ffffff;
+    font-size: 13.5px;
+  }
+
+  .page-container {
+    max-width: 780px;
+    margin: 0 auto;
+    position: relative;
+    min-height: 980px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  /* Header */
+  .page-header {
+    border-bottom: 1px solid #777777;
+    padding-bottom: 4px;
+    margin-bottom: 18px;
+  }
+
+  .page-header h1 {
+    font-size: 13.5px;
+    font-weight: 700;
+    margin: 0;
+    color: #000000;
+  }
+
+  /* Continuation markers */
+  .continuation-note {
+    text-align: right;
+    font-size: 12px;
+    color: #333333;
+    margin-bottom: 4px;
+  }
+
+  .continues-note {
+    text-align: right;
+    font-size: 12px;
+    color: #333333;
+    margin-top: 4px;
+    margin-bottom: 0;
+  }
+
+  /* Headings */
+  h2.section-title {
+    color: #72a400;
+    font-size: 14.5px;
+    font-weight: 700;
+    margin-top: 24px;
+    margin-bottom: 16px;
+  }
+
+  /* Content Paragraphs */
+  p.content-text {
+    text-align: justify;
+    line-height: 1.45;
+    margin-top: 0;
+    margin-bottom: 14px;
+  }
+
+  /* Monospace inline */
+  code, .code-inline {
+    font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 12.5px;
+  }
+
+  /* Code Blocks */
+  .highlight-box {
+    background-color: #f7f7f7;
+    border-radius: 2px;
+    padding: 12px 14px;
+    margin: 6px 0;
+    overflow-x: auto;
+  }
+
+  pre {
+    margin: 0;
+    font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 12px;
+    line-height: 1.42;
+    color: #000000;
+  }
+
+  /* Syntax Highlighting */
+  .k { color: #008000; font-weight: bold; }       /* Keywords like return, switch */
+  .kt { color: #a90d18; font-weight: bold; }      /* Types like unsigned long long */
+  .nf { color: #0000ff; }                         /* Functions */
+  .c1 { color: #3f7f5f; font-style: italic; }     /* Comments */
+  .mi { color: #008000; }                         /* Numbers */
+  .arrow { color: #c00000; font-weight: bold; }   /* Wrap continuation arrow */
+
+  /* Footer */
+  .page-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 20px;
+    margin-top: 30px;
+  }
+
+  .footer-left {
+    font-weight: 700;
+    font-size: 13.5px;
+    color: #000000;
+  }
+
+  .footer-right {
+    font-weight: 700;
+    font-size: 13.5px;
+    color: #000000;
+  }
+</style>
+</head>
+<body>
+
+<div class="page-container">
+  <div class="main-content">
+    
+    <!-- Top Header -->
+    <div class="page-header">
+      <h1>CUDA C++ Programming Guide, Release 13.3</h1>
+    </div>
+
+    <!-- Top continuation note -->
+    <div class="continuation-note">(continued from previous page)</div>
+
+    <!-- First Code Block -->
+    <div class="highlight-box">
+<pre>    desc.offset = offset;
+
+    desc.size = size;
+
+
+    cudaExternalMemoryGetMappedBuffer(&amp;ptr, extMem, &amp;desc);
+
+
+    <span class="c1">// Note: 'ptr' must eventually be freed using cudaFree()</span>
+
+    <span class="k">return</span> ptr;
+}</pre>
+    </div>
+
+    <!-- Section Heading -->
+    <h2 class="section-title">6.2.16.1.4 Mapping Mipmapped Arrays onto Imported Memory Objects</h2>
+
+    <!-- Body Paragraph -->
+    <p class="content-text">
+      A CUDA mipmapped array can be mapped onto an imported memory object as shown below. The offset, dimensions, format and number of mip levels must match that specified when creating the mapping using the corresponding Vulkan API. Additionally, if the mipmapped array is bound as a color target in Vulkan, the flag<code class="code-inline">cudaArrayColorAttachment</code> must be set. All mapped mipmapped arrays must be freed using <code class="code-inline">cudaFreeMipmappedArray()</code>. The following code sample shows how to convert Vulkan parameters into the corresponding CUDA parameters when mapping mipmapped arrays onto imported memory objects.
+    </p>
+
+    <!-- Second Code Block -->
+    <div class="highlight-box">
+<pre>cudaMipmappedArray_t <span class="nf">mapMipmappedArrayOntoExternalMemory</span>(cudaExternalMemory_t extMem,
+<span class="arrow">&#x21aa;</span><span class="kt">unsigned long long</span> offset, cudaChannelFormatDesc *formatDesc, cudaExtent *extent,
+<span class="arrow">&#x21aa;</span><span class="kt">unsigned int</span> flags, <span class="kt">unsigned int</span> numLevels) {
+    cudaMipmappedArray_t mipmap = NULL;
+    cudaExternalMemoryMipmappedArrayDesc desc = {};
+
+    memset(&amp;desc, <span class="mi">0</span>, <span class="k">sizeof</span>(desc));
+
+    desc.offset = offset;
+    desc.formatDesc = *formatDesc;
+    desc.extent = *extent;
+    desc.flags = flags;
+    desc.numLevels = numLevels;
+
+    <span class="c1">// Note: 'mipmap' must eventually be freed using cudaFreeMipmappedArray()</span>
+    cudaExternalMemoryGetMappedMipmappedArray(&amp;mipmap, extMem, &amp;desc);
+
+    <span class="k">return</span> mipmap;
+}
+
+cudaChannelFormatDesc <span class="nf">getCudaChannelFormatDescForVulkanFormat</span>(VkFormat format)
+{
+    cudaChannelFormatDesc d;
+
+    memset(&amp;d, <span class="mi">0</span>, <span class="k">sizeof</span>(d));
+
+    <span class="k">switch</span> (format) {</pre>
+    </div>
+
+    <!-- Bottom continuation note -->
+    <div class="continues-note">(continues on next page)</div>
+
+  </div>
+
+  <!-- Page Footer -->
+  <div class="page-footer">
+    <div class="footer-left">112</div>
+    <div class="footer-right">6. Programming Interface</div>
+  </div>
+</div>
+
+</body>
+</html>

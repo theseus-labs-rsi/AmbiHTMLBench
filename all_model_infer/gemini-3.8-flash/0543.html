@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>半导体 / AI 价值链全景图</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background-color: #f8fafc;
+      color: #1e293b;
+      padding: 24px;
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      width: 1000px;
+      max-width: 100%;
+      background: #ffffff;
+      padding: 24px 32px 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .header h1 {
+      font-size: 38px;
+      font-weight: 900;
+      color: #0b2545;
+      letter-spacing: 2px;
+      margin-bottom: 6px;
+    }
+    .header h2 {
+      font-size: 19px;
+      font-weight: 600;
+      color: #1e293b;
+      letter-spacing: 1px;
+    }
+
+    /* Table Grid */
+    .table-container {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid #e2e8f0;
+      margin-bottom: 16px;
+    }
+
+    /* Table Header */
+    .table-header {
+      display: grid;
+      grid-template-columns: 220px 200px 300px 1fr;
+      background-color: #031b38;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 700;
+      text-align: center;
+      padding: 10px 0;
+    }
+
+    /* Row Layout */
+    .row {
+      display: grid;
+      grid-template-columns: 220px 200px 300px 1fr;
+      border-top: 1px solid #e2e8f0;
+      min-height: 76px;
+      align-items: center;
+    }
+    .row:nth-child(even) {
+      background-color: #fafbfc;
+    }
+
+    .col {
+      padding: 10px 14px;
+      font-size: 12.5px;
+      line-height: 1.45;
+      border-right: 1px solid #e2e8f0;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .col:last-child {
+      border-right: none;
+    }
+
+    /* Column 1: Tier Badge & Name & Icon */
+    .col-tier {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+    }
+    .tier-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .badge {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 17px;
+      flex-shrink: 0;
+    }
+    .tier-text {
+      text-align: left;
+    }
+    .tier-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #1e293b;
+    }
+    .tier-sub {
+      font-size: 12px;
+      color: #475569;
+      font-weight: 500;
+    }
+    .tier-icon {
+      flex-shrink: 0;
+      margin-left: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Colors for Badges */
+    .b-1 { background-color: #4c3575; }
+    .b-2 { background-color: #24579c; }
+    .b-3 { background-color: #0a828a; }
+    .b-4 { background-color: #2e7d42; }
+    .b-5 { background-color: #b58d24; }
+    .b-6 { background-color: #483568; }
+    .b-7 { background-color: #d86927; }
+    .b-8 { background-color: #1a5e9b; }
+    .b-9 { background-color: #1e7188; }
+    .b-10 { background-color: #3b3164; }
+
+    /* Column 2: Role / Function */
+    .col-function {
+      color: #334155;
+      text-align: center;
+      justify-content: center;
+      font-weight: 500;
+    }
+
+    /* Column 3: Companies */
+    .col-companies {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-around;
+      gap: 8px 12px;
+      padding: 8px 14px;
+    }
+    .logo-item {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: #1e293b;
+      white-space: nowrap;
+    }
+    .logo-arm { font-family: sans-serif; font-weight: 800; color: #0091bd; font-size: 19px; letter-spacing: -1px; }
+    .logo-cadence { font-family: sans-serif; font-weight: 600; color: #111; font-size: 14px; }
+    .logo-siemens { font-weight: 900; color: #00646e; letter-spacing: 0.5px; font-size: 13px; }
+    .logo-allegro { font-family: serif; font-style: italic; font-weight: 700; color: #1e293b; font-size: 14px; }
+    
+    .logo-nvidia { color: #76b900; font-weight: 900; display: inline-flex; align-items: center; gap: 4px; font-size: 13px; }
+    .logo-amd { font-family: sans-serif; font-weight: 900; color: #000; letter-spacing: -0.5px; font-size: 14px; }
+    .logo-broadcom { color: #cc092f; font-weight: 800; font-size: 12.5px; }
+    .logo-qualcomm { color: #19529e; font-weight: 800; font-size: 13px; }
+    .logo-marvell { color: #111; font-weight: 900; letter-spacing: -0.5px; font-size: 13px; }
+    .logo-macom { color: #005a84; font-weight: 900; font-style: italic; font-size: 12.5px; }
+    .logo-nxp { color: #f39200; font-weight: 900; font-size: 14px; }
+
+    .logo-tsmc { font-weight: 900; color: #cf102d; font-size: 14px; }
+    .logo-umc { font-weight: 900; color: #003399; font-size: 16px; letter-spacing: 1px; }
+    .logo-gf { color: #ff5c00; font-weight: 800; font-size: 12.5px; }
+    .logo-intel { color: #0068b5; font-weight: 800; font-size: 17px; letter-spacing: -0.5px; }
+
+    .logo-asml { font-weight: 900; color: #0f1654; font-size: 16px; letter-spacing: 0.5px; }
+    .logo-amat { color: #007799; font-weight: 800; font-size: 11px; text-transform: uppercase; line-height: 1.1; text-align: left; }
+    .logo-lam { font-weight: 900; color: #000; font-size: 13px; }
+    .logo-kla { font-weight: 900; color: #002d62; font-size: 14px; }
+    .logo-onto { font-weight: 700; color: #111; font-size: 11.5px; line-height: 1.1; }
+
+    .logo-amkor { color: #004c97; font-weight: 900; font-size: 14px; }
+    .logo-ase { color: #002855; font-weight: 900; font-size: 15px; }
+    .logo-formfactor { color: #002d62; font-weight: 700; font-size: 13px; }
+
+    .logo-micron { color: #004b93; font-weight: 800; font-size: 15px; }
+    .logo-wd { font-weight: 900; color: #002244; font-size: 12px; }
+    .logo-sandisk { color: #d00027; font-weight: 800; font-size: 13px; }
+    .logo-seagate { color: #6db33f; font-weight: 700; font-size: 13px; }
+    .logo-dram { border: 1.5px solid #231f20; padding: 1px 3px; font-weight: 900; font-size: 9px; letter-spacing: 0.5px; }
+
+    .logo-mps { font-weight: 900; color: #004276; font-size: 15px; }
+    .logo-ti { color: #cc0000; font-weight: 800; font-size: 11px; text-align: left; line-height: 1.1; }
+    .logo-st { color: #00205b; font-weight: 900; font-size: 15px; }
+    .logo-on { color: #377d22; font-weight: 800; font-size: 13px; }
+
+    .logo-lumentum { color: #002b49; font-weight: 700; font-size: 12.5px; letter-spacing: 0.5px; }
+    .logo-ciena { color: #c41230; font-weight: 800; font-size: 13px; }
+    .logo-coherent { color: #002d62; font-weight: 800; font-size: 12.5px; }
+    .logo-credo { color: #002e6d; font-weight: 900; font-size: 13.5px; }
+
+    .logo-dell { font-weight: 800; color: #0076ce; font-size: 13px; }
+    .logo-hpe { color: #01a982; font-weight: 800; font-size: 11px; line-height: 1.1; text-align: left; }
+    .logo-ttm { color: #00205b; font-weight: 800; font-size: 12px; }
+    .logo-nokia { color: #124191; font-weight: 800; font-size: 13px; letter-spacing: 1px; }
+    .logo-celestica { font-weight: 700; color: #111; font-size: 11px; }
+    .logo-smci { color: #004b87; font-weight: 800; font-size: 12px; }
+
+    .logo-aws { color: #232f3e; font-weight: 900; font-size: 15px; }
+    .logo-azure { font-weight: 700; color: #0078d4; font-size: 12px; }
+    .logo-google { font-weight: 600; color: #4285f4; font-size: 12px; }
+    .logo-meta { font-weight: 800; color: #0668e1; font-size: 13px; }
+    .logo-equity { color: #64748b; font-size: 12px; font-weight: 600; }
+    .logo-oracle { color: #c74634; font-weight: 900; font-size: 13.5px; letter-spacing: 0.5px; }
+
+    /* Column 4: Role in AI */
+    .col-ai {
+      color: #334155;
+      font-size: 12.5px;
+      padding-left: 16px;
+      padding-right: 12px;
+      font-weight: 500;
+    }
+
+    /* Footer Container */
+    .footer-box {
+      border: 1.5px solid #0b2545;
+      border-radius: 6px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      background: #ffffff;
+      gap: 16px;
+    }
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 0 0 310px;
+      border-right: 1px solid #cbd5e1;
+      padding-right: 14px;
+    }
+    .footer-icon {
+      font-size: 32px;
+      color: #0b2545;
+      flex-shrink: 0;
+    }
+    .footer-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: #0b2545;
+      margin-bottom: 2px;
+    }
+    .footer-desc {
+      font-size: 11px;
+      color: #475569;
+      line-height: 1.35;
+    }
+    .footer-chain {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .chain-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .node-logo {
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 11px;
+    }
+    .node-label {
+      font-size: 10.5px;
+      color: #475569;
+      margin-top: 2px;
+      white-space: nowrap;
+    }
+    .chain-arrow {
+      color: #64748b;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .disclaimer {
+      font-size: 10px;
+      color: #94a3b8;
+      margin-top: 8px;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Header -->
+  <div class="header">
+    <h1>半导体 / AI 价值链全景图</h1>
+    <h2>从设计到智能：端到端生态体系</h2>
+  </div>
+
+  <!-- Table Structure -->
+  <div class="table-container">
+    <!-- Header -->
+    <div class="table-header">
+      <div>层级</div>
+      <div>主要作用</div>
+      <div>代表企业（示例）</div>
+      <div>在AI生态中的角色</div>
+    </div>
+
+    <!-- Row 1 -->
+    <div class="row">
+      <div class="col col-tier">
+        <div class="tier-left">
+          <div class="badge b-1">1</div>
+          <div class="tier-text">
+            <div class="tier-title">架构设计 / IP层</div>
+          </div>
+        </div>
+        <div class="tier-icon">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#4c3575" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="5" y="5" width="14" height="14" rx="2"></rect>
+            <path d="M9 9h6v6H9z"></path>
+            <path d="M3 9h2m-2 6h2m14-6h2m-2 6h2M9 3v2m6-2v2m-6 14v2m6-2v2"></path>
+          </svg>
+        </div>
+      </div>
+      <div class="col col-function">
+        创建基础IP<br>和芯片架构
+      </div>
+      <div class="col col-companies">
+        <span class="logo-item logo-arm">arm</span>
+        <span class="logo-item logo-cadence">c&aacute;dence</span>
+        <span class="logo-item logo-siemens">SIEMENS</span>
+        <span class="logo-item logo-allegro">Allegro MicroSystems</span>
+      </div>
+      <div class="col col-ai">
+        定义芯片如何设计，<br>是关键的第一步
+      </div>
+    </div>
+
+    <!-- Row 2 -->
+    <div class="row">
+      <div class="col col-tier">
+        <div class="tier-left">
+          <div class="badge b-2">2</div>
+          <div class="tier-text">
+            <div class="tier-title">芯片设计</div>
+            <div class="tier-sub">(无晶圆厂)</div>
+          </div>
+        </div>
+        <div class="tier-icon">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#24579c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="13" rx="2"></rect>
+            <path d="M8 8h8v3H8z"></path>
+            <path d="M12 16v4m-4 0h8"></path>
+          </svg>
+        </div>
+      </div>
+      <div class="col col-function">
+        使用IP设计芯片，<br>但不生产
+      </div>
+      <div class="col col-companies">
+        <span class="logo-item logo-nvidia">NVIDIA</span>
+        <span class="logo-item logo-amd">AMD</span>
+        <span class="logo-item logo-broadcom">BROADCOM</span>
+        <span class="logo-item logo-qualcomm">Qualcomm</span>
+        <span class="logo-item logo-marvell">MARVELL</span>
+        <span class="logo-item logo-macom">MACOM</span>
+        <span class="logo-item logo-nxp">NXP</span>
+      </div>
+      <div class="col col-ai">
+        打造高性能芯片<br>(GPU、CPU、ASIC、<br>SoC、网络芯片等)
+      </div>
+    </div>
+
+    <!-- Row 3 -->
+    <div class="row">
+      <div class="col col-tier">
+        <div class="tier-left">
+          <div class="badge b-3">3</div>
+          <div class="tier-text">
+            <div class="tier-title">晶圆制造</div>
+            <div class="tier-sub">(代工)</div>
+          </div>
+        </div>
+        <div class="tier-icon">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#0a828a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 21h18V10l-6 4V7l-6 4V3L3 7v14z"></path>
+            <path d="M7 16h2m-2-4h2m6 4h2"></path>
+          </svg>
+        </div>
+      </div>
+      <div class="col col-function">
+        在晶圆上制造芯片，<br>使用先进制程
+      </div>
+      <div class="col col-companies">
+        <span class="logo-item logo-tsmc">tsmc</span>
+        <span class="logo-item logo-umc">UMC</span>
+        <span class="logo-item logo-gf">GlobalFoundries</span>
+        <span class="logo-item logo-intel">intel.</span>
+      </div>
+      <div class="col col-ai">
+        最资本密集的环节，<br>将设计变为现实
+      </div>
+    </div>
+
+    <!-- Row 4 -->
+    <div class="row">
+      <div class="col col-tier">
+        <div class="tier-left">
+          <div class="badge b-4">4</div>
+          <div class="tier-text">
+            <div class="tier-title">设备</div>
+            <div class="tier-sub">(生产设备)</div>
+          </div>
+        </div>
+        <div class="tier-icon">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#2e7d42" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="4" width="10" height="16" rx="1"></rect>
+            <path d="M14 8h5v12h-5"></path>
+            <circle cx="9" cy="9" r="1.5"></circle>
+            <path d="M7 15h4"></path>
+          </svg>
+        </div>
+      </div>
+      <div class="col col-function">
+        提供制造芯片所需<br>的机器和工具
+      </div>
+      <div class="col col-companies">
+        <span class="logo-item logo-asml">ASML</span>
+        <span class="logo-item logo-amat">APPLIED<br>MATERIALS</span>
+        <span class="logo-item logo-lam">Lam RESEARCH</span>
+        <span class="logo-item logo-kla">KLA+</span>
+        <span class="logo-item logo-onto">Onto<br>innovation</span>
+      </div>
+      <div class="col col-ai">
+        支撑芯片制造的<br>每一步，是进入<br>的高门槛环节
+      </div>
+    </div>
+
+    <!-- Row 5 -->
+    <div class="row">
+      <div class="col col-tier">
+        <div class="tier-left">
+          <div class="badge b-5">5</div>
+          <div class="tier-text">
+            <div class="tier-title">封装与测试</div>
+            <div class="tier-sub">(OSAT)</div>
+          </div>
+        </div>
+        <div class="tier-icon">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#b58d24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="6" width="16" height="12" rx="2"></rect>
+            <circle cx="8" cy="12" r="1.5"></circle>
+            <circle cx="12" cy="12" r="1.5"></circle>
+            <circle cx="16" cy="12" r="1.5"></circle>
+            <path d="M2 10h2m-2 4h2m16-4h2m-2 4h2"></path>
+          </svg>
+        </div>
+      </div>
+      <div class="col col-function">
+        封装、打包并测试<br>芯片以确保可用
+      </div>
+      <div class="col col-companies">
+        <span class="logo-item logo-amkor">Amkor<br><span style="font-size:9px; font-weight:normal;">Technology</span></span>
+        <span class="logo-item logo-ase">&#9770; ASE</span>
+        <span class="logo-item logo-formfactor">&#9830; FormFactor</span>
+      </div>
+      <div class="col col-ai">
+        先进封装是AI芯片<br>(HBM、2.5D/3D等)<br>的关键瓶颈
+      </div>
+    </div>
+
+    <!-- Row 6 -->
+    <div class="row">
+      <div class="col col-tier">
+        <div class="tier-left">
+          <div class="badge b-6">6</div>
+          <div class="tier-text">
+            <div class="tier-title">内存</div>
+          </div>
+        </div>
+        <div class="tier-icon">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#483568" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="6" width="18" height="12" rx="1"></rect>
+            <rect x="5" y="8.5" width="3" height="7"></rect>
+            <rect x="10.5" y="8.5" width="3" height="7"></rect>
+            <rect x="16" y="8.5" width="3" height="7"></rect>
+            <path d="M6 18v2m4-2v2m4-2v2m4-2v2"></path>
+          </svg>
+        </div>
+      </div>
+      <div class="col col-function">
+        提供内存芯片<br>(DRAM、HBM、<br>NAND)，为AI<br>提供存储与带宽
+      </div>
+      <div class="col col-companies">
+        <span class="logo-item logo-micron">Micron</span>
+        <span class="logo-item logo-wd">WD Western Digital</span>
+        <span class="logo-item logo-sandisk">SanDisk</span>
+        <span class="logo-item logo-seagate">SEAGATE</span>
+        <span class="logo-item logo-dram">DRAM</span>
+      </div>
+      <div class="col col-ai">
+        内存带宽是AI<br>工作负载的关键<br>瓶颈之一
+      </div>
+    </div>
+
+    <!-- Row 7 -->
+    <div class="row">
+      <div class="col col-tier">
+        <div class="tier-left">
+          <div class="badge b-7">7</div>
+          <div class="tier-text">
+            <div class="tier-title">电源芯片与</div>
+            <div class="tier-sub" style="font-size: 13.5px; font-weight: 700; color: #1e293b;">电力管理</div>
+          </div>
+        </div>
+        <div class="tier-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="#d86927">
+            <path d="M13 2L3 14h7v8l11-13h-8l3-7z"></path>
+          </svg>
+        </div>
+      </div>
+      <div class="col col-function">
+        高效交付与管理<br>芯片和系统所需<br>的电力
+      </div>
+      <div class="col col-companies">
+        <span class="logo-item logo-mps">MPS</span>
+        <span class="logo-item logo-ti">TEXAS<br>INSTRUMENTS</span>
+        <span class="logo-item logo-st">ST</span>
+        <span class="logo-item logo-nxp">NXP</span>
+        <span class="logo-item logo-on">ON Semiconductor</span>
+      </div>
+      <div class="col col-ai">
+        对AI服务器、GPU、<br>电动车等电力效率<br>至关重要
+      </div>
+    </div>
+
+    <!-- Row 8 -->
+    <div class="row">
+      <div class="col col-tier">
+        <div class="tier-left">
+          <div class="badge b-8">8</div>
+          <div class="tier-text">
+            <div class="tier-title">连接与网络</div>
+          </div>
+        </div>
+        <div class="tier-icon">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#1a5e9b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="6" cy="6" r="2.5"></circle>
+            <circle cx="18" cy="6" r="2.5"></circle>
+            <circle cx="18" cy="18" r="2.5"></circle>
+            <circle cx="6" cy="18" r="2.5"></circle>
+            <path d="M8 7.5l8 9m0-9l-8 9"></path>
+          </svg>
+        </div>
+      </div>
+      <div class="col col-function">
+        在芯片、系统和<br>数据中心之间<br>高速传输数据
+      </div>
+      <div class="col col-companies">
+        <span class="logo-item logo-lumentum">LUMENTUM</span>
+        <span class="logo-item logo-marvell">MARVELL</span>
+        <span class="logo-item logo-ciena">ciena</span>
+        <span class="logo-item logo-coherent">&#10034; COHERENT</span>
+        <span class="logo-item logo-credo">CREDO</span>
+      </div>
+      <div class="col col-ai">
+        高速连接是AI<br>基础设施的<br>关键骨干
+      </div>
+    </div>
+
+    <!-- Row 9 -->
+    <div class="row">
+      <div class="col col-tier">
+        <div class="tier-left">
+          <div class="badge b-9">9</div>
+          <div class="tier-text">
+            <div class="tier-title">系统与基础设施</div>
+          </div>
+        </div>
+        <div class="tier-icon">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#1e7188" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="3" width="16" height="5" rx="1"></rect>
+            <rect x="4" y="9.5" width="16" height="5" rx="1"></rect>
+            <rect x="4" y="16" width="16" height="5" rx="1"></rect>
+            <circle cx="7" cy="5.5" r="0.75" fill="#1e7188"></circle>
+            <circle cx="7" cy="12" r="0.75" fill="#1e7188"></circle>
+            <circle cx="7" cy="18.5" r="0.75" fill="#1e7188"></circle>
+          </svg>
+        </div>
+      </div>
+      <div class="col col-function">
+        将芯片集成到服务器、<br>系统和硬件解决方案
+      </div>
+      <div class="col col-companies">
+        <span class="logo-item logo-dell">DELL Technologies</span>
+        <span class="logo-item logo-hpe">Hewlett Packard<br>Enterprise</span>
+        <span class="logo-item logo-ttm">TTM Technologies</span>
+        <span class="logo-item logo-nokia">NOKIA</span>
+        <span class="logo-item logo-celestica">CELESTICA</span>
+        <span class="logo-item logo-smci">SMCI</span>
+      </div>
+      <div class="col col-ai">
+        将芯片变为可部署<br>的企业、云和AI<br>基础设施
+      </div>
+    </div>
+
+    <!-- Row 10 -->
+    <div class="row">
+      <div class="col col-tier">
+        <div class="tier-left">
+          <div class="badge b-10">10</div>
+          <div class="tier-text">
+            <div class="tier-title">云计算 / 超大规模</div>
+            <div class="tier-sub">(终端用户)</div>
+          </div>
+        </div>
+        <div class="tier-icon">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="#3b3164">
+            <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"></path>
+          </svg>
+        </div>
+      </div>
+      <div class="col col-function">
+        部署大规模计算<br>基础设施并运行<br>AI应用
+      </div>
+      <div class="col col-companies">
+        <span class="logo-item logo-aws">aws</span>
+        <span class="logo-item logo-azure">Microsoft<br>Azure</span>
+        <span class="logo-item logo-google">Google Cloud</span>
+        <span class="logo-item logo-meta">&#8734; Meta</span>
+        <span class="logo-item logo-equity">@equitydd</span>
+        <span class="logo-item logo-oracle">ORACLE</span>
+      </div>
+      <div class="col col-ai">
+        推动整个AI<br>产业的计算需求
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Key Takeaways -->
+  <div class="footer-box">
+    <div class="footer-left">
+      <div class="footer-icon">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#0b2545" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M12 2a10 10 0 0 1 10 10"></path>
+          <circle cx="12" cy="12" r="6"></circle>
+          <circle cx="12" cy="12" r="2"></circle>
+        </svg>
+      </div>
+      <div>
+        <div class="footer-title">关键要点</div>
+        <div class="footer-desc">AI不只是芯片，而是一个完整的生态系统。每一层都至关重要，任何一个环节的瓶颈，都会影响大规模AI的落地。</div>
+      </div>
+    </div>
+
+    <!-- Flow Pipeline -->
+    <div class="footer-chain">
+      <div class="chain-node">
+        <div class="node-logo" style="color: #0091bd; font-size: 13px;">arm</div>
+        <div class="node-label">IP</div>
+      </div>
+      <div class="chain-arrow">&rarr;</div>
+
+      <div class="chain-node">
+        <div class="node-logo" style="color: #76b900; font-size: 9px; line-height: 1;">&#9679;<br>NVIDIA</div>
+        <div class="node-label">芯片设计</div>
+      </div>
+      <div class="chain-arrow">&rarr;</div>
+
+      <div class="chain-node">
+        <div class="node-logo" style="color: #cf102d; font-size: 11px;">tsmc</div>
+        <div class="node-label">晶圆制造</div>
+      </div>
+      <div class="chain-arrow">&rarr;</div>
+
+      <div class="chain-node">
+        <div class="node-logo" style="color: #004c97; font-size: 11px;">Amkor</div>
+        <div class="node-label">封装测试</div>
+      </div>
+      <div class="chain-arrow">&rarr;</div>
+
+      <div class="chain-node">
+        <div class="node-logo" style="color: #004b93; font-size: 11px;">Micron</div>
+        <div class="node-label">内存</div>
+      </div>
+      <div class="chain-arrow">&rarr;</div>
+
+      <div class="chain-node">
+        <div class="node-logo" style="color: #004276; font-size: 11px;">MPS</div>
+        <div class="node-label">电源管理</div>
+      </div>
+      <div class="chain-arrow">&rarr;</div>
+
+      <div class="chain-node">
+        <div class="node-logo" style="color: #111; font-size: 11px;">M</div>
+        <div class="node-label">连接网络</div>
+      </div>
+      <div class="chain-arrow">&rarr;</div>
+
+      <div class="chain-node">
+        <div class="node-logo" style="color: #004b87; font-size: 8px; border: 1px solid #004b87; padding: 1px 2px; border-radius: 2px;">SUPERMICRO</div>
+        <div class="node-label">系统集成</div>
+      </div>
+      <div class="chain-arrow">&rarr;</div>
+
+      <div class="chain-node">
+        <div class="node-logo" style="color: #232f3e; font-size: 12px;">aws</div>
+        <div class="node-label">云部署</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    注：不构成任何投资建议。图中企业为各层级代表性公司，非完整名单。
+  </div>
+</div>
+
+</body>
+</html>

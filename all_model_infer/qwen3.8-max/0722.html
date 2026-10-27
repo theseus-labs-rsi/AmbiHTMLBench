@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>现代的剧场</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 40px;
+            background-color: #e8e6e1; /* Paper-like background */
+            font-family: "Songti SC", "SimSun", "STSong", serif;
+            color: #1a1a1a;
+            line-height: 1.8;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .page-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #f4f2ed;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            position: relative;
+            padding: 60px 50px;
+            min-height: 1200px;
+            overflow: hidden;
+        }
+
+        /* Fold lines simulation */
+        .fold-line-h {
+            position: absolute;
+            top: 33%;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(0,0,0,0.05), transparent);
+            z-index: 10;
+            pointer-events: none;
+        }
+        .fold-line-h-2 {
+            top: 66%;
+        }
+        .fold-line-v {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 1px;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.05), transparent);
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .layout-grid {
+            display: flex;
+            gap: 40px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .left-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding-top: 180px; /* Space for header alignment */
+        }
+
+        .right-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            margin-bottom: 40px;
+        }
+        .page-num {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .main-title {
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        /* Typography */
+        p {
+            margin-bottom: 25px;
+            text-align: justify;
+            font-size: 15px;
+        }
+
+        .quote-block {
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 40px;
+            position: relative;
+            padding: 0 10px;
+        }
+        .quote-mark {
+            font-size: 40px;
+            font-family: serif;
+            line-height: 0;
+            vertical-align: -15px;
+            margin-right: 5px;
+            font-weight: bold;
+        }
+        .quote-mark-end {
+            font-size: 40px;
+            font-family: serif;
+            line-height: 0;
+            vertical-align: -25px;
+            margin-left: 5px;
+            font-weight: bold;
+        }
+
+        /* Images */
+        .theater-photo {
+            width: 100%;
+            height: auto;
+            margin-top: 20px;
+            border: 1px solid #333;
+            filter: grayscale(20%) contrast(1.1);
+        }
+
+        .bottom-collage {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 350px;
+            background: linear-gradient(to bottom, transparent, rgba(244, 242, 237, 0) 20%), 
+                        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="%23ddd"/></svg>'); 
+            /* Using a placeholder div for the complex bottom image as per instructions for non-text elements if OCR fails, 
+               but here I will simulate the visual block with a styled div since I cannot extract the actual image data */
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .collage-placeholder {
+            width: 100%;
+            height: 100%;
+            background-color: #dcdcdc;
+            position: relative;
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            padding-bottom: 20px;
+            border-top: 2px solid #555;
+            /* Simulating the cutout figures with CSS shapes/text for layout fidelity */
+        }
+
+        .figure-cutout {
+            width: 18%;
+            height: 80%;
+            background-color: #ccc;
+            border: 1px dashed #999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #666;
+            text-align: center;
+            clip-path: polygon(10% 0%, 90% 0%, 100% 100%, 0% 100%);
+        }
+
+        /* Specific text styling */
+        .bold-text {
+            font-weight: bold;
+        }
+
+        /* Vertical divider line in the middle top */
+        .center-divider {
+            position: absolute;
+            top: 40px;
+            left: 50%;
+            height: 150px;
+            width: 2px;
+            background-color: #333;
+            z-index: 5;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+    <!-- Fold lines -->
+    <div class="fold-line-h"></div>
+    <div class="fold-line-h fold-line-h-2"></div>
+    <div class="fold-line-v"></div>
+    
+    <!-- Center Divider Line -->
+    <div class="center-divider"></div>
+
+    <div class="layout-grid">
+        <!-- Left Column -->
+        <div class="left-col">
+            <div class="quote-block">
+                <span class="quote-mark">&ldquo;</span>剧场的绝对魅力在于它的现场性；它的浪漫在于它是生命短暂与无常的缩影。在剧场短暂的那一刹那中，演员和观众同时知道，他们彼此经历的共同经验是唯一的。灯暗，幕落，即使是同一个剧团，同一个剧本，同一个演员阵容，这一场演出永远再也不会重现。<span class="quote-mark-end">&rdquo;</span>
+            </div>
+
+            <!-- Photo Placeholder -->
+            <div style="width: 100%; margin-top: auto; margin-bottom: 20px;">
+                <div class="placeholder" style="width: 100%; height: 200px; background-color: #222; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 12px; border: 4px solid #fff; box-shadow: 0 0 0 1px #000;">
+                    [Photo: Theater stage with geometric structures and projected face, text 'george tabori wehner' at bottom]
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="right-col">
+            <div class="header">
+                <span class="page-num">05/</span>
+                <div class="main-title">现代的剧场</div>
+            </div>
+
+            <p>波德莱尔说：&ldquo;现代性就是过度、短暂、偶然，就是艺术的一半，另一半是永恒和不变&rdquo;。</p>
+
+            <p>美既可能存在于永恒中，也可能存在于短暂中，脚手架就是短暂存在的样本之一，在城市中发挥着它仍灵活性、便捷性和临时性。戏剧也是短暂存在的样本之一，具有限时性和现场性。</p>
+
+            <p>我们用脚手架搭建&ldquo;茶场&rdquo;，与&ldquo;剧场&rdquo;不同的是，这里没有聚光灯，灯源分散各处，没有可供行动的舞台，只有临时构建的通道，没有舞者和演员，只有汇聚的人群和威严的巨匠头像，这里仿佛和戏剧有关，又仿佛和戏剧无关，戏剧像是&ldquo;茶场&rdquo;的本质，一切的氛围围绕着它生长、裂变、演进、蔓延，而所谓的本质，站立着的是偶然和机遇，是后来者的想象和解读。</p>
+
+            <p>这便是现代的剧场，在短暂的潮汐聚会中，传递来自自身收缩、合拢、集结、凝聚的外在事物表达，还有梦境与现实的带来的深刻意蕴。</p>
+        </div>
+    </div>
+
+    <!-- Bottom Collage Area -->
+    <div class="bottom-collage">
+        <div class="collage-placeholder">
+            <div class="figure-cutout">[Figure 1]</div>
+            <div class="figure-cutout">[Figure 2]</div>
+            <div class="figure-cutout">[Figure 3]</div>
+            <div class="figure-cutout">[Figure 4]</div>
+            <div class="figure-cutout">[Figure 5]</div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

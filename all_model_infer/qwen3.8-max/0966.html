@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our World in Data</title>
+    <style>
+        :root {
+            --owid-blue: #002147;
+            --owid-red: #cc2222;
+            --owid-yellow: #f5c518;
+            --owid-light-blue: #eef4fa;
+            --owid-grey-bg: #f4f6f8;
+            --text-dark: #1a2b42;
+            --text-grey: #555;
+            --border-color: #e0e0e0;
+            --font-serif: 'Georgia', 'Times New Roman', serif;
+            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-sans);
+            color: var(--text-dark);
+            background-color: #fff;
+            line-height: 1.5;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Header */
+        header {
+            background-color: var(--owid-blue);
+            color: white;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid var(--owid-red);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            line-height: 1.1;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+            margin: 0;
+            padding: 0;
+            font-size: 14px;
+        }
+
+        nav li {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border-color: white;
+            color: white;
+        }
+
+        .btn-red {
+            background: var(--owid-red);
+            color: white;
+        }
+
+        /* Popular Pages Bar */
+        .popular-bar {
+            background-color: #dce6f0;
+            padding: 10px 40px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .popular-label {
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--owid-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .pill {
+            background: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            color: var(--text-dark);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        /* Hero Section */
+        .hero {
+            background-color: var(--owid-blue);
+            background-image: radial-gradient(circle at center, #003366 0%, #002147 100%);
+            color: white;
+            text-align: center;
+            padding: 60px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Simulated map background texture */
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.05"><path d="M10 10h80v80H10z" fill="none" stroke="white"/></svg>');
+            opacity: 0.1;
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-family: var(--font-serif);
+            color: var(--owid-yellow);
+            font-size: 36px;
+            max-width: 800px;
+            margin: 0 auto 20px;
+            line-height: 1.2;
+        }
+
+        .hero-sub {
+            font-size: 16px;
+            margin-bottom: 30px;
+            color: #ccc;
+        }
+
+        .search-container {
+            max-width: 700px;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 18px 20px;
+            border-radius: 4px;
+            border: none;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-badge {
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hero-footer {
+            font-size: 13px;
+            color: #aaa;
+        }
+
+        /* Main Grid */
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 25px;
+        }
+
+        .card {
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            background: white;
+        }
+
+        .card-img-placeholder {
+            width: 100%;
+            height: 140px;
+            background-color: #f0f0f0;
+            margin-bottom: 15px;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Specific Chart Placeholders */
+        .chart-line {
+            width: 80%;
+            height: 60%;
+            border-bottom: 1px solid #ccc;
+            border-left: 1px solid #ccc;
+            position: relative;
+        }
+        .chart-line::after {
+            content: "";
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(to top right, transparent 49%, #cc2222 50%, transparent 51%);
+            /* Simplified curve representation */
+            clip-path: polygon(0% 100%, 20% 60%, 40% 20%, 60% 10%, 80% 30%, 100% 80%, 100% 100%);
+            background-color: rgba(204, 34, 34, 0.1);
+            border-top: 2px solid #cc2222;
+        }
+
+        .tag {
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+        .tag-new { background: #ffebeb; color: var(--owid-red); padding: 2px 6px; border-radius: 2px; margin-right: 5px;}
+        .tag-meta { color: #888; }
+
+        .card h3 {
+            font-family: var(--font-serif);
+            font-size: 20px;
+            margin: 0 0 10px 0;
+            line-height: 1.3;
+            color: var(--owid-blue);
+        }
+
+        .card p {
+            font-size: 14px;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+
+        .authors {
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+        }
+
+        /* Middle Column (Updates) */
+        .updates-col {
+            background-color: var(--owid-grey-bg);
+            border: none;
+            padding: 20px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .section-header h2 {
+            font-family: var(--font-serif);
+            font-size: 20px;
+            margin: 0;
+            color: var(--owid-blue);
+        }
+        .icon-circle {
+            width: 40px;
+            height: 40px;
+            background: #dce6f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--owid-blue);
+        }
+
+        .update-item {
+            margin-bottom: 25px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 20px;
+        }
+        .update-item:last-child { border-bottom: none; }
+
+        .update-meta {
+            font-size: 11px;
+            font-weight: bold;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .update-title {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: var(--owid-blue);
+        }
+
+        .update-desc {
+            font-size: 14px;
+            color: #444;
+            margin-bottom: 5px;
+        }
+
+        .read-more {
+            font-size: 13px;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .btn-full {
+            width: 100%;
+            text-align: center;
+            border: 1px solid var(--owid-red);
+            color: var(--owid-red);
+            background: white;
+            padding: 10px;
+            margin-top: 10px;
+            display: block;
+        }
+
+        /* Right Column (Newsletter) */
+        .newsletter-col {
+            background-color: var(--owid-light-blue);
+            border: none;
+            padding: 20px;
+        }
+
+        .checkbox-group {
+            margin: 15px 0;
+        }
+        .checkbox-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            font-size: 13px;
+        }
+        .checkbox-item input { margin-top: 3px; }
+        .checkbox-item strong { color: var(--owid-blue); }
+
+        .email-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .privacy-text {
+            font-size: 12px;
+            color: #555;
+            margin-top: 15px;
+        }
+        .privacy-text a { text-decoration: underline; }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            color: var(--owid-blue);
+            font-size: 18px;
+        }
+
+        .donate-box {
+            background: #dce6f0;
+            padding: 15px;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 12px;
+        }
+        .heart-icon {
+            width: 30px;
+            height: 30px;
+            background: #d0dbe6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--owid-red);
+        }
+
+        /* Data Insights Section */
+        .insights-section {
+            background-color: #eef2f6;
+            padding: 40px 0;
+            margin-top: 40px;
+        }
+
+        .insights-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .insights-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .insights-header h2 {
+            font-family: var(--font-serif);
+            font-size: 28px;
+            color: var(--owid-blue);
+            margin: 0 0 5px 0;
+        }
+        .insights-header p {
+            margin: 0;
+            color: #444;
+            font-size: 15px;
+        }
+
+        .btn-outline-red {
+            border: 1px solid var(--owid-red);
+            color: var(--owid-red);
+            background: transparent;
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+
+        .insights-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .insight-card {
+            background: #dce6f0;
+            padding: 20px;
+            display: flex;
+            gap: 20px;
+            position: relative;
+        }
+
+        .insight-chart {
+            width: 250px;
+            height: 180px;
+            background: white;
+            flex-shrink: 0;
+            position: relative;
+            padding: 10px;
+        }
+        
+        /* Fake bar chart for insight */
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            height: 100%;
+            gap: 2px;
+            padding-top: 20px;
+        }
+        .bar {
+            flex: 1;
+            background: #995577;
+            position: relative;
+        }
+        .bar.green { background: #228855; }
+        .chart-label {
+            position: absolute;
+            top: 5px; left: 5px;
+            font-size: 10px;
+            font-family: var(--font-serif);
+            color: #995577;
+            width: 80%;
+            line-height: 1.1;
+        }
+
+        .insight-content h3 {
+            font-size: 20px;
+            margin: 5px 0 10px 0;
+            color: var(--owid-blue);
+        }
+        .insight-content p {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .date-tag {
+            font-size: 12px;
+            font-weight: bold;
+            color: #555;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .insight-card-small {
+            background: #dce6f0;
+            padding: 20px;
+            display: flex;
+            gap: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-arrow {
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+            width: 30px;
+            height: 30px;
+            background: var(--owid-blue);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        /* Floating buttons */
+        .floating-btns {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+        .float-btn {
+            background: var(--owid-blue);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+            .container { grid-template-columns: 1fr 1fr; }
+            .insights-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .container { grid-template-columns: 1fr; }
+            header { flex-direction: column; gap: 15px; }
+            .popular-bar { flex-wrap: wrap; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="logo-area">
+            <div class="logo">Our World<br>in Data</div>
+            <nav>
+                <ul>
+                    <li><span style="font-size: 16px;">☰</span> Browse by topic</li>
+                    <li>Data</li>
+                    <li>Insights</li>
+                    <li>Resources <span style="font-size: 10px;">▼</span></li>
+                    <li>About <span style="font-size: 10px;">▼</span></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="header-actions">
+            <button class="btn btn-outline">Subscribe</button>
+            <button class="btn btn-red">Donate</button>
+        </div>
+    </header>
+
+    <!-- Popular Pages -->
+    <div class="popular-bar">
+        <span class="popular-label">Popular Pages</span>
+        <span class="pill">Poverty</span>
+        <span class="pill">Child Mortality</span>
+        <span class="pill">Global Education</span>
+        <span class="pill">CO₂ Emissions</span>
+        <span class="pill">Migration</span>
+        <span class="pill">War & Peace</span>
+        <span class="pill">Life Expectancy</span>
+        <span class="pill">Population Growth</span>
+        <span class="pill">Artificial Intelligence</span>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Research and data to make progress against the world's largest problems.</h1>
+        <div class="hero-sub">Read about our mission →</div>
+        
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder='Try "Life expectancy", "Poverty Nigeria Vietnam", "CO2 France"...'>
+            <span class="search-icon">🔍</span>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-badge">📈 13,989 charts</div>
+            <div class="stat-badge">📄 126 topic pages</div>
+            <div class="stat-badge">🔍 32 data explorers</div>
+        </div>
+
+        <div class="hero-footer">All free: open access and openly licensed</div>
+    </section>
+
+    <!-- Main Content Grid -->
+    <main class="container">
+        
+        <!-- Column 1 -->
+        <div style="display: flex; flex-direction: column; gap: 25px;">
+            <article class="card">
+                <div class="card-img-placeholder" style="background: #fdfbf7;">
+                    <div class="chart-line"></div>
+                </div>
+                <div>
+                    <span class="tag tag-new">NEW</span>
+                    <span class="tag tag-meta">ARTICLE · 11 MIN READ</span>
+                </div>
+                <h3>South Korea's population is set to shrink: what would it take to stop the decline?</h3>
+                <p>How much would fertility rates, life expectancy, or migration rates need to change to stop the population from shrinking?</p>
+                <div class="authors">Hannah Ritchie, Sophia Mersmann, and Daniel Bachler</div>
+            </article>
+
+            <article class="card">
+                <div class="card-img-placeholder" style="background: #fdfbf7;">
+                     <!-- Abstract line chart representation -->
+                     <svg width="100%" height="100%" viewBox="0 0 200 100" preserveAspectRatio="none">
+                        <path d="M10,80 L30,60 L50,70 L70,40 L90,50 L110,30 L130,60 L150,20 L170,10 L190,30" fill="none" stroke="#228855" stroke-width="2"/>
+                        <path d="M10,90 L40,85 L70,70 L100,80 L130,60 L160,70 L180,40" fill="none" stroke="#334488" stroke-width="2"/>
+                        <path d="M10,95 L50,90 L90,95 L130,80 L150,90" fill="none" stroke="#cc2222" stroke-width="2"/>
+                     </svg>
+                </div>
+                <div>
+                    <span class="tag tag-meta" style="color: #334488;">FROM OUR CLASSICS</span>
+                </div>
+                <h3>Breaking out of the Malthusian trap: How pandemics allow us to understand why our ancestors were stuck in poverty</h3>
+                <div class="authors">Max Roser</div>
+            </article>
+        </div>
+
+        <!-- Column 2 -->
+        <div style="display: flex; flex-direction: column; gap: 25px;">
+            <article class="card">
+                <div class="card-img-placeholder" style="background: #dce6f0; padding: 10px;">
+                    <!-- Dashboard mockup -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; width: 100%; height: 100%;">
+                        <div style="background: white; border-radius: 2px;"></div>
+                        <div style="background: white; border-radius: 2px;"></div>
+                        <div style="background: white; border-radius: 2px;"></div>
+                        <div style="background: white; grid-column: span 2; border-radius: 2px;"></div>
+                        <div style="background: white; border-radius: 2px;"></div>
+                    </div>
+                </div>
+                <div>
+                    <span class="tag tag-new">NEW</span>
+                    <span class="tag tag-meta">INTERACTIVE TOOL</span>
+                </div>
+                <h3>Population tool: how will populations across the world change in the 21st century?</h3>
+                <p>We created an interactive tool that lets you test how changes in fertility rates, life expectancy, and migration rates will change future populations.</p>
+                <div class="authors">Sophia Mersmann, Daniel Bachler, and Hannah Ritchie</div>
+            </article>
+
+            <article class="card">
+                <div class="card-img-placeholder" style="background: #002147; color: white; flex-direction: row; justify-content: space-between; padding: 0;">
+                    <div style="padding: 20px; width: 50%;">
+                        <div style="font-family: var(--font-serif); font-size: 18px; margin-bottom: 10px;">We're hiring a Writer to join our team</div>
+                        <div style="font-size: 10px; margin-top: 30px;">Our World<br>in Data</div>
+                    </div>
+                    <div style="width: 50%; height: 100%; background: #ccc; position: relative;">
+                        <!-- Placeholder for team photo -->
+                        <div style="position: absolute; bottom: 0; right: 0; width: 100%; height: 80%; background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);"></div>
+                        <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #666; font-size: 12px;">[Team Photo]</span>
+                    </div>
+                </div>
+                <div>
+                    <span class="tag tag-meta" style="color: #334488;">ANNOUNCEMENT</span>
+                </div>
+                <h3>We're looking for a writer</h3>
+                <div class="authors">Hannah Ritchie</div>
+            </article>
+        </div>
+
+        <!-- Column 3 (Updates) -->
+        <div class="card updates-col">
+            <div class="section-header">
+                <div class="icon-circle">📰</div>
+                <h2>Updates and announcements</h2>
+            </div>
+
+            <div class="update-item">
+                <div class="update-meta">DATA UPDATE · YESTERDAY</div>
+                <div class="update-title">How much do countries reduce income inequality through taxes and transfers?</div>
+                <div class="update-desc">Explore updated data from the OECD Income Distribution Database.</div>
+                <a href="#" class="read-more">Read more →</a>
+            </div>
+
+            <div class="update-item">
+                <div class="update-meta">DATA UPDATE · 8 DAYS AGO</div>
+                <div class="update-title">How fast is the global economy growing, and where might it be headed next?</div>
+                <div class="update-desc">Explore updated projections from the IMF's World Economic Outlook.</div>
+                <a href="#" class="read-more">Read more →</a>
+            </div>
+
+            <div class="update-item">
+                <div class="update-meta">DATA UPDATE · 10 DAYS AGO</div>
+                <div class="update-title">How quickly has global air travel recovered from the COVID-19 pandemic?</div>
+                <div class="update-desc">Explore updated data on global passenger air traffic since 1950.</div>
+                <a href="#" class="read-more">Read more →</a>
+            </div>
+
+            <a href="#" class="btn btn-full">See all updates →</a>
+        </div>
+
+        <!-- Column 4 (Newsletter) -->
+        <div class="card newsletter-col">
+            <div class="section-header">
+                <div class="icon-circle">✉️</div>
+                <h2>Subscribe to our newsletters</h2>
+            </div>
+            
+            <p style="font-size: 14px; margin-bottom: 15px;">Receive our latest work by email</p>
+
+            <div class="checkbox-group">
+                <div class="checkbox-item">
+                    <input type="checkbox" checked>
+                    <div>
+                        <strong>The OWID Brief</strong> <span style="color:#666">Twice a month</span><br>
+                        Stay up to date with our latest work plus curated highlights from across Our World in Data, twice a month.
+                    </div>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" checked>
+                    <div>
+                        <strong>Data Insights</strong> <span style="color:#666">Every few days</span><br>
+                        Receive our bite-sized insights on how the world is changing, every few days.
+                    </div>
+                </div>
+            </div>
+
+            <input type="email" class="email-input" placeholder="Your email address">
+            <button class="btn btn-red" style="width: 100%;">Subscribe</button>
+
+            <div class="privacy-text">
+                By subscribing you are agreeing to the terms of our <a href="#">privacy policy</a>.
+            </div>
+
+            <div style="margin-top: 25px; border-top: 1px solid #ccc; padding-top: 15px;">
+                <strong style="font-family: var(--font-serif); font-size: 18px; color: var(--owid-blue);">Follow us</strong>
+                <div class="social-icons">
+                    <span>𝕏</span>
+                    <span>📷</span>
+                    <span>🌀</span>
+                    <span>f</span>
+                    <span>in</span>
+                    <span>🦋</span>
+                    <span>🐙</span>
+                </div>
+            </div>
+
+            <div class="donate-box">
+                <div class="heart-icon">❤️</div>
+                <div>
+                    We are a non-profit — all our work is free to use and openly licensed.<br>
+                    <a href="#" style="color: var(--owid-red); font-weight: bold; text-decoration: underline;">Donate to support us</a>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Data Insights Section -->
+    <section class="insights-section">
+        <div class="insights-container">
+            <div class="insights-header">
+                <div>
+                    <h2>Data Insights</h2>
+                    <p>Bite-sized insights on how the world is changing, published every few days.</p>
+                </div>
+                <button class="btn btn-outline-red">See all Data Insights →</button>
+            </div>
+
+            <div class="insights-grid">
+                <!-- Main Insight -->
+                <div class="insight-card">
+                    <div class="insight-chart">
+                        <div class="chart-label">Global sales of <span style="color:#995577">combustion engine cars</span> peaked in 2017</div>
+                        <div style="position: absolute; top: 5px; right: 5px; font-size: 8px; background: #002147; color: white; padding: 2px;">Our World<br>in Data</div>
+                        <div class="bar-chart">
+                            <div class="bar" style="height: 40%"></div>
+                            <div class="bar" style="height: 45%"></div>
+                            <div class="bar" style="height: 50%"></div>
+                            <div class="bar" style="height: 55%"></div>
+                            <div class="bar" style="height: 60%"></div>
+                            <div class="bar" style="height: 70%"></div>
+                            <div class="bar" style="height: 80%"></div>
+                            <div class="bar" style="height: 90%"></div> <!-- Peak -->
+                            <div class="bar" style="height: 85%"></div>
+                            <div class="bar green" style="height: 75%"></div>
+                            <div class="bar green" style="height: 80%"></div>
+                            <div class="bar green" style="height: 85%"></div>
+                            <div class="bar green" style="height: 95%"></div>
+                        </div>
+                        <div style="position: absolute; bottom: 5px; left: 5px; font-size: 8px; color: #666;">20 million cars</div>
+                        <div style="position: absolute; top: 40px; left: 5px; font-size: 8px; color: #666;">80 million cars</div>
+                        <div style="position: absolute; top: 30px; right: 10px; font-size: 8px; color: #228855;">Electric cars</div>
+                        <div style="position: absolute; top: 50px; left: 40px; font-size: 8px; color: #995577;">Non-electric</div>
+                    </div>
+                    <div class="insight-content">
+                        <div class="date-tag">📅 YESTERDAY</div>
+                        <h3>Global sales of combustion engine cars peaked in 2017</h3>
+                        <p>To decarbonize road transport, the world must move away from petrol and diesel cars towards electric vehicles and other forms of low-carbon transport.</p>
+                        <p>This transition has already started. In fact, global sales of combustion engine cars are well past their peak and are now falling.</p>
+                        <p>As you can see in the chart, global sales peaked in 2017. This is calculated based on data from the International Energy Agency. Bloomberg New Energy Finance also estimated this peak occurred around that time.</p>
+                    </div>
+                </div>
+
+                <!-- Secondary Insight (Partial) -->
+                <div class="insight-card-small">
+                    <div class="insight-chart" style="width: 180px; height: 160px;">
+                         <div class="chart-label" style="color: #555; font-size: 9px;">Money sent or brought back by migrants as a share of GDP</div>
+                         <div style="position: absolute; top: 5px; right: 5px; font-size: 6px; background: #002147; color: white; padding: 1px;">Our World<br>in Data</div>
+                         <!-- Fake area chart -->
+                         <svg width="100%" height="60%" style="position: absolute; bottom: 10px; left: 0;" viewBox="0 0 100 50" preserveAspectRatio="none">
+                            <path d="M0,50 L0,40 L10,10 L20,45 L30,48 L100,50 Z" fill="#dce6f0" stroke="#99aacc" stroke-width="1"/>
+                            <line x1="0" y1="10" x2="100" y2="10" stroke="#eee" stroke-width="0.5"/>
+                            <line x1="0" y1="25" x2="100" y2="25" stroke="#eee" stroke-width="0.5"/>
+                            <line x1="0" y1="40" x2="100" y2="40" stroke="#eee" stroke-width="0.5"/>
+                         </svg>
+                         <div style="position: absolute; bottom: 5px; left: 5px; font-size: 7px; color: #666;">0%</div>
+                         <div style="position: absolute; top: 40px; left: 5px; font-size: 7px; color: #666;">50%</div>
+                         <div style="position: absolute; top: 60px; left: 30px; font-size: 7px; color: #888;">1. Tajikistan 48%</div>
+                         <div style="position: absolute; top: 75px; left: 30px; font-size: 7px; color: #888;">2. Nicaragua 27%</div>
+                    </div>
+                    <div class="insight-content" style="flex: 1;">
+                        <div class="date-tag">📅 MAY 19</div>
+                        <h3 style="font-size: 18px;">Tajikistan [illegible] country's</h3>
+                        <p style="font-size: 13px;">In Tajikistan, [illegible] amounted to [illegible] compared [illegible]</p>
+                        <p style="font-size: 13px;">Nicaragua an [illegible]</p>
+                    </div>
+                    <div class="nav-arrow">›</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Floating Buttons -->
+    <div class="floating-btns">
+        <div class="float-btn"> Subscribe</div>
+        <div class="float-btn">💬 Feedback</div>
+    </div>
+
+</body>
+</html>

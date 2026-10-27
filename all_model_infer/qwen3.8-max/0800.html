@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curvilinear Composition Poster</title>
+    <style>
+        :root {
+            --poster-yellow: #FFE600;
+            --poster-black: #050505;
+            --poster-bg: #FFFFFF;
+        }
+
+        body {
+            margin: 0;
+            padding: 40px;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            font-family: "PingFang SC", "Microsoft YaHei", "SimHei", sans-serif;
+        }
+
+        .poster {
+            width: 600px;
+            height: 850px;
+            background-color: var(--poster-bg);
+            position: relative;
+            box-sizing: border-box;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .header-left h2 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: normal;
+            letter-spacing: 1px;
+        }
+
+        .header-left p {
+            margin: 4px 0 0 0;
+            font-size: 10px;
+            font-family: serif;
+            letter-spacing: 0.5px;
+        }
+
+        .header-right {
+            text-align: right;
+        }
+
+        .header-right h2 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: normal;
+            letter-spacing: 1px;
+        }
+
+        .header-right p {
+            margin: 4px 0 0 0;
+            font-size: 10px;
+            font-family: serif;
+            letter-spacing: 2px;
+        }
+
+        /* Grid Layout for Main Content */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.8fr;
+            grid-template-rows: auto auto auto auto;
+            gap: 20px 15px;
+            flex-grow: 1;
+        }
+
+        /* Row 1 */
+        .box-ku {
+            background-color: var(--poster-yellow);
+            color: var(--poster-black);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 80px;
+            font-weight: bold;
+            height: 140px;
+        }
+
+        .box-cools {
+            background-color: var(--poster-black);
+            color: var(--poster-yellow);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 140px;
+        }
+
+        .box-cools .cn {
+            font-size: 42px;
+            font-weight: bold;
+            letter-spacing: 8px;
+            margin-bottom: 5px;
+        }
+
+        .box-cools .en {
+            font-size: 38px;
+            font-weight: bold;
+            letter-spacing: 12px;
+            font-family: sans-serif;
+        }
+
+        /* Row 2 */
+        .spacer-bar-1 {
+            grid-column: 1;
+            height: 15px;
+            background-color: var(--poster-black);
+            width: 60%;
+            margin-top: -10px;
+            margin-bottom: -10px;
+            align-self: center;
+            justify-self: center;
+        }
+
+        .box-importance-cn {
+            background-color: var(--poster-yellow);
+            color: var(--poster-black);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 36px;
+            font-weight: bold;
+            line-height: 1.2;
+            height: 160px;
+        }
+
+        .box-forever {
+            background-color: var(--poster-black);
+            color: var(--poster-yellow);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 48px;
+            font-weight: bold;
+            line-height: 1.2;
+            height: 160px;
+            /* Offset to the right slightly to match image staggered look if needed, 
+               but grid handles most. The image shows it aligned right. */
+            justify-self: end;
+            width: 100%;
+        }
+
+        /* Row 3 */
+        .box-importance-en {
+            background-color: var(--poster-black);
+            color: var(--poster-yellow);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            font-family: serif;
+            letter-spacing: 2px;
+            line-height: 1.8;
+            height: 140px;
+            text-align: center;
+        }
+
+        .box-top {
+            background-color: var(--poster-black);
+            color: var(--poster-yellow);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 72px;
+            font-weight: bold;
+            letter-spacing: 10px;
+            height: 140px;
+            position: relative;
+        }
+        
+        /* The small black bar above "At the top" */
+        .small-bar-top {
+            position: absolute;
+            top: -25px;
+            right: 20px;
+            width: 80px;
+            height: 15px;
+            background-color: var(--poster-black);
+        }
+
+        /* Row 4 - Bottom Section */
+        .bottom-section {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .repeating-text-container {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            width: 100%;
+        }
+
+        .repeating-line {
+            background-color: var(--poster-black);
+            color: var(--poster-yellow);
+            font-size: 9px;
+            padding: 2px 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            letter-spacing: 1px;
+        }
+
+        .bottom-flex-row {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            height: 100px;
+        }
+
+        .circle-shape {
+            width: 90px;
+            height: 90px;
+            background-color: var(--poster-yellow);
+            border-radius: 50%;
+        }
+
+        .yellow-rect-small {
+            width: 80px;
+            height: 15px;
+            background-color: var(--poster-yellow);
+            margin-bottom: 10px;
+            margin-left: 20px;
+        }
+
+        .cool-set-bar {
+            background-color: var(--poster-black);
+            color: var(--poster-yellow);
+            font-size: 14px;
+            font-family: serif;
+            padding: 8px 15px;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            flex-grow: 0;
+            align-self: center;
+        }
+
+        .yellow-rect-bottom-right {
+            width: 80px;
+            height: 50px;
+            background-color: var(--poster-yellow);
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: auto;
+            padding-top: 20px;
+            text-align: center;
+            font-size: 16px;
+            letter-spacing: 4px;
+            font-weight: bold;
+        }
+
+        /* Adjustments for specific visual alignments based on image */
+        .row-2-wrapper {
+            display: contents;
+        }
+        
+        .row-3-wrapper {
+            display: contents;
+        }
+
+        /* Re-evaluating grid for better fidelity */
+        .main-layout {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .row {
+            display: flex;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .row-1 { height: 140px; gap: 15px; }
+        .row-2 { height: 160px; gap: 15px; margin-top: 30px; position: relative;}
+        .row-3 { height: 140px; gap: 15px; margin-top: 10px; position: relative;}
+        .row-4 { flex-direction: column; gap: 10px; margin-top: 10px; }
+        .row-5 { height: 100px; justify-content: space-between; align-items: flex-end; margin-top: 10px;}
+
+        .col-left { width: 35%; display: flex; flex-direction: column; }
+        .col-right { width: 65%; display: flex; flex-direction: column; }
+
+        /* Specific element tweaks */
+        .black-bar-float {
+            width: 70px;
+            height: 18px;
+            background: var(--poster-black);
+            margin: 0 auto 15px auto;
+        }
+
+        .black-bar-float-right {
+            width: 90px;
+            height: 18px;
+            background: var(--poster-black);
+            margin: 0 0 10px auto; /* Align right */
+        }
+
+        .yellow-bar-float {
+            width: 80px;
+            height: 18px;
+            background: var(--poster-yellow);
+            margin: 0 0 10px 20px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="poster">
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <h2>曲线式构图</h2>
+            <p>CURVILINEAR COMPOSITION</p>
+        </div>
+        <div class="header-right">
+            <h2>版式设计</h2>
+            <p>2023 / 6 / 07</p>
+        </div>
+    </div>
+
+    <div class="main-layout">
+        <!-- Row 1: 酷 & COOLS -->
+        <div class="row row-1">
+            <div class="col-left">
+                <div class="box-ku" style="height: 100%;">酷</div>
+            </div>
+            <div class="col-right">
+                <div class="box-cools" style="height: 100%;">
+                    <div class="cn">酷设而遇</div>
+                    <div class="en">COOLS</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Spacer Bar -->
+        <div style="display: flex; justify-content: flex-start; padding-left: 40px; margin-bottom: 15px;">
+            <div style="width: 70px; height: 18px; background: var(--poster-black);"></div>
+        </div>
+
+        <!-- Row 2: Importance CN & Forever -->
+        <div class="row row-2">
+            <div class="col-left">
+                <div class="box-importance-cn" style="height: 100%;">
+                    <div>构图的</div>
+                    <div>重要性</div>
+                </div>
+            </div>
+            <div class="col-right" style="justify-content: flex-end;">
+                <div class="box-forever" style="height: 100%; width: 85%;">
+                    <div>酷设</div>
+                    <div>永远</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 3: Importance EN & At Top -->
+        <div class="row row-3">
+            <div class="col-left">
+                <div class="box-importance-en" style="height: 100%;">
+                    <div>THE IMPORTANCE</div>
+                    <div>OF COMPOSITION</div>
+                </div>
+            </div>
+            <div class="col-right" style="position: relative;">
+                <!-- Small black bar above -->
+                <div style="position: absolute; top: -25px; right: 40px; width: 90px; height: 18px; background: var(--poster-black);"></div>
+                <div class="box-top" style="height: 100%;">
+                    在顶点
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 4: Repeating Text -->
+        <div class="row row-4">
+            <div class="repeating-text-container">
+                <div class="repeating-line">都可以是图片 &nbsp;&nbsp; 都可以是图片 &nbsp;&nbsp; 都可以是图片 &nbsp;&nbsp; 都可以是图片 &nbsp;&nbsp; 都可以</div>
+                <div class="repeating-line">都可以是图片 &nbsp;&nbsp; 都可以是图片 &nbsp;&nbsp; 都可以是图片 &nbsp;&nbsp; 都可以是图片 &nbsp;&nbsp; 都可以</div>
+                <div class="repeating-line">都可以是图片 &nbsp;&nbsp; 都可以是图片 &nbsp;&nbsp; 都可以是图片 &nbsp;&nbsp; 都可以是图片 &nbsp;&nbsp; 都可以</div>
+            </div>
+        </div>
+
+        <!-- Row 5: Circle, Text Bar, Rect -->
+        <div class="row row-5">
+            <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                <div class="yellow-bar-float"></div>
+                <div class="circle-shape"></div>
+            </div>
+            
+            <div style="display: flex; flex-direction: column; justify-content: flex-end; align-items: center; flex-grow: 1; padding-bottom: 5px;">
+                 <div class="cool-set-bar">COOL SET IS ALWAYS AT THE TOP</div>
+            </div>
+
+            <div style="display: flex; align-items: flex-end;">
+                <div class="yellow-rect-bottom-right"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        我 / 看 / 不 / 懂 / 但 / 大 / 受 / 震 / 撼
+    </div>
+</div>
+
+</body>
+</html>

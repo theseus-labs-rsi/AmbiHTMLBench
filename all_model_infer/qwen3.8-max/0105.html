@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>古诗三首</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 40px;
+            background-color: #f4f1ea; /* Approximate paper color */
+            font-family: "KaiTi", "STKaiti", "SimSun", serif;
+            color: #333;
+            line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .page-container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            min-height: 1000px;
+        }
+
+        /* Top Red Instructions */
+        .top-instructions {
+            color: #d32f2f;
+            font-size: 24px;
+            font-weight: bold;
+            font-family: "Heiti", "Microsoft YaHei", sans-serif;
+            width: 55%;
+            line-height: 1.4;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .page-title {
+            position: absolute;
+            top: 60px;
+            left: 55%;
+            font-size: 20px;
+            color: #555;
+            letter-spacing: 2px;
+        }
+
+        /* Main Layout Grid */
+        .content-grid {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .left-column {
+            width: 55%;
+            padding-right: 20px;
+        }
+
+        .right-column {
+            width: 40%;
+            position: relative;
+        }
+
+        /* Poem Styling */
+        .poem-block {
+            margin-bottom: 50px;
+            text-align: center;
+        }
+
+        .poem-title {
+            font-size: 22px;
+            margin-bottom: 5px;
+            letter-spacing: 5px;
+        }
+
+        .poem-author {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .poem-lines {
+            font-size: 22px;
+            line-height: 2.2;
+            letter-spacing: 2px;
+        }
+
+        .pinyin {
+            font-size: 12px;
+            font-family: Arial, sans-serif;
+            vertical-align: super;
+            margin-left: 2px;
+        }
+
+        .note-ref {
+            font-size: 12px;
+            vertical-align: super;
+            color: #333;
+        }
+
+        /* Right Column - Notes Box */
+        .notes-box {
+            border: 3px solid #d32f2f;
+            border-radius: 15px 15px 15px 15px; /* Slightly irregular to mimic hand draw */
+            padding: 20px;
+            height: 600px;
+            position: relative;
+            background-color: rgba(255, 255, 255, 0.3);
+            /* Simulating the hand-drawn look with box-shadow or just border */
+            box-shadow: 2px 2px 0px rgba(211, 47, 47, 0.2);
+        }
+        
+        /* Adjusting border radius to look more like the marker stroke */
+        .notes-box {
+            border-top-left-radius: 20px 10px;
+            border-top-right-radius: 10px 20px;
+            border-bottom-left-radius: 15px 25px;
+            border-bottom-right-radius: 25px 15px;
+        }
+
+        .notes-section {
+            margin-bottom: 40px;
+        }
+
+        .notes-header {
+            font-size: 16px;
+            font-weight: bold;
+            border-bottom: 1px solid #999;
+            display: inline-block;
+            margin-bottom: 10px;
+            padding-bottom: 2px;
+        }
+
+        .notes-list {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #444;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .notes-list li {
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+
+        .big-red-text {
+            color: #d32f2f;
+            font-size: 48px;
+            font-weight: bold;
+            font-family: "Heiti", "Microsoft YaHei", sans-serif;
+            text-align: center;
+            margin: 60px 0;
+            letter-spacing: 5px;
+        }
+
+        /* Speech Bubble */
+        .speech-bubble {
+            position: absolute;
+            bottom: -80px;
+            right: -20px;
+            background-color: #fce4b8;
+            border: 1px solid #e6c888;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            padding: 15px 20px;
+            width: 180px;
+            font-size: 13px;
+            color: #5d4037;
+            text-align: center;
+            z-index: 3;
+        }
+        
+        .speech-bubble::before {
+            content: "";
+            position: absolute;
+            left: -10px;
+            top: 20px;
+            width: 0;
+            height: 0;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-right: 10px solid #fce4b8;
+        }
+
+        /* Decorative Elements Placeholders */
+        .bg-birds-left {
+            position: absolute;
+            top: 350px;
+            left: -50px;
+            width: 200px;
+            height: 150px;
+            z-index: 1;
+            opacity: 0.8;
+        }
+
+        .bg-bird-top {
+            position: absolute;
+            top: 250px;
+            left: 58%;
+            width: 60px;
+            height: 60px;
+            z-index: 1;
+        }
+
+        .bg-ducks-bottom {
+            position: absolute;
+            bottom: 20px;
+            right: 50px;
+            width: 300px;
+            height: 150px;
+            z-index: 1;
+        }
+        
+        .bg-flowers-bottom-right {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 150px;
+            height: 200px;
+            z-index: 1;
+        }
+
+        .page-number {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            font-size: 16px;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Utility for ruby text simulation if needed, but using sup for simplicity as per image style */
+        .char-with-note {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .note-num {
+            font-size: 10px;
+            position: absolute;
+            top: -5px;
+            right: -8px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+    
+    <!-- Top Instructions -->
+    <div class="top-instructions">
+        1.三首古诗都要能背诵能默写；2.能翻译每句诗的意思；3.注释栏处的关键字词的意思都要掌握。
+    </div>
+    
+    <div class="page-title">古诗三首</div>
+
+    <!-- Decorative Placeholders -->
+    <div class="placeholder bg-birds-left" style="background: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><text y=\'50\' font-size=\'40\'>🐦</text></svg>') no-repeat center; background-size: contain;">
+        <!-- [Image: Birds and flowers on left] -->
+    </div>
+    
+    <div class="placeholder bg-bird-top" style="background: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><text y=\'50\' font-size=\'40\'>🐦</text></svg>') no-repeat center; background-size: contain;">
+        <!-- [Image: Single bird flying] -->
+    </div>
+
+    <div class="placeholder bg-ducks-bottom" style="background: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><text y=\'50\' font-size=\'40\'>🦆🦆🦆</text></svg>') no-repeat center; background-size: contain;">
+        <!-- [Image: Ducks swimming in water] -->
+    </div>
+    
+    <div class="placeholder bg-flowers-bottom-right" style="background: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><text y=\'80\' font-size=\'40\'>🌺</text></svg>') no-repeat center; background-size: contain;">
+         <!-- [Image: Pink flowers bottom right] -->
+    </div>
+
+    <div class="content-grid">
+        <!-- Left Column: Poems -->
+        <div class="left-column">
+            
+            <!-- Poem 1 -->
+            <div class="poem-block">
+                <div class="poem-title">绝 句</div>
+                <div class="poem-author">
+                    <span class="pinyin">fǔ</span><br>
+                    [唐] 杜 甫
+                </div>
+                <div class="poem-lines">
+                    迟 日<span class="note-ref">①</span>江 山 丽，<br>
+                    春 风 花 草 香。<br>
+                    泥 融<span class="note-ref">②</span>飞 燕 子，<br>
+                    <span class="pinyin">yuān yāng</span><br>
+                    沙 暖 睡 鸳 鸯<span class="note-ref">③</span>。
+                </div>
+            </div>
+
+            <!-- Poem 2 -->
+            <div class="poem-block">
+                <div class="poem-title">
+                    <span class="pinyin">huì chóng</span><br>
+                    惠崇春江晚景<span class="note-ref">①</span>
+                </div>
+                <div class="poem-author">
+                    <span class="pinyin">sòng sū shì</span><br>
+                    [宋] 苏 轼
+                </div>
+                <div class="poem-lines">
+                    竹 外 桃 花 三 两 枝，<br>
+                    春 江 水 暖 鸭 先 知。<br>
+                    <span class="pinyin">lóu hāo</span><br>
+                    蒌 蒿 满 地 芦 芽<span class="note-ref">②</span>短，<br>
+                    <span class="pinyin">tún</span><br>
+                    正 是 河 豚<span class="note-ref">③</span>欲 上 时。
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right Column: Notes -->
+        <div class="right-column">
+            <div class="notes-box">
+                
+                <!-- Notes for Poem 1 -->
+                <div class="notes-section">
+                    <div class="notes-header">注释</div>
+                    <ul class="notes-list">
+                        <li>①〔迟日〕春天白天渐长，所以说“迟日”。</li>
+                        <li>②〔泥融〕这里指泥土湿润。</li>
+                        <li>③〔鸳鸯〕一种鸟，常在水边嬉戏，雄鸟与雌鸟常结对生活。</li>
+                    </ul>
+                </div>
+
+                <div class="big-red-text">重点</div>
+
+                <!-- Notes for Poem 2 -->
+                <div class="notes-section">
+                    <div class="notes-header">注释</div>
+                    <ul class="notes-list">
+                        <li>① 惠崇是北宋名僧，能诗善画。这首诗是苏轼为惠崇的画作《春江晚景》所写的题画诗。</li>
+                        <li>②〔芦芽〕芦苇的嫩芽。</li>
+                        <li>③〔河豚〕一种有毒的鱼。</li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <!-- Speech Bubble -->
+            <div class="speech-bubble">
+                我能猜出“蒌蒿”是一种植物，因为……
+            </div>
+        </div>
+    </div>
+
+    <div class="page-number">2</div>
+
+</div>
+
+</body>
+</html>

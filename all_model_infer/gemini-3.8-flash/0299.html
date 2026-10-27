@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Composition with Depth Registration 基于深度注册的嵌入式图像合成</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    font-family: "SimSun", "STSong", "Songti SC", "Times New Roman", serif;
+    background-color: #f7f5eb;
+    color: #111;
+    line-height: 1.45;
+    display: flex;
+    justify-content: center;
+  }
+  .poster {
+    width: 900px;
+    background-color: #faf7ed;
+    position: relative;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    overflow: hidden;
+    padding-bottom: 70px;
+  }
+  /* Top Banner */
+  .top-banner {
+    background: linear-gradient(135deg, #f35702 0%, #ff8300 50%, #f6941d 100%);
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    position: relative;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  }
+  .top-banner .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  .top-banner .logo-text {
+    font-size: 26px;
+    font-weight: 900;
+    font-style: italic;
+    letter-spacing: 1px;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  .top-banner .sub-titles {
+    font-family: "SimHei", "Heiti SC", sans-serif;
+    font-size: 15px;
+    line-height: 1.25;
+    letter-spacing: 1px;
+  }
+  .top-banner .year {
+    font-family: Impact, "Arial Black", sans-serif;
+    font-size: 24px;
+    color: #ffde59;
+    margin-left: 4px;
+  }
+  .top-banner .right-badge {
+    font-family: "SimSun", "STSong", serif;
+    font-size: 24px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 2px;
+  }
+  .star-icon {
+    font-size: 26px;
+    color: #ffde59;
+  }
+
+  /* Header Section */
+  .header {
+    text-align: center;
+    padding: 30px 20px 15px 20px;
+  }
+  .title-en {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 30px;
+    font-weight: bold;
+    color: #000;
+    margin-bottom: 6px;
+  }
+  .title-cn {
+    font-family: "SimHei", "Heiti SC", sans-serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: #000;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+  }
+  .authors {
+    font-family: "KaiTi", "STKaiti", serif;
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 6px;
+  }
+  .conference {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 17px;
+    margin-bottom: 4px;
+  }
+  .contact {
+    font-family: "Times New Roman", "SimSun", serif;
+    font-size: 15px;
+  }
+
+  /* Main Two-Column Layout */
+  .main-content {
+    display: flex;
+    padding: 10px 28px;
+    gap: 28px;
+  }
+  .column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* Headings */
+  .sec-title {
+    color: #cf1f1f;
+    font-size: 18px;
+    font-weight: bold;
+    font-family: "SimHei", "Heiti SC", sans-serif;
+    margin-top: 4px;
+  }
+  .sub-title {
+    font-weight: bold;
+    font-size: 13.5px;
+    margin-top: 2px;
+    font-family: "SimHei", "Heiti SC", sans-serif;
+  }
+
+  /* Paragraphs */
+  p, .text-block {
+    font-size: 12px;
+    text-align: justify;
+    line-height: 1.5;
+    color: #111;
+  }
+  .indent {
+    text-indent: 2em;
+  }
+
+  /* Placeholders & Figures */
+  .figure-box {
+    width: 100%;
+    margin: 4px 0;
+    text-align: center;
+  }
+  .placeholder {
+    background-color: #eae5d8;
+    border: 1px dashed #999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+    font-size: 11px;
+    position: relative;
+  }
+  .caption {
+    font-size: 11px;
+    margin-top: 3px;
+    color: #222;
+  }
+
+  /* Grid of cyclist images */
+  .cyclist-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  .cyclist-item {
+    text-align: center;
+  }
+  .cyclist-item .placeholder {
+    height: 75px;
+  }
+
+  /* Flowchart diagram */
+  .flowchart-placeholder {
+    height: 80px;
+    border: 1px solid #ccc;
+    background: #fff;
+  }
+
+  /* 3-item row (input, depth, anchor) */
+  .three-images-row {
+    display: flex;
+    gap: 6px;
+    justify-content: space-between;
+  }
+  .three-images-row .item {
+    flex: 1;
+    text-align: center;
+  }
+  .three-images-row .placeholder {
+    height: 60px;
+  }
+
+  /* 8-rows visual comparison grid */
+  .comparison-grid-container {
+    border: 1px solid #ddd;
+    background: #fff;
+    padding: 4px;
+  }
+  .comp-labels {
+    display: flex;
+    justify-content: space-around;
+    font-size: 10px;
+    margin-top: 4px;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9.5px;
+    text-align: center;
+    font-family: "Times New Roman", "SimSun", serif;
+    margin: 4px 0;
+  }
+  th, td {
+    padding: 1.5px 2px;
+    line-height: 1.15;
+  }
+  .data-table {
+    border-top: 1.5px solid #000;
+    border-bottom: 1.5px solid #000;
+  }
+  .data-table thead tr:last-child th {
+    border-bottom: 1px solid #000;
+  }
+  .data-table tfoot tr td, .data-table tr.avg td {
+    border-top: 1px solid #000;
+  }
+  .highlight-table td:nth-child(5), .highlight-table td:nth-child(10) {
+    font-weight: bold;
+  }
+
+  /* Chart Placeholder */
+  .chart-box {
+    width: 100%;
+    height: 120px;
+    border: 1px solid #ccc;
+    background: #fff;
+    position: relative;
+  }
+
+  /* Bottom Graphic Banner */
+  .bottom-banner {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 48px;
+    background: linear-gradient(135deg, #ff8300 0%, #f35702 50%, #e64200 100%);
+    clip-path: polygon(0 35%, 100% 0, 100% 100%, 0% 100%);
+    opacity: 0.9;
+  }
+</style>
+</head>
+<body>
+
+<div class="poster">
+  <!-- Top Banner -->
+  <header class="top-banner">
+    <div class="logo-area">
+      <div class="logo-text">ISCAS</div>
+      <div class="sub-titles">
+        <div>中国科学院软件研究所学术年会<span class="year">2023</span></div>
+        <div>暨计算机科学国家重点实验室开放周</div>
+      </div>
+    </div>
+    <div class="right-badge">
+      <span class="star-icon">✹</span>
+      <span>学术论文</span>
+    </div>
+  </header>
+
+  <!-- Header Title -->
+  <section class="header">
+    <h1 class="title-en">Image Composition with Depth Registration</h1>
+    <h2 class="title-cn">基于深度注册的嵌入式图像合成</h2>
+    <div class="authors">李赞、王文成、侯飞</div>
+    <div class="conference">International Joint Conference on Artificial Intelligence(IJCAI-2023)</div>
+    <div class="contact">联系人：李赞，18810762067，lizhan@ios.ac.cn</div>
+  </section>
+
+  <!-- Two Column Layout -->
+  <main class="main-content">
+    <!-- Left Column -->
+    <div class="column">
+      <div class="sec-title">背景</div>
+      <p class="indent">图像合成是指将不同图像中的内容融合成一张看似真实的图像。已有的图像合成方法主要探讨色彩、阴影和亮度的和谐生成，对于图像内容之间的遮挡关系研究不多，往往需要费时的手动处理而效率不高。</p>
+
+      <div class="sec-title">方法</div>
+      <p class="indent">本文提出新的方法，从源图像中选择要融入目标图像中的内容（称为源内容）后，通过深度注册，将源内容融入目标图像所表达的三维空间中，由此，用户进行源内容在目标图像中不同位置的摆放时，融合处理可基于图像内容的深度方便判断它们之间的遮挡关系，以得到遮挡关系合理处理的合成图像。其处理步骤如下：</p>
+      <p>(a)基于深度学习方法进行源图像和目标图像的深度估计；</p>
+      <p>(b)基于深度注册初始化，将源内容融入目标图像所表达的三维空间；</p>
+      <p>(c)迭代进行图像分割/深度的调整，以优化深度注册，直至获得满意的合成结果。</p>
+
+      <!-- Flowchart placeholder -->
+      <div class="figure-box">
+        <div class="placeholder flowchart-placeholder">
+          [图示：基于深度注册的嵌入式图像合成框架流程图]
+        </div>
+      </div>
+
+      <div class="sub-title">深度注册:</div>
+      <p>(a)将源内容放至目标图像中，并调整其大小使得其与目标图像中的一个内容具有相似深度；</p>
+      <p>(b)将目标图像中该内容的锚点像素的深度值赋予源内容的锚点像素(一般来说选择图像内容所有像素中y值最小的点作为锚点)；</p>
+      <p>(c)根据相机成像原理，建立源内容深度和大小之间的关系；</p>
+      <p>(d)用户根据编辑意向设定源内容的位置、大小后，根据上述关系计算源内容各像素的深度，完成深度注册。</p>
+
+      <!-- 3 small figures -->
+      <div class="three-images-row">
+        <div class="item">
+          <div class="placeholder">[图片: 小鹿/草地]</div>
+          <div class="caption">(a)输入</div>
+        </div>
+        <div class="item">
+          <div class="placeholder">[图片: 深度图]</div>
+          <div class="caption">(b)深度注册</div>
+        </div>
+        <div class="item">
+          <div class="placeholder">[图片: 锚点标注]</div>
+          <div class="caption">(c)锚点</div>
+        </div>
+      </div>
+
+      <div class="sub-title">分割 / 深度的优化调整:</div>
+      <p>(a)分割优化:根据合成图像需求，进行更细致合理的分割，如分割开椅子座上的鸭子等。</p>
+      <p>(b)深度优化:根据编辑操作建立约束条件，更新源内容的深度值，以更适合图像合成处理。</p>
+
+      <div class="sec-title">实验结果</div>
+      <p class="indent">本方法可逐步优化深度注册，使源内容更合理融入目标图像对应的三维空间，方便图像合成的遮挡关系处理。如下图所示，在用户频繁改变源图像内容的位置时，只有第一次嵌入需要进行分割优化处理，故交互次数稍高。随后，再次改变源图像内容的位置，则无需更多的调整；反观常用的Photoshop方法，其每次合成处理都需要较多的用户交互。</p>
+
+      <!-- Chart: Photoshop vs Our Method -->
+      <div class="figure-box">
+        <div class="placeholder chart-box">
+          <div style="font-size:10px; width: 90%; text-align: left;">
+            <div style="text-align: right; margin-bottom: 5px;">
+              <span style="color:#2a7ab0; font-weight: bold;">―■― Photoshop</span>&nbsp;&nbsp;&nbsp;
+              <span style="color:#d86c27; font-weight: bold;">―▲― Our method</span>
+            </div>
+            <div>[折线图: 用户交互次数随合成顺序变化曲线 (composition orders: 1, 2, 3, 4)]</div>
+            <div style="font-size:9px; color:#666; margin-top:5px;">Photoshop: 54 &rarr; 67 &rarr; 59 &rarr; 62 | Our method: 20 &rarr; 7 &rarr; 3 &rarr; 2 &rarr; 2</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column -->
+    <div class="column">
+      <!-- 2x3 grid of cyclist images -->
+      <div class="cyclist-grid">
+        <div class="cyclist-item">
+          <div class="placeholder">[街景目标图像]</div>
+          <div class="caption">(a)目标图像</div>
+        </div>
+        <div class="cyclist-item">
+          <div class="placeholder">[骑车人源图像]</div>
+          <div class="caption">(b)源图像</div>
+        </div>
+        <div class="cyclist-item">
+          <div class="placeholder">[合成结果1]</div>
+          <div class="caption">(c)第一次合成</div>
+        </div>
+        <div class="cyclist-item">
+          <div class="placeholder">[合成结果2]</div>
+          <div class="caption">(d)第二次合成</div>
+        </div>
+        <div class="cyclist-item">
+          <div class="placeholder">[合成结果3]</div>
+          <div class="caption">(e)第三次合成</div>
+        </div>
+        <div class="cyclist-item">
+          <div class="placeholder">[合成结果4]</div>
+          <div class="caption">(f)第四次合成</div>
+        </div>
+      </div>
+
+      <p class="indent">本方法所得到合成结果，与基于深度学习的CompGAN方法、传统Tan的方法相比，能合理处理遮挡关系；与Photoshop方法相比，合成结果相当，但我们所需时间开销和交互次数大幅减少。</p>
+
+      <!-- Visual comparison 8 examples -->
+      <div class="comparison-grid-container">
+        <div class="placeholder" style="height: 180px; background: #fff;">
+          [图示：8组样例的视觉对比实验结果网格展示]
+        </div>
+        <div class="comp-labels">
+          <span>(a)源图像</span>
+          <span>(b)目标图像</span>
+          <span>(c)CompGAN</span>
+          <span>(d)Tan的方法</span>
+          <span>(e)PS</span>
+          <span>(f)我们的方法</span>
+        </div>
+      </div>
+
+      <p class="indent">对于上图的八个例子，我们用准确率和F1分数来度量源内容在合成图像中具有正确遮挡标签的像素占比，结果如下表所示:</p>
+
+      <!-- Table 1: Accuracy & F1-score -->
+      <table class="data-table highlight-table">
+        <thead>
+          <tr>
+            <th rowspan="2"></th>
+            <th colspan="5" style="border-bottom: 0.5px solid #aaa;">Accuracy</th>
+            <th colspan="5" style="border-bottom: 0.5px solid #aaa;">F1 score</th>
+          </tr>
+          <tr>
+            <th>CompGAN</th>
+            <th>Tan's</th>
+            <th>PS</th>
+            <th>Ours</th>
+            <th>Ours*</th>
+            <th>CompGAN</th>
+            <th>Tan's</th>
+            <th>PS</th>
+            <th>Ours</th>
+            <th>Ours*</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Row1</td>
+            <td>0.2100</td>
+            <td>0.7001</td>
+            <td>1.0000</td>
+            <td>0.9826</td>
+            <td>-</td>
+            <td>0.3472</td>
+            <td>0.8236</td>
+            <td>1.0000</td>
+            <td>0.9912</td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td>Row2</td>
+            <td>0.0000</td>
+            <td>0.7951</td>
+            <td>1.0000</td>
+            <td>0.9896</td>
+            <td>-</td>
+            <td>0.0000</td>
+            <td>0.8858</td>
+            <td>1.0000</td>
+            <td>0.9948</td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td>Row3</td>
+            <td>0.1674</td>
+            <td>0.8163</td>
+            <td>1.0000</td>
+            <td>0.9799</td>
+            <td>-</td>
+            <td>0.2694</td>
+            <td>0.8989</td>
+            <td>1.0000</td>
+            <td>0.9875</td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td>Row4</td>
+            <td>0.4322</td>
+            <td>0.6304</td>
+            <td>1.0000</td>
+            <td>0.7846</td>
+            <td>0.9995</td>
+            <td>0.5186</td>
+            <td>0.7733</td>
+            <td>1.0000</td>
+            <td>0.8326</td>
+            <td>0.9996</td>
+          </tr>
+          <tr>
+            <td>Row5</td>
+            <td>0.4503</td>
+            <td>0.7913</td>
+            <td>1.0000</td>
+            <td>0.9687</td>
+            <td>-</td>
+            <td>0.5910</td>
+            <td>0.8835</td>
+            <td>1.0000</td>
+            <td>0.9798</td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td>Row6</td>
+            <td>0.5222</td>
+            <td>0.5786</td>
+            <td>1.0000</td>
+            <td>0.9731</td>
+            <td>-</td>
+            <td>0.6557</td>
+            <td>0.7331</td>
+            <td>1.0000</td>
+            <td>0.9762</td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td>Row7</td>
+            <td>0.0000</td>
+            <td>0.9178</td>
+            <td>1.0000</td>
+            <td>0.9218</td>
+            <td>0.9887</td>
+            <td>0.0000</td>
+            <td>0.9572</td>
+            <td>1.0000</td>
+            <td>0.9586</td>
+            <td>0.9938</td>
+          </tr>
+          <tr>
+            <td>Row8</td>
+            <td>0.1998</td>
+            <td>0.8357</td>
+            <td>1.0000</td>
+            <td>0.9809</td>
+            <td>-</td>
+            <td>0.3363</td>
+            <td>0.9105</td>
+            <td>1.0000</td>
+            <td>0.9884</td>
+            <td>-</td>
+          </tr>
+          <tr class="avg">
+            <td>Average</td>
+            <td>0.2477</td>
+            <td>0.7582</td>
+            <td>1.0000</td>
+            <td>0.9477</td>
+            <td>0.9941</td>
+            <td>0.3398</td>
+            <td>0.8582</td>
+            <td>1.0000</td>
+            <td>0.9637</td>
+            <td>0.9967</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="indent">可以看到我们的方法在各项指标中都是最好的。上表中，Ours*表示使用优化调整的结果，可知我们只有极少次数需要用到优化调整，大多数情况下可以直接得到和PhotoShop相媲美的结果。如下表所示，本方法平均比Photoshop方法快4倍多，所需交互次数也少很多。</p>
+
+      <!-- Table 2: Time and Interventions -->
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th rowspan="2"></th>
+            <th colspan="2" style="border-bottom: 0.5px solid #aaa;">Photoshop</th>
+            <th colspan="2" style="border-bottom: 0.5px solid #aaa;">Ours</th>
+          </tr>
+          <tr>
+            <th>Time</th>
+            <th>Interventions</th>
+            <th>Time</th>
+            <th>Interventions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Row1</td>
+            <td>142.0s</td>
+            <td>71</td>
+            <td>33.0s</td>
+            <td>4</td>
+          </tr>
+          <tr>
+            <td>Row2</td>
+            <td>158.0s</td>
+            <td>84</td>
+            <td>34.0s</td>
+            <td>5</td>
+          </tr>
+          <tr>
+            <td>Row3</td>
+            <td>139.0s</td>
+            <td>87</td>
+            <td>32.0s</td>
+            <td>4</td>
+          </tr>
+          <tr>
+            <td>Row4</td>
+            <td>160.0s</td>
+            <td>93</td>
+            <td>44.0s</td>
+            <td>5</td>
+          </tr>
+          <tr>
+            <td>Row5</td>
+            <td>144.0s</td>
+            <td>77</td>
+            <td>45.0s</td>
+            <td>5</td>
+          </tr>
+          <tr>
+            <td>Row6</td>
+            <td>137.0s</td>
+            <td>75</td>
+            <td>33.0s</td>
+            <td>4</td>
+          </tr>
+          <tr>
+            <td>Row7</td>
+            <td>133.0s</td>
+            <td>82</td>
+            <td>35.0s</td>
+            <td>4</td>
+          </tr>
+          <tr>
+            <td>Row8</td>
+            <td>152.0s</td>
+            <td>73</td>
+            <td>34.0s</td>
+            <td>4</td>
+          </tr>
+          <tr class="avg">
+            <td>Average</td>
+            <td>145.6s</td>
+            <td>80.3</td>
+            <td>36.3s</td>
+            <td>4.4</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="sec-title">结论</div>
+      <p class="indent">本文提出的深度注册方法，促进了嵌入式图像合成的方便高效实现，降低了图像内容创作门槛，将提高电影、动画和艺术创作等领域的工作成效。</p>
+    </div>
+  </main>
+
+  <!-- Bottom Graphic Banner -->
+  <div class="bottom-banner"></div>
+</div>
+
+</body>
+</html>

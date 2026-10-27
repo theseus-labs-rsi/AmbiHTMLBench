@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>泰勒级数、正交变换与概率密度解答</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] },
+  chtml: { scale: 0.94 },
+  options: { enableMenu: false }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body { background: #eee; color: #363630; }
+.page {
+  position: relative;
+  width: 540px;
+  height: 608px;
+  margin: 0 auto;
+  overflow: hidden;
+  background: #e6e5df;
+  font-family: "Noto Serif CJK SC", "Songti SC", SimSun, serif;
+  font-size: 12.5px;
+  line-height: 1.65;
+}
+.block { position: absolute; }
+.green { color: #4c7558; font-weight: bold; }
+mjx-container { margin: 0 !important; }
+.top-fragment { top: -13px; left: 152px; font-size: 11px; }
+.series { top: 16px; left: 131px; }
+.unique { top: 66px; left: 62px; }
+.matrix-line {
+  top: 102px; left: 60px; width: 467px;
+  display: flex; align-items: center; gap: 6px;
+}
+.trace { top: 153px; left: 35px; }
+.eigen { top: 176px; left: 58px; width: 467px; white-space: nowrap; }
+.vectors { top: 198px; left: 146px; }
+.normalize-text { top: 216px; left: 58px; width: 466px; white-space: nowrap; }
+.normalize { top: 240px; left: 104px; }
+.q-row {
+  top: 279px; left: 27px; width: 501px;
+  display: flex; align-items: center; gap: 4px;
+}
+.q-row .matrix { flex-shrink: 0; }
+.q-row .conclusion { white-space: nowrap; font-size: 12px; }
+.part-two { top: 394px; left: 53px; }
+.quadratic { top: 422px; left: 77px; }
+.extrema { top: 444px; left: 24px; }
+.probability { top: 470px; left: 50px; width: 480px; white-space: nowrap; }
+.integral { top: 507px; left: 23px; white-space: nowrap; }
+.density { top: 547px; left: 202px; }
+.bottom-fragment { top: 597px; left: 50px; }
+</style>
+</head>
+<body>
+<main class="page">
+  <div class="block top-fragment">$3$ [illegible] $n!$ [illegible]</div>
+
+  <div class="block series">
+    $=\displaystyle\sum_{n=1}^{\infty}\frac{\frac13[2^n-(-1)^n]}{n!}x^n.$
+  </div>
+
+  <div class="block unique">
+    由 $S(x)$ 泰勒级数的唯一性，知 $a_n=\dfrac13[2^n-(-1)^n].$
+  </div>
+
+  <div class="block matrix-line">
+    <span class="green">（21）解</span>
+    <span>（Ⅰ）由已知</span>
+    <span>$A=\begin{bmatrix}0&amp;-1&amp;-1\\-1&amp;0&amp;a\\-1&amp;a&amp;0\end{bmatrix}$</span>
+    <span>与</span>
+    <span>$\Lambda=\begin{bmatrix}1&amp;0&amp;0\\0&amp;1&amp;0\\0&amp;0&amp;b\end{bmatrix}$</span>
+    <span>相似，由 $0+0+0=$</span>
+  </div>
+
+  <div class="block trace">
+    $1+1+b$，知 $b=-2$。故 $A$ 的特征值为：$\lambda_1=\lambda_2=1,\lambda_3=-2.$
+  </div>
+
+  <div class="block eigen">
+    由 $|1E-A|=(-1-a)^2=0$，得 $a=-1.$ 由 $(1E-A)\boldsymbol{x}=0$，得 $A$ 的特征向量为
+  </div>
+
+  <div class="block vectors">
+    $\boldsymbol{\alpha}_1=(-1,1,0)^{\mathrm T},\boldsymbol{\alpha}_2=(1,1,-2)^{\mathrm T}$（已正交）.
+  </div>
+
+  <div class="block normalize-text">
+    由 $(-2E-A)\boldsymbol{x}=0$，得 $A$ 的特征向量为 $\boldsymbol{\alpha}_3=(1,1,1)^{\mathrm T}.$ 将 $\boldsymbol{\alpha}_1,\boldsymbol{\alpha}_2,\boldsymbol{\alpha}_3$ 单位化，得
+  </div>
+
+  <div class="block normalize">
+    $\boldsymbol{\gamma}_1=\dfrac1{\sqrt2}(-1,1,0)^{\mathrm T},
+    \boldsymbol{\gamma}_2=\dfrac1{\sqrt6}(1,1,-2)^{\mathrm T},
+    \boldsymbol{\gamma}_3=\dfrac1{\sqrt3}(1,1,1)^{\mathrm T}.$
+  </div>
+
+  <div class="block q-row">
+    <span>令 $Q=(\boldsymbol{\gamma}_1,\boldsymbol{\gamma}_2,\boldsymbol{\gamma}_3)=$</span>
+    <span class="matrix">$\begin{bmatrix}
+    -\dfrac1{\sqrt2}&amp;\dfrac1{\sqrt6}&amp;\dfrac1{\sqrt3}\\[5pt]
+    \dfrac1{\sqrt2}&amp;\dfrac1{\sqrt6}&amp;\dfrac1{\sqrt3}\\[5pt]
+    0&amp;-\dfrac2{\sqrt6}&amp;\dfrac1{\sqrt3}
+    \end{bmatrix}$</span>
+    <span class="conclusion">，则 $Q$ 为所求正交矩阵，标准形为 $y_1^2+y_2^2-2y_3^2.$</span>
+  </div>
+
+  <div class="block part-two">
+    （Ⅱ）由于 $\boldsymbol{x}^{\mathrm T}\boldsymbol{x}=\boldsymbol{y}^{\mathrm T}\boldsymbol{y}=1$，即在 $y_1^2+y_2^2+y_3^2=1$ 的条件下，
+  </div>
+
+  <div class="block quadratic">
+    $f(x_1,x_2,x_3)\overset{\boldsymbol{x}=Q\boldsymbol{y}}{=}
+    y_1^2+y_2^2-2y_3^2
+    =y_1^2+y_2^2+y_3^2-3y_3^2
+    =1-3y_3^2,$
+  </div>
+
+  <div class="block extrema">
+    所以 $f(x_1,x_2,x_3)$ 在 $\boldsymbol{x}^{\mathrm T}\boldsymbol{x}=1$ 的条件下的最大值为 $1$，最小值为 $-2.$
+  </div>
+
+  <div class="block probability">
+    <span class="green">（22）解</span>
+    （Ⅰ）先求 $f(x).$ 解方程 $f'(x)+\dfrac1\lambda f(x)=0$，得 $f(x)=ce^{-\frac{x}{\lambda}}$（$c$ 为大于零
+  </div>
+
+  <div class="block integral">
+    的常数）. 由 $\displaystyle\int_{-\infty}^{+\infty}f(x)\mathrm{d}x
+    =\int_0^{+\infty}ce^{-\frac{x}{\lambda}}\mathrm{d}x=1$，得 $c=\dfrac1\lambda$，故
+  </div>
+
+  <div class="block density">
+    $f(x)=\begin{cases}
+    \dfrac1\lambda e^{-\frac{x}{\lambda}},&amp;x&gt;0,\\[6pt]
+    0,&amp;x\leq0.
+    \end{cases}$
+  </div>
+
+  <div class="block bottom-fragment">（Ⅱ）[illegible]</div>
+</main>
+</body>
+</html>

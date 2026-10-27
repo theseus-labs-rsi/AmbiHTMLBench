@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Podの優先度とプリエンプション | Kubernetes</title>
+    <style>
+        :root {
+            --k8s-blue: #326ce5;
+            --header-bg-start: #f5a623;
+            --header-bg-end: #f8c471;
+            --text-main: #333333;
+            --text-light: #555555;
+            --link-color: #326ce5;
+            --border-color: #e0e0e0;
+            --bg-sidebar: #f9f9f9;
+            --warning-border: #d9534f;
+            --info-bg: #e7f3fe;
+            --info-border: #b3d7ff;
+            --note-border: #326ce5;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans JP", sans-serif;
+            color: var(--text-main);
+            line-height: 1.6;
+            background-color: #fff;
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--header-bg-start), var(--header-bg-end));
+            color: white;
+            padding: 0 20px;
+        }
+
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .logo-icon {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            fill: white;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .nav-links a {
+            color: white;
+        }
+
+        .lang-selector {
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        /* Promo Banner */
+        .promo-banner {
+            background: linear-gradient(135deg, #f5a623, #f8c471); /* Same gradient roughly */
+            padding: 30px 20px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .promo-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .promo-text h2 {
+            margin: 0 0 10px 0;
+            font-size: 1.4rem;
+            text-decoration: underline;
+            color: #000;
+        }
+        
+        .promo-text h2 a {
+            color: #000;
+        }
+
+        .promo-text p {
+            margin: 5px 0;
+            font-size: 0.95rem;
+            color: #000;
+        }
+
+        .promo-text a.ticket-link {
+            text-decoration: underline;
+            color: #000;
+            font-weight: 500;
+        }
+
+        .promo-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .promo-logo-img {
+            height: 60px;
+            /* Placeholder for the complex logo */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.8rem;
+            color: #000;
+            text-align: center;
+        }
+        
+        .promo-logo-icons {
+            display: flex;
+            gap: 20px;
+            align-items: flex-end;
+        }
+        
+        .icon-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .icon-shape {
+            width: 40px;
+            height: 40px;
+            background: #000;
+            margin-bottom: 5px;
+            /* Simple shapes to mimic logos */
+        }
+        .kubecon-shape { clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); background: #000; position: relative;}
+        .kubecon-shape::after { content: ''; position: absolute; top: 10px; left: 10px; right: 10px; bottom: 10px; background: #f5a623; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); }
+        
+        .cnc-shape { width: 40px; height: 40px; background: #000; display: grid; grid-template-columns: 1fr 1fr; gap: 2px; transform: rotate(45deg); overflow: hidden;}
+        .cnc-shape div { background: #f5a623; }
+
+        .promo-footer-text {
+            font-size: 0.7rem;
+            margin-top: 5px;
+            border-top: 1px solid #000;
+            padding-top: 2px;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Main Layout */
+        .container {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            min-height: 800px;
+        }
+
+        /* Left Sidebar */
+        .sidebar-left {
+            width: 250px;
+            padding: 30px 20px;
+            border-right: 1px solid var(--border-color);
+            flex-shrink: 0;
+            font-size: 0.9rem;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .search-box input {
+            border: none;
+            outline: none;
+            width: 100%;
+            margin-left: 5px;
+        }
+
+        .nav-tree ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .nav-tree li {
+            margin-bottom: 8px;
+        }
+
+        .nav-tree .has-children > span {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-tree .has-children > span::before {
+            content: '▶';
+            font-size: 0.7em;
+            margin-right: 8px;
+            color: #666;
+            transition: transform 0.2s;
+        }
+        
+        .nav-tree .expanded > span::before {
+            transform: rotate(90deg);
+            color: var(--k8s-blue);
+        }
+
+        .nav-tree ul ul {
+            padding-left: 20px;
+            margin-top: 8px;
+            display: none;
+        }
+
+        .nav-tree .expanded > ul {
+            display: block;
+        }
+        
+        .nav-tree a {
+            color: var(--text-main);
+        }
+        
+        .nav-tree a.active {
+            color: var(--text-main);
+            font-weight: bold;
+        }
+        
+        .nav-tree .section-header {
+            color: var(--k8s-blue);
+            font-weight: bold;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 30px 40px;
+            min-width: 0; /* Prevent flex overflow */
+        }
+
+        .breadcrumbs {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 25px;
+        }
+        
+        .breadcrumbs a {
+            color: var(--k8s-blue);
+        }
+        
+        .breadcrumbs span {
+            margin: 0 5px;
+        }
+
+        .deprecation-notice {
+            border: 2px solid var(--k8s-blue);
+            padding: 20px;
+            margin-bottom: 30px;
+            background-color: #fff;
+        }
+
+        .deprecation-notice h4 {
+            margin-top: 0;
+            font-size: 1rem;
+        }
+
+        .deprecation-notice p {
+            margin-bottom: 0;
+            font-size: 0.95rem;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: #222;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            color: #222;
+            font-weight: normal;
+        }
+        
+        h3 {
+            font-size: 1.4rem;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            color: #222;
+            font-weight: normal;
+        }
+
+        .feature-state {
+            background-color: var(--info-bg);
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+        }
+        
+        .feature-state svg {
+            margin-right: 10px;
+            fill: var(--k8s-blue);
+            width: 20px;
+            height: 20px;
+        }
+
+        p {
+            margin-bottom: 1.2em;
+        }
+
+        code {
+            background-color: #f0f0f0;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+
+        .warning-box {
+            border-left: 4px solid var(--warning-border);
+            padding: 15px 20px;
+            margin: 25px 0;
+            background-color: #fff;
+        }
+
+        .warning-box h4 {
+            color: var(--warning-border);
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .note-box {
+            border-left: 4px solid var(--note-border);
+            padding: 15px 20px;
+            margin: 25px 0;
+            background-color: #fff;
+        }
+        
+        .note-box h4 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        ol {
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+        
+        ol li {
+            margin-bottom: 10px;
+        }
+
+        /* Right Sidebar (TOC) */
+        .sidebar-right {
+            width: 250px;
+            padding: 30px 20px;
+            border-left: 1px solid var(--border-color);
+            flex-shrink: 0;
+            font-size: 0.9rem;
+        }
+
+        .toc-actions {
+            margin-bottom: 25px;
+        }
+
+        .toc-actions ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .toc-actions li {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .toc-actions li svg {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            fill: var(--k8s-blue);
+            flex-shrink: 0;
+            margin-top: 3px;
+        }
+
+        .toc-links ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .toc-links li {
+            margin-bottom: 8px;
+            color: var(--text-light);
+        }
+        
+        .toc-links a {
+            color: var(--text-light);
+        }
+        
+        .toc-links a:hover {
+            color: var(--k8s-blue);
+        }
+        
+        .toc-links .indent-1 { padding-left: 15px; }
+        .toc-links .indent-2 { padding-left: 30px; }
+
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+            .sidebar-right { display: none; }
+        }
+        @media (max-width: 768px) {
+            .sidebar-left { display: none; }
+            .promo-content { flex-direction: column; text-align: center; }
+            .promo-logo { margin-top: 20px; }
+            .nav-links { display: none; } /* Simplified for mobile */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navigation -->
+    <header>
+        <div class="top-nav">
+            <div class="logo-area">
+                <!-- Kubernetes Helm Icon SVG -->
+                <svg class="logo-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50 5 L90 27.5 V72.5 L50 95 L10 72.5 V27.5 Z" fill="none" stroke="white" stroke-width="5"/>
+                    <circle cx="50" cy="50" r="15" fill="none" stroke="white" stroke-width="5"/>
+                    <path d="M50 5 V35 M50 65 V95 M10 27.5 L37 42.5 M63 57.5 L90 72.5 M90 27.5 L63 42.5 M37 57.5 L10 72.5" stroke="white" stroke-width="5"/>
+                </svg>
+                kubernetes
+            </div>
+            <nav class="nav-links">
+                <a href="#">ドキュメント</a>
+                <a href="#">ブログ</a>
+                <a href="#">トレーニング</a>
+                <a href="#">パートナー</a>
+                <a href="#">コミュニティ</a>
+                <a href="#">バージョン ▾</a>
+            </nav>
+            <div class="lang-selector">
+                日本語 (Japanese) ▾
+            </div>
+        </div>
+    </header>
+
+    <!-- Promo Banner -->
+    <div class="promo-banner">
+        <div class="promo-content">
+            <div class="promo-text">
+                <h2><a href="#">KubeCon + CloudNativeCon India 2026</a></h2>
+                <p>Join us for two days of incredible opportunities to collaborate, learn and share with the cloud native community.</p>
+                <p><a href="#" class="ticket-link">Buy your ticket now! 18 - 19 June | Mumbai, India</a></p>
+            </div>
+            <div class="promo-logo">
+                <div class="promo-logo-icons">
+                    <div class="icon-box">
+                        <div class="kubecon-shape"></div>
+                        <span>KubeCon</span>
+                    </div>
+                    <div class="icon-box">
+                        <div class="cnc-shape">
+                            <div></div><div></div><div></div><div></div>
+                        </div>
+                        <span>CloudNativeCon</span>
+                    </div>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center; margin-left: -60px; margin-top: 45px;">
+                     <div class="promo-footer-text">India 2026</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        
+        <!-- Left Sidebar -->
+        <aside class="sidebar-left">
+            <div class="search-box">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" placeholder="検索">
+            </div>
+            
+            <nav class="nav-tree">
+                <ul>
+                    <li class="has-children"><span>ドキュメント</span></li>
+                    <li class="has-children"><span>はじめに</span></li>
+                    <li class="has-children expanded">
+                        <span class="section-header">コンセプト</span>
+                        <ul>
+                            <li class="has-children"><span>概要</span></li>
+                            <li class="has-children"><span>クラスターのアーキテクチャ</span></li>
+                            <li class="has-children"><span>コンテナ</span></li>
+                            <li class="has-children"><span>Windows in Kubernetes</span></li>
+                            <li class="has-children"><span>ワークロード</span></li>
+                            <li class="has-children"><span>Service、負荷分散とネットワーク</span></li>
+                            <li class="has-children"><span>ストレージ</span></li>
+                            <li class="has-children"><span>設定</span></li>
+                            <li class="has-children"><span>セキュリティ</span></li>
+                            <li class="has-children"><span>ポリシー</span></li>
+                            <li class="has-children expanded">
+                                <span class="section-header">スケジューリング、プリエンプションと退避</span>
+                                <ul>
+                                    <li><a href="#">Kubernetesのスケジューラー</a></li>
+                                    <li><a href="#">Topology-Aware Workload Scheduling (EN)</a></li>
+                                    <li><a href="#">ノード上へのPodのスケジューリング</a></li>
+                                    <li><a href="#">Podのオーバーヘッド</a></li>
+                                    <li><a href="#">Podトポロジー分散制約</a></li>
+                                    <li><a href="#">Podのスケジューリング準備</a></li>
+                                    <li><a href="#">TaintとToleration</a></li>
+                                    <li><a href="#">スケジューリングフレームワーク</a></li>
+                                    <li><a href="#">動的リソース割り当て</a></li>
+                                    <li><a href="#">Gangスケジューリング</a></li>
+                                    <li><a href="#">スケジューラーのパフォーマンス...</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <div class="breadcrumbs">
+                <a href="#">Kubernetesドキュメント</a> <span>/</span> 
+                <a href="#">コンセプト</a> <span>/</span> 
+                <a href="#">スケジューリング、プリエンプションと退避</a> <span>/</span> 
+                Podの優先度とプリエンプション
+            </div>
+
+            <div class="deprecation-notice">
+                <h4>このページに記載されている情報は古い可能性があります</h4>
+                <p>このページの更新日は英語版よりも古いため、記載されている情報が古い可能性があります。最新の情報をご覧になりたい方は英語版のページをご覧ください: <a href="#">Pod Priority and Preemption</a></p>
+            </div>
+
+            <h1>Podの優先度とプリエンプション</h1>
+
+            <div class="feature-state">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <strong>FEATURE STATE:</strong>&nbsp;Kubernetes v1.14 [stable]
+            </div>
+
+            <p><a href="#">Pod</a>は <em>priority</em>（優先度）を持つことができます。 優先度は他のPodに対する相対的なPodの重要度を示します。 もしPodをスケジューリングできないときには、スケジューラーはそのPodをスケジューリングできるようにするため、優先度の低いPodをプリエンプトする（追い出す）ことを試みます。</p>
+
+            <div class="warning-box">
+                <h4>警告:</h4>
+                <p>クラスターの全てのユーザーが信用されていない場合、悪意のあるユーザーが可能な範囲で最も高い優先度のPodを作成することが可能です。これは他のPodが追い出されたりスケジューリングできない状態を招きます。 管理者はResourceQuotaを使用して、ユーザーがPodを高い優先度で作成することを防ぐことができます。</p>
+                <p>詳細は<a href="#">デフォルトで優先度クラスの消費を制限する</a> を参照してください。</p>
+            </div>
+
+            <h2>優先度とプリエンプションを使う方法</h2>
+            
+            <p>優先度とプリエンプションを使うには、</p>
+            
+            <ol>
+                <li>1つまたは複数の<a href="#">PriorityClass</a>を追加します</li>
+                <li>追加したPriorityClassを <code>priorityClassName</code> に設定したPodを作成します。 もちろんPodを直接作る必要はありません。一般的には <code>priorityClassName</code> をDeploymentのようなコレクションオブジェクトのPodテンプレートに追加します。</li>
+            </ol>
+
+            <p>これらの手順のより詳しい情報については、この先を読み進めてください。</p>
+
+            <div class="note-box">
+                <h4>備考:</h4>
+                <p>Kubernetesには最初から既に2つのPriorityClassが設定された状態になっています。 <code>system-cluster-critical</code>と<code>system-node-critical</code>です。 これらは汎用のクラスであり、<a href="#">重要なコンポーネントが常に最初にスケジュールされることを保証する</a>ために使われます。</p>
+            </div>
+
+            <h2>PriorityClass</h2>
+            
+            <p>PriorityClassはnamespaceによらないオブジェクトで、優先度クラスの名前から優先度を表す整数値へのマッピングを提供します。...</p>
+
+        </main>
+
+        <!-- Right Sidebar (TOC) -->
+        <aside class="sidebar-right">
+            <div class="toc-actions">
+                <ul>
+                    <li>
+                        <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                        <a href="#">ページの編集</a>
+                    </li>
+                    <li>
+                        <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                        <a href="#">子ページを作成</a>
+                    </li>
+                    <li>
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                        <a href="#">ドキュメントのissueを作成</a>
+                    </li>
+                    <li>
+                        <svg viewBox="0 0 24 24"><path d="M19 8h-1V3H6v5H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zM8 5h8v3H8V5zm8 12v2H8v-4h8v2zm2-2v-2H6v2H4v-4c0-.55.45-1 1-1h14c.55 0 1 .45 1 1v4h-2z"/></svg>
+                        <a href="#">セクション全体を印刷</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="toc-links">
+                <ul>
+                    <li><a href="#">優先度とプリエンプションを使う方法</a></li>
+                    <li><a href="#">PriorityClass</a></li>
+                    <li class="indent-1"><a href="#">PodPriorityと既存のクラスターに関する注意</a></li>
+                    <li class="indent-1"><a href="#">PriorityClassの例</a></li>
+                    <li><a href="#">非プリエンプトのPriorityClass</a></li>
+                    <li class="indent-1"><a href="#">非プリエンプトのPriorityClassの例</a></li>
+                    <li><a href="#">Podの優先度</a></li>
+                    <li class="indent-1"><a href="#">スケジューリング順序におけるPodの優先度の効果</a></li>
+                    <li><a href="#">プリエンプション</a></li>
+                    <li class="indent-1"><a href="#">ユーザーへ開示される情報</a></li>
+                    <li class="indent-1"><a href="#">プリエンプトの制限</a></li>
+                    <li><a href="#">トラブルシューティング</a></li>
+                    <li class="indent-1"><a href="#">Podが不必要にプリエンプトされる</a></li>
+                    <li class="indent-1"><a href="#">Podはプリエンプトされたが、プリエンプトさせたPodがスケジューリングされない</a></li>
+                    <li class="indent-1"><a href="#">優先度の高いPodが優先度の低いPodより先にプリエンプトされる</a></li>
+                    <li><a href="#">Podの優先度とQoSの相互作用</a></li>
+                    <li><a href="#">次の項目</a></li>
+                </ul>
+            </div>
+        </aside>
+
+    </div>
+
+</body>
+</html>

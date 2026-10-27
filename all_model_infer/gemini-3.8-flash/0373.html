@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Custom Docs UI Static Assets (Self-Hosting) - FastAPI</title>
+<style>
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    color: #2e3440;
+    background-color: #ffffff;
+    font-size: 14.5px;
+    line-height: 1.6;
+  }
+
+  /* Top Announcement Banner */
+  .top-banner {
+    background-color: #1a1e24;
+    color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 24px;
+    font-size: 12.5px;
+  }
+  .top-banner a {
+    color: inherit;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .sponsor-badge {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    background: #fffae6;
+    color: #1a1e24;
+    padding: 2px 10px;
+    border-radius: 14px;
+    font-size: 11.5px;
+    font-weight: 500;
+  }
+  .sponsor-badge-tag {
+    position: absolute;
+    top: -12px;
+    right: 8px;
+    font-size: 9px;
+    color: #999;
+  }
+  .sponsor-logo {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 700;
+  }
+  .sponsor-logo-icon {
+    width: 14px;
+    height: 14px;
+    background: #e5a93c;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .sponsor-text {
+    margin-left: 8px;
+    font-weight: 600;
+    color: #b07219;
+  }
+
+  /* Primary Header Navigation */
+  header {
+    background-color: #009485;
+    color: #ffffff;
+    padding: 8px 24px 0 24px;
+  }
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 8px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+  }
+  .brand-logo {
+    width: 26px;
+    height: 26px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #009485;
+    font-weight: 900;
+    font-size: 16px;
+  }
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .icon-btn {
+    cursor: pointer;
+    font-size: 15px;
+    opacity: 0.9;
+    display: flex;
+    align-items: center;
+  }
+  .search-box {
+    display: flex;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.16);
+    border-radius: 4px;
+    padding: 4px 10px;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 13px;
+    width: 210px;
+    justify-content: space-between;
+  }
+  .search-box span.kbd {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    font-size: 10px;
+    padding: 0 4px;
+  }
+  .repo-badge {
+    background-color: rgba(0, 0, 0, 0.22);
+    border-radius: 16px;
+    padding: 3px 10px;
+    font-size: 11.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .repo-badge svg {
+    fill: currentColor;
+  }
+
+  /* Nav Tabs */
+  .nav-tabs {
+    display: flex;
+    gap: 18px;
+    font-size: 13px;
+    padding-top: 6px;
+    padding-bottom: 8px;
+  }
+  .nav-tab {
+    cursor: pointer;
+    opacity: 0.85;
+    text-decoration: none;
+    color: white;
+  }
+  .nav-tab.active {
+    opacity: 1;
+    font-weight: 600;
+  }
+
+  /* Main Layout */
+  .main-wrapper {
+    display: flex;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 24px 32px 80px 32px;
+    gap: 40px;
+  }
+
+  /* Left Sidebar */
+  .sidebar-left {
+    width: 220px;
+    flex-shrink: 0;
+    font-size: 13px;
+  }
+  .sidebar-title {
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #1a1e24;
+  }
+  .nav-list {
+    list-style: none;
+  }
+  .nav-item {
+    margin-bottom: 6px;
+    line-height: 1.35;
+  }
+  .nav-item a {
+    color: #4c566a;
+    text-decoration: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .nav-item a:hover {
+    color: #009485;
+  }
+  .nav-sublist {
+    list-style: none;
+    padding-left: 12px;
+    margin-top: 6px;
+    border-left: 1px solid #e5e9f0;
+  }
+  .nav-subitem {
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+  .nav-subitem a {
+    color: #4c566a;
+    text-decoration: none;
+    display: block;
+    font-size: 12.5px;
+  }
+  .nav-subitem.active a {
+    color: #009485;
+    font-weight: 500;
+  }
+  .arrow {
+    font-size: 10px;
+    color: #999;
+  }
+
+  /* Main Content Column */
+  .content-center {
+    flex: 1;
+    min-width: 0;
+    max-width: 760px;
+  }
+  .breadcrumbs {
+    font-size: 12.5px;
+    color: #7b889b;
+    margin-bottom: 16px;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .breadcrumbs a {
+    color: #7b889b;
+    text-decoration: none;
+  }
+  .breadcrumbs .sep {
+    font-size: 10px;
+  }
+
+  h1 {
+    font-size: 29px;
+    font-weight: 300;
+    color: #4c566a;
+    margin-bottom: 24px;
+    letter-spacing: -0.5px;
+  }
+  h2 {
+    font-size: 21px;
+    font-weight: 400;
+    color: #2e3440;
+    margin-top: 32px;
+    margin-bottom: 16px;
+    letter-spacing: -0.3px;
+  }
+  p {
+    margin-bottom: 16px;
+    color: #3b4252;
+    font-size: 14.5px;
+  }
+  p strong {
+    font-weight: 600;
+  }
+  .dotted-term {
+    border-bottom: 1px dotted #7b889b;
+    text-decoration: none;
+    color: inherit;
+    cursor: help;
+  }
+  .link {
+    color: #7b889b;
+    text-decoration: none;
+  }
+  code.inline {
+    background-color: #f4f5f7;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 12.5px;
+    color: #555;
+  }
+
+  /* Code Block Container */
+  .tab-header {
+    border-bottom: 2px solid #e5e9f0;
+    display: flex;
+    margin-top: 24px;
+    font-size: 12.5px;
+    font-weight: 600;
+  }
+  .tab-btn {
+    padding: 6px 14px;
+    border-bottom: 2px solid #009485;
+    margin-bottom: -2px;
+    color: #2e3440;
+  }
+  .code-container {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    padding: 16px 0;
+    font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 12.5px;
+    line-height: 1.5;
+    position: relative;
+    overflow-x: auto;
+  }
+  .copy-icon {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    color: #a0aec0;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .code-line {
+    padding: 0 20px;
+    white-space: pre;
+  }
+  .code-line.highlight {
+    background-color: #e9f3ff;
+    border-left: 3px solid #3182ce;
+    padding-left: 17px;
+  }
+
+  /* Syntax Highlighting */
+  .hl-kw { color: #8957e5; } /* from, import, async def, return */
+  .hl-blue { color: #005cc5; } /* @app.get, decorators, func calls */
+  .hl-str { color: #22863a; } /* strings */
+  .hl-param { color: #24292e; }
+
+  /* Right Sidebar (On this page) */
+  .sidebar-right {
+    width: 220px;
+    flex-shrink: 0;
+    font-size: 12.5px;
+    padding-left: 12px;
+  }
+  .toc-title {
+    font-weight: 600;
+    color: #4c566a;
+    margin-bottom: 12px;
+  }
+  .toc-list {
+    list-style: none;
+  }
+  .toc-item {
+    margin-bottom: 8px;
+    line-height: 1.35;
+  }
+  .toc-item a {
+    color: #4c566a;
+    text-decoration: none;
+  }
+  .toc-item a:hover {
+    color: #009485;
+  }
+  .toc-sublist {
+    list-style: none;
+    padding-left: 12px;
+    margin-top: 6px;
+  }
+  .toc-subitem {
+    margin-bottom: 6px;
+  }
+  .toc-subitem a {
+    color: #718096;
+    text-decoration: none;
+  }
+
+  /* Floating Ask AI Button */
+  .ask-ai-fab {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #009485;
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    font-size: 8px;
+    font-weight: bold;
+    text-decoration: none;
+  }
+  .ask-ai-fab svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+    margin-bottom: 1px;
+  }
+</style>
+</head>
+<body>
+
+  <!-- Top Announcement Banner -->
+  <div class="top-banner">
+    <div>
+      <a href="#">
+        <span>&#128197;</span> FastAPI Conf '26 — Oct 28, 2026, Amsterdam &#127908;
+      </a>
+    </div>
+    <div style="position: relative;">
+      <span class="sponsor-badge-tag">sponsor</span>
+      <div class="sponsor-badge">
+        <div class="sponsor-logo">
+          <span class="sponsor-logo-icon"></span>
+          <span>BlockBee</span>
+        </div>
+        <span class="sponsor-text">Effortless crypto payments with instant payouts</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Primary Header Navigation -->
+  <header>
+    <div class="header-top">
+      <div class="brand">
+        <div class="brand-logo">&#9889;</div>
+        <span>FastAPI</span>
+      </div>
+      <div class="header-actions">
+        <div class="icon-btn" title="Toggle theme">&#128161;<sub>A</sub></div>
+        <div class="icon-btn" title="Language">&#25991;<sub>A</sub></div>
+        <div class="search-box">
+          <span style="display: flex; align-items: center; gap: 6px;">
+            <span>&#128269;</span> Search
+          </span>
+          <span class="kbd">&#8984;K</span>
+        </div>
+        <div class="repo-badge">
+          <svg height="16" width="16" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+          <span>fastapi/fastapi</span>
+          <span style="opacity: 0.7;">0.136.1</span>
+          <span>&#9734; 98.4k</span>
+          <span>&#9492; 9.3k</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav-tabs">
+      <a href="#" class="nav-tab">FastAPI</a>
+      <a href="#" class="nav-tab">Features</a>
+      <a href="#" class="nav-tab active">Learn</a>
+      <a href="#" class="nav-tab">Reference</a>
+      <a href="#" class="nav-tab">FastAPI People</a>
+      <a href="#" class="nav-tab">Resources</a>
+      <a href="#" class="nav-tab">About</a>
+      <a href="#" class="nav-tab">Release Notes</a>
+    </div>
+  </header>
+
+  <!-- Main Layout -->
+  <div class="main-wrapper">
+    <!-- Left Navigation Sidebar -->
+    <aside class="sidebar-left">
+      <div class="sidebar-title">Learn</div>
+      <ul class="nav-list">
+        <li class="nav-item"><a href="#">Python Types Intro</a></li>
+        <li class="nav-item"><a href="#">Concurrency and async / await</a></li>
+        <li class="nav-item"><a href="#">Environment Variables</a></li>
+        <li class="nav-item"><a href="#">Virtual Environments</a></li>
+        <li class="nav-item"><a href="#">Tutorial - User Guide <span class="arrow">&gt;</span></a></li>
+        <li class="nav-item"><a href="#">Advanced User Guide <span class="arrow">&gt;</span></a></li>
+        <li class="nav-item"><a href="#">FastAPI CLI</a></li>
+        <li class="nav-item"><a href="#">Editor Support</a></li>
+        <li class="nav-item"><a href="#">Deployment <span class="arrow">&gt;</span></a></li>
+        <li class="nav-item">
+          <a href="#">How To - Recipes <span class="arrow">&#9662;</span></a>
+          <ul class="nav-sublist">
+            <li class="nav-subitem"><a href="#">General - How To - Recipes</a></li>
+            <li class="nav-subitem"><a href="#">Migrate from Pydantic v1 to Pydantic v2</a></li>
+            <li class="nav-subitem"><a href="#">GraphQL</a></li>
+            <li class="nav-subitem"><a href="#">Custom Request and APIRoute class</a></li>
+            <li class="nav-subitem"><a href="#">Conditional OpenAPI</a></li>
+            <li class="nav-subitem"><a href="#">Extending OpenAPI</a></li>
+            <li class="nav-subitem"><a href="#">Separate OpenAPI Schemas for Input and Output or Not</a></li>
+            <li class="nav-subitem active"><a href="#">Custom Docs UI Static Assets (Self-Hosting)</a></li>
+            <li class="nav-subitem"><a href="#">Configure Swagger UI</a></li>
+            <li class="nav-subitem"><a href="#">Testing a Database</a></li>
+            <li class="nav-subitem"><a href="#">Use Old 403 Authentication Error Status Codes</a></li>
+          </ul>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Center Content -->
+    <main class="content-center">
+      <div class="breadcrumbs">
+        <a href="#">FastAPI</a>
+        <span class="sep">&gt;</span>
+        <a href="#">Learn</a>
+        <span class="sep">&gt;</span>
+        <a href="#">How To - Recipes</a>
+      </div>
+
+      <h1>Custom Docs UI Static Assets (Self-Hosting)</h1>
+
+      <p>The API docs use <strong>Swagger UI</strong> and <strong>ReDoc</strong>, and each of those need some JavaScript and CSS files.</p>
+
+      <p>By default, those files are served from a <a href="#" class="dotted-term">CDN</a>.</p>
+
+      <p>But it's possible to customize it, you can set a specific CDN, or serve the files yourself.</p>
+
+      <h2>Custom CDN for JavaScript and CSS</h2>
+
+      <p>Let's say that you want to use a different <a href="#" class="dotted-term">CDN</a>, for example you want to use <span class="link">https://unpkg.com/</span> .</p>
+
+      <p>This could be useful if for example you live in a country that restricts some URLs.</p>
+
+      <h2>Disable the automatic docs</h2>
+
+      <p>The first step is to disable the automatic docs, as by default, those use the default CDN.</p>
+
+      <p>To disable them, set their URLs to <code class="inline">None</code> when creating your <code class="inline">FastAPI</code> app:</p>
+
+      <div class="tab-header">
+        <div class="tab-btn">Python 3.10+</div>
+      </div>
+      <div class="code-container">
+        <div class="copy-icon" title="Copy to clipboard">&#9633;</div>
+        <div class="code-line"><span class="hl-kw">from</span> fastapi <span class="hl-kw">import</span> FastAPI</div>
+        <div class="code-line"><span class="hl-kw">from</span> fastapi.openapi.docs <span class="hl-kw">import</span> (</div>
+        <div class="code-line">    get_redoc_html,</div>
+        <div class="code-line">    get_swagger_ui_html,</div>
+        <div class="code-line">    get_swagger_ui_oauth2_redirect_html,</div>
+        <div class="code-line">)</div>
+        <div class="code-line"></div>
+        <div class="code-line highlight">app = FastAPI(docs_url=<span class="hl-kw">None</span>, redoc_url=<span class="hl-kw">None</span>)</div>
+        <div class="code-line"></div>
+        <div class="code-line"></div>
+        <div class="code-line"><span class="hl-blue">@app.get</span>(<span class="hl-str">"/docs"</span>, include_in_schema=<span class="hl-kw">False</span>)</div>
+        <div class="code-line"><span class="hl-kw">async def</span> <span class="hl-blue">custom_swagger_ui_html</span>():</div>
+        <div class="code-line">    <span class="hl-kw">return</span> <span class="hl-blue">get_swagger_ui_html</span>(</div>
+        <div class="code-line">        openapi_url=app.openapi_url,</div>
+        <div class="code-line">        title=app.title + <span class="hl-str">" - Swagger UI"</span>,</div>
+        <div class="code-line">        oauth2_redirect_url=app.swagger_ui_oauth2_redirect_url,</div>
+        <div class="code-line">        swagger_js_url=<span class="hl-str">"https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"</span>,</div>
+        <div class="code-line">        swagger_css_url=<span class="hl-str">"https://unpkg.com/swagger-ui-dist@5/swagger-ui.css"</span>,</div>
+        <div class="code-line">    )</div>
+        <div class="code-line"></div>
+        <div class="code-line"></div>
+        <div class="code-line"><span class="hl-blue">@app.get</span>(app.swagger_ui_oauth2_redirect_url, include_in_schema=<span class="hl-kw">False</span>)</div>
+        <div class="code-line"><span class="hl-kw">async def</span> <span class="hl-blue">swagger_ui_redirect</span>():</div>
+        <div class="code-line">    <span class="hl-kw">return</span> <span class="hl-blue">get_swagger_ui_oauth2_redirect_html</span>()</div>
+        <div class="code-line"></div>
+        <div class="code-line"></div>
+        <div class="code-line"><span class="hl-blue">@app.get</span>(<span class="hl-str">"/redoc"</span>, include_in_schema=<span class="hl-kw">False</span>)</div>
+        <div class="code-line"><span class="hl-kw">async def</span> <span class="hl-blue">redoc_html</span>():</div>
+        <div class="code-line">    <span class="hl-kw">return</span> <span class="hl-blue">get_redoc_html</span>(</div>
+        <div class="code-line">        openapi_url=app.openapi_url,</div>
+        <div class="code-line">        title=app.title + <span class="hl-str">" - ReDoc"</span>,</div>
+        <div class="code-line">        redoc_js_url=<span class="hl-str">"https://unpkg.com/redoc@2/bundles/redoc.standalone.js"</span>,</div>
+        <div class="code-line">    )</div>
+        <div class="code-line"></div>
+        <div class="code-line"></div>
+        <div class="code-line"><span class="hl-blue">@app.get</span>(<span class="hl-str">"/users/{username}"</span>)</div>
+        <div class="code-line"><span class="hl-kw">async def</span> <span class="hl-blue">read_user</span>(username: str):</div>
+        <div class="code-line">    <span class="hl-kw">return</span> {<span class="hl-str">"message"</span>: <span class="hl-str">f"Hello {username}"</span>}</div>
+      </div>
+    </main>
+
+    <!-- Right Sidebar (Table of Contents) -->
+    <aside class="sidebar-right">
+      <div class="toc-title">On this page</div>
+      <ul class="toc-list">
+        <li class="toc-item">
+          <a href="#">Custom CDN for JavaScript and CSS</a>
+          <ul class="toc-sublist">
+            <li class="toc-subitem"><a href="#">Disable the automatic docs</a></li>
+            <li class="toc-subitem"><a href="#">Include the custom docs</a></li>
+            <li class="toc-subitem"><a href="#">Create a <em>path operation</em> to test it</a></li>
+            <li class="toc-subitem"><a href="#">Test it</a></li>
+          </ul>
+        </li>
+        <li class="toc-item" style="margin-top: 12px;">
+          <a href="#">Self-hosting JavaScript and CSS for docs</a>
+          <ul class="toc-sublist">
+            <li class="toc-subitem"><a href="#">Project file structure</a></li>
+            <li class="toc-subitem"><a href="#">Download the files</a></li>
+            <li class="toc-subitem"><a href="#">Serve the static files</a></li>
+            <li class="toc-subitem"><a href="#">Test the static files</a></li>
+            <li class="toc-subitem"><a href="#">Disable the automatic docs for static files</a></li>
+            <li class="toc-subitem"><a href="#">Include the custom docs for static files</a></li>
+            <li class="toc-subitem"><a href="#">Create a <em>path operation</em> to test static files</a></li>
+            <li class="toc-subitem"><a href="#">Test Static Files UI</a></li>
+          </ul>
+        </li>
+      </ul>
+    </aside>
+  </div>
+
+  <!-- Floating Ask AI button -->
+  <div class="ask-ai-fab" title="Ask AI">
+    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.07L2.05 21.2a.5.5 0 0 0 .63.63l4.13-1.33A9.95 9.95 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z"/></svg>
+    Ask AI
+  </div>
+
+</body>
+</html>

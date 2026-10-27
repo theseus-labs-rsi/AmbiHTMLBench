@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FGER-Net Architecture and Algorithm</title>
+<script>
+window.MathJax = {tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]}, svg: {fontCache: 'global'}};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#fff;color:#000}
+.page{width:1456px;margin:0 auto;padding:0 40px;font-family:"Times New Roman",serif}
+.diagram{height:410px;position:relative;font-size:17px}
+.panel{position:absolute;border:3px dashed;border-radius:9px}
+.biology{left:0;top:42px;width:198px;height:338px;border-color:#bdd6ae;background:#f3f7ee;text-align:center}
+.biology h3{font-size:15px;margin:5px 0}
+.receptors{width:132px;height:144px;margin:2px auto;border:3px dashed #d9b8df;border-radius:7px;background:#f8f4f8;padding:4px}
+.receptor-labels{display:flex;gap:4px;font-size:6px;justify-content:space-around}
+.receptor-pictures{display:flex;gap:4px;margin-top:3px}
+.placeholder{display:flex;align-items:center;justify-content:center;text-align:center;color:#555;font-family:"Times New Roman",serif;font-size:11px}
+.receptor-pictures .placeholder{width:53px;height:117px;border:1px solid #bdb1a7;background:#fffaf7;padding:3px}
+.concept{left:207px;top:42px;width:149px;height:338px;background:#edf2fb;border-color:#b0bfd9;text-align:center;font-weight:bold}
+.concept .heading{padding-top:3px;line-height:19px}
+.concept .dynamic{position:absolute;top:108px;width:100%;line-height:19px}
+.concept .static{position:absolute;top:219px;width:100%;line-height:19px}
+.dash-line{position:absolute;left:170px;border-top:2px dashed #444;width:310px}
+.dash-line.one{top:148px}
+.dash-line.two{top:319px}
+.time-series{position:absolute;left:353px;top:201px;transform:rotate(37deg);font-size:18px}
+.event{left:443px;top:39px;width:600px;height:190px;border-color:#b8d7aa;background:#f2fff1}
+.frame{left:443px;top:239px;width:600px;height:141px;border-color:#b0bfd9;background:#eef3fd}
+.network-title{position:absolute;left:14px;top:7px;font-size:19px}
+.time-label{position:absolute;left:23px;bottom:0;font-size:18px;font-weight:bold}
+.pathway{position:absolute;left:27px;right:24px;top:45px;height:106px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.pathway .arrow{font-family:Arial,sans-serif;font-size:24px}
+.event-input{width:55px;height:58px;border:1px solid #98b99d;background:#f9fff8}
+.features{width:20px;height:68px;border:1px solid #536b92;background:repeating-linear-gradient(to bottom,#a9c8ee 0,#a9c8ee 5px,#446697 6px,#446697 7px)}
+.features.tall{height:90px}
+.features.short{height:37px;width:15px}
+.neural{width:55px;height:59px;border:1px solid #999;border-radius:45%;font-size:10px;background:#fbfff7}
+.lstm{border:1px solid #52735a;border-radius:5px;font:bold 17px Arial,sans-serif;padding:7px 4px;background:#f5fff5}
+.mlp{position:relative}
+.mlp-label{position:absolute;bottom:-24px;left:8px;font-size:15px;font-weight:bold}
+.delta{width:9px;height:20px;background:#fbf79e;border:1px solid #466480}
+.small-label{position:absolute;font-size:10px;color:#555}
+.frame .pathway{top:32px;height:88px}
+.frame-input{width:40px;height:40px;border:2px solid #111;border-radius:6px;font-size:10px}
+.cnn{width:98px;height:57px;border:3px dashed #bfdcae;border-radius:6px;background:#f0f8e9;display:flex;align-items:center;justify-content:center;font-size:19px}
+.perception{right:0;top:42px;width:155px;height:338px;background:#edf2fb;border-color:#b0bfd9;text-align:center}
+.perception-title{font-size:16px;font-weight:bold;margin-top:12px}
+.chart{position:absolute;left:10px;width:135px;height:113px;border:4px dashed}
+.chart.dynamic-chart{top:44px;background:#fff4d4;border-color:#ffdc7b}
+.chart.static-chart{top:195px;background:#eee4f2;border-color:#d7b4de}
+.chart h3{font-size:18px;margin:6px 0 0}
+.chart .placeholder{height:73px;width:105px;margin:auto}
+.connection{position:absolute;height:1px;background:#222}
+.connection.event-out{left:1043px;top:138px;width:45px}
+.connection.frame-out{left:1043px;top:323px;width:45px}
+.vertical-link{position:absolute;left:1087px;top:138px;height:186px;border-left:1px solid #222}
+.output-link{position:absolute;left:1087px;top:228px;width:86px;border-top:1px solid #222}
+.output-rise{position:absolute;left:1172px;top:228px;height:96px;border-left:1px solid #222}
+.output-base{position:absolute;left:1087px;top:323px;width:86px;border-top:1px solid #222}
+.output-top{position:absolute;left:1172px;top:228px;width:34px;border-top:1px solid #222}
+.output-value{position:absolute;left:1167px;top:216px;width:9px;height:18px;background:#94b6e5;border:1px solid #304c7d}
+.output-label{position:absolute;left:1164px;top:236px;font-size:10px}
+.plus{position:absolute;color:white;background:#174e7e;border-radius:50%;font:bold 13px Arial;width:13px;height:13px;text-align:center;line-height:13px}
+.plus.p1{left:1015px;top:132px}
+.plus.p2{left:1080px;top:317px}
+.output-bracket{position:absolute;right:155px;top:107px;width:22px;height:249px;border-left:1px solid #111;border-radius:50% 0 0 50%}
+.caption{font-family:Arial,Helvetica,sans-serif;font-size:22px;line-height:23.7px;margin:35px 0 50px}
+.columns{display:grid;grid-template-columns:670px 670px;gap:32px;align-items:start}
+.prose{font-size:28px;line-height:31.8px;text-align:justify;padding-top:7px}
+.prose p{margin:0}
+.prose p.indent{text-indent:27px}
+.prose p.subsection{text-indent:53px}
+.algorithm{border-top:2px solid #111;border-bottom:1px solid #111;font-size:28px;line-height:32px;padding-bottom:7px}
+.algorithm-title{border-bottom:1px solid #111;font-size:28px;line-height:34px;margin-bottom:3px}
+.algorithm-body{padding-left:26px}
+.algorithm-line{min-height:32px;white-space:nowrap}
+.algorithm-line.inset{padding-left:47px}
+.algorithm em{font-style:italic}
+.algorithm mjx-container{margin:0!important}
+@media(max-width:1455px){.page{margin-left:0;margin-right:0}}
+</style>
+</head>
+<body>
+<main class="page">
+<section class="diagram" aria-label="Architecture of FGER-Net">
+<div class="panel biology">
+<h3>Rapidly Adapting Receptors</h3>
+<div class="receptors">
+<div class="receptor-labels"><span>Meissner’s corpuscles</span><span>Ruffini endings</span></div>
+<div class="receptor-pictures">
+<div class="placeholder">[Diagram: skin receptor]</div>
+<div class="placeholder">[Diagram: skin receptor]</div>
+</div>
+</div>
+<h3>Slowly Adapting Receptors</h3>
+<div class="receptors">
+<div class="receptor-labels"><span>Merkel’s disks</span><span>Pacinian corpuscle</span></div>
+<div class="receptor-pictures">
+<div class="placeholder">[Diagram: skin receptor]</div>
+<div class="placeholder">[Diagram: skin receptor]</div>
+</div>
+</div>
+</div>
+<div class="panel concept">
+<div class="heading">Common perceptual<br>mechanism</div>
+<div class="dynamic">Perceiving<br>dynamic<br>force</div>
+<div class="static">Perceiving<br>static<br>force</div>
+</div>
+<div class="dash-line one"></div>
+<div class="dash-line two"></div>
+<div class="time-series">Time Series</div>
+<div class="panel event">
+<div class="network-title">Event Stream Recurrent Network</div>
+<div class="pathway">
+<div class="placeholder event-input">[Diagram: event stream]</div>
+<span class="arrow">→</span>
+<div class="features short"></div>
+<span class="arrow">→</span>
+<div class="placeholder neural">[Diagram: network]</div>
+<span class="arrow">→</span>
+<div class="features"></div>
+<span style="font-size:10px">Pooling<br>→</span>
+<div class="features tall"></div>
+<span class="arrow">→</span>
+<div class="features tall"></div>
+<span class="arrow">→</span>
+<div style="position:relative"><span class="small-label" style="top:-25px;left:13px">$(h_t,c_t)$</span><div class="lstm">LSTM</div></div>
+<span class="arrow">→</span>
+<div class="mlp"><div class="placeholder neural">[Diagram: network]</div><span class="mlp-label">MLP</span></div>
+<span class="arrow">→</span>
+<div style="position:relative"><div class="delta"></div><span class="small-label" style="top:23px;left:0">$\Delta F$</span></div>
+<span class="arrow">→</span>
+</div>
+<div class="time-label">At time step t+1</div>
+</div>
+<div class="panel frame">
+<div class="network-title">Frame-Guided Network</div>
+<div class="pathway">
+<div class="placeholder frame-input">[Image frame]</div>
+<span class="arrow">⟶</span>
+<div class="cnn">CNN</div>
+<span class="arrow">→</span>
+<div class="features tall"></div>
+<span class="arrow">→</span>
+<div class="features tall"></div>
+<span class="arrow">→</span>
+<div class="mlp"><div class="placeholder neural">[Diagram: network]</div><span class="mlp-label">MLP</span></div>
+<span class="arrow">→</span>
+<div style="position:relative"><div class="delta"></div><span class="small-label" style="top:23px;left:0">$\Delta F$</span></div>
+<span class="arrow">⟶</span>
+</div>
+<div class="time-label">At time step t+1</div>
+</div>
+<div class="connection event-out"></div>
+<div class="connection frame-out"></div>
+<div class="vertical-link"></div>
+<div class="plus p1">+</div>
+<div class="plus p2">+</div>
+<div class="output-link"></div>
+<div class="output-rise"></div>
+<div class="output-base"></div>
+<div class="output-top"></div>
+<div class="output-value"></div>
+<div class="output-label">$F_{\mathrm{output}}$</div>
+<div class="output-bracket"></div>
+<div class="panel perception">
+<div class="perception-title">Perceiving</div>
+<div class="chart dynamic-chart">
+<h3>Dynamic</h3>
+<div class="placeholder">[Chart: dynamic force, F versus t]</div>
+</div>
+<div class="chart static-chart">
+<h3>Static</h3>
+<div class="placeholder">[Chart: static force, F versus t]</div>
+</div>
+</div>
+</section>
+
+<p class="caption">Fig. 2. &nbsp;The architecture of the proposed FGER-Net is presented, alongside its conceptual underpinnings. The left portion illustrates the biological inspiration for the network: the synergistic function of fast and slow adapting mechanoreceptors in perceiving dynamic and static forces, respectively. These biological principles are emulated by the FGER-Net. In the network itself (center), event streams and image frames are synergistically fused for robust force estimation. In this architecture, frames are used to periodically correct for drift during training and to continuously stabilize the high frequency force predictions derived from the event stream during inference. The resulting force estimation is thereby made accurate and robust against drift, successfully capturing both dynamic and static tactile information, mirroring the perceptual capabilities shown on the right side of the diagram.</p>
+
+<div class="columns">
+<section class="prose">
+<p>dual rate architecture mirrors biological perception: a high frequency recurrent pathway integrates transient force incre-<br>ments from the event stream, while a low frequency pathway extracts absolute spatial references from single image frames for periodic training corrections.</p>
+<p class="indent">During inference, we maximize estimation stability via a continuous correction strategy. By persistently fusing the most recent frame feature with incoming events, this absolute spatial anchor effectively eliminates integration drift.</p>
+<p class="indent">The architecture utilizes dual parallel pathways optimized for each modality’s distinct characteristics. To circumvent the extreme sparsity typical of standard convolutions on event data, individual events are normalized and processed by a pointwise MLP, followed by max-pooling to generate an aggregated feature vector for each packet. Conversely, dense spatial information from image frames is extracted into a com-<br>pact feature vector using a residual CNN backbone coupled with average pooling.</p>
+<p class="subsection"><em>a) Data Stream Segmentation:</em> The algorithm’s process-<br>ing cycle is driven by the arrival of new frames. A cycle is</p>
+</section>
+
+<section class="algorithm">
+<div class="algorithm-title"><strong>Algorithm 1</strong> FGER-Net</div>
+<div class="algorithm-body">
+<div class="algorithm-line"><strong>Input:</strong> $I_{\mathrm{guide}},\ \{P_m\}_{m=1}^{M},\ f_{\mathrm{prev\_cycle}},\ (h_{\mathrm{prev\_cycle}},C_{\mathrm{prev\_cycle}})$</div>
+<div class="algorithm-line"><strong>Output:</strong> $\hat f_{\mathrm{final}},\ (h_M,C_M)$</div>
+<div class="algorithm-line"><em>Guiding Frame Feature Extraction</em></div>
+<div class="algorithm-line">$\mathbf f_{\mathrm{frame}}\leftarrow\Phi_f(I_{\mathrm{guide}})$</div>
+<div class="algorithm-line"><em>Recurrent Processing Loop</em></div>
+<div class="algorithm-line">$\hat f_0\leftarrow f_{\mathrm{prev\_cycle}};\ (h_0,C_0)\leftarrow(h_{\mathrm{prev\_cycle}},C_{\mathrm{prev\_cycle}})$</div>
+<div class="algorithm-line"><strong>for</strong> $m\leftarrow1$ <strong>to</strong> $M$ <strong>do</strong></div>
+<div class="algorithm-line inset">$\mathbf f_{e,m}\leftarrow\Phi_e(P_m)$</div>
+<div class="algorithm-line inset">$\mathbf x_m\leftarrow\operatorname{concatenate}(\mathbf f_{e,m},\hat f_{m-1})$</div>
+<div class="algorithm-line inset">$(h_m,C_m)\leftarrow\operatorname{LSTM}(\mathbf x_m,(h_{m-1},C_{m-1}))$</div>
+<div class="algorithm-line inset">$\Delta\hat f_m\leftarrow\operatorname{MLP}_{\Delta f}(h_m)$</div>
+<div class="algorithm-line inset">$\hat f_m\leftarrow\hat f_{m-1}+\Delta\hat f_m$</div>
+<div class="algorithm-line"><strong>end for</strong></div>
+<div class="algorithm-line"><em>Fusion and Correction</em></div>
+<div class="algorithm-line">$\mathbf f_{\mathrm{fusion}}\leftarrow\operatorname{concatenate}(\hat f_M,\mathbf f_{\mathrm{frame}})$</div>
+<div class="algorithm-line">$\Delta f_{\mathrm{corr}}\leftarrow\operatorname{MLP}_{\mathrm{corr}}(\mathbf f_{\mathrm{fusion}})$</div>
+<div class="algorithm-line">$\hat f_{\mathrm{final}}\leftarrow\hat f_M+\Delta f_{\mathrm{corr}}$</div>
+<div class="algorithm-line"><strong>return</strong> $\hat f_{\mathrm{final}},(h_M,C_M)$</div>
+</div>
+</section>
+</div>
+</main>
+</body>
+</html>

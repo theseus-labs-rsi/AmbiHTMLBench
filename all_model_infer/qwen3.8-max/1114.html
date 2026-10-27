@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>什么是审计？</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 40px 20px;
+            background-color: #fce356; /* Yellow background */
+            background-image: linear-gradient(#f5d640 1px, transparent 1px);
+            background-size: 100% 30px;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .notebook-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 5px 5px 0px rgba(0,0,0,0.1);
+            padding: 40px 30px 40px 60px; /* Extra left padding for rings */
+            box-sizing: border-box;
+            border: 2px solid #333;
+        }
+
+        /* Binder Clips at top */
+        .clip {
+            position: absolute;
+            top: -25px;
+            width: 40px;
+            height: 50px;
+            background-color: #333;
+            border-radius: 5px 5px 0 0;
+            z-index: 10;
+        }
+        .clip::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 5px;
+            width: 30px;
+            height: 10px;
+            background-color: #555;
+            border-radius: 0 0 5px 5px;
+        }
+        .clip-left { left: 25%; }
+        .clip-right { right: 25%; }
+        
+        /* Wire handles for clips */
+        .clip-handle {
+            position: absolute;
+            top: -15px;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #333;
+            border-bottom: none;
+            border-radius: 10px 10px 0 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Spiral Rings on the left */
+        .rings {
+            position: absolute;
+            left: -15px;
+            top: 50px;
+            bottom: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            z-index: 5;
+        }
+        .ring {
+            width: 30px;
+            height: 15px;
+            background-color: #fce356;
+            border: 3px solid #333;
+            border-radius: 10px;
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.1);
+        }
+
+        /* Content Styling */
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 0px #fce356;
+        }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #e6a817; /* Orange-yellow text */
+            margin-bottom: 10px;
+        }
+
+        .star-icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background-color: #fce356;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            margin-right: 8px;
+            border: 1px solid #e6a817; /* Approximate border effect */
+        }
+        
+        /* Simulating the star with emoji or simple shape for better compatibility if clip-path fails, 
+           but sticking to CSS shape for fidelity. Adding a text shadow/outline effect via wrapper is hard, 
+           so using a colored span. */
+        .star-wrapper {
+            color: #fce356;
+            font-size: 1.2em;
+            margin-right: 5px;
+            text-shadow: -1px -1px 0 #e6a817, 1px -1px 0 #e6a817, -1px 1px 0 #e6a817, 1px 1px 0 #e6a817;
+        }
+
+        p {
+            font-size: 0.95em;
+            line-height: 1.6;
+            color: #333;
+            margin: 0 0 10px 0;
+            text-align: justify;
+        }
+
+        .highlight-text {
+            color: #7b68ee; /* Purple-ish blue for keywords */
+            font-weight: bold;
+        }
+
+        .sub-point {
+            margin-bottom: 8px;
+            padding-left: 5px;
+        }
+
+        /* Decorative Elements */
+        .pencil-top {
+            position: absolute;
+            right: -20px;
+            top: 40%;
+            width: 60px;
+            height: 20px;
+            background: #fce356;
+            transform: rotate(-30deg);
+            border: 2px solid #333;
+            border-radius: 2px;
+            z-index: 1;
+        }
+        .pencil-top::before {
+            content: '';
+            position: absolute;
+            left: -15px;
+            top: 0;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-right: 15px solid #333;
+        }
+        .pencil-top::after {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 5px;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-right: 10px solid #fce356;
+        }
+
+        .pencil-bottom {
+            position: absolute;
+            right: -10px;
+            top: 50%;
+            width: 50px;
+            height: 18px;
+            background: #7b68ee;
+            transform: rotate(-20deg);
+            border: 2px solid #333;
+            z-index: 1;
+        }
+         .pencil-bottom::before {
+            content: '';
+            position: absolute;
+            left: -12px;
+            top: 0;
+            border-top: 9px solid transparent;
+            border-bottom: 9px solid transparent;
+            border-right: 12px solid #333;
+        }
+
+        .paper-plane {
+            position: absolute;
+            bottom: -20px;
+            left: -20px;
+            width: 80px;
+            height: 60px;
+            z-index: 10;
+        }
+        /* Simple CSS Paper Plane */
+        .plane-body {
+            width: 0; 
+            height: 0; 
+            border-left: 40px solid transparent;
+            border-right: 40px solid transparent;
+            border-bottom: 60px solid #e0e0e0;
+            transform: rotate(-45deg);
+            position: relative;
+        }
+        .plane-wing {
+            position: absolute;
+            top: 20px;
+            left: -10px;
+            width: 0; 
+            height: 0; 
+            border-left: 30px solid transparent;
+            border-right: 30px solid transparent;
+            border-bottom: 40px solid #fff;
+            transform: rotate(-45deg);
+            border: 2px solid #333;
+        }
+
+        .plus-sign {
+            position: absolute;
+            left: 40px;
+            top: 68%;
+            color: #fce356;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 1px 1px 0 #333;
+        }
+
+        /* Watermark simulation (faint) */
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 3em;
+            color: rgba(0,0,0,0.03);
+            pointer-events: none;
+            white-space: nowrap;
+            z-index: 0;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="notebook-container">
+        <!-- Watermarks -->
+        <div class="watermark">@小小才睡醒</div>
+        <div class="watermark" style="top: 20%; left: 20%;">@小小才睡醒</div>
+        <div class="watermark" style="top: 80%; left: 80%;">@小小才睡醒</div>
+
+        <!-- Binder Clips -->
+        <div class="clip clip-left"><div class="clip-handle"></div></div>
+        <div class="clip clip-right"><div class="clip-handle"></div></div>
+
+        <!-- Spiral Rings -->
+        <div class="rings">
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <div class="ring"></div>
+        </div>
+
+        <!-- Decorative Pencils -->
+        <div class="pencil-top"></div>
+        <div class="pencil-bottom"></div>
+
+        <!-- Decorative Plus -->
+        <div class="plus-sign">+</div>
+
+        <!-- Paper Plane -->
+        <div class="paper-plane">
+            <svg width="80" height="60" viewBox="0 0 100 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 40 L95 5 L65 75 L50 55 L5 40 Z" fill="#E0E0E0" stroke="#333" stroke-width="2"/>
+                <path d="M50 55 L95 5 L65 75 Z" fill="#FFFFFF" stroke="#333" stroke-width="2"/>
+                <path d="M50 55 L50 75 L60 65 Z" fill="#B0B0B0" stroke="#333" stroke-width="2"/>
+            </svg>
+        </div>
+
+        <!-- Main Content -->
+        <h1>什么是审计？</h1>
+
+        <div class="section">
+            <div class="section-title">
+                <span class="star-wrapper">★</span> 审计定义
+            </div>
+            <p>审计是对资料作出证据搜集及分析，以评估企业财务状况，然后就资料及一般公认准则之间的相关程度作出结论及报告。</p>
+        </div>
+
+        <div class="section">
+            <div class="section-title">
+                <span class="star-wrapper">★</span> 审计的基本要素
+            </div>
+            <p>任何审计都具有三个基本要素，即审计主体、审计客体和审计授权或委托人。</p>
+            
+            <div class="sub-point">
+                <span class="highlight-text">审计主体：</span>指审计行为的执行者，即审计机构和审计人员，为审计第一关系人；
+            </div>
+            <div class="sub-point">
+                <span class="highlight-text">审计客体：</span>指审计行为的接受者，即指被审计的资产代管或经营者，为审计第二关系人；
+            </div>
+            <div class="sub-point">
+                <span class="highlight-text">审计授权或委托人：</span>指依法授权或委托审计主体行使审计职责的单位或人员，为审计第三关系人。
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">
+                <span class="star-wrapper">★</span> 审计本质
+            </div>
+            <p>审计本质是一项具有独立性的经济监督活动。</p>
+        </div>
+
+    </div>
+
+</body>
+</html>

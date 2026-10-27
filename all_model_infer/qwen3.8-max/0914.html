@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>目录 - Building Thinking Classrooms</title>
+    <style>
+        body {
+            font-family: "Songti SC", "SimSun", "STSong", serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .page-container {
+            width: 600px;
+            background-color: #e8e6e1; /* Approximate paper color */
+            padding: 40px 50px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Header Section */
+        .header {
+            margin-bottom: 40px;
+            padding-left: 20px;
+        }
+
+        .title-row {
+            display: flex;
+            align-items: baseline;
+        }
+
+        .big-b {
+            font-family: "Times New Roman", serif;
+            font-size: 48px;
+            font-style: italic;
+            font-weight: bold;
+            margin-right: 10px;
+            line-height: 1;
+        }
+
+        .cn-title {
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 15px;
+            margin-left: 10px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 5px;
+            display: inline-block;
+        }
+
+        .en-subtitle {
+            font-family: "Times New Roman", serif;
+            font-style: italic;
+            font-size: 16px;
+            margin-left: 45px; /* Align under the Chinese title roughly */
+            margin-top: 5px;
+            color: #333;
+        }
+
+        /* Table of Contents List */
+        .toc-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .toc-item {
+            display: flex;
+            align-items: center;
+            background: linear-gradient(to bottom, #dcdcdc 0%, #cfcfcf 100%); /* Grey bar effect */
+            padding: 10px 0;
+            position: relative;
+        }
+
+        /* Simulating the grey band across the page */
+        .toc-item::before {
+            content: '';
+            position: absolute;
+            left: -50px;
+            right: -50px;
+            top: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.08);
+            z-index: 0;
+        }
+
+        .icon-container {
+            width: 50px;
+            height: 50px;
+            background-color: #fff;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 20px;
+            margin-right: 20px;
+            z-index: 1;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+            border: 1px solid #ccc;
+        }
+
+        .icon-placeholder {
+            width: 24px;
+            height: 24px;
+            background-color: #555;
+            mask-size: contain;
+            mask-repeat: no-repeat;
+            mask-position: center;
+            -webkit-mask-size: contain;
+            -webkit-mask-repeat: no-repeat;
+            -webkit-mask-position: center;
+        }
+
+        /* Simple CSS shapes for icons to avoid external dependencies */
+        .icon-doc { background: #555; width: 16px; height: 20px; position: relative; }
+        .icon-doc::after { content: ''; position: absolute; top: 2px; left: 2px; width: 10px; height: 2px; background: #fff; box-shadow: 0 4px 0 #fff, 0 8px 0 #fff; }
+        
+        .icon-cards { width: 18px; height: 18px; background: #555; transform: rotate(15deg); border-radius: 2px; position: relative;}
+        .icon-cards::before { content:''; position:absolute; width: 18px; height: 18px; background: #777; transform: rotate(-30deg); border-radius: 2px; z-index: -1;}
+
+        .icon-pen { width: 4px; height: 20px; background: #555; transform: rotate(45deg); position: relative; }
+        .icon-pen::after { content: ''; position: absolute; bottom: -4px; left: 0; border-left: 2px solid transparent; border-right: 2px solid transparent; border-top: 4px solid #555; }
+
+        .icon-desk { width: 20px; height: 14px; border: 2px solid #555; border-radius: 2px; position: relative; }
+        .icon-desk::after { content: ''; position: absolute; top: 4px; left: 0; width: 100%; height: 2px; background: #555; }
+
+        .icon-question { font-family: sans-serif; font-weight: bold; font-size: 20px; color: #555; line-height: 1; }
+
+        .icon-speech { width: 18px; height: 14px; background: #555; border-radius: 4px; position: relative; }
+        .icon-speech::after { content: ''; position: absolute; bottom: -4px; left: 4px; border-left: 4px solid #555; border-right: 4px solid transparent; border-top: 4px solid #555; border-bottom: 4px solid transparent;}
+
+        .text-content {
+            flex-grow: 1;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .chapter-line {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            display: flex;
+            align-items: center;
+        }
+
+        .chapter-num {
+            margin-right: 10px;
+        }
+
+        .separator {
+            margin: 0 10px;
+            color: #666;
+            font-weight: normal;
+        }
+
+        .chapter-title {
+            font-weight: normal;
+        }
+
+        .sub-title {
+            font-size: 14px;
+            color: #444;
+            margin-top: 4px;
+            padding-left: 75px; /* Indent to align with text */
+            position: relative;
+        }
+        
+        .sub-title::before {
+            content: '——';
+            position: absolute;
+            left: 45px;
+        }
+
+        .page-num {
+            font-family: "Arial", sans-serif;
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-right: 40px;
+            z-index: 1;
+            min-width: 40px;
+            text-align: right;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+    
+    <div class="header">
+        <div class="title-row">
+            <span class="big-b">B</span>
+            <span class="cn-title">目 录</span>
+        </div>
+        <div class="en-subtitle">uilding Thinking Classrooms</div>
+    </div>
+
+    <div class="toc-list">
+        
+        <!-- Chapter 1 -->
+        <div class="toc-item">
+            <div class="icon-container">
+                <div class="icon-doc"></div>
+            </div>
+            <div class="text-content">
+                <div class="chapter-line">
+                    <span class="chapter-num">第一章</span>
+                    <span class="separator">|</span>
+                    <span class="chapter-title">激发学习兴趣</span>
+                </div>
+                <div class="sub-title">布置思考题</div>
+            </div>
+            <div class="page-num">001</div>
+        </div>
+
+        <!-- Chapter 2 -->
+        <div class="toc-item">
+            <div class="icon-container">
+                <div class="icon-cards"></div>
+            </div>
+            <div class="text-content">
+                <div class="chapter-line">
+                    <span class="chapter-num">第二章</span>
+                    <span class="separator">|</span>
+                    <span class="chapter-title">探索课堂合作</span>
+                </div>
+                <div class="sub-title">频繁地进行透明化的随机分组</div>
+            </div>
+            <div class="page-num">019</div>
+        </div>
+
+        <!-- Chapter 3 -->
+        <div class="toc-item">
+            <div class="icon-container">
+                <div class="icon-pen"></div>
+            </div>
+            <div class="text-content">
+                <div class="chapter-line">
+                    <span class="chapter-num">第三章</span>
+                    <span class="separator">|</span>
+                    <span class="chapter-title">改变被动的行为习惯</span>
+                </div>
+                <div class="sub-title">运用白板</div>
+            </div>
+            <div class="page-num">037</div>
+        </div>
+
+        <!-- Chapter 4 -->
+        <div class="toc-item">
+            <div class="icon-container">
+                <div class="icon-desk"></div>
+            </div>
+            <div class="text-content">
+                <div class="chapter-line">
+                    <span class="chapter-num">第四章</span>
+                    <span class="separator">|</span>
+                    <span class="chapter-title">打造自由思考的空间</span>
+                </div>
+                <div class="sub-title">课桌椅随意摆放</div>
+            </div>
+            <div class="page-num">051</div>
+        </div>
+
+        <!-- Chapter 5 -->
+        <div class="toc-item">
+            <div class="icon-container">
+                <div class="icon-question">?</div>
+            </div>
+            <div class="text-content">
+                <div class="chapter-line">
+                    <span class="chapter-num">第五章</span>
+                    <span class="separator">|</span>
+                    <span class="chapter-title">应对学生的提问</span>
+                </div>
+                <div class="sub-title">只回答持续思考的问题</div>
+            </div>
+            <div class="page-num">063</div>
+        </div>
+
+        <!-- Chapter 6 -->
+        <div class="toc-item">
+            <div class="icon-container">
+                <div class="icon-speech"></div>
+            </div>
+            <div class="text-content">
+                <div class="chapter-line">
+                    <span class="chapter-num">第六章</span>
+                    <span class="separator">|</span>
+                    <span class="chapter-title">提高课堂参与度</span>
+                </div>
+                <div class="sub-title">站着口述题目</div>
+            </div>
+            <div class="page-num">079</div>
+        </div>
+
+        <!-- Chapter 7 -->
+        <div class="toc-item">
+            <div class="icon-container">
+                <div class="icon-doc"></div>
+            </div>
+            <div class="text-content">
+                <div class="chapter-line">
+                    <span class="chapter-num">第七章</span>
+                    <span class="separator">|</span>
+                    <span class="chapter-title">布置有效果的作业</span>
+                </div>
+                <div class="sub-title">布置自测题</div>
+            </div>
+            <div class="page-num">097</div>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

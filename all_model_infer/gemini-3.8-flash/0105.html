@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>古诗三首</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    background-color: #f7f5f0;
+    font-family: "KaiTi", "STKaiti", "SimSun", "Songti SC", serif;
+    color: #2b2b2b;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+  }
+  .page {
+    width: 650px;
+    background-color: #fffef9;
+    border: 1px solid #e2ddd3;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    position: relative;
+    padding: 24px 28px 40px 28px;
+    min-height: 900px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  
+  /* Top handwritten-style instructions */
+  .top-note {
+    color: #df4444;
+    font-size: 15px;
+    font-weight: bold;
+    line-height: 1.5;
+    margin-bottom: 15px;
+    letter-spacing: 0.5px;
+  }
+  .header-tag {
+    display: inline-block;
+    color: #333;
+    font-size: 16px;
+    margin-left: 20px;
+    font-weight: normal;
+    position: relative;
+  }
+  .circle-mark {
+    display: inline-block;
+    position: absolute;
+    left: -12px;
+    top: -3px;
+    width: 24px;
+    height: 24px;
+    border: 2px solid rgba(223, 68, 68, 0.7);
+    border-radius: 50%;
+  }
+
+  /* Main layout */
+  .content-body {
+    display: flex;
+    flex: 1;
+    gap: 15px;
+    position: relative;
+  }
+
+  /* Left column - poems */
+  .left-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding-left: 10px;
+  }
+  
+  .poem-section {
+    margin-bottom: 25px;
+    position: relative;
+  }
+
+  .poem-title {
+    text-align: center;
+    font-size: 20px;
+    font-weight: normal;
+    letter-spacing: 5px;
+    margin-bottom: 4px;
+  }
+
+  .poem-author {
+    text-align: center;
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 12px;
+  }
+
+  .poem-lines {
+    text-align: center;
+    font-size: 17px;
+    line-height: 1.9;
+    letter-spacing: 1.5px;
+  }
+
+  ruby {
+    ruby-align: center;
+  }
+  rt {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: normal;
+    color: #444;
+    transform: translateY(-2px);
+  }
+
+  .sup-num {
+    font-size: 10px;
+    vertical-align: super;
+    margin-left: 1px;
+  }
+
+  /* Speech bubble */
+  .speech-bubble-container {
+    position: absolute;
+    bottom: 60px;
+    right: 170px;
+    z-index: 2;
+  }
+  .bubble-dots {
+    display: inline-flex;
+    gap: 3px;
+    vertical-align: middle;
+    margin-right: 4px;
+  }
+  .bubble-dots span {
+    width: 5px;
+    height: 6px;
+    border: 1.5px solid #d49b6a;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .speech-bubble {
+    display: inline-block;
+    background-color: #f7eee1;
+    border: 1.5px solid #dfb88e;
+    border-radius: 16px;
+    padding: 6px 12px;
+    font-size: 12px;
+    color: #5a3d28;
+    line-height: 1.4;
+    max-width: 130px;
+    vertical-align: middle;
+  }
+
+  /* Right column - annotations */
+  .right-col {
+    width: 175px;
+    position: relative;
+  }
+
+  .notes-box {
+    border: 3px solid #ff4d4d;
+    border-radius: 18px;
+    padding: 12px 10px;
+    display: flex;
+    flex-direction: column;
+    height: 98%;
+    background: rgba(255, 255, 255, 0.4);
+  }
+
+  .notes-heading {
+    font-size: 11px;
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 8px;
+    text-align: left;
+  }
+
+  .notes-list {
+    list-style: none;
+    font-size: 10px;
+    line-height: 1.45;
+    color: #444;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .notes-list li {
+    text-align: justify;
+    text-justify: inter-ideograph;
+  }
+
+  .center-highlight {
+    margin: auto 0;
+    text-align: center;
+    color: #f04449;
+    font-size: 26px;
+    font-weight: bold;
+    letter-spacing: 4px;
+  }
+
+  /* Decorative placeholders for traditional paintings */
+  .illustration-flowers {
+    position: absolute;
+    top: 130px;
+    left: -20px;
+    width: 110px;
+    height: 110px;
+    opacity: 0.6;
+    pointer-events: none;
+    font-size: 10px;
+    color: #aaa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .illustration-swallow {
+    position: absolute;
+    top: 110px;
+    right: 185px;
+    width: 25px;
+    height: 25px;
+    opacity: 0.7;
+    pointer-events: none;
+  }
+
+  .illustration-bottom {
+    position: absolute;
+    bottom: 0px;
+    left: 20px;
+    right: 20px;
+    height: 110px;
+    pointer-events: none;
+    opacity: 0.5;
+    font-size: 10px;
+    color: #aaa;
+    display: flex;
+    align-items: flex-end;
+    padding-bottom: 10px;
+  }
+
+  .page-footer {
+    position: absolute;
+    bottom: 15px;
+    left: 28px;
+    font-size: 13px;
+    font-family: Arial, sans-serif;
+    color: #333;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <!-- Top instructions in red -->
+  <div class="top-note">
+    1.三首古诗都要能背诵能<br>
+    默写；2.能翻译每句诗的<span class="header-tag"><span class="circle-mark"></span>古诗三首</span><br>
+    意思；3.注释栏处的关键<br>
+    字词的意思都要掌握。
+  </div>
+
+  <div class="content-body">
+    <!-- Left Column: Poems -->
+    <div class="left-col">
+      <!-- Poem 1: 绝句 -->
+      <div class="poem-section">
+        <h2 class="poem-title">绝 句</h2>
+        <div class="poem-author">
+          〔唐〕 杜 <ruby>甫<rt>fǔ</rt></ruby>
+        </div>
+        <div class="poem-lines">
+          迟 日<span class="sup-num">①</span>江 山 丽，<br>
+          春 风 花 草 香。<br>
+          泥 融<span class="sup-num">②</span>飞 燕 子，<br>
+          沙 暖 睡 <ruby>鸳<rt>yuān</rt></ruby><ruby>鸯<rt>yāng</rt></ruby><span class="sup-num">③</span>。
+        </div>
+      </div>
+
+      <!-- Poem 2: 惠崇春江晚景 -->
+      <div class="poem-section" style="margin-top: 15px;">
+        <h2 class="poem-title" style="letter-spacing: 1px; font-size: 17px;">
+          <ruby>惠<rt>huì</rt></ruby><ruby>崇<rt>chóng</rt></ruby>春江晚景<span class="sup-num">①</span>
+        </h2>
+        <div class="poem-author">
+          〔<ruby>宋<rt>sòng</rt></ruby>〕 <ruby>苏<rt>sū</rt></ruby> <ruby>轼<rt>shì</rt></ruby>
+        </div>
+        <div class="poem-lines">
+          竹 外 桃 花 三 两 枝，<br>
+          春 江 水 暖 鸭 先 知。<br>
+          <ruby>蒌<rt>lóu</rt></ruby><ruby>蒿<rt>hāo</rt></ruby>满 地 芦 芽<span class="sup-num">②</span>短，<br>
+          正 是 河 <ruby>豚<rt>tún</rt></ruby><span class="sup-num">③</span>欲 上 时。
+        </div>
+      </div>
+
+      <!-- Speech Bubble -->
+      <div class="speech-bubble-container">
+        <div class="bubble-dots">
+          <span></span><span></span><span></span>
+        </div>
+        <div class="speech-bubble">
+          我能猜出“蒌蒿”是一种植物，因为……
+        </div>
+      </div>
+
+      <!-- Background decorative illustration indicators -->
+      <div class="illustration-flowers placeholder">[插图：桃花枝与飞燕]</div>
+      <div class="illustration-bottom placeholder">[插图：春江水暖鸭群嬉戏水墨画]</div>
+    </div>
+
+    <!-- Right Column: Notes in Red Marked Box -->
+    <div class="right-col">
+      <div class="notes-box">
+        <div class="notes-heading">注释</div>
+        <ul class="notes-list">
+          <li>①〔迟日〕春天白天渐长，所以说“迟日”。</li>
+          <li>②〔泥融〕这里指泥土湿润。</li>
+          <li>③〔鸳鸯〕一种鸟，常在水边嬉戏，雄鸟与雌鸟常结对生活。</li>
+        </ul>
+
+        <div class="center-highlight">
+          重点
+        </div>
+
+        <div class="notes-heading">注释</div>
+        <ul class="notes-list">
+          <li>① 惠崇是北宋名僧，能诗善画。这首诗是苏轼为惠崇的画作《春江晚景》所写的题画诗。</li>
+          <li>②〔芦芽〕芦苇的嫩芽。</li>
+          <li>③〔河豚〕一种有毒的鱼。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page number footer -->
+  <div class="page-footer">2</div>
+</div>
+
+</body>
+</html>

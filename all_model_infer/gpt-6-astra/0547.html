@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Experiments and Simulated Benchmarks</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] },
+  chtml: { scale: 1 }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: #fff; color: #000; }
+body { font-family: "Times New Roman", Times, serif; }
+.page {
+  width: 1464px;
+  padding: 24px 46px 0;
+  display: grid;
+  grid-template-columns: 670px 671px;
+  column-gap: 31px;
+  align-items: start;
+}
+.column { min-width: 0; }
+p {
+  margin: 0;
+  font-size: 28px;
+  line-height: 32px;
+  text-align: justify;
+}
+.opening { margin-top: 7px; white-space: nowrap; }
+.equation {
+  height: 125px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  font-size: 28px;
+  padding-right: 36px;
+}
+.equation .number { position: absolute; right: 0; top: 46px; }
+.equation mjx-container[display="true"] { margin: 0 !important; }
+.equation-note { margin-top: 3px; }
+h1 {
+  font-size: 28px;
+  font-weight: normal;
+  font-variant: small-caps;
+  text-align: center;
+  margin: 27px 0 16px;
+  line-height: 34px;
+}
+h2 {
+  font-size: 28px;
+  font-style: italic;
+  font-weight: normal;
+  margin: 0 0 13px;
+  line-height: 34px;
+}
+.indented { text-indent: 27px; }
+.benchmark-heading { margin-top: 27px; }
+figure { margin: 0; }
+.task-grid {
+  width: 671px;
+  height: 267px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+}
+.placeholder {
+  overflow: hidden;
+  background: #eeeeec;
+  color: #666;
+  position: relative;
+}
+.task {
+  border: 1px solid #d4d4d0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: Arial, sans-serif;
+}
+.task-label {
+  color: white;
+  background: #244772;
+  font-size: 18px;
+  line-height: 21px;
+  text-align: center;
+  min-width: 94px;
+  padding: 0 5px;
+}
+.placeholder-caption {
+  margin: auto;
+  padding: 5px;
+  text-align: center;
+  font: 14px/18px Arial, sans-serif;
+}
+figcaption {
+  text-align: center;
+  font-size: 25px;
+  line-height: 34px;
+}
+.suite-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  width: 671px;
+  height: 166px;
+}
+.suite-grid .task-label { font-size: 22px; line-height: 28px; min-width: 116px; }
+.figure-description { margin-top: 14px; }
+.benchmark-text { margin-top: 37px; }
+</style>
+</head>
+<body>
+<main class="page">
+<section class="column">
+<p class="opening">layer. The model is trained using a cross-entropy loss:</p>
+<div class="equation">
+<div>$$\mathcal{L}_{\mathrm{cls}}=\sum_{k\in\{pos,rot,open\}}\sum_{b=1}^{B_k}y_{k,b}\log(\hat{y}_{k,b})$$</div>
+<span class="number">(7)</span>
+</div>
+<p class="equation-note">where $B_k$ denotes the number of bins for each action com-<br>ponent. This approach allows the model to leverage the point cloud as a spatial anchor for localization.</p>
+
+<h1>IV. Experiments</h1>
+<h2>A. Implementation Details</h2>
+<p class="indented">We utilize Qwen2.5-VL [3] as the VLM backbone. To initialize from the pretrained PTv3 model [69], we use the same model configuration as PTv3-Large. Specifically, there are 5 hierarchical stages with $(3, 3, 3, 12, 3)$ layers and feature dimensionality of $(64, 128, 256, 512, 768)$ per stage. The PointACT module, including the hierarchical interaction blocks and the action head, comprises approximately 300M trainable parameters. To maintain the knowledge of the VLM, we keep the VLM backbone frozen if not otherwise mentioned. We crop the input point cloud using a workspace bounding box defined relative to the robot base frame [57, 11], and perform voxelization with size of 1cm. We set the maximum number of points as 4096.</p>
+<p class="indented">Across our experimental benchmarks, the model is trained with a total batch size of 128 distributed across 2 NVIDIA H100 GPUs. We optimize the model for 20K to 50K gradient steps using the AdamW optimizer with a learning rate of $5 \times 10^{-5}$ and a cosine decay schedule. We apply standard point cloud augmentations, including random rotation around the gravity axis, alongside image-level augmentations for the VLM input during training.</p>
+<h2 class="benchmark-heading">B. Evaluation Benchmarks</h2>
+</section>
+
+<section class="column">
+<figure>
+<div class="task-grid">
+<div class="placeholder task"><div class="task-label">Water<br>plants</div><div class="placeholder-caption">[Simulation image]</div></div>
+<div class="placeholder task"><div class="task-label">Frame off<br>hanger</div><div class="placeholder-caption">[Simulation image]</div></div>
+<div class="placeholder task"><div class="task-label">Toilet seat<br>down</div><div class="placeholder-caption">[Simulation image]</div></div>
+<div class="placeholder task"><div class="task-label">Umbrella<br>out</div><div class="placeholder-caption">[Simulation image]</div></div>
+<div class="placeholder task"><div class="task-label">Close<br>fridge</div><div class="placeholder-caption">[Simulation image]</div></div>
+<div class="placeholder task"><div class="task-label">Close<br>laptop lid</div><div class="placeholder-caption">[Simulation image]</div></div>
+<div class="placeholder task"><div class="task-label">Wine at<br>rack</div><div class="placeholder-caption">[Simulation image]</div></div>
+<div class="placeholder task"><div class="task-label">Close box</div><div class="placeholder-caption">[Simulation image]</div></div>
+<div class="placeholder task"><div class="task-label">Phone on<br>base</div><div class="placeholder-caption">[Simulation image]</div></div>
+<div class="placeholder task"><div class="task-label">Sweep to<br>dustpan</div><div class="placeholder-caption">[Simulation image]</div></div>
+</div>
+<figcaption>(a) RLBench 10 tasks.</figcaption>
+<div class="suite-grid">
+<div class="placeholder task"><div class="task-label">Spatial</div><div class="placeholder-caption">[Simulation image]</div></div>
+<div class="placeholder task"><div class="task-label">Object</div><div class="placeholder-caption">[Simulation image]</div></div>
+<div class="placeholder task"><div class="task-label">Goal</div><div class="placeholder-caption">[Simulation image]</div></div>
+<div class="placeholder task"><div class="task-label">Long</div><div class="placeholder-caption">[Simulation image]</div></div>
+</div>
+<figcaption>(b) LIBERO 4 task suites.</figcaption>
+</figure>
+<p class="figure-description">Fig. 3: <strong>Illustration of the simulated benchmarks.</strong> (a) Ex-<br>amples of tasks from the RLBench 10 tasks benchmark [42], covering a diverse set of manipulation skills such as object placement, articulated object interaction and tool use. (b) Rep-<br>resentative tasks from the LIBERO benchmark [41], includ-<br>ing spatial reasoning, object pick-and-place, goal-conditioned tasks, and long-horizon manipulation.</p>
+<p class="benchmark-text"><strong>RLBench.</strong> We use the same 10 RLBench tabletop manipula-<br>tion tasks as HybridVLA [42], including <em>Close box</em>, <em>Close laptop</em>, <em>Toilet seat down</em>, <em>Sweep to dustpan</em>, <em>Close fridge</em>, <em>Phone on base</em>, <em>Take umbrella out</em>, <em>Frame off hanger</em>, <em>Wine at rack</em>, and <em>Water plants</em>. We train a unified multi-task policy using 100 demonstrations per task, and use the keypoint action space following prior work [42, 57, 11, 22, 17, 52]. The classification head is used for keypoint prediction with action chunk size $H = 1$ since the action is already long-horizon. An RRT-based motion planner is used to compute collision-free trajectories to the predicted keypoint, smoothing</p>
+</section>
+</main>
+</body>
+</html>

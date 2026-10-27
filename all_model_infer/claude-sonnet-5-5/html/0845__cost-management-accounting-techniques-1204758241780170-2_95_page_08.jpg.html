@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Make or Buy Decision</title>
+<script>
+window.MathJax = { tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background: #333;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  .slide {
+    position: relative;
+    width: 1024px;
+    height: 750px;
+    margin: 0 auto;
+    overflow: hidden;
+    background:
+      repeating-linear-gradient(90deg, rgba(0,0,0,0.08) 0px, rgba(0,0,0,0.08) 2px, transparent 2px, transparent 6px),
+      linear-gradient(to bottom, #7a4a12 0%, #a06a1e 15%, #8a5614 45%, #6b4210 70%, #4a2c08 100%);
+  }
+  .title {
+    text-align: center;
+    margin: 0;
+    padding-top: 35px;
+    font-size: 54px;
+    font-weight: bold;
+    color: #f0d898;
+    text-shadow: 3px 3px 3px rgba(0,0,0,0.6), -1px -1px 0 #7a5a10;
+    letter-spacing: 1px;
+  }
+  .table-box {
+    position: absolute;
+    top: 148px;
+    left: 30px;
+    width: 955px;
+    height: 465px;
+    background: #eaf9fb;
+    border: 2px solid #333;
+    box-sizing: border-box;
+  }
+  table {
+    width: 100%;
+    height: 100%;
+    border-collapse: collapse;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  td {
+    padding: 4px 12px;
+    vertical-align: bottom;
+  }
+  .label-col {
+    text-align: left;
+    padding-left: 40px;
+    width: 38%;
+  }
+  .cpu-col {
+    text-align: center;
+    width: 16%;
+    color: #00008b;
+  }
+  .make-col {
+    text-align: center;
+    width: 23%;
+    color: #00008b;
+  }
+  .buy-col {
+    text-align: center;
+    width: 23%;
+    color: #00008b;
+  }
+  .green { color: #0a6b1e; }
+  .purple { color: #6a0dad; }
+  .navy { color: #00008b; }
+  .header-row td { padding-bottom: 0; }
+  .underline-cpu { border-bottom: 2px solid #333; display: inline-block; padding: 0 6px 2px 6px; }
+  .underline-make { border-bottom: 2px solid #333; display: inline-block; padding: 0 20px 2px 20px; }
+  .underline-buy { border-bottom: 2px solid #333; display: inline-block; padding: 0 20px 2px 20px; }
+  .total-underline-cpu { border-bottom: 3px double #333; padding-bottom: 2px; }
+  .total-underline-make { border-bottom: 3px double #333; padding-bottom: 2px; }
+  .total-underline-buy { border-bottom: 3px double #333; padding-bottom: 2px; }
+  .spacer-row td { padding: 2px 0; }
+
+  .callout {
+    position: absolute;
+    top: 638px;
+    left: 205px;
+    width: 530px;
+    background: #ffffff;
+    border: 2px solid #333;
+    text-align: center;
+    padding: 10px 8px;
+    font-size: 26px;
+    font-weight: bold;
+    color: #00008b;
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.4);
+  }
+
+  .placeholder {
+    position: absolute;
+    border: 1px dashed rgba(255,255,255,0.5);
+    color: rgba(255,255,255,0.85);
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: rgba(0,0,0,0.05);
+  }
+
+  svg.arrow-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1024px;
+    height: 750px;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+<div class="slide">
+
+  <h1 class="title">The Make or Buy Decision</h1>
+
+  <div class="table-box">
+    <table>
+      <tr class="header-row">
+        <td class="label-col"></td>
+        <td class="cpu-col purple">Cost<br>Per Unit</td>
+        <td class="make-col purple" colspan="1" style="text-align:right; padding-right:0;">Cost of 20,000 Units</td>
+        <td class="buy-col"></td>
+      </tr>
+      <tr class="header-row">
+        <td class="label-col"></td>
+        <td class="cpu-col"></td>
+        <td class="make-col navy"><span class="underline-make">Make</span></td>
+        <td class="buy-col navy"><span class="underline-buy">Buy</span></td>
+      </tr>
+      <tr>
+        <td class="label-col green">Outside purchase price</td>
+        <td class="cpu-col navy"><span class="underline-cpu">$&nbsp;&nbsp;25</span></td>
+        <td class="make-col"></td>
+        <td class="buy-col green">$&nbsp;&nbsp;500,000</td>
+      </tr>
+      <tr class="spacer-row"><td colspan="4">&nbsp;</td></tr>
+      <tr>
+        <td class="label-col navy">Direct materials</td>
+        <td class="cpu-col navy">$&nbsp;&nbsp;9</td>
+        <td class="make-col navy">180,000</td>
+        <td class="buy-col"></td>
+      </tr>
+      <tr>
+        <td class="label-col navy">Direct labor</td>
+        <td class="cpu-col navy">5</td>
+        <td class="make-col navy">100,000</td>
+        <td class="buy-col"></td>
+      </tr>
+      <tr>
+        <td class="label-col navy">Variable overhead</td>
+        <td class="cpu-col navy">1</td>
+        <td class="make-col navy">20,000</td>
+        <td class="buy-col"></td>
+      </tr>
+      <tr>
+        <td class="label-col navy">Depreciation of equip.</td>
+        <td class="cpu-col navy">3</td>
+        <td class="make-col navy">-</td>
+        <td class="buy-col"></td>
+      </tr>
+      <tr>
+        <td class="label-col navy">Supervisor's salary</td>
+        <td class="cpu-col navy">2</td>
+        <td class="make-col navy">40,000</td>
+        <td class="buy-col"></td>
+      </tr>
+      <tr>
+        <td class="label-col navy">General factory overhead</td>
+        <td class="cpu-col navy">10</td>
+        <td class="make-col navy">-</td>
+        <td class="buy-col"></td>
+      </tr>
+      <tr>
+        <td class="label-col navy">Total cost</td>
+        <td class="cpu-col navy total-underline-cpu">$&nbsp;30</td>
+        <td class="make-col navy total-underline-make">$&nbsp;340,000</td>
+        <td class="buy-col green total-underline-buy">$&nbsp;&nbsp;500,000</td>
+      </tr>
+    </table>
+  </div>
+
+  <svg class="arrow-overlay">
+    <defs>
+      <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="8" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#cc0000" />
+      </marker>
+    </defs>
+    <line x1="475" y1="655" x2="665" y2="358" stroke="#cc0000" stroke-width="4" marker-end="url(#arrowhead)" />
+  </svg>
+
+  <div class="callout">20,000&nbsp;&nbsp;&times;&nbsp;&nbsp;$9 per unit&nbsp;&nbsp;=&nbsp;&nbsp;$180,000</div>
+
+  <div class="placeholder" style="top:600px; left:855px; width:170px; height:150px; border:none; background:none; color:rgba(255,255,255,0.4);">[Image: balance scale, bottom-right]</div>
+
+</div>
+</body>
+</html>

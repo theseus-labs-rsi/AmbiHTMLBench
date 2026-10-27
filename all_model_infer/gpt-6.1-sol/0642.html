@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Micro-controller vs. Micro-processor</title>
+<script>
+window.MathJax = {tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]}};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+* { box-sizing: border-box; }
+html, body { margin: 0; background: #fff; }
+body { font-family: Arial, Helvetica, sans-serif; }
+.page { position: relative; width: 1024px; height: 768px; background: white; overflow: hidden; }
+.header { position: absolute; top: 15px; left: 61px; width: 945px; height: 31px; background: linear-gradient(90deg, #19156c 0%, #79778e 35%, #ddddE2 67%, white 100%); }
+h1 { margin: -2px 0 0 26px; color: white; font-size: 30px; line-height: 34px; font-weight: 700; text-shadow: 1px 2px 2px #777; }
+.decoration { position: absolute; left: 0; top: 0; width: 77px; height: 61px; }
+.decoration span { position: absolute; width: 16px; height: 16px; }
+.d1 { left: 15px; top: 15px; background: #08066c; }
+.d2 { left: 46px; top: 15px; background: #c9c8dd; }
+.d3 { left: 61px; top: 0; background: #c6c5dc; height: 31px !important; }
+.d4 { left: 31px; top: 30px; background: #b0aecf; }
+.d5 { left: 46px; top: 30px; background: #7773ad; }
+.d6 { left: 30px; top: 45px; background: #9793c3; }
+.d7 { left: 0; top: 30px; width: 30px !important; height: 30px !important; background: linear-gradient(90deg, #d1cfe2, white); }
+.placeholder { position: absolute; left: 77px; top: 196px; width: 857px; height: 390px; border: 2px solid #d0d0d0; border-radius: 25px; background: #eee; }
+.diagram-layout { display: flex; gap: 66px; position: absolute; left: 15px; top: 6px; }
+.one-chip { width: 268px; }
+.many-chips { width: 462px; }
+.zone-heading { margin: 4px 0 26px; height: 33px; text-align: center; font-family: "Arial Narrow", "Liberation Sans Narrow", Arial, sans-serif; font-size: 27px; font-weight: bold; text-decoration: underline; line-height: 33px; }
+.many-chips .zone-heading { margin-top: 0; margin-bottom: 28px; }
+.controller { height: 275px; width: 268px; border: 2px solid #161616; background: #06a7da; padding: 0 11px 7px; }
+.controller-title { text-align: center; height: 40px; line-height: 38px; font-size: 25px; font-weight: bold; font-family: "Arial Narrow", "Liberation Sans Narrow", Arial, sans-serif; }
+.chip-label { border: 2px solid #242424; background: white; font-family: "Arial Narrow", "Liberation Sans Narrow", Arial, sans-serif; font-size: 25px; font-weight: bold; white-space: nowrap; display: flex; align-items: center; justify-content: center; }
+.controller-row { display: flex; justify-content: space-between; }
+.row-first { height: 52px; margin-bottom: 10px; align-items: flex-start; }
+.cpu { width: 62px; height: 52px; }
+.timer-small { width: 171px; height: 46px; }
+.row-second { height: 48px; margin-bottom: 19px; }
+.memory-small { width: 143px; justify-content: flex-start; padding-left: 8px; }
+.clock-small { width: 90px; }
+.row-third { height: 44px; margin-bottom: 12px; }
+.io-small { width: 143px; font-size: 25px; }
+.usart-small { width: 91px; height: 42px; }
+.other-small { height: 38px; width: 239px; font-size: 24px; }
+.large-row { display: flex; align-items: flex-start; gap: 14px; }
+.large-row + .large-row { margin-top: 24px; }
+.large-chip { border: 2px solid #242424; display: flex; align-items: center; justify-content: center; font-family: "Arial Narrow", "Liberation Sans Narrow", Arial, sans-serif; font-weight: bold; font-size: 30px; white-space: nowrap; }
+.processor { width: 223px; height: 77px; background: #20b046; color: #fff; }
+.clock { width: 86px; height: 75px; background: #b77d5b; color: #fff; }
+.usart { width: 121px; height: 76px; background: #98d6e5; }
+.memory { width: 222px; height: 74px; background: #05a5da; color: #fff; justify-content: flex-start; padding-left: 23px; }
+.io { width: 230px; height: 74px; background: #eee2ad; justify-content: flex-start; padding-left: 14px; }
+.large-row.bottom { margin-top: 30px; padding-left: 3px; gap: 10px; }
+.timer { width: 222px; height: 68px; background: #c4c4c4; justify-content: flex-start; padding-left: 3px; }
+.other { width: 228px; height: 65px; font-size: 28px; background: linear-gradient(90deg, #c6bddf 0%, #c6bddf 29%, #eee2ad 29%, #eee2ad 55%, #afe51b 55%, #afe51b 79%, #f7a9cb 79%); }
+.placeholder-caption { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.footer { position: absolute; left: 437px; top: 727px; font-size: 16px; line-height: 20px; }
+.page-number { position: absolute; left: 951px; top: 727px; font-weight: bold; font-size: 20px; line-height: 22px; }
+</style>
+</head>
+<body>
+<main class="page">
+<div class="header"><h1>Micro-controller vs. Micro-processor</h1></div>
+<div class="decoration" aria-hidden="true">
+<span class="d1"></span><span class="d2"></span><span class="d3"></span><span class="d4"></span><span class="d5"></span><span class="d6"></span><span class="d7"></span>
+</div>
+<figure class="placeholder" style="margin:0" aria-label="Diagram comparing one microcontroller chip with many different microprocessor chips">
+<figcaption class="placeholder-caption">[Diagram: centered]</figcaption>
+<div class="diagram-layout">
+<section class="one-chip">
+<h2 class="zone-heading">One Chip</h2>
+<div class="controller">
+<div class="controller-title">Microcontroller</div>
+<div class="controller-row row-first">
+<div class="chip-label cpu">CPU</div>
+<div class="chip-label timer-small">Timer/Counter</div>
+</div>
+<div class="controller-row row-second">
+<div class="chip-label memory-small">Memory</div>
+<div class="chip-label clock-small">Clock</div>
+</div>
+<div class="controller-row row-third">
+<div class="chip-label io-small">I/O Interface</div>
+<div class="chip-label usart-small">USART</div>
+</div>
+<div class="chip-label other-small">Other Peripherals</div>
+</div>
+</section>
+<section class="many-chips">
+<h2 class="zone-heading">Many Different Chips</h2>
+<div class="large-row">
+<div class="large-chip processor">Microprocessor</div>
+<div class="large-chip clock">Clock</div>
+<div class="large-chip usart">USART</div>
+</div>
+<div class="large-row">
+<div class="large-chip memory">Memory</div>
+<div class="large-chip io">I/O Interfaces</div>
+</div>
+<div class="large-row bottom">
+<div class="large-chip timer">Timer/Counter</div>
+<div class="large-chip other">Other Peripherals</div>
+</div>
+</section>
+</div>
+</figure>
+<footer class="footer">© 2015 by Eng. Mohamed Tarek.</footer>
+<div class="page-number">7</div>
+</main>
+</body>
+</html>

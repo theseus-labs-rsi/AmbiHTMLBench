@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Custom Docs UI Static Assets (Self-Hosting) - FastAPI</title>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+body{margin:0;font-family:Roboto,Arial,sans-serif;color:#222;width:1425px;}
+.topbar{background:#222;height:64px;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 118px;font-size:14px;}
+.sponsor{background:#fff3c4;border-radius:18px;padding:8px 14px;display:flex;gap:14px;align-items:center;color:#222;position:relative;}
+.sponsor b{font-size:16px}
+.sponsor span{color:#e0a000;font-size:12px;font-weight:bold;line-height:1.3}
+.sponsor small{position:absolute;top:-8px;right:0;background:#666;color:#fff;border-radius:8px;padding:1px 8px;font-size:10px}
+.header{background:#009485;color:#fff;padding:0 118px;}
+.hrow{display:flex;align-items:center;height:48px;padding-top:0;}
+.logo{font-size:18px;font-weight:bold;margin-left:55px;flex:1}
+.search{background:rgba(0,0,0,.2);width:150px;padding:8px 12px;border-radius:3px;font-size:14px;margin-right:40px;display:flex;justify-content:space-between}
+.repo{font-size:12px;width:250px}
+.tabs{display:flex;gap:24px;font-size:14px;height:48px;align-items:center;opacity:.9}
+.main{display:flex;padding:50px 118px;}
+.nav{width:210px;font-size:14px;margin-right:40px}
+.nav div{margin:0 0 9px 0;line-height:19px}
+.nav .sub{padding-left:12px}
+.nav .act{color:#009485}
+.content{width:688px;}
+.toc{width:210px;margin-left:40px;font-size:14px}
+.toc div{margin-bottom:9px;line-height:19px}
+.toc .sub{padding-left:12px}
+.crumb{font-size:14px;color:#666}
+h1{font-weight:300;font-size:32px;color:#555;margin:20px 0 40px}
+h2{font-weight:300;font-size:25px;margin:50px 0 20px}
+h3{font-weight:400;font-size:20px;margin:40px 0 20px}
+p{font-size:16px;line-height:25px;margin:0 0 16px}
+code{background:#f5f5f5;font-family:monospace;padding:1px 4px;font-size:14px}
+.tab{font-size:12px;font-weight:bold;padding:12px 16px;border-bottom:2px solid #000;display:inline-block}
+pre{background:#f5f5f5;margin:0;padding:12px 16px;font-size:14px;line-height:19px;overflow:hidden;border-top:1px solid #ddd}
+.hl{background:#e3ebf8;display:block;margin:0 -16px;padding:0 16px;border-left:2px solid #4477cc}
+.k{color:#3f6ec6}.s{color:#1c7d4d}.f{color:#a846b9}
+.ask{position:fixed;right:20px;bottom:20px;width:60px;height:60px;border-radius:30px;background:#009485;color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center}
+</style>
+</head>
+<body>
+<div class="topbar"><div><b>📅 FastAPI Conf '26</b> — Oct 28, 2026, Amsterdam 🎤</div>
+<div class="sponsor"><small>sponsor</small><b>BlockBee</b><span>Effortless crypto payments<br>with instant payouts</span></div></div>
+<div class="header">
+<div class="hrow" style="height:48px;padding-top:0"><div class="logo">FastAPI</div><div class="search"><span>🔍 Search</span><span>⌘K</span></div><div class="repo">fastapi/fastapi<br>0.136.1 ☆ 98.4k ⑂ 9.3k</div></div>
+<div class="tabs"><span>FastAPI</span><span>Features</span><span style="opacity:1;font-weight:500">Learn</span><span>Reference</span><span>FastAPI People</span><span>Resources</span><span>About</span><span>Release Notes</span></div>
+</div>
+<div class="main">
+<div class="nav">
+<div><b>Learn</b></div><div>Python Types Intro</div><div>Concurrency and async / await</div><div>Environment Variables</div><div>Virtual Environments</div><div>Tutorial - User Guide ›</div><div>Advanced User Guide ›</div><div>FastAPI CLI</div><div>Editor Support</div><div>Deployment ›</div><div>How To - Recipes ⌄</div>
+<div class="sub">General - How To - Recipes</div><div class="sub">Migrate from Pydantic v1 to Pydantic v2</div><div class="sub">GraphQL</div><div class="sub">Custom Request and APIRoute class</div><div class="sub">Conditional OpenAPI</div><div class="sub">Extending OpenAPI</div><div class="sub">Separate OpenAPI Schemas for Input and Output or Not</div><div class="sub act">Custom Docs UI Static Assets (Self-Hosting)</div><div class="sub">Configure Swagger UI</div><div class="sub">Testing a Database</div><div class="sub">Use Old 403 Authentication Error Status Codes</div>
+</div>
+<div class="content">
+<div class="crumb">FastAPI › Learn › How To - Recipes</div>
+<h1>Custom Docs UI Static Assets (Self-Hosting)</h1>
+<p>The API docs use <b>Swagger UI</b> and <b>ReDoc</b>, and each of those need some JavaScript and CSS files.</p>
+<p>By default, those files are served from a <u>CDN</u>.</p>
+<p>But it's possible to customize it, you can set a specific CDN, or serve the files yourself.</p>
+<h2>Custom CDN for JavaScript and CSS</h2>
+<p>Let's say that you want to use a different <u>CDN</u>, for example you want to use <code>https://unpkg.com/</code>.</p>
+<p>This could be useful if for example you live in a country that restricts some URLs.</p>
+<h3>Disable the automatic docs</h3>
+<p>The first step is to disable the automatic docs, as by default, those use the default CDN.</p>
+<p>To disable them, set their URLs to <code>None</code> when creating your <code>FastAPI</code> app:</p>
+<div class="tab">Python 3.10+</div>
+<pre><span class="k">from</span> <span class="f">fastapi</span> <span class="k">import</span> FastAPI
+<span class="k">from</span> <span class="f">fastapi.openapi.docs</span> <span class="k">import</span> (
+    get_redoc_html,
+    get_swagger_ui_html,
+    get_swagger_ui_oauth2_redirect_html,
+)
+
+<span class="hl">app = FastAPI(docs_url=None, redoc_url=None)</span>
+
+
+<span class="k">@app</span>.get(<span class="s">"/docs"</span>, include_in_schema=False)
+<span class="k">async def</span> <span class="f">custom_swagger_ui_html</span>():
+    <span class="k">return</span> get_swagger_ui_html(
+        openapi_url=app.openapi_url,
+        title=app.title + <span class="s">" - Swagger UI"</span>,
+        oauth2_redirect_url=app.swagger_ui_oauth2_redirect_url,
+        swagger_js_url=<span class="s">"https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"</span>
+        swagger_css_url=<span class="s">"https://unpkg.com/swagger-ui-dist@5/swagger-ui.css"</span>,
+    )
+
+
+<span class="k">@app</span>.get(app.swagger_ui_oauth2_redirect_url, include_in_schema=False)
+<span class="k">async def</span> <span class="f">swagger_ui_redirect</span>():
+    <span class="k">return</span> get_swagger_ui_oauth2_redirect_html()
+
+
+<span class="k">@app</span>.get(<span class="s">"/redoc"</span>, include_in_schema=False)
+<span class="k">async def</span> <span class="f">redoc_html</span>():
+    <span class="k">return</span> get_redoc_html(
+        openapi_url=app.openapi_url,
+        title=app.title + <span class="s">" - ReDoc"</span>,
+        redoc_js_url=<span class="s">"https://unpkg.com/redoc@2/bundles/redoc.standalone.js"</span>,
+    )
+
+
+<span class="k">@app</span>.get(<span class="s">"/users/{username}"</span>)
+<span class="k">async def</span> <span class="f">read_user</span>(username: <span class="f">str</span>):
+    <span class="k">return</span> {<span class="s">"message"</span>: f<span class="s">"Hello {username}"</span>}</pre>
+</div>
+<div class="toc">
+<div><b style="color:#555">On this page</b></div>
+<div>Custom CDN for JavaScript and CSS</div><div class="sub">Disable the automatic docs</div><div class="sub">Include the custom docs</div><div class="sub">Create a <i>path operation</i> to test it</div><div class="sub">Test it</div>
+<div>Self-hosting JavaScript and CSS for docs</div><div class="sub">Project file structure</div><div class="sub">Download the files</div><div class="sub">Serve the static files</div><div class="sub">Test the static files</div><div class="sub">Disable the automatic docs for static files</div><div class="sub">Include the custom docs for static files</div><div class="sub">Create a <i>path operation</i> to test static files</div><div class="sub">Test Static Files UI</div>
+</div>
+</div>
+<div class="ask">Ask AI</div>
+</body>
+</html>

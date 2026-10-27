@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CNIPA专利信息资源</title>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Microsoft YaHei", "SimHei", sans-serif;
+    background: linear-gradient(135deg, #b7e4d8 0%, #cfe9e6 50%, #eef7f5 100%);
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 40px 10px 40px;
+  }
+  .header h1 {
+    font-size: 60px;
+    font-weight: 900;
+    color: #b7362f;
+    margin: 0;
+    letter-spacing: 2px;
+  }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .header-right .stars {
+    font-size: 40px;
+    color: #d92020;
+    line-height: 1;
+  }
+  .header-right .cn-text {
+    font-size: 34px;
+    font-weight: bold;
+    color: #1a1a1a;
+    letter-spacing: 6px;
+  }
+  .header-right .url {
+    font-size: 13px;
+    color: #333;
+    display: block;
+    text-align: left;
+  }
+
+  .main-panel {
+    background: #fff;
+    margin: 10px 30px 30px 30px;
+    padding: 20px 30px;
+    border-radius: 4px;
+    display: flex;
+    gap: 20px;
+    position: relative;
+  }
+
+  .left-col {
+    flex: 3;
+    min-width: 0;
+  }
+  .right-col {
+    flex: 1;
+    min-width: 260px;
+    border-left: 1px solid #eee;
+    padding-left: 20px;
+  }
+
+  .tabs {
+    display: flex;
+    border-bottom: 2px solid #ddd;
+    margin-bottom: 15px;
+  }
+  .tab {
+    padding: 12px 40px;
+    font-size: 20px;
+    text-align: center;
+    color: #888;
+    background: #f2f2f2;
+  }
+  .tab.active {
+    color: #000;
+    font-weight: bold;
+    background: #fff;
+    border-bottom: 3px solid #1a73c7;
+  }
+
+  .title-links {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  .title-links a {
+    color: #1a73c7;
+    text-decoration: none;
+    font-weight: bold;
+    margin-right: 5px;
+  }
+
+  .invention-name {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 15px 0;
+  }
+
+  table.biblio {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16px;
+  }
+  table.biblio tr {
+    border-bottom: 1px solid #e5e5e5;
+  }
+  table.biblio td {
+    padding: 10px 12px;
+    vertical-align: top;
+  }
+  table.biblio td.label {
+    width: 220px;
+    background: #f7f7f7;
+    font-weight: bold;
+  }
+
+  .section-title {
+    font-size: 22px;
+    font-weight: bold;
+    border-bottom: 1px solid #999;
+    padding-bottom: 8px;
+    margin: 20px 0 10px 0;
+  }
+
+  .abstract-row {
+    display: flex;
+    gap: 20px;
+  }
+  .abstract-text-col {
+    flex: 1.4;
+  }
+  .abstract-img-col {
+    flex: 1;
+    text-align: center;
+  }
+
+  .translate-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #1a73c7;
+    color: #fff;
+    padding: 6px 18px;
+    border-radius: 3px;
+    font-size: 15px;
+    margin-bottom: 12px;
+  }
+
+  .abstract-text {
+    font-size: 16px;
+    line-height: 1.9;
+    text-align: justify;
+  }
+
+  .placeholder {
+    border: 1px dashed #999;
+    background: #fafafa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    font-size: 14px;
+    text-align: center;
+  }
+
+  .right-col h3 {
+    font-size: 20px;
+    margin: 5px 0 10px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .right-col h3 .detail-link {
+    font-size: 14px;
+    color: #1a73c7;
+    font-weight: normal;
+  }
+  .status-list {
+    list-style: none;
+    padding-left: 15px;
+    border-left: 2px dotted #bbb;
+    margin: 0 0 20px 10px;
+  }
+  .status-list li {
+    position: relative;
+    margin-bottom: 18px;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  .status-list li::before {
+    content: "";
+    position: absolute;
+    left: -21px;
+    top: 4px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #999;
+  }
+  .status-date {
+    font-weight: bold;
+    display: block;
+  }
+
+  .link-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px 0;
+  }
+  .link-list li {
+    margin-bottom: 10px;
+  }
+  .link-list a {
+    color: #1a73c7;
+    text-decoration: none;
+    font-size: 15px;
+  }
+
+  .watermark-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    opacity: 0.15;
+    font-size: 40px;
+    color: #555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(-25deg);
+    overflow: hidden;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>CNIPA专利信息资源</h1>
+  <div class="header-right">
+    <span class="stars">✦<br>✦✦</span>
+    <div>
+      <span class="cn-text">公 益 讲 座</span>
+      <span class="url">www.cnipa.gov.cn/wxfw</span>
+    </div>
+  </div>
+</div>
+
+<div class="main-panel">
+  <div class="left-col">
+    <div class="tabs">
+      <div class="tab active">著录项目</div>
+      <div class="tab">全文文本</div>
+      <div class="tab">全文图像</div>
+    </div>
+
+    <div class="title-links">
+      <a href="#">CN103373680A[中文]</a><a href="#">CN103373680A[英文]</a><a href="#">CN103373680B[中文]</a>
+    </div>
+
+    <div class="invention-name">发明名称 --- 容器封口装置</div>
+
+    <table class="biblio">
+      <tr><td class="label">申请号</td><td>CN201310123287.2</td></tr>
+      <tr><td class="label">申请日</td><td>2013.04.10</td></tr>
+      <tr><td class="label">公开（公告）号</td><td>CN103373680A</td></tr>
+      <tr><td class="label">公开（公告）日</td><td>2013.10.30</td></tr>
+      <tr><td class="label">IPC分类号</td><td>B67B3/20</td></tr>
+      <tr><td class="label">申请（专利权）人</td><td>克罗内斯股份公司；</td></tr>
+      <tr><td class="label">发明人</td><td>克劳斯·布赤豪瑟尔；</td></tr>
+      <tr><td class="label">优先权号</td><td>DE102012103518.0</td></tr>
+      <tr><td class="label">优先权日</td><td>2012.04.20</td></tr>
+      <tr><td class="label">申请人地址</td><td>德国诺伊特拉布林；</td></tr>
+      <tr><td class="label">CPC分类号</td><td>&nbsp;</td></tr>
+    </table>
+
+    <div class="abstract-row">
+      <div class="abstract-text-col">
+        <div class="section-title">摘要</div>
+        <div class="translate-btn">🌐 翻译</div>
+        <div class="abstract-text">
+          本发明涉及一种容器封口装置，尤其是用盖(10)来封口容器的
+          装置(1)，装置(1)包括将盖(10)施加到容器上的封口锥体(3)和
+          用于将盖(10)转交给封口锥体(3)的接取轮(5)，其中，该接取轮
+          (5)包括至少一个活动部段(52)，该活动部段可由从盖供给机构
+          (4)接取盖(10)的接取位置运动到将盖(10)转交给封口锥体(3)的
+          移交位置。
+        </div>
+      </div>
+      <div class="abstract-img-col">
+        <div class="section-title">摘要附图</div>
+        <div class="placeholder" style="width:280px;height:280px;margin:0 auto;">
+          [Diagram: circular mechanical device with numbered parts (1,3,4,5,10,30,42,44,50,52 etc.), centered]
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="right-col">
+    <h3>法律状态 <span class="detail-link">详细&gt;&gt;</span></h3>
+    <ul class="status-list">
+      <li><span class="status-date">20131030</span>公开</li>
+      <li><span class="status-date">20131127</span>实质审查的生效</li>
+      <li><span class="status-date">20160622</span>授权</li>
+    </ul>
+
+    <h3>引证(7) <span class="detail-link">详细&gt;&gt;</span></h3>
+    <ul class="link-list">
+      <li><a href="#">CN101817492A</a></li>
+      <li><a href="#">CN201817250U</a></li>
+      <li><a href="#">CN2813578Y</a></li>
+      <li><a href="#">CN2861125Y</a></li>
+      <li><a href="#">DE1200161B</a></li>
+    </ul>
+
+    <h3>同族(4) <span class="detail-link">详细&gt;&gt;</span></h3>
+    <ul class="link-list">
+      <li><a href="#">CN103373680A</a></li>
+      <li><a href="#">EP2653435A1</a></li>
+      <li><a href="#">DE102012103518A1</a></li>
+      <li><a href="#">EP2653435B1</a></li>
+    </ul>
+  </div>
+
+  <div class="watermark-overlay">国家知识产权局公益讲座 · 仅供学习交流使用 · 请勿用于商业用途</div>
+</div>
+
+</body>
+</html>

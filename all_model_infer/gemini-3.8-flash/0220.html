@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analyzing Healthcare in the US</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: #e9ecef;
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+  }
+  .page-container {
+    width: 800px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    overflow: hidden;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(180deg, #442066 0%, #30174b 100%);
+    padding: 45px 20px 35px 20px;
+    text-align: center;
+  }
+  .header-subtitle {
+    color: #00bcd4;
+    font-size: 26px;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+  .header-title {
+    color: #ffffff;
+    font-size: 34px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+
+  /* Multi-color Stripe */
+  .color-stripe {
+    display: flex;
+    height: 14px;
+    width: 100%;
+  }
+  .stripe-1 {
+    width: 28.5%;
+    background-color: #30174b;
+  }
+  .stripe-2 {
+    width: 28.5%;
+    background-color: #0097a7;
+  }
+  .stripe-3 {
+    width: 43%;
+    background-color: #00bcd4;
+  }
+
+  /* Middle Content Section */
+  .middle-section {
+    display: flex;
+    background-color: #ffffff;
+  }
+  .image-column {
+    width: 43%;
+    position: relative;
+    background-color: #e0f2f1;
+    overflow: hidden;
+  }
+  .image-placeholder {
+    width: 100%;
+    height: 100%;
+    min-height: 440px;
+    background-image: url('https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80');
+    background-size: cover;
+    background-position: center 20%;
+  }
+  .text-column {
+    width: 57%;
+    padding: 35px 35px 25px 25px;
+  }
+
+  /* Feature Block */
+  .feature-block {
+    display: flex;
+    margin-bottom: 25px;
+  }
+  .check-icon {
+    width: 38px;
+    height: 38px;
+    background-color: #3f205c;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 18px;
+    margin-top: 2px;
+  }
+  .check-icon svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: #ffffff;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .feature-content h2 {
+    color: #381e56;
+    font-size: 19px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    line-height: 1.25;
+  }
+  .feature-content p {
+    color: #555555;
+    font-size: 13.5px;
+    line-height: 1.5;
+    margin-bottom: 12px;
+    font-weight: 400;
+  }
+  .bullet-list {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 8px;
+  }
+  .bullet-list li {
+    position: relative;
+    padding-left: 14px;
+    color: #555555;
+    font-size: 13.5px;
+    line-height: 1.55;
+    margin-bottom: 4px;
+  }
+  .bullet-list li::before {
+    content: "•";
+    color: #00bcd4;
+    font-size: 16px;
+    position: absolute;
+    left: 0;
+    top: -1px;
+  }
+
+  /* Bottom Section */
+  .bottom-section {
+    background-color: #f5f5f7;
+    padding: 30px 40px 40px 40px;
+  }
+  .bottom-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .bottom-header .check-icon {
+    margin-right: 18px;
+    margin-top: 0;
+  }
+  .bottom-header h2 {
+    color: #381e56;
+    font-size: 20px;
+    font-weight: 700;
+  }
+  .chart-container {
+    padding-left: 56px;
+  }
+  .chart-subtitle {
+    color: #777777;
+    font-size: 13.5px;
+    margin-bottom: 14px;
+  }
+  
+  /* Bar Chart Layout */
+  .chart-area {
+    position: relative;
+    width: 100%;
+    background-size: 12.5% 100%;
+    background-image: 
+      linear-gradient(to right, rgba(0,0,0,0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, transparent 24px, rgba(0,0,0,0.08) 24px, transparent 25px);
+    background-repeat: repeat-x, repeat-y;
+    border-bottom: 1px solid #777777;
+    border-left: 1px solid #777777;
+    padding: 10px 0 0 0;
+  }
+  
+  .chart-bar-wrapper {
+    display: flex;
+    align-items: center;
+    height: 25px;
+    margin-bottom: 6px;
+    position: relative;
+  }
+  .chart-bar {
+    height: 100%;
+    background-color: #00bcd4;
+  }
+  .chart-label {
+    margin-left: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #381e56;
+  }
+  
+  .chart-ticks {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: -1px;
+  }
+  .tick {
+    width: 1px;
+    height: 5px;
+    background-color: #777777;
+  }
+</style>
+</head>
+<body>
+
+<div class="page-container">
+  <!-- Top Banner -->
+  <div class="header">
+    <div class="header-subtitle">Analyzing</div>
+    <div class="header-title">Healthcare in the US</div>
+  </div>
+
+  <!-- Decorative Color Stripe -->
+  <div class="color-stripe">
+    <div class="stripe-1"></div>
+    <div class="stripe-2"></div>
+    <div class="stripe-3"></div>
+  </div>
+
+  <!-- Middle Section: Image + Text -->
+  <div class="middle-section">
+    <!-- Left Column: Image -->
+    <div class="image-column">
+      <div class="image-placeholder"></div>
+    </div>
+
+    <!-- Right Column: Content -->
+    <div class="text-column">
+      <!-- Section 1 -->
+      <div class="feature-block">
+        <div class="check-icon">
+          <svg viewBox="0 0 24 24">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+        <div class="feature-content">
+          <h2>The Market Fundamentals</h2>
+          <p>The healthcare market is fundamentally different from any other commodity market. The fundamental difference is one cannot predict when demand will rise and fall. COVID-19 did away with all underlying presumptions about how the market behaves.</p>
+          <p>If patients are customers, the customers themselves cannot plan ahead on when to opt for healthcare services. ER/Accident distinguish this market in fundamental ways.</p>
+        </div>
+      </div>
+
+      <!-- Section 2 -->
+      <div class="feature-block" style="margin-bottom: 0;">
+        <div class="check-icon">
+          <svg viewBox="0 0 24 24">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+        <div class="feature-content">
+          <h2>Healthcare Coverage Across the US</h2>
+          <p>Healthcare coverage has increased in America over the years due to the following reasons.</p>
+          <ul class="bullet-list">
+            <li>Government-sponsored Medicaid plans</li>
+            <li>Medicare</li>
+            <li>Liberalization of laws</li>
+            <li>Competition amongst private health insurers</li>
+            <li>State-level health plans</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Section: Chart -->
+  <div class="bottom-section">
+    <div class="bottom-header">
+      <div class="check-icon">
+        <svg viewBox="0 0 24 24">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
+      <h2>Healthcare Coverage Stadistics</h2>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-subtitle">Adults Covered</div>
+      <div class="chart-area">
+        <!-- Bar 1: 50% -->
+        <div class="chart-bar-wrapper">
+          <div class="chart-bar" style="width: 77%;"></div>
+          <span class="chart-label">50%</span>
+        </div>
+        <!-- Bar 2: 40% -->
+        <div class="chart-bar-wrapper">
+          <div class="chart-bar" style="width: 61.6%;"></div>
+          <span class="chart-label">40%</span>
+        </div>
+        <!-- Bar 3: 30% -->
+        <div class="chart-bar-wrapper">
+          <div class="chart-bar" style="width: 46.2%;"></div>
+          <span class="chart-label">30%</span>
+        </div>
+        <!-- Bar 4: 10% -->
+        <div class="chart-bar-wrapper" style="margin-bottom: 8px;">
+          <div class="chart-bar" style="width: 15.4%;"></div>
+          <span class="chart-label">10%</span>
+        </div>
+      </div>
+      <!-- Axis ticks -->
+      <div class="chart-ticks">
+        <div class="tick"></div>
+        <div class="tick"></div>
+        <div class="tick"></div>
+        <div class="tick"></div>
+        <div class="tick"></div>
+        <div class="tick"></div>
+        <div class="tick"></div>
+        <div class="tick"></div>
+        <div class="tick"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

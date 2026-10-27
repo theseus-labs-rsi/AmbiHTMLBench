@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RFC 9000 - QUIC Transport Protocol</title>
+<style>
+  body {
+    background-color: #ffffff;
+    color: #000000;
+    font-family: "Times New Roman", Times, Georgia, serif;
+    font-size: 15px;
+    line-height: 1.45;
+    margin: 0;
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .page-container {
+    width: 100%;
+    max-width: 760px;
+    min-height: 1000px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 14px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #000000;
+    margin-bottom: 36px;
+  }
+
+  .header .left {
+    text-align: left;
+  }
+
+  .header .center {
+    text-align: center;
+  }
+
+  .header .right {
+    text-align: right;
+  }
+
+  /* Code box */
+  .code-box {
+    background-color: #f7f7f8;
+    border: 1px solid #efefef;
+    padding: 16px 20px;
+    margin-bottom: 14px;
+  }
+
+  .code-box pre {
+    margin: 0;
+    font-family: Consolas, Monaco, "Courier New", Courier, monospace;
+    font-size: 13.5px;
+    line-height: 1.28;
+    color: #111111;
+  }
+
+  .caption {
+    font-style: italic;
+    font-size: 14.5px;
+    margin-bottom: 22px;
+  }
+
+  /* Content */
+  p {
+    margin: 0 0 16px 0;
+    text-align: justify;
+    text-justify: inter-word;
+  }
+
+  h2 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 32px;
+    margin-bottom: 18px;
+    color: #111111;
+  }
+
+  a {
+    color: #0000cc;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  /* Footer */
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 14px;
+    margin-top: 60px;
+    padding-top: 10px;
+  }
+
+  .footer .left {
+    text-align: left;
+  }
+
+  .footer .center {
+    text-align: center;
+  }
+
+  .footer .right {
+    text-align: right;
+  }
+</style>
+</head>
+<body>
+
+<div class="page-container">
+  <div>
+    <!-- Running Header -->
+    <div class="header">
+      <span class="left">RFC 9000</span>
+      <span class="center">QUIC Transport Protocol</span>
+      <span class="right">May 2021</span>
+    </div>
+
+    <!-- Algorithm Box -->
+    <div class="code-box">
+      <pre><code>DecodePacketNumber(largest_pn, truncated_pn, pn_nbits):
+   expected_pn  = largest_pn + 1
+   pn_win       = 1 &lt;&lt; pn_nbits
+   pn_hwin      = pn_win / 2
+   pn_mask      = pn_win - 1
+   // The incoming packet number should be greater than
+   // expected_pn - pn_hwin and less than or equal to
+   // expected_pn + pn_hwin
+   //
+   // This means we cannot just strip the trailing bits from
+   // expected_pn and add the truncated_pn because that might
+   // yield a value outside the window.
+   //
+   // The following code calculates a candidate value and
+   // makes sure it's within the packet number window.
+   // Note the extra checks to prevent overflow and underflow.
+   candidate_pn = (expected_pn &amp; ~pn_mask) | truncated_pn
+   if candidate_pn &lt;= expected_pn - pn_hwin and
+      candidate_pn &lt; (1 &lt;&lt; 62) - pn_win:
+      return candidate_pn + pn_win
+   if candidate_pn &gt; expected_pn + pn_hwin and
+      candidate_pn &gt;= pn_win:
+      return candidate_pn - pn_win
+   return candidate_pn</code></pre>
+    </div>
+
+    <div class="caption">
+      Figure 47: Sample Packet Number Decoding Algorithm
+    </div>
+
+    <p>
+      For example, if the highest successfully authenticated packet had a packet number of 0xa82f30ea, then a packet containing a 16-bit value of 0x9b32 will be decoded as 0xa82f9b32.
+    </p>
+
+    <!-- Section A.4 -->
+    <h2>A.4. &nbsp;Sample ECN Validation Algorithm</h2>
+
+    <p>
+      Each time an endpoint commences sending on a new network path, it determines whether the path supports ECN; see <a href="#section-13.4">Section 13.4</a>. If the path supports ECN, the goal is to use ECN. Endpoints might also periodically reassess a path that was determined to not support ECN.
+    </p>
+
+    <p>
+      This section describes one method for testing new paths. This algorithm is intended to show how a path might be tested for ECN support. Endpoints can implement different methods.
+    </p>
+
+    <p>
+      The path is assigned an ECN state that is one of "testing", "unknown", "failed", or "capable". On paths with a "testing" or "capable" state, the endpoint sends packets with an ECT marking -- ECT (0) by default; otherwise, the endpoint sends unmarked packets.
+    </p>
+
+    <p>
+      To start testing a path, the ECN state is set to "testing", and existing ECN counts are remembered as a baseline.
+    </p>
+
+    <p>
+      The testing period runs for a number of packets or a limited time, as determined by the endpoint. The goal is not to limit the duration of the testing period but to ensure that enough marked packets are sent for received ECN counts to provide a clear indication of how the path treats marked packets. <a href="#section-13.4.2">Section 13.4.2</a> suggests limiting this to ten packets or three times the PTO.
+    </p>
+  </div>
+
+  <!-- Running Footer -->
+  <div class="footer">
+    <span class="left">Iyengar &amp; Thomson</span>
+    <span class="center">Standards Track</span>
+    <span class="right">Page 149</span>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subtitle Overlay</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: "Microsoft YaHei", "SimHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* Approximate aspect ratio of the image */
+            aspect-ratio: 3 / 4;
+            background-color: #3e2723; /* Dark brownish fallback */
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        /* Simulating the background image with a gradient/texture since I can't embed the actual photo */
+        .background-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Using a placeholder color scheme that mimics the dark, warm tones of the original */
+            background: linear-gradient(to bottom, 
+                rgba(60, 40, 30, 0.8) 0%, 
+                rgba(40, 25, 20, 0.9) 100%);
+            z-index: 1;
+        }
+        
+        /* Adding a subtle texture to mimic the photo noise */
+        .background-layer::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjM2UyNzIzIi8+CjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiM1ZDNhMmEiIG9wYWNpdHk9IjAuMSIvPgo8L3N2Zz4=');
+            opacity: 0.3;
+        }
+
+        .subtitle-track {
+            position: absolute;
+            top: 18%; /* Start below the top visual area */
+            left: 0;
+            width: 100%;
+            height: 80%;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Distribute lines somewhat evenly */
+            padding-bottom: 2%;
+        }
+
+        .subtitle-line {
+            text-align: center;
+            width: 100%;
+            padding: 2px 0;
+            /* Semi-transparent dark background for readability, mimicking the video overlay style */
+            background: linear-gradient(to right, transparent, rgba(0,0,0,0.6) 10%, rgba(0,0,0,0.6) 90%, transparent);
+        }
+
+        .zh-text {
+            display: block;
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px #000000, -1px -1px 2px #000000, 1px -1px 2px #000000, -1px 1px 2px #000000;
+            margin-bottom: 2px;
+            letter-spacing: 1px;
+        }
+
+        .en-text {
+            display: block;
+            color: #e0e0e0;
+            font-size: 0.75rem;
+            font-family: "Arial", sans-serif;
+            text-shadow: 1px 1px 2px #000000, -1px -1px 2px #000000, 1px -1px 2px #000000, -1px 1px 2px #000000;
+            line-height: 1.2;
+        }
+
+        /* Specific adjustments for spacing to match the image density */
+        .spacer {
+            height: 10px;
+        }
+        
+        /* Top visual area placeholder */
+        .top-visual {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 18%;
+            z-index: 5;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            padding-bottom: 5px;
+        }
+        
+        .visual-placeholder {
+            width: 60%;
+            height: 80%;
+            background: rgba(139, 69, 19, 0.3); /* Hint of the plaid blanket color */
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: rgba(255,255,255,0.3);
+            font-size: 0.8rem;
+            border: 1px dashed rgba(255,255,255,0.2);
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="background-layer"></div>
+    
+    <!-- Top section representing the person in the blanket -->
+    <div class="top-visual">
+        <div class="visual-placeholder">[Image: Person in plaid blanket]</div>
+    </div>
+
+    <div class="subtitle-track">
+        
+        <div class="subtitle-line">
+            <span class="zh-text">它不会像子弹射入胸膛</span>
+            <span class="en-text">It doesn't actually kill you,</span>
+        </div>
+
+        <div class="subtitle-line">
+            <span class="zh-text">或是迎面而来的车祸 那样真的杀了你</span>
+            <span class="en-text">like a bullet to the heart or a head-on car wreck.</span>
+        </div>
+
+        <div class="subtitle-line">
+            <span class="zh-text">但是它会让你死</span>
+            <span class="en-text">It should.</span>
+        </div>
+
+        <div class="subtitle-line">
+            <span class="zh-text">当你至死不渝的爱人对你说</span>
+            <span class="en-text">When someone you've promised to cherish till death do you part</span>
+        </div>
+
+        <div class="subtitle-line">
+            <span class="zh-text">我从未爱过你时 你立刻就被杀死了</span>
+            <span class="en-text">says, "I never loved you," it should kill you instantly.</span>
+        </div>
+
+        <div class="subtitle-line">
+            <span class="zh-text">发生了这种事 你会成日混混沌沌</span>
+            <span class="en-text">You shouldn't have to wake up day after day after that,</span>
+        </div>
+
+        <div class="subtitle-line">
+            <span class="zh-text">试图去理解这世界为什么会这样</span>
+            <span class="en-text">trying to understand how in the world you don't know.</span>
+        </div>
+
+        <div class="subtitle-line">
+            <span class="zh-text">好像从未有过光明</span>
+            <span class="en-text">The light just never went on, you know.</span>
+        </div>
+
+        <div class="subtitle-line">
+            <span class="zh-text">当然 我应该早就知道的</span>
+            <span class="en-text">I must have have known, of course,</span>
+        </div>
+
+        <div class="subtitle-line">
+            <span class="zh-text">但是我却如此害怕去看到事实</span>
+            <span class="en-text">but I was too scared to see the truth.</span>
+        </div>
+
+        <div class="subtitle-line">
+            <span class="zh-text">于是恐惧让你变得愚蠢</span>
+            <span class="en-text">Then fear just makes you so stupid.</span>
+        </div>
+
+        <div class="subtitle-line">
+            <span class="zh-text">不 这不愚蠢 梅丝夫人</span>
+            <span class="en-text">No. It's not stupid, Signora Mayes.</span>
+        </div>
+
+        <div class="subtitle-line">
+            <span class="zh-text">爱是盲目的</span>
+            <span class="en-text">L'amore e cieco.</span>
+        </div>
+
+        <div class="subtitle-line">
+            <span class="zh-text">每个人都知道 因为它是条真理</span>
+            <span class="en-text">Everybody has that saying because it's true everywhere.</span>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

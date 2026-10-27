@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exploring the Effect of Temperature on Enzyme Activity in Plant Cells</title>
+    <style>
+        :root {
+            --primary-teal: #a8dadc;
+            --dark-teal: #457b9d;
+            --header-bg: linear-gradient(to bottom, #bfeef0, #e0f7fa);
+            --section-header-bg: linear-gradient(to right, #a8dadc, #e0f7fa);
+            --right-col-bg: #cceef0;
+            --text-color: #1d3557;
+            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-main);
+            color: #000;
+            background-color: #fff;
+            line-height: 1.4;
+            font-size: 14px;
+        }
+
+        .poster-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header Section */
+        header {
+            background: var(--header-bg);
+            padding: 40px 20px 20px 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin: 0 0 10px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #000;
+        }
+
+        .authors-bar {
+            border-top: 2px solid #000;
+            border-bottom: 2px solid #000;
+            padding: 15px 0;
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-around;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        /* Main Grid Layout */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        /* Column Styling */
+        .col-left, .col-center {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .col-right {
+            background-color: var(--right-col-bg);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            /* Extend to bottom visually handled by grid stretch */
+        }
+
+        /* Section Headers */
+        .section-header {
+            background: var(--section-header-bg);
+            padding: 10px 15px;
+            font-size: 20px;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            color: #000;
+        }
+
+        .col-right .section-header {
+            background: #fff; /* White background for headers in the teal column */
+        }
+
+        /* Typography */
+        h3 {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin: 15px 0 8px 0;
+            color: #000;
+        }
+
+        p {
+            margin: 0 0 10px 0;
+            text-align: left;
+        }
+
+        ul {
+            margin: 0 0 10px 0;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+
+        /* Image Placeholder */
+        .image-placeholder {
+            width: 100%;
+            height: 280px;
+            background-color: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #555;
+            font-style: italic;
+            border: 1px solid #ccc;
+            /* Simulating the succulent image with a gradient/pattern if possible, 
+               but strict rule says placeholder div. 
+               I will use a background image url to a generic placeholder or just color.
+               Actually, I can try to mimic the look with CSS gradients to be "faithful" 
+               without external assets, or just stick to the placeholder rule.
+               The rule says: "Create a <div> ... with class 'placeholder'".
+            */
+            background: radial-gradient(circle, #8fbfbf 0%, #5a8a8a 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .image-placeholder::after {
+            content: "[Image: Succulent Plant]";
+            position: absolute;
+            color: rgba(255,255,255,0.7);
+            font-weight: bold;
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            background-color: #e0f7fa;
+        }
+
+        th, td {
+            padding: 8px 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.5);
+        }
+
+        th {
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 13px;
+        }
+
+        /* References */
+        .references {
+            font-size: 11px;
+            line-height: 1.3;
+        }
+        
+        .references p {
+            margin-bottom: 8px;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid #000;
+            padding: 10px 20px;
+            font-size: 10px;
+            color: #333;
+            margin-top: auto;
+        }
+        
+        /* Specific adjustments for the right column to match image */
+        .col-right-wrapper {
+            background-color: var(--right-col-bg);
+            grid-column: 3;
+            grid-row: 1 / span 2; /* Span full height if needed, but grid auto handles it */
+            padding: 0; /* Padding handled inside */
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .right-inner {
+            padding: 20px;
+            height: 100%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Re-evaluating Grid for exact layout match */
+        /* Row 1: Intro | Image | Discussion */
+        /* Row 2: Methodology | Results | Conclusion/Ack/Ref */
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 25px;
+            padding: 25px;
+        }
+
+        .item-intro { grid-column: 1; grid-row: 1; }
+        .item-image { grid-column: 2; grid-row: 1; }
+        .item-discussion { grid-column: 3; grid-row: 1; background: var(--right-col-bg); padding: 20px; }
+        
+        .item-method { grid-column: 1; grid-row: 2; }
+        .item-results { grid-column: 2; grid-row: 2; }
+        .item-right-bottom { 
+            grid-column: 3; 
+            grid-row: 2; 
+            background: var(--right-col-bg); 
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Fixing the right column background continuity */
+        /* The image shows the right column has a continuous teal background */
+        /* So we should wrap col 3 in a container or apply bg to both cells */
+        
+        .right-col-cell {
+            background-color: var(--right-col-bg);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="poster-container">
+    <header>
+        <h1>EXPLORING THE EFFECT OF TEMPERATURE<br>ON ENZYME ACTIVITY IN PLANT CELLS</h1>
+        <div class="authors-bar">
+            <span>&middot; Alex G.</span>
+            <span>&middot; Monica V.</span>
+            <span>&middot; Tessa H.</span>
+            <span>&middot; Aiko S.</span>
+            <span>&middot; Bill T.</span>
+        </div>
+    </header>
+
+    <div class="grid-container">
+        <!-- Row 1, Col 1: Introduction -->
+        <div class="item-intro">
+            <div class="section-header">INTRODUCTION</div>
+            <p>Enzymes are essential biological catalysts that regulate chemical reactions within cells. This study investigates how temperature influences enzyme activity in plant cells, specifically focusing on amylase, an enzyme that catalyzes the breakdown of starch. Understanding the relationship between temperature and enzyme activity can help optimize agricultural practices, such as enhancing crop resistance to temperature fluctuations and improving the efficiency of industrial processes that involve plant-based enzymes.</p>
+        </div>
+
+        <!-- Row 1, Col 2: Image -->
+        <div class="item-image">
+            <div class="image-placeholder"></div>
+        </div>
+
+        <!-- Row 1, Col 3: Discussion -->
+        <div class="item-discussion right-col-cell">
+            <div class="section-header">DISCUSSION</div>
+            <p>The results suggest that temperature has a profound impact on enzyme activity, with amylase being most efficient at 40&deg;C. The significant decline in activity at temperatures above 60&deg;C supports the hypothesis that extreme heat denatures enzymes. This has implications for both agricultural biotechnology, where temperature resilience could be engineered, and for industrial enzyme applications, where optimal reaction conditions are critical for efficiency.</p>
+        </div>
+
+        <!-- Row 2, Col 1: Methodology -->
+        <div class="item-method">
+            <div class="section-header">METHODOLOGY</div>
+            
+            <h3>SAMPLE PREPARATION</h3>
+            <p>Corn leaf cells were isolated and homogenized to extract amylase enzymes. The enzyme activity was measured by the rate of starch breakdown.</p>
+
+            <h3>TEMPERATURE VARIATION</h3>
+            <p>Enzyme activity was tested at 0&deg;C, 20&deg;C, 40&deg;C, 60&deg;C, and 80&deg;C. Reactions were incubated for 30 minutes at each temperature.</p>
+
+            <h3>SUBSTRATE ADDITION</h3>
+            <p>Starch solution was added to each reaction, providing a substrate for the amylase enzyme.</p>
+
+            <h3>REACTION TERMINATION</h3>
+            <p>The reactions were stopped after 30 minutes using an enzyme inhibitor, and glucose production was measured.</p>
+
+            <h3>DATA ANALYSIS</h3>
+            <p>Absorbance of glucose was measured using a spectrophotometer. Data were analyzed using ANOVA to assess statistical significance of temperature on enzyme activity.</p>
+        </div>
+
+        <!-- Row 2, Col 2: Results -->
+        <div class="item-results">
+            <div class="section-header">RESULTS</div>
+
+            <h3>OPTIMAL TEMPERATURE</h3>
+            <p>Enzyme activity peaked at 40&deg;C, where the amylase was most effective in catalyzing starch breakdown. At this temperature, the rate of glucose production was 50% higher than at lower or higher temperatures.</p>
+
+            <h3>TEMPERATURE EFFECT</h3>
+            <ul>
+                <li>At 0&deg;C, enzyme activity was minimal, with only 10% of the maximum activity observed at 40&deg;C</li>
+                <li>At 20&deg;C, enzyme activity was moderate, with a 30% increase in glucose production compared to 0&deg;C</li>
+                <li>At 60&deg;C, enzyme activity dropped significantly, with only 25% of the activity seen at 40&deg;C</li>
+                <li>At 80&deg;C, enzyme activity was nearly zero, indicating enzyme denaturation</li>
+            </ul>
+
+            <h3>TEMPERATURE EFFECT</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>TEMPERATURE (&deg;C)</th>
+                        <th>ENZYME ACTIVITY</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0</td>
+                        <td>0.1</td>
+                    </tr>
+                    <tr>
+                        <td>20</td>
+                        <td>0.3</td>
+                    </tr>
+                    <tr>
+                        <td>40</td>
+                        <td>0.5</td>
+                    </tr>
+                    <tr>
+                        <td>60</td>
+                        <td>0.25</td>
+                    </tr>
+                    <tr>
+                        <td>80</td>
+                        <td>0.05</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Row 2, Col 3: Conclusion, Ack, Ref -->
+        <div class="item-right-bottom right-col-cell">
+            <div>
+                <div class="section-header">CONCLUSION</div>
+                <p>Amylase activity in plant cells is highly temperature-dependent, with an optimal temperature of 40&deg;C for maximum efficiency. Understanding the temperature sensitivity of enzymes can help improve crop productivity under varying environmental conditions and optimize industrial enzyme processes.</p>
+            </div>
+
+            <div>
+                <div class="section-header">ACKNOWLEDGMENTS</div>
+                <p>This study was funded by the Agricultural Science Research Fund. Special thanks to the Plant Biology Department at Greenfield University for providing the samples.</p>
+            </div>
+
+            <div>
+                <div class="section-header">REFERENCES</div>
+                <div class="references">
+                    <p>&bull; Green, J. H., &amp; Thomas, L. M. (2021). Temperature-dependent enzyme activity in plant cells: A comparative study. Journal of Plant Physiology, 98(2), 115-130. https://doi.org/10.1016/j.jplphys.2021.0207</p>
+                    <p>&bull; Zhang, Q., &amp; Chen, Y. F. (2020). Effects of temperature fluctuations on enzyme kinetics in plant systems. Biochemical and Biophysical Research Communications, 53(9), 245-259. https://doi.org/10.1016/j.bbrc.2020.0806</p>
+                    <p>&bull; Patel, S. K., &amp; Rivera, J. A. (2022). The impact of thermal stress on plant enzyme activity: Insights from cellular experiments. Plant Biochemistry Journal, 62(4), 410-425. https://doi.org/10.1098/pbj.2022.0404</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        [All information here is for demonstration purposes and does not reflect actual data or outcomes.]
+    </footer>
+</div>
+
+</body>
+</html>

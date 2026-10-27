@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>docker buildx rm | Docker Docs</title>
+<script>
+window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#fff;font-family:Arial,Helvetica,sans-serif;color:#383f4b;font-size:14px}
+body{min-width:1440px}
+.announcement{height:36px;background:#030b48;color:#c7ccdf;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;position:relative}
+.announcement .new{font-size:20px;color:#e0bed1;margin-right:20px}
+.announcement .sparkles{color:#8c77df;margin-right:4px}
+.announcement .arrow{font-size:25px;line-height:20px;margin-left:5px;color:#fff}
+.close{position:absolute;right:13px;top:8px;color:white;font-size:25px;font-weight:400;line-height:25px}
+.topbar{height:64px;background:#114bed;display:flex;align-items:center;padding:0 16px;color:white;gap:32px}
+.brand{width:168px;display:flex;align-items:center;font-size:25px;letter-spacing:-.6px;white-space:nowrap}
+.brand .placeholder{width:24px;height:24px;margin-right:5px;overflow:hidden;font-size:6px;line-height:8px;color:white;display:flex;align-items:center;text-align:center}
+.brand strong{font-weight:500}
+.brand span{font-weight:300}
+.toplinks{display:flex;align-items:center;gap:32px;height:100%}
+.toplinks span{height:100%;display:flex;align-items:center;position:relative;color:#fff}
+.toplinks .active:after{content:"";height:4px;background:#fff;position:absolute;bottom:13px;left:-8px;right:-8px}
+.tools{display:flex;gap:8px;margin-left:auto;align-items:center}
+.tool{height:42px;background:#063bb7;border:1px solid #3163e7;border-radius:9px;display:flex;align-items:center;padding:0 12px;gap:12px;color:white}
+.tool .placeholder{width:20px;height:22px;font-size:5px;text-align:center;display:flex;align-items:center;overflow:hidden}
+.search-symbol{height:18px;width:18px;border:2px solid white;border-radius:50%;position:relative;margin-right:2px}
+.search-symbol:after{content:"";position:absolute;width:9px;height:2px;background:white;transform:rotate(48deg);right:-6px;bottom:-3px}
+.theme{padding:0 10px;font-size:26px}
+.layout{display:grid;grid-template-columns:320px 715px 405px;align-items:start}
+.sidebar{background:#f8f8f9;min-height:1500px;padding:16px 36px 0 24px;font-size:14px}
+.sidebar ul{list-style:none;padding:0;margin:0}
+.sidebar li{height:30.2px;display:flex;align-items:center;position:relative;white-space:nowrap;color:#414855}
+.sidebar .l1{padding-left:12px}
+.sidebar .l2{padding-left:24px}
+.sidebar .l3{padding-left:36px}
+.chevron{position:absolute;right:8px;top:11px;width:8px;height:8px;border-right:1px solid #656b75;border-bottom:1px solid #656b75;transform:rotate(45deg)}
+.chevron.up{transform:rotate(225deg);top:14px}
+.sidebar .selected{background:#e7eaee;border-radius:4px;margin-left:28px;padding-left:8px}
+main{padding:35px 0 0 32px;width:715px}
+.breadcrumbs{height:30px;font-size:14px;color:#83909f;white-space:nowrap}
+a{color:#527fbf;text-decoration:none}
+.breadcrumbs .slash{padding:0 8px;color:#8b929d}
+h1{font-size:29px;font-weight:600;line-height:36px;margin:6px 0 14px;color:#141b26}
+.actions{height:37px;display:flex;align-items:flex-start;gap:25px;font-size:13px;color:#5a6575;border-bottom:1px solid #cdd0d4}
+.actions span{display:flex;align-items:center;gap:7px}
+.actions .icon{font-size:15px;line-height:17px}
+.summary{width:100%;border-collapse:collapse;margin-top:52px;font-size:13px}
+.summary th{width:136px;text-align:left;font-weight:600}
+.summary th,.summary td{height:41px;padding:0}
+.summary tr:first-child{border-bottom:1px solid #e1e3e6}
+code{font-family:"Courier New",monospace;background:#e8ebee;border-radius:3px;padding:4px;font-size:13px}
+.summary code{font-size:11.5px;color:#111827}
+h2{font-size:26px;line-height:32px;font-weight:500;color:#090b0c;margin:0 0 14px}
+p{font-size:16px;line-height:28px;margin:0}
+.description{margin-top:55px}
+.options{margin-top:30px}
+.options-table{margin-top:41px;width:100%;border-collapse:collapse;font-size:13px}
+.options-table th{text-align:left;height:41px;background:#e7eaee;color:#141b26;font-weight:600;border-bottom:1px solid #d0d4d9}
+.options-table th:first-child{padding-left:8px;width:164px}
+.options-table th:nth-child(2){width:82px}
+.options-table td{height:41px;border-bottom:1px solid #e0e3e6;padding:0}
+.options-table tr:last-child td{border-bottom:0}
+.options-table code{font-size:11.5px}
+.options-table td:nth-child(2) code,.options-table tr:last-child td:first-child code{color:#111827}
+.examples{margin-top:56px}
+.examples h2{margin-bottom:15px}
+h3{font-size:20px;line-height:28px;font-weight:500;color:#080a0c;margin:0 0 16px}
+.codebox{margin:21px 0 0;border:1px solid #c9cfd6;border-radius:4px;background:#f8f9fb;padding:15px;overflow:hidden;white-space:pre;font-family:"Courier New",monospace;font-size:13.5px;line-height:25px;color:#3c4350}
+.prompt{color:#88cdaa}
+.example-section{margin-top:34px}
+.example-section p code{font-size:13.5px}
+.example-section.force{margin-top:37px}
+.example-section.force .codebox{margin-top:21px}
+.example-section.keep{margin-top:35px}
+.keep p{line-height:28px}
+.toc{padding:52px 24px 0 32px;font-size:14px}
+.toc h2{font-size:18px;font-weight:400;line-height:25px;margin:0 0 11px;color:#090b0c}
+.toc ul{list-style:none;margin:0;padding:0 0 0 8px;color:#586476}
+.toc li{height:29px;line-height:29px;padding-left:8px;white-space:nowrap;overflow:hidden;text-overflow:clip}
+.toc li.current{border-left:2px solid #cdd1d6;background:linear-gradient(to right,#f8f9fa,#fff);color:#060708}
+.toc li.sub{padding-left:16px;font-size:13.5px}
+.feedback{position:fixed;right:40px;bottom:0;height:38px;background:#086dd2;border:1px solid #4590d6;border-radius:7px 7px 0 0;padding:8px 16px;color:white;font-size:14px;display:flex;align-items:center;gap:9px}
+.feedback .placeholder{width:18px;height:18px;font-size:4px;line-height:6px;overflow:hidden;text-align:center}
+</style>
+</head>
+<body>
+<div class="announcement"><span class="new"><span class="sparkles">✣</span>New</span>Insights on the state of AI agents from 800+ builders and leaders. Download your copy <span class="arrow">→</span><span class="close">×</span></div>
+<header class="topbar">
+<div class="brand"><div class="placeholder">[Docker logo]</div><strong>docker</strong><span>docs</span></div>
+<nav class="toplinks"><span>Get started</span><span>Guides</span><span>Manuals</span><span class="active">Reference</span></nav>
+<div class="tools">
+<div class="tool"><div class="placeholder">[Gordon icon]</div>Gordon</div>
+<div class="tool"><span class="search-symbol"></span>Search</div>
+<div class="tool theme"><div class="placeholder">[Theme icon]</div></div>
+</div>
+</header>
+<div class="layout">
+<aside class="sidebar">
+<ul>
+<li>CLI reference<span class="chevron up"></span></li>
+<li class="l1">docker<span class="chevron up"></span></li>
+<li class="l2">docker build</li>
+<li class="l2">docker builder<span class="chevron"></span></li>
+<li class="l2">docker buildx<span class="chevron up"></span></li>
+<li class="l3">docker buildx bake</li>
+<li class="l3">docker buildx build</li>
+<li class="l3">docker buildx create</li>
+<li class="l3">docker buildx dap<span class="chevron"></span></li>
+<li class="l3">docker buildx debug<span class="chevron"></span></li>
+<li class="l3">docker buildx dial-stdio</li>
+<li class="l3">docker buildx du</li>
+<li class="l3">docker buildx history<span class="chevron"></span></li>
+<li class="l3">docker buildx imagetools<span class="chevron"></span></li>
+<li class="l3">docker buildx inspect</li>
+<li class="l3">docker buildx ls</li>
+<li class="l3">docker buildx policy<span class="chevron"></span></li>
+<li class="l3">docker buildx prune</li>
+<li class="selected">docker buildx rm</li>
+<li class="l3">docker buildx stop</li>
+<li class="l3">docker buildx use</li>
+<li class="l3">docker buildx version</li>
+<li class="l2">docker checkpoint<span class="chevron"></span></li>
+<li class="l2">docker compose<span class="chevron"></span></li>
+<li class="l2">docker config<span class="chevron"></span></li>
+<li class="l2">docker container<span class="chevron"></span></li>
+<li class="l2">docker context<span class="chevron"></span></li>
+<li class="l2">docker debug</li>
+<li class="l2">docker desktop<span class="chevron"></span></li>
+<li class="l2">docker dhi<span class="chevron"></span></li>
+<li class="l2">docker exec</li>
+<li class="l2">docker image<span class="chevron"></span></li>
+<li class="l2">docker images</li>
+<li class="l2">docker info</li>
+<li class="l2">docker init</li>
+<li class="l2">docker inspect</li>
+<li class="l2">docker login</li>
+<li class="l2">docker logout</li>
+<li class="l2">docker manifest<span class="chevron"></span></li>
+<li class="l2">docker mcp<span class="chevron"></span></li>
+<li class="l2">docker model<span class="chevron"></span></li>
+<li class="l2">docker network<span class="chevron"></span></li>
+<li class="l2">docker node<span class="chevron"></span></li>
+<li class="l2">docker offload<span class="chevron"></span></li>
+<li class="l2">docker pass<span class="chevron"></span></li>
+<li class="l2">docker plugin<span class="chevron"></span></li>
+<li class="l2">docker ps</li>
+<li class="l2">docker pull</li>
+<li class="l2">docker push</li>
+</ul>
+</aside>
+<main>
+<div class="breadcrumbs"><a>Home</a><span class="slash">/</span><a>Reference</a><span class="slash">/</span><a>CLI reference</a><span class="slash">/</span><a>docker</a><span class="slash">/</span><a>docker buildx</a><span class="slash">/</span>docker buildx rm</div>
+<h1>docker buildx rm</h1>
+<div class="actions">
+<span><span class="icon placeholder" style="width:15px;height:17px;overflow:hidden;font-size:4px">[Gordon icon]</span>Ask Gordon</span>
+<span><span class="icon">▧</span>Copy Markdown</span>
+<span><span class="icon">↗</span>View Markdown</span>
+</div>
+<table class="summary">
+<tbody>
+<tr><th>Description</th><td>Remove one or more builder instances</td></tr>
+<tr><th>Usage</th><td><code>docker buildx rm [OPTIONS] [NAME...]</code></td></tr>
+</tbody>
+</table>
+<section class="description">
+<h2>Description</h2>
+<p>Removes the specified or current builder. It is a no-op attempting to remove the default builder.</p>
+</section>
+<section class="options">
+<h2>Options</h2>
+<table class="options-table">
+<thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><a><code>--all-inactive</code></a></td><td></td><td>Remove all inactive builders</td></tr>
+<tr><td><a><code>-f, --force</code></a></td><td></td><td>Do not prompt for confirmation</td></tr>
+<tr><td><a><code>--keep-daemon</code></a></td><td></td><td>Keep the BuildKit daemon running</td></tr>
+<tr><td><a><code>--keep-state</code></a></td><td></td><td>Keep BuildKit state</td></tr>
+<tr><td><code>--timeout</code></td><td><code>20s</code></td><td>Override the default timeout for loading builder status</td></tr>
+</tbody>
+</table>
+</section>
+<section class="examples">
+<h2>Examples</h2>
+<h3>Remove all inactive builders (--all-inactive)</h3>
+<p>Remove builders that are not in running state.</p>
+<pre class="codebox"><span class="prompt">$</span> docker buildx rm --all-inactive
+WARNING! This will remove all builders that are not in running state. Are yo</pre>
+<section class="example-section">
+<h3>Override the configured builder instance (--builder)</h3>
+<p>Same as <a><code>buildx --builder</code></a>.</p>
+</section>
+<section class="example-section force">
+<h3>Do not prompt for confirmation (--force)</h3>
+<p>Do not prompt for confirmation before removing inactive builders.</p>
+<pre class="codebox"><span class="prompt">$</span> docker buildx rm --all-inactive --force</pre>
+</section>
+<section class="example-section keep">
+<h3>Keep the BuildKit daemon running (--keep-daemon)</h3>
+<p>Keep the BuildKit daemon running after the buildx context is removed. This is useful when you manage BuildKit daemons and buildx contexts independently. Only supported by the <a><code>docker-<br>container</code></a> and <a><code>kubernetes</code></a> drivers.</p>
+</section>
+</section>
+</main>
+<aside class="toc">
+<h2>Table of contents</h2>
+<ul>
+<li class="current">Description</li>
+<li>Options</li>
+<li>Examples</li>
+<li class="sub">Remove all inactive builders (--all-inactive)</li>
+<li class="sub">Override the configured builder instance (--builder)</li>
+<li class="sub">Do not prompt for confirmation (--force)</li>
+<li class="sub">Keep the BuildKit daemon running (--keep-daem...</li>
+<li class="sub">Keep BuildKit state (--keep-state)</li>
+</ul>
+</aside>
+</div>
+<div class="feedback"><div class="placeholder">[Feedback icon]</div>Give feedback</div>
+</body>
+</html>

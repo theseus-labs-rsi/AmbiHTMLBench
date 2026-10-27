@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SD_STAT Register Field Descriptions (continued)</title>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+<style>
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    color: #000;
+    margin: 0;
+    padding: 40px 60px;
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 5px;
+  }
+  .logo-block {
+    display: flex;
+    align-items: flex-start;
+  }
+  .logo-mark {
+    font-size: 26px;
+    font-weight: bold;
+    margin-right: 6px;
+    line-height: 1;
+  }
+  .logo-text {
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 1.1;
+    letter-spacing: 0.5px;
+  }
+  .top-line {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 2px solid #000;
+    padding-bottom: 8px;
+    margin-top: 30px;
+    font-size: 13px;
+  }
+  .top-line a {
+    color: #1155cc;
+  }
+  .top-line .right {
+    font-style: italic;
+  }
+  h1.table-title {
+    text-align: center;
+    font-size: 17px;
+    margin: 25px 0 15px 0;
+  }
+  table.reg-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #000;
+    table-layout: fixed;
+  }
+  table.reg-table th, table.reg-table td {
+    border: 1px solid #000;
+    padding: 6px 8px;
+    text-align: left;
+    vertical-align: top;
+    font-size: 13px;
+  }
+  table.reg-table th {
+    background-color: #d9d9d9;
+    font-weight: bold;
+  }
+  colgroup .col-bit { width: 6%; }
+  colgroup .col-field { width: 14%; }
+  colgroup .col-type { width: 8%; }
+  colgroup .col-reset { width: 8%; }
+  colgroup .col-desc { width: 64%; }
+  .desc-cell p {
+    margin: 0 0 4px 0;
+  }
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    border-top: 2px solid #000;
+    padding-top: 8px;
+    margin-top: 30px;
+    font-size: 13px;
+    align-items: flex-start;
+  }
+  .footer .left {
+    text-align: left;
+  }
+  .footer .left a {
+    color: #1155cc;
+    display: block;
+  }
+  .footer .center {
+    text-align: center;
+    flex: 1;
+    font-style: italic;
+  }
+  .footer .right {
+    text-align: right;
+  }
+  .copyright {
+    text-align: center;
+    font-size: 12px;
+    margin-top: 4px;
+  }
+</style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="logo-block">
+      <span class="logo-mark">↑J↓</span>
+      <span class="logo-text">TEXAS<br>INSTRUMENTS</span>
+    </div>
+  </div>
+
+  <div class="top-line">
+    <div>www.ti.com</div>
+    <div class="right">Multimedia Card Registers</div>
+  </div>
+
+  <h1 class="table-title">Table 18-38. SD_STAT Register Field Descriptions (continued)</h1>
+
+  <table class="reg-table">
+    <colgroup>
+      <col class="col-bit">
+      <col class="col-field">
+      <col class="col-type">
+      <col class="col-reset">
+      <col class="col-desc">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>Bit</th>
+        <th>Field</th>
+        <th>Type</th>
+        <th>Reset</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>8</td>
+        <td>CIRQ</td>
+        <td>R</td>
+        <td>0h</td>
+        <td class="desc-cell">
+          <p>Card interrupt.</p>
+          <p>This bit is only used for SD and SDIO cards.</p>
+          <p>In</p>
+          <p>1-bit mode, interrupt source is asynchronous (can be a source of asynchronous wake-up).</p>
+          <p>In</p>
+          <p>4-bit mode, interrupt source is sampled during the interrupt cycle.</p>
+          <p>In CE-ATA mode, interrupt source is detected when the card drives mmc_cmd line to zero during one cycle after data transmission end.</p>
+          <p>All modes above are fully exclusive.</p>
+          <p>The controller interrupt must be clear by setting SD_IE[8] CIRQ_ENABLE to 0, then the host driver must start the interrupt service with card (clearing card interrupt status) to remove card interrupt source.</p>
+          <p>Otherwise the Controller interrupt will be reasserted as soon as SD_IE[8] CIRQ_ENABLE is set to 1.</p>
+          <p>Writes to this bit are ignored.</p>
+          <p>0h (R) = No card interrupt</p>
+          <p>1h (R) = Generate card interrupt</p>
+        </td>
+      </tr>
+      <tr>
+        <td>7</td>
+        <td>CREM</td>
+        <td>R/W</td>
+        <td>0h</td>
+        <td class="desc-cell">
+          <p>Card Removal.</p>
+          <p>This bit is set automatically when SD_PSTATE[CINS] changes from 1 to 0.</p>
+          <p>A clear of this bit doesn't affect Card inserted present state (SD_PSTATE[CINS]).</p>
+          <p>0h (W) = Status bit unchanged</p>
+          <p>0h (R) = Card State stable or debouncing</p>
+          <p>1h (W) = Status is cleared</p>
+          <p>1h (R) = Card Removed</p>
+        </td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td>CINS</td>
+        <td>R/W</td>
+        <td>0h</td>
+        <td class="desc-cell">
+          <p>Card Insertion.</p>
+          <p>This bit is set automatically when SD_PSTATE[CINS] changes from 0 to 1.</p>
+          <p>A clear of this bit doesn't affect Card inserted present state (SD_PSTATE[CINS]).</p>
+          <p>0h (W) = Status bit unchanged</p>
+          <p>0h (R) = Card State stable or debouncing</p>
+          <p>1h (W) = Status is cleared.</p>
+          <p>1h (R) = Card inserted</p>
+        </td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>BRR</td>
+        <td>R/W</td>
+        <td>0h</td>
+        <td class="desc-cell">
+          <p>Buffer read ready.</p>
+          <p>This bit is set automatically during a read operation to the card (see class</p>
+          <p>2 - block oriented read commands) when one block specified by the SD_BLK</p>
+          <p>[10:0] BLEN bit field is completely written in the buffer.</p>
+          <p>It indicates that the memory card has filled out the buffer and that the local host needs to empty the buffer by reading it.</p>
+          <p>Note: If the DMA receive-mode is enabled, this bit is never set instead a DMA receive request to the main DMA controller of the system is generated.</p>
+          <p>0h (W) = Status bit unchanged</p>
+          <p>0h (R) = Not ready to read buffer</p>
+          <p>1h (W) = Status is cleared.</p>
+          <p>1h (R) = Ready to read buffer</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="footer">
+    <div class="left">
+      SPRUH73Q – October 2011 – Revised December 2019<br>
+      <a href="#">Submit Documentation Feedback</a>
+    </div>
+    <div class="right">
+      <em>Multimedia Card (MMC)</em>&nbsp;&nbsp;&nbsp;4299
+    </div>
+  </div>
+  <div class="copyright">Copyright &copy; 2011–2019, Texas Instruments Incorporated</div>
+
+</body>
+</html>

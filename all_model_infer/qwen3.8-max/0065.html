@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>docker buildx rm | Docker Docs</title>
+    <style>
+        :root {
+            --primary-blue: #1d63ed;
+            --dark-blue: #0b132b;
+            --text-main: #1e2330;
+            --text-muted: #5c6370;
+            --bg-sidebar: #f9fafb;
+            --bg-code: #f4f5f7;
+            --border-color: #e3e6eb;
+            --link-color: #1d63ed;
+            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-sans);
+            color: var(--text-main);
+            line-height: 1.5;
+            background-color: #fff;
+        }
+
+        /* Top Banner */
+        .top-banner {
+            background-color: #000033;
+            color: white;
+            text-align: center;
+            padding: 10px 20px;
+            font-size: 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .top-banner a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .top-banner .close-btn {
+            position: absolute;
+            right: 20px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        .sparkle {
+            color: #a78bfa;
+            margin-right: 5px;
+        }
+
+        /* Header */
+        header {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .logo svg {
+            fill: white;
+            width: 24px;
+            height: 24px;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 24px;
+            margin: 0;
+            padding: 0;
+        }
+        nav a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding-bottom: 4px;
+        }
+        nav a.active {
+            border-bottom: 2px solid white;
+            color: white;
+        }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .btn-gordon, .btn-search {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+        .theme-toggle {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        /* Layout */
+        .container {
+            display: flex;
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        /* Sidebar */
+        aside.sidebar {
+            width: 280px;
+            background-color: var(--bg-sidebar);
+            border-right: 1px solid var(--border-color);
+            height: calc(100vh - 100px);
+            overflow-y: auto;
+            padding: 24px 0;
+            flex-shrink: 0;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar li {
+            margin: 0;
+        }
+        .sidebar a {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 24px;
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .sidebar a:hover {
+            background-color: #f0f2f5;
+        }
+        .sidebar a.active {
+            background-color: #eef2f9;
+            font-weight: 500;
+        }
+        .sidebar .indent-1 { padding-left: 40px; }
+        .sidebar .indent-2 { padding-left: 56px; }
+        .chevron {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        /* Main Content */
+        main {
+            flex: 1;
+            padding: 32px 48px;
+            max-width: 900px;
+            min-width: 0;
+        }
+
+        /* Breadcrumbs */
+        .breadcrumbs {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+        .breadcrumbs a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+        .breadcrumbs span {
+            margin: 0 4px;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin: 0 0 16px 0;
+            font-weight: 600;
+        }
+
+        .action-links {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 32px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 24px;
+        }
+        .action-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .action-links a:hover {
+            color: var(--text-main);
+        }
+
+        /* Info Table */
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 40px;
+            font-size: 14px;
+        }
+        .info-table td {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: top;
+        }
+        .info-table tr:last-child td {
+            border-bottom: none;
+        }
+        .info-label {
+            width: 120px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+        code {
+            background-color: var(--bg-code);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 13px;
+            color: #d63384;
+        }
+        .code-block {
+            background-color: #f8f9fa;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 16px;
+            font-family: var(--font-mono);
+            font-size: 13px;
+            overflow-x: auto;
+            margin: 16px 0;
+            color: var(--text-main);
+        }
+        .code-block .prompt {
+            color: #28a745;
+            margin-right: 8px;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin: 40px 0 16px 0;
+            font-weight: 600;
+        }
+        
+        h3 {
+            font-size: 18px;
+            margin: 32px 0 12px 0;
+            font-weight: 600;
+        }
+
+        p {
+            margin: 0 0 16px 0;
+            font-size: 15px;
+            color: #333;
+        }
+
+        /* Options Table */
+        .options-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            font-size: 14px;
+        }
+        .options-table th {
+            text-align: left;
+            background-color: #eef0f4;
+            padding: 10px 12px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .options-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: top;
+        }
+        .options-table tr:last-child td {
+            border-bottom: none;
+        }
+        .flag {
+            color: var(--link-color);
+            background-color: #eef2f9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* Right TOC */
+        aside.toc {
+            width: 250px;
+            padding: 32px 24px;
+            flex-shrink: 0;
+        }
+        .toc h4 {
+            font-size: 16px;
+            margin: 0 0 16px 0;
+            font-weight: 600;
+        }
+        .toc ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            border-left: 2px solid var(--border-color);
+        }
+        .toc li {
+            margin: 0;
+        }
+        .toc a {
+            display: block;
+            padding: 6px 0 6px 12px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 13px;
+            margin-left: -2px;
+            border-left: 2px solid transparent;
+        }
+        .toc a:hover {
+            color: var(--text-main);
+        }
+        .toc a.active {
+            color: var(--text-main);
+            font-weight: 500;
+            border-left-color: var(--text-main);
+            background: linear-gradient(90deg, rgba(0,0,0,0.03) 0%, transparent 100%);
+        }
+        .toc .sub-item {
+            padding-left: 24px;
+        }
+
+        /* Feedback Button */
+        .feedback-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        /* Utilities */
+        .text-truncate {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Banner -->
+    <div class="top-banner">
+        <span class="sparkle">✨</span>
+        <span><strong>New</strong> &nbsp; Insights on the state of AI agents from 800+ builders and leaders. Download your copy →</span>
+        <span class="close-btn">×</span>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="header-left">
+            <div class="logo">
+                <svg viewBox="0 0 24 24"><path d="M13.983 11.078h2.119a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.119a.185.185 0 00-.185.185v1.888c0 .102.083.185.185.185m-2.954-5.43h2.118a.186.186 0 00.186-.186V3.574a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.185m0 2.716h2.118a.187.187 0 00.186-.186V6.29a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.887c0 .102.082.186.185.186m-2.93 0h2.12a.186.186 0 00.184-.186V6.29a.185.185 0 00-.185-.185H8.1a.185.185 0 00-.185.185v1.887c0 .102.083.186.185.186m-2.964 0h2.119a.186.186 0 00.185-.186V6.29a.185.185 0 00-.185-.185H5.136a.186.186 0 00-.186.185v1.887c0 .102.084.186.186.186m5.893 2.715h2.118a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.185m-2.93 0h2.12a.185.185 0 00.184-.185V9.006a.185.185 0 00-.184-.186h-2.12a.185.185 0 00-.184.185v1.888c0 .102.083.185.185.185m-2.964 0h2.119a.185.185 0 00.185-.185V9.006a.185.185 0 00-.185-.186H5.136a.186.186 0 00-.186.186v1.887c0 .102.084.185.186.185m-2.92 0h2.12a.185.185 0 00.184-.185V9.006a.185.185 0 00-.184-.186H2.25a.186.186 0 00-.186.186v1.887c0 .102.084.185.186.185m11.786 0h2.118a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.185m-2.954 2.715h2.118a.187.187 0 00.186-.186v-1.887a.186.186 0 00-.186-.186h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.185m-2.93 0h2.12a.186.186 0 00.184-.186v-1.887a.185.185 0 00-.185-.186h-2.12a.185.185 0 00-.184.185v1.888c0 .102.083.185.185.185m-2.964 0h2.119a.186.186 0 00.185-.186v-1.887a.185.185 0 00-.185-.186H5.136a.186.186 0 00-.186.186v1.887c0 .102.084.185.186.185m-2.92 0h2.12a.185.185 0 00.184-.186v-1.887a.185.185 0 00-.184-.186H2.25a.186.186 0 00-.186.186v1.887c0 .102.084.185.186.185m11.786 0h2.118a.186.186 0 00.186-.186v-1.887a.186.186 0 00-.186-.186h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.185m-2.954 2.716h2.118a.186.186 0 00.186-.186v-1.887a.186.186 0 00-.186-.186h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.185m-2.93 0h2.12a.185.185 0 00.184-.186v-1.887a.185.185 0 00-.185-.186h-2.12a.185.185 0 00-.184.185v1.888c0 .102.083.185.185.185m-2.964 0h2.119a.186.186 0 00.185-.186v-1.887a.185.185 0 00-.185-.186H5.136a.186.186 0 00-.186.186v1.887c0 .102.084.185.186.185m-2.92 0h2.12a.185.185 0 00.184-.186v-1.887a.185.185 0 00-.184-.186H2.25a.186.186 0 00-.186.186v1.887c0 .102.084.185.186.185m11.786 0h2.118a.186.186 0 00.186-.186v-1.887a.186.186 0 00-.186-.186h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.185"/><path d="M23.844 11.666c-.058-.042-.582-.438-1.715-.438-.296 0-.596.028-.89.083-.175-1.202-1.188-1.79-1.234-1.817l-.296-.168-.193.273c-.243.346-.41.73-.496 1.132-.16.796-.063 1.54.28 2.218-.52.29-1.363.363-1.535.37H.646c-.207 0-.375.166-.377.372-.01 1.043.16 2.08.504 3.066.39 1.086.98 1.89 1.754 2.39 1.158.74 3.036.93 4.836.93 1.63 0 3.27-.196 4.542-.586 1.77-.543 3.27-1.39 4.458-2.518.99-.94 1.586-1.99 2.036-2.916.066-.136.13-.27.19-.4.146-.03.3-.066.45-.108.746-.21 1.25-.51 1.506-.726.05-.042.09-.08.12-.114l.18-.206-.21-.16z"/></svg>
+                dockerdocs
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#">Get started</a></li>
+                    <li><a href="#">Guides</a></li>
+                    <li><a href="#">Manuals</a></li>
+                    <li><a href="#" class="active">Reference</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="header-right">
+            <button class="btn-gordon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg>
+                Gordon
+            </button>
+            <button class="btn-search">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                Search
+            </button>
+            <button class="theme-toggle">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <ul>
+                <li><a href="#">CLI reference <span class="chevron">▲</span></a></li>
+                <li><a href="#" class="indent-1">docker <span class="chevron">▲</span></a></li>
+                <li><a href="#" class="indent-2">docker build</a></li>
+                <li><a href="#" class="indent-2">docker builder <span class="chevron">▼</span></a></li>
+                <li><a href="#" class="indent-2">docker buildx <span class="chevron">▲</span></a></li>
+                <li><a href="#" class="indent-2" style="padding-left: 72px;">docker buildx bake</a></li>
+                <li><a href="#" class="indent-2" style="padding-left: 72px;">docker buildx build</a></li>
+                <li><a href="#" class="indent-2" style="padding-left: 72px;">docker buildx create</a></li>
+                <li><a href="#" class="indent-2" style="padding-left: 72px;">docker buildx dap <span class="chevron">▼</span></a></li>
+                <li><a href="#" class="indent-2" style="padding-left: 72px;">docker buildx debug <span class="chevron">▼</span></a></li>
+                <li><a href="#" class="indent-2" style="padding-left: 72px;">docker buildx dial-stdio</a></li>
+                <li><a href="#" class="indent-2" style="padding-left: 72px;">docker buildx du</a></li>
+                <li><a href="#" class="indent-2" style="padding-left: 72px;">docker buildx history <span class="chevron">▼</span></a></li>
+                <li><a href="#" class="indent-2" style="padding-left: 72px;">docker buildx imagetools <span class="chevron">▼</span></a></li>
+                <li><a href="#" class="indent-2" style="padding-left: 72px;">docker buildx inspect</a></li>
+                <li><a href="#" class="indent-2" style="padding-left: 72px;">docker buildx ls</a></li>
+                <li><a href="#" class="indent-2" style="padding-left: 72px;">docker buildx policy <span class="chevron">▼</span></a></li>
+                <li><a href="#" class="indent-2" style="padding-left: 72px;">docker buildx prune</a></li>
+                <li><a href="#" class="indent-2 active" style="padding-left: 72px;">docker buildx rm</a></li>
+                <li><a href="#" class="indent-2" style="padding-left: 72px;">docker buildx stop</a></li>
+                <li><a href="#" class="indent-2" style="padding-left: 72px;">docker buildx use</a></li>
+                <li><a href="#" class="indent-2" style="padding-left: 72px;">docker buildx version</a></li>
+                <li><a href="#" class="indent-2">docker checkpoint <span class="chevron">▼</span></a></li>
+                <li><a href="#" class="indent-2">docker compose <span class="chevron">▼</span></a></li>
+                <li><a href="#" class="indent-2">docker config <span class="chevron">▼</span></a></li>
+                <li><a href="#" class="indent-2">docker container <span class="chevron">▼</span></a></li>
+                <li><a href="#" class="indent-2">docker context <span class="chevron">▼</span></a></li>
+                <li><a href="#" class="indent-2">docker debug</a></li>
+                <li><a href="#" class="indent-2">docker desktop <span class="chevron">▼</span></a></li>
+                <li><a href="#" class="indent-2">docker dhi <span class="chevron">▼</span></a></li>
+                <li><a href="#" class="indent-2">docker exec</a></li>
+                <li><a href="#" class="indent-2">docker image <span class="chevron">▼</span></a></li>
+                <li><a href="#" class="indent-2">docker images</a></li>
+                <li><a href="#" class="indent-2">docker info</a></li>
+                <li><a href="#" class="indent-2">docker init</a></li>
+                <li><a href="#" class="indent-2">docker inspect</a></li>
+                <li><a href="#" class="indent-2">docker login</a></li>
+                <li><a href="#" class="indent-2">docker logout</a></li>
+                <li><a href="#" class="indent-2">docker manifest <span class="chevron">▼</span></a></li>
+                <li><a href="#" class="indent-2">docker mcp <span class="chevron">▼</span></a></li>
+                <li><a href="#" class="indent-2">docker model <span class="chevron">▼</span></a></li>
+                <li><a href="#" class="indent-2">docker network <span class="chevron">▼</span></a></li>
+                <li><a href="#" class="indent-2">docker node <span class="chevron">▼</span></a></li>
+                <li><a href="#" class="indent-2">docker offload <span class="chevron">▼</span></a></li>
+                <li><a href="#" class="indent-2">docker pass <span class="chevron">▼</span></a></li>
+                <li><a href="#" class="indent-2">docker plugin <span class="chevron">▼</span></a></li>
+                <li><a href="#" class="indent-2">docker ps</a></li>
+                <li><a href="#" class="indent-2">docker pull</a></li>
+                <li><a href="#" class="indent-2">docker push</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main>
+            <div class="breadcrumbs">
+                <a href="#">Home</a> <span>/</span>
+                <a href="#">Reference</a> <span>/</span>
+                <a href="#">CLI reference</a> <span>/</span>
+                <a href="#">docker</a> <span>/</span>
+                <a href="#">docker buildx</a> <span>/</span>
+                <span>docker buildx rm</span>
+            </div>
+
+            <h1>docker buildx rm</h1>
+
+            <div class="action-links">
+                <a href="#">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg>
+                    Ask Gordon
+                </a>
+                <a href="#">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                    Copy Markdown
+                </a>
+                <a href="#">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                    View Markdown
+                </a>
+            </div>
+
+            <table class="info-table">
+                <tr>
+                    <td class="info-label">Description</td>
+                    <td>Remove one or more builder instances</td>
+                </tr>
+                <tr>
+                    <td class="info-label">Usage</td>
+                    <td><code>docker buildx rm [OPTIONS] [NAME...]</code></td>
+                </tr>
+            </table>
+
+            <h2>Description</h2>
+            <p>Removes the specified or current builder. It is a no-op attempting to remove the default builder.</p>
+
+            <h2>Options</h2>
+            <table class="options-table">
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">Option</th>
+                        <th style="width: 15%;">Default</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="flag">--all-inactive</span></td>
+                        <td></td>
+                        <td>Remove all inactive builders</td>
+                    </tr>
+                    <tr>
+                        <td><span class="flag">-f</span>, <span class="flag">--force</span></td>
+                        <td></td>
+                        <td>Do not prompt for confirmation</td>
+                    </tr>
+                    <tr>
+                        <td><span class="flag">--keep-daemon</span></td>
+                        <td></td>
+                        <td>Keep the BuildKit daemon running</td>
+                    </tr>
+                    <tr>
+                        <td><span class="flag">--keep-state</span></td>
+                        <td></td>
+                        <td>Keep BuildKit state</td>
+                    </tr>
+                    <tr>
+                        <td><span class="flag">--timeout</span></td>
+                        <td><code>20s</code></td>
+                        <td>Override the default timeout for loading builder status</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Examples</h2>
+
+            <h3>Remove all inactive builders (--all-inactive)</h3>
+            <p>Remove builders that are not in running state.</p>
+            <div class="code-block">
+                <span class="prompt">$</span> docker buildx rm --all-inactive<br>
+                WARNING! This will remove all builders that are not in running state. Are you sure you want to continue? [y/N]
+            </div>
+
+            <h3>Override the configured builder instance (--builder)</h3>
+            <p>Same as <code>buildx --builder</code>.</p>
+
+            <h3>Do not prompt for confirmation (--force)</h3>
+            <p>Do not prompt for confirmation before removing inactive builders.</p>
+            <div class="code-block">
+                <span class="prompt">$</span> docker buildx rm --all-inactive --force
+            </div>
+
+            <h3>Keep the BuildKit daemon running (--keep-daemon)</h3>
+            <p>Keep the BuildKit daemon running after the buildx context is removed. This is useful when you manage BuildKit daemons and buildx contexts independently. Only supported by the <code>docker-container</code> and <code>kubernetes</code> drivers.</p>
+
+        </main>
+
+        <!-- Right TOC -->
+        <aside class="toc">
+            <h4>Table of contents</h4>
+            <ul>
+                <li><a href="#" class="active">Description</a></li>
+                <li><a href="#">Options</a></li>
+                <li><a href="#">Examples</a></li>
+                <li><a href="#" class="sub-item text-truncate">Remove all inactive builders (--all-inactive)</a></li>
+                <li><a href="#" class="sub-item text-truncate">Override the configured builder instance (--builder)</a></li>
+                <li><a href="#" class="sub-item text-truncate">Do not prompt for confirmation (--force)</a></li>
+                <li><a href="#" class="sub-item text-truncate">Keep the BuildKit daemon running (--keep-daem...</a></li>
+                <li><a href="#" class="sub-item text-truncate">Keep BuildKit state (--keep-state)</a></li>
+            </ul>
+        </aside>
+    </div>
+
+    <button class="feedback-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Give feedback
+    </button>
+
+</body>
+</html>

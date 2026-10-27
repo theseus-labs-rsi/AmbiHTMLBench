@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ringmaster LMO: Asynchronous Linear Minimization Oracle Momentum Method</title>
+<script>window.MathJax={tex:{inlineMath:[['$','$']]}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+body{margin:0;background:#fff;font-family:"Times New Roman",Times,serif;color:#000;}
+.page{position:relative;width:850px;height:1100px;margin:0 auto;}
+.side{position:absolute;left:20px;top:300px;width:40px;height:500px;}
+.side span{position:absolute;left:0;top:500px;transform:rotate(-90deg);transform-origin:left top;white-space:nowrap;font-size:27px;color:#888;}
+.main{position:absolute;left:150px;width:550px;top:110px;}
+.rule{border-top:4px solid #000;margin:0;}
+.rule2{border-top:1px solid #000;}
+h1{text-align:center;font-size:23px;margin:26px 0 16px;line-height:1.25;}
+.red{color:#c00000;}
+.sf{font-family:Helvetica,Arial,sans-serif;font-size:12px;color:#555;}
+.sfr{font-family:Helvetica,Arial,sans-serif;font-size:12px;color:#d00;}
+.authors{display:grid;grid-template-columns:1fr 1fr;row-gap:22px;margin-top:38px;text-align:center;font-size:13px;line-height:1.25;}
+.mono{font-family:"Courier New",monospace;font-size:12px;}
+h2{text-align:center;font-size:16px;margin:30px 0 10px;}
+.abs{margin:0 50px;font-size:13px;text-align:justify;line-height:1.28;}
+h3{font-size:16px;margin:24px 0 12px;}
+p{font-size:13px;text-align:justify;line-height:1.28;margin:0;}
+.cite{color:#2050c0;}
+.fn{border-top:1px solid #000;width:200px;margin-top:8px;padding-top:4px;font-size:10px;padding-left:20px;}
+.pre{font-size:11px;margin-top:30px;}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="side"><span>arXiv:2605.18174v1 [cs.LG] 18 May 2026</span></div>
+<div class="main">
+<div class="rule"></div>
+<h1><span class="red">Ringmaster LMO</span>: Asynchronous Linear Minimization<br>Oracle Momentum Method</h1>
+<div class="rule2"></div>
+<div class="authors">
+<div><b>Abdurakhmon Sadiev</b><br>KAUST<br><span class="mono">abdurakhmon.sadiev@kaust.edu.sa</span></div>
+<div><b>Artavazd Maranjyan</b><br>KAUST<br><span class="mono">artavazd.maranjyan@kaust.edu.sa</span></div>
+<div><b>Ivan Ilin</b><br>KAUST<br><span class="mono">ivan.ilin@kaust.edu.sa</span></div>
+<div><b>Peter Richtárik</b><br>KAUST<br><span class="mono">peter.richtarik@kaust.edu.sa</span></div>
+</div>
+<h2>Abstract</h2>
+<div class="abs">Muon has recently emerged as a strong alternative to <span class="sf">AdamW</span> for training neural networks, with encouraging large-scale pretraining results and growing evidence that matrix-structured updates can be faster in practice. Yet Muon, and more generally Linear Minimization Oracle (LMO) based methods, are typically used synchronously. This is problematic in heterogeneous distributed systems, where workers complete gradient computations at different speeds and synchronous training must repeatedly wait for slower workers. In this work, we introduce <span class="sfr">Ringmaster LMO</span>, an asynchronous LMO-based momentum method for unconstrained stochastic nonconvex optimization. Our method builds on the delay-thresholding idea of <span class="sf">Ringmaster ASGD</span>. For <span class="sf">SGD</span>-type methods, <span class="sf">Ringmaster ASGD</span> achieves optimal time complexity by discarding overly stale gradients. <span class="sfr">Ringmaster LMO</span> extends this mechanism to general LMO-based updates. We establish convergence guarantees under generalized $(L_0, L_1)$-smoothness and further develop a parameter-agnostic variant with decreasing stepsizes and adaptive delay thresholds. Finally, we translate our iteration guarantees into time complexity bounds under heterogeneous worker computation times. In the classical Euclidean smooth setting, these bounds recover the optimal time complexity of <span class="sf">Ringmaster ASGD</span>. Experiments on stochastic quadratic problems and NanoChat language-model pretraining show that the advantages of <span class="sfr">Ringmaster LMO</span> grow with system heterogeneity and that the method outperforms strong synchronous and asynchronous baselines.</div>
+<h3>1&nbsp;&nbsp;&nbsp;Introduction</h3>
+<p>For more than a decade, <span class="sf">Adam</span> [<span class="cite">Kingma and Ba, 2014</span>] has been the default choice for training large neural networks, with its decoupled weight-decay variant <span class="sf">AdamW</span> [<span class="cite">Loshchilov and Hutter, 2019</span>] more recently becoming the default variant. For matrix-valued layers, however, these methods treat each weight matrix as a vector, rather than explicitly using its matrix structure. Recently, <span class="cite">Jordan et al.</span> [<span class="cite">2024b</span>] proposed the <span class="sf">Muon</span> optimizer, showing that using the matrix structure of hidden-layer weights can be beneficial. <span class="sf">Muon</span> forms the update direction from the matrix gradient via approximate orthogonalization. This matrix-structured update has led to strong empirical results, including the <span class="mono">nanoGPT</span> speedrun where <span class="sf">Muon</span> improves on the <span class="sf">AdamW</span> baseline [<span class="cite">Jordan et al., 2024a</span>]. Recent pretraining benchmarks also report that <span class="sf">Muon</span> can be substantially more compute-efficient than <span class="sf">AdamW</span> [<span class="cite">Shah et al., 2025</span>, <span class="cite">Liu et al., 2025</span>, <span class="cite">Wen et al., 2026</span>]. More generally, <span class="sf">Muon</span> fits into</p>
+<div class="fn">Code: <span class="mono cite" style="font-size:10px">github.com/vectozavr/ringmaster-lmo</span>.</div>
+<div class="pre">Preprint.</div>
+</div>
+</div>
+</body>
+</html>

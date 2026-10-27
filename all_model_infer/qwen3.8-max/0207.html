@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Si të lahen duart</title>
+    <style>
+        :root {
+            --primary-black: #222;
+            --primary-grey: #999;
+            --box-bg: #f4f4f4;
+            --footer-orange: #e85d15;
+            --footer-grey: #9e9e9e;
+            --font-main: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 40px;
+            font-family: var(--font-main);
+            background-color: #fff;
+            color: var(--primary-black);
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Header Styles */
+        header {
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 5rem;
+            font-weight: 800;
+            margin: 0 0 10px 0;
+            letter-spacing: -2px;
+            line-height: 1;
+        }
+
+        h1 .grey-text {
+            color: var(--primary-grey);
+        }
+
+        .subtitle {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-grey);
+            text-transform: uppercase;
+            margin: 0 0 30px 0;
+            letter-spacing: 0.5px;
+        }
+
+        .duration-row {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 40px;
+        }
+
+        .clock-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary-grey);
+            border-radius: 4px;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        /* Simulating the clock icon visually */
+        .clock-icon::after {
+            content: '';
+            width: 24px;
+            height: 24px;
+            border: 3px solid white;
+            border-radius: 50%;
+            display: block;
+        }
+        .clock-icon::before {
+            content: '';
+            position: absolute;
+            width: 2px;
+            height: 8px;
+            background: white;
+            top: 10px;
+            left: 19px;
+            transform-origin: bottom;
+            transform: rotate(45deg);
+            z-index: 2;
+        }
+
+        .duration-text span {
+            color: var(--primary-grey);
+        }
+
+        /* Grid Layout */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px 30px;
+            margin-bottom: 60px;
+        }
+
+        .step-card {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .image-box {
+            background-color: var(--box-bg);
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            position: relative;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .step-number {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: var(--primary-grey);
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding: 5px 12px;
+            z-index: 10;
+        }
+
+        .placeholder-img {
+            width: 80%;
+            height: 80%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-style: italic;
+            text-align: center;
+            font-size: 0.9rem;
+            border: 1px dashed #ccc;
+        }
+
+        .step-text {
+            font-size: 1.1rem;
+            line-height: 1.4;
+            color: var(--primary-black);
+        }
+
+        /* Footer Styles */
+        footer {
+            margin-top: 50px;
+            width: 100%;
+        }
+
+        .footer-orange {
+            background-color: var(--footer-orange);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+        }
+
+        .ministry-logo {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 10px;
+            /* Placeholder for the emblem */
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="none" stroke="white" stroke-width="2"/><path d="M50 20 L60 40 L80 40 L65 55 L70 75 L50 65 L30 75 L35 55 L20 40 L40 40 Z" fill="white" opacity="0.8"/></svg>');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+        }
+
+        .ministry-text {
+            font-weight: bold;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            line-height: 1.2;
+        }
+
+        .footer-grey {
+            background-color: var(--footer-grey);
+            padding: 15px;
+            text-align: center;
+            color: white;
+            font-size: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .footer-grey a {
+            color: white;
+            text-decoration: none;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 900px) {
+            .grid-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            h1 { font-size: 3.5rem; }
+            .subtitle { font-size: 1.1rem; }
+        }
+
+        @media (max-width: 600px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+            h1 { font-size: 2.5rem; }
+            body { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Si të <span class="grey-text">lahen</span> duart</h1>
+        <div class="subtitle">LAJINI DUART KUR TË JENË NDOTUR DUKSHËM! NË TË KUNDËRT, FSHIJINI ATO</div>
+        
+        <div class="duration-row">
+            <div class="clock-icon"></div>
+            <div class="duration-text">Kohëzgjatja e gjithë procedurës: <span>40 – 60 sekonda</span></div>
+        </div>
+    </header>
+
+    <main class="grid-container">
+        <!-- Step 0 -->
+        <div class="step-card">
+            <div class="image-box">
+                <div class="step-number">0</div>
+                <div class="placeholder-img">[Diagram: Hands under faucet]</div>
+            </div>
+            <div class="step-text">Lagini duart me ujë;</div>
+        </div>
+
+        <!-- Step 1 -->
+        <div class="step-card">
+            <div class="image-box">
+                <div class="step-number">1</div>
+                <div class="placeholder-img">[Diagram: Soap dispenser]</div>
+            </div>
+            <div class="step-text">Vendosni mjaft sapun që të mbulohet e gjithë sipërfaqja e dorës;</div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step-card">
+            <div class="image-box">
+                <div class="step-number">2</div>
+                <div class="placeholder-img">[Diagram: Palm to palm rubbing]</div>
+            </div>
+            <div class="step-text">Fërkojini duart pëllëmbë me pëllëmbë;</div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step-card">
+            <div class="image-box">
+                <div class="step-number">3</div>
+                <div class="placeholder-img">[Diagram: Right palm over left dorsum]</div>
+            </div>
+            <div class="step-text">Pëllëmba e djathtë mbi shpinën e së majtës me gishtat e gërshetuar dhe anasjelltas;</div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="step-card">
+            <div class="image-box">
+                <div class="step-number">4</div>
+                <div class="placeholder-img">[Diagram: Palm to palm with fingers interlaced]</div>
+            </div>
+            <div class="step-text">Pëllëmbë me pëllëmbë me gishtat e gërshetuar;</div>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="step-card">
+            <div class="image-box">
+                <div class="step-number">5</div>
+                <div class="placeholder-img">[Diagram: Backs of fingers to opposing palms]</div>
+            </div>
+            <div class="step-text">Shpinën e gishtave kundër pëllëmbëve me gishtat e gërshetuar;</div>
+        </div>
+
+        <!-- Step 6 -->
+        <div class="step-card">
+            <div class="image-box">
+                <div class="step-number">6</div>
+                <div class="placeholder-img">[Diagram: Rotational rubbing of left thumb]</div>
+            </div>
+            <div class="step-text">Fërkim rrotullues i gishtit të madh të majtë duke e shtrënguar në pëllëmbën e djathtë dhe anasjelltas;</div>
+        </div>
+
+        <!-- Step 7 -->
+        <div class="step-card">
+            <div class="image-box">
+                <div class="step-number">7</div>
+                <div class="placeholder-img">[Diagram: Rotational rubbing of fingertips]</div>
+            </div>
+            <div class="step-text">Fërkim rrotullues, prapa dhe përpara me gishtat e shtrënguar të dorës së djathtë në pëllëmbën e majtë dhe anasjelltas;</div>
+        </div>
+
+        <!-- Step 8 -->
+        <div class="step-card">
+            <div class="image-box">
+                <div class="step-number">8</div>
+                <div class="placeholder-img">[Diagram: Rinsing hands with water]</div>
+            </div>
+            <div class="step-text">Shpëlaji duart me ujë;</div>
+        </div>
+
+        <!-- Step 9 -->
+        <div class="step-card">
+            <div class="image-box">
+                <div class="step-number">9</div>
+                <div class="placeholder-img">[Diagram: Drying hands with towel]</div>
+            </div>
+            <div class="step-text">Thaji duart tërësisht me peshqir për një përdorim;</div>
+        </div>
+
+        <!-- Step 10 -->
+        <div class="step-card">
+            <div class="image-box">
+                <div class="step-number">10</div>
+                <div class="placeholder-img">[Diagram: Turning off faucet with towel]</div>
+            </div>
+            <div class="step-text">Përdore peshqirin për ta ndalur rubinetin;</div>
+        </div>
+
+        <!-- Step 11 -->
+        <div class="step-card">
+            <div class="image-box">
+                <div class="step-number">11</div>
+                <div class="placeholder-img">[Diagram: Clean hands raised]</div>
+            </div>
+            <div class="step-text">Duart tuaja tash janë të sigurta.</div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-orange">
+            <div class="ministry-logo"></div>
+            <div class="ministry-text">MINISTRIA E<br>SHËNDETESISË</div>
+        </div>
+        <div class="footer-grey">
+            5 momentet e mia për higjienë të duarve<br>
+            'Bazuar në: 'My 5 moments for Hand Hygiene',<br>
+            URL: http://www.who.int/gpsc/5may/background/5moments/en/index.html © World Health Organization 2009'. Të gjitha të drejtat e rezervuara.'
+        </div>
+    </footer>
+
+</body>
+</html>

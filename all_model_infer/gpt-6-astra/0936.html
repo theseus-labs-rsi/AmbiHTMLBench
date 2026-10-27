@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>拆解美国上市公司年报（以 Apple 10-K 为例）</title>
+<script>
+window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body { background: #eeeeee; }
+.page {
+  position: relative;
+  width: 540px;
+  height: 764px;
+  margin: 0 auto;
+  overflow: hidden;
+  background: #fdfdfc;
+  color: #080808;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.background {
+  position: absolute;
+  inset: 0;
+  width: 540px;
+  height: 764px;
+  background: repeating-linear-gradient(0deg, transparent 0 133px, #f7f7f5 134px 136px);
+  color: #eeeeeb;
+  font-size: 8px;
+  text-align: center;
+  padding-top: 8px;
+}
+h1 {
+  position: absolute;
+  top: 91px;
+  left: 46px;
+  width: 448px;
+  margin: 0;
+  color: #002250;
+  font-family: KaiTi, STKaiti, "Kaiti SC", serif;
+  font-size: 42px;
+  font-weight: bold;
+  line-height: 53px;
+  white-space: nowrap;
+}
+.subtitle {
+  position: absolute;
+  top: 165px;
+  left: 100px;
+  width: 340px;
+  text-align: center;
+  color: #082753;
+  font-family: KaiTi, STKaiti, "Kaiti SC", serif;
+  font-size: 23px;
+  line-height: 30px;
+}
+.subtitle .english { font-family: Arial, Helvetica, sans-serif; font-size: 21px; }
+.report {
+  position: absolute;
+  left: 48px;
+  top: 215px;
+  width: 445px;
+  height: 349px;
+  background: #fff;
+  text-align: center;
+}
+.agency {
+  position: absolute;
+  top: 1px;
+  width: 100%;
+  font-weight: bold;
+  font-size: 11px;
+  line-height: 13px;
+}
+.agency .address { font-size: 9px; line-height: 12px; }
+.rule {
+  position: absolute;
+  left: 168px;
+  width: 113px;
+  height: 1px;
+  background: #555;
+}
+.rule.one { top: 47px; }
+.form-title {
+  position: absolute;
+  top: 57px;
+  width: 100%;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 18px;
+}
+.rule.two { top: 78px; }
+.filing {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  font-size: 7.5px;
+  line-height: 10px;
+  white-space: nowrap;
+}
+.annual { top: 98px; font-weight: bold; }
+.fiscal { top: 109px; }
+.or { top: 120px; }
+.transition { top: 132px; font-weight: bold; }
+.period { top: 145px; }
+.commission { top: 157px; }
+.box { font-size: 9px; vertical-align: -0.2px; }
+.rule.three { top: 172px; }
+.apple-logo {
+  position: absolute;
+  top: 178px;
+  left: 211px;
+  width: 27px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 6px;
+  line-height: 7px;
+  color: #111;
+}
+.company {
+  position: absolute;
+  top: 214px;
+  width: 100%;
+  font-size: 17px;
+  font-weight: bold;
+  line-height: 20px;
+}
+.company-caption {
+  position: absolute;
+  top: 236px;
+  width: 100%;
+  font-size: 8px;
+  line-height: 10px;
+}
+.rule.four { top: 251px; }
+.details {
+  position: absolute;
+  top: 260px;
+  left: 0;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 132px 1fr 123px;
+  font-size: 7.5px;
+  line-height: 9px;
+}
+.details .left { grid-column: 1; }
+.details .right { grid-column: 3; }
+.details strong { font-weight: bold; }
+.location { margin-top: 7px; }
+.location .caption { margin-top: 1px; }
+.zip { margin-top: 23px; }
+.telephone {
+  position: absolute;
+  top: 327px;
+  width: 100%;
+  font-size: 7.5px;
+  line-height: 9px;
+}
+.seal {
+  position: absolute;
+  left: 231px;
+  top: 582px;
+  width: 79px;
+  height: 80px;
+  border: 2px solid #b59429;
+  border-radius: 50%;
+  background: #f4eac3;
+  color: #233954;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  text-align: center;
+  font-size: 9px;
+  line-height: 12px;
+}
+.credit {
+  position: absolute;
+  left: 177px;
+  top: 676px;
+  margin: 0;
+  color: #710b0d;
+  font-family: KaiTi, STKaiti, "Kaiti SC", Arial, sans-serif;
+  font-size: 25px;
+  font-weight: bold;
+  font-style: italic;
+  line-height: 32px;
+  white-space: nowrap;
+}
+.credit span { font-family: Arial, Helvetica, sans-serif; font-size: 23px; }
+.disclaimer {
+  position: absolute;
+  left: 32px;
+  top: 708px;
+  margin: 0;
+  color: #666;
+  font-family: KaiTi, STKaiti, "Kaiti SC", serif;
+  font-size: 9px;
+  letter-spacing: .3px;
+  line-height: 12px;
+  white-space: nowrap;
+}
+.disclaimer span { font-family: Arial, Helvetica, sans-serif; font-size: 8px; }
+</style>
+</head>
+<body>
+<main class="page">
+  <div class="placeholder background">[Background: faint repeating pattern]</div>
+  <h1>拆解美国上市公司年报</h1>
+  <div class="subtitle">（以 <span class="english">Apple 10-K</span> 为例）</div>
+
+  <section class="report">
+    <div class="agency">
+      UNITED STATES<br>
+      SECURITIES AND EXCHANGE COMMISSION
+      <div class="address">Washington, D.C. 20549</div>
+    </div>
+    <div class="rule one"></div>
+    <div class="form-title">FORM 10-K</div>
+    <div class="rule two"></div>
+
+    <div class="filing annual"><span class="box">☒</span> ANNUAL REPORT PURSUANT TO SECTION 13 OR 15(d) OF THE SECURITIES EXCHANGE ACT OF 1934</div>
+    <div class="filing fiscal">For the fiscal year ended September 24, 2022</div>
+    <div class="filing or">or</div>
+    <div class="filing transition"><span class="box">☐</span> TRANSITION REPORT PURSUANT TO SECTION 13 OR 15(d) OF THE SECURITIES EXCHANGE ACT OF 1934</div>
+    <div class="filing period">For the transition period from ______ to ______</div>
+    <div class="filing commission">Commission File Number: 001-36743</div>
+    <div class="rule three"></div>
+
+    <div class="placeholder apple-logo">[Apple logo]</div>
+    <div class="company">Apple Inc.</div>
+    <div class="company-caption">(Exact name of Registrant as specified in its charter)</div>
+    <div class="rule four"></div>
+
+    <div class="details">
+      <div class="left">
+        <strong>California</strong><br>
+        (State or other jurisdiction<br>
+        of incorporation or organization)
+        <div class="location">
+          <strong>One Apple Park Way<br>Cupertino, California</strong>
+          <div class="caption">(Address of principal executive offices)</div>
+        </div>
+      </div>
+      <div class="right">
+        <strong>94-2404110</strong><br>
+        (I.R.S. Employer Identification No.)
+        <div class="zip"><strong>95014</strong><br>(Zip Code)</div>
+      </div>
+    </div>
+    <div class="telephone">
+      <strong>(408) 996-1010</strong><br>
+      (Registrant’s telephone number, including area code)
+    </div>
+  </section>
+
+  <div class="placeholder seal">[Seal: U.S. Securities and Exchange Commission]</div>
+  <p class="credit">小红书<span>@jerrygong</span></p>
+  <p class="disclaimer"><span>DisClaimers：</span>文中所述皆来自公开市场信息梳理</p>
+</main>
+</body>
+</html>

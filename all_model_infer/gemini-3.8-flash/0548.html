@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FGER-Net Architecture and Algorithm</title>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  body {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 10pt;
+    line-height: 1.25;
+    color: #000;
+    margin: 0 auto;
+    padding: 20px;
+    max-width: 900px;
+    background-color: #fff;
+  }
+
+  .figure-container {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+
+  .placeholder {
+    width: 100%;
+    height: 250px;
+    background-color: #fafbfc;
+    border: 1px dashed #c0c0c0;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #555;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 12px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    position: relative;
+  }
+
+  .placeholder-inner {
+    text-align: center;
+    padding: 15px;
+  }
+
+  .placeholder-title {
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 6px;
+    color: #333;
+  }
+
+  .caption {
+    font-size: 9pt;
+    text-align: justify;
+    line-height: 1.25;
+    margin-bottom: 16px;
+  }
+
+  .caption-label {
+    font-weight: normal;
+  }
+
+  .columns-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    column-gap: 24px;
+  }
+
+  .left-column {
+    flex: 1;
+    text-align: justify;
+  }
+
+  .left-column p {
+    margin: 0 0 10px 0;
+    text-indent: 1.5em;
+  }
+
+  .left-column p:first-child {
+    text-indent: 0;
+  }
+
+  .paragraph-heading {
+    font-style: italic;
+  }
+
+  .right-column {
+    flex: 1;
+  }
+
+  .algorithm-box {
+    width: 100%;
+    border-top: 1.5px solid #000;
+    border-bottom: 1.5px solid #000;
+    padding-top: 2px;
+    padding-bottom: 4px;
+    font-size: 9.5pt;
+    line-height: 1.35;
+  }
+
+  .algorithm-header {
+    border-bottom: 1px solid #000;
+    padding-bottom: 3px;
+    margin-bottom: 4px;
+  }
+
+  .algorithm-title {
+    font-weight: bold;
+  }
+
+  .alg-line {
+    padding-left: 0;
+    margin: 1px 0;
+  }
+
+  .alg-indent-1 {
+    padding-left: 1.5em;
+  }
+
+  .alg-indent-2 {
+    padding-left: 3em;
+  }
+
+  .alg-keyword {
+    font-weight: bold;
+  }
+
+  .alg-comment {
+    font-style: italic;
+    margin-top: 2px;
+    margin-bottom: 1px;
+  }
+</style>
+</head>
+<body>
+
+  <div class="figure-container">
+    <div class="placeholder">
+      <div class="placeholder-inner">
+        <div class="placeholder-title">[Diagram: FGER-Net Architectural Framework]</div>
+        <div>Left: Biological Inspiration (Rapidly & Slowly Adapting Receptors &rarr; Common perceptual mechanism)</div>
+        <div>Center: Event Stream Recurrent Network & Frame-Guided Network (CNN, LSTM, MLP, Feature Fusion)</div>
+        <div>Right: Dynamic & Static Force Perception Curves</div>
+      </div>
+    </div>
+    <div class="caption">
+      <span class="caption-label">Fig. 2.</span> The architecture of the proposed FGER-Net is presented, alongside its conceptual underpinnings. The left portion illustrates the biological inspiration for the network: the synergistic function of fast and slow adapting mechanoreceptors in perceiving dynamic and static forces, respectively. These biological principles are emulated by the FGER-Net. In the network itself (center), event streams and image frames are synergistically fused for robust force estimation. In this architecture, frames are used to periodically correct for drift during training and to continuously stabilize the high frequency force predictions derived from the event stream during inference. The resulting force estimation is thereby made accurate and robust against drift, successfully capturing both dynamic and static tactile information, mirroring the perceptual capabilities shown on the right side of the diagram.
+    </div>
+  </div>
+
+  <div class="columns-container">
+    <!-- Left Column -->
+    <div class="left-column">
+      <p>
+        dual rate architecture mirrors biological perception: a high frequency recurrent pathway integrates transient force increments from the event stream, while a low frequency pathway extracts absolute spatial references from single image frames for periodic training corrections.
+      </p>
+      <p>
+        During inference, we maximize estimation stability via a continuous correction strategy. By persistently fusing the most recent frame feature with incoming events, this absolute spatial anchor effectively eliminates integration drift.
+      </p>
+      <p>
+        The architecture utilizes dual parallel pathways optimized for each modality's distinct characteristics. To circumvent the extreme sparsity typical of standard convolutions on event data, individual events are normalized and processed by a pointwise MLP, followed by max-pooling to generate an aggregated feature vector for each packet. Conversely, dense spatial information from image frames is extracted into a compact feature vector using a residual CNN backbone coupled with average pooling.
+      </p>
+      <p>
+        <span class="paragraph-heading">a) Data Stream Segmentation:</span> The algorithm's processing cycle is driven by the arrival of new frames. A cycle is
+      </p>
+    </div>
+
+    <!-- Right Column (Algorithm 1) -->
+    <div class="right-column">
+      <div class="algorithm-box">
+        <div class="algorithm-header">
+          <span class="algorithm-title">Algorithm 1</span> FGER-Net
+        </div>
+        
+        <div class="alg-line">
+          <span class="alg-keyword">Input:</span> \(I_{\text{guide}}\), \(\{P_m\}_{m=1}^M\), \(f_{\text{prev\_cycle}}\), \((h_{\text{prev\_cycle}}, C_{\text{prev\_cycle}})\)
+        </div>
+        <div class="alg-line">
+          <span class="alg-keyword">Output:</span> \(\hat{f}_{\text{final}}\), \((h_M, C_M)\)
+        </div>
+
+        <div class="alg-line alg-comment">Guiding Frame Feature Extraction</div>
+        <div class="alg-line">
+          \(\mathbf{f}_{\text{frame}} \leftarrow \Phi_f(I_{\text{guide}})\)
+        </div>
+
+        <div class="alg-line alg-comment">Recurrent Processing Loop</div>
+        <div class="alg-line">
+          \(\hat{f}_0 \leftarrow f_{\text{prev\_cycle}}\); \((h_0, C_0) \leftarrow (h_{\text{prev\_cycle}}, C_{\text{prev\_cycle}})\)
+        </div>
+        <div class="alg-line">
+          <span class="alg-keyword">for</span> \(m \leftarrow 1\) <span class="alg-keyword">to</span> \(M\) <span class="alg-keyword">do</span>
+        </div>
+        <div class="alg-line alg-indent-1">
+          \(\mathbf{f}_{e,m} \leftarrow \Phi_e(P_m)\)
+        </div>
+        <div class="alg-line alg-indent-1">
+          \(\mathbf{x}_m \leftarrow \text{concatenate}(\mathbf{f}_{e,m}, \hat{f}_{m-1})\)
+        </div>
+        <div class="alg-line alg-indent-1">
+          \((h_m, C_m) \leftarrow \text{LSTM}(\mathbf{x}_m, (h_{m-1}, C_{m-1}))\)
+        </div>
+        <div class="alg-line alg-indent-1">
+          \(\Delta\hat{f}_m \leftarrow \text{MLP}_{\Delta f}(h_m)\)
+        </div>
+        <div class="alg-line alg-indent-1">
+          \(\hat{f}_m \leftarrow \hat{f}_{m-1} + \Delta\hat{f}_m\)
+        </div>
+        <div class="alg-line">
+          <span class="alg-keyword">end for</span>
+        </div>
+
+        <div class="alg-line alg-comment">Fusion and Correction</div>
+        <div class="alg-line">
+          \(\mathbf{f}_{\text{fusion}} \leftarrow \text{concatenate}(\hat{f}_M, \mathbf{f}_{\text{frame}})\)
+        </div>
+        <div class="alg-line">
+          \(\Delta f_{\text{corr}} \leftarrow \text{MLP}_{\text{corr}}(\mathbf{f}_{\text{fusion}})\)
+        </div>
+        <div class="alg-line">
+          \(\hat{f}_{\text{final}} \leftarrow \hat{f}_M + \Delta f_{\text{corr}}\)
+        </div>
+        <div class="alg-line">
+          <span class="alg-keyword">return</span> \(\hat{f}_{\text{final}}, (h_M, C_M)\)
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

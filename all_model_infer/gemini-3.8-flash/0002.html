@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>江戸時代のやきもの - 湯木美術館</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Hiragino Mincho ProN", "Yu Mincho", "MS Mincho", "Noto Serif JP", serif;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .poster {
+            width: 600px;
+            height: 900px;
+            background-color: #f2efea;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            color: #111;
+        }
+
+        /* Left Content Area */
+        .left-content {
+            flex: 1;
+            padding: 35px 25px 30px 35px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header-text {
+            font-size: 16px;
+            letter-spacing: 0.15em;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .sub-header {
+            font-size: 14px;
+            letter-spacing: 0.2em;
+            color: #555;
+            margin-bottom: 25px;
+        }
+
+        .main-title {
+            margin-bottom: 20px;
+        }
+
+        .main-title-line {
+            font-size: 64px;
+            line-height: 1.15;
+            font-weight: 300;
+            color: #0c2b3d;
+            letter-spacing: 0.05em;
+        }
+
+        .en-subtitle {
+            font-family: "Didot", "Bodoni MT", "Times New Roman", serif;
+            font-size: 13px;
+            letter-spacing: 0.3em;
+            color: #334e68;
+            margin: 10px 0 15px 10px;
+        }
+
+        .section-title {
+            font-size: 26px;
+            line-height: 1.6;
+            letter-spacing: 0.12em;
+            color: #222;
+            margin-top: 15px;
+        }
+
+        .section-title span {
+            display: block;
+        }
+
+        .dates-container {
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+
+        .dates {
+            font-size: 15px;
+            letter-spacing: 0.08em;
+            color: #222;
+        }
+
+        .footer-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .museum-corp {
+            font-size: 9px;
+            letter-spacing: 0.1em;
+            color: #555;
+        }
+
+        .museum-name {
+            font-size: 22px;
+            letter-spacing: 0.15em;
+            color: #111;
+            font-weight: 500;
+            margin: 2px 0 0 0;
+        }
+
+        .museum-en {
+            font-size: 8px;
+            letter-spacing: 0.25em;
+            color: #555;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .address, .tel-fax, .url {
+            font-size: 8px;
+            line-height: 1.4;
+            letter-spacing: 0.05em;
+            color: #444;
+        }
+
+        /* Right Blue Stripe & Gallery Area */
+        .right-sidebar {
+            width: 140px;
+            position: relative;
+            background-color: #0d4661;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 50px;
+            gap: 50px;
+            z-index: 1;
+        }
+
+        /* Image Placeholders */
+        .item-block {
+            position: relative;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .placeholder {
+            background-color: rgba(255, 255, 255, 0.2);
+            border: 1px dashed rgba(255, 255, 255, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #fff;
+            font-size: 9px;
+            padding: 4px;
+            position: relative;
+            border-radius: 4px;
+        }
+
+        .caption {
+            font-size: 7px;
+            color: #fff;
+            text-align: center;
+            margin-top: 5px;
+            transform: scale(0.9);
+            white-space: nowrap;
+            letter-spacing: 0.02em;
+        }
+
+        /* Specific item positions & overlap styles */
+        .item-1 {
+            margin-left: -50px;
+        }
+        .item-1 .placeholder {
+            width: 150px;
+            height: 95px;
+        }
+
+        .item-2 {
+            margin-left: -10px;
+        }
+        .item-2 .placeholder {
+            width: 130px;
+            height: 145px;
+        }
+
+        .item-3 {
+            margin-left: -10px;
+        }
+        .item-3 .placeholder {
+            width: 105px;
+            height: 95px;
+        }
+
+        /* Bottom Floating Items (overlapping bottom area) */
+        .item-4-container {
+            position: absolute;
+            bottom: 0px;
+            right: 0px;
+            z-index: 3;
+            display: flex;
+            align-items: flex-end;
+        }
+
+        .item-kogo {
+            margin-right: -40px;
+            margin-bottom: 25px;
+        }
+        .item-kogo .placeholder {
+            width: 120px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: rgba(180, 50, 40, 0.2);
+            border-color: rgba(180, 50, 40, 0.5);
+            color: #333;
+        }
+
+        .item-mizusashi {
+            width: 170px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .item-mizusashi .placeholder {
+            width: 210px;
+            height: 180px;
+            margin-right: 20px;
+        }
+        .item-mizusashi .caption {
+            color: #fff;
+            margin-top: -20px;
+            margin-bottom: 10px;
+            background: rgba(13, 70, 97, 0.7);
+            padding: 2px 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="poster">
+    <!-- Left Column: Content -->
+    <div class="left-content">
+        <div>
+            <div class="header-text">ひと目でわかる京焼300年の歴史</div>
+            <div class="sub-header">平成29年春季展</div>
+            
+            <div class="main-title">
+                <div class="main-title-line">江戸</div>
+                <div class="main-title-line">時代の</div>
+                <div class="en-subtitle">Ceramics of the Edo Period</div>
+                <div class="main-title-line">やきもの</div>
+            </div>
+
+            <div class="section-title">
+                <span>仁清・乾山窯と</span>
+                <span>後期京焼の</span>
+                <span>食器を中心に</span>
+            </div>
+        </div>
+
+        <div>
+            <div class="dates-container">
+                <div class="dates">平成29年4月8日(土)〜7月30日(日)</div>
+            </div>
+
+            <div class="footer-info">
+                <div class="museum-corp">公益財団法人</div>
+                <div class="museum-name">湯木美術館</div>
+                <div class="museum-en">YUKI MUSEUM OF ART</div>
+                <div class="address">〒541-0046 大阪市中央区平野町3-3-9</div>
+                <div class="tel-fax">TEL.06-6203-0188 FAX.06-6203-1080</div>
+                <div class="url">http://www.yuki-museum.or.jp/</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column: Vertical Blue Strip with Artifacts -->
+    <div class="right-sidebar">
+        <!-- Item 1: Bowl with Lid -->
+        <div class="item-block item-1">
+            <div class="placeholder">
+                [Photo: 乾山窯 銹絵染付春草文蓋茶碗]
+            </div>
+            <div class="caption">乾山窯 銹絵染付春草文蓋茶碗</div>
+        </div>
+
+        <!-- Item 2: Large Cup/Bowl -->
+        <div class="item-block item-2">
+            <div class="placeholder">
+                [Photo: 仁阿弥道八 色絵桜文鉢]
+            </div>
+            <div class="caption">仁阿弥道八 色絵桜文鉢</div>
+        </div>
+
+        <!-- Item 3: Deep irregular dish -->
+        <div class="item-block item-3">
+            <div class="placeholder">
+                [Photo: 青木木米 (三ッ葉) 形向付]
+            </div>
+            <div class="caption">青木木米 (三ッ葉) 形向付</div>
+        </div>
+    </div>
+
+    <!-- Bottom Overlapping Ceramics -->
+    <div class="item-4-container">
+        <!-- Red circular dish/incense box -->
+        <div class="item-block item-kogo">
+            <div class="placeholder">
+                [Photo: 香合]
+            </div>
+        </div>
+        <!-- Water jar / Mizusashi at bottom right -->
+        <div class="item-block item-mizusashi">
+            <div class="placeholder">
+                [Photo: 仁清 菓子器付金錆水指 根来東伯筆]
+            </div>
+            <div class="caption">仁清 菓子器付金錆水指 根来東伯筆</div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>基于深度注册的嵌入式图像合成</title>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+<style>
+  body {
+    font-family: "SimSun", "Microsoft YaHei", serif;
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    color: #111;
+  }
+  .header {
+    background: linear-gradient(90deg, #e86a10, #f5a623 60%, #fcd77a 100%);
+    padding: 15px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  .iscas-logo {
+    font-size: 48px;
+    font-weight: 900;
+    color: #0a2a6b;
+    letter-spacing: -2px;
+    font-style: italic;
+  }
+  .header-titles {
+    color: #fff;
+    font-weight: bold;
+    line-height: 1.4;
+  }
+  .header-titles .line1 {
+    font-size: 20px;
+  }
+  .header-titles .line2 {
+    font-size: 16px;
+  }
+  .header-right {
+    color: #fff;
+    font-size: 28px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .title-block {
+    text-align: center;
+    margin: 25px 40px 10px 40px;
+  }
+  .title-en {
+    font-size: 36px;
+    font-weight: bold;
+    color: #000;
+  }
+  .title-cn {
+    font-size: 32px;
+    font-weight: bold;
+    margin-top: 5px;
+  }
+  .authors {
+    font-size: 26px;
+    margin-top: 8px;
+  }
+  .conf-info {
+    font-size: 18px;
+    margin-top: 15px;
+    line-height: 1.5;
+  }
+  .content {
+    display: flex;
+    gap: 30px;
+    margin: 20px 40px;
+  }
+  .col {
+    flex: 1;
+    font-size: 15px;
+    line-height: 1.6;
+    text-align: justify;
+  }
+  h2.section {
+    color: #c0392b;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 18px 0 6px 0;
+  }
+  p {
+    margin: 4px 0;
+    text-indent: 2em;
+  }
+  .no-indent {
+    text-indent: 0;
+  }
+  .indent-item {
+    margin: 2px 0 2px 1em;
+    text-indent: -1em;
+    padding-left: 1em;
+  }
+  .figure-block {
+    margin: 10px 0;
+    text-align: center;
+  }
+  .figure-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+  .placeholder {
+    background: #eee;
+    border: 1px solid #999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: #555;
+    text-align: center;
+    box-sizing: border-box;
+  }
+  .caption {
+    font-size: 13px;
+    text-align: center;
+    margin-top: 2px;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 12px;
+    margin: 10px 0;
+  }
+  table, th, td {
+    border: 1px solid #333;
+  }
+  th, td {
+    padding: 2px 4px;
+    text-align: center;
+  }
+  .bold-val {
+    font-weight: bold;
+  }
+  .chart-area {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .footer-bar {
+    height: 60px;
+    background: linear-gradient(90deg, #f7941e, #fcd77a);
+    margin-top: 30px;
+  }
+  .cost-table {
+    font-size: 13px;
+  }
+  .flowchart {
+    width: 540px;
+    height: 150px;
+    margin: 8px auto;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div class="iscas-logo">ISCAS</div>
+    <div class="header-titles">
+      <div class="line1">中国科学院软件研究所学术年会'2023</div>
+      <div class="line2">暨计算机科学国家重点实验室开放周</div>
+    </div>
+  </div>
+  <div class="header-right">✳ 学术论文</div>
+</div>
+
+<div class="title-block">
+  <div class="title-en">Image Composition with Depth Registration</div>
+  <div class="title-cn">基于深度注册的嵌入式图像合成</div>
+  <div class="authors">李赞、王文成、侯飞</div>
+  <div class="conf-info">
+    International Joint Conference on Artificial Intelligence(IJCAI-2023)<br>
+    联系人：李赞， 18810762067， lizhan@ios.ac.cn
+  </div>
+</div>
+
+<div class="content">
+  <!-- LEFT COLUMN -->
+  <div class="col">
+    <h2 class="section">背景</h2>
+    <p>图像合成是指将不同图像中的内容融合成一张看似真实的图像。已有的图像合成方法主要探讨色彩、阴影和亮度的和谐生成，对于图像内容之间的遮挡关系研究不多，往往需要费时的手动处理而效率不高。</p>
+
+    <h2 class="section">方法</h2>
+    <p>本文提出新的方法，从源图像中选择要融入目标图像中的内容（称为源内容）后，通过深度注册，将源内容融入目标图像所表达的三维空间中，由此，用户进行源内容在目标图像中不同位置的摆放时，融合处理可基于图像内容的深度方便判断它们之间的遮挡关系，以得到遮挡关系合理处理的合成图像。其处理步骤如下：</p>
+    <div class="indent-item">(a)基于深度学习方法进行源图像和目标图像的深度估计；</div>
+    <div class="indent-item">(b)基于深度注册初始化，将源内容融入目标图像所表达的三维空间；</div>
+    <div class="indent-item">(c)迭代进行图像分割/深度的调整，以优化深度注册，直至获得满意的合成结果。</div>
+
+    <div class="figure-block">
+      <div class="placeholder flowchart">[Diagram: 源图像处理流程图 (a)-(e) 分割/深度细化步骤，含满意判断及输出]</div>
+    </div>
+
+    <h2 class="section">深度注册：</h2>
+    <div class="indent-item">(a)将源内容放至目标图像中，并调整其大小使得其与目标图像中的一个内容具有相似深度；</div>
+    <div class="indent-item">(b)将目标图像中该内容的锚点像素的深度值赋予源内容的锚点像素(一般来说选择图像内容所有像素中y值最小的点作为锚点)；</div>
+    <div class="indent-item">(c)根据相机成像原理，建立源内容深度和大小之间的关系；</div>
+    <div class="indent-item">(d)用户根据编辑意向设定源内容的位置、大小后，根据上述关系计算源内容各像素的深度，完成深度注册。</div>
+
+    <div class="figure-block">
+      <div class="figure-row">
+        <div class="placeholder" style="width:160px;height:100px;">[Photo: 输入牛羊草地图像]</div>
+        <div class="placeholder" style="width:160px;height:100px;">[Photo: 深度注册结果图像]</div>
+        <div class="placeholder" style="width:160px;height:100px;">[Photo: 锚点放大细节图]</div>
+      </div>
+      <div class="caption" style="display:flex;justify-content:center;gap:60px;">
+        <span>(a)输入</span><span>(b)深度注册</span><span>(c)锚点</span>
+      </div>
+    </div>
+
+    <h2 class="section">分割 / 深度的优化调整：</h2>
+    <p class="no-indent">(a)分割优化：根据合成图像需求，进行更细致合理的分割，如分割开椅子座上的鸭子等。</p>
+    <p class="no-indent">(b)深度优化：根据编辑操作建立约束条件，更新源内容的深度值，以更适合图像合成处理。</p>
+
+    <h2 class="section">实验结果</h2>
+    <p>本方法可逐步优化深度注册，使源内容更合理融入目标图像对应的三维空间，方便图像合成的遮挡关系处理。如下图所示，在用户频繁改变源图像内容的位置时，只有第一次嵌入需要进行分割优化处理，故交互次数稍高。随后，再次改变源图像内容的位置时，则无需更多的调整；反观常用的Photoshop方法，其每次合成处理都需要较多的用户交互。</p>
+
+    <div class="chart-area">
+      <div class="placeholder" style="width:460px;height:240px;">
+        [Chart: 折线图，纵轴 interventions，横轴 composition orders 1-4；PhotoShop系列值 54,67,59,62；Our method系列值 7,3,2,2]
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT COLUMN -->
+  <div class="col">
+    <div class="figure-block">
+      <div class="figure-row">
+        <div class="placeholder" style="width:220px;height:120px;">[Photo: 目标图像 - 自行车运动员]</div>
+        <div class="placeholder" style="width:220px;height:120px;">[Photo: 源图像 - 自行车运动员]</div>
+      </div>
+      <div class="caption" style="display:flex;justify-content:space-around;">
+        <span>(a)目标图像</span><span>(b)源图像</span>
+      </div>
+      <div class="figure-row">
+        <div class="placeholder" style="width:220px;height:120px;">[Photo: 第一次合成]</div>
+        <div class="placeholder" style="width:220px;height:120px;">[Photo: 第二次合成]</div>
+      </div>
+      <div class="caption" style="display:flex;justify-content:space-around;">
+        <span>(c)第一次合成</span><span>(d)第二次合成</span>
+      </div>
+      <div class="figure-row">
+        <div class="placeholder" style="width:220px;height:120px;">[Photo: 第三次合成]</div>
+        <div class="placeholder" style="width:220px;height:120px;">[Photo: 第四次合成]</div>
+      </div>
+      <div class="caption" style="display:flex;justify-content:space-around;">
+        <span>(e)第三次合成</span><span>(f)第四次合成</span>
+      </div>
+    </div>
+
+    <p>本方法所得到合成结果，与基于深度学习的CompGAN方法、传统Tan的方法相比，能合理处理遮挡关系；与PhotoShop方法相比，合成结果相当，但我们所需时间开销和交互次数大幅减少。</p>
+
+    <div class="figure-block">
+      <div class="placeholder" style="width:100%;height:500px;">
+        [Image grid: 8行 x 6列 对比结果 — 鸟/气球房间/运动员/花瓶/毛巾柜/足球箱/玩偶椅子 等不同方法(源图像、目标图像、compGAN、Tan的方法、PS、我们的方法) 对比图]
+      </div>
+      <div class="caption" style="display:flex;justify-content:space-around;font-size:12px;">
+        <span>(a)源图像</span><span>(b)目标图像</span><span>(c)compGAN</span><span>(d)Tan的方法</span><span>(e)PS</span><span>(f)我们的方法</span>
+      </div>
+    </div>
+
+    <p>对于上图的八个例子，我们用准确率和F1分数来度量源内容在合成图像中具有正确遮挡标签的像素占比，结果如下表所示：</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th rowspan="2"></th>
+          <th colspan="5">Accuracy</th>
+          <th colspan="5">F1 score</th>
+        </tr>
+        <tr>
+          <th>CompGAN</th><th>Tan's</th><th>PS</th><th>Ours</th><th>Our*</th>
+          <th>CompGAN</th><th>Tan's</th><th>PS</th><th>Ours</th><th>Our*</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Row1</td><td>0.2100</td><td>0.7001</td><td>1.0000</td><td class="bold-val">0.9826</td><td>-</td>
+            <td>0.3472</td><td>0.8236</td><td>1.0000</td><td class="bold-val">0.9912</td><td>-</td></tr>
+        <tr><td>Row2</td><td>0.0000</td><td>0.7951</td><td>1.0000</td><td class="bold-val">0.9896</td><td>-</td>
+            <td>0.0000</td><td>0.8858</td><td>1.0000</td><td class="bold-val">0.9948</td><td>-</td></tr>
+        <tr><td>Row3</td><td>0.1674</td><td>0.8163</td><td>1.0000</td><td class="bold-val">0.9799</td><td>-</td>
+            <td>0.2694</td><td>0.8989</td><td>1.0000</td><td class="bold-val">0.9875</td><td>-</td></tr>
+        <tr><td>Row4</td><td>0.4322</td><td>0.6304</td><td>1.0000</td><td>0.7846</td><td class="bold-val">0.9995</td>
+            <td>0.5186</td><td>0.7733</td><td>1.0000</td><td>0.8326</td><td class="bold-val">0.9996</td></tr>
+        <tr><td>Row5</td><td>0.5222</td><td>0.5786</td><td>1.0000</td><td class="bold-val">0.9687</td><td>-</td>
+            <td>0.5910</td><td>0.8835</td><td>1.0000</td><td class="bold-val">0.9798</td><td>-</td></tr>
+        <tr><td>Row6</td><td>0.1998</td><td>0.8357</td><td>1.0000</td><td class="bold-val">0.9731</td><td>-</td>
+            <td>0.6557</td><td>0.7331</td><td>1.0000</td><td class="bold-val">0.9762</td><td>-</td></tr>
+        <tr><td>Row7</td><td>0.0000</td><td>0.9178</td><td>1.0000</td><td>0.9218</td><td class="bold-val">0.9887</td>
+            <td>0.0000</td><td>0.9572</td><td>1.0000</td><td>0.9586</td><td class="bold-val">0.9938</td></tr>
+        <tr><td>Row8</td><td>0.1998</td><td>0.8357</td><td>1.0000</td><td class="bold-val">0.9809</td><td>-</td>
+            <td>0.3363</td><td>0.9105</td><td>1.0000</td><td class="bold-val">0.9884</td><td>-</td></tr>
+        <tr><td>Average</td><td>0.2477</td><td>0.7582</td><td>1.0000</td><td>0.9477</td><td class="bold-val">0.9941</td>
+            <td>0.3398</td><td>0.8582</td><td>1.0000</td><td>0.9637</td><td class="bold-val">0.9967</td></tr>
+      </tbody>
+    </table>
+
+    <p>可以看到我们的方法在各项指标中都是最好的。上表中，Ours*表示使用优化调整的结果，可知我们只有极少次需要用到优化调整，大多数情况下可以直接得到和PhotoShop相媲美的结果。如下表所示，本方法平均比Photoshop方法快4倍多，所需交互次数也少很多。</p>
+
+    <table class="cost-table">
+      <thead>
+        <tr>
+          <th rowspan="2"></th>
+          <th colspan="2">Photoshop</th>
+          <th colspan="2">Ours</th>
+        </tr>
+        <tr>
+          <th>Time</th><th>Interventions</th><th>Time</th><th>Interventions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Row1</td><td>142.0s</td><td>71</td><td>33.0s</td><td>4</td></tr>
+        <tr><td>Row2</td><td>158.0s</td><td>84</td><td>34.0s</td><td>5</td></tr>
+        <tr><td>Row3</td><td>139.0s</td><td>87</td><td>32.0s</td><td>4</td></tr>
+        <tr><td>Row4</td><td>160.0s</td><td>93</td><td>44.0s</td><td>5</td></tr>
+        <tr><td>Row5</td><td>144.0s</td><td>77</td><td>45.0s</td><td>5</td></tr>
+        <tr><td>Row6</td><td>137.0s</td><td>75</td><td>33.0s</td><td>4</td></tr>
+        <tr><td>Row7</td><td>133.0s</td><td>82</td><td>35.0s</td><td>4</td></tr>
+        <tr><td>Row8</td><td>152.0s</td><td>73</td><td>34.0s</td><td>4</td></tr>
+        <tr><td>Average</td><td>145.6s</td><td>80.3</td><td>36.3s</td><td>4.4</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="section">结论</h2>
+    <p>本文提出的深度注册方法，促进了嵌入式图像合成的方便高效实现，降低了图像内容创作门槛，将提高电影、动画和艺术创作等领域的工作成效。</p>
+  </div>
+</div>
+
+<div class="footer-bar"></div>
+
+</body>
+</html>

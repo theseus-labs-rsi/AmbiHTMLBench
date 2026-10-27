@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Images, contours and fields — Matplotlib Documentation</title>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #222;
+    font-size: 15px;
+  }
+  header.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px;
+    border-bottom: 1px solid #e3e3e3;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    font-size: 22px;
+    font-weight: 600;
+    color: #11557c;
+  }
+  .logo img {
+    width: 32px;
+    height: 32px;
+    margin-right: 8px;
+  }
+  nav.main-nav {
+    display: flex;
+    gap: 22px;
+    font-size: 15px;
+    color: #222;
+    flex-wrap: wrap;
+  }
+  nav.main-nav a {
+    color: #222;
+    text-decoration: none;
+  }
+  .topbar-icons {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .topbar-icons .version-select {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 4px 10px;
+    font-size: 14px;
+  }
+  .icon {
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+  }
+
+  .layout {
+    display: flex;
+  }
+  .sidebar {
+    width: 365px;
+    min-width: 365px;
+    padding: 24px 20px 60px 24px;
+    border-right: 1px solid #eee;
+    font-size: 14.5px;
+  }
+  .sidebar h3 {
+    font-size: 15px;
+    margin-bottom: 14px;
+    margin-top: 4px;
+  }
+  .sidebar ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .sidebar li {
+    padding: 6px 0;
+    color: #444;
+    cursor: default;
+  }
+  .sidebar li.active {
+    color: #11557c;
+    font-weight: 600;
+  }
+  .sidebar li.current {
+    background: #e9f3fb;
+    color: #11557c;
+    font-weight: 600;
+    margin: 0 -24px;
+    padding: 6px 24px;
+  }
+  .sidebar .toggle-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .sidebar .sublist {
+    padding-left: 10px;
+  }
+
+  main.content {
+    flex: 1;
+    padding: 24px 40px 60px 40px;
+    min-width: 0;
+  }
+  .breadcrumb {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .breadcrumb a {
+    color: #11557c;
+    text-decoration: none;
+  }
+  h1.page-title {
+    font-size: 34px;
+    font-weight: 500;
+    margin: 0 0 30px 0;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+  }
+  .card {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 220px;
+  }
+  .card .placeholder {
+    width: 100%;
+    height: 130px;
+    background: #f6f6f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: #999;
+    margin-bottom: 12px;
+    overflow: hidden;
+    border-radius: 2px;
+  }
+  .card .placeholder img {
+    max-width: 100%;
+    max-height: 100%;
+  }
+  .card .caption {
+    font-size: 15px;
+    color: #222;
+    line-height: 1.3;
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo">
+    <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><circle cx='16' cy='16' r='15' fill='%23333' /></svg>" alt="matplotlib logo">
+    matplotlib
+  </div>
+  <nav class="main-nav">
+    <a href="#">Plot types</a>
+    <a href="#">User guide</a>
+    <a href="#">Tutorials</a>
+    <a href="#">Examples</a>
+    <a href="#">Reference</a>
+    <a href="#">Contribute</a>
+    <a href="#">Releases</a>
+  </nav>
+  <div class="topbar-icons">
+    <span class="icon">🔍</span>
+    <span class="icon">🌓</span>
+    <span class="version-select">3.10 (stable) ▾</span>
+    <span class="icon">▦</span>
+    <span class="icon">💬</span>
+    <span class="icon">🐙</span>
+    <span class="icon">🐦</span>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <h3>Section Navigation</h3>
+    <ul>
+      <li class="toggle-row">Lines, bars and markers <span>⌄</span></li>
+      <li class="toggle-row current">Images, contours and fields <span>⌃</span></li>
+      <li class="sublist">
+        <ul>
+          <li>Affine transform of an image</li>
+          <li>Wind barbs</li>
+          <li>Barcode</li>
+          <li>Interactive adjustment of colormap range</li>
+          <li>Colormap normalizations</li>
+          <li>Colormap normalizations SymLogNorm</li>
+          <li>Contour corner mask</li>
+          <li>Contour Demo</li>
+          <li>Contour image</li>
+          <li>Contour Label Demo</li>
+          <li>Contourf demo</li>
+          <li>Contourf hatching</li>
+          <li>Contourf and log color scale</li>
+          <li>Contouring the solution space of optimizations</li>
+          <li>BboxImage Demo</li>
+          <li>Figimage Demo</li>
+          <li>Annotated heatmap</li>
+          <li>Image resampling</li>
+          <li>Clipping images with patches</li>
+          <li>Many ways to plot images</li>
+          <li>Image with masked values</li>
+          <li>Image nonuniform</li>
+          <li>Blend transparency with color in 2D images</li>
+          <li>Modifying the coordinate formatter</li>
+          <li>Interpolations for imshow</li>
+          <li>Contour plot of irregularly spaced data</li>
+          <li>Layer images with alpha blending</li>
+          <li>Visualize matrices with matshow</li>
+          <li>Multiple images with one colorbar</li>
+          <li>pcolor images</li>
+          <li>pcolormesh grids and shading</li>
+          <li>pcolormesh</li>
+          <li>Streamplot</li>
+          <li>QuadMesh Demo</li>
+          <li>Advanced quiver and quiverkey functions</li>
+          <li>Quiver Simple Demo</li>
+          <li>Shading example</li>
+          <li>Spectrogram</li>
+          <li>Spy Demos</li>
+          <li>Tricontour Demo</li>
+          <li>Tricontour Smooth Delaunay</li>
+          <li>Tricontour Smooth User</li>
+          <li>Trigradient Demo</li>
+        </ul>
+      </li>
+    </ul>
+  </aside>
+
+  <main class="content">
+    <div class="breadcrumb">
+      <span>🏠</span> <a href="#">Examples</a> &rsaquo; <a href="#">Images,...</a>
+    </div>
+    <h1 class="page-title">Images, contours and fields</h1>
+
+    <div class="grid">
+
+      <div class="card">
+        <div class="placeholder">[Chart: two side-by-side affine transform plots]</div>
+        <div class="caption">Affine transform of an image</div>
+      </div>
+
+      <div class="card">
+        <div class="placeholder">[Chart: two wind barb vector field plots]</div>
+        <div class="caption">Wind barbs</div>
+      </div>
+
+      <div class="card">
+        <div class="placeholder">[Chart: barcode-like vertical black/white stripes]</div>
+        <div class="caption">Barcode</div>
+      </div>
+
+      <div class="card">
+        <div class="placeholder">[Chart: colormap pan/zoom adjustment image]</div>
+        <div class="caption">Interactive adjustment of colormap range</div>
+      </div>
+
+      <div class="card">
+        <div class="placeholder">[Chart: two colormap normalization panels with colorbars]</div>
+        <div class="caption">Colormap normalizations</div>
+      </div>
+
+      <div class="card">
+        <div class="placeholder">[Chart: two green scale heatmaps with colorbars]</div>
+        <div class="caption">Colormap normalizations SymLogNorm</div>
+      </div>
+
+      <div class="card">
+        <div class="placeholder">[Chart: two contour corner mask diamond plots]</div>
+        <div class="caption">Contour corner mask</div>
+      </div>
+
+      <div class="card">
+        <div class="placeholder">[Chart: contour lines with labels, diagonal line]</div>
+        <div class="caption">Contour Demo</div>
+      </div>
+
+      <div class="card">
+        <div class="placeholder">[Chart: two contour image panels]</div>
+        <div class="caption">Contour image</div>
+      </div>
+
+      <div class="card">
+        <div class="placeholder">[Chart: contour plot with inline labels]</div>
+        <div class="caption">Contour Label Demo</div>
+      </div>
+
+      <div class="card">
+        <div class="placeholder">[Chart: grayscale filled contour with masked region]</div>
+        <div class="caption">Contourf demo</div>
+      </div>
+
+      <div class="card">
+        <div class="placeholder">[Chart: hatched contourf pattern]</div>
+        <div class="caption">Contourf hatching</div>
+      </div>
+
+      <div class="card">
+        <div class="placeholder">[Chart: blue circular contourf with log color scale]</div>
+        <div class="caption">Contourf and log color scale</div>
+      </div>
+
+      <div class="card">
+        <div class="placeholder">[Chart: concentric circle contour optimization path]</div>
+        <div class="caption">Contouring the solution space of optimizations</div>
+      </div>
+
+      <div class="card">
+        <div class="placeholder">[Chart: BboxImage demo with "test" box and gradient bars]</div>
+        <div class="caption">BboxImage Demo</div>
+      </div>
+
+      <div class="card">
+        <div class="placeholder">[Chart: small colored square blocks figimage]</div>
+        <div class="caption">Figimage Demo</div>
+      </div>
+
+      <div class="card">
+        <div class="placeholder">[Table: annotated heatmap with numeric labels]</div>
+        <div class="caption">Annotated heatmap</div>
+      </div>
+
+      <div class="card">
+        <div class="placeholder">[Chart: down-sampled and up-sampled grid images]</div>
+        <div class="caption">Image resampling</div>
+      </div>
+
+      <div class="card">
+        <div class="placeholder">[Photo: circular clipped portrait image]</div>
+        <div class="caption">Clipping images with patches</div>
+      </div>
+
+      <div class="card">
+        <div class="placeholder">[Chart: red/green blurred blobs on pale background]</div>
+        <div class="caption">Many ways to plot images</div>
+      </div>
+
+      <div class="card">
+        <div class="placeholder">[Chart: masked image with colored dots, colorbar]</div>
+        <div class="caption">Image with masked values</div>
+      </div>
+
+      <div class="card">
+        <div class="placeholder">[Chart: four purple gradient nonuniform image panels]</div>
+        <div class="caption">Image nonuniform</div>
+      </div>
+
+      <div class="card">
+        <div class="placeholder">[Chart: blended transparency contour blobs, red/blue]</div>
+        <div class="caption">Blend transparency with color in 2D images</div>
+      </div>
+
+      <div class="card">
+        <div class="placeholder">[Chart: small colored grid, coordinate formatter]</div>
+        <div class="caption">Modifying the coordinate formatter</div>
+      </div>
+
+      <div class="card">
+        <div class="placeholder">[Chart: grid of small interpolation sample images]</div>
+        <div class="caption">Interpolations for imshow</div>
+      </div>
+
+      <div class="card">
+        <div class="placeholder">[Chart: irregular grid contour with red/blue blobs]</div>
+        <div class="caption">Contour plot of irregularly spaced data</div>
+      </div>
+
+      <div class="card">
+        <div class="placeholder">[Chart: green/yellow checkerboard alpha blended image]</div>
+        <div class="caption">Layer images with alpha blending</div>
+      </div>
+
+      <div class="card">
+        <div class="placeholder">[Chart: dark matrix with diagonal line, matshow]</div>
+        <div class="caption">Visualize matrices with matshow</div>
+      </div>
+
+      <div class="card">
+        <div class="placeholder">[Chart: two multi-colored image panels with shared colorbar]</div>
+        <div class="caption">Multiple images with one colorbar</div>
+      </div>
+
+      <div class="card">
+        <div class="placeholder">[Chart: pcolor grid image, green/yellow/blue cells]</div>
+        <div class="caption">pcolor images</div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

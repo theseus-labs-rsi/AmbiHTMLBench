@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Observer - Sunday 28 April 2024</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: #f4f4f4;
+      font-family: 'Georgia', 'Times New Roman', serif;
+      color: #111;
+      display: flex;
+      justify-content: center;
+      padding: 10px;
+    }
+    .newspaper-page {
+      background: #fff;
+      width: 820px;
+      padding: 14px 18px 24px 18px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.15);
+      position: relative;
+    }
+
+    /* Top Promo Banner */
+    .top-strip {
+      background-color: #19436e;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 3px 10px;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+      margin-bottom: 3px;
+    }
+
+    /* Top Teasers Grid */
+    .top-teasers {
+      display: grid;
+      grid-template-columns: 440px 145px 175px;
+      gap: 5px;
+      height: 195px;
+      margin-bottom: 8px;
+    }
+
+    /* Movies Teaser (Yellow) */
+    .teaser-movies {
+      background-color: #f7b700;
+      position: relative;
+      padding: 8px 10px;
+      display: flex;
+      overflow: hidden;
+    }
+    .teaser-movies .mag-cover {
+      width: 135px;
+      height: 175px;
+      background: #eee;
+      border: 1px solid #111;
+      position: relative;
+      flex-shrink: 0;
+      overflow: hidden;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    }
+    .teaser-movies .mag-cover img, .teaser-movies .mag-cover .inner-cover {
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+    .inner-cover .cover-header {
+      font-size: 8px;
+      font-weight: bold;
+      padding: 2px 4px;
+      border-bottom: 1px solid #000;
+    }
+    .inner-cover .cover-title {
+      background: #000;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+      padding: 2px;
+      transform: rotate(-3deg);
+      margin: 30px 2px 5px 2px;
+      text-align: center;
+    }
+    .inner-cover .cover-sub {
+      font-size: 6px;
+      font-weight: 800;
+      text-align: center;
+    }
+    .teaser-movies .movies-text {
+      padding-left: 12px;
+      z-index: 2;
+      width: 190px;
+    }
+    .teaser-movies h2 {
+      font-family: 'Georgia', serif;
+      font-size: 32px;
+      line-height: 0.95;
+      font-weight: 900;
+      color: #0b0b0b;
+      margin-top: 2px;
+      margin-bottom: 8px;
+    }
+    .teaser-movies .sub-text {
+      font-family: 'Georgia', serif;
+      font-size: 11px;
+      line-height: 1.25;
+      font-weight: bold;
+      color: #7d1c14;
+      margin-bottom: 25px;
+    }
+    .teaser-movies .section-tag {
+      font-style: italic;
+      font-size: 10px;
+      font-family: 'Georgia', serif;
+      position: absolute;
+      bottom: 8px;
+      left: 157px;
+    }
+    .teaser-movies .sports-figure {
+      position: absolute;
+      right: -10px;
+      bottom: -15px;
+      width: 130px;
+      height: 200px;
+      z-index: 1;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    /* Magazine Teaser (Magenta) */
+    .teaser-mag {
+      background-color: #d8234c;
+      color: #fff;
+      padding: 6px 8px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    .teaser-mag .mag-top {
+      font-family: 'Georgia', serif;
+      font-size: 8px;
+      font-style: italic;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+    .teaser-mag .mays-photo {
+      width: 90px;
+      height: 95px;
+      margin: 0 auto 6px auto;
+      background: #111;
+      border: 1px solid rgba(255,255,255,0.4);
+      position: relative;
+      overflow: hidden;
+    }
+    .mays-photo .mays-quote {
+      position: absolute;
+      font-size: 6px;
+      color: #fff;
+      width: 100%;
+      top: 15px;
+      text-align: center;
+      font-family: sans-serif;
+    }
+    .teaser-mag h3 {
+      font-family: 'Georgia', serif;
+      font-size: 11px;
+      line-height: 1.15;
+      font-weight: bold;
+      margin-bottom: 4px;
+      text-align: left;
+    }
+    .teaser-mag .section-tag {
+      font-style: italic;
+      font-size: 9px;
+      font-family: 'Georgia', serif;
+      position: absolute;
+      bottom: 6px;
+      left: 8px;
+    }
+
+    /* Peak Booze Teaser (Yellow) */
+    .teaser-booze {
+      background-color: #f7b700;
+      padding: 6px 8px;
+      position: relative;
+      overflow: hidden;
+    }
+    .teaser-booze h2 {
+      font-family: 'Georgia', serif;
+      font-size: 26px;
+      line-height: 0.95;
+      font-weight: 900;
+      color: #111;
+      margin-bottom: 6px;
+    }
+    .teaser-booze .sub-text {
+      font-family: 'Georgia', serif;
+      font-size: 10.5px;
+      line-height: 1.15;
+      font-weight: bold;
+      color: #b01010;
+      width: 65px;
+    }
+    .teaser-booze .section-tag {
+      font-style: italic;
+      font-size: 9px;
+      font-family: 'Georgia', serif;
+      position: absolute;
+      bottom: 6px;
+      left: 8px;
+    }
+    .teaser-booze .pint-img {
+      position: absolute;
+      right: 4px;
+      bottom: -10px;
+      width: 75px;
+      height: 155px;
+    }
+
+    /* Masthead */
+    .masthead-wrapper {
+      position: relative;
+      border-bottom: 4px solid #000;
+      padding-bottom: 4px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .masthead-title {
+      font-family: 'Times New Roman', 'Georgia', serif;
+      font-size: 82px;
+      font-weight: 900;
+      letter-spacing: -2px;
+      line-height: 0.85;
+      color: #112948;
+      margin-left: -4px;
+    }
+    .masthead-meta {
+      text-align: right;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 8px;
+      line-height: 1.25;
+      color: #111;
+      padding-bottom: 2px;
+    }
+    .masthead-meta .bold {
+      font-weight: bold;
+    }
+    .barcode-box {
+      position: absolute;
+      right: 175px;
+      bottom: 28px;
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+    }
+    .barcode-img {
+      width: 100px;
+      height: 28px;
+      background: repeating-linear-gradient(
+        90deg,
+        #000 0,
+        #000 1px,
+        #fff 1px,
+        #fff 2px,
+        #000 2px,
+        #000 4px,
+        #fff 4px,
+        #fff 5px
+      );
+    }
+    .barcode-num {
+      font-family: monospace;
+      font-size: 7px;
+      letter-spacing: -0.5px;
+    }
+
+    /* Main Headline */
+    .main-headline {
+      font-family: 'Georgia', serif;
+      font-size: 40px;
+      line-height: 1.05;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: #0b1c2c;
+      margin-bottom: 14px;
+    }
+
+    /* Content Layout */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 148px 465px 145px;
+      gap: 14px;
+    }
+
+    /* Left Column */
+    .col-left {
+      font-family: 'Georgia', serif;
+      font-size: 9.2px;
+      line-height: 1.35;
+      color: #222;
+    }
+    .bullet-point {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 8px;
+      font-family: 'Georgia', serif;
+      font-size: 13.5px;
+      line-height: 1.15;
+      font-weight: 700;
+      color: #1c2b39;
+    }
+    .bullet-icon {
+      width: 9px;
+      height: 9px;
+      background-color: #2b84ba;
+      border-radius: 50%;
+      margin-top: 3px;
+      margin-right: 6px;
+      flex-shrink: 0;
+    }
+    .byline {
+      border-top: 1px solid #aaa;
+      padding-top: 4px;
+      margin-top: 12px;
+      margin-bottom: 8px;
+    }
+    .byline-name {
+      font-weight: bold;
+      font-size: 9.5px;
+    }
+    .byline-title {
+      font-style: italic;
+      font-size: 8.5px;
+      color: #444;
+    }
+    .col-left p {
+      margin-bottom: 7px;
+      text-align: justify;
+    }
+
+    /* Center Section */
+    .col-center {
+      display: flex;
+      flex-direction: column;
+    }
+    .photo-area-wrapper {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .main-photo-container {
+      width: 335px;
+      position: relative;
+    }
+    .main-photo {
+      width: 100%;
+      height: 205px;
+      object-fit: cover;
+      background-color: #d6cfc7;
+      display: block;
+      border: 1px solid #ddd;
+    }
+    .photo-side-col {
+      width: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .photo-caption {
+      font-size: 7.5px;
+      line-height: 1.25;
+      font-style: italic;
+      color: #333;
+    }
+    .photo-caption strong {
+      font-style: normal;
+    }
+    .quote-block {
+      border-top: 1px solid #ccc;
+      padding-top: 6px;
+      margin-top: auto;
+    }
+    .quote-author {
+      color: #007599;
+      font-family: 'Georgia', serif;
+      font-size: 12px;
+      font-weight: bold;
+      margin-bottom: 3px;
+    }
+    .quote-text {
+      font-family: 'Georgia', serif;
+      font-size: 12.5px;
+      line-height: 1.15;
+      font-weight: bold;
+      color: #0b1c2c;
+      margin-bottom: 6px;
+    }
+    .quote-link {
+      color: #007599;
+      font-style: italic;
+      font-size: 9px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    /* Three sub-columns under photo */
+    .under-photo-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      font-size: 9.2px;
+      line-height: 1.35;
+      color: #222;
+      text-align: justify;
+    }
+    .under-photo-cols p {
+      margin-bottom: 6px;
+    }
+    .continued-link {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 8px;
+      font-weight: bold;
+      color: #007599;
+      text-align: right;
+      display: block;
+      margin-top: 4px;
+    }
+
+    /* Right Column (Dirty Blood) */
+    .col-right {
+      border-left: 1px solid #ccc;
+      padding-left: 12px;
+      font-size: 9.2px;
+      line-height: 1.35;
+      color: #222;
+    }
+    .right-headline {
+      font-family: 'Georgia', serif;
+      font-size: 19px;
+      line-height: 1.1;
+      font-weight: normal;
+      color: #0b1c2c;
+      margin-bottom: 8px;
+    }
+    .right-byline {
+      border-top: 1px solid #aaa;
+      padding-top: 3px;
+      margin-bottom: 8px;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 8px;
+      font-weight: bold;
+      line-height: 1.15;
+      color: #000;
+    }
+    .col-right p {
+      margin-bottom: 6px;
+      text-align: justify;
+    }
+
+    /* Generic Image Placeholder */
+    .placeholder {
+      background-color: #ddd;
+      border: 1px solid #bbb;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-family: sans-serif;
+      font-size: 9px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="newspaper-page">
+    <!-- Top Navy Strip -->
+    <div class="top-strip">
+      <span>Last chance Get up to 40% off a print subscription</span>
+      <span>See page 57</span>
+    </div>
+
+    <!-- Teaser Banner -->
+    <div class="top-teasers">
+      <!-- 20 Best Sports Movies -->
+      <div class="teaser-movies">
+        <div class="mag-cover placeholder" style="background:#fff; border:1px solid #444;">
+          <div style="font-size:7px; color:#666; padding: 2px;">the new review</div>
+          <div style="background:#111; color:#fff; font-weight:bold; font-size:8px; padding:2px; margin-top:15px; transform:rotate(-3deg);">A LEAGUE OF THEIR OWN</div>
+          <div style="font-size:5px; font-weight:bold; margin-top:2px;">GUY LODGE CHOOSES THE 20 BEST SPORTS MOVIES</div>
+          <div style="width:100%; height:90px; background:#e0e0e0; margin-top:10px; display:flex; align-items:center; justify-content:center; font-size:6px; color:#888;">[Review Cover Image]</div>
+        </div>
+        <div class="movies-text">
+          <h2>20 best<br>sports<br>movies</h2>
+          <div class="sub-text">From Rocky to<br>Gregory’s Girl,<br>Senna to Zidane</div>
+          <div class="section-tag">In New Review</div>
+        </div>
+        <div class="sports-figure placeholder" style="background:none; border:none;">
+          <svg width="120" height="190" viewBox="0 0 120 190">
+            <!-- Stylized silhouette representation of woman kicking ball -->
+            <path d="M 55 35 Q 60 20 50 15 Q 40 18 42 32 Z" fill="#b08d57" />
+            <path d="M 40 38 Q 65 35 65 70 Q 40 72 38 40 Z" fill="#1b2a4a" />
+            <path d="M 38 70 Q 70 70 72 95 Q 40 95 38 70 Z" fill="#ffffff" />
+            <path d="M 45 95 L 30 160 L 40 162 L 55 105 Z" fill="#b08d57" />
+            <path d="M 62 95 L 85 130 L 98 125 L 75 95 Z" fill="#b08d57" />
+            <circle cx="50" cy="172" r="12" fill="#fff" stroke="#000" stroke-width="1.5" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Daniel Mays (Observer Magazine) -->
+      <div class="teaser-mag">
+        <div class="mag-top">The Observer Magazine</div>
+        <div class="mays-photo placeholder" style="background:#222; color:#ccc;">
+          <div class="mays-quote">‘It felt like a step up’</div>
+          <span style="position:absolute; bottom:5px; font-size:7px;">[Daniel Mays]</span>
+        </div>
+        <h3>Daniel Mays<br>On Mike Leigh,<br>Michael Douglas<br>and Guys & Dolls</h3>
+        <div class="section-tag">In the magazine</div>
+      </div>
+
+      <!-- Peak Booze -->
+      <div class="teaser-booze">
+        <h2>Peak<br>booze</h2>
+        <div class="sub-text">Why<br>Britain<br>has the<br>20-year<br>hangover<br>from hell</div>
+        <div class="section-tag">This section</div>
+        <div class="pint-img placeholder" style="background: linear-gradient(to top, #c99330, #e2bb6e, #ffffff); border-radius: 3px 3px 6px 6px; border:1px solid #b58022;">
+          <span style="color:#664; font-size:7px; margin-top:60px;">[Pint Glass]</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Masthead -->
+    <div class="masthead-wrapper">
+      <div class="masthead-title">The Observer</div>
+      
+      <!-- Barcode area -->
+      <div class="barcode-box">
+        <div style="font-size:6px; margin-bottom:2px;">9 770029</div>
+        <div class="barcode-img"></div>
+        <div style="font-size:6px; margin-bottom:2px;">771229</div>
+        <div style="font-size:8px; font-weight:bold; margin-bottom:12px; margin-left:3px;">17</div>
+      </div>
+
+      <div class="masthead-meta">
+        <div><span class="bold">From £1.97 for</span></div>
+        <div><span class="bold">subscribers</span></div>
+        <div style="color:#007599; font-weight:bold;">www.observer.co.uk</div>
+        <div class="bold">Sunday 28 April 2024</div>
+        <div>£4.00</div>
+      </div>
+    </div>
+
+    <!-- Main Headline -->
+    <h1 class="main-headline">
+      Exclusive: top Tory MP defects<br>to Labour in fury at NHS crisis
+    </h1>
+
+    <!-- 3-Column Content Body -->
+    <div class="content-grid">
+      
+      <!-- Left Column -->
+      <div class="col-left">
+        <div class="bullet-point">
+          <div class="bullet-icon"></div>
+          <div>Ex-health minister slams ‘nationalist right’</div>
+        </div>
+        <div class="bullet-point">
+          <div class="bullet-icon"></div>
+          <div>‘Tories failing on improving care’</div>
+        </div>
+
+        <div class="byline">
+          <div class="byline-name">Toby Helm</div>
+          <div class="byline-title">Political Editor</div>
+        </div>
+
+        <p>A Tory MP and former health minister has staged a dramatic defection to Labour, saying the Conservatives have become a "nationalist party of the right" that has abandoned compassion and no longer prioritises the NHS.</p>
+
+        <p>Dr Dan Poulter, the MP for Central Suffolk and North Ipswich, who works part-time as a mental health doctor in an NHS hospital, announced in an exclusive interview with the <em>Observer</em> that he was resigning as a Tory MP and would be taking the Labour whip until the next election.</p>
+
+        <p>He said he would not seek re-election to the House of Commons at the next general election. But, writing in today's <em>Observer</em>, he says he envisages a role advising the Labour party on its policies on mental health while focusing more on his NHS work.</p>
+
+        <p>Poulter said his experiences on more than 20 night shifts over the last year in a severely overstretched accident and emergency department had been "truly life-changing" and persuaded him to defect to the only party he believed was now really committed to investing in improving the NHS.</p>
+      </div>
+
+      <!-- Center Column (Photo + continuation text) -->
+      <div class="col-center">
+        <div class="photo-area-wrapper">
+          <div class="main-photo-container">
+            <!-- Simulated photo of Poulter and Reeves in front of Labour logo -->
+            <div class="main-photo placeholder" style="position:relative; background-color:#dfdeda;">
+              <div style="position:absolute; top:8px; left:8px; font-family:'Helvetica Neue', sans-serif; font-weight:900; font-size:38px; color:rgba(228,0,59,0.7); letter-spacing:-1px;">
+                <span style="font-size:26px;">🌹</span>Labour
+              </div>
+              <div style="position:absolute; bottom:20px; width:100%; display:flex; justify-content:center; gap:30px;">
+                <div style="width:75px; height:100px; background:#293b54; border-radius:4px 4px 0 0; display:flex; flex-direction:column; align-items:center;">
+                  <div style="width:24px; height:24px; background:#e8be99; border-radius:50%; margin-top:-10px;"></div>
+                </div>
+                <div style="width:65px; height:90px; background:#1b3952; border-radius:4px 4px 0 0; display:flex; flex-direction:column; align-items:center;">
+                  <div style="width:22px; height:22px; background:#eed0b0; border-radius:50%; margin-top:-10px;"></div>
+                </div>
+              </div>
+              <div style="position:absolute; bottom:6px; font-size:8px; color:#444;">[Photo: Dan Poulter and Ellie Reeves]</div>
+            </div>
+          </div>
+          
+          <div class="photo-side-col">
+            <div class="photo-caption">
+              <strong>Dan Poulter</strong> filling out his party membership form with Labour MP Ellie Reeves.
+            </div>
+            
+            <div class="quote-block">
+              <div class="quote-author">Dan Poulter</div>
+              <div class="quote-text">From the frontline I see the NHS desperately struggling. I’ve come to the conclusion the only cure is a Labour government</div>
+              <a href="#" class="quote-link">Comment, page 5</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3 Columns Below Photo -->
+        <div class="under-photo-cols">
+          <div>
+            <p>He said: “I could not go on as part of that. I have to be able to look my NHS colleagues in the eye, my patients in the eye and my constituents in the eye. And I know that the Conservative government has been falling on the thing I care about most, which is the NHS and its patients.”</p>
+            <p>The <em>Observer</em> understands that dis-</p>
+          </div>
+          <div>
+            <p>cussions between Poulter and senior Labour figures have been going on for many months at the highest levels about the timing and organisation of his likely defection, as well as advisory roles he could play in future in developing the party’s health policies, with the benefit of his firsthand inside knowledge.</p>
+          </div>
+          <div>
+            <p>The defection has, however, been kept the tightest of secrets, with only half a dozen people in the party knowing it was coming before the <em>Observer</em> broke the news.</p>
+            <p>A one nation Tory on the left of the party, Poulter has regularly made his</p>
+            <div class="continued-link">Continued on page 4 &gt;&gt;</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column -->
+      <div class="col-right">
+        <h2 class="right-headline">Government was warned about dirty blood in 1970s</h2>
+
+        <div class="right-byline">
+          Jon Ungoed-Thomas<br>&amp; Robin McKie
+        </div>
+
+        <p>A commercial blood product at the centre of the biggest treatment scandal in the history of the NHS was approved for use after government officials were told convicts were among the paid donors and virus contamination “should be assumed”, corporate filings reveal.</p>
+
+        <p>The product, given to haemophiliacs in the 1970s and ’80s to enable their blood to clot, was injected into thousands of UK patients, including young children, who were then infected with HIV and hepatitis C.</p>
+
+        <p>A single batch could contain plasma from 20,000 donors harvested in US prisons and some of the poorest neighbourhoods of the US, where drug use and sexual infections were rife. One infected donation would contaminate the entire batch.</p>
+
+        <p>An inquiry lead by Brian Langstaff will report next month on the scandal, which has killed about 3,000 people in the UK. He has already concluded “wrongs were done at individual, collective and systemic levels”.</p>
+
+        <p>The drug firm Bayer provided 7,000 documents to the inquiry, which reveals its subsidiary, Cutter Laboratories, warned in licensing application documents in the 1970s that its commercial blood product Koate, may contain viruses. It said: “Since the presence or absence of hepatitis virus in Koate</p>
+
+        <div class="continued-link">Continued on page 10 &gt;&gt;</div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

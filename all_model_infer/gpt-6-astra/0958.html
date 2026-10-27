@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compute Engine documentation</title>
+<script>
+window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;min-width:1440px;background:#f7f8fa;color:#202124;font-family:Arial,Helvetica,sans-serif}
+body{width:1440px;height:1600px;overflow:hidden}
+a{color:#1a73d2;text-decoration:none}
+.topbar{height:48px;background:white;display:flex;align-items:center;padding:0 24px;gap:0;font-size:14px}
+.brand{width:193px;font-size:23px;letter-spacing:-.7px;white-space:nowrap;color:#5f6368}
+.google{font-weight:500;margin-right:5px}
+.blue{color:#4285f4}.red{color:#ea4335}.yellow{color:#fbbc05}.green{color:#34a853}
+.top-item{height:48px;display:flex;align-items:center;position:relative;color:#5f6368;white-space:nowrap}
+.top-item.active{color:#1967c4;width:179px}
+.top-item.active:after{content:"";position:absolute;bottom:0;left:4px;width:106px;height:3px;background:#1967c4;border-radius:3px 3px 0 0}
+.caret{display:inline-block;margin-left:14px;border-top:5px solid currentColor;border-left:5px solid transparent;border-right:5px solid transparent}
+.tools{width:190px}
+.top-spacer{flex:1}
+.search{width:200px;height:36px;border-radius:3px;background:#f1f3f4;display:flex;align-items:center;color:#5f6368;padding:0 12px;font-size:16px;gap:12px}
+.magnifier{width:16px;height:16px;border:2px solid #5f6368;border-radius:50%;position:relative}
+.magnifier:after{content:"";width:7px;height:2px;background:#5f6368;position:absolute;right:-5px;bottom:-3px;transform:rotate(45deg)}
+.search kbd{margin-left:auto;background:#fff;border-radius:7px;padding:4px 9px;font:13px Arial}
+.console,.language{height:36px;border:1px solid #dadce0;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#5f6368}
+.console{width:107px;margin-left:8px;gap:9px}
+.theme{width:52px;text-align:center;color:#5f6368;font-size:27px}
+.language{width:116px;gap:9px}
+.language .caret{margin-left:0}
+.signin{margin-left:17px;font-size:14px}
+.product-header{height:105px;background:#e8f0fe;box-shadow:0 2px 4px #0002;position:relative;z-index:1}
+.product-title{height:69px;padding:20px 24px;display:flex;align-items:center;gap:10px;font-size:21px}
+.chip-icon{width:30px;height:30px;position:relative;display:flex;align-items:center;justify-content:center}
+.chip-icon:before{content:"";width:19px;height:19px;border:3px dashed #4285f4;outline:2px dashed #fbbc04;outline-offset:-6px}
+.chip-icon:after{content:"";position:absolute;width:8px;height:8px;border:2px solid #34a853}
+.button{display:inline-flex;align-items:center;justify-content:center;background:#1a73e8;color:white;border-radius:3px;height:37px;font-size:14px;padding:0 24px;border:0}
+.start{position:absolute;right:24px;top:20px;width:110px;height:36px}
+.tabs{display:flex;gap:36px;height:36px;padding-left:24px;font-size:14px}
+.tabs span{height:36px;position:relative;padding-top:3px}
+.tabs .selected{color:#1967c4}
+.tabs .selected:after{content:"";position:absolute;bottom:0;left:4px;right:4px;height:3px;background:#1967c4;border-radius:3px}
+.workspace{display:grid;grid-template-columns:270px 1fr;height:1447px}
+.sidebar{background:white;border-right:1px solid #dadce0;font-size:13px;position:relative;height:1447px;color:#202124}
+.filter-zone{height:80px;border-bottom:1px solid #dadce0;padding:23px 24px}
+.filter{height:32px;background:#f1f3f4;border-radius:3px;display:flex;align-items:center;gap:12px;padding:0 11px;color:#5f6368;font-size:12px}
+.filter-icon{width:9px;height:8px;background:linear-gradient(#80868b,#80868b) top center/9px 1px no-repeat,linear-gradient(#80868b,#80868b) center center/6px 1px no-repeat,linear-gradient(#80868b,#80868b) bottom center/2px 1px no-repeat}
+.intro-nav{height:209px;padding:11px 24px 10px;border-bottom:1px solid #dadce0}
+.intro-nav div{margin:5px 0 0;line-height:19px}
+.intro-nav .twoline{line-height:16px;margin-top:6px;margin-bottom:6px}
+.nav-row{height:48px;border-bottom:1px solid #dadce0;display:flex;align-items:center;justify-content:space-between;padding:0 16px 0 24px;font-weight:bold;color:#555;font-size:12px}
+.chevron{width:8px;height:8px;border-right:2px solid #5f6368;border-bottom:2px solid #5f6368;transform:rotate(45deg);margin-right:1px;margin-top:-5px}
+.chevron.up{transform:rotate(225deg);margin-top:5px}
+.compute{height:280px;border-bottom:1px solid #dadce0;padding-top:0}
+.compute .nav-row{height:35px;border:0;padding-top:8px}
+.tree-item{height:24px;display:flex;align-items:center;padding-left:40px;font-size:12px;line-height:16px}
+.tree-item.branch{padding-left:24px;gap:7px}
+.triangle-right{width:0;height:0;border-left:4px solid #303134;border-top:4px solid transparent;border-bottom:4px solid transparent;transform:scale(.8)}
+.triangle-down{width:0;height:0;border-top:4px solid #303134;border-left:4px solid transparent;border-right:4px solid transparent;transform:scale(.8)}
+.tree-item.deep{padding-left:56px}
+.tree-item.current{background:#e8f0fe;color:#185abc;border-radius:0 16px 16px 0;margin-right:8px;font-weight:bold}
+.tree-item.long{height:40px;align-items:flex-start;padding-top:4px}
+.collapse{position:absolute;right:8px;bottom:15px;width:40px;height:40px;border-radius:50%;background:#f1f3f4;box-shadow:0 1px 7px #0003;display:flex;align-items:center;justify-content:center;color:#5f6368;font-size:23px}
+.content-area{padding:23px 0 0 23px}
+.document{width:936px;min-height:1450px;border:1px solid #dadce0;border-radius:13px 13px 0 0;overflow:hidden;background:#fff}
+.hero{height:228px;position:relative;background:linear-gradient(105deg,#e8effd,#e6f4ea);padding:39px 40px}
+h1{font-size:38px;font-weight:500;letter-spacing:-.7px;line-height:44px;margin:0 0 25px}
+.hero .button{width:239px}
+.placeholder{display:flex;align-items:center;justify-content:center;color:#657780;font-size:12px;text-align:center}
+.hero-art{position:absolute;right:0;top:0;width:417px;height:228px;background:transparent}
+.introduction{height:216px;padding:40px 40px 30px;font-size:16px;line-height:24px}
+.introduction p{margin:0 0 16px}
+.credit{height:168px;background:linear-gradient(105deg,#e8effd,#e6f4ea);display:flex;align-items:center;padding:0 40px;gap:35px}
+.credit-copy{width:579px}
+.credit h3{font-size:18px;font-weight:500;margin:0 0 3px;line-height:24px}
+.credit ul{font-size:14px;line-height:22px;margin:0;padding-left:18px}
+.credit .button{width:175px;padding:0;flex-shrink:0}
+.resources{padding:39px 40px 0}
+h2{font-size:28px;line-height:35px;letter-spacing:-.3px;font-weight:500;margin:0}
+.resources>p{font-size:16px;margin:17px 0 33px;line-height:24px}
+.card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.card{height:395px;border:1px solid #dadce0;border-radius:9px;padding:16px}
+.resource-icon{width:40px;height:40px;border-radius:50%;background:#d2e3fc;color:#1a73e8;display:flex;align-items:center;justify-content:center;font-size:23px;margin-bottom:20px}
+.resource-icon.info span{width:20px;height:20px;border-radius:50%;background:#1a73e8;color:white;font-size:14px;font-weight:bold;text-align:center;line-height:20px}
+.resource-icon.reference span{font-size:21px;font-weight:bold}
+.card h3{font-size:20px;font-weight:400;line-height:26px;margin:0 0 26px}
+.card ul{list-style:none;padding:0;margin:0}
+.card li{font-size:14px;line-height:24px;margin-bottom:8px;color:#1a73d2}
+.related{text-align:center;padding-top:39px}
+.related-tabs{display:flex;justify-content:center;gap:12px;margin:21px 0 19px}
+.related-tab{border:1px solid #dadce0;border-radius:9px;height:33px;padding:0 16px;display:flex;align-items:center;font-size:14px;background:white}
+.related-tab.active{background:#1a73e8;color:white;border-color:#1a73e8;padding:0 14px}
+.tick{width:12px;height:7px;transform:rotate(-45deg);border-bottom:1.5px solid white;border-left:1.5px solid white;margin-right:9px;margin-top:-4px}
+.related p{font-size:16px;line-height:24px;margin:0 0 33px}
+.training-card{height:240px;border:1px solid #dadce0;border-radius:9px;padding:17px 16px;text-align:left}
+.training-label{display:inline-block;font-size:12px;line-height:23px;padding:0 8px;border-radius:7px;background:#fef7e0;color:#a50e0e}
+</style>
+</head>
+<body>
+<header>
+<div class="topbar">
+<div class="brand"><span class="google"><span class="blue">G</span><span class="red">o</span><span class="yellow">o</span><span class="blue">g</span><span class="green">l</span><span class="red">e</span></span>Cloud</div>
+<div class="top-item active">Technology areas<span class="caret"></span></div>
+<div class="top-item tools">Cross-product tools<span class="caret"></span></div>
+<div class="top-spacer"></div>
+<div class="search"><span class="magnifier"></span><span>Search</span><kbd>/</kbd></div>
+<div class="console"><span aria-hidden="true">▤</span>Console</div>
+<div class="theme" aria-label="Theme">☼</div>
+<div class="language"><span aria-hidden="true">◎</span>English<span class="caret"></span></div>
+<a class="signin">Sign in</a>
+</div>
+<div class="product-header">
+<div class="product-title"><span class="chip-icon" aria-hidden="true"></span><span>Compute Engine</span></div>
+<a class="button start">Start free</a>
+<nav class="tabs"><span class="selected">Overview</span><span>Guides</span><span>APIs &amp; Reference</span><span>Samples</span><span>Resources</span></nav>
+</div>
+</header>
+<div class="workspace">
+<aside class="sidebar">
+<div class="filter-zone"><div class="filter"><span class="filter-icon"></span>Filter</div></div>
+<div class="intro-nav">
+<div>Google Cloud Documentation home</div>
+<div>Get started with Google Cloud</div>
+<div>Product list</div>
+<div class="twoline">Integrated AI assistance with Gemini<br>for Google Cloud</div>
+<div>What's new in documentation</div>
+<div>Recent product release notes</div>
+<div>Cloud Customer Care</div>
+</div>
+<div class="nav-row">Cross-product tools<span class="chevron"></span></div>
+<div class="nav-row">AI and ML<span class="chevron"></span></div>
+<div class="nav-row">Application development<span class="chevron"></span></div>
+<div class="nav-row">Application hosting<span class="chevron"></span></div>
+<div class="compute">
+<div class="nav-row">Compute<span class="chevron up"></span></div>
+<div class="tree-item">Overview of compute</div>
+<div class="tree-item branch"><span class="triangle-down"></span>Virtual machines</div>
+<div class="tree-item deep current">Compute Engine</div>
+<div class="tree-item deep">Capacity Planner</div>
+<div class="tree-item deep long">See additional products on<br>overview page</div>
+<div class="tree-item branch"><span class="triangle-right"></span>Images</div>
+<div class="tree-item branch"><span class="triangle-right"></span>Block storage</div>
+<div class="tree-item branch"><span class="triangle-right"></span>Workloads</div>
+<div class="tree-item branch"><span class="triangle-right"></span>Selected related products</div>
+</div>
+<div class="nav-row">Data analytics<span class="chevron"></span></div>
+<div class="nav-row">Databases<span class="chevron"></span></div>
+<div class="nav-row">Distributed, hybrid, and multicloud<span class="chevron"></span></div>
+<div class="nav-row">Industry solutions<span class="chevron"></span></div>
+<div class="nav-row">Migration<span class="chevron"></span></div>
+<div class="nav-row">Networking<span class="chevron"></span></div>
+<div class="nav-row">Observability and monitoring<span class="chevron"></span></div>
+<div class="nav-row">Security<span class="chevron"></span></div>
+<div class="nav-row">Storage<span class="chevron"></span></div>
+<div class="collapse">‹</div>
+</aside>
+<main class="content-area">
+<article class="document">
+<section class="hero">
+<h1>Compute Engine<br>documentation</h1>
+<a class="button">Read product documentation</a>
+<div class="placeholder hero-art">[Illustration: colored geometric lines and shapes]</div>
+</section>
+<section class="introduction">
+<p>Compute Engine is a <a>computing and hosting service</a> that lets you create and run virtual machines on Google<br>infrastructure. Compute Engine offers scale, performance, and value that lets you easily launch large compute clusters<br>on Google's infrastructure. There are no upfront investments, and you can run thousands of virtual CPUs on a system<br>that offers quick, consistent performance.</p>
+<p><a>Go to the Compute Engine product page for more.</a></p>
+</section>
+<section class="credit">
+<div class="credit-copy">
+<h3>Start your proof of concept with $300 in free credit</h3>
+<ul>
+<li>Develop with our latest Generative AI models and tools.</li>
+<li>Get free usage of 20+ popular products, including Compute Engine and AI APIs.</li>
+<li>No automatic charges, no commitment.</li>
+</ul>
+</div>
+<a class="button">Get started for free</a>
+</section>
+<section class="resources">
+<h2>Documentation resources</h2>
+<p>Find quickstarts and guides, review key references, and get help with common issues.</p>
+<div class="card-grid">
+<section class="card">
+<div class="resource-icon" aria-label="Guides icon">☷</div>
+<h3>Guides</h3>
+<ul>
+<li><a>Machine families resource and<br>comparison guide</a></li>
+<li><a>Choose a deployment strategy</a></li>
+<li><a>Create and start a VM</a></li>
+<li><a>About SSH connections</a></li>
+<li><a>Choose a migration path</a></li>
+<li><a>Data protection options</a></li>
+<li><a>VM instance lifecycle</a></li>
+</ul>
+</section>
+<section class="card">
+<div class="resource-icon reference" aria-label="Reference icon"><span>⌕</span></div>
+<h3>Reference</h3>
+<ul>
+<li><a>gcloud compute command-line tool</a></li>
+<li><a>Client libraries</a></li>
+<li><a>REST API</a></li>
+</ul>
+</section>
+<section class="card">
+<div class="resource-icon info" aria-label="Information icon"><span>i</span></div>
+<h3>Resources</h3>
+<ul>
+<li><a>Pricing</a></li>
+<li><a>Quotas and limits</a></li>
+<li><a>Release notes</a></li>
+<li><a>Support</a></li>
+<li><a>Samples and videos</a></li>
+</ul>
+</section>
+</div>
+<section class="related">
+<h2>Related resources</h2>
+<div class="related-tabs">
+<div class="related-tab active"><span class="tick"></span>Training and tutorials</div>
+<div class="related-tab">Use cases</div>
+<div class="related-tab">Code samples</div>
+</div>
+<p>Explore self-paced training, use cases, reference architectures, and code samples with examples of how to use and<br>connect Google Cloud services.</p>
+<div class="card-grid">
+<div class="training-card"><span class="training-label">Training</span></div>
+<div class="training-card"><span class="training-label">Training</span></div>
+<div class="training-card"><span class="training-label">Training</span></div>
+</div>
+</section>
+</section>
+</article>
+</main>
+</div>
+</body>
+</html>

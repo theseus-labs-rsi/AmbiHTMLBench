@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Azure Architecture Center</title>
+<script>
+window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };
+</script>
+<script id="MathJax-script" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: #1b1b1f;
+    font-size: 15px;
+  }
+  a { color: #0067b8; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Top promo banner */
+  .promo-banner {
+    background: #000;
+    color: #fff;
+    position: relative;
+    height: 145px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+  .promo-banner .content {
+    padding-left: 24px;
+    z-index: 2;
+  }
+  .promo-banner h1 {
+    font-size: 28px;
+    font-weight: 400;
+    margin: 0 0 6px 0;
+  }
+  .promo-banner .date {
+    font-size: 13px;
+    color: #ccc;
+    margin-bottom: 14px;
+  }
+  .promo-banner .learn-more-btn {
+    background: #fff;
+    color: #000;
+    border: none;
+    padding: 8px 16px;
+    font-size: 13px;
+    border-radius: 2px;
+    cursor: pointer;
+  }
+  .promo-banner .dots {
+    position: absolute;
+    top: 20px;
+    left: 800px;
+    width: 40px;
+    height: 40px;
+    background-image: radial-gradient(circle, #666 1.5px, transparent 1.5px);
+    background-size: 8px 8px;
+    opacity: 0.6;
+  }
+  .promo-banner .skyline {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 400px;
+    height: 100%;
+    background: linear-gradient(120deg, #0a3d2f 0%, #1a6b4a 20%, #2fa84f 40%, #7fd13b 55%, #1a9e6e 70%, #0e5a8a 85%, #6e2fa8 100%);
+    clip-path: polygon(0% 100%, 5% 60%, 12% 80%, 20% 40%, 28% 70%, 35% 30%, 42% 65%, 50% 20%, 58% 55%, 66% 35%, 74% 60%, 82% 25%, 90% 50%, 100% 30%, 100% 100%);
+  }
+  .promo-banner .close-btn {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    width: 30px;
+    height: 30px;
+    background: #1a1a1a;
+    color: #fff;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 3;
+  }
+
+  /* Learn nav */
+  .learn-nav {
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    height: 56px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  .learn-nav .ms-logo {
+    width: 24px;
+    height: 24px;
+    background: conic-gradient(#f25022 0turn 0.25turn, #7fba00 0.25turn 0.5turn, #00a4ef 0.5turn 0.75turn, #ffb900 0.75turn 1turn);
+    margin-right: 12px;
+  }
+  .learn-nav .learn-label {
+    font-size: 17px;
+    margin-right: 20px;
+    color: #1b1b1f;
+  }
+  .learn-nav .divider {
+    width: 1px;
+    height: 20px;
+    background: #ccc;
+    margin-right: 20px;
+  }
+  .learn-nav .nav-links {
+    display: flex;
+    gap: 24px;
+    flex: 1;
+  }
+  .learn-nav .nav-links span {
+    font-size: 14px;
+    color: #1b1b1f;
+    cursor: pointer;
+  }
+  .learn-nav .right-links {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 14px;
+  }
+  .learn-nav .search-icon {
+    font-size: 16px;
+  }
+
+  /* Azure sub nav */
+  .azure-nav {
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    height: 48px;
+    border-bottom: 1px solid #e0e0e0;
+    background: #fff;
+  }
+  .azure-nav .azure-label {
+    font-weight: 600;
+    font-size: 15px;
+    margin-right: 24px;
+  }
+  .azure-nav .nav-links {
+    display: flex;
+    gap: 22px;
+    flex: 1;
+    font-size: 14px;
+  }
+  .azure-nav .nav-links span { cursor: pointer; }
+  .azure-nav .actions {
+    display: flex;
+    gap: 12px;
+  }
+  .azure-nav .portal-btn {
+    border: 1px solid #0067b8;
+    color: #0067b8;
+    background: #fff;
+    padding: 7px 16px;
+    font-size: 13px;
+    border-radius: 2px;
+  }
+  .azure-nav .get-started-btn {
+    background: #0067b8;
+    color: #fff;
+    border: none;
+    padding: 7px 16px;
+    font-size: 13px;
+    border-radius: 2px;
+  }
+
+  /* Hero section */
+  .hero {
+    background: #004e8c;
+    background-image: radial-gradient(#0a5ea0 1px, transparent 1px);
+    background-size: 18px 18px;
+    background-color: #004e8c;
+    color: #fff;
+    padding: 44px 24px 44px 24px;
+  }
+  .hero h2 {
+    font-size: 34px;
+    font-weight: 400;
+    margin: 0 0 20px 0;
+  }
+  .hero p {
+    max-width: 720px;
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* Cards row under hero */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    padding: 24px;
+    max-width: 1400px;
+  }
+  .info-card {
+    border: 1px solid #e0e0e0;
+    padding: 20px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .info-card .icon {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: 4px;
+  }
+  .icon-dot { background: repeating-radial-gradient(circle, #e05a2b 0 4px, transparent 4px 9px); }
+  .info-card .label {
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: #555;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .info-card .title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #0067b8;
+    line-height: 1.4;
+  }
+
+  /* Section headings */
+  .section {
+    padding: 30px 24px 10px 24px;
+  }
+  .section h2 {
+    font-size: 26px;
+    font-weight: 400;
+    margin: 0 0 10px 0;
+  }
+  .section p.desc {
+    margin: 0 0 24px 0;
+    color: #333;
+  }
+
+  /* Architect workloads grid */
+  .workload-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    padding: 0 24px 40px 24px;
+  }
+  .workload-card {
+    border: 1px solid #e0e0e0;
+    padding: 24px;
+  }
+  .workload-card .icon-box {
+    width: 46px;
+    height: 46px;
+    margin-bottom: 14px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+  }
+  .workload-card h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 14px 0;
+  }
+  .workload-card ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .workload-card li {
+    margin-bottom: 10px;
+    font-size: 14px;
+  }
+
+  /* Technology areas */
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    padding: 0 24px 40px 24px;
+  }
+  .tech-card h3 {
+    font-size: 17px;
+    font-weight: 600;
+    margin: 0 0 14px 0;
+  }
+  .tech-card ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .tech-card li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 10px;
+    font-size: 14px;
+  }
+  .tech-card li .icn {
+    flex-shrink: 0;
+    width: 15px;
+    text-align: center;
+    color: #0067b8;
+    font-size: 13px;
+    margin-top: 2px;
+  }
+
+  .placeholder {
+    background: repeating-linear-gradient(45deg, #f0f0f0, #f0f0f0 8px, #e6e6e6 8px, #e6e6e6 16px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    font-size: 12px;
+    text-align: center;
+    border-radius: 4px;
+  }
+</style>
+</head>
+<body>
+
+  <!-- Promo banner -->
+  <div class="promo-banner">
+    <button class="close-btn">&times;</button>
+    <div class="dots"></div>
+    <div class="skyline"></div>
+    <div class="content">
+      <h1>Microsoft Build 2026</h1>
+      <div class="date">June 2-3, 2026</div>
+      <button class="learn-more-btn">Learn more &rsaquo;</button>
+    </div>
+  </div>
+
+  <!-- Learn top nav -->
+  <div class="learn-nav">
+    <div class="ms-logo"></div>
+    <div class="learn-label">Learn</div>
+    <div class="nav-links">
+      <span>Documentation &vee;</span>
+      <span>Training &amp; Labs &vee;</span>
+      <span>Q&amp;A &vee;</span>
+      <span>Topics &vee;</span>
+    </div>
+    <div class="right-links">
+      <span class="search-icon">&#128269;</span>
+      <span>Sign in</span>
+    </div>
+  </div>
+
+  <!-- Azure sub nav -->
+  <div class="azure-nav">
+    <div class="azure-label">Azure</div>
+    <div class="nav-links">
+      <span>Products &vee;</span>
+      <span>Architecture &vee;</span>
+      <span>Migration</span>
+      <span>Develop &vee;</span>
+      <span>Learn Azure &vee;</span>
+      <span>Troubleshooting</span>
+      <span>Resources &vee;</span>
+    </div>
+    <div class="actions">
+      <button class="portal-btn">Portal</button>
+      <button class="get-started-btn">Get started with Azure</button>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero">
+    <h2>Azure Architecture Center</h2>
+    <p>Design solutions on Azure by using established patterns and practices. Azure Architecture Center is a catalog of solution ideas, example workloads, reference architectures, technology decision guides, and architecture guides for Azure workloads.</p>
+  </div>
+
+  <!-- Info cards -->
+  <div class="card-grid">
+    <div class="info-card">
+      <div class="icon icon-dot" style="background: none;">
+        <svg width="40" height="40" viewBox="0 0 40 40"><circle cx="8" cy="10" r="4" fill="#e05a2b"/><circle cx="8" cy="30" r="4" fill="#e05a2b"/><circle cx="28" cy="20" r="4" fill="#e05a2b"/><line x1="8" y1="10" x2="8" y2="30" stroke="#e05a2b" stroke-width="2"/><line x1="8" y1="20" x2="28" y2="20" stroke="#e05a2b" stroke-width="2"/></svg>
+      </div>
+      <div>
+        <div class="label">ARCHITECTURE</div>
+        <div class="title">Browse Azure architectures</div>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="icon">
+        <svg width="40" height="40" viewBox="0 0 40 40">
+          <circle cx="8" cy="8" r="3" fill="#e0952b"/><circle cx="20" cy="8" r="3" fill="#e0952b"/><circle cx="32" cy="8" r="3" fill="#e0952b"/>
+          <circle cx="8" cy="20" r="3" fill="#e0952b"/><circle cx="20" cy="20" r="3" fill="#e0952b"/><circle cx="32" cy="20" r="3" fill="#e0952b"/>
+          <circle cx="8" cy="32" r="3" fill="#e0952b"/><circle cx="20" cy="32" r="3" fill="#e0952b"/><circle cx="32" cy="32" r="3" fill="#e0952b"/>
+        </svg>
+      </div>
+      <div>
+        <div class="label">CONCEPT</div>
+        <div class="title">Build by using application architecture fundamentals</div>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="icon">
+        <svg width="40" height="40" viewBox="0 0 40 40">
+          <rect x="6" y="6" width="22" height="28" fill="#e0662b" rx="2"/>
+          <circle cx="26" cy="26" r="7" fill="#fff" stroke="#e0662b" stroke-width="2"/>
+          <line x1="31" y1="31" x2="36" y2="36" stroke="#e0662b" stroke-width="2"/>
+        </svg>
+      </div>
+      <div>
+        <div class="label">REFERENCE</div>
+        <div class="title">Make technology choices</div>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="icon">
+        <svg width="40" height="40" viewBox="0 0 40 40">
+          <circle cx="8" cy="8" r="3" fill="#e0952b"/><circle cx="20" cy="8" r="3" fill="#e0952b"/><circle cx="32" cy="8" r="3" fill="#e0952b"/>
+          <circle cx="8" cy="20" r="3" fill="#e0952b"/><circle cx="20" cy="20" r="3" fill="#e0952b"/><circle cx="32" cy="20" r="3" fill="#e0952b"/>
+          <circle cx="8" cy="32" r="3" fill="#e0952b"/><circle cx="20" cy="32" r="3" fill="#e0952b"/><circle cx="32" cy="32" r="3" fill="#e0952b"/>
+        </svg>
+      </div>
+      <div>
+        <div class="label">CONCEPT</div>
+        <div class="title">Learn cloud design patterns</div>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="icon">
+        <svg width="40" height="40" viewBox="0 0 40 40">
+          <polygon points="20,4 24,16 36,16 26,24 30,36 20,28 10,36 14,24 4,16 16,16" fill="#e0357a"/>
+        </svg>
+      </div>
+      <div>
+        <div class="label">WHAT'S NEW</div>
+        <div class="title">See what's new and updated</div>
+      </div>
+    </div>
+    <div></div>
+  </div>
+
+  <!-- Architect workloads -->
+  <div class="section">
+    <h2>Architect workloads on Azure</h2>
+    <p class="desc">Explore best practices and patterns for building workloads on Microsoft Azure.</p>
+  </div>
+  <div class="workload-grid">
+    <div class="workload-card">
+      <div class="icon-box">
+        <svg width="30" height="30" viewBox="0 0 30 30"><polygon points="2,28 28,28 2,2" fill="none" stroke="#0067b8" stroke-width="2"/></svg>
+      </div>
+      <h3>Design for the cloud</h3>
+      <ul>
+        <li><a href="#">Learn fundamental architecture styles</a></li>
+        <li><a href="#">Use best practices in cloud applications</a></li>
+        <li><a href="#">Avoid performance anti-patterns</a></li>
+        <li><a href="#">Use responsible engineering practices</a></li>
+        <li><a href="#">Use cloud design patterns</a></li>
+      </ul>
+    </div>
+    <div class="workload-card">
+      <div class="icon-box">
+        <svg width="30" height="30" viewBox="0 0 30 30"><circle cx="15" cy="15" r="13" fill="none" stroke="#0067b8" stroke-width="2"/><polygon points="15,6 18,15 15,24 12,15" fill="#0067b8"/></svg>
+      </div>
+      <h3>Choose the right technology</h3>
+      <ul>
+        <li><a href="#">Choose a compute service</a></li>
+        <li><a href="#">Choose a container service</a></li>
+        <li><a href="#">Choose a data store</a></li>
+        <li><a href="#">Choose AI services</a></li>
+        <li><a href="#">Choose a messaging service</a></li>
+      </ul>
+    </div>
+    <div class="workload-card">
+      <div class="icon-box">
+        <svg width="30" height="30" viewBox="0 0 30 30"><rect x="2" y="2" width="10" height="10" fill="none" stroke="#0067b8" stroke-width="2"/><rect x="16" y="16" width="10" height="10" fill="#0067b8"/></svg>
+      </div>
+      <h3>Implement an Azure landing zone</h3>
+      <ul>
+        <li><a href="#">Deploy a platform landing zone</a></li>
+        <li><a href="#">Automate through subscription vending</a></li>
+        <li><a href="#">Application landing zone solutions</a></li>
+      </ul>
+    </div>
+    <div class="workload-card">
+      <div class="icon-box">
+        <svg width="30" height="30" viewBox="0 0 30 30"><circle cx="15" cy="15" r="13" fill="none" stroke="#0067b8" stroke-width="2"/><polygon points="15,8 18,14 15,20 12,14" fill="#0067b8"/></svg>
+      </div>
+      <h3>Specialized scenarios</h3>
+      <ul>
+        <li><a href="#">Architecture for startups</a></li>
+        <li><a href="#">Architecture for SaaS and multitenant applications</a></li>
+        <li><a href="#">Build mission-critical workloads</a></li>
+        <li><a href="#">Azure for AWS professionals</a></li>
+        <li><a href="#">Azure for Google Cloud professionals</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Technology areas -->
+  <div class="section">
+    <h2>Technology areas</h2>
+    <p class="desc">Explore architectures and guides for different technologies.</p>
+  </div>
+  <div class="tech-grid">
+    <div class="tech-card">
+      <h3>Popular articles</h3>
+      <ul>
+        <li><span class="icn">&#128203;</span><a href="#">Microsoft Foundry chat baseline architecture</a></li>
+        <li><span class="icn">&#128196;</span><a href="#">Develop and optimize a RAG implementation</a></li>
+        <li><span class="icn">&#128196;</span><a href="#">AI agent orchestration patterns</a></li>
+        <li><span class="icn">&#128196;</span><a href="#">Cloud design patterns</a></li>
+        <li><span class="icn">&#128196;</span><a href="#">Hub-spoke network topology</a></li>
+      </ul>
+    </div>
+    <div class="tech-card">
+      <h3>AI &amp; Machine Learning</h3>
+      <ul>
+        <li><span class="icn">&#128196;</span><a href="#">AI architecture design</a></li>
+        <li><span class="icn">&#128203;</span><a href="#">Microsoft Foundry chat baseline architecture</a></li>
+        <li><span class="icn">&#128196;</span><a href="#">Build a generative AI gateway</a></li>
+        <li><span class="icn">&#128196;</span><a href="#">AI agent orchestration patterns</a></li>
+        <li><span class="icn">&#128196;</span><a href="#">Develop and optimize a RAG implementation</a></li>
+      </ul>
+    </div>
+    <div class="tech-card">
+      <h3>Analytics</h3>
+      <ul>
+        <li><span class="icn">&#128196;</span><a href="#">Analytics architecture design</a></li>
+        <li><span class="icn">&#128640;</span><a href="#">Choose a data analytics technology</a></li>
+        <li><span class="icn">&#128640;</span><a href="#">Choose a Microsoft Fabric deployment pattern</a></li>
+        <li><span class="icn">&#128203;</span><a href="#">Analytics end-to-end with Microsoft Fabric</a></li>
+        <li><span class="icn">&#128203;</span><a href="#">Enterprise BI with Microsoft Fabric</a></li>
+      </ul>
+    </div>
+    <div class="tech-card">
+      <h3>Compute</h3>
+      <ul>
+        <li><span class="icn">&#128640;</span><a href="#">Choose an Azure compute service</a></li>
+        <li><span class="icn">&#128203;</span><a href="#">Run a Linux VM on Azure</a></li>
+        <li><span class="icn">&#128203;</span><a href="#">Run a Windows VM on Azure</a></li>
+        <li><span class="icn">&#128203;</span><a href="#">Azure VM baseline architecture</a></li>
+        <li><span class="icn">&#128196;</span><a href="#">Understand multi-region compute balancing</a></li>
+      </ul>
+    </div>
+  </div>
+
+</body>
+</html>

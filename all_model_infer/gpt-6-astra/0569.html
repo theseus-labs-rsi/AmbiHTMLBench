@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FIPS 197 — Mathematical Preliminaries</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] },
+  chtml: { scale: 1, matchFontHeight: true },
+  options: { enableMenu: false }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: white; color: black; }
+body { font-family: "Times New Roman", Times, serif; }
+.page { position: relative; width: 1530px; height: 1980px; margin: 0 auto; }
+header { position: absolute; top: 80px; left: 193px; width: 1144px; display: flex; justify-content: space-between; font-family: Arial, Helvetica, sans-serif; font-size: 29px; letter-spacing: .5px; }
+header .running-title { font-variant: small-caps; }
+h1, h2 { position: absolute; left: 193px; width: 1144px; margin: 0; font-family: Arial, Helvetica, sans-serif; font-weight: 700; }
+h1 { top: 176px; font-size: 44px; line-height: 53px; }
+h1 .number { display: inline-block; width: 78px; }
+h2 { font-size: 36px; line-height: 45px; }
+h2 .number { display: inline-block; width: 86px; }
+h2 sup { font-family: "Times New Roman", Times, serif; font-size: 70%; vertical-align: super; line-height: 0; }
+p { position: absolute; left: 193px; width: 1144px; margin: 0; font-size: 30px; line-height: 35px; }
+a { color: #0000ff; text-decoration: none; }
+sup.note { font-size: 21px; line-height: 0; vertical-align: super; margin-left: 8px; }
+.equation { position: absolute; left: 193px; width: 1144px; font-size: 30px; line-height: 43px; display: flex; align-items: center; justify-content: center; }
+.equation .tag { position: absolute; right: 0; }
+.examples { position: absolute; top: 1080px; left: 265px; width: 1072px; font-size: 30px; line-height: 43px; display: grid; grid-template-columns: 750px 193px 129px; align-items: center; }
+.examples .label { text-align: right; white-space: nowrap; }
+.examples .tag { text-align: right; grid-column: 3; grid-row: 1 / 4; }
+.footnote { position: absolute; top: 1769px; left: 193px; width: 1144px; font-size: 25px; line-height: 31px; }
+.footnote::before { content: ""; display: block; width: 458px; border-top: 1px solid black; margin-bottom: 3px; }
+.footnote sup { font-size: 18px; vertical-align: super; }
+.page-number { position: absolute; top: 1817px; left: 0; width: 100%; text-align: center; font-size: 30px; }
+mjx-container { margin: 0 !important; }
+</style>
+</head>
+<body>
+<article class="page">
+<header>
+<span>FIPS 197</span>
+<span class="running-title">Advanced Encryption Standard (AES)</span>
+</header>
+
+<h1><span class="number">4.</span>Mathematical Preliminaries</h1>
+
+<p style="top:257px;">
+For some transformations of the AES algorithms specified in Sec. <a href="#section5">5</a>, each byte in the state array<br>
+is interpreted as one of the 256 elements of a finite field, also known as a Galois Field, denoted<br>
+by $\mathrm{GF}(2^8)$.<sup class="note"><a href="#note1">1</a></sup>
+</p>
+
+<p style="top:380px;">
+In order to define addition and multiplication in $\mathrm{GF}(2^8)$, each byte $\{b_7\ b_6\ b_5\ b_4\ b_3\ b_2\ b_1\ b_0\}$ is<br>
+interpreted as a polynomial, denoted by $b(x)$, as follows:
+</p>
+
+<div class="equation" style="top:477px;">
+<span>$b(x)=b_7x^7+b_6x^6+b_5x^5+b_4x^4+b_3x^3+b_2x^2+b_1x+b_0.$</span>
+<span class="tag">(4.1)</span>
+</div>
+
+<p style="top:545px;">For example, $\{\mathtt{01100011}\}$ is represented by the polynomial $x^6+x^5+x+1$.</p>
+
+<h2 style="top:620px;"><span class="number">4.1</span>Addition in GF(2<sup>8</sup>)</h2>
+
+<p style="top:686px;">
+In order to add two elements in the finite field $\mathrm{GF}(2^8)$, the coefficients of the polynomials that<br>
+represent the elements are added modulo 2 (i.e., with the exclusive-OR operation, denoted by $\oplus$),<br>
+so that $1\oplus1=0$, $1\oplus0=1$, and $0\oplus0=0$.
+</p>
+
+<p style="top:810px;">
+Equivalently, two bytes can be added by applying the exclusive-OR operation to each pair of corre-<br>
+sponding bits in the bytes. Thus, the sum of $\{a_7\ a_6\ a_5\ a_4\ a_3\ a_2\ a_1\ a_0\}$ and $\{b_7\ b_6\ b_5\ b_4\ b_3\ b_2\ b_1\ b_0\}$<br>
+is $\{a_7\oplus b_7\ \ a_6\oplus b_6\ \ a_5\oplus b_5\ \ a_4\oplus b_4\ \ a_3\oplus b_3\ \ a_2\oplus b_2\ \ a_1\oplus b_1\ \ a_0\oplus b_0\}$. (In Section <a href="#section514">5.1.4</a>, this<br>
+definition is extended to words.)
+</p>
+
+<p style="top:968px;">For example, the following three representations of addition are equivalent:</p>
+
+<div class="examples">
+<div>$(x^6+x^4+x^2+x+1)+(x^7+x+1)=x^7+x^6+x^4+x^2$</div>
+<div class="label">(polynomial)</div>
+<div class="tag">(4.2)</div>
+<div>$\{\mathtt{01010111}\}\oplus\{\mathtt{10000011}\}=\{\mathtt{11010100}\}$</div>
+<div class="label">(binary)</div>
+<div>$\{\mathtt{57}\}\oplus\{\mathtt{83}\}=\{\mathtt{d4}\}$</div>
+<div class="label">(hexadecimal).</div>
+</div>
+
+<p style="top:1252px;">
+Because the coefficients of the polynomials are reduced modulo 2, the coefficient 1 is equivalent<br>
+to the coefficient −1, so addition is equivalent to subtraction. For example, $x^4+x^2$ represents the<br>
+same finite field element as $x^4-x^2$, $-x^4+x^2$, and $-x^4-x^2$. Similarly, the sum of any element<br>
+with itself is the zero element.
+</p>
+
+<h2 style="top:1425px;"><span class="number">4.2</span>Multiplication in GF(2<sup>8</sup>)</h2>
+
+<p style="top:1490px;">
+The symbol • denotes multiplication in $\mathrm{GF}(2^8)$.&nbsp; Conceptually, this multiplication is defined<br>
+on two bytes in two steps: &nbsp;1) the two polynomials that represent the bytes are multiplied as<br>
+polynomials, and 2) the resulting polynomial is reduced modulo the following fixed polynomial:
+</p>
+
+<div class="equation" style="top:1645px;">
+<span>$m(x)=x^8+x^4+x^3+x+1.$</span>
+<span class="tag">(4.3)</span>
+</div>
+
+<p style="top:1718px;">Within both steps, the individual coefficients of the polynomials are reduced modulo 2.</p>
+
+<div class="footnote" id="note1"><sup>1</sup>Information about the properties of finite fields can be found in textbooks, such as Michael Artin’s <em>Algebra</em> [<a href="#reference4">4</a>].</div>
+
+<div class="page-number">8</div>
+</article>
+</body>
+</html>

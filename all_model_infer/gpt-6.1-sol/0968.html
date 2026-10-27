@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RFC 9053 — COSE Algorithms — Page 17</title>
+<script>
+window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+* { box-sizing: border-box; }
+html, body { margin: 0; background: #fff; color: #171717; }
+body { font-family: "Times New Roman", Times, serif; }
+.page { position: relative; width: 1448px; height: 2048px; margin: 0 auto; padding-top: 86px; }
+header, footer { position: absolute; left: 136px; width: 1175px; font-size: 25px; }
+header { top: 86px; height: 53px; border-bottom: 2px solid #d1d1d1; }
+.running-line { display: grid; grid-template-columns: 1fr 1fr 1fr; align-items: center; }
+.running-line span:nth-child(2) { text-align: center; }
+.running-line span:nth-child(3) { text-align: right; }
+main { position: absolute; top: 171px; left: 160px; width: 1127px; font-size: 28px; line-height: 33px; }
+table { width: 100%; border-collapse: collapse; table-layout: fixed; border: 2px solid #dedede; font-size: 28px; line-height: 33px; background: #f8f8f8; }
+col.name { width: 108px; }
+col.label { width: 105px; }
+col.type { width: 97px; }
+col.algorithm { width: 634px; }
+col.description { width: 181px; }
+th { text-align: left; background: #eaeaea; font-weight: bold; padding: 13px 18px 12px; border-bottom: 2px solid #dedede; }
+td { padding: 13px 18px 12px; vertical-align: top; }
+.caption { font-style: italic; margin-top: 1px; line-height: 34px; }
+h2 { font-size: 32px; line-height: 39px; margin: 35px 0 13px; font-weight: bold; }
+h2 .number { display: inline-block; margin-right: 23px; }
+p { margin: 0 0 25px; }
+a { color: #28249c; text-decoration: none; }
+ul { padding-left: 48px; margin: 24px 0 0; }
+li { padding-left: 0; margin-bottom: 6px; }
+li::marker { font-size: 23px; }
+footer { top: 1735px; border-top: 2px solid #c9c9c9; padding-top: 22px; }
+</style>
+</head>
+<body>
+<div class="page">
+<header>
+<div class="running-line">
+<span>RFC 9053</span>
+<span>COSE Algorithms</span>
+<span>August 2022</span>
+</div>
+</header>
+<main>
+<table>
+<colgroup>
+<col class="name"><col class="label"><col class="type"><col class="algorithm"><col class="description">
+</colgroup>
+<thead>
+<tr><th>Name</th><th>Label</th><th>Type</th><th>Algorithm</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>salt</td>
+<td>-20</td>
+<td>bstr</td>
+<td>direct+HKDF-SHA-256, direct+HKDF-SHA-512,<br>
+direct+HKDF-AES-128, direct+HKDF-AES-256,<br>
+ECDH-ES+HKDF-256, ECDH-ES+HKDF-512, ECDH-<br>
+SS+HKDF-256, ECDH-SS+HKDF-512, ECDH-<br>
+ES+A128KW, ECDH-ES+A192KW, ECDH-<br>
+ES+A256KW, ECDH-SS+A128KW, ECDH-SS+A192KW,<br>
+ECDH-SS+A256KW</td>
+<td>Random<br>salt</td>
+</tr>
+</tbody>
+</table>
+<div class="caption">Table 9: HKDF Algorithm Parameters</div>
+<h2><span class="number">5.2.</span>Context Information Structure</h2>
+<p>The context information structure is used to ensure that the derived keying material is "bound"<br>
+to the context of the transaction. The context information structure used here is based on that<br>
+defined in [<a href="#">SP800-56A</a>]. By using CBOR for the encoding of the context information structure, we<br>
+automatically get the same type and length separation of fields that is obtained by the use of ASN.<br>
+1. This means that there is no need to encode the lengths for the base elements, as it is done by<br>
+the encoding used in JSON Object Signing and Encryption (JOSE) (<a href="#">Section 4.6.2</a> of [<a href="#">RFC7518</a>]).</p>
+<p>The context information structure refers to PartyU and PartyV as the two parties that are doing<br>
+the key derivation. Unless the application protocol defines differently, we assign PartyU to the<br>
+entity that is creating the message and PartyV to the entity that is receiving the message. By<br>
+defining this association, different keys will be derived for each direction, as the context<br>
+information is different in each direction.</p>
+<p>The context structure is built from information that is known to both entities. This information<br>
+can be obtained from a variety of sources:</p>
+<ul>
+<li>Fields can be defined by the application. This is commonly used to assign fixed names to<br>
+parties, but it can be used for other items such as nonces.</li>
+<li>Fields can be defined by usage of the output. Examples of this are the algorithm and key size<br>
+that are being generated.</li>
+<li>Fields can be defined by parameters from the message. We define a set of header parameters<br>
+in <a href="#">Table 10</a> that can be used to carry the values associated with the context structure.<br>
+Examples of this are identities and nonce values. These header parameters are designed to<br>
+be placed in the unprotected bucket of the recipient structure; they do not need to be in the<br>
+protected bucket, since they are already included in the cryptographic computation by virtue<br>
+of being included in the context structure.</li>
+</ul>
+</main>
+<footer>
+<div class="running-line">
+<span>Schaad</span>
+<span>Informational</span>
+<span>Page 17</span>
+</div>
+</footer>
+</div>
+</body>
+</html>

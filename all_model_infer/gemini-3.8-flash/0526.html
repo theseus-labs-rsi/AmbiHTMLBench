@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>預見未來 - 現代藝術展</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    background-color: #111;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: "Songti SC", "Noto Serif CJK SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", "STSong", serif;
+    color: #fff;
+  }
+
+  .poster {
+    position: relative;
+    width: 794px;
+    height: 1123px;
+    overflow: hidden;
+    background: 
+      radial-gradient(ellipse at 85% 35%, rgba(10, 10, 10, 0.98) 0%, rgba(20, 20, 20, 0.95) 30%, rgba(35, 33, 31, 0.85) 50%, rgba(140, 133, 124, 0.4) 75%),
+      radial-gradient(circle at 10% 20%, #9e978e 0%, #837b71 45%, #423e3b 85%),
+      linear-gradient(135deg, #a39c93 0%, #686158 50%, #151515 100%);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  }
+
+  /* Ink wash organic flow effect on the right */
+  .ink-bg-layer {
+    position: absolute;
+    top: -10%;
+    right: -10%;
+    width: 75%;
+    height: 120%;
+    background: 
+      radial-gradient(ellipse at 60% 40%, rgba(15,15,15,0.98) 0%, rgba(25,25,25,0.95) 40%, rgba(50,48,45,0.7) 65%, transparent 80%),
+      repeating-radial-gradient(circle at 60% 30%, rgba(20,20,20,0.4) 0px, rgba(20,20,20,0.4) 3px, rgba(40,38,36,0.3) 4px, rgba(40,38,36,0.3) 7px);
+    border-radius: 40% 60% 30% 70% / 50% 30% 70% 50%;
+    transform: rotate(-15deg);
+    pointer-events: none;
+    filter: blur(2px);
+  }
+
+  /* Top Left: English subtitle & Main Chinese Title */
+  .top-left-content {
+    position: absolute;
+    top: 55px;
+    left: 45px;
+    z-index: 2;
+  }
+
+  .en-title {
+    font-size: 24px;
+    line-height: 1.35;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.85);
+    font-family: "Didot", "Bodoni MT", "Cinzel", "Georgia", serif;
+  }
+
+  .main-title-grid {
+    margin-top: 50px;
+    display: grid;
+    grid-template-columns: 140px 140px;
+    grid-gap: 20px 25px;
+  }
+
+  .main-title-char {
+    font-size: 132px;
+    line-height: 1;
+    font-weight: 300;
+    color: #ffffff;
+    letter-spacing: -2px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  }
+
+  /* Top Right Block */
+  .top-right-block {
+    position: absolute;
+    top: 55px;
+    right: 50px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .top-right-header {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: flex-start;
+  }
+
+  /* Vertical Chinese text in header */
+  .cjk-vertical-col {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    font-size: 50px;
+    line-height: 1.25;
+    font-weight: 400;
+    letter-spacing: 6px;
+    color: #ffffff;
+  }
+
+  .cjk-vertical-col.col-2 {
+    margin-right: 12px;
+  }
+
+  .en-vertical-col {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: rgba(255, 255, 255, 0.45);
+    font-family: "Didot", "Georgia", serif;
+    margin-right: 25px;
+    height: 160px;
+    text-align: right;
+  }
+
+  .en-desc-block {
+    margin-top: 30px;
+    text-align: right;
+    font-family: "Didot", "Georgia", serif;
+    font-size: 14.5px;
+    line-height: 1.6;
+    letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  /* Lower Section */
+  .lower-section {
+    position: absolute;
+    bottom: 50px;
+    left: 45px;
+    right: 50px;
+    z-index: 2;
+  }
+
+  /* Date formatting: 06/28 */
+  .date-group {
+    position: absolute;
+    left: 0;
+    font-family: "Georgia", serif;
+    font-size: 26px;
+    line-height: 1;
+    font-weight: bold;
+    width: 80px;
+  }
+
+  .date-day-top {
+    display: block;
+    padding-left: 2px;
+  }
+
+  .date-slash {
+    position: absolute;
+    top: 6px;
+    left: 26px;
+    font-size: 32px;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .date-day-bottom {
+    display: block;
+    margin-top: 5px;
+    padding-left: 36px;
+  }
+
+  /* Meta Section: Top Organizer */
+  .organizer-section {
+    position: absolute;
+    bottom: 345px;
+    left: 110px;
+    width: 320px;
+  }
+
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 8px;
+    font-weight: normal;
+  }
+
+  .organizer-name {
+    font-size: 13px;
+    letter-spacing: 1px;
+    color: #ffffff;
+    white-space: nowrap;
+  }
+
+  .meta-divider {
+    position: absolute;
+    bottom: 330px;
+    left: 110px;
+    width: 270px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.35);
+  }
+
+  /* Guest / Artists Section */
+  .artists-wrapper {
+    position: absolute;
+    bottom: 175px;
+    left: 0;
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .year-capsule {
+    width: 26px;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 13px;
+    padding: 6px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 13px;
+    line-height: 1.4;
+    font-family: "Georgia", serif;
+    letter-spacing: 1px;
+    margin-left: 15px;
+    margin-right: 69px;
+  }
+
+  .artists-content {
+    width: 300px;
+  }
+
+  .artists-grid {
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    grid-gap: 5px 12px;
+    font-size: 12.5px;
+    color: #ffffff;
+    letter-spacing: 1px;
+    margin-top: 6px;
+  }
+
+  .artists-grid span {
+    white-space: nowrap;
+  }
+
+  /* Exhibition Introduction Paragraph */
+  .intro-text-group {
+    position: absolute;
+    bottom: 0px;
+    left: 0;
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .date-second {
+    position: relative;
+    width: 80px;
+    font-family: "Georgia", serif;
+    font-size: 26px;
+    line-height: 1;
+    font-weight: bold;
+    flex-shrink: 0;
+  }
+
+  .paragraphs-container {
+    margin-left: 30px;
+    width: 305px;
+    font-size: 8px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.85);
+    text-align: justify;
+    font-family: "SimSun", "Songti SC", serif;
+  }
+
+  .paragraphs-container p {
+    margin-bottom: 6px;
+    text-indent: 14px;
+  }
+
+  /* Bottom Left Logo */
+  .bottom-logo {
+    position: absolute;
+    bottom: -30px;
+    left: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: scale(0.75);
+    transform-origin: left bottom;
+  }
+
+  .logo-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 32px;
+    margin-bottom: 4px;
+  }
+
+  .logo-bar {
+    width: 3px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 1px;
+  }
+
+  .logo-text {
+    font-size: 7px;
+    text-align: center;
+    line-height: 1.1;
+    letter-spacing: 0.5px;
+    color: rgba(255, 255, 255, 0.7);
+    font-family: "sans-serif";
+  }
+
+  /* Right Bottom Catchphrase */
+  .catchphrase-section {
+    position: absolute;
+    right: 25px;
+    bottom: 75px;
+    text-align: right;
+  }
+
+  .vertical-rule {
+    position: absolute;
+    right: -25px;
+    top: -200px;
+    bottom: -20px;
+    width: 1px;
+    background: rgba(255, 255, 255, 0.4);
+  }
+
+  .catchphrase-title {
+    font-size: 42px;
+    line-height: 1.25;
+    font-weight: 400;
+    letter-spacing: 4px;
+    color: #ffffff;
+    margin-bottom: 15px;
+  }
+
+  .catchphrase-sub {
+    font-size: 20px;
+    letter-spacing: 3px;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 300;
+  }
+  
+  .catchphrase-sub .dash {
+    margin: 0 4px;
+    font-weight: 100;
+  }
+</style>
+</head>
+<body>
+
+<div class="poster">
+  <!-- Decorative Ink Layer -->
+  <div class="ink-bg-layer"></div>
+
+  <!-- Top Left Section -->
+  <div class="top-left-content">
+    <div class="en-title">
+      Foresee<br>
+      The<br>
+      Future
+    </div>
+    <div class="main-title-grid">
+      <div class="main-title-char">預</div>
+      <div class="main-title-char">見</div>
+      <div class="main-title-char">未</div>
+      <div class="main-title-char">來</div>
+    </div>
+  </div>
+
+  <!-- Top Right Section -->
+  <div class="top-right-block">
+    <div class="top-right-header">
+      <div class="cjk-vertical-col">現代</div>
+      <div class="cjk-vertical-col col-2">藝術展</div>
+      <div class="en-vertical-col">
+        Modern<br>art exhibition
+      </div>
+    </div>
+    <div class="en-desc-block">
+      Modern art exhibition<br>
+      free to share<br>
+      big coffee guests
+    </div>
+  </div>
+
+  <!-- Bottom Area -->
+  <div class="lower-section">
+    <!-- Date 1: 06/28 -->
+    <div class="date-group" style="bottom: 335px;">
+      <span class="date-day-top">06</span>
+      <span class="date-slash">/</span>
+      <span class="date-day-bottom">28</span>
+    </div>
+
+    <!-- Sponsor Section -->
+    <div class="organizer-section">
+      <div class="section-label">主办方</div>
+      <div class="organizer-name">麦礼贺夫人艺术馆/亚洲协会香港中心</div>
+    </div>
+
+    <div class="meta-divider"></div>
+
+    <!-- Artists Section with Capsule Year -->
+    <div class="artists-wrapper">
+      <div class="year-capsule">
+        <span>2</span>
+        <span>0</span>
+        <span>2</span>
+        <span>0</span>
+      </div>
+      <div class="artists-content">
+        <div class="section-label">主办方</div>
+        <div class="artists-grid">
+          <span>曾&nbsp;&nbsp;翔</span>
+          <span>王&nbsp;&nbsp;镛</span>
+          <span>沃兴华</span>
+          <span>刘彦湖</span>
+          <span>于明诠</span>
+          <span>李成连</span>
+          <span>沈&nbsp;&nbsp;鹏</span>
+          <span>朱关田</span>
+          <span>王学仲</span>
+          <span>田英章</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Intro Paragraphs & Date 2 -->
+    <div class="intro-text-group">
+      <div class="date-second">
+        <span class="date-day-top">07</span>
+        <span class="date-slash">/</span>
+        <span class="date-day-bottom">06</span>
+
+        <!-- Bottom Left Logo -->
+        <div class="bottom-logo">
+          <div class="logo-bars">
+            <div class="logo-bar" style="height: 10px;"></div>
+            <div class="logo-bar" style="height: 18px;"></div>
+            <div class="logo-bar" style="height: 28px;"></div>
+            <div class="logo-bar" style="height: 20px;"></div>
+            <div class="logo-bar" style="height: 24px;"></div>
+            <div class="logo-bar" style="height: 14px;"></div>
+            <div class="logo-bar" style="height: 6px;"></div>
+          </div>
+          <div class="logo-text">
+            創意香港<br>
+            CREATE<br>
+            HK
+          </div>
+        </div>
+      </div>
+
+      <div class="paragraphs-container">
+        <p>现代艺术，又称现代派艺术，很难有一个准确的定义。大致来说，被称为“现代主义”或“现代派”的艺术，是指20世纪以来，区别于传统的，带有前卫和先锋色彩的各种艺术思潮和流派的总称。</p>
+        <p>现代艺术主要包括了野兽主义、立体主义、未来主义、表现主义、俄国的至上主义与构成主义、荷兰的风格派、达达主义、超现实主义、抽象主义、波普艺术等。</p>
+      </div>
+    </div>
+
+    <!-- Right Bottom Slogan -->
+    <div class="catchphrase-section">
+      <div class="vertical-rule"></div>
+      <div class="catchphrase-title">
+        未 来的你<br>
+        是否还在？
+      </div>
+      <div class="catchphrase-sub">
+        而我<span class="dash">—</span>直在这等着你
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

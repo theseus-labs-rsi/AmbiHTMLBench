@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>雀巢商业模式画布</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+    background-color: #f7f7f7;
+    color: #222;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+  }
+  .canvas-container {
+    width: 1000px;
+    background-color: #ffffff;
+    padding: 24px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
+  }
+  /* Header */
+  .header {
+    margin-bottom: 12px;
+  }
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .header-left {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .brand-logo-area {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #0b597b;
+  }
+  .brand-logo-area .cn-name {
+    font-size: 32px;
+    font-weight: 900;
+    letter-spacing: 2px;
+  }
+  .brand-nest-icon {
+    width: 60px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .brand-nest-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: #0b597b;
+  }
+  .brand-logo-area .en-name {
+    font-size: 34px;
+    font-weight: 800;
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: -0.5px;
+  }
+  .main-title {
+    font-size: 38px;
+    font-weight: 900;
+    color: #0b597b;
+    margin-left: 10px;
+    letter-spacing: 1px;
+  }
+  .header-right {
+    text-align: right;
+  }
+  .subtitle-label {
+    font-size: 20px;
+    font-weight: 800;
+    color: #0b597b;
+    letter-spacing: 1px;
+  }
+  .subtitle-main {
+    font-size: 30px;
+    font-weight: 900;
+    color: #111;
+    margin-top: 2px;
+    letter-spacing: 0.5px;
+  }
+  .brand-intro {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #444;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: justify;
+  }
+  .brand-intro strong {
+    color: #111;
+  }
+
+  /* Grid Canvas */
+  .bmc-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: auto auto auto;
+    border-top: 1.5px solid #8c9095;
+    border-left: 1.5px solid #8c9095;
+  }
+  .cell {
+    border-right: 1.5px solid #8c9095;
+    border-bottom: 1.5px solid #8c9095;
+    padding: 8px 10px;
+    font-size: 11.5px;
+    line-height: 1.45;
+    position: relative;
+    background: #fff;
+  }
+  
+  /* Titles in cells */
+  .cell-header {
+    margin-bottom: 6px;
+  }
+  .cell-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: #0b597b;
+    letter-spacing: 2px;
+  }
+  .cell-subtitle {
+    font-size: 9.5px;
+    color: #2395b8;
+    line-height: 1.2;
+    margin-top: 2px;
+    transform-origin: left;
+  }
+
+  /* Content typography */
+  .content p {
+    margin-bottom: 6px;
+    text-align: justify;
+  }
+  .highlight-blue {
+    color: #0b597b;
+    font-weight: 700;
+  }
+  .section-tag {
+    color: #0b597b;
+    font-weight: bold;
+    margin-bottom: 4px;
+    display: block;
+  }
+
+  /* Placement */
+  .col-partners {
+    grid-column: 1 / 2;
+    grid-row: 1 / 3;
+  }
+  .col-activities {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+  }
+  .col-resources {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+  }
+  .col-value {
+    grid-column: 3 / 4;
+    grid-row: 1 / 3;
+  }
+  .col-relationships {
+    grid-column: 4 / 5;
+    grid-row: 1 / 2;
+  }
+  .col-channels {
+    grid-column: 4 / 5;
+    grid-row: 2 / 3;
+  }
+  .col-segments {
+    grid-column: 5 / 6;
+    grid-row: 1 / 3;
+  }
+  
+  /* Bottom section */
+  .col-cost {
+    grid-column: 1 / 4;
+    grid-row: 3 / 4;
+    padding: 8px 12px;
+  }
+  .col-revenue {
+    grid-column: 4 / 6;
+    grid-row: 3 / 4;
+    padding: 8px 12px;
+  }
+
+  .cost-split {
+    display: flex;
+    margin-top: 6px;
+    gap: 16px;
+  }
+  .cost-subcol {
+    flex: 1;
+    display: flex;
+    gap: 6px;
+  }
+  .vertical-label {
+    writing-mode: vertical-lr;
+    letter-spacing: 3px;
+    font-size: 11px;
+    font-weight: bold;
+    color: #333;
+    border: 1px solid #777;
+    padding: 4px 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: fit-content;
+  }
+  .cost-items {
+    font-size: 11px;
+    line-height: 1.45;
+  }
+  .list-numbered {
+    margin: 0;
+    padding-left: 0;
+    list-style: none;
+  }
+  .list-numbered li {
+    margin-bottom: 4px;
+    text-align: justify;
+  }
+</style>
+</head>
+<body>
+
+<div class="canvas-container">
+  <!-- Top Header Area -->
+  <div class="header">
+    <div class="header-top">
+      <div class="header-left">
+        <div class="brand-logo-area">
+          <span class="cn-name">雀巢</span>
+          <div class="brand-nest-icon">
+            <!-- Stylized Bird Nest Vector Placeholder -->
+            <svg viewBox="0 0 100 65">
+              <path d="M5,40 C15,25 35,20 50,30 C65,15 85,25 95,40 C98,45 80,60 50,60 C20,60 2,45 5,40 Z" fill="none" stroke="#0b597b" stroke-width="3"/>
+              <path d="M30,32 C28,20 38,12 45,18 C48,22 42,30 30,32 Z" fill="#0b597b"/>
+              <path d="M52,32 C50,15 65,8 72,16 C75,22 68,30 52,32 Z" fill="#0b597b"/>
+              <circle cx="42" cy="16" r="2" fill="#fff"/>
+              <circle cx="68" cy="14" r="2" fill="#fff"/>
+              <line x1="10" y1="42" x2="90" y2="42" stroke="#0b597b" stroke-width="2"/>
+              <line x1="15" y1="48" x2="85" y2="48" stroke="#0b597b" stroke-width="2"/>
+              <line x1="25" y1="54" x2="75" y2="54" stroke="#0b597b" stroke-width="2"/>
+            </svg>
+          </div>
+          <span class="en-name">Nestlē</span>
+        </div>
+        <div class="main-title">商业模式画布</div>
+      </div>
+      <div class="header-right">
+        <div class="subtitle-label">战略模式--</div>
+        <div class="subtitle-main">全球TOP食品公司</div>
+      </div>
+    </div>
+    <div class="brand-intro">
+      <strong>【品牌简介】</strong>雀巢是全球知名的食品饮料公司。拥有从全球知名品牌，到各地受欢迎的本土产品，业务遍布全球一百多个国家和地区。从一个生产婴儿食品的乡村作坊发展成今天领先世界的食品公司，雀巢走过了130多年的发展历程。
+    </div>
+  </div>
+
+  <!-- Business Model Canvas Main Table -->
+  <div class="bmc-grid">
+    <!-- 1. 重要伙伴 -->
+    <div class="cell col-partners">
+      <div class="cell-header">
+        <div class="cell-title">重要伙伴</div>
+        <div class="cell-subtitle">有效运作所需的供应商和合作伙伴</div>
+      </div>
+      <div class="content">
+        <span class="section-tag">对内</span>
+        <p><strong>全球80多个国家拥有500多家工厂，近25万名员工</strong></p>
+        <p><strong>雀巢在全球拥有强大的食品和营养研究网络，数千名科学家及技术人员在研发领域工作</strong></p>
+        <p><strong>并与风险投资、研究合作伙伴和大学保持着紧密的合作</strong></p>
+        <p>全球约30家产品技术中心和研发中心，为创新提供专业技术和识，支持业务增长</p>
+        <p style="margin-top: 10px;"><strong>电商与物流（国内菜鸟合作绿色供应链）</strong></p>
+      </div>
+    </div>
+
+    <!-- 2. 关键业务 -->
+    <div class="cell col-activities">
+      <div class="cell-header">
+        <div class="cell-title">关键业务</div>
+        <div class="cell-subtitle">成功营运必需的重要业务模块</div>
+      </div>
+      <div class="content">
+        <p class="highlight-blue" style="margin-bottom: 4px;">聚研发-管理-并购三力，享全球食饮增长红利</p>
+        <ol class="list-numbered">
+          <li><strong>1、通过创新和改造来加强公司的老字号品牌和基础业务；</strong></li>
+          <li><strong>2、寻求新的内外部创新模式，包括在雀巢旗下创立新的子公司；</strong></li>
+          <li><strong>3、确保投资为雀巢铺设新的增长路径；</strong></li>
+          <li><strong>4、在技术支持和能力增长的同时进行策略性投资。</strong></li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- 3. 核心资源 -->
+    <div class="cell col-resources">
+      <div class="cell-header">
+        <div class="cell-title">核心资源</div>
+        <div class="cell-subtitle">模式运转所需的资源</div>
+      </div>
+      <div class="content">
+        <p>在食品制造领域内<strong>一百四十多年的经验</strong>、对<strong>Z新营养和食品加工技术</strong>的不断追求、<strong>高质量原材料</strong>的使用、<strong>Z高技术设备</strong>的应用、<strong>高素质的员工</strong>及<strong>研发方面的巨额投资</strong></p>
+      </div>
+    </div>
+
+    <!-- 4. 价值主张 -->
+    <div class="cell col-value">
+      <div class="cell-header">
+        <div class="cell-title">价值主张</div>
+        <div class="cell-subtitle">为客户创造价值的产品或服务</div>
+      </div>
+      <div class="content">
+        <p><strong class="highlight-blue">理念：</strong><br><strong>充分发掘食品的力量，提升每个个体的生活品质，无论当下还是未来。</strong></p>
+        <p><strong class="highlight-blue">主张：</strong><br>坚持诚信、合法经营，尊重员工和合作伙伴</p>
+        <p><strong>雀巢研发网络将“质量源于设计”的理念应用到所有的产品研发之中。</strong></p>
+        <p><strong class="highlight-blue">产品：</strong><br><strong>咖啡、奶品、谷物和零食等</strong></p>
+      </div>
+    </div>
+
+    <!-- 5. 客户关系 -->
+    <div class="cell col-relationships">
+      <div class="cell-header">
+        <div class="cell-title">客户关系</div>
+        <div class="cell-subtitle">如何与客户建立及维系关系</div>
+      </div>
+      <div class="content">
+        <p>会员俱乐部、积分制福利兑换、电商优惠组合等常规营销形式</p>
+        <p>标签化标准、<br>包装设计手册、<br>品牌化战略、<br>全球消费者服务机构</p>
+      </div>
+    </div>
+
+    <!-- 6. 渠道通路 -->
+    <div class="cell col-channels">
+      <div class="cell-header">
+        <div class="cell-title">渠道通路</div>
+        <div class="cell-subtitle">企业服务流程中的客户接触点</div>
+      </div>
+      <div class="content">
+        <p><strong>线上商城</strong><br><strong>电商渠道</strong></p>
+        <p>产品销往全球100多个国家和地区</p>
+      </div>
+    </div>
+
+    <!-- 7. 客户细分 -->
+    <div class="cell col-segments">
+      <div class="cell-header">
+        <div class="cell-title">客户细分</div>
+        <div class="cell-subtitle">所服务的客户群体分类</div>
+      </div>
+      <div class="content">
+        <p><strong>没有特别区分的大客户群体，根据子品 牌的不同锚定细分消费者。</strong></p>
+        <p><strong>到2030的目标：帮助5000万儿童拥有更健康的生活</strong></p>
+        <p><strong>在与雀巢公司的商业活动直接相关的社区中，帮助3000万人改善生活。</strong></p>
+      </div>
+    </div>
+
+    <!-- 8. 成本结构 -->
+    <div class="cell col-cost">
+      <div class="cell-header">
+        <div class="cell-title">成本结构</div>
+        <div class="cell-subtitle">商业模式运转下所引发的成本</div>
+      </div>
+      <div class="cost-split">
+        <div class="cost-subcol">
+          <div class="vertical-label">固定成本</div>
+          <div class="cost-items">
+            <strong>人力成本、技术研发运维成本、一般及行政开支、商品成本、门店运维成本</strong>
+          </div>
+        </div>
+        <div class="cost-subcol">
+          <div class="vertical-label">可变成本</div>
+          <div class="cost-items">
+            <strong>原料成本、广告营销活动成本、流量成本、包装成本、周边成本、其他成本</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. 收入来源 -->
+    <div class="cell col-revenue">
+      <div class="cell-header">
+        <div class="cell-title">收入来源</div>
+        <div class="cell-subtitle">企业通过向客户提供价值主张而获得的收入</div>
+      </div>
+      <div class="content" style="margin-top: 6px;">
+        <p><strong>各类产品销售收入（95%来自食品的销售）</strong></p>
+        <p><strong>投资收入</strong></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

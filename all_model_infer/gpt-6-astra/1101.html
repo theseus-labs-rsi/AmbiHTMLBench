@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>手寫筆記：系統理論</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; }
+body {
+  background: #252729;
+  font-family: "DFKai-SB", "BiauKai", "KaiTi", "Noto Serif TC", serif;
+}
+.document {
+  position: relative;
+  width: 540px;
+  height: 737px;
+  overflow: hidden;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 56px, #858b90 57px, #41474a 59px, transparent 61px),
+    repeating-linear-gradient(0deg, transparent 0 67px, #676e72 68px, transparent 70px),
+    #252729;
+}
+.notebook {
+  position: absolute;
+  left: 270px;
+  top: 365px;
+  width: 688px;
+  height: 496px;
+  transform: translate(-50%, -50%) rotate(90deg);
+  display: grid;
+  grid-template-columns: 340px 348px;
+  color: #494940;
+  background: #e4e3d5;
+  border: 1px solid #aaa99d;
+  box-shadow: 4px 4px 5px #0008;
+}
+.page {
+  position: relative;
+  overflow: hidden;
+  padding: 9px 13px 8px 13px;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 9px, #a7b3ac66 9px 10px),
+    repeating-linear-gradient(90deg, transparent 0 9px, #a7b3ac66 9px 10px),
+    #e6e5d8;
+}
+.left { padding-right: 17px; }
+.right { padding-left: 18px; }
+.line {
+  margin: 0;
+  font-size: 13px;
+  line-height: 18px;
+  white-space: nowrap;
+  letter-spacing: -.55px;
+}
+.title { font-size: 14px; line-height: 19px; }
+.red { color: #965857; }
+.blue { color: #59677f; }
+.chapter {
+  margin: 2px 0 1px;
+  color: #98616c;
+  font-size: 17px;
+  line-height: 22px;
+  letter-spacing: 1px;
+}
+.upper-notes {
+  display: grid;
+  grid-template-columns: 171px 135px;
+  height: 119px;
+}
+.upper-notes .line { line-height: 19px; }
+.outline {
+  border: 1px solid #77796a;
+  padding: 1px 3px;
+  font-size: 12px;
+  line-height: 16px;
+}
+ul {
+  margin: 0;
+  padding-left: 13px;
+  font-size: 12px;
+  line-height: 18px;
+}
+.section { margin-top: 2px; }
+.annotation {
+  display: inline-block;
+  padding: 0 3px;
+  border: 1px solid #858273;
+  line-height: 17px;
+}
+.bottom-left {
+  display: grid;
+  grid-template-columns: 188px 117px;
+  margin-top: 1px;
+}
+.bottom-left .line { font-size: 12px; line-height: 18px; }
+.arrow-area {
+  display: flex;
+  align-items: center;
+  height: 42px;
+  gap: 8px;
+  padding-left: 55px;
+}
+.placeholder { position: relative; }
+.arrow {
+  width: 26px;
+  height: 40px;
+  font-size: 7px;
+  color: #696758;
+  text-align: center;
+  padding-top: 12px;
+  clip-path: polygon(30% 0,70% 0,70% 58%,100% 58%,50% 100%,0 58%,30% 58%);
+  background: #aaa99b;
+}
+.arrow::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  z-index: -1;
+  background: #e6e5d8;
+  clip-path: polygon(32% 0,68% 0,68% 59%,96% 59%,50% 96%,4% 59%,32% 59%);
+}
+.footer-line { font-size: 12px; line-height: 18px; }
+.right .line { line-height: 19px; }
+.indent { padding-left: 17px; }
+.right-top { min-height: 174px; }
+.right-middle {
+  position: relative;
+  display: grid;
+  grid-template-columns: 135px 171px;
+  min-height: 102px;
+}
+.right-middle .line { font-size: 12px; line-height: 19px; }
+.callout-column { padding: 0 0 0 3px; }
+.callout-column .outline { font-size: 12px; line-height: 16px; }
+.purple-arrow {
+  width: 29px;
+  height: 27px;
+  margin: 0 0 0 56px;
+  background: #957694;
+  clip-path: polygon(34% 0,66% 0,66% 53%,100% 53%,50% 100%,0 53%,34% 53%);
+  font-size: 6px;
+  padding-top: 5px;
+  text-align: center;
+  color: #ece2e9;
+}
+.right-lower {
+  display: grid;
+  grid-template-columns: 140px 166px;
+  margin-top: 1px;
+  min-height: 102px;
+}
+.right-lower .line { font-size: 12px; line-height: 18px; }
+.right-lower .outline { font-size: 12px; }
+.binding {
+  position: absolute;
+  z-index: 5;
+  left: 324px;
+  top: 13px;
+  width: 31px;
+  height: 471px;
+  color: #585a50;
+  font: 6px/7px serif;
+  text-align: center;
+  background:
+    radial-gradient(ellipse at 8px 8px, #56594d 0 3px, transparent 4px) 0 0 / 31px 19px repeat-y;
+}
+.binding::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 14px 5px at 15px 9px, transparent 60%, #656b5b 66%, #9a9f8b 77%, #4c5147 87%, transparent 93%) 0 0 / 31px 19px repeat-y;
+}
+.binding span {
+  position: absolute;
+  bottom: 0;
+  left: 1px;
+  width: 29px;
+  background: #dedfcecc;
+}
+</style>
+</head>
+<body>
+<main class="document">
+  <article class="notebook">
+    <section class="page left">
+      <p class="line title">三. 腦的原則</p>
+      <p class="line">局部專業分工，言語區，感覺中樞、動作言語[illegible]</p>
+      <p class="line">[illegible]聯繫、腦[illegible]，看[illegible]的[illegible]</p>
+
+      <h1 class="chapter">第四章 系統理論</h1>
+
+      <div class="upper-notes">
+        <div>
+          <p class="line blue">一. [illegible]系統[illegible]</p>
+          <p class="line red">[illegible]的腦[illegible]系統</p>
+          <p class="line red">長期記憶的[illegible]</p>
+          <p class="line red">大腦的[illegible]圖</p>
+          <p class="line">（二）生物學材料</p>
+        </div>
+        <div>
+          <p class="line">G. [illegible]</p>
+          <ul>
+            <li>有機體，各有[illegible]</li>
+            <li>[illegible]不同[illegible]</li>
+            <li>交互作用</li>
+            <li>[illegible]系統[illegible]</li>
+          </ul>
+          <div class="outline">
+            [illegible]<span class="red">系統理論</span>[illegible]<br>
+            [illegible]互[illegible]
+          </div>
+        </div>
+      </div>
+
+      <p class="line blue section">1. 林奈系統</p>
+      <p class="line">[illegible]（G. 艾[illegible]）[illegible]</p>
+      <p class="line blue">2. [illegible] → <span style="color:#494940">選擇適應[illegible]</span></p>
+      <p class="line">中間[illegible]，生產[illegible]</p>
+      <p class="line" style="text-align:right">
+        <span class="annotation red">互動[illegible]現實系統</span>
+      </p>
+      <p class="line blue">3. [illegible]</p>
+      <p class="line">[illegible]腦[illegible]系統[illegible]，機[illegible]，不[?]</p>
+      <p class="line blue">4. [illegible]系統的[illegible]</p>
+      <p class="line">（1）共同[illegible]，科[illegible]</p>
+
+      <div class="bottom-left">
+        <div>
+          <div class="arrow-area">
+            <div class="placeholder arrow">[Arrow]</div>
+            <span style="font-size:13px">系統的原理</span>
+          </div>
+          <p class="line blue">3. [illegible]型 → A.B.C.D.H.I.K</p>
+          <p class="line"><span class="annotation">[illegible]之後[illegible]</span></p>
+        </div>
+        <div>
+          <p class="line blue">5. 林[illegible]</p>
+          <p class="line">[illegible]以利[illegible]</p>
+          <p class="line">[illegible]因[illegible]</p>
+          <p class="line blue">[illegible]的[illegible]</p>
+          <p class="line">（2）[illegible]</p>
+        </div>
+      </div>
+      <p class="line footer-line">我國的[illegible]有[illegible]（第2圖）[illegible]</p>
+    </section>
+
+    <section class="page right">
+      <div class="right-top">
+        <p class="line title">（三）系統的特質</p>
+        <p class="line">1. 封閉的系統　（1）意識與前意識之間，與潛意識間[illegible]</p>
+        <p class="line indent">（2）能量：[illegible]的部份原理，[illegible]</p>
+        <p class="line indent" style="padding-left:83px">[illegible]，故[illegible]</p>
+        <p class="line indent">（3）[illegible]，故[illegible]，幫助的[illegible]</p>
+        <p class="line indent">（4）[illegible]系統[illegible]</p>
+        <p class="line">2. 所有系統[illegible]</p>
+        <p class="line">大[illegible]與[illegible]</p>
+        <p class="line">3. [illegible]的[illegible]</p>
+      </div>
+
+      <div class="right-middle">
+        <div>
+          <p class="line">4. [illegible]系統</p>
+          <p class="line">5. [illegible]系統</p>
+          <p class="line">6. 大[illegible]的[illegible]</p>
+          <p class="line">[illegible]<span class="red">未來</span>[illegible]</p>
+        </div>
+        <div class="callout-column">
+          <div class="outline"><span class="red">[illegible]</span>90%，[illegible]</div>
+          <div class="placeholder purple-arrow">[Arrow]</div>
+          <div class="outline">
+            大[illegible]可以[illegible]原理進<br>
+            入而[illegible]<span class="red">血流及血壓</span>、[illegible]<br>
+            [illegible]提出[illegible]
+          </div>
+        </div>
+      </div>
+
+      <div class="right-lower">
+        <div>
+          <p class="line">（三）[illegible]</p>
+          <p class="line"><span class="red">以[illegible]</span>的方式</p>
+          <p class="line blue">[illegible]改變[illegible]</p>
+          <p class="line blue">（[illegible]）[illegible]</p>
+          <p class="line blue">[illegible]自我[illegible]</p>
+        </div>
+        <div>
+          <div class="outline">
+            [illegible]改變[illegible]原[?]<br>
+            <span class="blue">[illegible]</span>、<span class="red">[illegible]</span><br>
+            [illegible]強[illegible]
+          </div>
+        </div>
+      </div>
+
+      <p class="line">（四）林奈，生物學之父</p>
+      <p class="line">[illegible]的模式，如吸收[illegible]</p>
+      <p class="line blue">[illegible]的[illegible]理[illegible]</p>
+      <p class="line">（五）[illegible]</p>
+      <p class="line">（六）<span class="annotation blue">[illegible]系統理論</span>[illegible]</p>
+      <p class="line">[illegible]<span class="red">學習</span>[illegible]</p>
+      <p class="line" style="text-align:right">出現[illegible]</p>
+    </section>
+
+    <div class="placeholder binding">
+      <span>[Notebook binding: center]</span>
+    </div>
+  </article>
+</main>
+</body>
+</html>

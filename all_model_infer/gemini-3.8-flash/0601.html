@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>线性代数笔记 - 矩阵乘法</title>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  body {
+    background-color: #f0ede6;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  }
+
+  .notebook-page {
+    width: 680px;
+    min-height: 900px;
+    background-color: #fbfbf9;
+    background-image: linear-gradient(#e4eaf2 1px, transparent 1px);
+    background-size: 100% 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    padding: 30px 45px 30px 45px;
+    position: relative;
+    box-sizing: border-box;
+    font-size: 15px;
+    line-height: 30px;
+  }
+
+  .header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+  }
+
+  .header-meta {
+    font-size: 11px;
+    color: #4a77a5;
+    line-height: 1.4;
+    text-align: left;
+  }
+
+  .header-meta div {
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 2px;
+  }
+
+  .header-meta .line {
+    display: inline-block;
+    width: 90px;
+    border-bottom: 1px dotted #4a77a5;
+    margin-left: 5px;
+  }
+
+  /* Colors matching handwriting */
+  .c-green {
+    color: #0b663b;
+  }
+
+  .c-purple {
+    color: #3b2068;
+  }
+
+  .c-orange {
+    color: #d25a27;
+  }
+
+  .circled-row {
+    border: 1.5px solid #0b663b;
+    border-radius: 12px;
+    padding: 1px 4px;
+  }
+
+  .circled-col {
+    border: 1.5px solid #0b663b;
+    border-radius: 10px;
+    padding: 2px 2px;
+  }
+
+  .circled-num {
+    border: 1.5px solid #3b2068;
+    border-radius: 50%;
+    display: inline-block;
+    padding: 0 3px;
+    line-height: 1.1;
+  }
+
+  .section {
+    margin-bottom: 12px;
+  }
+
+  .flex-row {
+    display: flex;
+    align-items: center;
+  }
+
+  .side-note-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .side-note-text {
+    width: 175px;
+    font-size: 13.5px;
+    line-height: 1.4;
+    position: relative;
+    padding-left: 8px;
+    border-left: 1.5px solid #3b2068;
+    border-radius: 4px 0 0 4px;
+    margin-left: 10px;
+  }
+
+  .indent {
+    padding-left: 24px;
+  }
+
+  .footer-logo {
+    position: absolute;
+    bottom: 18px;
+    right: 35px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    color: #2775b6;
+  }
+</style>
+</head>
+<body>
+
+<div class="notebook-page">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-meta">
+      <div>No.<span class="line"></span></div>
+      <div>Date<span class="line"></span></div>
+    </div>
+  </div>
+
+  <!-- Row 1: Example Matrices A, B -->
+  <div class="section flex-row c-green" style="font-size: 15px;">
+    <span>例：设&nbsp;</span>
+    <span>
+      \( A = \begin{pmatrix}
+        \enclose{roundedbox}[border-color="#0b663b"]{1 & 0 & -1 & 2} \\
+        -1 & 1 & 3 & 0 \\
+        0 & 5 & -1 & 4
+      \end{pmatrix} \)
+    </span>
+    <span style="margin-left: 18px;">
+      \( B = \begin{pmatrix}
+        \enclose{box}[border-color="#0b663b", mathbackground="none"]{\begin{matrix} 0 \\ 1 \\ 3 \\ -1 \end{matrix}} & \begin{matrix} 3 & 4 \\ 2 & -1 \\ 1 & -1 \\ 2 & 1 \end{matrix}
+      \end{pmatrix} \)
+    </span>
+    <span style="margin-left: 20px;">求 \( AB \)</span>
+  </div>
+
+  <!-- Row 2: Matrix AB Result -->
+  <div class="section flex-row" style="margin-left: 36px;">
+    <div class="c-purple flex-row">
+      <span style="margin-right: 4px;">\( AB = \)</span>
+      <span>
+        \( \begin{pmatrix}
+          \enclose{circle}[border-color="#3b2068"]{-5} & 6 & 7 \\
+          10 & 2 & -6 \\
+          -2 & 17 & 10
+        \end{pmatrix} \)
+      </span>
+      <span style="margin-left: 15px; font-size: 14.5px;">
+        \( = 1 \times 0 + 0 \times 1 + (-1) \times 3 + 2 \times (-1) \)
+      </span>
+    </div>
+  </div>
+
+  <!-- Section 2: Comparison -->
+  <div class="section side-note-container" style="margin-top: 15px;">
+    <div>
+      <div class="c-orange" style="font-weight: 500;">2. 比较：</div>
+      <div class="flex-row c-purple" style="margin: 4px 0;">
+        <span>行列式：</span>
+        <span>
+          \( \begin{vmatrix} a_{11} & a_{12} \\ a_{21} & a_{22} \end{vmatrix} \cdot \begin{vmatrix} b_{11} & b_{12} & b_{13} \\ b_{21} & b_{22} & b_{23} \\ b_{31} & b_{32} & b_{33} \end{vmatrix} \)
+        </span>
+        <span style="margin-left: 15px;">有意义</span>
+      </div>
+      <div class="flex-row c-purple" style="margin: 4px 0;">
+        <span>矩阵：</span>
+        <span style="margin-left: 14px;">
+          \( \begin{pmatrix} a_{11} & a_{12} \\ a_{21} & a_{22} \end{pmatrix} \begin{pmatrix} b_{11} & b_{12} & b_{13} \\ b_{21} & b_{22} & b_{23} \\ b_{31} & b_{32} & b_{33} \end{pmatrix} \)
+        </span>
+        <span style="margin-left: 15px;">无意义</span>
+      </div>
+    </div>
+    <div class="side-note-text c-purple">
+      △ 只有当第一个矩阵的列数等于第二个矩阵的行数时，两个矩阵才能够相乘
+    </div>
+  </div>
+
+  <!-- Multiplication Result Shape Rules -->
+  <div class="section c-purple" style="margin-top: 18px;">
+    <div>
+      相乘结果矩阵形状：结果矩阵 \( \begin{cases} \text{行数} = \text{第一个矩阵的行数} \\ \text{列数} = \text{第二个矩阵的列数} \end{cases} \)
+    </div>
+    <div style="margin-top: 2px;">
+      （中间相等，取两头：\( A_{5 \times 4} \cdot B_{4 \times 3} = C_{5 \times 3} \)）
+    </div>
+    <div class="flex-row c-green" style="margin-top: 2px;">
+      <span>例：</span>
+      <span style="margin-left: 10px;">
+        \( \begin{pmatrix} 1 & 2 & 3 \end{pmatrix} \begin{pmatrix} 3 \\ 2 \\ 1 \end{pmatrix} = \begin{pmatrix} 10 \end{pmatrix} \)
+      </span>
+    </div>
+  </div>
+
+  <!-- Green Matrix Calculations -->
+  <div class="section side-note-container" style="margin-top: 15px; align-items: center;">
+    <div>
+      <div class="c-green" style="margin-bottom: 8px;">
+        \( \begin{pmatrix} -2 & 4 \\ 1 & -2 \end{pmatrix}_{2 \times 2} \begin{pmatrix} 2 & 4 \\ -3 & -6 \end{pmatrix}_{2 \times 2} = \begin{pmatrix} -16 & -32 \\ 8 & 16 \end{pmatrix}_{2 \times 2} \)
+      </div>
+      <div class="c-green">
+        \( \begin{pmatrix} 2 & 4 \\ -3 & -6 \end{pmatrix}_{2 \times 2} \begin{pmatrix} -2 & 4 \\ 1 & -2 \end{pmatrix}_{2 \times 2} = \begin{pmatrix} 0 & 0 \\ 0 & 0 \end{pmatrix}_{2 \times 2} \)
+      </div>
+    </div>
+    <div class="c-purple" style="font-size: 16px; font-weight: bold; margin-right: 35px;">
+      \( AB \ne BA \)
+    </div>
+  </div>
+
+  <!-- Numbered Rules -->
+  <div class="section c-purple" style="margin-top: 8px; line-height: 28px;">
+    <div>① 矩阵乘法不一定满足交换律</div>
+    <div>② 矩阵 \( A \ne 0, B \ne 0 \) 却有 \( AB = 0 \)</div>
+    <div class="indent">从而不能由 \( AB = 0 \) 得出 \( A = 0 \) 或 \( B = 0 \) 的结论</div>
+    <div>③ \( AB = AC, A \ne 0 \;\not\kern-0.3em\implies B = C \)</div>
+  </div>
+
+  <!-- Footer Logo -->
+  <div class="footer-logo">KOKUYO</div>
+</div>
+
+</body>
+</html>

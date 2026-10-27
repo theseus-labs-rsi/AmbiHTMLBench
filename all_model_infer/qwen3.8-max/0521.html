@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sick Transit - Books & Arts</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Courier+Prime&display=swap');
+
+        body {
+            margin: 0;
+            padding: 40px;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            font-family: 'EB Garamond', serif;
+            color: #000;
+        }
+
+        .page-container {
+            width: 850px;
+            min-height: 1100px;
+            background-color: #fff;
+            padding: 60px 70px;
+            box-sizing: border-box;
+            position: relative;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        /* Crop Marks */
+        .crop-mark {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 1px solid #000;
+        }
+        .tl { top: 20px; left: 20px; border-right: none; border-bottom: none; }
+        .tr { top: 20px; right: 20px; border-left: none; border-bottom: none; }
+        .bl { bottom: 20px; left: 20px; border-right: none; border-top: none; }
+        .br { bottom: 20px; right: 20px; border-left: none; border-top: none; }
+        
+        .crosshair {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+        }
+        .crosshair::before, .crosshair::after {
+            content: '';
+            position: absolute;
+            background: #000;
+        }
+        .crosshair::before { top: 14px; left: 0; width: 30px; height: 1px; }
+        .crosshair::after { top: 0; left: 14px; width: 1px; height: 30px; }
+        .crosshair-circle {
+            position: absolute;
+            top: 5px; left: 5px;
+            width: 18px; height: 18px;
+            border: 1px solid #000;
+            border-radius: 50%;
+        }
+
+        .ch-top { top: 5px; left: 50%; transform: translateX(-50%); }
+        .ch-bottom { bottom: 5px; left: 50%; transform: translateX(-50%); }
+        .ch-left { top: 50%; left: 5px; transform: translateY(-50%); }
+        .ch-right { top: 50%; right: 5px; transform: translateY(-50%); }
+
+        /* Header Info */
+        .header-info {
+            font-family: 'Courier Prime', monospace;
+            font-size: 10px;
+            margin-bottom: 40px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Main Title Section */
+        .section-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .books-arts-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 48px;
+            font-weight: 400;
+            margin: 0;
+            line-height: 1;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .books-arts-title span {
+            font-style: italic;
+            font-size: 60px;
+            vertical-align: middle;
+            margin: 0 5px;
+        }
+
+        .header-line {
+            border-bottom: 2px solid #000;
+            width: 100%;
+            margin-top: -15px;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: -1;
+        }
+        
+        .header-line-container {
+            position: relative;
+            height: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .header-line-bg {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #000;
+        }
+
+        .article-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 10px 0 5px 0;
+            text-align: center;
+        }
+
+        .article-subtitle {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-style: italic;
+            margin: 0 0 15px 0;
+            text-align: center;
+        }
+
+        .author-byline {
+            font-family: 'EB Garamond', serif;
+            font-size: 18px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* Columns Layout */
+        .content-columns {
+            column-count: 3;
+            column-gap: 25px;
+            text-align: justify;
+            font-size: 15px;
+            line-height: 1.35;
+        }
+
+        .content-columns p {
+            margin-top: 0;
+            margin-bottom: 12px;
+            text-indent: 15px;
+        }
+
+        .content-columns p:first-child {
+            text-indent: 0;
+        }
+
+        .drop-cap {
+            float: left;
+            font-size: 58px;
+            line-height: 45px;
+            padding-top: 4px;
+            padding-right: 5px;
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+        }
+
+        /* Book Review Blocks in Middle Column */
+        .book-review-block {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 13px;
+            line-height: 1.2;
+        }
+
+        .book-author {
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .book-title-main {
+            font-weight: 700;
+            font-style: italic;
+            font-size: 14px;
+        }
+
+        .book-subtitle {
+            font-weight: 700;
+            font-style: italic;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .book-details {
+            font-size: 11px;
+            color: #333;
+        }
+
+        .separator-line {
+            width: 60px;
+            height: 1px;
+            background: #000;
+            margin: 15px auto;
+        }
+
+        /* Footnote */
+        .footnote {
+            font-size: 12px;
+            font-style: italic;
+            line-height: 1.2;
+            margin-top: 10px;
+            border-top: 1px solid #000;
+            padding-top: 5px;
+            text-indent: 0 !important;
+        }
+        
+        .footnote span {
+            font-style: normal;
+        }
+
+        /* Footer */
+        .page-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            font-family: 'EB Garamond', serif;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Utility for italicizing specific words in text */
+        i {
+            font-style: italic;
+        }
+        
+        /* Specific overrides for column breaking if needed, though CSS columns handle it mostly */
+        .col-break {
+            break-inside: avoid;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+    <!-- Crop Marks -->
+    <div class="crop-mark tl"></div>
+    <div class="crop-mark tr"></div>
+    <div class="crop-mark bl"></div>
+    <div class="crop-mark br"></div>
+    
+    <!-- Crosshairs -->
+    <div class="crosshair ch-top"><div class="crosshair-circle"></div></div>
+    <div class="crosshair ch-bottom"><div class="crosshair-circle"></div></div>
+    <div class="crosshair ch-left"><div class="crosshair-circle"></div></div>
+    <div class="crosshair ch-right"><div class="crosshair-circle"></div></div>
+
+    <!-- Header Info -->
+    <div class="header-info">
+        Iss.40/June 22 bob &nbsp; 1/21/02 2:21 PM &nbsp; Page 1
+    </div>
+
+    <!-- Main Header -->
+    <div class="section-header">
+        <div class="header-line-container">
+            <div style="position: relative; z-index: 2; background: #fff; display: inline-block; padding: 0 20px;">
+                <h1 class="books-arts-title">Books<span>&amp;</span>Arts</h1>
+            </div>
+            <div class="header-line-bg"></div>
+        </div>
+        
+        <h2 class="article-title">Sick Transit</h2>
+        <h3 class="article-subtitle">The Bioethics of Big Brother</h3>
+        <div class="author-byline">By Wesley J. Smith</div>
+    </div>
+
+    <!-- Content -->
+    <div class="content-columns">
+        <!-- Column 1 Content -->
+        <p><span class="drop-cap">P</span>eople who are elderly, disabled, prematurely born, or seriously ill have much to fear from the medical intelligentsia&mdash;those bioethicists and moral philosophers who have in recent years transformed medical ethics.</p>
+        
+        <p>It was bioethicists and moral philosophers, after all, who made it acceptable to dehydrate to death people diagnosed as permanently unconscious&mdash;a practice that has already spread to brain-damaged people who are unquestionably conscious.</p>
+        
+        <p>It was bioethicists and moral philosophers who made a distinction between &ldquo;human beings&rdquo; and &ldquo;persons,&rdquo; with only persons enjoying the right to life&mdash;a theory intended to pave the way for the legal killing of babies born with birth defects and involuntary euthanasia of legally incompetent patients. (Both forms of medicalized killing already occur in the Netherlands, a country some look to as a model for the United States.)</p>
+        
+        <p>It was bioethicists and moral philosophers as well who promulgated &ldquo;Futile Care Theory,&rdquo; which allows doctors and health-insurance executives to deny not merely high-tech interventions but also such treatments as CPR and antibiotics to the profoundly disabled and people at the end of life. Even if the patient or the patient&rsquo;s family wants the care, what matters is the medical professional&rsquo;s assessment of the quality and worth of the patient&rsquo;s life. Little noticed by the mainstream media,</p>
+
+        <div class="footnote">
+            Wesley J. Smith, an attorney for the International Anti-Euthanasia Task Force, is the author of <span>Forced Exit: The Slippery Slope from Assisted Suicide to Legalized Murder.</span>
+        </div>
+
+        <!-- Column 2 Content -->
+        <p>Futile Care Theory is already being implemented in hospitals and nursing homes, both informally in clinical settings and formally through hospital protocols.</p>
+        
+        <p>In short, with the exception of helping to create laws that permit people to refuse unwanted medical treatment, the attitudes and policies of most mainstream bioethicists and moral philosophers are very bad news for the medically defenseless and vulnerable among us.</p>
+
+        <div class="separator-line"></div>
+
+        <div class="book-review-block col-break">
+            <div class="book-author">Daniel Callahan</div>
+            <div class="book-title-main">False Hopes</div>
+            <div class="book-subtitle">Why America's Quest for Perfect<br>Health is a Recipe for Failure</div>
+            <div class="book-details">Simon & Schuster, 336 pp., $24</div>
+        </div>
+
+        <div class="book-review-block col-break">
+            <div class="book-author">William B. Schwartz</div>
+            <div class="book-title-main">Life Without Disease</div>
+            <div class="book-subtitle">The Pursuit of Medical Utopia</div>
+            <div class="book-details">University of California Press, 204 pp., $22</div>
+        </div>
+
+        <div class="separator-line"></div>
+
+        <p>It is in this context that two new books, <i>False Hopes</i> by the noted bioethicist Daniel Callahan and <i>Life Without Disease</i> by physician William B. Schwartz, cause so much concern. Both authors urge the laudable reform of our currently dysfunctional health-care system in order to make it more widely accessible and cost efficient. Unfortunately, both authors choose methods that are unethical and immoral.</p>
+
+        <p>At first blush, Callahan and Schwartz seem mirror opposites: Callahan is nihilistic; Schwartz is utopian. Callahan is convinced that medical progress has advanced just about as far as it reasonably can. Schwartz sees a medically miraculous future where life expectancy will</p>
+
+        <!-- Column 3 Content -->
+        <p>reach 130 years. Callahan would put more money into public-health education, while Schwartz would increase investment in medical research. Callahan writes too long. Schwartz writes too short.</p>
+
+        <p>Despite these differences, however, the authors have much in common. Both write in the passive prose so favored by the medical intelligentsia. Both attempt to appear rational and balanced as they grapple with health-care policy. And both surrender abjectly to medical utilitarianism.</p>
+
+        <p>Each enthusiastically espouses a rigid system of health-care rationing that would sacrifice the life and health of some people for the sake of health-care &ldquo;equity&rdquo;&mdash;which for both the authors represents a higher good than the fate of individual patients. And therein lies an acute and fast-approaching danger to the future of America as a moral nation.</p>
+
+        <p>Callahan disbelieves in medical utopia, and everywhere he looks, he sees only limits. People expect too much from their doctors. Medicine is too expensive and getting more so. Health care consumes 14 percent of the gross domestic product and takes resources away from other important community interests.</p>
+
+        <p>And what have we gotten for our huge investment in medicine? Not as much, according to Callahan, as might be supposed. It&rsquo;s true that life expectancy has increased by approximately thirty years during the twentieth century, but that has mostly to do with improved infant-mortality rates. And our increased lifespan is actually a bit of a curse. We used to die quickly from infectious disease. Now we die slowly from such chronic and debilitating conditions as Alz-</p>
+    </div>
+
+    <!-- Footer -->
+    <div class="page-footer">
+        <div>June 22, 1998</div>
+        <div>The Weekly Standard / 31</div>
+    </div>
+
+</div>
+
+</body>
+</html>

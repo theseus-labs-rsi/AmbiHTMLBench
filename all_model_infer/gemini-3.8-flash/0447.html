@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1200, initial-scale=1.0">
+<title>Dawn - A journey to the beginning of the solar system</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    background-color: #000000;
+    color: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    min-width: 1200px;
+    padding: 30px 40px;
+    overflow-x: auto;
+  }
+
+  .main-container {
+    display: grid;
+    grid-template-columns: 310px 1fr 340px;
+    gap: 30px;
+    position: relative;
+    max-width: 1350px;
+    margin: 0 auto;
+  }
+
+  /* Colors */
+  .cyan-title {
+    color: #22ccee;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Flags */
+  .flag {
+    display: inline-block;
+    width: 24px;
+    height: 15px;
+    border: 1px solid rgba(255,255,255,0.2);
+    vertical-align: middle;
+  }
+  .flag-de {
+    background: linear-gradient(to bottom, #000 33.33%, #dd0000 33.33%, #dd0000 66.66%, #ffce00 66.66%);
+  }
+  .flag-us {
+    background: repeating-linear-gradient(to bottom, #b22234, #b22234 1.15px, #fff 1.15px, #fff 2.3px);
+    position: relative;
+  }
+  .flag-us::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 40%;
+    height: 54%;
+    background-color: #3c3b6e;
+  }
+  .flag-it {
+    background: linear-gradient(to right, #009246 33.33%, #ffffff 33.33%, #ffffff 66.66%, #ce2b37 66.66%);
+  }
+
+  /* Left Column */
+  .col-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 40px;
+  }
+
+  /* Framing Cameras Block */
+  .block-fc h2 {
+    font-size: 19px;
+    margin-bottom: 8px;
+  }
+  .block-fc .desc {
+    font-style: italic;
+    font-size: 11.5px;
+    line-height: 1.35;
+    margin-bottom: 15px;
+    text-align: left;
+    font-weight: bold;
+  }
+  .fc-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  .person-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .person-img {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    border: 2px solid #555;
+    background: #2a2a2a;
+    overflow: hidden;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .person-caption {
+    font-size: 9.5px;
+    line-height: 1.2;
+    color: #fff;
+    font-weight: bold;
+  }
+
+  /* GRaND Block */
+  .block-grand h2 {
+    font-size: 17px;
+    margin-bottom: 12px;
+  }
+  .grand-content {
+    display: flex;
+    gap: 15px;
+  }
+  .grand-desc-box {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  .grand-desc-box .desc {
+    font-style: italic;
+    font-size: 11.5px;
+    line-height: 1.35;
+    font-weight: bold;
+  }
+
+  /* Center Column */
+  .col-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .center-header h1 {
+    font-size: 44px;
+    color: #22ccee;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+  .center-header h3 {
+    font-size: 16.5px;
+    color: #22ccee;
+    font-style: italic;
+    font-weight: normal;
+  }
+
+  /* Center Graphic (Planet & Orbit) */
+  .planet-stage {
+    position: relative;
+    width: 100%;
+    height: 380px;
+    margin-top: 10px;
+  }
+  .planet-sphere {
+    position: absolute;
+    top: 55px;
+    left: 45px;
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #b5b1a8 0%, #6e6b66 50%, #201e1c 85%, #050505 100%);
+    box-shadow: inset -20px -20px 50px #000, 0 0 10px rgba(0,0,0,0.8);
+    overflow: hidden;
+  }
+  /* Craters */
+  .planet-sphere::after {
+    content: "";
+    position: absolute;
+    top: 15%;
+    left: 20%;
+    width: 40px;
+    height: 35px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.15);
+    box-shadow: inset 2px 2px 4px rgba(255,255,255,0.2), inset -2px -2px 4px rgba(0,0,0,0.4);
+  }
+  /* Laser / Sensor footprint */
+  .sensor-beam {
+    position: absolute;
+    top: 135px;
+    left: 170px;
+    width: 90px;
+    height: 40px;
+    background: linear-gradient(135deg, rgba(255,235,130,0.7) 0%, rgba(255,235,130,0.1) 80%);
+    clip-path: polygon(100% 0%, 0% 80%, 45% 100%);
+    z-index: 5;
+  }
+  .sensor-footprint {
+    position: absolute;
+    top: 165px;
+    left: 170px;
+    width: 50px;
+    height: 14px;
+    background: #ffeb82;
+    opacity: 0.85;
+    border-radius: 50%;
+    transform: rotate(-10deg);
+    filter: drop-shadow(0 0 4px #ffeb82);
+    z-index: 6;
+  }
+  /* Red Elliptical Orbit Track */
+  .orbit-line {
+    position: absolute;
+    top: 0;
+    left: 80px;
+    width: 210px;
+    height: 375px;
+    border: 2px solid #e60000;
+    border-radius: 50%;
+    transform: rotate(-25deg);
+    pointer-events: none;
+    z-index: 3;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 75%);
+  }
+  .orbit-line-front {
+    position: absolute;
+    top: 0;
+    left: 80px;
+    width: 210px;
+    height: 375px;
+    border: 2px solid #e60000;
+    border-radius: 50%;
+    transform: rotate(-25deg);
+    pointer-events: none;
+    z-index: 7;
+    clip-path: polygon(50% 50%, 100% 40%, 100% 100%, 0% 100%);
+  }
+  /* Spacecraft on orbit */
+  .spacecraft {
+    position: absolute;
+    top: 75px;
+    left: 235px;
+    width: 100px;
+    height: 40px;
+    z-index: 8;
+  }
+  .solar-panel-left {
+    position: absolute;
+    left: 0;
+    top: 12px;
+    width: 38px;
+    height: 14px;
+    background: repeating-linear-gradient(to right, #244977, #244977 4px, #5882b4 5px);
+    border: 1px solid #7ea7dc;
+    transform: skewY(-5deg);
+  }
+  .solar-panel-right {
+    position: absolute;
+    right: 8px;
+    top: 19px;
+    width: 38px;
+    height: 14px;
+    background: repeating-linear-gradient(to right, #244977, #244977 4px, #5882b4 5px);
+    border: 1px solid #7ea7dc;
+    transform: skewY(6deg);
+  }
+  .sat-body {
+    position: absolute;
+    left: 40px;
+    top: 8px;
+    width: 18px;
+    height: 22px;
+    background: #888;
+    border: 1px solid #bbb;
+    box-shadow: inset 1px 1px 3px #fff, inset -1px -1px 3px #000;
+  }
+
+  /* Mission statement below planet */
+  .mission-statement {
+    font-size: 13.5px;
+    font-style: italic;
+    font-weight: bold;
+    line-height: 1.45;
+    color: #ffffff;
+    max-width: 440px;
+    margin-top: 25px;
+    margin-bottom: 30px;
+  }
+  .dawn-url {
+    font-size: 27px;
+    font-weight: bold;
+    color: #22ccee;
+    letter-spacing: 0.5px;
+  }
+
+  /* Right Column */
+  .col-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 40px;
+  }
+
+  /* Gravity Science Block */
+  .block-gs h2 {
+    font-size: 19px;
+    margin-bottom: 8px;
+  }
+  .gs-main {
+    display: flex;
+    gap: 15px;
+  }
+  .gs-left-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+  }
+  .gs-left-content .desc {
+    font-style: italic;
+    font-size: 11px;
+    line-height: 1.35;
+    font-weight: bold;
+  }
+
+  /* Visible & Infrared Spectrometer Block */
+  .block-vir h2 {
+    font-size: 17px;
+    margin-bottom: 12px;
+  }
+  .vir-content {
+    display: flex;
+    gap: 12px;
+  }
+  .vir-desc-box {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+  }
+  .vir-desc-box .desc {
+    font-style: italic;
+    font-size: 11px;
+    line-height: 1.35;
+    font-weight: bold;
+  }
+
+  /* Hardware Placeholders */
+  .hardware-placeholder {
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: 0 0 10px rgba(0,0,0,0.8);
+    overflow: hidden;
+  }
+  .hw-fc {
+    width: 130px;
+    height: 170px;
+    background: linear-gradient(135deg, #7c7247 0%, #3e3820 70%, #15140d 100%);
+    border: 1px solid #a3955d;
+  }
+  .hw-grand {
+    width: 140px;
+    height: 165px;
+    background: linear-gradient(135deg, #444c4e 0%, #222b2d 50%, #111516 100%);
+    border: 1px solid #667578;
+  }
+  .hw-gs {
+    width: 135px;
+    height: 170px;
+    background: radial-gradient(circle at 30% 40%, #555 0%, #222 60%, #111 100%);
+    border: 1px solid #444;
+  }
+  .hw-vir {
+    width: 140px;
+    height: 140px;
+    background: linear-gradient(135deg, #94938d 0%, #464645 50%, #1a1a1a 100%);
+    border: 1px solid #888;
+  }
+
+  .hw-tag {
+    position: absolute;
+    bottom: 6px;
+    background: rgba(0,0,0,0.75);
+    padding: 2px 6px;
+    font-size: 8px;
+    color: #ccc;
+    border-radius: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: center;
+  }
+
+  /* Detailed visual mockups inside hardware boxes */
+  .fc-visual {
+    width: 90%;
+    height: 85%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  .fc-barrel {
+    width: 32px;
+    height: 55px;
+    background: #395270;
+    border: 2px solid #5d7fa8;
+    border-bottom: none;
+  }
+  .fc-base {
+    width: 85px;
+    height: 70px;
+    background: #bfa85d;
+    border: 2px solid #dfc776;
+    border-radius: 3px;
+    position: relative;
+  }
+
+  .grand-visual {
+    width: 85%;
+    height: 85%;
+    position: relative;
+    border: 2px solid #e0c868;
+    background: #2a2e30;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 4px;
+  }
+  .grand-core {
+    width: 100%;
+    height: 50%;
+    background: linear-gradient(to right, #cf713a, #ff9f59);
+    border-radius: 3px;
+  }
+  .grand-bottom {
+    width: 100%;
+    height: 35%;
+    background: #c9b14e;
+    border-radius: 2px;
+  }
+
+  .gs-visual {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+  .dish-mock {
+    position: absolute;
+    left: 5px;
+    top: 20px;
+    width: 48px;
+    height: 110px;
+    border-radius: 50% 0 0 50%;
+    background: radial-gradient(ellipse at 80% 50%, #999 0%, #333 90%);
+    border: 2px solid #888;
+  }
+  .bus-mock {
+    position: absolute;
+    right: 8px;
+    top: 15px;
+    width: 75px;
+    height: 125px;
+    background: repeating-linear-gradient(45deg, #1f2224, #1f2224 4px, #353a3e 4px, #353a3e 8px);
+    border: 2px solid #666;
+  }
+
+  .vir-visual {
+    width: 90%;
+    height: 85%;
+    position: relative;
+  }
+  .vir-plate {
+    width: 100%;
+    height: 38px;
+    background: #d4cfb8;
+    transform: perspective(60px) rotateX(25deg);
+    border: 1px solid #fffae8;
+  }
+  .vir-scaffold {
+    width: 80%;
+    height: 45px;
+    margin: 0 auto;
+    border-left: 3px solid #666;
+    border-right: 3px solid #666;
+    background: repeating-linear-gradient(-45deg, transparent, transparent 6px, #444 6px, #444 8px);
+  }
+  .vir-base {
+    width: 95%;
+    height: 25px;
+    margin: 0 auto;
+    background: #aaa;
+    border-radius: 2px;
+  }
+
+  /* Person Avatar Placeholders */
+  .avatar-mock {
+    font-size: 26px;
+    line-height: 1;
+    color: #888;
+  }
+</style>
+</head>
+<body>
+
+<div class="main-container">
+
+  <!-- LEFT COLUMN -->
+  <div class="col-left">
+    
+    <!-- Framing Cameras -->
+    <div class="block-fc">
+      <h2 class="cyan-title">Framing Cameras <span class="flag flag-de" title="Germany"></span></h2>
+      <p class="desc">
+        By imaging the surfaces of Vesta and Ceres, the framing cameras will enable scientists to map the topography, albedo and color, and to determine their shapes, volumes, and spin rates.
+      </p>
+      <div class="fc-content">
+        <div class="person-box">
+          <div class="person-img" title="Holger Sierks">
+            <span class="avatar-mock">👤</span>
+          </div>
+          <div class="person-caption">
+            Holger Sierks<br>
+            Framing Camera Lead, MPS
+          </div>
+        </div>
+        <div class="hardware-placeholder hw-fc">
+          <div class="fc-visual">
+            <div class="fc-barrel"></div>
+            <div class="fc-base"></div>
+          </div>
+          <span class="hw-tag">[Framing Camera]</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gamma Ray Neutron Detector -->
+    <div class="block-grand">
+      <h2 class="cyan-title">Gamma Ray Neutron Detector <span class="flag flag-us" title="United States"></span></h2>
+      <div class="grand-content">
+        <div class="hardware-placeholder hw-grand">
+          <div class="grand-visual">
+            <div class="grand-core"></div>
+            <div class="grand-bottom"></div>
+          </div>
+          <span class="hw-tag">[GRaND Detector]</span>
+        </div>
+        <div class="grand-desc-box">
+          <p class="desc">
+            GRaND measures elemental abundances on the surfaces of Vesta and Ceres, offering insight into their respective formation and evolution
+          </p>
+          <div class="person-box" style="align-items: flex-start; text-align: left;">
+            <div class="person-img" title="Tom Prettyman">
+              <span class="avatar-mock">👤</span>
+            </div>
+            <div class="person-caption">
+              Tom Prettyman<br>
+              GRaND Team Lead, PSI
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CENTER COLUMN -->
+  <div class="col-center">
+    
+    <div class="center-header">
+      <h1>Dawn</h1>
+      <h3>A journey to the beginning of the solar system</h3>
+    </div>
+
+    <!-- Central Space Diagram -->
+    <div class="planet-stage">
+      <div class="orbit-line"></div>
+      
+      <!-- Planet (Vesta) -->
+      <div class="planet-sphere" title="Protoplanet Vesta"></div>
+      
+      <!-- Beam & Target Footprint -->
+      <div class="sensor-beam"></div>
+      <div class="sensor-footprint"></div>
+
+      <!-- Dawn Spacecraft -->
+      <div class="spacecraft">
+        <div class="solar-panel-left"></div>
+        <div class="sat-body"></div>
+        <div class="solar-panel-right"></div>
+      </div>
+
+      <div class="orbit-line-front"></div>
+    </div>
+
+    <p class="mission-statement">
+      In its journey to the main asteroid belt to orbit two diverse protoplanets, Vesta and Ceres, Dawn is carrying a suite of sophisticated scientific instruments to collect data that will inform us about the early formation of our solar system.
+    </p>
+
+    <div class="dawn-url">http://dawn.jpl.nasa.gov</div>
+
+  </div>
+
+  <!-- RIGHT COLUMN -->
+  <div class="col-right">
+    
+    <!-- Gravity Science -->
+    <div class="block-gs">
+      <h2 class="cyan-title">Gravity Science <span class="flag flag-us" title="United States"></span></h2>
+      <div class="gs-main">
+        <div class="gs-left-content">
+          <p class="desc">
+            Gravity science: the spacecraft transmits a radio signal to Earth through its high gain antenna that changes in frequency as the spacecraft's speed changes when flying over areas of different densities. The collective set of information on the mass variations or concentrations is called the gravitational field of the body/planet.
+          </p>
+          <div class="person-box" style="align-self: center; margin-top: 10px;">
+            <div class="person-img" title="Sami Asmar">
+              <span class="avatar-mock">👤</span>
+            </div>
+            <div class="person-caption">
+              Sami Asmar<br>
+              Gravity Science Lead, JPL
+            </div>
+          </div>
+        </div>
+        <div class="hardware-placeholder hw-gs">
+          <div class="gs-visual">
+            <div class="dish-mock"></div>
+            <div class="bus-mock"></div>
+          </div>
+          <span class="hw-tag">[Spacecraft / Antenna]</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Visible & Infrared Spectrometer -->
+    <div class="block-vir">
+      <h2 class="cyan-title">Visible &amp; Infrared Spectrometer <span class="flag flag-it" title="Italy"></span></h2>
+      <div class="vir-content">
+        <div class="hardware-placeholder hw-vir">
+          <div class="vir-visual">
+            <div class="vir-plate"></div>
+            <div class="vir-scaffold"></div>
+            <div class="vir-base"></div>
+          </div>
+          <span class="hw-tag">[VIR Spectrometer]</span>
+        </div>
+        <div class="vir-desc-box">
+          <p class="desc">
+            VIR measures reflected sunlight and emitted thermal radiation from the surfaces of the targets. Scientists extract and then map mineralogical signatures and thermal properties. These properties hold clues to the history and formation mechanisms of Vesta and Ceres.
+          </p>
+          <div class="person-box" style="align-self: center; margin-top: 5px;">
+            <div class="person-img" title="Angioletta Coradini">
+              <span class="avatar-mock">👤</span>
+            </div>
+            <div class="person-caption">
+              Angioletta Coradini,<br>
+              VIR Team Leader, INAF
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>

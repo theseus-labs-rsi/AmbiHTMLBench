@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>All Up In The Biz - Poster</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background-color: #111;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .poster {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    height: 750px;
+    background-color: #d6cfc0;
+    background-image: 
+      radial-gradient(circle at 50% 20%, rgba(240, 235, 224, 0.9) 0%, rgba(190, 180, 165, 0.6) 60%, rgba(20, 20, 20, 0.95) 100%),
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    color: #fff;
+  }
+
+  /* Photo Layer Simulation */
+  .photo-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+  }
+
+  .photo-background .portrait-silhouette {
+    position: absolute;
+    top: 110px;
+    width: 440px;
+    height: 520px;
+    background: radial-gradient(ellipse at 50% 30%, #302f2d 0%, #151413 60%, #000 95%);
+    border-radius: 50% 50% 40% 40% / 60% 60% 30% 30%;
+    opacity: 0.92;
+    filter: contrast(130%) grayscale(80%);
+  }
+
+  /* Cap Brim shape */
+  .photo-background .cap-brim {
+    position: absolute;
+    top: 350px;
+    width: 470px;
+    height: 95px;
+    background: #1c1a17;
+    border-radius: 50% 50% 45% 45%;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.9);
+  }
+
+  /* Bottom fade to deep black */
+  .fade-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 38%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 25%, rgba(0,0,0,1) 50%, #000000 100%);
+    z-index: 2;
+  }
+
+  /* Content Overlay */
+  .content {
+    position: relative;
+    z-index: 10;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 24px 20px 20px 20px;
+    text-align: center;
+  }
+
+  /* Top Bar */
+  .top-bar {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    align-items: flex-start;
+  }
+
+  .laurel {
+    font-size: 8px;
+    letter-spacing: 1px;
+    line-height: 1.1;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.85);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    padding: 2px 8px;
+  }
+
+  .laurel::before, .laurel::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 14px;
+    height: 100%;
+    border: 1.5px solid rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+  }
+
+  .laurel::before {
+    left: 0;
+    border-right: none;
+  }
+
+  .laurel::after {
+    right: 0;
+    border-left: none;
+  }
+
+  .laurel-sub {
+    font-size: 5px;
+    margin-top: 2px;
+    opacity: 0.8;
+  }
+
+  .network-credits {
+    padding-top: 4px;
+    padding-right: 35px;
+  }
+
+  .showtime-orig {
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 4px;
+    color: #f7f6f2;
+    text-transform: uppercase;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  }
+
+  .director {
+    margin-top: 10px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #0c0b0b;
+    text-transform: uppercase;
+  }
+
+  /* Title Section */
+  .title-area {
+    margin-top: 15px;
+  }
+
+  .title-top {
+    font-family: 'Impact', 'Arial Black', sans-serif;
+    font-size: 38px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: #e5a729;
+    text-transform: uppercase;
+    line-height: 1;
+    text-shadow: 2px 2px 0px rgba(0,0,0,0.3);
+  }
+
+  .title-main {
+    font-family: 'Georgia', 'Playfair Display', 'Impact', serif;
+    font-size: 165px;
+    font-weight: 900;
+    line-height: 0.82;
+    color: #e5a729;
+    letter-spacing: -2px;
+    text-shadow: 
+      3px 3px 0px #1a1610,
+      -1px -1px 0px #1a1610,
+      1px -1px 0px #1a1610,
+      -1px 1px 0px #1a1610;
+    transform: scaleY(1.05);
+  }
+
+  .subtitle {
+    margin-top: 36px;
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1.35;
+    letter-spacing: 2px;
+    color: #e5a729;
+    text-transform: uppercase;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+  }
+
+  /* Bottom Area */
+  .bottom-area {
+    margin-bottom: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .release-type {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: #ffffff;
+    text-transform: uppercase;
+  }
+
+  .release-date {
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 4px;
+    color: #ffffff;
+    text-transform: uppercase;
+    margin-top: -6px;
+  }
+
+  .brand-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 4px;
+  }
+
+  .logo-showtime {
+    display: inline-flex;
+    align-items: center;
+    font-family: 'Arial Black', sans-serif;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    color: #ffffff;
+    position: relative;
+  }
+
+  .logo-showtime .sho-circle {
+    background-color: #ffffff;
+    color: #000;
+    border-radius: 50%;
+    padding: 1px 4px;
+    margin-right: -1px;
+    display: inline-block;
+  }
+
+  .logo-divider {
+    width: 1px;
+    height: 36px;
+    background-color: #666;
+  }
+
+  .logo-paramount {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1;
+  }
+
+  .streaming-on {
+    font-size: 7px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #ccc;
+    margin-bottom: 2px;
+  }
+
+  .paramount-text {
+    font-family: 'Georgia', serif;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 22px;
+    letter-spacing: -0.5px;
+    color: #ffffff;
+    display: flex;
+    align-items: baseline;
+  }
+
+  .paramount-plus {
+    font-family: sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    margin-left: 2px;
+  }
+
+  .disclaimer {
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    color: #a8a8a8;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+</style>
+</head>
+<body>
+
+<div class="poster">
+  <!-- Visual Background Layers Representing Biz Markie Close-up -->
+  <div class="photo-background">
+    <div class="portrait-silhouette"></div>
+    <div class="cap-brim"></div>
+  </div>
+  
+  <div class="fade-bottom"></div>
+
+  <!-- Content Layer -->
+  <div class="content">
+    
+    <!-- Top Header -->
+    <div class="top-bar">
+      <div class="laurel">
+        <span>TRIBECA</span>
+        <span>FESTIVAL</span>
+        <span style="font-size:9px; font-weight:bold; margin: 1px 0;">2023</span>
+        <span class="laurel-sub">OFFICIAL SELECTION</span>
+      </div>
+      <div class="network-credits">
+        <div class="showtime-orig">SHOWTIME ORIGINAL</div>
+        <div class="director">A SACHA JENKINS JAMMIE</div>
+      </div>
+    </div>
+
+    <!-- Main Title & Tagline -->
+    <div class="title-area">
+      <div class="title-top">ALL UP IN THE</div>
+      <div class="title-main">BIZ</div>
+      <div class="subtitle">
+        THE LIFE AND RHYMES<br>
+        OF BIZ MARKIE
+      </div>
+    </div>
+
+    <!-- Bottom Billing & Streaming Info -->
+    <div class="bottom-area">
+      <div class="release-type">DOCUMENTARY FILM</div>
+      <div class="release-date">AUGUST 11</div>
+      
+      <div class="brand-row">
+        <div class="logo-showtime">
+          <span class="sho-circle">SHO</span>WTIME&#174;
+        </div>
+        <div class="logo-divider"></div>
+        <div class="logo-paramount">
+          <span class="streaming-on">STREAMING ON</span>
+          <span class="paramount-text">Paramount<span class="paramount-plus">+</span></span>
+        </div>
+      </div>
+
+      <div class="disclaimer">
+        PARAMOUNT+ WITH SHOWTIME PLAN ONLY.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

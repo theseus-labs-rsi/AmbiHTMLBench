@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>山里的约会 - TongCai 2021</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@400;700&family=Noto+Serif+SC:wght@400;700&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+
+        .poster-container {
+            width: 600px;
+            height: 850px;
+            position: relative;
+            background: linear-gradient(to bottom, #dcebe6 0%, #cde0d5 40%, #a8c686 60%, #8fb365 100%);
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        /* Background Illustration Placeholder */
+        .bg-illustration {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            /* Simulating the watercolor texture and landscape */
+            background: 
+                radial-gradient(circle at 50% 80%, rgba(139, 195, 74, 0.4) 0%, transparent 60%),
+                radial-gradient(circle at 20% 60%, rgba(76, 175, 80, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 65%, rgba(255, 152, 0, 0.2) 0%, transparent 40%),
+                linear-gradient(to bottom, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.05) 100%);
+        }
+
+        /* Specific visual elements to mimic the scene */
+        .mountains {
+            position: absolute;
+            top: 45%;
+            left: 0;
+            width: 100%;
+            height: 20%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 200"><path d="M0,200 Q150,50 300,150 T600,100 L600,200 Z" fill="%236b8e5a" opacity="0.6"/><path d="M0,200 Q100,100 250,180 T600,150 L600,200 Z" fill="%23557a46" opacity="0.5"/></svg>') no-repeat bottom center;
+            background-size: cover;
+            z-index: 2;
+        }
+
+        .field {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 45%;
+            background: linear-gradient(to bottom, #9cb368 0%, #7a9648 100%);
+            z-index: 3;
+            opacity: 0.8;
+        }
+
+        /* Text Layers */
+        .content-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        /* Top Right Text */
+        .top-right-text {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            text-align: right;
+            color: #2c3e2c;
+            font-size: 13px;
+            line-height: 1.6;
+            font-weight: 500;
+            max-width: 400px;
+        }
+
+        /* Left Vertical Text */
+        .left-vertical-top {
+            position: absolute;
+            top: 20px;
+            left: 25px;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            color: #1a331a;
+            font-size: 22px;
+            font-weight: bold;
+            letter-spacing: 5px;
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        .left-vertical-mid {
+            position: absolute;
+            top: 280px;
+            left: 30px;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            transform: rotate(180deg);
+            color: #1a331a;
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .left-vertical-bot {
+            position: absolute;
+            bottom: 20px;
+            left: 30px;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            transform: rotate(180deg);
+            color: #1a331a;
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Center Title */
+        .main-title {
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-30%);
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            color: #143614;
+            font-size: 75px;
+            font-family: 'Ma Shan Zheng', cursive;
+            text-shadow: 2px 2px 4px rgba(255,255,255,0.3);
+            letter-spacing: 10px;
+        }
+        
+        .main-title-sub {
+            position: absolute;
+            top: 180px;
+            left: 42%;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            color: #143614;
+            font-size: 65px;
+            font-family: 'Ma Shan Zheng', cursive;
+            text-shadow: 2px 2px 4px rgba(255,255,255,0.3);
+            letter-spacing: 5px;
+        }
+
+        /* Watermark / Social Tag */
+        .social-tag {
+            position: absolute;
+            top: 58%;
+            left: 55%;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .social-tag-sub {
+            position: absolute;
+            top: 61%;
+            left: 58%;
+            color: white;
+            font-size: 12px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        /* Bottom Poem Text */
+        .bottom-text-container {
+            position: absolute;
+            bottom: 25px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            padding: 0 60px;
+            box-sizing: border-box;
+            color: #2c3e2c;
+            font-size: 14px;
+            line-height: 1.8;
+            font-weight: 500;
+        }
+
+        .poem-col {
+            text-align: left;
+        }
+
+        .poem-col.right {
+            text-align: left;
+            margin-right: 20px;
+        }
+
+        /* Decorative elements to simulate people/trees roughly */
+        .deco-tree {
+            position: absolute;
+            width: 60px;
+            height: 80px;
+            background: radial-gradient(circle, #4a7c29 30%, transparent 70%);
+            border-radius: 50%;
+            z-index: 4;
+        }
+        .tree-1 { top: 55%; right: 5%; width: 80px; height: 100px; background: radial-gradient(circle, #d4a017 20%, #4a7c29 60%, transparent 80%); }
+        .tree-2 { top: 58%; left: 10%; width: 50px; height: 60px; background: radial-gradient(circle, #6b8e23 40%, transparent 70%); }
+        
+        .house {
+            position: absolute;
+            top: 60%;
+            left: 15%;
+            width: 40px;
+            height: 25px;
+            background: #e74c3c;
+            z-index: 4;
+        }
+        .house::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -5px;
+            width: 50px;
+            height: 10px;
+            background: #c0392b;
+            transform: skewX(-20deg);
+        }
+
+        /* People placeholders (abstract dots/shapes) */
+        .person {
+            position: absolute;
+            width: 8px;
+            height: 15px;
+            background: #333;
+            border-radius: 4px;
+            z-index: 5;
+        }
+        /* Scatter some people */
+        .p1 { bottom: 25%; left: 20%; background: #e67e22; }
+        .p2 { bottom: 22%; left: 25%; background: #3498db; }
+        .p3 { bottom: 28%; left: 35%; background: #9b59b6; }
+        .p4 { bottom: 20%; left: 45%; background: #2ecc71; }
+        .p5 { bottom: 24%; left: 55%; background: #f1c40f; }
+        .p6 { bottom: 26%; left: 65%; background: #e74c3c; }
+        .p7 { bottom: 21%; left: 75%; background: #1abc9c; }
+        .p8 { bottom: 23%; left: 85%; background: #34495e; }
+        
+        .p9 { bottom: 15%; left: 22%; background: #d35400; }
+        .p10 { bottom: 12%; left: 30%; background: #8e44ad; }
+        .p11 { bottom: 16%; left: 48%; background: #27ae60; }
+        .p12 { bottom: 14%; left: 60%; background: #c0392b; }
+        .p13 { bottom: 18%; left: 72%; background: #f39c12; }
+        .p14 { bottom: 13%; left: 88%; background: #2980b9; }
+
+        .oven {
+            position: absolute;
+            bottom: 15%;
+            right: 15%;
+            width: 50px;
+            height: 40px;
+            background: #dcdcdc;
+            border-radius: 50% 50% 10% 10%;
+            z-index: 4;
+        }
+        .oven::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 15px;
+            width: 20px;
+            height: 15px;
+            background: #333;
+            border-radius: 50%;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="poster-container">
+    <!-- Background Layers -->
+    <div class="bg-illustration"></div>
+    <div class="mountains"></div>
+    <div class="field"></div>
+    
+    <!-- Decorative Scene Elements -->
+    <div class="deco-tree tree-1"></div>
+    <div class="deco-tree tree-2"></div>
+    <div class="house"></div>
+    <div class="oven"></div>
+    
+    <!-- Abstract People -->
+    <div class="person p1"></div>
+    <div class="person p2"></div>
+    <div class="person p3"></div>
+    <div class="person p4"></div>
+    <div class="person p5"></div>
+    <div class="person p6"></div>
+    <div class="person p7"></div>
+    <div class="person p8"></div>
+    <div class="person p9"></div>
+    <div class="person p10"></div>
+    <div class="person p11"></div>
+    <div class="person p12"></div>
+    <div class="person p13"></div>
+    <div class="person p14"></div>
+
+    <!-- Text Content -->
+    <div class="content-layer">
+        
+        <!-- Top Right -->
+        <div class="top-right-text">
+            地上的路原来很平坦可是有太多人走过这些路过的人们太累了<br>
+            于是他们决定扔下一些东西
+        </div>
+
+        <!-- Left Side Vertical -->
+        <div class="left-vertical-top">大班综合</div>
+        <div class="left-vertical-mid">TongCai 2021</div>
+        <div class="left-vertical-bot">Autumn</div>
+
+        <!-- Center Title -->
+        <div class="main-title">山里的</div>
+        <div class="main-title-sub">約會</div>
+
+        <!-- Social Media Tag -->
+        <div class="social-tag">
+            <span style="font-size: 18px;">&#9829;</span> @Hiro豆豆老师
+        </div>
+        <div class="social-tag-sub">From 小红书</div>
+
+        <!-- Bottom Poem -->
+        <div class="bottom-text-container">
+            <div class="poem-col">
+                有的人扔下了悲伤<br>
+                变成了路上的石头
+            </div>
+            <div class="poem-col">
+                有的人留下快乐<br>
+                变成了山上的树苗
+            </div>
+            <div class="poem-col right">
+                我把装在瓶子里的思念<br>
+                放在高高的山顶上<br>
+                交成了黑夜的眼睛
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

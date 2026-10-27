@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>魔吉拉的面具</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #141f1e;
+            font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            color: #ffffff;
+        }
+
+        /* Simulated 3D Game Background Scene */
+        .game-viewport {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            max-width: 1280px;
+            max-height: 720px;
+            background: radial-gradient(circle at 50% 60%, #304e4a 0%, #172726 45%, #080d0d 85%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Background visual elements representing Link and the Chest */
+        .scene-elements {
+            position: absolute;
+            bottom: 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0.45;
+        }
+
+        .chest-platform {
+            width: 260px;
+            height: 50px;
+            background: #465f5a;
+            clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
+            margin-top: -10px;
+        }
+
+        .chest {
+            width: 120px;
+            height: 70px;
+            background: #254a43;
+            border: 3px solid #3c6d63;
+            border-radius: 6px 6px 0 0;
+        }
+
+        /* Central Modal Dialog */
+        .modal-container {
+            position: relative;
+            z-index: 10;
+            width: 620px;
+            background: rgba(30, 48, 49, 0.88);
+            border: 1px solid rgba(135, 185, 180, 0.4);
+            box-shadow: 0 0 40px rgba(80, 160, 150, 0.25), inset 0 0 15px rgba(0, 0, 0, 0.5);
+            padding: 30px 40px 24px 30px;
+            display: flex;
+            align-items: flex-start;
+            backdrop-filter: blur(6px);
+            margin-bottom: 80px;
+        }
+
+        /* Side decorative borders */
+        .modal-container::before,
+        .modal-container::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 10px;
+            background-repeat: repeat-y;
+            opacity: 0.6;
+        }
+
+        .modal-container::before {
+            left: 5px;
+            border-left: 2px dashed #9be0d7;
+        }
+
+        .modal-container::after {
+            right: 5px;
+            border-right: 2px dashed #9be0d7;
+        }
+
+        /* Left Item Icon */
+        .item-icon-wrapper {
+            position: relative;
+            flex-shrink: 0;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 25px;
+            margin-left: 10px;
+        }
+
+        /* Light burst behind icon */
+        .icon-glow {
+            position: absolute;
+            width: 110px;
+            height: 110px;
+            background: radial-gradient(circle, rgba(255, 230, 110, 0.7) 0%, rgba(240, 160, 40, 0.2) 50%, transparent 75%);
+            filter: blur(4px);
+        }
+
+        /* Majora's Mask Stylized Silhouette */
+        .mask-placeholder {
+            position: relative;
+            width: 64px;
+            height: 56px;
+            background: #9c2842;
+            border-radius: 4px 4px 50% 50%;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 0 10px #e65c00;
+        }
+
+        .mask-placeholder::before,
+        .mask-placeholder::after {
+            content: "";
+            position: absolute;
+            top: 14px;
+            width: 16px;
+            height: 16px;
+            background: #ffcc00;
+            border-radius: 50%;
+            border: 3px solid #bf1b28;
+            box-shadow: inset 0 0 4px #000;
+        }
+
+        .mask-placeholder::before { left: 8px; }
+        .mask-placeholder::after { right: 8px; }
+
+        .spike-row {
+            position: absolute;
+            top: -8px;
+            display: flex;
+            gap: 6px;
+        }
+
+        .spike {
+            width: 0;
+            height: 0;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-bottom: 10px solid #f5a623;
+        }
+
+        /* Right Content Area */
+        .item-info {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .item-title {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #ffffff;
+            text-shadow: 0 0 8px rgba(0, 0, 0, 0.7);
+        }
+
+        .stats-badge {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(18, 28, 29, 0.95);
+            padding: 2px 8px;
+            border-radius: 3px;
+            width: fit-content;
+            gap: 6px;
+            margin-bottom: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .armor-icon {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            background-color: #d8e2e2;
+            clip-path: polygon(25% 0%, 75% 0%, 100% 30%, 80% 50%, 70% 35%, 70% 100%, 30% 100%, 30% 35%, 20% 50%, 0% 30%);
+        }
+
+        .stat-value {
+            font-size: 15px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .item-description {
+            font-size: 14px;
+            line-height: 1.65;
+            color: #cdd9d7;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+            letter-spacing: 0.5px;
+        }
+
+        /* Bottom action prompt */
+        .prompt-container {
+            align-self: flex-end;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 14px;
+            font-size: 13px;
+            color: #dbebe8;
+        }
+
+        .button-prompt {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 16px;
+            height: 16px;
+            background: #ffffff;
+            color: #1e3031;
+            border-radius: 50%;
+            font-size: 11px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-viewport">
+    <!-- Background scenery -->
+    <div class="scene-elements">
+        <div class="chest"></div>
+        <div class="chest-platform"></div>
+    </div>
+
+    <!-- UI Overlay Box -->
+    <div class="modal-container">
+        <!-- Item Icon -->
+        <div class="item-icon-wrapper">
+            <div class="icon-glow"></div>
+            <div class="spike-row">
+                <div class="spike"></div>
+                <div class="spike"></div>
+                <div class="spike"></div>
+                <div class="spike"></div>
+            </div>
+            <div class="mask-placeholder"></div>
+        </div>
+
+        <!-- Text details -->
+        <div class="item-info">
+            <h1 class="item-title">魔吉拉的面具</h1>
+            
+            <div class="stats-badge">
+                <span class="armor-icon"></span>
+                <span class="stat-value">1</span>
+            </div>
+
+            <p class="item-description">
+                从太古时期留传下来的面具。<br>
+                戴上它的话，有些怪物就不容易发现自己。<br>
+                这样的珍品并非轻易就能得到。
+            </p>
+
+            <div class="prompt-container">
+                <span>打开袋子</span>
+                <span class="button-prompt">+</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>步行游览区 - 北线</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+    background-color: #f4f5f7;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    color: #1a1a1a;
+  }
+  .card-container {
+    width: 100%;
+    max-width: 540px;
+    background: #ffffff;
+    display: flex;
+    position: relative;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+  }
+
+  /* Left Sidebar */
+  .sidebar {
+    width: 115px;
+    min-width: 115px;
+    border-right: 1.5px solid #5c7989;
+    padding: 24px 0 30px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    background: linear-gradient(180deg, #ffffff 0%, #fdfdfd 70%, #edf3f6 100%);
+  }
+  .block-char {
+    width: 46px;
+    height: 46px;
+    background-color: #496b7b;
+    color: #ffffff;
+    font-size: 26px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+    border-radius: 2px;
+  }
+  .sidebar-divider {
+    width: 72px;
+    height: 1.5px;
+    background-color: #8da4b0;
+    margin: 20px 0 25px 0;
+  }
+  .route-box {
+    width: 34px;
+    height: 34px;
+    border: 1px solid #78929f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 19px;
+    font-weight: bold;
+    color: #222222;
+    background: #fff;
+  }
+  .down-triangle {
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 13px solid #5a7d8e;
+    margin: 8px 0;
+  }
+  .number-badge {
+    margin-top: 36px;
+    font-size: 64px;
+    font-weight: 900;
+    font-family: Impact, "Arial Black", sans-serif;
+    background: linear-gradient(135deg, #26c6da 0%, #0097a7 50%, #006064 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transform: rotate(-8deg);
+    filter: drop-shadow(2px 3px 2px rgba(0, 150, 166, 0.25));
+  }
+
+  /* Main Content Area */
+  .main-content {
+    flex: 1;
+    padding: 10px 18px 25px 18px;
+    position: relative;
+    background: linear-gradient(to bottom right, #fbfcfe 0%, #ffffff 40%, #f4f8fb 100%);
+  }
+
+  /* Header */
+  .header-banner {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .hand-icon {
+    font-size: 22px;
+    transform: rotate(15deg);
+    display: inline-block;
+  }
+  .header-text {
+    font-size: 19px;
+    font-weight: 900;
+    color: #496b7b;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .header-text::before {
+    content: "◆";
+    font-size: 13px;
+  }
+  .mountains {
+    display: flex;
+    align-items: flex-end;
+    gap: 1px;
+    margin-left: 4px;
+  }
+  .mountain {
+    width: 0;
+    height: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-bottom: 22px solid #555555;
+  }
+  .mountain.tall {
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-bottom: 28px solid #444444;
+  }
+
+  /* Section Item */
+  .section-item {
+    margin-bottom: 22px;
+    position: relative;
+  }
+  .section-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+
+  /* Hanging Board */
+  .sign-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .sign-rope-svg {
+    width: 110px;
+    height: 24px;
+    display: block;
+    margin-bottom: -1px;
+  }
+  .sign-board {
+    border: 2.5px solid #496b7b;
+    border-radius: 12px;
+    padding: 8px 12px;
+    width: 88%;
+    background: #ffffff;
+    box-shadow: 1px 2px 4px rgba(73, 107, 123, 0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .sign-title {
+    color: #496b7b;
+    font-size: 18px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-align: center;
+  }
+
+  /* Image Placeholders */
+  .photo-placeholder {
+    width: 120px;
+    height: 100px;
+    border-radius: 4px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background-color: #d1dbe0;
+    box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: bold;
+    text-align: center;
+    padding: 6px;
+  }
+  .photo-1 {
+    transform: rotate(3deg);
+    background: linear-gradient(135deg, #899b82, #556b4f);
+  }
+  .photo-2 {
+    transform: rotate(-3deg);
+    background: linear-gradient(135deg, #c7a488, #8d624a);
+  }
+  .photo-3 {
+    transform: rotate(2deg);
+    background: linear-gradient(135deg, #d3c48f, #8b7944);
+  }
+
+  /* Description Texts */
+  .section-desc {
+    margin-top: 10px;
+    font-size: 13.5px;
+    line-height: 1.55;
+    font-weight: 800;
+    color: #000000;
+    text-align: justify;
+    letter-spacing: 0.3px;
+    position: relative;
+  }
+
+  /* Deco arrow between sections */
+  .deco-curve {
+    width: 24px;
+    height: 24px;
+    margin: -4px auto 2px 35%;
+  }
+
+  .inline-triangle {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 12px solid #5a5a5a;
+    display: inline-block;
+    margin-right: 2px;
+    vertical-align: -1px;
+  }
+</style>
+</head>
+<body>
+
+<div class="card-container">
+  <!-- Left Column -->
+  <div class="sidebar">
+    <div class="block-char">步</div>
+    <div class="block-char">行</div>
+    <div class="block-char">游</div>
+    <div class="block-char">览</div>
+    <div class="block-char">区</div>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="route-box">北</div>
+    <div class="down-triangle"></div>
+    <div class="route-box">线</div>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="number-badge">6</div>
+  </div>
+
+  <!-- Right Column -->
+  <div class="main-content">
+    <!-- Top banner -->
+    <div class="header-banner">
+      <span class="hand-icon">👉</span>
+      <span class="header-text">接上篇</span>
+      <div class="mountains">
+        <div class="mountain"></div>
+        <div class="mountain tall"></div>
+      </div>
+    </div>
+
+    <!-- Section 1 -->
+    <div class="section-item">
+      <div class="section-top">
+        <div class="sign-wrapper">
+          <svg class="sign-rope-svg" viewBox="0 0 100 24">
+            <circle cx="50" cy="3" r="2.5" fill="#496b7b" />
+            <line x1="50" y1="3" x2="16" y2="24" stroke="#496b7b" stroke-width="1.5" />
+            <line x1="50" y1="3" x2="84" y2="24" stroke="#496b7b" stroke-width="1.5" />
+          </svg>
+          <div class="sign-board">
+            <div class="sign-title">马达加斯加</div>
+            <div class="sign-title">丛林</div>
+          </div>
+        </div>
+        <div class="photo-placeholder photo-1">
+          [Photo: 饲养员与环尾狐猴互动]
+        </div>
+      </div>
+      <svg class="deco-curve" viewBox="0 0 30 30" fill="none">
+        <path d="M5 2 C 15 15, 20 18, 18 28" stroke="#496b7b" stroke-width="1.5" stroke-dasharray="2 2" />
+        <polygon points="15,25 18,29 21,25" fill="#496b7b" />
+      </svg>
+      <div class="section-desc">
+        环尾狐猴的天堂，成群结队的环尾狐猴在这里攀爬跳跃，在零距离投喂专属食物的时候有可能会跳到你的肩膀上哦，这时候就是拍照留念的最佳时<span class="inline-triangle"></span>机啦！
+      </div>
+    </div>
+
+    <!-- Section 2 -->
+    <div class="section-item">
+      <div class="section-top">
+        <div class="sign-wrapper">
+          <svg class="sign-rope-svg" viewBox="0 0 100 24">
+            <circle cx="50" cy="3" r="2.5" fill="#496b7b" />
+            <line x1="50" y1="3" x2="16" y2="24" stroke="#496b7b" stroke-width="1.5" />
+            <line x1="50" y1="3" x2="84" y2="24" stroke="#496b7b" stroke-width="1.5" />
+          </svg>
+          <div class="sign-board">
+            <div class="sign-title">小熊猫展区</div>
+          </div>
+        </div>
+        <div class="photo-placeholder photo-2">
+          [Photo: 小熊猫玩偶/互动周边]
+        </div>
+      </div>
+      <svg class="deco-curve" viewBox="0 0 30 30" fill="none">
+        <path d="M5 2 C 15 15, 20 18, 18 28" stroke="#496b7b" stroke-width="1.5" stroke-dasharray="2 2" />
+        <polygon points="15,25 18,29 21,25" fill="#496b7b" />
+      </svg>
+      <div class="section-desc">
+        北野里最受欢迎的网红打卡地之一，里面设有零食铺子可以购买竹叶和小熊猫互动，注：自带的食物不能给它吃哦！
+      </div>
+    </div>
+
+    <!-- Section 3 -->
+    <div class="section-item">
+      <div class="section-top">
+        <div class="sign-wrapper">
+          <svg class="sign-rope-svg" viewBox="0 0 100 24">
+            <circle cx="50" cy="3" r="2.5" fill="#496b7b" />
+            <line x1="50" y1="3" x2="16" y2="24" stroke="#496b7b" stroke-width="1.5" />
+            <line x1="50" y1="3" x2="84" y2="24" stroke="#496b7b" stroke-width="1.5" />
+          </svg>
+          <div class="sign-board">
+            <div class="sign-title">爬行动物馆</div>
+          </div>
+        </div>
+        <div class="photo-placeholder photo-3">
+          [Photo: 盘卧的黄金蟒]
+        </div>
+      </div>
+      <div class="section-desc" style="margin-top: 14px;">
+        喜欢蟒蛇、蜥蜴的小伙伴们千万不要错过这里，黄金蟒、网纹蟒、红鬣蜥、绿鬣蜥、黑白泰迦等等都有昂！PS:怕蛇的小伙伴就不要挑战自己啦！
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

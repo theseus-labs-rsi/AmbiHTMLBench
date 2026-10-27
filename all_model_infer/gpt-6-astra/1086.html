@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Troubleshoot single sign-on | Docker Docs</title>
+<script>
+window.MathJax = {tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]}};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#fff;color:#343c48;font-family:Arial,Helvetica,sans-serif}
+body{min-width:1440px}
+.page{width:1440px;height:1600px;overflow:hidden;position:relative}
+a{color:#527fbf;text-decoration:none}
+.announcement{height:36px;background:#030b48;color:#c9cbe0;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;gap:20px}
+.new{font-size:20px;color:#d5bbc9}
+.sparkle{color:#a781eb}
+.close{position:absolute;right:13px;top:8px;font-size:24px;font-weight:400;color:white}
+.topbar{height:64px;background:#124bed;color:white;display:flex;align-items:center;padding:0 16px;gap:32px}
+.brand{display:flex;align-items:center;gap:6px;width:168px;font-size:25px;white-space:nowrap;letter-spacing:-.5px}
+.brand strong{font-weight:500}
+.brand span:last-child{font-weight:300}
+.logo.placeholder{width:24px;height:26px;overflow:hidden;font-size:5px;line-height:7px;display:flex;align-items:center;text-align:center;color:white}
+.toplinks{height:100%;display:flex;align-items:center;gap:32px;font-size:14px}
+.toplinks span{height:51px;padding-top:19px;position:relative}
+.toplinks .active:after{content:"";position:absolute;bottom:0;left:-8px;right:-8px;height:4px;background:white}
+.toptools{margin-left:auto;display:flex;gap:8px;align-items:center;font-size:14px}
+.tool{height:42px;border:1px solid #3b6bed;background:#073bbc;border-radius:9px;display:flex;align-items:center;padding:0 12px;gap:12px}
+.tool-icon{font-size:22px;color:white}
+.search-icon{width:18px;height:18px;border:1.8px solid white;border-radius:50%;position:relative;margin-right:3px}
+.search-icon:after{content:"";width:8px;height:2px;background:white;position:absolute;right:-6px;bottom:-3px;transform:rotate(48deg)}
+.theme{width:42px;padding:0;justify-content:center;font-size:27px}
+.layout{display:grid;grid-template-columns:320px 683px 373px;column-gap:32px}
+.sidebar{background:#f8f8f9;min-height:1500px;padding:21px 36px 30px 16px;font-size:14px;color:#424957}
+.nav-group{margin:0 0 23px}
+.nav-title{font-size:14px;font-weight:600;margin:0 0 8px;line-height:18px}
+.nav-list{list-style:none;margin:0;padding:0}
+.nav-list li{height:30px;line-height:30px;padding-left:8px;position:relative;white-space:nowrap}
+.nav-list .arrow:after{content:"";position:absolute;right:8px;top:12px;width:7px;height:7px;border-right:1px solid #626773;border-bottom:1px solid #626773;transform:rotate(45deg)}
+.nav-list .up:after{transform:rotate(225deg);top:15px}
+.badge{font-size:11px;line-height:14px;border-radius:3px;color:#fff;display:inline-block;padding:0 4px;vertical-align:1px}
+.beta{background:#3265e8}
+.green{background:#5fc996}
+.nav-list li.indent{padding-left:20px}
+.nav-list li.deep{padding-left:32px}
+.nav-list li.selected{margin-left:24px;padding-left:8px;background:#e7eaee;border-radius:3px}
+.enterprise{margin-top:27px}
+main{padding-top:34px;font-size:16px;line-height:28px}
+.breadcrumb{font-size:14px;line-height:20px;display:flex;gap:9px;color:#8993a1;margin-bottom:17px}
+h1{font-size:29px;line-height:36px;font-weight:600;letter-spacing:-.35px;color:#151c28;margin:0 0 11px}
+.actions{display:flex;align-items:center;gap:26px;font-size:13px;color:#566273;height:28px;margin-bottom:13px}
+.actions span{display:flex;align-items:center;gap:7px}
+.action-icon{font-size:16px;line-height:18px}
+.title-block{border-bottom:1px solid #cdd0d4}
+.intro{margin:24px 0 29px}
+p{margin:0 0 22px}
+h2{color:#080808;font-size:26px;font-weight:500;line-height:34px;margin:0 0 11px;letter-spacing:-.2px}
+h3{font-size:21px;line-height:28px;color:#080808;font-weight:500;margin:0 0 16px}
+.check-description{margin-bottom:35px}
+ol{padding-left:27px;margin:0 0 34px}
+ol li{padding-left:5px;margin-bottom:8px;line-height:28px}
+ol li::marker{color:#727883}
+strong{font-weight:600;color:#18202b}
+.identity-title{margin-top:34px}
+.identity-list{margin-bottom:22px}
+.further{margin-bottom:29px}
+.groups-title{margin-bottom:13px}
+.error-description{margin-top:16px;margin-bottom:21px}
+pre{margin:0 0 33px;border:1px solid #cbd0d6;background:#f8f9fa;border-radius:4px;height:57px;line-height:55px;padding:0 15px;font-size:13.5px;letter-spacing:.15px;overflow:hidden;white-space:pre;color:#434b59}
+.causes{margin-bottom:16px}
+.bullets{margin:0 0 34px;padding-left:26px}
+.bullets li{padding-left:6px;line-height:28px;margin-bottom:9px}
+.bullets li::marker{color:#d5d7db}
+code{font-family:monospace;font-size:13px;background:#e9ebef;padding:4px 3px;border-radius:2px;color:#171e29}
+.affected{margin-bottom:16px}
+.rightbar{padding-top:15px;padding-right:30px;font-size:14px}
+.edit-links{display:flex;flex-direction:column;gap:19px;font-size:13px;line-height:18px;margin-bottom:20px}
+.edit-links span{color:#0b0b0b;font-size:16px}
+.toc-title{font-size:20px;color:#0b0b0b;margin:0 0 12px;line-height:25px}
+.toc{list-style:none;margin:0;padding:0 0 0 8px;font-size:14px;color:#586475}
+.toc li{padding:6px 8px;line-height:17px;white-space:nowrap}
+.toc li.current{border-left:2px solid #ccd0d7;padding-left:8px;background:linear-gradient(90deg,#f8f9fa,white);color:#080808}
+.feedback{position:absolute;bottom:0;right:40px;width:168px;height:38px;background:#086dce;border-radius:7px 7px 0 0;color:white;display:flex;align-items:center;justify-content:center;gap:10px;font-size:14px}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="announcement">
+<span class="new"><span class="sparkle">✣</span> New</span>
+<span>Insights on the state of AI agents from 800+ builders and leaders. Download your copy →</span>
+<span class="close">×</span>
+</div>
+<header class="topbar">
+<div class="brand"><div class="logo placeholder">[Docker logo]</div><span><strong>docker</strong>docs</span></div>
+<nav class="toplinks"><span>Get started</span><span>Guides</span><span class="active">Manuals</span><span>Reference</span></nav>
+<div class="toptools">
+<div class="tool"><span class="tool-icon">♙</span>Gordon</div>
+<div class="tool"><span class="search-icon"></span>Search</div>
+<div class="tool theme">☾</div>
+</div>
+</header>
+<div class="layout">
+<aside class="sidebar">
+<section class="nav-group">
+<h2 class="nav-title">AI AND AGENTS</h2>
+<ul class="nav-list">
+<li>Overview</li>
+<li class="arrow">Docker Sandboxes</li>
+<li class="arrow">MCP Catalog and Toolkit <span class="badge beta">Beta</span></li>
+<li class="arrow">Model Runner</li>
+<li class="arrow">Gordon</li>
+<li class="arrow">AI and Docker Compose</li>
+<li class="arrow">Docker Agent</li>
+</ul>
+</section>
+<section class="nav-group">
+<h2 class="nav-title">APPLICATION DEVELOPMENT</h2>
+<ul class="nav-list">
+<li class="arrow">Docker Desktop</li>
+<li class="arrow">Docker Engine</li>
+<li class="arrow">Docker Offload</li>
+<li class="arrow">Docker Build</li>
+<li class="arrow">Docker Build Cloud</li>
+<li class="arrow">Docker Compose</li>
+<li class="arrow">Docker Extensions</li>
+<li>Deprecated products and features</li>
+<li>Release lifecycle</li>
+</ul>
+</section>
+<section class="nav-group">
+<h2 class="nav-title">SUPPLY CHAIN SECURITY</h2>
+<ul class="nav-list">
+<li class="arrow">Docker Hardened Images <span class="badge green">New</span></li>
+<li class="arrow">Docker Hub</li>
+<li class="arrow">Docker Scout</li>
+</ul>
+</section>
+<section class="nav-group">
+<h2 class="nav-title">PLATFORM</h2>
+<ul class="nav-list">
+<li>Support</li>
+<li class="arrow">Billing</li>
+<li class="arrow">Docker accounts</li>
+<li class="arrow">Security</li>
+<li class="arrow">Subscription</li>
+<li>Release notes</li>
+</ul>
+</section>
+<section class="nav-group enterprise">
+<h2 class="nav-title">ENTERPRISE</h2>
+<ul class="nav-list">
+<li class="arrow">Administration</li>
+<li class="arrow">Deploy Docker Desktop</li>
+<li class="arrow up">Security</li>
+<li class="indent">Add and manage domains</li>
+<li class="indent arrow up">Single sign-on</li>
+<li class="deep">Setup</li>
+<li class="deep">Manage connections</li>
+<li class="selected">Troubleshoot</li>
+<li class="deep arrow">FAQs</li>
+<li class="indent arrow">Provision</li>
+<li class="indent arrow">Enforce sign-in</li>
+<li class="indent arrow">Roles and permissions</li>
+<li class="indent arrow">Hardened Docker Desktop</li>
+<li class="indent">Organization access tokens</li>
+</ul>
+</section>
+</aside>
+<main>
+<div class="breadcrumb"><a>Home</a><span>/</span><a>Manuals</a><span>/</span><a>Security</a><span>/</span><a>Single sign-on</a><span>/</span><span>Troubleshoot</span></div>
+<div class="title-block">
+<h1>Troubleshoot single sign-on</h1>
+<div class="actions"><span><span class="action-icon">♙</span>Ask Gordon</span><span><span class="action-icon">▣</span>Copy Markdown</span><span><span class="action-icon">↗</span>View Markdown</span></div>
+</div>
+<p class="intro">This page describes common single sign-on (SSO) errors and their solutions. Issues can stem<br>from your identity provider (IdP) configuration or Docker settings.</p>
+<h2>Check for errors</h2>
+<p class="check-description">If you experience SSO issues, check both Docker and your identity provider for errors first.</p>
+<h3>Check Docker error logs</h3>
+<ol>
+<li>Sign in to <a>Docker Home</a> and select your organization from the top-left account drop-down.</li>
+<li>Select <strong>Admin Console</strong>, then <strong>SSO and SCIM</strong>.</li>
+<li>In the SSO connections table, select the <strong>Action</strong> menu and then <strong>View error logs</strong>.</li>
+<li>For more details on specific errors, select <strong>View error details</strong> next to an error message.</li>
+<li>Note any errors you see on this page for further troubleshooting.</li>
+</ol>
+<h3 class="identity-title">Check identity provider errors</h3>
+<ol class="identity-list">
+<li>Review your IdP’s logs or audit trails for any failed authentication or provisioning attempts.</li>
+<li>Confirm that your IdP’s SSO settings match the values provided in Docker.</li>
+<li>If applicable, confirm that you have configured user provisioning correctly and that it is<br>enabled in your IdP.</li>
+<li>If applicable, verify that your IdP correctly maps Docker's required user attributes.</li>
+<li>Try provisioning a test user from your IdP and verify if they appear in Docker.</li>
+</ol>
+<p class="further">For further troubleshooting, check your IdP's documentation or contact their support team.</p>
+<h2 class="groups-title">Groups are not formatted correctly</h2>
+<h3>Error message</h3>
+<p class="error-description">When this issue occurs, the following error message is common:</p>
+<pre>Some of the groups assigned to the user are not formatted as '&lt;organization [?]</pre>
+<h3 class="causes">Causes</h3>
+<ul class="bullets">
+<li>Incorrect group name formatting in your identity provider (IdP): Docker requires groups to<br>follow the format <code>&lt;organization&gt;:&lt;team&gt;</code>. If the groups assigned to a user do not follow<br>this format, they will be ignored.</li>
+<li>Non-matching groups between IdP and Docker organization: If a group in your IdP does not<br>have a corresponding team in Docker, it will not be recognized, and the user will be placed<br>in the default organization and team.</li>
+</ul>
+<h3 class="affected">Affected environments</h3>
+<ul class="bullets"><li>Docker single sign-on setup using IdPs such as Okta or Azure AD</li></ul>
+</main>
+<aside class="rightbar">
+<div class="edit-links"><a><span>▧</span> Edit this page</a><a><span>⚑</span> Request changes</a></div>
+<h2 class="toc-title">Table of contents</h2>
+<ul class="toc">
+<li class="current">Check for errors</li>
+<li>Groups are not formatted correctly</li>
+<li>User is not assigned to the organization</li>
+<li>IdP-initiated sign in is not enabled for connection</li>
+<li>Not enough seats in organization</li>
+<li>Domain is not verified for SSO connection</li>
+<li>Unable to find session</li>
+<li>Name ID is not an email address</li>
+</ul>
+</aside>
+</div>
+<div class="feedback"><span>▣</span>Give feedback</div>
+</div>
+</body>
+</html>

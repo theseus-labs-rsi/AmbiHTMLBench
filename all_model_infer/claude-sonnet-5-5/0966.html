@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our World in Data</title>
+<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Lato', Arial, sans-serif;
+    color: #1d2d3d;
+    background: #fff;
+  }
+  .topbar {
+    background: #002147;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 32px;
+    border-bottom: 3px solid #c0392b;
+  }
+  .logo {
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 1.1;
+  }
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    font-size: 15px;
+  }
+  .nav span, .nav a {
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .topbar-right {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .btn-subscribe {
+    background: #fff;
+    color: #002147;
+    border: none;
+    padding: 9px 18px;
+    font-weight: 700;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  .btn-donate {
+    background: #c0392b;
+    color: #fff;
+    border: none;
+    padding: 9px 18px;
+    font-weight: 700;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  .popular-pages {
+    background: #eceff1;
+    padding: 12px 32px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    font-size: 13px;
+  }
+  .popular-pages .label {
+    font-weight: 700;
+    color: #5a6b7b;
+    letter-spacing: 0.5px;
+    margin-right: 8px;
+  }
+  .pill {
+    background: #fff;
+    border: 1px solid #c7ccd1;
+    border-radius: 16px;
+    padding: 6px 16px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+  .hero {
+    background: #002147;
+    background-image: linear-gradient(rgba(0,33,71,0.85), rgba(0,33,71,0.85));
+    color: #fff;
+    text-align: center;
+    padding: 50px 20px 40px;
+    position: relative;
+  }
+  .hero h1 {
+    color: #f0c419;
+    font-size: 34px;
+    margin: 0 0 20px;
+    line-height: 1.3;
+  }
+  .hero .mission {
+    color: #fff;
+    margin-bottom: 25px;
+    font-size: 15px;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .search-box {
+    max-width: 620px;
+    margin: 0 auto 20px;
+    background: #fff;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    padding: 14px 18px;
+  }
+  .search-box input {
+    border: none;
+    outline: none;
+    flex: 1;
+    font-size: 15px;
+    color: #333;
+  }
+  .search-icon {
+    color: #888;
+  }
+  .stats-row {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+  }
+  .stat-pill {
+    border: 1px solid rgba(255,255,255,0.5);
+    border-radius: 16px;
+    padding: 6px 16px;
+    font-size: 13px;
+  }
+  .hero .footer-note {
+    font-size: 13px;
+    color: #cdd5dd;
+  }
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1.1fr 1fr 1fr;
+    gap: 20px;
+    padding: 30px 32px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .card-col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .article-card {
+    border: 1px solid #ddd;
+    padding-bottom: 15px;
+  }
+  .article-card img, .placeholder {
+    width: 100%;
+    height: 170px;
+    display: block;
+    object-fit: cover;
+  }
+  .placeholder {
+    background: #e8eef4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #889;
+    font-size: 12px;
+    text-align: center;
+  }
+  .tags {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 10px 15px 5px;
+  }
+  .tag-new {
+    background: #c0392b;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 2px;
+  }
+  .tag-label {
+    font-size: 11px;
+    color: #5a6b7b;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  .article-card h3 {
+    margin: 5px 15px 10px;
+    font-size: 17px;
+    line-height: 1.3;
+  }
+  .article-card p {
+    margin: 0 15px 10px;
+    font-size: 13.5px;
+    color: #444;
+    line-height: 1.5;
+  }
+  .article-card .byline {
+    margin: 0 15px;
+    font-size: 13px;
+    font-style: italic;
+    color: #333;
+  }
+  .updates-col {
+    background: #f0f0ee;
+    padding: 25px;
+  }
+  .updates-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 25px;
+  }
+  .icon-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #d6dbe0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .updates-header h2 {
+    font-size: 21px;
+    margin: 0;
+  }
+  .update-item {
+    border-bottom: 1px solid #d5d5d3;
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+  }
+  .update-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #5a6b7b;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+  .update-item h4 {
+    font-size: 15px;
+    margin: 0 0 8px;
+    line-height: 1.35;
+  }
+  .update-item p {
+    font-size: 13.5px;
+    color: #444;
+    margin: 0 0 6px;
+  }
+  .update-item a {
+    font-size: 13.5px;
+    color: #c0392b;
+    text-decoration: none;
+  }
+  .see-all-btn {
+    display: block;
+    text-align: center;
+    border: 1px solid #c0392b;
+    color: #c0392b;
+    padding: 10px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 14px;
+    margin-top: 10px;
+  }
+  .newsletter-col {
+    background: #d4e3ec;
+    padding: 25px;
+  }
+  .newsletter-header {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .newsletter-header h2 {
+    font-size: 21px;
+    margin: 0;
+  }
+  .newsletter-col .sub-text {
+    font-size: 14px;
+    margin-bottom: 15px;
+    font-weight: 600;
+  }
+  .checkbox-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .checkbox-row input {
+    margin-top: 3px;
+  }
+  .checkbox-row .title {
+    font-weight: 700;
+    font-size: 14px;
+  }
+  .checkbox-row .desc {
+    font-size: 13px;
+    color: #333;
+    display: block;
+    font-weight: 400;
+    margin-top: 2px;
+  }
+  .email-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #aaa;
+    border-radius: 3px;
+    margin-bottom: 12px;
+    font-size: 14px;
+  }
+  .subscribe-btn {
+    width: 100%;
+    background: #c0392b;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    font-weight: 700;
+    font-size: 15px;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-bottom: 12px;
+  }
+  .newsletter-col .policy-text {
+    font-size: 12px;
+    color: #333;
+    border-bottom: 1px solid #b9cdd9;
+    padding-bottom: 18px;
+    margin-bottom: 18px;
+  }
+  .newsletter-col .policy-text a {
+    color: #1d2d3d;
+    font-weight: 700;
+  }
+  .follow-us h3 {
+    font-size: 16px;
+    margin: 0 0 10px;
+  }
+  .social-icons {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .social-icons span {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #002147;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+  }
+  .donate-box {
+    background: #c6dceb;
+    border-radius: 4px;
+    padding: 15px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    font-size: 13px;
+  }
+  .donate-box .heart {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .donate-box a {
+    color: #1d2d3d;
+    font-weight: 700;
+  }
+
+  .insights-section {
+    background: #eef1f3;
+    padding: 40px 32px;
+  }
+  .insights-header {
+    max-width: 1400px;
+    margin: 0 auto 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .insights-header h2 {
+    font-size: 30px;
+    margin: 0 0 8px;
+  }
+  .insights-header p {
+    font-size: 15px;
+    color: #444;
+    margin: 0;
+  }
+  .insights-header .see-all-btn {
+    white-space: nowrap;
+    padding: 10px 18px;
+  }
+  .insights-grid {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 300px 1fr 300px 1fr;
+    gap: 0;
+    position: relative;
+  }
+  .insight-card {
+    display: flex;
+    gap: 0;
+    overflow: hidden;
+  }
+  .insight-img {
+    width: 300px;
+    height: 220px;
+    background: #fff;
+    border: 1px solid #ccc;
+    flex-shrink: 0;
+  }
+  .insight-text {
+    padding: 0 15px;
+  }
+  .insight-date {
+    font-size: 11px;
+    font-weight: 700;
+    color: #5a6b7b;
+    margin-bottom: 8px;
+  }
+  .insight-text h3 {
+    font-size: 19px;
+    margin: 0 0 10px;
+    line-height: 1.3;
+  }
+  .insight-text p {
+    font-size: 13.5px;
+    color: #333;
+    line-height: 1.5;
+    margin: 0 0 10px;
+  }
+  .nav-arrow {
+    position: absolute;
+    right: -50px;
+    top: 90px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #002147;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .bottom-bar {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    gap: 8px;
+    padding: 10px;
+    z-index: 10;
+  }
+  .bottom-bar button {
+    background: #002147;
+    color: #fff;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">Our World<br>in Data</div>
+  <div class="nav">
+    <span>&#9776; Browse by topic</span>
+    <span>Data</span>
+    <span>Insights</span>
+    <span>Resources &#9662;</span>
+    <span>About &#9662;</span>
+  </div>
+  <div class="topbar-right">
+    <button class="btn-subscribe">Subscribe</button>
+    <button class="btn-donate">Donate</button>
+  </div>
+</div>
+
+<div class="popular-pages">
+  <span class="label">POPULAR PAGES</span>
+  <span class="pill">Poverty</span>
+  <span class="pill">Child Mortality</span>
+  <span class="pill">Global Education</span>
+  <span class="pill">CO<sub>2</sub> Emissions</span>
+  <span class="pill">Migration</span>
+  <span class="pill">War &amp; Peace</span>
+  <span class="pill">Life Expectancy</span>
+  <span class="pill">Population Growth</span>
+  <span class="pill">Artificial Intelligence</span>
+</div>
+
+<div class="hero">
+  <h1>Research and data to make progress<br>against the world's largest problems.</h1>
+  <div class="mission">Read about our mission &rarr;</div>
+  <div class="search-box">
+    <input type="text" placeholder='Try &quot;Life expectancy&quot;, &quot;Poverty Nigeria Vietnam&quot;, &quot;CO2 France&quot;...'>
+    <span class="search-icon">&#128269;</span>
+  </div>
+  <div class="stats-row">
+    <span class="stat-pill">&#128200; 13,989 charts</span>
+    <span class="stat-pill">&#128278; 126 topic pages</span>
+    <span class="stat-pill">&#128269; 32 data explorers</span>
+  </div>
+  <div class="footer-note">All free: open access and openly licensed</div>
+</div>
+
+<div class="main-grid">
+  <div class="card-col">
+    <div class="article-card">
+      <div class="placeholder" style="background:#fdf6ec;">[Chart: population curve, cream background]</div>
+      <div class="tags"><span class="tag-new">NEW</span><span class="tag-label">ARTICLE &middot; 11 MIN READ</span></div>
+      <h3>South Korea's population is set to shrink: what would it take to stop the decline?</h3>
+      <p>How much would fertility rates, life expectancy, or migration rates need to change to stop the population from shrinking?</p>
+      <div class="byline">Hannah Ritchie, Sophia Mersmann, and Daniel Bachler</div>
+    </div>
+    <div class="article-card">
+      <div class="placeholder" style="background:#f0f0ee;">[Chart: line graph with volatile data]</div>
+      <div class="tags"><span class="tag-label">FROM OUR CLASSICS</span></div>
+      <h3>Breaking out of the Malthusian trap: How pandemics allow us to understand why our ancestors were stuck in poverty</h3>
+      <div class="byline">Max Roser</div>
+    </div>
+  </div>
+
+  <div class="card-col">
+    <div class="article-card">
+      <div class="placeholder" style="background:#d9e4ee;">[Interactive tool screenshot: dashboard with charts]</div>
+      <div class="tags"><span class="tag-new">NEW</span><span class="tag-label">INTERACTIVE TOOL</span></div>
+      <h3>Population tool: how will populations across the world change in the 21st century?</h3>
+      <p>We created an interactive tool that lets you test how changes in fertility rates, life expectancy, and migration rates will change future populations.</p>
+      <div class="byline">Sophia Mersmann, Daniel Bachler, and Hannah Ritchie</div>
+    </div>
+    <div class="article-card">
+      <div class="placeholder" style="background:#1d2d3d; color:#fff;">[Photo: team group photo, "We're hiring a Writer to join our team"]</div>
+      <div class="tags"><span class="tag-label">ANNOUNCEMENT</span></div>
+      <h3>We're looking for a writer</h3>
+      <div class="byline">Hannah Ritchie</div>
+    </div>
+  </div>
+
+  <div class="updates-col">
+    <div class="updates-header">
+      <div class="icon-circle">&#128240;</div>
+      <h2>Updates and<br>announcements</h2>
+    </div>
+    <div class="update-item">
+      <div class="update-label">DATA UPDATE &middot; YESTERDAY</div>
+      <h4>How much do countries reduce income inequality through taxes and transfers?</h4>
+      <p>Explore updated data from the OECD Income Distribution Database.</p>
+      <a href="#">Read more &rarr;</a>
+    </div>
+    <div class="update-item">
+      <div class="update-label">DATA UPDATE &middot; 8 DAYS AGO</div>
+      <h4>How fast is the global economy growing, and where might it be headed next?</h4>
+      <p>Explore updated projections from the IMF's World Economic Outlook.</p>
+      <a href="#">Read more &rarr;</a>
+    </div>
+    <div class="update-item" style="border-bottom:none;">
+      <div class="update-label">DATA UPDATE &middot; 10 DAYS AGO</div>
+      <h4>How quickly has global air travel recovered from the COVID-19 pandemic?</h4>
+      <p>Explore updated data on global passenger air traffic since 1950.</p>
+      <a href="#">Read more &rarr;</a>
+    </div>
+    <a href="#" class="see-all-btn">See all updates &rarr;</a>
+  </div>
+
+  <div class="newsletter-col">
+    <div class="newsletter-header">
+      <div class="icon-circle">&#9993;</div>
+      <h2>Subscribe to our newsletters</h2>
+    </div>
+    <div class="sub-text">Receive our latest work by email</div>
+    <div class="checkbox-row">
+      <input type="checkbox" checked>
+      <div>
+        <span class="title">The OWID Brief <span style="font-weight:400;">Twice a month</span></span>
+        <span class="desc">Stay up to date with our latest work plus curated highlights from across Our World in Data, twice a month.</span>
+      </div>
+    </div>
+    <div class="checkbox-row">
+      <input type="checkbox" checked>
+      <div>
+        <span class="title">Data Insights <span style="font-weight:400;">Every few days</span></span>
+        <span class="desc">Receive our bite-sized insights on how the world is changing, every few days.</span>
+      </div>
+    </div>
+    <input type="text" class="email-input" placeholder="Your email address">
+    <button class="subscribe-btn">Subscribe</button>
+    <div class="policy-text">By subscribing you are agreeing to the terms of our <a href="#">privacy policy</a>.</div>
+    <div class="follow-us">
+      <h3>Follow us</h3>
+      <div class="social-icons">
+        <span>X</span><span>&#128247;</span><span>&#128172;</span><span>f</span><span>in</span><span>&#128038;</span><span>&#9733;</span>
+      </div>
+    </div>
+    <div class="donate-box">
+      <div class="heart">&#10084;</div>
+      <div>
+        We are a non-profit — all our work is free to use and openly licensed.<br>
+        <a href="#">Donate to support us</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="insights-section">
+  <div class="insights-header">
+    <div>
+      <h2>Data Insights</h2>
+      <p>Bite-sized insights on how the world is changing, published every few days.</p>
+    </div>
+    <a href="#" class="see-all-btn">See all Data Insights &rarr;</a>
+  </div>
+  <div class="insights-grid">
+    <div class="insight-img placeholder">[Chart: Global sales of combustion engine cars peaked in 2017 — bar chart]</div>
+    <div class="insight-text">
+      <div class="insight-date">&#128197; YESTERDAY</div>
+      <h3>Global sales of combustion engine cars peaked in 2017</h3>
+      <p>To decarbonize road transport, the world must move away from petrol and diesel cars towards electric vehicles and other forms of low-carbon transport.</p>
+      <p>This transition has already started. In fact, global sales of combustion engine cars are well past their peak and are now falling.</p>
+      <p>As you can see in the chart, global sales peaked in 2017. This is calculated based on data from the International Energy Agency. Bloomberg New Energy Finance also estimated this peak occurred around that time.</p>
+    </div>
+    <div class="insight-img placeholder">[Chart: Money sent or brought back by migrants as a share of GDP — bar chart ranking]</div>
+    <div class="insight-text">
+      <div class="insight-date">&#128197; MAY 19</div>
+      <h3>Tajikistan is the most remittance-dependent country's [illegible]</h3>
+      <p>In Tajikistan, remittances amounted to [illegible] compared to [illegible]</p>
+      <p>Nicaragua an[illegible]</p>
+      <p>Remittances [illegible]</p>
+    </div>
+  </div>
+  <div class="nav-arrow">&#8250;</div>
+</div>
+
+<div class="bottom-bar">
+  <button>&#9993; Subscribe</button>
+  <button>&#128172; Feedback</button>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>手写笔记 OCR</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "SimSun", "宋体", serif;
+    font-size: 13px;
+    background: #f5f5f0;
+    padding: 20px;
+    color: #111;
+    line-height: 1.6;
+  }
+  .page {
+    background: #fff;
+    width: 760px;
+    margin: 0 auto;
+    padding: 24px 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  /* ---- spiral divider ---- */
+  .spiral {
+    width: 100%;
+    height: 18px;
+    margin: 14px 0;
+    background: repeating-linear-gradient(
+      90deg,
+      #aaa 0px, #aaa 4px,
+      transparent 4px, transparent 18px
+    );
+    border-top: 2px solid #888;
+    border-bottom: 2px solid #888;
+    opacity: 0.6;
+  }
+
+  /* ===== TOP HALF ===== */
+  .top-half {
+    display: grid;
+    grid-template-columns: 190px 1fr 200px;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  /* LEFT column (top) */
+  .col-left-top {
+    font-size: 12px;
+    line-height: 1.7;
+    padding-right: 6px;
+    border-right: 1px solid #ddd;
+  }
+  .col-left-top .section-title {
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 2px;
+  }
+  .col-left-top .indent1 { padding-left: 12px; }
+  .col-left-top .indent2 { padding-left: 24px; }
+  .arrow-down {
+    display: block;
+    text-align: center;
+    font-size: 18px;
+    color: #555;
+    margin: 4px 0;
+  }
+  .boxed-red {
+    border: 1.5px solid red;
+    padding: 2px 4px;
+    display: inline-block;
+    color: red;
+    font-weight: bold;
+  }
+  .red { color: red; }
+  .blue { color: #1a1aff; }
+  .pink { color: #cc44aa; }
+  .purple { color: #7700cc; }
+  .underline { text-decoration: underline; }
+
+  /* MIDDLE column (top) */
+  .col-mid-top {
+    font-size: 12px;
+    line-height: 1.7;
+    padding: 0 6px;
+  }
+  .col-mid-top .block-title {
+    font-weight: bold;
+    font-size: 13px;
+    margin-bottom: 3px;
+  }
+  .boxed-block {
+    border: 1.5px solid #333;
+    padding: 4px 6px;
+    margin: 4px 0;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+  .boxed-block-red {
+    border: 1.5px solid red;
+    padding: 4px 6px;
+    margin: 4px 0;
+    font-size: 12px;
+    line-height: 1.7;
+    color: #c00;
+  }
+
+  /* RIGHT column (top) */
+  .col-right-top {
+    font-size: 12px;
+    line-height: 1.7;
+    padding-left: 6px;
+    border-left: 1px solid #ddd;
+  }
+  .col-right-top .main-title {
+    font-weight: bold;
+    font-size: 14px;
+    text-align: center;
+    margin-bottom: 6px;
+    writing-mode: horizontal-tb;
+  }
+  .dots-row {
+    display: flex;
+    gap: 10px;
+    margin: 4px 0 6px 0;
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: #333; display: inline-block; }
+
+  /* ===== BOTTOM HALF ===== */
+  .bottom-half {
+    display: grid;
+    grid-template-columns: 180px 1fr 200px;
+    gap: 8px;
+    margin-top: 6px;
+  }
+  .col-left-bot {
+    font-size: 12px;
+    line-height: 1.7;
+    padding-right: 6px;
+    border-right: 1px solid #ddd;
+  }
+  .col-mid-bot {
+    font-size: 12px;
+    line-height: 1.7;
+    padding: 0 6px;
+  }
+  .col-right-bot {
+    font-size: 12px;
+    line-height: 1.7;
+    padding-left: 6px;
+    border-left: 1px solid #ddd;
+  }
+
+  /* arrows used in bottom half */
+  .arrow-left {
+    display: inline-block;
+    font-size: 20px;
+    color: #cc44aa;
+    vertical-align: middle;
+  }
+
+  /* numbered / bulleted items */
+  .num { font-weight: bold; }
+  .indent1 { padding-left: 12px; }
+  .indent2 { padding-left: 24px; }
+  .indent3 { padding-left: 36px; }
+
+  p { margin-bottom: 2px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ============ TOP HALF ============ -->
+  <div class="top-half">
+
+    <!-- LEFT column top -->
+    <div class="col-left-top">
+      <p class="section-title">三、防御固守阵地</p>
+      <p>XX/Z，已占优势，确</p>
+      <p>保XX/Z，CDHIK</p>
+      <p class="indent1">组织积极防御</p>
+      <span class="arrow-down">↓</span>
+      <p class="indent1">巩固阵地</p>
+      <p class="indent1">　守住阵地</p>
+      <br>
+      <p>(1) 不能被动挨打，积极抗</p>
+      <p class="indent1">击敌人进攻，消耗敌有</p>
+      <p class="indent1">生力量</p>
+      <br>
+      <p>5.攻击力</p>
+      <p class="indent1">不能蛮干，要积极主动</p>
+      <p class="indent1">地想办法，克服困难，</p>
+      <p class="indent1">完成任务</p>
+    </div>
+
+    <!-- MIDDLE column top -->
+    <div class="col-mid-top">
+      <p class="block-title">2.近距离突击</p>
+      <div class="boxed-block">
+        <p>中共部队：</p>
+        <p>二、近距离突击 — 以近距离</p>
+        <p>接触来歼灭敌人，避免被</p>
+        <p>敌火力优势所压制</p>
+      </div>
+      <br>
+      <p><span class="num">1.</span>一般来说：距敌 D 米以内</p>
+      <p class="indent1">展开突击，</p>
+      <p class="indent1">(一)结合地形：利用地形地物</p>
+      <p class="indent2">接敌运动</p>
+      <p class="indent1">(火力掩护)：以机枪，炮兵</p>
+      <p class="indent2">配合步兵进攻</p>
+      <br>
+      <div class="boxed-block-red">
+        <p>以近战胜过远战，</p>
+        <p>夜战胜过昼战，</p>
+        <p>近战夜战是解放军</p>
+        <p>战术精髓之一</p>
+      </div>
+    </div>
+
+    <!-- RIGHT column top -->
+    <div class="col-right-top">
+      <p class="main-title">三、防御固守阵地</p>
+      <div class="dots-row">
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+      <p>防御：<span class="red">确保要点</span></p>
+      <p class="indent1">掌握预备队</p>
+      <p class="indent1">积极防御</p>
+      <p class="indent1"><span class="red">坚守阵地</span></p>
+      <p>一、<span class="underline">要求守住阵地</span>，消耗</p>
+      <p class="indent1">敌人有生力量</p>
+      <p class="indent1">G：积极防御，不消</p>
+      <p class="indent2">极等待</p>
+      <br>
+      <p><span class="blue">—积极防御要注意</span></p>
+      <p class="indent1"><span class="blue">结合地形构筑工事</span></p>
+      <p class="indent1"><span class="blue">布置兵力火器</span></p>
+      <p class="indent1"><span class="blue">设置障碍物</span></p>
+      <p class="indent1"><span class="blue">组织联合火力</span></p>
+      <p class="indent1">以上措施综合运用，</p>
+      <p class="indent1">形成完整防御体系</p>
+    </div>
+
+  </div><!-- end top-half -->
+
+  <!-- ===== SPIRAL DIVIDER ===== -->
+  <div class="spiral"></div>
+
+  <!-- ============ BOTTOM HALF ============ -->
+  <div class="bottom-half">
+
+    <!-- LEFT column bottom -->
+    <div class="col-left-bot">
+      <p>(一) <span class="red">战斗编成</span></p>
+      <p class="indent1">以主力部队构成</p>
+      <p class="indent1">第一梯队</p>
+      <p class="indent1">预备队配置于后</p>
+      <p>(II) 部队区分</p>
+      <p class="indent1">突击集团：</p>
+      <p class="indent2">担任突击方向</p>
+      <p class="indent1">牵制集团：</p>
+      <p class="indent2">牵制敌人</p>
+      <p class="indent1">后备集团：</p>
+      <p class="indent2">用于发展胜利</p>
+      <br>
+      <p>(III) 突击方向选择</p>
+      <p class="indent1">选择敌薄弱环节</p>
+      <p class="indent1">迂回包围</p>
+      <p class="indent1">断敌退路</p>
+      <br>
+      <p><span class="red">注意：</span></p>
+      <p class="indent1">集中兵力于主要</p>
+      <p class="indent1">突击方向</p>
+      <p class="indent1">以少量兵力</p>
+      <p class="indent1">牵制其他方向</p>
+    </div>
+
+    <!-- MIDDLE column bottom -->
+    <div class="col-mid-bot">
+      <p>(II) <span class="red underline">攻击战术要点</span></p>
+      <p class="indent1">以火力压制敌人</p>
+      <p class="indent1">步兵在火力掩护下</p>
+      <p class="indent1">向敌冲击</p>
+      <br>
+      <p>大范围运动迂回，</p>
+      <p>以一部兵力正面</p>
+      <p>牵制，主力从侧翼</p>
+      <p>或背后突击</p>
+      <br>
+
+      <!-- boxed area with arrows -->
+      <div style="display:flex; align-items:flex-start; gap:6px; margin-top:6px;">
+        <div>
+          <div class="boxed-block" style="border-color:#cc44aa; color:#c00; min-width:160px;">
+            <p><span class="pink">战术核心：</span></p>
+            <p>以近战夜战</p>
+            <p>为主要手段</p>
+            <p>集中优势兵力</p>
+            <p>各个歼灭敌人</p>
+          </div>
+          <p style="margin-top:4px; font-size:11px;">
+            <span class="arrow-left">←</span>
+            <span class="pink">各个歼灭敌人</span>
+          </p>
+          <p style="font-size:11px;">
+            <span class="arrow-left">←</span>
+            <span class="pink">是我军战术基本原则</span>
+          </p>
+        </div>
+        <div class="boxed-block" style="min-width:140px; border-color:#333;">
+          <p>大范围运动，</p>
+          <p>迂回包围，</p>
+          <p>断敌退路，</p>
+          <p>再予以歼灭</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT column bottom -->
+    <div class="col-right-bot">
+      <p>(一) <span class="blue">战斗编成(0)</span> 强调</p>
+      <p class="indent1">发挥整体战斗力</p>
+      <p>(2) 指挥与协同</p>
+      <p class="indent1">加强各兵种协同</p>
+      <p class="indent1">步炮协同、步坦协同</p>
+      <br>
+      <p>(1) <span class="red">1969年以后</span>，中共</p>
+      <p class="indent1">军队推行合成化</p>
+      <p class="indent1">建设，提高诸兵种</p>
+      <p class="indent1">合成作战能力</p>
+      <br>
+      <p>十 十 十</p>
+      <p>各部队按战役任务</p>
+      <p>编成诸兵种合成</p>
+      <p>作战单元</p>
+      <br>
+      <p>至</p>
+      <p class="indent1">以合成化提升</p>
+      <p class="indent1">整体作战效能，</p>
+      <p class="indent1">是现代战争的</p>
+      <p class="indent1">必然要求</p>
+      <p class="indent1">下</p>
+    </div>
+
+  </div><!-- end bottom-half -->
+
+</div><!-- end page -->
+</body>
+</html>

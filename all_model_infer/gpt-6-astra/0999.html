@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>降水与列车效应笔记</title>
+<script>
+window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: #dedbd5;
+  color: #555451;
+}
+.page {
+  position: relative;
+  width: 540px;
+  height: 720px;
+  overflow: hidden;
+  margin: 0 auto;
+  background:
+    linear-gradient(105deg, rgba(114,108,102,.09), transparent 48%, rgba(114,108,102,.08)),
+    #dedbd6;
+  font-family: "Kaiti SC", "KaiTi", "STKaiti", "楷体", cursive;
+}
+.rules {
+  position: absolute;
+  top: 37px;
+  left: 24px;
+  width: 481px;
+  height: 635px;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(124,120,115,.16) 0,
+    rgba(124,120,115,.16) 1px,
+    transparent 1px,
+    transparent 28.7px
+  );
+  transform: rotate(.5deg);
+}
+.date {
+  position: absolute;
+  left: 35px;
+  top: 20px;
+  font: 8px Arial, sans-serif;
+  color: #bbb7b1;
+}
+.notes {
+  position: absolute;
+  top: 43px;
+  left: 34px;
+  width: 474px;
+  font-size: 19px;
+  line-height: 27.5px;
+  letter-spacing: -.65px;
+}
+.line {
+  white-space: nowrap;
+  min-height: 27.5px;
+}
+.heading { font-size: 21px; }
+.item { font-size: 18.5px; }
+.continuation { padding-left: 27px; }
+.definition {
+  display: grid;
+  grid-template-columns: 103px 1fr;
+  align-items: start;
+  margin-top: 0;
+}
+.term {
+  color: #507f99;
+  font-size: 19px;
+  white-space: nowrap;
+}
+.explanation {
+  font-size: 19.5px;
+  line-height: 27.5px;
+}
+.explanation .line { letter-spacing: -.8px; }
+.red-underline {
+  border-bottom: 1px solid #a87674;
+  padding-bottom: 1px;
+}
+.blue-underline {
+  border-bottom: 1px solid #668994;
+  padding-bottom: 2px;
+}
+.circled {
+  display: inline-block;
+  border: 1px solid #63899b;
+  border-radius: 48%;
+  padding: 0 5px;
+  line-height: 23px;
+  transform: rotate(-2deg);
+}
+.binding {
+  position: absolute;
+  right: -5px;
+  top: 15px;
+  width: 43px;
+  height: 652px;
+  color: #77746e;
+  font: 9px Arial, sans-serif;
+}
+.hole {
+  position: absolute;
+  width: 21px;
+  height: 23px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, #aaa79f 15%, #c3bfb7 55%, transparent 72%);
+  text-align: center;
+  padding-top: 6px;
+  overflow: hidden;
+}
+.hole:nth-child(1) { top: 0; left: 0; }
+.hole:nth-child(2) { top: 29px; left: 3px; }
+.hole:nth-child(3) { top: 59px; left: 6px; }
+.hole:nth-child(4) { top: 87px; left: 8px; }
+.hole:nth-child(5) { top: 118px; left: 9px; }
+.hole:nth-child(6) { top: 149px; left: 12px; }
+.hole:nth-child(7) { top: 180px; left: 13px; }
+.hole:nth-child(8) { top: 211px; left: 15px; }
+.hole:nth-child(9) { top: 244px; left: 16px; }
+.hole:nth-child(10) { top: 278px; left: 17px; }
+.hole:nth-child(11) { top: 311px; left: 18px; }
+.hole:nth-child(12) { top: 346px; left: 20px; }
+.hole:nth-child(13) { top: 379px; left: 22px; }
+.hole:nth-child(14) { top: 414px; left: 23px; }
+.hole:nth-child(15) { top: 449px; left: 25px; }
+.hole:nth-child(16) { top: 487px; left: 26px; }
+.hole:nth-child(17) { top: 523px; left: 28px; }
+.hole:nth-child(18) { top: 560px; left: 29px; }
+.hole:nth-child(19) { top: 598px; left: 30px; }
+.hole:nth-child(20) { top: 635px; left: 31px; }
+.watermark {
+  position: absolute;
+  top: 34px;
+  right: 18px;
+  width: 153px;
+  height: 26px;
+  transform: rotate(28deg);
+  color: rgba(255,255,255,.8);
+  font: 10px sans-serif;
+  text-align: center;
+}
+.footer-rule {
+  position: absolute;
+  left: 14px;
+  right: 29px;
+  top: 668px;
+  height: 9px;
+  border-bottom: 1px solid #aaa79f;
+  border-radius: 50%;
+}
+.brand {
+  position: absolute;
+  left: 27px;
+  top: 679px;
+  color: #a1a4a1;
+  font: 14px Georgia, serif;
+  letter-spacing: -1px;
+}
+</style>
+</head>
+<body>
+<main class="page">
+  <div class="rules" aria-hidden="true"></div>
+  <div class="date">Date</div>
+
+  <section class="notes">
+    <div class="line heading">3. 东南季风，形成强降水。</div>
+    <div class="line item">(3.) 受台风“烟花”逼近，带来大量水汽</div>
+    <div class="line item">(4.) 这次的降水过程中，中小尺度对流反复在伏牛山前地</div>
+    <div class="line continuation">区发展并向郑州方向移动，也就形成了<span class="circled">“列车效应”</span></div>
+    <div class="line continuation">导致降水强度大、维持时间长，造成局地极端降水。</div>
+
+    <div class="definition">
+      <div class="term">△列车效应：</div>
+      <div class="explanation">
+        <div class="line">指<span class="red-underline">长时间的降水</span>并不是因为一块云滞在不动的</div>
+        <div class="line">持续不断造成，而是<span class="blue-underline">对流云先后生成发展、</span></div>
+        <div class="line">使得多降水云团先后<span class="blue-underline">经过同一地区</span>，造成同</div>
+        <div class="line">一地区出现<span class="red-underline">长时间降水情况</span>。就像列车的</div>
+        <div class="line">不同车厢先后经过同一段铁轨一样，这种情</div>
+        <div class="line">况叫做列车效应。</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="placeholder watermark">@[illegible]</div>
+
+  <div class="placeholder binding" aria-label="右侧笔记本装订孔及局部可见的底页文字">
+    <div class="hole">[?]</div>
+    <div class="hole">[?]</div>
+    <div class="hole">[?]</div>
+    <div class="hole">[?]</div>
+    <div class="hole">[?]</div>
+    <div class="hole">[?]</div>
+    <div class="hole">20</div>
+    <div class="hole">20</div>
+    <div class="hole">21</div>
+    <div class="hole">21</div>
+    <div class="hole">217</div>
+    <div class="hole">221</div>
+    <div class="hole">225</div>
+    <div class="hole">228</div>
+    <div class="hole">229<br>231</div>
+    <div class="hole">[?]</div>
+    <div class="hole">[?]</div>
+    <div class="hole">[?]</div>
+    <div class="hole">[?]</div>
+    <div class="hole">[?]</div>
+  </div>
+
+  <div class="footer-rule" aria-hidden="true"></div>
+  <div class="brand">Campus</div>
+</main>
+</body>
+</html>

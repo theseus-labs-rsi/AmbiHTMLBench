@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compute Engine documentation | Google Cloud</title>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Roboto', Arial, sans-serif;
+    color: #202124;
+    font-size: 14px;
+  }
+  a { color: #1a73e8; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Top nav */
+  .topnav {
+    display: flex;
+    align-items: center;
+    padding: 10px 24px;
+    border-bottom: 1px solid #e8eaed;
+    gap: 24px;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    color: #5f6368;
+    font-weight: 500;
+    margin-right: 10px;
+  }
+  .logo .g { color: #4285F4; }
+  .logo .g2 { color: #EA4335; }
+  .logo .g3 { color: #FBBC05; }
+  .logo .g4 { color: #4285F4; }
+  .logo .g5 { color: #34A853; }
+  .logo .g6 { color: #EA4335; }
+  .nav-item {
+    color: #202124;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+  }
+  .nav-item.active { color: #1a73e8; font-weight: 500; }
+  .topnav .spacer { flex: 1; }
+  .search-box {
+    display: flex;
+    align-items: center;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    padding: 6px 10px;
+    gap: 8px;
+    width: 220px;
+    color: #5f6368;
+  }
+  .console-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    padding: 6px 12px;
+    white-space: nowrap;
+  }
+  .icon-circle {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 1px solid #dadce0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .lang-sel {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    padding: 6px 10px;
+  }
+
+  /* Product bar */
+  .productbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+  }
+  .product-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 22px;
+  }
+  .product-title .ic {
+    width: 28px; height: 28px;
+  }
+  .start-free-btn {
+    background: #1a73e8;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    gap: 32px;
+    padding: 0 24px;
+    border-bottom: 1px solid #e8eaed;
+  }
+  .tab {
+    padding: 12px 0;
+    color: #5f6368;
+    font-size: 14px;
+  }
+  .tab.active {
+    color: #1a73e8;
+    border-bottom: 2px solid #1a73e8;
+    font-weight: 500;
+  }
+
+  /* Main layout */
+  .main-wrap {
+    display: flex;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    width: 270px;
+    flex-shrink: 0;
+    padding: 16px 0;
+    border-right: 1px solid #e8eaed;
+  }
+  .filter-box {
+    margin: 0 16px 16px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    padding: 6px 10px;
+    color: #5f6368;
+  }
+  .side-link {
+    padding: 8px 16px;
+    color: #202124;
+    display: block;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .side-link.active {
+    background: #e8f0fe;
+    color: #1a73e8;
+  }
+  .side-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 16px;
+    font-weight: 500;
+    font-size: 13px;
+    color: #202124;
+    cursor: pointer;
+  }
+  .side-sub {
+    padding-left: 28px;
+  }
+  .side-sub2 {
+    padding-left: 44px;
+  }
+  .hr-divider {
+    border: none;
+    border-top: 1px solid #e8eaed;
+    margin: 8px 0;
+  }
+  .collapse-btn {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 1px solid #dadce0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 16px;
+  }
+
+  /* Content */
+  .content {
+    flex: 1;
+    padding: 24px 32px;
+    max-width: 1000px;
+  }
+
+  .hero {
+    display: flex;
+    background: linear-gradient(to bottom, #e6f4ea 0%, #e6f4ea 50%, #ffffff 50%, #ffffff 100%);
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    padding: 40px;
+    min-height: 220px;
+  }
+  .hero-left {
+    flex: 1;
+    z-index: 2;
+  }
+  .hero-left h1 {
+    font-size: 36px;
+    margin: 0 0 20px 0;
+    font-weight: 400;
+  }
+  .read-doc-btn {
+    background: #1a73e8;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 4px;
+    display: inline-block;
+    font-weight: 500;
+  }
+  .hero-graphic {
+    width: 400px;
+    height: 200px;
+    position: relative;
+  }
+  .placeholder {
+    border: 1px dashed #bbb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    font-size: 12px;
+    text-align: center;
+    background: rgba(255,255,255,0.3);
+  }
+
+  .intro-text {
+    padding: 24px 0;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .promo-box {
+    background: #e6f4ea;
+    border-radius: 8px;
+    padding: 24px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 24px 0;
+  }
+  .promo-box h2 {
+    font-size: 20px;
+    margin: 0 0 12px 0;
+    font-weight: 400;
+  }
+  .promo-box ul {
+    margin: 0;
+    padding-left: 20px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .get-started-btn {
+    background: #1a73e8;
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 4px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .doc-resources h2 {
+    font-size: 28px;
+    font-weight: 400;
+    margin: 32px 0 8px 0;
+  }
+  .doc-resources > p {
+    font-size: 15px;
+    color: #202124;
+    margin-bottom: 24px;
+  }
+
+  .cards-row {
+    display: flex;
+    gap: 24px;
+  }
+  .card {
+    flex: 1;
+    border: 1px solid #e8eaed;
+    border-radius: 8px;
+    padding: 20px;
+  }
+  .card-icon {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: #e8f0fe;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1a73e8;
+    margin-bottom: 12px;
+  }
+  .card h3 {
+    font-size: 20px;
+    font-weight: 400;
+    margin: 0 0 16px 0;
+  }
+  .card a {
+    display: block;
+    margin-bottom: 12px;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .related-resources h2 {
+    font-size: 28px;
+    font-weight: 400;
+    margin: 48px 0 16px 0;
+  }
+  .tab-pills {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .pill {
+    border: 1px solid #dadce0;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .pill.active {
+    background: #1a73e8;
+    color: #fff;
+    border-color: #1a73e8;
+  }
+  .related-desc {
+    font-size: 15px;
+    line-height: 1.7;
+    margin-bottom: 24px;
+  }
+  .training-row {
+    display: flex;
+    gap: 24px;
+  }
+  .training-card {
+    flex: 1;
+    border: 1px solid #e8eaed;
+    border-radius: 8px;
+    padding: 16px;
+    min-height: 60px;
+  }
+  .training-label {
+    background: #fef7e0;
+    color: #b06000;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 4px;
+    display: inline-block;
+  }
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <div class="logo">
+    <span class="g">G</span><span class="g2">o</span><span class="g3">o</span><span class="g4">g</span><span class="g5">l</span><span class="g6">e</span>&nbsp;Cloud
+  </div>
+  <div class="nav-item active">Technology areas <span>▾</span></div>
+  <div class="nav-item">Cross-product tools <span>▾</span></div>
+  <div class="spacer"></div>
+  <div class="search-box">🔍 Search <span style="margin-left:auto;">/</span></div>
+  <div class="console-btn">🖥 Console</div>
+  <div class="icon-circle">☀</div>
+  <div class="lang-sel">🌐 English ▾</div>
+  <div class="nav-item">Sign in</div>
+</div>
+
+<div class="productbar">
+  <div class="product-title">
+    <span class="ic">⚙️</span> Compute Engine
+  </div>
+  <div class="start-free-btn">Start free</div>
+</div>
+
+<div class="tabs">
+  <div class="tab active">Overview</div>
+  <div class="tab">Guides</div>
+  <div class="tab">APIs &amp; Reference</div>
+  <div class="tab">Samples</div>
+  <div class="tab">Resources</div>
+</div>
+
+<div class="main-wrap">
+  <div class="sidebar">
+    <div class="filter-box">▽ Filter</div>
+
+    <div class="side-link">Google Cloud Documentation home</div>
+    <div class="side-link">Get started with Google Cloud</div>
+    <div class="side-link">Product list</div>
+    <div class="side-link">Integrated AI assistance with Gemini for Google Cloud</div>
+    <div class="side-link">What's new in documentation</div>
+    <div class="side-link">Recent product release notes</div>
+    <div class="side-link">Cloud Customer Care</div>
+
+    <hr class="hr-divider">
+
+    <div class="side-section">Cross-product tools <span>▾</span></div>
+    <div class="side-section">AI and ML <span>▾</span></div>
+    <div class="side-section">Application development <span>▾</span></div>
+    <div class="side-section">Application hosting <span>▾</span></div>
+    <div class="side-section">Compute <span>▾</span></div>
+    <div class="side-link side-sub">Overview of compute</div>
+    <div class="side-section side-sub">Virtual machines <span>▾</span></div>
+    <div class="side-link side-sub2 active">Compute Engine</div>
+    <div class="side-link side-sub2">Capacity Planner</div>
+    <div class="side-link side-sub2">See additional products on overview page</div>
+    <div class="side-section side-sub">Images <span>▸</span></div>
+    <div class="side-section side-sub">Block storage <span>▸</span></div>
+    <div class="side-section side-sub">Workloads <span>▸</span></div>
+    <div class="side-section side-sub">Selected related products <span>▸</span></div>
+
+    <hr class="hr-divider">
+
+    <div class="side-section">Data analytics <span>▾</span></div>
+    <div class="side-section">Databases <span>▾</span></div>
+    <div class="side-section">Distributed, hybrid, and multicloud <span>▾</span></div>
+    <div class="side-section">Industry solutions <span>▾</span></div>
+    <div class="side-section">Migration <span>▾</span></div>
+    <div class="side-section">Networking <span>▾</span></div>
+    <div class="side-section">Observability and monitoring <span>▾</span></div>
+    <div class="side-section">Security <span>▾</span></div>
+    <div class="side-section">Storage <span>▾</span></div>
+
+    <div class="collapse-btn">‹</div>
+  </div>
+
+  <div class="content">
+
+    <div class="hero">
+      <div class="hero-left">
+        <h1>Compute Engine<br>documentation</h1>
+        <div class="read-doc-btn">Read product documentation</div>
+      </div>
+      <div class="hero-graphic">
+        <div class="placeholder" style="width:400px;height:200px;border:none;background:transparent;">
+          [Graphic: abstract geometric shapes, circles, lines, squares - decorative illustration]
+        </div>
+      </div>
+    </div>
+
+    <div class="intro-text">
+      <p>
+        Compute Engine is a <a href="#">computing and hosting service</a> that lets you create and run virtual machines on Google
+        infrastructure. Compute Engine offers scale, performance, and value that lets you easily launch large compute clusters
+        on Google's infrastructure. There are no upfront investments, and you can run thousands of virtual CPUs on a system
+        that offers quick, consistent performance.
+      </p>
+      <p>
+        <a href="#">Go to the Compute Engine product page for more.</a>
+      </p>
+    </div>
+
+    <div class="promo-box">
+      <div>
+        <h2>Start your proof of concept with $300 in free credit</h2>
+        <ul>
+          <li>Develop with our latest Generative AI models and tools.</li>
+          <li>Get free usage of 20+ popular products, including Compute Engine and AI APIs.</li>
+          <li>No automatic charges, no commitment.</li>
+        </ul>
+      </div>
+      <div class="get-started-btn">Get started for free</div>
+    </div>
+
+    <div class="doc-resources">
+      <h2>Documentation resources</h2>
+      <p>Find quickstarts and guides, review key references, and get help with common issues.</p>
+
+      <div class="cards-row">
+        <div class="card">
+          <div class="card-icon">☰</div>
+          <h3>Guides</h3>
+          <a href="#">Machine families resource and comparison guide</a>
+          <a href="#">Choose a deployment strategy</a>
+          <a href="#">Create and start a VM</a>
+          <a href="#">About SSH connections</a>
+          <a href="#">Choose a migration path</a>
+          <a href="#">Data protection options</a>
+          <a href="#">VM instance lifecycle</a>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔍</div>
+          <h3>Reference</h3>
+          <a href="#">gcloud compute command-line tool</a>
+          <a href="#">Client libraries</a>
+          <a href="#">REST API</a>
+        </div>
+        <div class="card">
+          <div class="card-icon">ℹ</div>
+          <h3>Resources</h3>
+          <a href="#">Pricing</a>
+          <a href="#">Quotas and limits</a>
+          <a href="#">Release notes</a>
+          <a href="#">Support</a>
+          <a href="#">Samples and videos</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="related-resources">
+      <h2>Related resources</h2>
+      <div class="tab-pills">
+        <div class="pill active">✓ Training and tutorials</div>
+        <div class="pill">Use cases</div>
+        <div class="pill">Code samples</div>
+      </div>
+      <div class="related-desc">
+        Explore self-paced training, use cases, reference architectures, and code samples with examples of how to use and
+        connect Google Cloud services.
+      </div>
+      <div class="training-row">
+        <div class="training-card"><span class="training-label">Training</span></div>
+        <div class="training-card"><span class="training-label">Training</span></div>
+        <div class="training-card"><span class="training-label">Training</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>来成都旅游的正确玩法</title>
+    <style>
+        body {
+            background-color: #2c3e63;
+            color: #ffffff;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+        }
+        
+        /* Header Styles */
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .title-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        .main-title {
+            font-size: 32px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 2px 2px 0 #000;
+            letter-spacing: 2px;
+        }
+        .highlight-title {
+            font-size: 32px;
+            font-weight: bold;
+            color: #ff99cc;
+            text-shadow: 2px 2px 0 #fff, 4px 4px 0 rgba(0,0,0,0.2);
+            letter-spacing: 2px;
+        }
+        .sub-title-row {
+            display: flex;
+            justify-content: center;
+            align-items: baseline;
+            gap: 15px;
+        }
+        .sub-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 2px 2px 0 #000;
+        }
+        .price {
+            font-size: 48px;
+            font-weight: bold;
+            color: #00ffff;
+            text-shadow: 2px 2px 0 #fff, 4px 4px 0 rgba(0,0,0,0.2);
+            line-height: 1;
+        }
+
+        /* Divider */
+        .divider {
+            height: 10px;
+            background-image: url("data:image/svg+xml,%3Csvg width='20' height='10' viewBox='0 0 20 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 5 Q 5 0 10 5 T 20 5' fill='none' stroke='%23aaddff' stroke-width='2'/%3E%3C/svg%3E");
+            background-repeat: repeat-x;
+            margin: 15px 0;
+            opacity: 0.7;
+        }
+
+        /* Day Header */
+        .day-header {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .day-badge {
+            background: #fff;
+            color: #d32f2f;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 18px;
+            border: 2px solid #333;
+            white-space: nowrap;
+            z-index: 2;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+        }
+        .day-info {
+            margin-left: 15px;
+            flex: 1;
+        }
+        .route {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+        .cost {
+            font-size: 14px;
+            color: #aaffaa;
+            font-weight: bold;
+        }
+
+        /* Timeline Layout */
+        .timeline {
+            position: relative;
+            padding-left: 60px;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 35px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            border-left: 2px dashed #fff;
+            z-index: 1;
+        }
+
+        .time-slot {
+            position: relative;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: flex-start;
+        }
+        .time-badge {
+            position: absolute;
+            left: -60px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #fff;
+            color: #000;
+            padding: 10px 15px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 20px;
+            border: 2px solid #000;
+            z-index: 2;
+            white-space: nowrap;
+        }
+        /* Adjust specific badge positions to match image flow */
+        .slot-morning .time-badge { top: 80px; }
+        .slot-afternoon .time-badge { top: 80px; }
+        .slot-evening .time-badge { top: 40px; }
+
+        .content-block {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+        }
+        .image-placeholder {
+            width: 140px;
+            height: 140px;
+            background-color: #444;
+            border-radius: 5px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #aaa;
+            font-size: 12px;
+            text-align: center;
+            overflow: hidden;
+            position: relative;
+        }
+        .image-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .details {
+            flex: 1;
+        }
+        .spot-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #ffeb3b;
+            margin-bottom: 8px;
+            text-shadow: 1px 1px 2px #000;
+        }
+        .info-line {
+            font-size: 15px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: flex-start;
+            line-height: 1.4;
+        }
+        .icon {
+            margin-right: 5px;
+            font-size: 16px;
+        }
+        .intro-text {
+            color: #e0e0e0;
+        }
+
+        /* Arrow indicators between slots */
+        .arrow-down {
+            position: absolute;
+            left: -28px;
+            bottom: -25px;
+            color: #fff;
+            font-size: 20px;
+            z-index: 2;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <div class="title-row">
+            <span class="main-title">来成都旅游的</span>
+            <span class="highlight-title">正确玩法</span>
+        </div>
+        <div class="sub-title-row">
+            <span class="sub-title">三天两夜人均</span>
+            <span class="price">900</span>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Day 2 Header -->
+    <div class="day-header">
+        <div class="day-badge">第二天</div>
+        <div class="day-info">
+            <div class="route">行程：大熊猫基地→文殊院→望平街→东郊记忆</div>
+            <div class="cost">人均消费：门票55/27元+吃饭150元+交通25元+住宿100元=300左右</div>
+        </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="timeline">
+        
+        <!-- Morning Slot (Panda Base) - Note: In image, Panda base is above the "Morning" badge visually, but logically part of the flow. 
+             Actually, looking closely, the "Morning" badge is between Panda Base and Wenshu Yuan. 
+             Let's re-evaluate the visual structure.
+             
+             Structure Analysis:
+             1. Day Badge (Left) -> Route Info (Right)
+             2. Arrow down
+             3. Panda Base Block (Image Left, Text Right) -> No time badge next to it specifically? 
+                Wait, the "Morning" (上午) badge is below the Panda Base block.
+                The "Afternoon" (下午) badge is below the Wenshu Yuan block.
+                The "Evening" (晚上) badge is at the bottom.
+                
+             Correction: The timeline line runs through the badges.
+             - Top: Day 2 Badge.
+             - Then Panda Base content.
+             - Then "Morning" Badge on the line.
+             - Then Wenshu Yuan content.
+             - Then "Afternoon" Badge on the line.
+             - Then Wangping Street content.
+             - Then "Evening" Badge on the line.
+             - Then Dongjiao Memory content.
+             
+             Actually, looking at the arrows:
+             Day 2 -> Arrow -> Panda Base -> Arrow -> Morning Badge -> Wenshu Yuan -> Arrow -> Afternoon Badge -> Wangping -> Arrow -> Evening Badge -> Dongjiao.
+             
+             Wait, the badges are ON the left column. The content is on the right.
+             The vertical dashed line connects the badges.
+             
+             Let's map strictly:
+             Row 1: Day 2 Badge | Route Text
+             Row 2: (Empty on left) | Panda Base Content
+             Row 3: Morning Badge | Wenshu Yuan Content
+             Row 4: Afternoon Badge | Wangping Street Content
+             Row 5: Evening Badge | Dongjiao Memory Content
+             
+             This seems to be the grid. The dashed line connects Day2 -> Morning -> Afternoon -> Evening.
+             But visually, the Panda base is between Day 2 and Morning.
+             So the layout is:
+             [Day 2 Badge] [Route Info]
+             [   |      ] [Panda Base Info]
+             [Morning]    [Wenshu Yuan Info]
+             [   |      ] [Wangping Info] -- Wait, Afternoon is next to Wangping.
+             
+             Let's look at the Y-coordinates.
+             - Day 2 is top.
+             - Panda Base is below Day 2.
+             - Morning badge is aligned with Wenshu Yuan? Or between Panda and Wenshu?
+               The badge "上午" is vertically centered between the Panda block and Wenshu block? 
+               No, it looks like it's next to the Wenshu block start.
+               
+             Let's try a flex column approach for the main content, and absolute positioning for the left rail.
+        -->
+
+        <!-- Re-structuring for better fidelity -->
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+            
+            <!-- Block 1: Panda Base -->
+            <div style="display: flex; gap: 15px; margin-top: 10px;">
+                <div style="width: 80px; display: flex; justify-content: center; align-items: center;">
+                    <!-- Spacer for alignment with badges below -->
+                </div>
+                <div class="image-placeholder">
+                    [Photo: Pandas on tree]
+                </div>
+                <div class="details">
+                    <div class="spot-title">大熊猫基地</div>
+                    <div class="info-line"><span class="icon">💰</span> 门票：全票55，半票27</div>
+                    <div class="info-line"><span class="icon">🚇</span> 交通：地铁3号线，熊猫大道站</div>
+                    <div class="info-line"><span class="icon">💬</span> <span class="intro-text">简介：成都旅游必打卡国宝熊猫，里面有许多可爱的熊猫可以近距离观察</span></div>
+                </div>
+            </div>
+
+            <!-- Block 2: Morning + Wenshu Yuan -->
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <div style="width: 80px; display: flex; justify-content: center;">
+                    <div class="time-badge" style="position: static; transform: none;">上午</div>
+                </div>
+                <div class="image-placeholder">
+                    [Photo: Yellow temple wall]
+                </div>
+                <div class="details">
+                    <div class="spot-title">文殊院</div>
+                    <div class="info-line"><span class="icon">💰</span> 门票：免费开放</div>
+                    <div class="info-line"><span class="icon">🚇</span> 交通：地铁1号线直达文殊院站</div>
+                    <div class="info-line"><span class="icon">💬</span> <span class="intro-text">简介：位于成都市中区，既有香火气又有烟火气，可以烧香拜佛</span></div>
+                </div>
+            </div>
+
+            <!-- Block 3: Afternoon + Wangping Street -->
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <div style="width: 80px; display: flex; justify-content: center;">
+                    <div class="time-badge" style="position: static; transform: none;">下午</div>
+                </div>
+                <div class="image-placeholder">
+                    [Photo: Neon sign Wangping St]
+                </div>
+                <div class="details">
+                    <div class="spot-title">望平街</div>
+                    <div class="info-line"><span class="icon">💰</span> 门票：免费开放</div>
+                    <div class="info-line"><span class="icon">🚇</span> 交通：地铁2号线</div>
+                    <div class="info-line"><span class="icon">💬</span> <span class="intro-text">简介：街上有咖啡馆、小酒吧、面包店等，是一条文艺浪漫的街区</span></div>
+                </div>
+            </div>
+
+            <!-- Block 4: Evening + Dongjiao Memory -->
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <div style="width: 80px; display: flex; justify-content: center;">
+                    <div class="time-badge" style="position: static; transform: none;">晚上</div>
+                </div>
+                <div class="image-placeholder">
+                    [Photo: Dongjiao Memory entrance]
+                </div>
+                <div class="details">
+                    <div class="spot-title">东郊记忆</div>
+                    <div class="info-line"><span class="icon">💰</span> 门票：免费开放</div>
+                    <div class="info-line"><span class="icon">🚇</span> 交通：地铁8号线东郊记忆站</div>
+                    <div class="info-line"><span class="icon">💬</span> <span class="intro-text">简介：集合音乐、美术、戏剧、摄影等文化形态的多元文化园区</span></div>
+                </div>
+            </div>
+
+        </div>
+        
+        <!-- Overlay Dashed Line for the timeline effect -->
+        <div style="position: absolute; left: 35px; top: 60px; bottom: 20px; width: 2px; border-left: 2px dashed #fff; z-index: 0; pointer-events: none;"></div>
+        
+        <!-- Arrows on the line -->
+        <div style="position: absolute; left: 28px; top: 180px; color: #fff; font-size: 20px; z-index: 1;">↓</div>
+        <div style="position: absolute; left: 28px; top: 360px; color: #fff; font-size: 20px; z-index: 1;">↓</div>
+        <div style="position: absolute; left: 28px; top: 540px; color: #fff; font-size: 20px; z-index: 1;">↓</div>
+
+    </div>
+</div>
+
+</body>
+</html>

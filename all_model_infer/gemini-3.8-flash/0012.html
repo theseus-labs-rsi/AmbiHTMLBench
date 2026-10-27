@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>中国当代美术展</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: #f2f2f2;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "SimHei", sans-serif;
+      color: #111;
+      display: flex;
+      justify-content: center;
+      padding: 20px 0;
+    }
+    .poster {
+      width: 600px;
+      min-height: 850px;
+      background: #ffffff;
+      padding: 35px 36px 30px;
+      position: relative;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header Title */
+    .header-title {
+      font-size: 42px;
+      font-weight: 900;
+      letter-spacing: 7px;
+      text-align: center;
+      color: #000;
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
+
+    /* Sub-header Pinyin Bar */
+    .pinyin-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      font-family: Arial, sans-serif;
+      color: #222;
+      margin-bottom: 15px;
+      padding: 0 4px;
+    }
+    .pinyin-bar span {
+      display: inline-flex;
+      align-items: center;
+    }
+    .pinyin-line {
+      flex: 1;
+      height: 1px;
+      background: #222;
+      margin: 0 6px;
+      position: relative;
+    }
+    .pinyin-line::after {
+      content: "•";
+      position: absolute;
+      right: -3px;
+      top: -6px;
+      font-size: 10px;
+    }
+
+    /* Central Artwork Graphic */
+    .art-visual {
+      width: 100%;
+      height: 290px;
+      position: relative;
+      background: linear-gradient(180deg, #fcfbf9 0%, #f4ede1 50%, #ffffff 100%);
+      overflow: hidden;
+      margin-bottom: 25px;
+    }
+    .ribbon-container {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .bg-text {
+      position: absolute;
+      font-size: 90px;
+      font-weight: 900;
+      color: rgba(255, 255, 255, 0.7);
+      text-shadow: 0 0 15px rgba(180, 160, 140, 0.15);
+      z-index: 1;
+      user-select: none;
+    }
+    .bg-text.mei { top: 15px; right: 80px; }
+    .bg-text.dai { bottom: 50px; left: 100px; }
+    .bg-text.zhan { bottom: 35px; right: 120px; }
+    .wave-shape {
+      position: absolute;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(226,216,200,0.85) 50%, rgba(200,188,170,0.6) 100%);
+      box-shadow: 0 10px 25px rgba(150, 130, 110, 0.15);
+      backdrop-filter: blur(2px);
+    }
+    .w1 { width: 380px; height: 110px; top: 10px; left: 120px; border-radius: 50px 100px 30px 60px; transform: rotate(-3deg); }
+    .w2 { width: 140px; height: 160px; top: 40px; left: 20px; border-radius: 20px 40px 10px 30px; }
+    .w3 { width: 180px; height: 140px; bottom: 40px; left: 60px; border-radius: 40px 80px 20px 40px; z-index: 2; }
+    .w4 { width: 220px; height: 130px; bottom: 60px; right: 30px; border-radius: 30px 20px 50px 30px; z-index: 2; }
+    .w5 { width: 240px; height: 100px; bottom: 5px; right: 20px; border-radius: 40px 60px 20px 50px; z-index: 3; }
+
+    /* Middle Info Row */
+    .info-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+    .category-left {
+      font-size: 6.5px;
+      line-height: 1.45;
+      color: #333;
+      letter-spacing: 0.5px;
+    }
+    .middle-meta {
+      text-align: center;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      color: #444;
+      line-height: 1.9;
+    }
+    .category-right {
+      text-align: right;
+      font-size: 8.5px;
+      line-height: 1.6;
+      color: #222;
+      letter-spacing: 0.8px;
+    }
+
+    /* Lower Grid Section */
+    .bottom-section {
+      display: grid;
+      grid-template-columns: 105px 125px 1fr 65px;
+      column-gap: 12px;
+      border-top: 1px solid transparent;
+      padding-top: 10px;
+    }
+
+    /* Col 1: China Contemporary Art Museum */
+    .col-museum {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+    .col-museum .en-title {
+      font-family: Arial, sans-serif;
+      font-weight: 700;
+      font-size: 11px;
+      line-height: 1.2;
+      color: #000;
+      margin-bottom: 5px;
+    }
+    .col-museum .cn-title {
+      font-size: 7.5px;
+      letter-spacing: 0.5px;
+      color: #222;
+      margin-bottom: 4px;
+    }
+    .col-museum .year {
+      font-size: 10px;
+      font-weight: 700;
+      color: #111;
+      font-family: Arial, sans-serif;
+      margin-bottom: 12px;
+    }
+    .artists-vertical-label {
+      font-size: 12px;
+      font-weight: 900;
+      line-height: 1.6;
+      margin-top: auto;
+      letter-spacing: 1px;
+    }
+
+    /* Col 2: Arts Chinese & Artists Row 1 */
+    .col-arts {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .arts-badge {
+      font-family: "Didot", "Cinzel", "Times New Roman", serif;
+      color: #9d8765;
+      line-height: 0.85;
+      margin-top: 20px;
+    }
+    .arts-badge .arts {
+      font-size: 18px;
+      letter-spacing: 1px;
+      margin-left: 36px;
+    }
+    .arts-badge .chinese {
+      font-size: 20px;
+      letter-spacing: 0.5px;
+    }
+
+    /* Col 3: Participating Artists & List */
+    .col-participating {
+      display: flex;
+      flex-direction: column;
+      border-left: 1px solid #777;
+      padding-left: 10px;
+    }
+    .manifesto {
+      font-size: 5px;
+      line-height: 1.4;
+      color: #111;
+      letter-spacing: -0.1px;
+      margin-bottom: 4px;
+      transform: scale(0.92);
+      transform-origin: left top;
+    }
+    .participating-title {
+      font-family: "Didot", "Cinzel", "Times New Roman", serif;
+      color: #9d8765;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+    .participating-title .en-sub {
+      font-size: 13px;
+      font-style: italic;
+      letter-spacing: 0.5px;
+    }
+    .participating-title .en-main {
+      font-size: 23px;
+      letter-spacing: 2px;
+    }
+
+    /* Bottom Artists Flex Line */
+    .artists-flow-wrap {
+      display: flex;
+      grid-column: 2 / span 2;
+      align-items: flex-end;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    .artist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 2px;
+    }
+    .artist-item .cn {
+      writing-mode: vertical-rl;
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      color: #000;
+    }
+    .artist-item .pinyin {
+      writing-mode: vertical-rl;
+      font-family: Arial, sans-serif;
+      font-size: 5px;
+      letter-spacing: 0.5px;
+      color: #444;
+      transform: rotate(180deg);
+      height: 48px;
+    }
+
+    /* Director Box (艺术总监) */
+    .director-box {
+      border-left: 1px solid #777;
+      padding-left: 8px;
+      margin-left: 5px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+    .director-box .tag {
+      font-size: 7.5px;
+      font-weight: bold;
+      color: #111;
+      margin-bottom: 5px;
+      white-space: nowrap;
+    }
+    .director-box .name {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      line-height: 1.5;
+      color: #111;
+      white-space: nowrap;
+    }
+
+    /* Col 4: Curators */
+    .col-curators {
+      padding-left: 5px;
+    }
+    .col-curators .tag {
+      font-size: 7.5px;
+      font-weight: bold;
+      color: #111;
+      margin-bottom: 6px;
+      white-space: nowrap;
+    }
+    .curator-list {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .curator-list .name {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      color: #111;
+      line-height: 1.25;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="poster">
+
+    <!-- Top Headline -->
+    <div class="header-title">中国当代美术展</div>
+
+    <!-- Pinyin Divider Track -->
+    <div class="pinyin-bar">
+      <span>ZHONG</span>
+      <div class="pinyin-line"></div>
+      <span>GUO</span>
+      <div class="pinyin-line"></div>
+      <span>DANG</span>
+      <div class="pinyin-line"></div>
+      <span>DAI</span>
+      <div class="pinyin-line"></div>
+      <span>MEI</span>
+      <div class="pinyin-line"></div>
+      <span>SHU</span>
+      <div class="pinyin-line"></div>
+      <span>ZHAN</span>
+      <div style="width: 12px; height: 1px; background: #222; margin: 0 4px;"></div>
+      <span style="font-size: 11px; margin-left: 2px;">☸</span>
+    </div>
+
+    <!-- Center Artistic Graphic Placeholder & Layers -->
+    <div class="art-visual placeholder" title="[Graphic: Abstract 3D layered paper ribbon artwork with faint embossed calligraphy]">
+      <div class="ribbon-container">
+        <div class="bg-text mei">美</div>
+        <div class="bg-text dai">代</div>
+        <div class="bg-text zhan">展</div>
+        <div class="wave-shape w1"></div>
+        <div class="wave-shape w2"></div>
+        <div class="wave-shape w3"></div>
+        <div class="wave-shape w4"></div>
+        <div class="wave-shape w5"></div>
+      </div>
+    </div>
+
+    <!-- Middle Info Block -->
+    <div class="info-section">
+      <div class="category-left">
+        中国画<br>
+        书法<br>
+        油画<br>
+        雕塑<br>
+        版画<br>
+        漆画<br>
+        年画<br>
+        建筑艺术壁画
+      </div>
+
+      <div class="middle-meta">
+        <div>开幕时间：2018年5月23日 14:00</div>
+        <div>展览时间：2018年5月23日-5月30日 17:00</div>
+        <div>展览地点：中国当代美术馆 二号厅</div>
+      </div>
+
+      <div class="category-right">
+        工艺美术<br>
+        传统工艺美术<br>
+        新型工艺美术
+      </div>
+    </div>
+
+    <!-- Bottom Section: Titles, Artists & Curators -->
+    <div class="bottom-section">
+      
+      <!-- Column 1: Museum Brand & Vertical Artists Header -->
+      <div class="col-museum">
+        <div class="en-title">China Contemporary<br>Art Museum</div>
+        <div class="cn-title">中国当代美术馆</div>
+        <div class="year">2019</div>
+        <div class="artists-vertical-label">
+          艺<br>术<br>家
+        </div>
+      </div>
+
+      <!-- Column 2 & 3: English Branding & Artists -->
+      <div class="arts-badge" style="grid-column: 2;">
+        <div class="arts">ARTS</div>
+        <div class="chinese">CHINESE</div>
+      </div>
+
+      <div class="col-participating" style="grid-column: 3;">
+        <div class="manifesto">
+          正如整个中国现代文化具有的过渡性、矛盾性和包容性那样，中国现代美术也充满了新旧交替、中西混杂、变化发展的特色。
+        </div>
+        <div class="participating-title">
+          <div class="en-sub">Participating</div>
+          <div class="en-main">ARTISTS</div>
+        </div>
+      </div>
+
+      <!-- Column 4: Curators (策展人员) -->
+      <div class="col-curators" style="grid-column: 4; grid-row: 1 / span 2;">
+        <div class="tag">• [策展人员]</div>
+        <div class="curator-list">
+          <div class="name">杨建兵</div>
+          <div class="name">胡&nbsp;&nbsp;静</div>
+          <div class="name">田&nbsp;&nbsp;芳</div>
+          <div class="name">武&nbsp;&nbsp;强</div>
+          <div class="name">王艳茹</div>
+          <div class="name">任&nbsp;&nbsp;斌</div>
+        </div>
+      </div>
+
+      <!-- Bottom Artists Flow Across Col 2 & 3 -->
+      <div class="artists-flow-wrap">
+        <!-- 1 -->
+        <div class="artist-item">
+          <div class="cn">章汉夫</div>
+          <div class="pinyin">Zhang Hanfu</div>
+        </div>
+        <!-- 2 -->
+        <div class="artist-item">
+          <div class="cn">黄强辉</div>
+          <div class="pinyin">Huang Qianghui</div>
+        </div>
+        <!-- 3 -->
+        <div class="artist-item">
+          <div class="cn">林&nbsp;伟</div>
+          <div class="pinyin">Lin Wei</div>
+        </div>
+        <!-- 4 -->
+        <div class="artist-item">
+          <div class="cn">马宏宇</div>
+          <div class="pinyin">Ma Hongyu</div>
+        </div>
+        <!-- 5 -->
+        <div class="artist-item">
+          <div class="cn">彭万里</div>
+          <div class="pinyin">Peng Wanli</div>
+        </div>
+        <!-- 6 -->
+        <div class="artist-item">
+          <div class="cn">王&nbsp;兵</div>
+          <div class="pinyin">Wang Bing</div>
+        </div>
+        <!-- 7 -->
+        <div class="artist-item">
+          <div class="cn">庞右向</div>
+          <div class="pinyin">Pang Right</div>
+        </div>
+        <!-- 8 -->
+        <div class="artist-item">
+          <div class="cn">冯&nbsp;雷</div>
+          <div class="pinyin">Feng Lei</div>
+        </div>
+
+        <!-- 艺术总监 -->
+        <div class="director-box">
+          <div class="tag">• [艺术总监]</div>
+          <div class="name">王&nbsp;&nbsp;峰</div>
+          <div class="name">刘永智</div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</body>
+</html>

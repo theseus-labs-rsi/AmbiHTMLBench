@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人经验总结 - 投影幻灯片</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #2a2a2a;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .scene-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            max-width: 1200px;
+            max-height: 900px;
+            background: linear-gradient(to bottom, #dcdcdc 0%, #b0b0b0 100%);
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        /* Ceiling and Lights */
+        .ceiling {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 15%;
+            background-color: #e0e0e0;
+            z-index: 1;
+        }
+        .light {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-color: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.8);
+            top: 20px;
+        }
+        .light:nth-child(1) { left: 30%; }
+        .light:nth-child(2) { left: 45%; }
+        .light:nth-child(3) { left: 60%; }
+        .light:nth-child(4) { left: 75%; }
+
+        /* Projector */
+        .projector {
+            position: absolute;
+            top: 0;
+            left: 72%;
+            width: 4px;
+            height: 80px;
+            background-color: #555;
+            z-index: 2;
+        }
+        .projector::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: -8px;
+            width: 20px;
+            height: 15px;
+            background-color: #333;
+            border-radius: 2px;
+        }
+
+        /* Wall Panels */
+        .wall {
+            position: absolute;
+            top: 15%;
+            left: 0;
+            width: 100%;
+            height: 85%;
+            background-color: #cfcfcf;
+            z-index: 0;
+        }
+        .panel-line-v {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: #aaa;
+        }
+        .panel-line-h {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #aaa;
+        }
+
+        /* Projection Screen */
+        .screen-frame {
+            position: absolute;
+            top: 8%;
+            left: 5%;
+            width: 62%;
+            height: 55%;
+            background-color: #333;
+            border-radius: 4px;
+            z-index: 3;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .screen-content {
+            position: absolute;
+            top: 2%;
+            left: 1%;
+            width: 98%;
+            height: 96%;
+            background-color: #f0f2f5;
+            padding: 20px 30px;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        /* Slide Text Styling */
+        .slide-header {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .slide-subheader {
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 15px;
+        }
+        .slide-section-title {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .slide-list {
+            list-style-type: decimal;
+            padding-left: 20px;
+            margin: 0;
+            font-size: 0.75rem;
+            color: #444;
+            line-height: 1.6;
+        }
+        .slide-list li {
+            margin-bottom: 4px;
+        }
+        .highlight-text {
+            color: #333;
+        }
+
+        /* Presenter */
+        .presenter {
+            position: absolute;
+            top: 45%;
+            left: 68%;
+            width: 60px;
+            height: 120px;
+            z-index: 4;
+        }
+        .presenter-head {
+            width: 25px;
+            height: 30px;
+            background-color: #222;
+            border-radius: 50%;
+            margin: 0 auto;
+        }
+        .presenter-body {
+            width: 40px;
+            height: 70px;
+            background-color: #111;
+            margin: 5px auto 0;
+            border-radius: 10px 10px 0 0;
+        }
+
+        /* Audience Area */
+        .audience-area {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 45%;
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            width: 100%;
+            margin-bottom: -10px;
+        }
+        .row.back { transform: scale(0.8); margin-bottom: 20px; opacity: 0.9; }
+        .row.middle { transform: scale(0.9); margin-bottom: 10px; }
+        .row.front { transform: scale(1.1); margin-bottom: -20px; }
+
+        .seat-unit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 120px;
+            position: relative;
+        }
+
+        .person {
+            width: 70px;
+            height: 90px;
+            border-radius: 30px 30px 0 0;
+            position: relative;
+            z-index: 2;
+        }
+        .person-head {
+            width: 40px;
+            height: 45px;
+            background-color: #3e2723;
+            border-radius: 50%;
+            position: absolute;
+            top: -20px;
+            left: 15px;
+            z-index: 3;
+        }
+        
+        /* Specific person styles based on image */
+        .p1 .person { background-color: #5d4037; } /* Brown hair */
+        .p1 .person-head { background-color: #4e342e; width: 50px; left: 10px; top: -10px; height: 60px;} 
+        
+        .p2 .person { background-color: #eceff1; background-image: linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc), linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc); background-size: 10px 10px; background-position: 0 0, 5px 5px; } /* Plaid shirt approx */
+        .p2 .person-head { background-color: #3e2723; }
+
+        .p3 .person { background-color: #212121; } /* Black shirt */
+        .p3 .person-head { background-color: #1a1a1a; }
+        .p3 .hair-clip { position: absolute; top: 10px; left: 25px; width: 10px; height: 10px; background: #d81b60; border-radius: 50%; z-index: 4;}
+
+        .p4 .person { background-color: #f5f5f5; } /* White shirt */
+        .p4 .person-head { background-color: #3e2723; width: 45px; height: 50px; top: -25px; left: 12px;} 
+        .p4 .ponytail { position: absolute; top: 20px; left: 25px; width: 20px; height: 40px; background: #3e2723; border-radius: 0 0 10px 10px; z-index: 2;}
+
+        .p5 .person { background-color: #424242; } /* Dark grey shirt */
+        .p5 .person-head { background-color: #212121; }
+
+        .p6 .person { background-color: #eeeeee; } /* Light shirt right */
+        .p6 .person-head { background-color: #4e342e; width: 60px; height: 70px; top: -30px; left: 5px; border-radius: 40% 40% 50% 50%;} 
+
+        .chair-back {
+            width: 90px;
+            height: 50px;
+            background-color: #5d4037;
+            border: 4px solid #212121;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+            position: relative;
+            z-index: 1;
+            margin-top: -30px;
+        }
+        .desk-surface {
+            width: 110px;
+            height: 15px;
+            background-color: #8d6e63;
+            position: absolute;
+            bottom: 45px;
+            z-index: 0;
+            border-radius: 2px;
+        }
+        .desk-leg {
+            width: 8px;
+            height: 40px;
+            background-color: #212121;
+            position: absolute;
+            bottom: 5px;
+        }
+        .desk-leg.left { left: 10px; }
+        .desk-leg.right { right: 10px; }
+
+        /* Foreground blur effect simulation */
+        .foreground-blur {
+            position: absolute;
+            bottom: -50px;
+            left: -50px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(200,200,200,0.8) 0%, rgba(200,200,200,0) 70%);
+            z-index: 10;
+            filter: blur(10px);
+        }
+        
+        .arm-foreground {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 150px;
+            background-color: #d7ccc8;
+            border-radius: 40px 40px 0 0;
+            z-index: 11;
+            transform: rotate(-15deg);
+            transform-origin: bottom left;
+        }
+        .arm-stripe {
+            width: 100%;
+            height: 20px;
+            background-color: #81c784;
+            margin-top: 20px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="scene-container">
+    <!-- Ceiling -->
+    <div class="ceiling">
+        <div class="light"></div>
+        <div class="light"></div>
+        <div class="light"></div>
+        <div class="light"></div>
+    </div>
+
+    <!-- Projector -->
+    <div class="projector"></div>
+
+    <!-- Wall Background -->
+    <div class="wall">
+        <div class="panel-line-v" style="left: 20%;"></div>
+        <div class="panel-line-v" style="left: 40%;"></div>
+        <div class="panel-line-v" style="left: 60%;"></div>
+        <div class="panel-line-v" style="left: 80%;"></div>
+        <div class="panel-line-h" style="top: 30%;"></div>
+        <div class="panel-line-h" style="top: 60%;"></div>
+    </div>
+
+    <!-- Projection Screen -->
+    <div class="screen-frame">
+        <div class="screen-content">
+            <div class="slide-header">个人经验总结</div>
+            <div class="slide-subheader">学习原则——备考攻略</div>
+            <br>
+            <div class="slide-section-title">做题经验分享及总结：</div>
+            <ol class="slide-list">
+                <li><span class="highlight-text">常识：</span>李梦讲的挺好，如果时间充裕可以好好看看，王军涛，某笔</li>
+                <li><span class="highlight-text">言语理解：</span>郭熙老师，小宝，欣说</li>
+                <li><span class="highlight-text">数量：</span>花生十三，齐麟，唐宋</li>
+                <li><span class="highlight-text">判断：</span>花生十三，用不了没有界，聂佳，钩豪，龙飞，蔡金龙</li>
+                <li><span class="highlight-text">申论：</span>站长，李梦圆，张小龙，小马哥，申论大湿（浙江县级好评论）（申论逻辑强<br>向而不是刷题,复盘比刷题和看视频重要。名言警句的例子不要贪多，分论点排比，<br>今天一句名言，明天一个案例，能坚持两个月已经非常多了。）</li>
+                <li><span class="highlight-text">三查选岗调必须问的就是关系</span></li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Presenter -->
+    <div class="presenter">
+        <div class="presenter-head"></div>
+        <div class="presenter-body"></div>
+    </div>
+
+    <!-- Audience Area -->
+    <div class="audience-area">
+        <!-- Back Row -->
+        <div class="row back">
+            <div class="seat-unit p1">
+                <div class="person"><div class="person-head"></div></div>
+                <div class="chair-back"></div>
+                <div class="desk-surface"></div>
+            </div>
+            <div class="seat-unit p2">
+                <div class="person"><div class="person-head"></div></div>
+                <div class="chair-back"></div>
+                <div class="desk-surface"></div>
+            </div>
+            <div class="seat-unit p3">
+                <div class="person"><div class="person-head"></div></div>
+                <div class="chair-back"></div>
+                <div class="desk-surface"></div>
+            </div>
+            <div class="seat-unit p4">
+                <div class="person"><div class="person-head"></div></div>
+                <div class="chair-back"></div>
+                <div class="desk-surface"></div>
+            </div>
+            <div class="seat-unit p5">
+                <div class="person"><div class="person-head"></div></div>
+                <div class="chair-back"></div>
+                <div class="desk-surface"></div>
+            </div>
+        </div>
+
+        <!-- Middle Row -->
+        <div class="row middle">
+            <div class="seat-unit p1">
+                <div class="person"><div class="person-head"></div></div>
+                <div class="chair-back"></div>
+                <div class="desk-surface">
+                    <div style="position:absolute; top:-15px; left:10px; width:10px; height:20px; background:#ef5350; border-radius:2px;"></div> <!-- Water bottle -->
+                </div>
+            </div>
+            <div class="seat-unit p2">
+                <div class="person"><div class="person-head"></div></div>
+                <div class="chair-back"></div>
+                <div class="desk-surface"></div>
+            </div>
+            <div class="seat-unit p3">
+                <div class="person">
+                    <div class="person-head"></div>
+                    <div class="hair-clip"></div>
+                </div>
+                <div class="chair-back"></div>
+                <div class="desk-surface"></div>
+            </div>
+            <div class="seat-unit p4">
+                <div class="person">
+                    <div class="person-head"></div>
+                    <div class="ponytail"></div>
+                </div>
+                <div class="chair-back"></div>
+                <div class="desk-surface"></div>
+            </div>
+            <div class="seat-unit p5">
+                <div class="person"><div class="person-head"></div></div>
+                <div class="chair-back"></div>
+                <div class="desk-surface"></div>
+            </div>
+        </div>
+
+        <!-- Front Row -->
+        <div class="row front">
+            <div class="seat-unit" style="visibility: hidden;"> <!-- Empty space for alignment -->
+                <div class="chair-back"></div>
+            </div>
+            <div class="seat-unit p2">
+                <div class="person"><div class="person-head"></div></div>
+                <div class="chair-back"></div>
+                <div class="desk-surface"></div>
+            </div>
+            <div class="seat-unit p3">
+                <div class="person"><div class="person-head"></div></div>
+                <div class="chair-back"></div>
+                <div class="desk-surface"></div>
+            </div>
+            <div class="seat-unit p4">
+                <div class="person">
+                    <div class="person-head"></div>
+                    <div class="ponytail"></div>
+                </div>
+                <div class="chair-back"></div>
+                <div class="desk-surface"></div>
+            </div>
+            <div class="seat-unit p6">
+                <div class="person"><div class="person-head"></div></div>
+                <div class="chair-back"></div>
+                <div class="desk-surface"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Foreground Elements -->
+    <div class="arm-foreground">
+        <div class="arm-stripe"></div>
+        <div class="arm-stripe" style="margin-top: 10px; background-color: #fff;"></div>
+        <div class="arm-stripe" style="margin-top: 10px;"></div>
+    </div>
+
+</div>
+
+</body>
+</html>

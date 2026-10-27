@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CNN Structure and Geometry Generation Strategies</title>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$']],
+      displayMath: [['$$', '$$']]
+    }
+  };
+</script>
+<style>
+  body {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 15px;
+    line-height: 1.5;
+    margin: 0;
+    padding: 20px 40px;
+    color: #000;
+  }
+  .container {
+    display: flex;
+    gap: 40px;
+  }
+  .left-col {
+    width: 48%;
+  }
+  .right-col {
+    width: 48%;
+    text-align: justify;
+  }
+  .fig1-block {
+    margin-bottom: 15px;
+  }
+  .fig1-images {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .placeholder {
+    border: 1px solid #000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    text-align: center;
+    background: #f5f5f5;
+    position: relative;
+  }
+  .fig1a {
+    width: 220px;
+    height: 200px;
+  }
+  .fig1b {
+    width: 220px;
+    height: 200px;
+  }
+  .fig1c {
+    width: 220px;
+    height: 200px;
+  }
+  .fig-caption {
+    font-size: 13px;
+    text-align: center;
+    margin-top: 4px;
+  }
+  .fig-label {
+    text-align: center;
+    font-size: 13px;
+    margin-top: 2px;
+  }
+  .fig2-block {
+    margin-top: 10px;
+    margin-bottom: 15px;
+  }
+  .fig2-placeholder {
+    width: 100%;
+    height: 180px;
+    position: relative;
+  }
+  .fig2-text {
+    font-size: 12px;
+    position: absolute;
+  }
+  figcaption {
+    font-size: 13px;
+    margin-top: 5px;
+  }
+  .caption-block {
+    font-size: 13px;
+    margin-bottom: 5px;
+  }
+  p {
+    margin: 10px 0;
+    text-align: justify;
+  }
+  .eq-block {
+    margin: 15px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .eq-number {
+    margin-left: auto;
+  }
+  sub, sup {
+    font-size: 0.8em;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="left-col">
+
+    <div class="fig1-block">
+      <div class="fig1-images">
+        <div class="placeholder fig1a">
+          [Grid Diagram: Pixelated geometry with black/white cells, 8x8 grid pattern]
+        </div>
+        <div class="placeholder fig1b">
+          [Heatmap Diagram: NGnet-generated geometry mapped matrix with red/blue color gradient, numeric values overlaid: 1.00, 0.82, 1.00, 0.41, -0.66 / -0.30, -0.57, 0.83, 0.69, 1.00 / 0.92, -0.35, 0.82, -0.74, -0.8 / 0.88, 0.04, 0.15, 1.00, 0.86 / 0.83, 0.65, 1.00, 0.39, -0.38]
+        </div>
+        <div class="placeholder fig1c">
+          [Shape Diagram: Black irregular geometric shape on white background with dashed bounding box]
+        </div>
+      </div>
+      <div class="fig-label">(a) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(b)</div>
+      <div class="caption-block">
+        Fig. 1. &nbsp; Geometry generation strategies. (a) Pixelated geometry and its mapped matrix. (b) NGnet-generated geometry and its mapped matrix.
+      </div>
+    </div>
+
+    <div class="fig2-block">
+      <div class="placeholder fig2-placeholder">
+        [Diagram: CNN architecture flowchart showing Input: Antenna topology (left arrow) → Convolution+Relu → Max Pooling → Convolution+Relu → Max Pooling → Fully connected → Output: Antenna performance (right arrow). Shows stacked feature map blocks and layer transitions with dashed connecting lines.]
+      </div>
+      <div class="caption-block">
+        Fig. 2. &nbsp; CNN structure used in the ML modeling process.
+      </div>
+    </div>
+
+    <p>
+      antenna shape is expressed in terms of the linear combination of normalized Gaussian functions, as shown in Fig. 1(b). The antenna geometry can be expressed as
+    </p>
+
+    <div class="eq-block">
+      $$
+      \begin{cases}
+      \displaystyle\sum_{k=1}^{N} w_{i'} b_{i'}(\boldsymbol{x}) \geq 0, & \rho_{\text{topo}}(\boldsymbol{x}) = 1 \\[10pt]
+      \displaystyle\sum_{k=1}^{N} w_{i'} b_{i'}(\boldsymbol{x}) < 0, & \rho_{\text{topo}}(\boldsymbol{x}) = 0
+      \end{cases}
+      \tag{4}
+      $$
+    </div>
+
+    <p>
+      in which $b_{i'}(\boldsymbol{x})$ represents the normalized Gaussian function, $w_{i'}$ is the weighting coefficient, and $N$ is the number of Gaussian functions. $b_{i'}(\boldsymbol{x})$ is calculated using
+    </p>
+
+    <div class="eq-block">
+      $$
+      b_{i'}(\boldsymbol{x}) = G_{i'}(\boldsymbol{x}) / \sum_{k=1}^{N} G_k(\boldsymbol{x})
+      \tag{5}
+      $$
+    </div>
+
+    <p>
+      in which $G_k(\boldsymbol{x})$ represents the Gaussian function with center $\mu_k$ and covariance matrix $\Sigma_k$, expressed as follows:
+    </p>
+
+    <div class="eq-block">
+      $$
+      G_k(\boldsymbol{x}) = \frac{1}{(2\pi)^{D/2} |\Sigma|^{1/2}} e^{-1/2(\boldsymbol{x}-\boldsymbol{\mu}_k)^T \Sigma_k^{-1} (\boldsymbol{x}-\boldsymbol{\mu}_k)}
+      \tag{6}
+      $$
+    </div>
+
+    <p>
+      in which $D$ signifies the dimension of input $x$. In this case, $\rho_{\text{topo}}(\boldsymbol{x})$ is mapped into a vector of hyperparameters $\boldsymbol{w}$ =
+    </p>
+
+  </div>
+
+  <div class="right-col">
+    <p>
+      in Fig. 2. The first two layers play roles in feature extraction, and the third layer maps the extracted features into the final output, such as the antenna performance at frequency points of concern. The convolution layer is the fundamental component of the CNN, which typically consists of linear and nonlinear operations, i.e., convolution operation and activation operation. The convolution operation introduces a small array of numbers called a kernel to be applied to the input tensor, which is an array of numbers. The elementwise product between each element of the kernel and the input tensor is calculated at each location of the tensor and then summed to obtain the output value at the corresponding position of the output tensor, which is called a feature map. This procedure is then repeated by applying multiple kernels to form multiple feature maps to represent the characteristics of the input tensors. Two main hyperparameters define the convolution operation: the kernel size $p \times q$ and kernel number $n_{\text{kernel}}$. We suggest using a $3 \times 3$ size kernel in the proposed algorithm.
+    </p>
+    <p>
+      For overlap of the outermost element of the input tensor, zero padding is essential before the convolution operation. The kernels are shared across the entire image positions, which largely increases the modeling efficiency by reducing the number of parameters to learn. The outputs of the convolution are then passed through a nonlinear activation function, which is the rectified linear unit (ReLU) in the presented algorithm. Then, the output is passed through the pooling layer to implement the downsampling operation, which reduces the in-plane dimensionality of the feature maps. Here, max pooling is implemented, in which the maximum values in each patch extracted from the input feature maps are outputted. The used CNN consists of a stack of several convolution layers and pooling layers, followed by one fully connected layer and one regression layer. To achieve a balance between the computational cost and modeling ability, a shallow CNN with a layer number of 2 is recommended. The output feature maps of the final pooling layer are flattened and connected to the fully connected layer, in which every input is connected to every output by a learnable weight.
+    </p>
+  </div>
+</div>
+
+</body>
+</html>

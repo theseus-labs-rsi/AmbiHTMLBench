@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Well Calibrated Simulation Study of a Novel Adaptive Parallelised Bayesian Inference of the Multispecies Coalescent Model</title>
+<script>window.MathJax={tex:{inlineMath:[['$','$']]}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+body{font-family:"Times New Roman",serif;margin:0;background:#fff;color:#000}
+.page{width:1240px;margin:0 auto;padding:10px 14px}
+h1{text-align:center;font-size:25px;margin:8px 0 14px;line-height:1.35}
+.bar{height:9px;background:#1f3f6e;width:760px;margin:0 auto 0 212px}
+.header{display:flex;align-items:center;margin-top:14px;height:110px}
+.authors{flex:1;text-align:center;font-size:15px}
+.authors b{font-size:17px}
+.placeholder{border:1px dashed #888;background:#f3f3f3;display:flex;align-items:center;justify-content:center;text-align:center;font-size:11px;color:#555;box-sizing:border-box}
+.main{display:flex;gap:14px;margin-top:6px}
+.left{width:410px;font-size:13px}
+.right{flex:1;font-size:13px;border-left:1px solid #999;padding-left:10px}
+.sec{background:#5b9bd5;color:#fff;font-weight:bold;font-size:24px;text-align:center;padding:8px;margin:12px 0}
+p{margin:6px 0;line-height:1.4}
+.c{text-align:center}
+.j{text-align:justify}
+.ops{display:flex;align-items:center;margin:20px 0}
+.ops div.op{flex:1;text-align:center;font-weight:bold;font-size:13px;border-right:1px solid #999;padding:0 6px}
+.arrow{width:90px;height:60px;background:#3b8ed0;color:#fff;font-weight:bold;display:flex;align-items:center;justify-content:center;clip-path:polygon(0 50%,100% 0,100% 100%);font-size:12px;padding-left:20px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.small{font-size:12px}
+</style>
+</head>
+<body>
+<div class="page">
+<h1>WELL CALIBRATED SIMULATION STUDY OF A NOVEL ADAPTIVE<br>PARALLELISED BAYESIAN INFERENCE OF THE MULTISPECIES COALESCENT<br>MODEL TESTING A DIFFERENT NUMBER OF TAXA AND GENES.</h1>
+<div class="bar"></div>
+<div class="header">
+<div class="placeholder" style="width:235px;height:80px;margin-left:14px">[Logo: The University of Auckland, New Zealand]</div>
+<div class="authors"><b>Hu Ge<sup>1</sup>, Jordan Douglas<sup>2</sup>, Remco Bouckaert<sup>2</sup></b><br>(1) School of Biological Sciences, University of Auckland, Auckland 1010, New Zealand<br>(2) School of Computer Science, University of Auckland, Auckland, 1010, New Zealand</div>
+<div class="placeholder" style="width:140px;height:120px">[Logo: Beast2 mouse]<br>Beast2</div>
+</div>
+<div class="main">
+<div class="left">
+<div class="sec">Introduction</div>
+<p class="c">A novel Parallelised Bayesian Inference of the Multispecies Coalescent with <b>new MCMC proposals</b> has been implemented in the open-source BEAST 2 platform as the StarBeast3 package. This new approach avoids biases, such as being an inconsistent estimator of the tree topology. Furthermore, it explores the state space much more efficiently, allowing the handle of data sets one and a half orders of magnitude larger than StarBeast2 and more than two orders faster than *BEAST.</p>
+<p class="c" style="margin-top:18px">Our <b>goal</b> was to establish the correct implementation of StarBeast3 by testing different numbers of taxa and genes.</p>
+<p class="c"><b>Key words</b>: multispecies coalescent; BEAST 2; phylogenetics; bayesian inference; high performance; adaptive; parallelisarion.</p>
+<div class="sec">Methods</div>
+<p class="j">We performed well calibration studies by simulating alignments using parameters directly sampled from the prior distribution, and then we inferred the posterior estimates of these parameters using StarBeast3 <b>(Figure 1)</b>.</p>
+<div class="placeholder" style="width:400px;height:170px">[Diagram: pipeline prior.xml → 1. BEAST → tree.log, XML template, trace.log → 2. CoverageTestXMLGenerator; beast.xml → 3. BEAST → trace.log, tree.log (N times) → 4. loganalyser; summary → 5. CoverageCalculator → coverage stats]</div>
+<p class="j small"><b>Figure 1.</b> Pipeline of 5 steps implemented by Experimenter package in BEAST 2 that assists in simulation studies to verify correctness of the implementation. <b>(1)</b> Set up XML for desired model and sample from prior. <b>(2)</b> Generate (MCMC) analysis for each of the samples (support for multiple alignments). <b>(3)</b> Run the analyses using StarBeast3 package in BEAST2. <b>(4)</b> Use loganalyser to summarise trace files. <b>(5)</b> Run CoverageCalculator to summarise coverage of parameters. <b>Source:</b> <i>https://github.com/rbouckaert/DeveloperManual.git</i></p>
+<p class="c" style="margin-top:14px">We evaluated a strict and relaxed clock model, across varying tree sizes ( 4 species: 12 taxa; 16 species: 48 taxa), and multiple genes (10, 50, 100, and 200). With 100 independent runs, we estimated the coverage of the true value by the 95% highest probability density (HPD) estimates for various parameters in the model <b>(Figure 2)</b> and its newly developed efficient MCMC operators.</p>
+<div class="placeholder" style="width:400px;height:250px">[Diagram: simulated species tree S with embedded gene trees; labels: Relaxed clock rates v1, ...,vk; Branch rates r1, ..., r2n-1 (optional); Species tree S; Site models ψ1, ..., ψk; Time; Gene trees g1, ..., gk; Population sizes Ne1, ..., Ne2n-1; Alignments D1, ..., Dk]</div>
+<p class="j"><b>Figure 2.</b> Simulated species trees S with n = 16 species with k = 100 gene trees embedded. Parameters in the multispecies coalescent model are indicated in the figure: Node heights (time) are shown on the y-axis, and effective population sizes are on the x-axis. Species tree branch rates are indicated by line thickness. Colors show Gen trees. The tree was built from a Direct simulator in BEAST2 and visualized using UglyTrees (Douglas, 2020).</p>
+</div>
+<div class="right">
+<p><b>Novel MCMC operators</b> which generate proposals that explore the state space more efficiently implementing in Starbeast3:</p>
+<div class="ops">
+<div class="op">Effective Population Size Gibbs Operator</div>
+<div class="op">Bactrian Operators for Trees</div>
+<div class="op">Adaptive variance multivariate normal (AVMN) operator</div>
+<div class="op">Parallel Gene Tree Operator</div>
+<div class="op" style="border:none">Species Tree Relaxed Clock Model Operators</div>
+<div class="arrow">StarBeast3</div>
+</div>
+<div class="sec" style="width:380px">Results</div>
+<div class="grid">
+<div class="placeholder" style="height:190px">[Plot: Species tree height, Coverage: 96%; Posterior estimate vs True value]</div>
+<div class="placeholder" style="height:190px">[Plot: Species tree birth rate, Coverage: 94%]</div>
+<div class="placeholder" style="height:190px">[Plot: Gene tree height, Coverage: 91%]</div>
+<div class="placeholder" style="height:190px">[Plot: Clock model standard deviation, Coverage: 97%]</div>
+<div class="placeholder" style="height:190px">[Plot: Branch rate mean, Coverage: 92%]</div>
+<div class="placeholder" style="height:190px">[Plot: Branch rate variance, Coverage: 97%]</div>
+<div class="placeholder" style="height:190px">[Plot: Transition−transversion ratio, Coverage: 96%]</div>
+<div class="placeholder" style="height:190px">[Plot: Gene tree substitution rate, Coverage: 94%]</div>
+<div class="placeholder" style="height:190px">[Plot: Gene tree frequency, Coverage: 94%]</div>
+<div class="placeholder" style="height:190px">[Plot: Effective population size, Coverage: 92%]</div>
+<div class="placeholder" style="height:190px">[Plot: Mean effective population size, Coverage: 95%]</div>
+<div></div>
+</div>
+<p class="c">Well-calibrated simulation study analysing nS = 16 species, nG = 48 taxa, and k = 50 genes. One hundred simulations were performed to recover the coverage between “true” simulated values and their estimates under the posterior distribution. Vertical lines represent 95% highest posterior density (HPD) intervals of parameters. Each line represents a single simulation and is colored blue when the true value was contained within the 95% interval, or red otherwise. The top of each plot shows the coverage of each parameter (i.e., the number of MCMC simulations for which the “true” parameter value was contained within the 95% HPD). This result was coherent when we tested 100 and 200 genes, respectively.</p>
+<div class="sec">Conclusion</div>
+<p class="c">Our results show all coverage observed is in the expected range, from 90 to 99 inclusive, suggesting the correct implementation of StarBeast3 for all experiments performed. Furthermore, these experiments evidence that startbeast3 is suitable for multispecies coalescent inference on large datasets (100+ genes).</p>
+<div style="display:flex;gap:10px">
+<div style="flex:1">
+<p><b>Software Availability:</b> StarBeast3 is available as an open-source BEAST 2 package with an easy-to-use graphical user interface.Instructions for downloading and running StarBeast3 can be found at https://github.com/rbouckaert/ starbeast3</p>
+<p class="small"><b>Acknowledgments:</b> The study was supported by a Marsden grant 18-UOA-096 from the Royal Society of New Zealand. Software packages were benchmarked using the New Zealand Science Infrastructure (NeSI) cluster, f[illegible] New Zealand Ministry of Business, Innovation, and Employment.</p>
+</div>
+<div style="width:120px;text-align:center"><b>StarBeast3 preprint:</b><div class="placeholder" style="width:110px;height:110px;margin-top:6px">[QR code]</div></div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

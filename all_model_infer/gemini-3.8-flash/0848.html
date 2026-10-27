@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Do Stationarity Transformations Actually Improve Time Series Forecasts? A Controlled Experimental Evaluation</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 0;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #fff;
+      color: #000;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 10pt;
+      line-height: 1.35;
+      -webkit-font-smoothing: antialiased;
+    }
+    .page-container {
+      position: relative;
+      width: 820px;
+      min-height: 1120px;
+      margin: 0 auto;
+      padding: 50px 55px 40px 65px;
+      box-sizing: border-box;
+    }
+
+    /* arXiv vertical watermark on left margin */
+    .arxiv-watermark {
+      position: absolute;
+      left: 14px;
+      top: 600px;
+      transform: rotate(-90deg);
+      transform-origin: 0 0;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 17px;
+      color: #7f7f7f;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+
+    /* Top border line */
+    .top-divider {
+      border-top: 1px solid #666;
+      margin-bottom: 15px;
+    }
+
+    .article-type {
+      font-size: 10.5pt;
+      color: #222;
+      margin-bottom: 6px;
+    }
+
+    .title {
+      font-size: 18pt;
+      font-weight: 700;
+      line-height: 1.25;
+      color: #000;
+      margin: 0 0 16px 0;
+    }
+
+    .authors {
+      font-size: 10.5pt;
+      font-weight: 700;
+      margin-bottom: 30px;
+    }
+
+    .orcid-icon {
+      display: inline-block;
+      vertical-align: -1px;
+      margin-left: 2px;
+      margin-right: 2px;
+    }
+
+    /* Two-column layout */
+    .content-grid {
+      display: flex;
+      gap: 30px;
+      min-height: 800px;
+    }
+
+    .left-col {
+      width: 170px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding-bottom: 25px;
+    }
+
+    .right-col {
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* Left column metadata */
+    .metadata-block {
+      font-size: 6.8pt;
+      line-height: 1.35;
+      color: #333;
+    }
+    .metadata-item {
+      margin-bottom: 2px;
+    }
+    .metadata-item span.label {
+      font-weight: 600;
+      color: #222;
+    }
+    .copyright-notice {
+      margin-top: 8px;
+    }
+    .copyright-notice a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+    .copyright-notice a:hover {
+      text-decoration: underline;
+    }
+
+    /* Right column content */
+    .affiliations {
+      font-size: 7.8pt;
+      line-height: 1.45;
+      color: #222;
+      margin-bottom: 22px;
+    }
+    .affil-row {
+      display: flex;
+      margin-bottom: 2px;
+    }
+    .affil-num {
+      width: 18px;
+      flex-shrink: 0;
+    }
+    .affil-text {
+      flex: 1;
+    }
+
+    .section-title {
+      font-size: 10pt;
+      font-weight: 700;
+      color: #000;
+      margin: 0 0 8px 0;
+    }
+
+    .highlights-question {
+      font-size: 8.8pt;
+      font-weight: 700;
+      margin: 8px 0 4px 0;
+      color: #000;
+    }
+
+    .highlights-list {
+      margin: 0 0 8px 0;
+      padding-left: 14px;
+      list-style-type: disc;
+    }
+    .highlights-list li {
+      font-size: 8.3pt;
+      line-height: 1.32;
+      color: #111;
+      margin-bottom: 4px;
+      padding-left: 2px;
+    }
+
+    .abstract-text {
+      font-size: 8.3pt;
+      line-height: 1.32;
+      text-align: justify;
+      color: #111;
+      margin-bottom: 18px;
+    }
+
+    .keywords {
+      font-size: 8.3pt;
+      line-height: 1.35;
+      color: #111;
+      text-align: justify;
+    }
+    .keywords strong {
+      font-weight: 700;
+      color: #000;
+    }
+
+    .bottom-divider {
+      border-top: 1px solid #777;
+      margin-top: 25px;
+    }
+
+    /* Page footer */
+    .page-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 45px;
+      font-size: 7.8pt;
+      color: #222;
+    }
+    .page-footer a {
+      color: #0088cc;
+      text-decoration: none;
+    }
+    .page-footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-container">
+    <!-- arXiv vertical watermark -->
+    <div class="arxiv-watermark">
+      arXiv:2605.17689v1&nbsp;&nbsp;[stat.ME]&nbsp;&nbsp;17 May 2026
+    </div>
+
+    <!-- Top divider line -->
+    <div class="top-divider"></div>
+
+    <!-- Document Header -->
+    <div class="article-type">Article</div>
+    <h1 class="title">Do Stationarity Transformations Actually Improve Time Series Forecasts? A Controlled Experimental Evaluation</h1>
+    
+    <div class="authors">
+      Bhanu Suraj Malla <sup>1,*</sup><svg class="orcid-icon" viewBox="0 0 256 256" width="13" height="13"><circle cx="128" cy="128" r="128" fill="#A6CE39"/><path fill="#FFF" d="M86.3 186.2H70.9V79.1h15.4v107.1zM78.6 65.3c-5.4 0-9.8-4.4-9.8-9.8s4.4-9.8 9.8-9.8 9.8 4.4 9.8 9.8c0 5.4-4.4 9.8-9.8 9.8zM108.9 79.1h39.6c30.2 0 45.4 18.9 45.4 46.1 0 30-20.5 46.1-45.7 46.1h-39.3V79.1zm15.4 78.4h22.9c19.1 0 30.6-11.2 30.6-32.3 0-20.2-11.6-32.3-30.6-32.3h-22.9v64.6z"/></svg> and Yuqing Hu <sup>1</sup><svg class="orcid-icon" viewBox="0 0 256 256" width="13" height="13"><circle cx="128" cy="128" r="128" fill="#A6CE39"/><path fill="#FFF" d="M86.3 186.2H70.9V79.1h15.4v107.1zM78.6 65.3c-5.4 0-9.8-4.4-9.8-9.8s4.4-9.8 9.8-9.8 9.8 4.4 9.8 9.8c0 5.4-4.4 9.8-9.8 9.8zM108.9 79.1h39.6c30.2 0 45.4 18.9 45.4 46.1 0 30-20.5 46.1-45.7 46.1h-39.3V79.1zm15.4 78.4h22.9c19.1 0 30.6-11.2 30.6-32.3 0-20.2-11.6-32.3-30.6-32.3h-22.9v64.6z"/></svg>
+    </div>
+
+    <!-- Main Content Layout -->
+    <div class="content-grid">
+      <!-- Left Column: Dates and Copyright -->
+      <div class="left-col">
+        <div class="metadata-block">
+          <div class="metadata-item"><span class="label">Received:</span> </div>
+          <div class="metadata-item"><span class="label">Revised:</span> </div>
+          <div class="metadata-item"><span class="label">Accepted:</span> </div>
+          <div class="metadata-item"><span class="label">Published:</span> </div>
+          <div class="copyright-notice">
+            <strong>Copyright:</strong> &copy; 2026 by the authors. Submitted to Journal Not Specified for possible open access publication under the terms and conditions of the <a href="#">Creative Commons Attribution (CC BY) license</a>.
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Affiliations, Highlights, Abstract, Keywords -->
+      <div class="right-col">
+        <div class="affiliations">
+          <div class="affil-row">
+            <span class="affil-num"><sup>1</sup></span>
+            <span class="affil-text">School of Computer Science, Georgia Institute of Technology, Atlanta, GA 30332, USA</span>
+          </div>
+          <div class="affil-row">
+            <span class="affil-num">*</span>
+            <span class="affil-text">Correspondence: bmalla7@gatech.edu</span>
+          </div>
+        </div>
+
+        <div class="section-title">Highlights</div>
+        
+        <div class="highlights-question">What are the main findings?</div>
+        <ul class="highlights-list">
+          <li>Differencing-based transformations (first, seasonal, fractional) act as high-pass filters that remove predictable low-frequency signal, worsening forecast accuracy in the majority of cases—even for models traditionally assumed to require stationary input.</li>
+          <li>Variance stabilization (log, Box-Cox) is the primary exception, improving forecasts on heteroscedastic data by addressing a modeling assumption violation without attenuating predictive structure.</li>
+        </ul>
+
+        <div class="highlights-question">What are the implications of the main findings?</div>
+        <ul class="highlights-list">
+          <li>Transformation selection should be guided by empirical out-of-sample evaluation rather than theoretical stationarity assumptions.</li>
+          <li>Practitioners should distinguish between signal-preserving transforms (variance stabilization) and signal-suppressing transforms (differencing), complementing theoretical guidance with empirical out-of-sample validation.</li>
+        </ul>
+
+        <div class="section-title" style="margin-top: 14px;">Abstract</div>
+        <div class="abstract-text">
+          Stationarity transformations are standard preprocessing in time series forecasting, yet their actual impact on accuracy across different non-stationarity types and model families has received little controlled evaluation. We construct synthetic datasets with known properties—trend, seasonality, heteroscedasticity, and combinations—and apply fourteen transformation configurations across seven models and three forecast horizons (3,528 experiments). Stationarity is quantified via consensus ratios from ten statistical tests, and each transform–dataset pair is classified as matched or mismatched based on whether the transform targets the dataset’s known non-stationarity. For matched pairs, transforms improve forecasts only 18% of the time. The primary exception is variance stabilization: log and Box-Cox on heteroscedastic data improve accuracy in 60–65% of cases. Differencing a linear-trend series—a textbook use case—worsens forecasts in all cases tested. Mediation analysis confirms that while transforms achieve trend stationarity, this does not translate into lower forecast error; the mechanism is signal attenuation. Real-world validation on TSA airport passenger data corroborates these findings. Our results suggest transformation selection should be guided by empirical out-of-sample evaluation rather than theoretical stationarity assumptions.
+        </div>
+
+        <div class="keywords">
+          <strong>Keywords:</strong> stationarity transformations; forecast accuracy; time series preprocessing; controlled experiment; mediation analysis; fractional differencing; synthetic data
+        </div>
+
+        <div class="bottom-divider"></div>
+      </div>
+    </div>
+
+    <!-- Page Footer -->
+    <div class="page-footer">
+      <div>Version May 19, 2026 submitted to Journal Not Specified</div>
+      <div><a href="https://doi.org/10.3390/1010000">https://doi.org/10.3390/1010000</a></div>
+    </div>
+  </div>
+
+</body>
+</html>

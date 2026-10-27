@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中小学教师类 (D类)</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 40px 20px;
+            background-color: #f3e6d0;
+            background-image: 
+                linear-gradient(#e6d5b8 1px, transparent 1px),
+                linear-gradient(90deg, #e6d5b8 1px, transparent 1px);
+            background-size: 25px 25px;
+            font-family: "Microsoft YaHei", "SimHei", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .notebook-container {
+            position: relative;
+            width: 100%;
+            max-width: 650px;
+            background-color: #fff;
+            border-radius: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            padding: 70px 50px 50px 70px;
+            border: 12px solid #7a4b3a;
+            box-sizing: border-box;
+        }
+
+        /* Inner orange border simulation */
+        .notebook-container::before {
+            content: '';
+            position: absolute;
+            top: -12px; left: -12px; right: -12px; bottom: -12px;
+            border: 12px solid #f39c12;
+            border-radius: 35px;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        /* Adjusting the double border effect to match image closely */
+        .outer-frame {
+            position: relative;
+            width: 100%;
+            max-width: 680px;
+            background: #f39c12;
+            border-radius: 35px;
+            padding: 10px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        .inner-frame {
+            background: #7a4b3a;
+            border-radius: 25px;
+            padding: 8px;
+            height: 100%;
+        }
+
+        .paper {
+            background: #fffdf8;
+            border-radius: 18px;
+            padding: 60px 40px 40px 60px;
+            position: relative;
+            min-height: 700px;
+        }
+
+        /* Spiral Binding */
+        .spirals {
+            position: absolute;
+            left: -25px;
+            top: 40px;
+            bottom: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            z-index: 10;
+        }
+
+        .spiral-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .spiral {
+            width: 45px;
+            height: 12px;
+            background: linear-gradient(to bottom, #8b5a2b, #5c3a21);
+            border-radius: 6px;
+            box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* Header Banner */
+        .header-banner {
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #d9534f;
+            color: #ffd700;
+            padding: 12px 50px;
+            border-radius: 30px;
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            z-index: 20;
+            white-space: nowrap;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        /* Tape decoration */
+        .tape {
+            position: absolute;
+            top: 15px;
+            left: 40px;
+            width: 35px;
+            height: 25px;
+            background-color: rgba(243, 156, 18, 0.6);
+            transform: rotate(-45deg);
+            z-index: 15;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+
+        /* Sticky Notes on the right */
+        .sticky-notes {
+            position: absolute;
+            right: -20px;
+            top: 120px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            z-index: 5;
+        }
+
+        .sticky {
+            width: 50px;
+            height: 35px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+            transform: rotate(5deg);
+        }
+
+        .sticky.pink { background-color: #f48fb1; }
+        .sticky.yellow { background-color: #ffe082; transform: rotate(-8deg); margin-top: 10px;}
+
+        /* Content Styling */
+        .content {
+            color: #333;
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        .section-title {
+            font-weight: bold;
+            font-size: 17px;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+
+        .text-block {
+            margin-bottom: 15px;
+            text-align: justify;
+            border-bottom: 1px dashed #ccc;
+            padding-bottom: 15px;
+        }
+        
+        .text-block:last-child {
+            border-bottom: none;
+        }
+
+        .bullet-point {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #ccc;
+            padding-bottom: 15px;
+        }
+
+        .triangle {
+            color: #d9534f;
+            font-size: 14px;
+            margin-right: 8px;
+            margin-top: 4px;
+            flex-shrink: 0;
+        }
+
+        .bold-text {
+            font-weight: bold;
+        }
+
+        .footer-note {
+            position: absolute;
+            bottom: 15px;
+            right: 20px;
+            font-size: 12px;
+            color: #555;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="outer-frame">
+        <div class="inner-frame">
+            <div class="paper">
+                
+                <!-- Spirals -->
+                <div class="spirals">
+                    <div class="spiral-group"><div class="spiral"></div><div class="spiral"></div></div>
+                    <div class="spiral-group"><div class="spiral"></div><div class="spiral"></div></div>
+                    <div class="spiral-group"><div class="spiral"></div><div class="spiral"></div></div>
+                    <div class="spiral-group"><div class="spiral"></div><div class="spiral"></div></div>
+                    <div class="spiral-group"><div class="spiral"></div><div class="spiral"></div></div>
+                </div>
+
+                <!-- Header -->
+                <div class="header-banner">中小学教师类（D类）</div>
+                <div class="tape"></div>
+
+                <!-- Sticky Notes -->
+                <div class="sticky-notes">
+                    <div class="sticky pink"></div>
+                    <div class="sticky yellow"></div>
+                </div>
+
+                <!-- Main Content -->
+                <div class="content">
+                    
+                    <div class="section-title">（一）科目</div>
+                    
+                    <div class="text-block">
+                        教育系统事业单位考试整体来说考试形式为<span class="bold-text">公共科目+专业知识</span>。
+                    </div>
+
+                    <div class="bullet-point">
+                        <span class="triangle">▶</span>
+                        <div>
+                            <span class="bold-text">公共科目包括：</span>教育基础知识：教育学、心理学或教育心理学、教育法律法规、新课改或公共基础知识（事业单位考试中的公基）。<span class="bold-text">心理学与教育心理学并不相同</span>，心理学通常称为普通心理学，教育心理学简称为教心。
+                        </div>
+                    </div>
+
+                    <div class="bullet-point">
+                        <span class="triangle">▶</span>
+                        <div>
+                            <span class="bold-text">专业学科：</span>一般来说一部分考核学科基础知识，另外一部分考核教学知识（教学设计、教学实施、教学评价）。
+                        </div>
+                    </div>
+
+                    <div class="section-title">（二）题型</div>
+
+                    <div class="text-block" style="border-bottom: none; padding-bottom: 5px; margin-bottom: 5px;">
+                        教育理论知识的题型分为客观题和主观题两大类型。
+                    </div>
+
+                    <div class="bullet-point">
+                        <span class="triangle">▶</span>
+                        <div>
+                            客观题主要是指单选题、多选题、不定项选择题、判断题、填空题等；
+                        </div>
+                    </div>
+
+                    <div class="bullet-point" style="border-bottom: none;">
+                        <span class="triangle">▶</span>
+                        <div>
+                            主观题主要包括名词解释题、辨析题、简答题、论述题、材料/案例分析题、教学设计题（活动设计题）等。<span class="bold-text">一般地域不同，题型也有所区别。</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Footer -->
+                <div class="footer-note">*线上课程面向22岁及以上</div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

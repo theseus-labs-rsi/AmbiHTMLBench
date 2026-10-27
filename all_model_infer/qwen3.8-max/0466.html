@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journey to Apple 2030</title>
+    <style>
+        :root {
+            --bg-color: #000000;
+            --text-main: #ffffff;
+            --text-muted: #a1a1a6;
+            --accent-green: #34c759; /* Approximate Apple Green */
+            --box-bg: #1d1d1f;
+            --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-stack);
+            margin: 0;
+            padding: 40px;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* Header Navigation */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 60px;
+        }
+
+        .nav-left {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-item {
+            cursor: pointer;
+        }
+
+        .nav-item.active {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .sub-menu {
+            display: flex;
+            flex-direction: column;
+            margin-top: 5px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+        
+        .sub-menu span {
+            margin-bottom: 2px;
+        }
+        
+        .sub-menu span.underline {
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* Main Title */
+        h1 {
+            font-size: 56px;
+            font-weight: 700;
+            margin: 0 0 40px 0;
+            letter-spacing: -0.5px;
+        }
+
+        /* Timeline Layout Container */
+        .timeline-container {
+            position: relative;
+            width: 100%;
+            min-height: 800px;
+            margin-top: 20px;
+        }
+
+        /* Section Headers (Where we've been, etc.) */
+        .section-headers {
+            display: flex;
+            justify-content: space-between;
+            position: absolute;
+            top: 0;
+            width: 100%;
+            z-index: 10;
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 1.1;
+            width: 200px;
+        }
+
+        .section-title.center {
+            position: absolute;
+            left: 28%; /* Aligned with the grey box start roughly */
+            top: 0;
+        }
+
+        .section-title.right {
+            position: absolute;
+            right: 22%;
+            top: 0;
+        }
+
+        /* The Grey Box for 2023 */
+        .activity-box {
+            position: absolute;
+            left: 27%;
+            top: -20px;
+            width: 40%;
+            height: 750px;
+            background-color: var(--box-bg);
+            border-radius: 20px;
+            z-index: 1;
+        }
+
+        /* The Timeline Axis */
+        .axis-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, 
+                var(--accent-green) 0%, 
+                var(--accent-green) 67%, 
+                transparent 67%, 
+                transparent 100%); /* Solid then dashed logic handled below */
+            z-index: 2;
+        }
+        
+        /* Custom dashed line for the future part */
+        .axis-line::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 67%;
+            width: 33%;
+            height: 2px;
+            background-image: linear-gradient(to right, var(--accent-green) 50%, transparent 50%);
+            background-size: 20px 2px;
+            background-repeat: repeat-x;
+        }
+
+        /* Timeline Points and Content */
+        .timeline-grid {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 0;
+            z-index: 5;
+        }
+
+        .point {
+            position: absolute;
+            top: -6px; /* Center dot on line */
+            width: 12px;
+            height: 12px;
+            background-color: var(--text-main);
+            border-radius: 50%;
+            transform: translateX(-50%);
+        }
+
+        .year-label {
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: 700;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        .content-block {
+            position: absolute;
+            width: 160px;
+            font-size: 13px;
+            line-height: 1.4;
+            color: var(--text-muted);
+        }
+
+        .content-block strong {
+            color: var(--text-main);
+            font-weight: 600;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .content-block .highlight {
+            color: var(--accent-green);
+            font-weight: 700;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .content-block.above {
+            bottom: 30px;
+        }
+
+        .content-block.below {
+            top: 30px;
+        }
+
+        /* Connector Lines */
+        .connector {
+            position: absolute;
+            width: 1px;
+            background-color: var(--text-muted);
+            left: 0;
+        }
+        
+        .connector.up {
+            bottom: 0;
+            height: 30px; /* Connects text to dot area roughly */
+        }
+        
+        .connector.down {
+            top: 0;
+            height: 30px;
+        }
+
+        /* Specific Positioning for Items */
+        
+        /* 2015 */
+        .p-2015 { left: 3%; }
+        .c-2015 { left: 3%; top: 120px; width: 180px; }
+        
+        /* 2018 */
+        .p-2018 { left: 13%; }
+        .c-2018 { left: 13%; top: 160px; width: 160px; }
+
+        /* 2020 */
+        .p-2020 { left: 20%; }
+        .c-2020 { left: 20%; top: 160px; width: 160px; }
+
+        /* 2021 (Above) */
+        .p-2021 { left: 23.5%; }
+        .c-2021 { left: 17%; bottom: 120px; width: 160px; } /* Shifted left to fit */
+
+        /* 2022 Label only on axis, but content is inside box */
+        .p-2022-label { left: 27%; top: -35px; font-weight: 700; font-size: 14px; position: absolute; transform: translateX(-50%); }
+
+        /* Inside Box Items (2023 Activities) */
+        /* We need to distribute these between 27% and 67% */
+        
+        .box-item-1 { left: 30%; top: 160px; } /* 22% material */
+        .box-item-2 { left: 36%; bottom: 120px; } /* 12.8M devices */
+        .box-item-3 { left: 41%; top: 160px; } /* 20% reduction */
+        .box-item-4 { left: 47%; bottom: 120px; } /* 70% reduction */
+        .box-item-5 { left: 52%; top: 140px; } /* 320+ suppliers */
+        .box-item-6 { left: 58%; bottom: 120px; } /* Codified 100% */
+
+        /* Dots for box items */
+        .dot-b1 { left: 30%; }
+        .dot-b2 { left: 36%; }
+        .dot-b3 { left: 41%; }
+        .dot-b4 { left: 47%; }
+        .dot-b5 { left: 52%; }
+        .dot-b6 { left: 58%; }
+
+        /* 2023 End Label */
+        .p-2023-label { left: 67%; top: -35px; font-weight: 700; font-size: 14px; position: absolute; transform: translateX(-50%); }
+
+        /* 2025 */
+        .p-2025 { left: 74%; }
+        .c-2025-above { left: 74%; bottom: 100px; width: 180px; }
+        .c-2025-below { left: 74%; top: 40px; width: 200px; }
+
+        /* 2030 */
+        .p-2030 { left: 91%; }
+        .c-2030 { left: 91%; bottom: 100px; width: 180px; font-size: 18px; line-height: 1.2; }
+        .c-2030 strong { font-size: 20px; }
+
+        /* Vertical connectors for specific items */
+        .v-line {
+            position: absolute;
+            width: 1px;
+            background: rgba(255,255,255,0.3);
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-left">
+            <span class="nav-item">Contents</span>
+            <span class="nav-item">Introduction</span>
+            <div>
+                <span class="nav-item active">Environmental Initiatives</span>
+                <div class="sub-menu">
+                    <span class="underline">Apple 2030</span>
+                    <span>Resources</span>
+                    <span>Smarter Chemistry</span>
+                </div>
+            </div>
+            <span class="nav-item">Engagement and Advocacy</span>
+            <span class="nav-item">Data</span>
+            <span class="nav-item">Appendix</span>
+        </div>
+        <div class="nav-right">
+            <span>2024 Environmental Progress Report</span>
+            <span>11</span>
+        </div>
+    </header>
+
+    <h1>Journey to Apple 2030</h1>
+
+    <div class="timeline-container">
+        
+        <!-- Background Box for 2023 -->
+        <div class="activity-box"></div>
+
+        <!-- Section Titles -->
+        <div class="section-headers">
+            <div class="section-title">Where<br>we've been</div>
+            <div class="section-title center">2023<br>activities</div>
+            <div class="section-title right">Where<br>we're going</div>
+        </div>
+
+        <!-- The Horizontal Line -->
+        <div class="axis-line"></div>
+
+        <!-- Timeline Points & Data -->
+        <div class="timeline-grid">
+            
+            <!-- 2015 -->
+            <div class="point p-2015">
+                <div class="year-label">2015</div>
+            </div>
+            <div class="content-block below c-2015">
+                <div class="v-line" style="height: 140px; top: -140px; left: 0;"></div>
+                <span class="highlight">Launched</span>
+                Supplier Clean Energy and Energy Efficiency Programs established to partner with global suppliers to reduce the energy used to manufacture Apple products
+            </div>
+
+            <!-- 2018 -->
+            <div class="point p-2018">
+                <div class="year-label">2018</div>
+            </div>
+            <div class="content-block below c-2018">
+                <div class="v-line" style="height: 180px; top: -180px; left: 0;"></div>
+                <span class="highlight">Achieved</span>
+                <strong>100% renewable electricity</strong>
+                generated or sourced for our corporate operations
+            </div>
+
+            <!-- 2020 -->
+            <div class="point p-2020">
+                <div class="year-label">2020</div>
+            </div>
+            <div class="content-block below c-2020">
+                <div class="v-line" style="height: 180px; top: -180px; left: 0;"></div>
+                <span class="highlight">Achieved</span>
+                <strong>Carbon neutrality</strong>
+                for our corporate operations and announced 2030 targets
+            </div>
+
+            <!-- 2021 -->
+            <div class="point p-2021">
+                <div class="year-label">2021</div>
+            </div>
+            <div class="content-block above c-2021">
+                <div class="v-line" style="height: 140px; bottom: -140px; left: 100%;"></div>
+                <span class="highlight">Launched</span>
+                <strong>Restore Fund</strong>
+                to advance nature-based carbon removal projects
+            </div>
+
+            <!-- 2022 Label -->
+            <div class="p-2022-label">2022</div>
+
+            <!-- Inside Box Items (2023 Activities) -->
+            
+            <!-- Item 1: 22% -->
+            <div class="point dot-b1"></div>
+            <div class="content-block below box-item-1">
+                <div class="v-line" style="height: 180px; top: -180px; left: 0;"></div>
+                <strong>22%</strong>
+                of the material shipped in products came from recycled or renewable sources<sup>19</sup>
+            </div>
+
+            <!-- Item 2: 12.8M -->
+            <div class="point dot-b2"></div>
+            <div class="content-block above box-item-2">
+                <div class="v-line" style="height: 140px; bottom: -140px; left: 0;"></div>
+                <strong>12.8M</strong>
+                devices and accessories sent to new users for reuse from programs like Apple Trade In and AppleCare
+            </div>
+
+            <!-- Item 3: 20% -->
+            <div class="point dot-b3"></div>
+            <div class="content-block below box-item-3">
+                <div class="v-line" style="height: 180px; top: -180px; left: 0;"></div>
+                <strong>20%</strong>
+                reduction in emissions from transporting products compared to 2022
+            </div>
+
+            <!-- Item 4: 70% -->
+            <div class="point dot-b4"></div>
+            <div class="content-block above box-item-4">
+                <div class="v-line" style="height: 140px; bottom: -140px; left: 0;"></div>
+                <strong>70%+</strong>
+                reduction in average product energy use since 2008
+            </div>
+
+            <!-- Item 5: 320+ -->
+            <div class="point dot-b5"></div>
+            <div class="content-block below box-item-5">
+                <div class="v-line" style="height: 160px; top: -160px; left: 0;"></div>
+                <strong>320+</strong>
+                suppliers are committed to using 100% renewable energy for all Apple-related production by 2030
+            </div>
+
+            <!-- Item 6: Codified -->
+            <div class="point dot-b6"></div>
+            <div class="content-block above box-item-6">
+                <div class="v-line" style="height: 140px; bottom: -140px; left: 0;"></div>
+                <span class="highlight">Codified</span>
+                <strong>100% renewable energy</strong>
+                mandate added to our Supplier Code of Conduct applicable to all direct suppliers for the manufacture of Apple products
+            </div>
+
+            <!-- 2023 Label -->
+            <div class="p-2023-label">2023</div>
+
+            <!-- 2025 -->
+            <div class="point p-2025">
+                <div class="year-label">2025</div>
+            </div>
+            
+            <div class="content-block above c-2025-above">
+                <div class="v-line" style="height: 120px; bottom: -120px; left: 0;"></div>
+                <span class="highlight">Goal</span>
+                <strong>Transition</strong>
+                to 100% fiber-based packaging by 2025<sup>20</sup>
+            </div>
+
+            <div class="content-block below c-2025-below">
+                <div class="v-line" style="height: 60px; top: -60px; left: 0;"></div>
+                <span class="highlight">Goal</span>
+                <strong>Use</strong>
+                100% recycled cobalt in all Apple-designed batteries<sup>21</sup><br><br>
+                100% recycled tin soldering and 100% recycled gold plating in all Apple-designed rigid and flexible printed circuit boards<sup>22</sup><br><br>
+                100% recycled rare earth elements in all magnets across all products<sup>23</sup>
+            </div>
+
+            <!-- 2030 -->
+            <div class="point p-2030">
+                <div class="year-label">2030</div>
+            </div>
+            <div class="content-block above c-2030">
+                <div class="v-line" style="height: 120px; bottom: -120px; left: 0;"></div>
+                <span class="highlight" style="font-size: 20px;">Apple 2030</span>
+                <strong>To be carbon neutral for our entire footprint by 2030</strong>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

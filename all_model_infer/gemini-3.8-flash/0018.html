@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DAY3 3.特色路线</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 20px 0;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+    }
+    .poster-container {
+      position: relative;
+      width: 540px;
+      height: 720px;
+      background-color: #ffffff;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    /* Header */
+    .header-day {
+      position: absolute;
+      top: 18px;
+      left: 20px;
+      display: flex;
+      align-items: center;
+    }
+    .day-burst {
+      position: absolute;
+      top: -6px;
+      left: -8px;
+      font-size: 16px;
+      color: #f7a635;
+      font-weight: bold;
+      transform: rotate(-15deg);
+    }
+    .day-text {
+      font-size: 38px;
+      font-weight: 900;
+      color: #ffa134;
+      text-shadow: 
+        2px 2px 0px #fff,
+        -2px -2px 0px #fff,
+        2px -2px 0px #fff,
+        -2px 2px 0px #fff,
+        3px 3px 0px #e08316;
+      letter-spacing: -1px;
+    }
+
+    .header-title-box {
+      position: absolute;
+      top: 20px;
+      left: 210px;
+      background-color: #c7f636;
+      border-radius: 24px;
+      padding: 4px 24px 6px 24px;
+      display: inline-flex;
+      align-items: center;
+    }
+    .header-title-text {
+      font-size: 30px;
+      font-weight: 900;
+      color: #111111;
+      letter-spacing: 1px;
+    }
+
+    /* Locations & Photos */
+    .spot {
+      position: absolute;
+    }
+    .photo-frame {
+      border: 1px solid rgba(0,0,0,0.06);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      background-size: cover;
+      background-position: center;
+    }
+
+    /* Image 1: 那香海 */
+    #spot-naxianghai {
+      top: 108px;
+      left: 32px;
+    }
+    #spot-naxianghai .photo-frame {
+      width: 190px;
+      height: 122px;
+      background: linear-gradient(180deg, #378ec4 0%, #76bce2 52%, #deb883 53%, #e4cda4 100%);
+    }
+
+    /* Image 2: 那香海落日 */
+    #spot-sunset {
+      top: 92px;
+      left: 300px;
+    }
+    #spot-sunset .photo-frame {
+      width: 202px;
+      height: 128px;
+      background: linear-gradient(180deg, #dd7257 0%, #eaa685 50%, #b2938b 52%, #b59587 100%);
+    }
+
+    /* Image 3: 鸡鸣岛 */
+    #spot-jimingdao {
+      top: 342px;
+      left: 10px;
+    }
+    #spot-jimingdao .photo-frame {
+      width: 200px;
+      height: 128px;
+      background: linear-gradient(180deg, #4282c2 0%, #83aed5 50%, #2f4b39 60%, #466c89 100%);
+    }
+
+    /* Image 4: 摩天岭索道 */
+    #spot-suodao {
+      top: 306px;
+      left: 314px;
+    }
+    #spot-suodao .photo-frame {
+      width: 205px;
+      height: 128px;
+      background: linear-gradient(180deg, #99c6e8 0%, #35767b 50%, #4c7c4c 100%);
+    }
+
+    /* Image 5: 小五队抱海驿站 */
+    #spot-xiaowudui {
+      top: 486px;
+      left: 184px;
+    }
+    #spot-xiaowudui .photo-frame {
+      width: 208px;
+      height: 134px;
+      background: linear-gradient(180deg, #7aaee2 0%, #cce3f5 48%, #4f7943 50%, #56854b 100%);
+    }
+
+    .placeholder-caption {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.95);
+      background: rgba(0, 0, 0, 0.35);
+      padding: 3px 6px;
+      border-radius: 4px;
+      text-align: center;
+    }
+
+    /* Location Tags */
+    .loc-tag {
+      display: inline-flex;
+      align-items: center;
+      background: #fedad0;
+      border-radius: 14px;
+      padding: 2px 12px 2px 6px;
+      margin-top: 5px;
+      font-size: 14px;
+      font-weight: bold;
+      color: #222;
+    }
+    .loc-pin {
+      width: 14px;
+      height: 14px;
+      margin-right: 4px;
+      display: inline-block;
+    }
+
+    /* Annotation Texts */
+    .desc-text {
+      position: absolute;
+      font-size: 13px;
+      line-height: 1.35;
+      font-weight: 700;
+      color: #4b4887;
+    }
+
+    #desc-art {
+      top: 75px;
+      left: 222px;
+      width: 72px;
+    }
+    #desc-cliff {
+      top: 366px;
+      left: 226px;
+      width: 84px;
+    }
+    #desc-camp {
+      top: 615px;
+      left: 16px;
+      line-height: 1.4;
+      font-size: 13.5px;
+    }
+    #desc-scenery {
+      top: 554px;
+      left: 405px;
+      width: 120px;
+      line-height: 1.4;
+      font-size: 13.5px;
+    }
+
+    /* Route Callouts (Taxi times) */
+    .route-label {
+      position: absolute;
+      font-size: 13px;
+      font-weight: 800;
+      color: #d74b12;
+      line-height: 1.25;
+      text-align: left;
+    }
+
+    #route-1 {
+      top: 288px;
+      left: 263px;
+    }
+    #route-2 {
+      top: 553px;
+      left: 22px;
+    }
+    #route-3 {
+      top: 498px;
+      left: 470px;
+    }
+    #route-4 {
+      top: 279px;
+      left: 408px;
+    }
+
+    /* SVG Overlay for curved travel arrows */
+    .route-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="poster-container">
+    <!-- SVG layer for arrows -->
+    <svg class="route-svg" viewBox="0 0 540 720">
+      <defs>
+        <marker id="arrowhead" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="#d74b12" />
+        </marker>
+        <marker id="arrowhead-wide" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+          <path d="M0,0 L7,3.5 L0,7 Z" fill="#d74b12" />
+        </marker>
+      </defs>
+
+      <!-- Arrow 1: 那香海 to 鸡鸣岛 -->
+      <path d="M 238,260 C 265,295 260,345 224,366" 
+            fill="none" stroke="#d74b12" stroke-width="3.5" stroke-linecap="round" marker-end="url(#arrowhead-wide)" />
+
+      <!-- Arrow 2: 鸡鸣岛 to 小五队抱海驿站 -->
+      <path d="M 52,504 C 47,560 90,600 148,574" 
+            fill="none" stroke="#d74b12" stroke-width="4" stroke-linecap="round" marker-end="url(#arrowhead-wide)" />
+
+      <!-- Arrow 3: 小五队抱海驿站 to 摩天岭索道 -->
+      <path d="M 402,556 C 472,554 480,490 460,453" 
+            fill="none" stroke="#d74b12" stroke-width="4" stroke-linecap="round" marker-end="url(#arrowhead-wide)" />
+
+      <!-- Arrow 4: 摩天岭索道 to 那香海落日 -->
+      <path d="M 515,302 C 540,320 534,235 513,222" 
+            fill="none" stroke="#d74b12" stroke-width="3.5" stroke-linecap="round" marker-end="url(#arrowhead-wide)" />
+    </svg>
+
+    <!-- Header Section -->
+    <div class="header-day">
+      <span class="day-burst">\\\</span>
+      <span class="day-text">DAY3</span>
+    </div>
+
+    <div class="header-title-box">
+      <span class="header-title-text">3.特色路线</span>
+    </div>
+
+    <!-- 1. 那香海 -->
+    <div class="spot" id="spot-naxianghai">
+      <figure class="photo-frame placeholder">
+        <span class="placeholder-caption">[那香海沙滩草帽遮阳伞]</span>
+      </figure>
+      <div style="text-align: center;">
+        <div class="loc-tag">
+          <span style="color:#d73827; margin-right: 4px;">📍</span>那香海
+        </div>
+      </div>
+    </div>
+
+    <!-- Text: 艺术感满满，适合出片 -->
+    <div class="desc-text" id="desc-art">
+      艺术感满满，适合出片
+    </div>
+
+    <!-- 2. 那香海落日 -->
+    <div class="spot" id="spot-sunset">
+      <figure class="photo-frame placeholder">
+        <span class="placeholder-caption">[那香海落日海面晚霞渔船]</span>
+      </figure>
+      <div style="text-align: center;">
+        <div class="loc-tag">
+          <span style="color:#d73827; margin-right: 4px;">📍</span>那香海落日
+        </div>
+      </div>
+    </div>
+
+    <!-- Transit Label 1: 打车11分钟 -->
+    <div class="route-label" id="route-1">
+      打车11<br>分钟
+    </div>
+
+    <!-- 3. 鸡鸣岛 -->
+    <div class="spot" id="spot-jimingdao">
+      <figure class="photo-frame placeholder">
+        <span class="placeholder-caption">[鸡鸣岛海岛岩壁与风车]</span>
+      </figure>
+      <div style="text-align: center;">
+        <div class="loc-tag">
+          <span style="color:#d73827; margin-right: 4px;">📍</span>鸡鸣岛
+        </div>
+      </div>
+    </div>
+
+    <!-- Text: 悬崖书吧、婚礼教堂、悬崖咖啡厅 -->
+    <div class="desc-text" id="desc-cliff">
+      悬崖书吧<br>、婚礼教堂、悬崖<br>咖啡厅
+    </div>
+
+    <!-- 4. 摩天岭索道 -->
+    <div class="spot" id="spot-suodao">
+      <figure class="photo-frame placeholder">
+        <span class="placeholder-caption">[摩天岭跨海索道吊箱]</span>
+      </figure>
+      <div style="text-align: center;">
+        <div class="loc-tag">
+          <span style="color:#d73827; margin-right: 4px;">📍</span>摩天岭索道
+        </div>
+      </div>
+    </div>
+
+    <!-- Transit Label 2: 打车5分钟 -->
+    <div class="route-label" id="route-2">
+      打车5<br>分钟
+    </div>
+
+    <!-- Text: 威海绝美海岸线 私藏童话般露营地 -->
+    <div class="desc-text" id="desc-camp">
+      威海绝美海岸线<br>私藏童话般露营地
+    </div>
+
+    <!-- 5. 小五队抱海驿站 -->
+    <div class="spot" id="spot-xiaowudui">
+      <figure class="photo-frame placeholder">
+        <span class="placeholder-caption">[小五队抱海驿站草坪风车房车]</span>
+      </figure>
+      <div style="text-align: center;">
+        <div class="loc-tag">
+          <span style="color:#d73827; margin-right: 4px;">📍</span>小五队抱海驿站
+        </div>
+      </div>
+    </div>
+
+    <!-- Transit Label 3: 打车20分钟 -->
+    <div class="route-label" id="route-3">
+      打车20<br>分钟
+    </div>
+
+    <!-- Text: 荡漾在山海间 看风景、吹海风、享受时光 -->
+    <div class="desc-text" id="desc-scenery">
+      荡漾在山海间<br>看风景、吹海<br>风、享受时光
+    </div>
+
+    <!-- Transit Label 4: 打车33分钟 -->
+    <div class="route-label" id="route-4">
+      打车33分钟
+    </div>
+
+  </div>
+
+</body>
+</html>

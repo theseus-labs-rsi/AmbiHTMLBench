@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEWS, NOTES, QUOTES</title>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    background-color: #f7f7f7;
+    margin: 0;
+    padding: 20px;
+    font-family: "Times New Roman", Times, Georgia, serif;
+    color: #1a1a1a;
+    display: flex;
+    justify-content: center;
+  }
+  .page {
+    background-color: #fff;
+    width: 820px;
+    padding: 40px 45px 30px 45px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    position: relative;
+  }
+  
+  /* Header */
+  .header-title {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 900;
+    font-size: 26px;
+    letter-spacing: 2.5px;
+    margin-bottom: 18px;
+    text-transform: uppercase;
+  }
+
+  /* Three Column Text Section */
+  .columns-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 24px;
+    font-size: 13.5px;
+    line-height: 1.25;
+    text-align: justify;
+  }
+  .column {
+    display: flex;
+    flex-direction: column;
+  }
+  .article-title {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 14.5px;
+    line-height: 1.2;
+    margin-top: 0;
+    margin-bottom: 6px;
+    letter-spacing: -0.2px;
+  }
+  p {
+    margin-top: 0;
+    margin-bottom: 14px;
+    text-indent: 14px;
+  }
+  p.no-indent {
+    text-indent: 0;
+  }
+
+  /* Boxed AGC section in col 3 */
+  .agc-box {
+    border: 1px solid #222;
+    padding: 10px 12px;
+    margin-top: 5px;
+    margin-bottom: 16px;
+    background: #fff;
+  }
+  .agc-box .article-title {
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+  .agc-box p {
+    text-indent: 14px;
+    margin-bottom: 8px;
+  }
+  .agc-box p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Lower Half - Advertisements */
+  .ads-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 22px;
+    margin-top: 25px;
+  }
+  .ad-box {
+    border: 1px solid #111;
+    min-height: 440px;
+    padding: 14px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Left Ad: Grant-Lehr */
+  .ad-left {
+    justify-content: space-between;
+    padding: 12px 14px 10px 14px;
+  }
+  .bullets-list {
+    margin-left: 80px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 900;
+    font-size: 13px;
+    line-height: 1.55;
+    list-style: none;
+    padding-left: 0;
+    margin-top: 2px;
+    margin-bottom: 10px;
+  }
+  .bullets-list li {
+    display: flex;
+    align-items: center;
+  }
+  .bullets-list li::before {
+    content: "●";
+    font-size: 12px;
+    margin-right: 8px;
+  }
+
+  .sketch-area {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  .placeholder-image {
+    width: 200px;
+    height: 185px;
+    border: 1px dashed #aaa;
+    background: #fafafa;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 11px;
+    color: #666;
+    padding: 8px;
+    box-sizing: border-box;
+  }
+  .sketch-caption {
+    font-style: italic;
+    font-size: 11.5px;
+    line-height: 1.25;
+    width: 125px;
+    text-align: left;
+    margin-left: 10px;
+  }
+
+  .ad-left-footer {
+    text-align: center;
+    margin-top: 15px;
+  }
+  .grant-lehr-logo {
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: italic;
+    font-weight: 900;
+    font-size: 26px;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  .grant-lehr-address {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10.5px;
+    font-weight: bold;
+    line-height: 1.35;
+  }
+
+  /* Right Ad: Welcome / Capitol House */
+  .ad-right {
+    text-align: center;
+    padding: 18px 20px 14px 20px;
+  }
+  .welcome-header {
+    text-align: left;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    letter-spacing: 3.5px;
+    margin-bottom: 16px;
+    font-weight: normal;
+  }
+  .welcome-body {
+    font-size: 12.5px;
+    line-height: 1.4;
+    margin-bottom: 12px;
+  }
+  .welcome-body .org {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  .capitol-title {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 17px;
+    letter-spacing: 4px;
+    font-weight: bold;
+    margin-top: 12px;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+  }
+  .convention-host {
+    font-style: italic;
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+  .event-date {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10.5px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    line-height: 1.4;
+    margin-bottom: 10px;
+  }
+  .bullet-divider {
+    font-size: 10px;
+    margin: 8px 0;
+  }
+  .hotel-promo {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 600;
+    font-size: 12.5px;
+    letter-spacing: 0.5px;
+    line-height: 1.35;
+    margin-bottom: 12px;
+  }
+  .hotel-list {
+    text-align: left;
+    display: inline-block;
+    margin: 0 auto;
+    font-size: 10.5px;
+    line-height: 1.3;
+  }
+  .hotel-item {
+    margin-bottom: 6px;
+  }
+  .hotel-name {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+  }
+  .hotel-city {
+    font-style: normal;
+    margin-left: 18px;
+  }
+
+  /* Page Footer */
+  .page-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <!-- Title -->
+  <div class="header-title">NEWS, NOTES, QUOTES . . . .</div>
+
+  <!-- Three Columns Section -->
+  <div class="columns-container">
+    <!-- Column 1 -->
+    <div class="column">
+      <div class="article-title">Big Shoes to Fill—</div>
+      <p>A toast to retiring Regional Director <em>Bert Brush</em> . . . . In his three years at the helm, his region has continued to advance effectively the interests of the profession. Fortunately his influence will still be felt by the Gulf States in his capacity as &ldquo;Mother to the New Director&rdquo; . . . a title Bert amiably tagged on his predecessor, <em>Gentleman John Pritchard</em> of the Tunica Hills.</p>
+      
+      <div class="article-title">Progress on<br>Association Film</div>
+      <p><em>Frank Lotz Miller</em>, New Orleans architectural photographer, will assist LAA in production of a filmstrip depicting the work of the architect, what he can do for the client, how to select him, etc. <em>Miller</em> will make available from his collection, all slides which &ldquo;fit&rdquo; the script. The balance will be photographed by <em>Miller</em> and furnished to LAA at cost. <em>Bill Brockway's</em> Film Committee has completed the script and hopes to have copies to all seven chapters early in 1962.</p>
+    </div>
+
+    <!-- Column 2 -->
+    <div class="column">
+      <div class="article-title">Public Relations Effort by<br>Crescent City Chapter</div>
+      <p>The New Orleans Chapter has embarked on a vigorous public relations program, including retainage of professional public relations counsel and the beginning of a chapter publication. At the last chapter meeting, President Murvan Maxwell applauded the chapter PR Committee, under the leadership of <em>Lem McCoy</em>, for long hours of hard work dedicated to enhancing the image of the profession in the New Orleans area.</p>
+
+      <div class="article-title">Continue Membership on<br>LAA Board of Governors</div>
+      <p>The following have a one year term yet to serve on the Association's Board of Governors: <em>Ralph Kiper</em>, Shreveport; <em>Clifton C. Lasseigne</em>, Baton Rouge; <em>F. V. von Osthoff</em>, <em>August Perez III</em>, and <em>Carl Olschner</em>, New Orleans. Retiring President <em>W. J. Evans</em> will continue on the body as immediate past president. The four</p>
+    </div>
+
+    <!-- Column 3 -->
+    <div class="column">
+      <p class="no-indent">officers and seven new chapter presidents will complete the 1962 board membership.</p>
+
+      <!-- AGC Boxed Announcement -->
+      <div class="agc-box">
+        <div class="article-title">AGC Says December 8<br>Bad Day for Bids</div>
+        <p>The AGC is sponsoring the First Annual Construction Management Conference at LSU on December 8 and 9. Since December 8 is on Friday, the AGC respectfully requests that architects refrain from asking for bids on that date.</p>
+        <p>Your cooperation in this matter will permit AGC members to attend the conference in greater numbers.</p>
+      </div>
+
+      <div class="article-title">Next Month . . .</div>
+      <p class="no-indent">LOUISIANA ARCHITECT will feature an article professing that &ldquo;Arbitration Is the Best Way to Settle Differences.&rdquo; Too many current victories in court eventually lead to immeasurable loss in public esteem after publicity has taken its toll.</p>
+    </div>
+  </div>
+
+  <!-- Bottom Half Advertisements -->
+  <div class="ads-container">
+    <!-- Left Ad: GRANT-LEHR -->
+    <div class="ad-box ad-left">
+      <ul class="bullets-list">
+        <li>curtain walls</li>
+        <li>acoustical panels</li>
+        <li>partitions</li>
+        <li>roof panels</li>
+        <li>solar screens</li>
+      </ul>
+
+      <div class="sketch-area">
+        <figure class="placeholder placeholder-image" style="margin: 0;">
+          <svg viewBox="0 0 160 120" width="100%" height="100%" style="stroke: #333; fill: none; stroke-width: 1;">
+            <!-- Stylized Building with Curtain Wall Grid -->
+            <polygon points="35,15 150,5 150,90 35,95" fill="#f0f0f0" />
+            <line x1="35" y1="30" x2="150" y2="22" />
+            <line x1="35" y1="45" x2="150" y2="38" />
+            <line x1="35" y1="60" x2="150" y2="54" />
+            <line x1="35" y1="75" x2="150" y2="70" />
+            <!-- Vertical grid lines -->
+            <line x1="50" y1="14" x2="50" y2="94" stroke-dasharray="1,1" />
+            <line x1="70" y1="12" x2="70" y2="93" stroke-dasharray="1,1" />
+            <line x1="90" y1="10" x2="90" y2="92" stroke-dasharray="1,1" />
+            <line x1="110" y1="8" x2="110" y2="91" stroke-dasharray="1,1" />
+            <line x1="130" y1="6" x2="130" y2="90" stroke-dasharray="1,1" />
+            <!-- Trees on left -->
+            <path d="M10,95 Q15,40 22,95 M20,95 Q25,30 30,95" stroke="#444" stroke-width="1.5" />
+            <!-- Ground & Cars -->
+            <line x1="5" y1="95" x2="155" y2="95" stroke-width="1.5" />
+            <rect x="75" y="88" width="22" height="7" rx="2" fill="#555" />
+            <rect x="110" y="86" width="25" height="9" rx="2" fill="#333" />
+          </svg>
+          <span style="font-size: 9px; margin-top: 4px;">[Illustration: Building sketch]</span>
+        </figure>
+        <div class="sketch-caption">
+          Architects sketch showing<br>Grant Lehr panels for<br>curtain wall application
+        </div>
+      </div>
+
+      <div class="ad-left-footer">
+        <div class="grant-lehr-logo">GRANT–LEHR</div>
+        <div class="grant-lehr-address">
+          1911 North 4th St. P. O. Box 263<br>
+          Baton Rouge, Louisiana
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Ad: WELCOME / CAPITOL HOUSE -->
+    <div class="ad-box ad-right">
+      <div class="welcome-header">WELCOME . . .</div>
+      
+      <div class="welcome-body">
+        <div class="org">
+          Louisiana Architects Assn.<br>
+          and<br>
+          Gulf States Region, American<br>
+          Institute of Architects
+        </div>
+        <div style="font-style: italic; margin-top: 5px; margin-bottom: 2px;">to the</div>
+        <div class="capitol-title">CAPITOL HOUSE</div>
+        <div class="convention-host">Your Convention Host</div>
+        <div class="event-date">
+          NOVEMBER 15 - 18, 1961<br>
+          BATON ROUGE, LOUISIANA
+        </div>
+        
+        <div class="bullet-divider">●</div>
+        
+        <div class="hotel-promo">
+          BE OUR GUEST AT OTHER<br>
+          BETTER HOTELS OF LOUISIANA
+        </div>
+
+        <div class="hotel-list">
+          <div class="hotel-item">
+            <span class="hotel-name">— CAPTAIN SHREVE</span><br>
+            <span class="hotel-city">Shreveport, Louisiana</span>
+          </div>
+          <div class="hotel-item">
+            <span class="hotel-name">— HEIDELBERG HOTEL</span><br>
+            <span class="hotel-city">Baton Rouge, Louisiana</span>
+          </div>
+          <div class="hotel-item">
+            <span class="hotel-name">— EVANGELINE HOTEL</span><br>
+            <span class="hotel-city">Lafayette, Louisiana</span>
+          </div>
+          <div class="hotel-item">
+            <span class="hotel-name">— VIRGINIA HOTEL</span><br>
+            <span class="hotel-city">Monroe, Louisiana</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page Footer -->
+  <div class="page-footer">
+    <div>NOVEMBER, 1961</div>
+    <div>9</div>
+  </div>
+</div>
+
+</body>
+</html>

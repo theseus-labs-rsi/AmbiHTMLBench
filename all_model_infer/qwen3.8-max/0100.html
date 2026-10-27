@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mirror News App</title>
+    <style>
+        :root {
+            --bg-color: #0b0b14;
+            --header-red: #9e1b1b;
+            --logo-red: #d31118;
+            --text-white: #ffffff;
+            --text-grey: #a0a0a0;
+            --accent-pink: #d65c85;
+            --nav-bg: #000000;
+            --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #333; /* Background outside the phone screen */
+            font-family: var(--font-main);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .phone-container {
+            width: 100%;
+            max-width: 400px; /* Simulate mobile width */
+            background-color: var(--bg-color);
+            color: var(--text-white);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100vh; /* Full height for scrolling simulation if needed, but fixed for layout */
+        }
+
+        /* Status Bar */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px 5px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            background-color: #000;
+        }
+        .status-icons {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+        .battery-icon {
+            width: 22px;
+            height: 10px;
+            border: 1px solid #fff;
+            border-radius: 2px;
+            position: relative;
+            display: inline-block;
+        }
+        .battery-icon::after {
+            content: '';
+            position: absolute;
+            right: -3px;
+            top: 2px;
+            width: 2px;
+            height: 4px;
+            background: #fff;
+        }
+        .battery-level {
+            width: 30%;
+            height: 100%;
+            background: #fff; /* Low battery look based on image */
+            display: block;
+        }
+
+        /* Top Navigation Tabs */
+        .top-nav {
+            display: flex;
+            background-color: var(--header-red);
+            padding: 8px 10px;
+            gap: 8px;
+            overflow-x: auto;
+        }
+        .nav-tab {
+            background-color: rgba(0,0,0,0.2);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            white-space: nowrap;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .nav-tab.plus {
+            padding: 6px 10px;
+            font-size: 16px;
+            line-height: 1;
+        }
+
+        /* Main Content Area */
+        .content-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 60px; /* Space for bottom nav */
+        }
+
+        /* Hero Section */
+        .hero-section {
+            position: relative;
+            width: 100%;
+        }
+        .hero-image-placeholder {
+            width: 100%;
+            height: 280px;
+            background: linear-gradient(to bottom, #2a2a2a, #1a1a1a);
+            position: relative;
+            overflow: hidden;
+        }
+        /* Simulating the face image with a gradient/placeholder since I can't generate the actual photo */
+        .hero-image-placeholder::before {
+            content: '[Photo: Close up of man with bruised eye]';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #555;
+            font-size: 12px;
+            text-align: center;
+            width: 80%;
+        }
+        
+        .mirror-logo {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background-color: var(--logo-red);
+            color: white;
+            padding: 5px 10px;
+            font-weight: 900;
+            font-size: 24px;
+            letter-spacing: -1px;
+            z-index: 10;
+        }
+
+        .hero-headline {
+            padding: 15px;
+            font-size: 22px;
+            font-weight: 700;
+            line-height: 1.3;
+            margin: 0;
+        }
+
+        .hero-tag {
+            padding: 0 15px 15px 15px;
+            color: var(--accent-pink);
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .play-icon {
+            font-size: 10px;
+        }
+
+        /* Grid Layout for secondary stories */
+        .news-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            padding: 0 15px;
+            margin-top: 10px;
+        }
+
+        .news-item {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .news-item.right-col {
+            border-left: 2px solid var(--accent-pink);
+            padding-left: 10px;
+        }
+        
+        .news-item.bottom-left {
+             border-left: 2px solid var(--accent-pink);
+             padding-left: 10px;
+        }
+
+        .thumb-placeholder {
+            width: 100%;
+            height: 90px;
+            background-color: #222;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #555;
+            font-size: 10px;
+            text-align: center;
+            overflow: hidden;
+        }
+        
+        .thumb-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.7;
+        }
+
+        .news-headline {
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 1.3;
+            margin: 0;
+        }
+
+        .news-tag {
+            color: var(--accent-pink);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-top: auto;
+        }
+
+        /* Specific adjustments for the grid items based on image */
+        .item-1 { grid-column: 1; grid-row: 1; }
+        .item-2 { grid-column: 2; grid-row: 1; }
+        .item-3 { grid-column: 1; grid-row: 2; }
+        .item-4 { grid-column: 2; grid-row: 2; }
+        .item-5 { grid-column: 1; grid-row: 3; }
+        .item-6 { grid-column: 2; grid-row: 3; }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background-color: var(--nav-bg);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0 20px 0;
+            border-top: 1px solid #222;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: #888;
+            font-size: 10px;
+            text-decoration: none;
+        }
+
+        .nav-item.active {
+            color: var(--accent-pink);
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+        
+        /* Custom Icon Shapes using CSS/SVG placeholders */
+        .icon-news { background: var(--accent-pink); width: 20px; height: 20px; border-radius: 3px; position: relative; }
+        .icon-news::after { content: ''; position: absolute; top: 4px; left: 4px; width: 12px; height: 2px; background: #000; box-shadow: 0 4px 0 #000, 0 8px 0 #000; }
+        
+        .icon-discover { border: 2px solid #888; width: 18px; height: 14px; border-radius: 2px; position: relative; }
+        .icon-discover::after { content: ''; position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%); width: 10px; height: 2px; background: #888; }
+
+        .icon-bookmark { width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 18px solid #888; position: relative; top: 5px;}
+        /* Simplified bookmark shape */
+        .icon-bookmark-simple { width: 16px; height: 20px; background: #fff; clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%); }
+
+        .icon-account { width: 18px; height: 18px; border-radius: 50%; background: #888; position: relative; }
+        .icon-account::after { content: ''; position: absolute; top: 20px; left: -4px; width: 26px; height: 10px; background: #888; border-radius: 10px 10px 0 0; }
+
+        /* Home Indicator */
+        .home-indicator {
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background-color: #fff;
+            border-radius: 2px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="phone-container">
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <span>8:43</span>
+        <div class="status-icons">
+            <!-- Signal Bars -->
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="white">
+                <rect x="0" y="8" width="3" height="4" rx="1"/>
+                <rect x="4.5" y="5" width="3" height="7" rx="1"/>
+                <rect x="9" y="2" width="3" height="10" rx="1"/>
+                <rect x="13.5" y="0" width="3" height="12" rx="1" opacity="0.3"/>
+            </svg>
+            <!-- Wifi -->
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="white">
+                <path d="M8 10.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zM8 6c2.2 0 4.2.9 5.7 2.3l-1.4 1.4C11.1 8.6 9.6 8 8 8s-3.1.6-4.3 1.7L2.3 8.3C3.8 6.9 5.8 6 8 6zm0-4.5c3.3 0 6.3 1.3 8.5 3.4l-1.4 1.4C13.2 4.4 10.7 3.5 8 3.5S2.8 4.4.9 6.3L-.5 4.9C1.7 2.8 4.7 1.5 8 1.5z" transform="translate(0, -1)"/>
+            </svg>
+            <!-- Battery -->
+            <div class="battery-icon">
+                <span class="battery-level"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Navigation -->
+    <div class="top-nav">
+        <div class="nav-tab plus">+</div>
+        <div class="nav-tab">TOP STORIES</div>
+        <div class="nav-tab">NEWS</div>
+        <div class="nav-tab">POLITICS</div>
+    </div>
+
+    <!-- Scrollable Content -->
+    <div class="content-scroll">
+        
+        <!-- Hero Story -->
+        <div class="hero-section">
+            <div class="mirror-logo">Mirror</div>
+            <div class="hero-image-placeholder">
+                <!-- Placeholder for the man's face -->
+            </div>
+            <h1 class="hero-headline">Alan Carr's husband says 'he never hit me' as he dismisses black eye pic rumours</h1>
+            <div class="hero-tag">
+                ALAN CARR <span class="play-icon">&#9658;</span>
+            </div>
+        </div>
+
+        <!-- News Grid -->
+        <div class="news-grid">
+            
+            <!-- Item 1: GCSE Image + Text -->
+            <div class="news-item item-1">
+                <div class="thumb-placeholder">
+                    [Photo: Children playing in park]
+                </div>
+                <h3 class="news-headline">GCSE results hit record high after cancelled exams - with 30% getting top grades</h3>
+                <div class="news-tag">GCSES &#9658;</div>
+            </div>
+
+            <!-- Item 2: Bus Crash Text -->
+            <div class="news-item right-col item-2">
+                <h3 class="news-headline">Woman, 32, killed in horror bus crash described as 'kind and thoughtful soul'</h3>
+                <div class="news-tag">TRANSPORT FOR LON...</div>
+            </div>
+
+            <!-- Item 3: Rollercoaster Text -->
+            <div class="news-item bottom-left item-5">
+                <h3 class="news-headline">Rollercoaster comes off tracks at UK theme park as emergency crews</h3>
+            </div>
+
+            <!-- Item 4: Spy Suspect Text -->
+            <div class="news-item right-col item-4">
+                <h3 class="news-headline">Brit spy suspect is 'stocky bald man with right-wing views who drives a Fiesta'</h3>
+                <div class="news-tag">MILITARY INTELLIGEN...</div>
+            </div>
+            
+             <!-- Item 6: Spy Image (Bottom Right) -->
+             <div class="news-item item-6" style="justify-content: flex-end;">
+                <div class="thumb-placeholder" style="height: 60px;">
+                    [Photo: Two people walking]
+                </div>
+            </div>
+
+        </div>
+        
+        <!-- Spacer to ensure content isn't hidden behind nav -->
+        <div style="height: 20px;"></div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <a href="#" class="nav-item active">
+            <div class="icon-news"></div>
+            <span>My News</span>
+        </a>
+        <a href="#" class="nav-item">
+            <div class="icon-discover"></div>
+            <span>Discover</span>
+        </a>
+        <a href="#" class="nav-item">
+            <div class="icon-bookmark-simple"></div>
+            <span>Bookmarks</span>
+        </a>
+        <a href="#" class="nav-item">
+            <div class="icon-account"></div>
+            <span>My Account</span>
+        </a>
+    </div>
+    
+    <div class="home-indicator"></div>
+</div>
+
+</body>
+</html>

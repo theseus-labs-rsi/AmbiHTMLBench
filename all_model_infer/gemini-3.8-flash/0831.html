@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy and security | Firefox Support</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #15141a;
+      background-color: #ffffff;
+      line-height: 1.5;
+    }
+
+    /* Top Navigation */
+    header {
+      border-bottom: 1px solid #e0e0e6;
+      padding: 12px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      color: #15141a;
+      line-height: 1.1;
+    }
+
+    .brand-top {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .brand-bottom {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #15141a;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    .sign-in-btn {
+      border: 1px solid #0060df;
+      color: #0060df;
+      background: transparent;
+      padding: 6px 16px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 30px 60px;
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      column-gap: 60px;
+    }
+
+    /* Breadcrumbs */
+    .breadcrumbs {
+      grid-column: 1 / -1;
+      font-size: 12px;
+      color: #5b5b66;
+      margin-bottom: 24px;
+    }
+
+    .breadcrumbs span {
+      margin: 0 4px;
+    }
+
+    /* Left Column */
+    .left-col {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 24px;
+    }
+
+    .logo-and-title {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-icon {
+      width: 44px;
+      height: 44px;
+      margin-bottom: 12px;
+    }
+
+    .product-icon svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .page-title {
+      font-size: 36px;
+      font-weight: 800;
+      color: #15141a;
+      letter-spacing: -0.5px;
+      line-height: 1.15;
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      font-size: 15px;
+      color: #4a4a55;
+    }
+
+    .download-block {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+
+    .btn-download {
+      background-color: #0060df;
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 13px;
+      padding: 8px 18px;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .btn-download:hover {
+      background-color: #0250bb;
+    }
+
+    .download-sublinks {
+      font-size: 11px;
+      color: #0060df;
+      display: flex;
+      gap: 6px;
+    }
+
+    .download-sublinks a {
+      color: #0060df;
+      text-decoration: underline;
+    }
+
+    /* Tabs */
+    .tabs-nav {
+      display: flex;
+      gap: 20px;
+      border-bottom: 1px solid #e0e0e6;
+      margin-top: 10px;
+      margin-bottom: 24px;
+    }
+
+    .tab-item {
+      font-size: 13px;
+      font-weight: 500;
+      color: #3b3b44;
+      text-decoration: none;
+      padding-bottom: 10px;
+      position: relative;
+    }
+
+    .tab-item.active {
+      color: #0060df;
+      font-weight: 600;
+    }
+
+    .tab-item.active::after {
+      content: "";
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: #0060df;
+    }
+
+    /* Article List */
+    .article-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .article-item {
+      display: flex;
+      gap: 16px;
+      padding: 18px 0;
+      border-bottom: 1px solid #f0f0f4;
+    }
+
+    .article-icon {
+      flex-shrink: 0;
+      margin-top: 2px;
+      color: #15141a;
+    }
+
+    .article-content {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .article-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #15141a;
+      text-decoration: none;
+    }
+
+    .article-title:hover {
+      text-decoration: underline;
+    }
+
+    .article-desc {
+      font-size: 13px;
+      color: #4a4a55;
+      line-height: 1.45;
+    }
+
+    .article-meta {
+      font-size: 12px;
+      color: #15141a;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-top: 4px;
+    }
+
+    .meta-date {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .pencil-icon {
+      font-size: 11px;
+    }
+
+    /* Right Column (Sidebar) */
+    .right-col {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* Search Bar */
+    .search-box {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 8px 32px 8px 12px;
+      font-size: 13px;
+      border: 1px solid #8f8f9d;
+      border-radius: 4px;
+      outline: none;
+      color: #15141a;
+    }
+
+    .search-input::placeholder {
+      color: #73737c;
+    }
+
+    .search-icon {
+      position: absolute;
+      right: 10px;
+      pointer-events: none;
+      color: #4a4a55;
+    }
+
+    /* Sidebar Topics List */
+    .sidebar-section-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #15141a;
+      margin-bottom: 12px;
+    }
+
+    .topics-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topics-list li a {
+      display: block;
+      padding: 6px 10px;
+      font-size: 13px;
+      color: #4a4a55;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+
+    .topics-list li a:hover {
+      background-color: #f0f0f4;
+    }
+
+    .topics-list li.active a {
+      background-color: #e8e8ed;
+      color: #15141a;
+      font-weight: 700;
+    }
+
+    /* Ask a Question Card */
+    .ask-box {
+      background-color: #130a38;
+      border-radius: 12px;
+      padding: 24px 20px;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 12px;
+    }
+
+    .ask-box-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .ask-box-text {
+      font-size: 12px;
+      line-height: 1.4;
+      color: #d1cfe2;
+      max-width: 180px;
+    }
+
+    .ask-box-btn {
+      margin-top: 4px;
+      background-color: #0060df;
+      color: #ffffff;
+      border: none;
+      border-radius: 4px;
+      padding: 6px 20px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .ask-box-btn:hover {
+      background-color: #0250bb;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header -->
+  <header>
+    <div class="nav-left">
+      <a href="#" class="brand">
+        <span class="brand-top">Mozilla</span>
+        <span class="brand-bottom">Support</span>
+      </a>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#">Explore Help Articles</a></li>
+          <li><a href="#">Community Forums</a></li>
+          <li><a href="#">Ask a Question</a></li>
+          <li><a href="#">Contribute</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div>
+      <a href="#" class="sign-in-btn">Sign In/Up</a>
+    </div>
+  </header>
+
+  <!-- Content Container -->
+  <div class="container">
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumbs">
+      Home <span>/</span> Firefox <span>/</span> Privacy and security
+    </div>
+
+    <!-- Left Main Column -->
+    <main class="left-col">
+      <div class="header-section">
+        <div class="logo-and-title">
+          <div class="product-icon">
+            <!-- Firefox Logo Icon Representation -->
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="24" cy="24" r="22" fill="#FF9400" />
+              <path d="M42 22C41.2 12.5 33.5 5 24 5C13.5 5 5 13.5 5 24C5 34.5 13.5 43 24 43C31 43 37 39.2 40.2 33.6C36.8 34.8 32.5 33.5 29.8 30.5C27 27.5 27 23 30 20C27.5 20.2 25.2 21.8 24.2 24.2C23.2 26.6 23.8 29.5 25.5 31.5C21 31.5 17 28 17 23.5C17 19.5 20 16.5 23.5 15.5C20.5 13.5 16 14.5 14 17.5C11.5 21.2 11.8 26.5 14.5 30C12 27 11 23 12 19.5C12.5 17 14 14.5 16 13C12.5 15.5 10 19.5 10 24C10 31.7 16.3 38 24 38C30.5 38 36 33.5 37.5 27.5C38.2 24.5 37.5 22.5 42 22Z" fill="#E22850" />
+              <path d="M38 18C37 13 33 9 28 8C31 10 33 13 33.5 16.5C34 19.5 32.5 22.5 30 24C32.5 23.5 35 21 36 19C37 17.5 37.5 18 38 18Z" fill="#FFE144" />
+            </svg>
+          </div>
+          <h1 class="page-title">Privacy and security</h1>
+          <p class="page-subtitle">Learn how to protect your privacy and secure your data.</p>
+        </div>
+
+        <div class="download-block">
+          <a href="#" class="btn-download">Download Firefox</a>
+          <div class="download-sublinks">
+            <a href="#">Systems and Languages</a>
+            <a href="#">What's New</a>
+            <a href="#">Privacy</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="tabs-nav">
+        <a href="#" class="tab-item active">All articles and threads</a>
+        <a href="#" class="tab-item">Tracking protection</a>
+        <a href="#" class="tab-item">Encryption</a>
+        <a href="#" class="tab-item">Security</a>
+      </div>
+
+      <!-- Article Entries -->
+      <div class="article-list">
+
+        <!-- Item 1 -->
+        <article class="article-item">
+          <div class="article-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+          </div>
+          <div class="article-content">
+            <a href="#" class="article-title">Use built-in VPN in Firefox</a>
+            <p class="article-desc">Learn how to activate and use the built-in VPN feature in Firefox to protect your browsing.</p>
+            <div class="article-meta">
+              <span>Firefox</span>
+              <span class="meta-date"><span class="pencil-icon">✎</span> Last updated: 1 day ago</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Item 2 -->
+        <article class="article-item">
+          <div class="article-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+          </div>
+          <div class="article-content">
+            <a href="#" class="article-title">Common Myths about Private Browsing</a>
+            <p class="article-desc">Learn more about common misconceptions about Private Browsing in Firefox.</p>
+            <div class="article-meta">
+              <span>Firefox</span>
+              <span class="meta-date"><span class="pencil-icon">✎</span> Last updated: 11/3/25</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Item 3 -->
+        <article class="article-item">
+          <div class="article-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+          </div>
+          <div class="article-content">
+            <a href="#" class="article-title">Avoid and report Mozilla tech support scams</a>
+            <p class="article-desc">Mozilla does not provide telephone support and does not charge for software downloads, upgrades or technical help. Learn more.</p>
+            <div class="article-meta">
+              <span>Firefox, Firefox for Android, Firefox for iOS,...</span>
+              <span class="meta-date"><span class="pencil-icon">✎</span> Last updated: 2/3/25</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Item 4 -->
+        <article class="article-item">
+          <div class="article-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+          </div>
+          <div class="article-content">
+            <a href="#" class="article-title">Insecure connection password warning in Firefox</a>
+            <p class="article-desc">Firefox will show you a "connection is not secure" warning message when a website login page is insecure and information could be stolen.</p>
+            <div class="article-meta">
+              <span>Firefox</span>
+              <span class="meta-date"><span class="pencil-icon">✎</span> Last updated: 3/19/26</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Item 5 -->
+        <article class="article-item">
+          <div class="article-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+          </div>
+          <div class="article-content">
+            <a href="#" class="article-title">Third-party trackers</a>
+            <p class="article-desc">Learn about cross-site (third-party) cookies that collect information to track your browsing, which are used on many websites.</p>
+            <div class="article-meta">
+              <span>Firefox</span>
+              <span class="meta-date"><span class="pencil-icon">✎</span> Last updated: 10/26/24</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Item 6 -->
+        <article class="article-item">
+          <div class="article-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+          </div>
+          <div class="article-content">
+            <a href="#" class="article-title">Does Firefox share my location with websites?</a>
+            <p class="article-desc">Learn what information Firefox sends to websites about your location and how to use and manage location-aware features of your browser.</p>
+            <div class="article-meta">
+              <span>Firefox</span>
+              <span class="meta-date"><span class="pencil-icon">✎</span> Last updated: 3/22/26</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Item 7 -->
+        <article class="article-item">
+          <div class="article-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+          </div>
+          <div class="article-content">
+            <a href="#" class="article-title">Configure DNS over HTTPS protection levels in Firefox</a>
+            <p class="article-desc">DNS over HTTPS (DoH) is a recommended feature that enhances privacy. Learn more about the DoH protection levels you can configure in Firefox settings.</p>
+            <div class="article-meta">
+              <span>Firefox</span>
+              <span class="meta-date"><span class="pencil-icon">✎</span> Last updated: 3/27/25</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Item 8 (Partially visible) -->
+        <article class="article-item">
+          <div class="article-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+          </div>
+          <div class="article-content">
+            <a href="#" class="article-title">Enhanced Tracking Protection in Firefox for desktop</a>
+          </div>
+        </article>
+
+      </div>
+    </main>
+
+    <!-- Right Sidebar Column -->
+    <aside class="right-col">
+      <!-- Search Input -->
+      <div class="search-box">
+        <input type="text" class="search-input" placeholder="Search questions, arti">
+        <span class="search-icon">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </span>
+      </div>
+
+      <!-- Popular Topics Navigation -->
+      <nav>
+        <h2 class="sidebar-section-title">Popular Firefox Topics</h2>
+        <ul class="topics-list">
+          <li><a href="#">Backup, recovery, and sync</a></li>
+          <li><a href="#">Browse</a></li>
+          <li><a href="#">Performance and connectivity</a></li>
+          <li><a href="#">Accessibility</a></li>
+          <li><a href="#">Download and save</a></li>
+          <li><a href="#">Search, tag, and share</a></li>
+          <li><a href="#">Installation and updates</a></li>
+          <li><a href="#">Settings</a></li>
+          <li class="active"><a href="#">Privacy and security</a></li>
+          <li><a href="#">Passwords and sign in</a></li>
+        </ul>
+      </nav>
+
+      <!-- Ask a Question Box -->
+      <div class="ask-box">
+        <div class="ask-box-header">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 20h9"></path>
+            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+          </svg>
+          <span>Ask a Question</span>
+        </div>
+        <p class="ask-box-text">Still need help? Sign in to ask your question on our forums.</p>
+        <a href="#" class="ask-box-btn">Continue</a>
+      </div>
+    </aside>
+
+  </div>
+
+</body>
+</html>

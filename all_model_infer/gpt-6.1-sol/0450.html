@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Geometry Generation and CNN Modeling</title>
+<script>
+window.MathJax = {tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]}, chtml: {scale: 1}};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+* { box-sizing: border-box; }
+body { margin: 0; background: white; color: black; font-family: "Times New Roman", Times, serif; }
+.page { width: 1450px; padding: 29px 22px 0 56px; display: grid; grid-template-columns: 670px 671px; column-gap: 31px; }
+p { margin: 0; font-size: 28px; line-height: 31.8px; text-align: justify; }
+.blue { color: blue; }
+.figure-one { height: 279px; }
+.top-images { height: 222px; display: flex; align-items: flex-start; padding-left: 14px; gap: 40px; }
+.pixel-panel { width: 173px; flex-shrink: 0; }
+.pixel-grid { border-collapse: collapse; width: 173px; height: 175px; font-size: 18px; line-height: 19px; table-layout: fixed; }
+.pixel-grid td { padding: 0; border: 1px dashed #555; text-align: center; }
+.pixel-grid .one { background: black; color: white; }
+.panel-label { text-align: center; font-size: 21px; margin-top: 16px; }
+.mapping-panel { width: 416px; position: relative; display: flex; gap: 28px; }
+.heat-wrapper { width: 215px; position: relative; }
+.heatmap { position: relative; width: 175px; height: 175px; margin-top: 4px; border: 2px dashed black; background: #f9e4e4; overflow: visible; }
+.heatmap .placeholder { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; color: #666; font: 11px Arial, sans-serif; }
+.heat-numbers { position: relative; height: 179px; margin-top: -10px; display: flex; flex-direction: column; justify-content: space-between; font-size: 17px; white-space: nowrap; margin-left: -7px; }
+.color-scale { position: absolute; left: 184px; top: 4px; height: 174px; width: 13px; background: linear-gradient(to bottom, #f00000, #fff, #1500ed); }
+.scale-labels { position: absolute; left: 198px; top: 0; height: 182px; display: flex; flex-direction: column; justify-content: space-between; color: #666; font-size: 8px; }
+.geometry { width: 172px; height: 173px; margin-top: 4px; border: 2px dashed black; display: flex; align-items: center; justify-content: center; font-size: 13px; text-align: center; }
+.mapping-label { position: absolute; left: 188px; top: 191px; font-size: 21px; }
+.caption { font-size: 21px; line-height: 24px; text-align: left; }
+.figure-two { height: 245px; position: relative; }
+.diagram-header { position: absolute; top: 4px; left: 27px; width: 606px; display: flex; align-items: center; justify-content: space-between; font-size: 15px; }
+.arrow { font-size: 36px; line-height: 30px; color: #fff0b9; -webkit-text-stroke: 1px black; vertical-align: middle; margin-right: 15px; }
+.arrow.up { margin-left: 15px; margin-right: 0; }
+.pooling { position: absolute; top: 38px; font-size: 15px; }
+.pool-one { left: 287px; }
+.pool-two { left: 447px; }
+.network { position: absolute; left: 60px; top: 55px; width: 540px; height: 82px; border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #666; }
+.network-labels { position: absolute; top: 143px; left: 170px; width: 465px; display: flex; justify-content: space-between; font-size: 15px; }
+.figure-two .caption { position: absolute; top: 181px; left: 0; }
+.left-text { padding-top: 0; }
+.equation { position: relative; display: flex; align-items: center; justify-content: center; font-size: 26px; width: 100%; }
+.equation .number { position: absolute; right: 0; font-size: 26px; }
+.eq-four { height: 194px; }
+.eq-five { height: 111px; }
+.eq-six { height: 91px; }
+.equation mjx-container[display="true"] { margin: 0 !important; }
+.right-column p { font-size: 28px; line-height: 31.8px; }
+.right-column .indented { text-indent: 26px; }
+</style>
+</head>
+<body>
+<main class="page">
+<section class="left-column">
+<div class="figure-one">
+<div class="top-images">
+<div class="pixel-panel">
+<table class="pixel-grid" aria-label="Pixelated geometry matrix">
+<tbody>
+<tr><td>0</td><td>0</td><td>0</td><td class="one">1</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+<tr><td>0</td><td class="one">1</td><td>0</td><td class="one">1</td><td>0</td><td>0</td><td>0</td><td class="one">1</td></tr>
+<tr><td>0</td><td>0</td><td class="one">1</td><td>0</td><td class="one">1</td><td>0</td><td>0</td><td>0</td></tr>
+<tr><td>0</td><td>0</td><td>0</td><td class="one">1</td><td class="one">1</td><td class="one">1</td><td>0</td><td>0</td></tr>
+<tr><td>0</td><td>0</td><td>0</td><td>0</td><td class="one">1</td><td class="one">1</td><td>0</td><td>0</td></tr>
+<tr><td>0</td><td class="one">1</td><td>0</td><td>0</td><td>0</td><td class="one">1</td><td>0</td><td>0</td></tr>
+<tr><td>0</td><td class="one">1</td><td class="one">1</td><td>0</td><td>0</td><td class="one">1</td><td>0</td><td>0</td></tr>
+<tr><td>0</td><td>0</td><td>0</td><td class="one">1</td><td class="one">1</td><td class="one">1</td><td>0</td><td>0</td></tr>
+</tbody>
+</table>
+<div class="panel-label">(a)</div>
+</div>
+<div class="mapping-panel">
+<div class="heat-wrapper">
+<div class="heatmap">
+<div class="placeholder">[Heatmap: mapped matrix]</div>
+<div class="heat-numbers">
+<div>-1.00 0.82 1.00 0.41 -0.66</div>
+<div>-0.30 -0.57 0.83 0.69 1.00</div>
+<div>0.92 -0.35 0.82 -0.74 -0.81</div>
+<div>0.88 0.04 0.15 1.00 0.86</div>
+<div>0.83 0.65 1.00 0.39 -0.38</div>
+</div>
+</div>
+<div class="color-scale"></div>
+<div class="scale-labels"><span>1</span><span>0.6</span><span>0.2</span><span>−0.2</span><span>−0.6</span><span>−1</span></div>
+</div>
+<div class="placeholder geometry">[Diagram: NGnet-generated geometry]</div>
+<div class="mapping-label">(b)</div>
+</div>
+</div>
+<div class="caption">Fig. 1.&nbsp; Geometry generation strategies. (a) Pixelated geometry and its mapped<br>matrix. (b) NGnet-generated geometry and its mapped matrix.</div>
+</div>
+
+<div class="figure-two">
+<div class="diagram-header">
+<span><span class="arrow">⇩</span>Input: Antenna topology</span>
+<span>Output: Antenna performance<span class="arrow up">⇧</span></span>
+</div>
+<span class="pooling pool-one">Max. Pooling</span>
+<span class="pooling pool-two">Max. Pooling</span>
+<div class="placeholder network">[Diagram: CNN structure from antenna topology to antenna performance]</div>
+<div class="network-labels"><span>Convolution+Relu</span><span>Convolution+Relu</span><span>Fully connected</span></div>
+<div class="caption">Fig. 2.&nbsp;&nbsp; CNN structure used in the ML modeling process.</div>
+</div>
+
+<div class="left-text">
+<p>antenna shape is expressed in terms of the linear combination of normalized Gaussian functions, as shown in Fig. <span class="blue">1(b)</span>. The antenna geometry can be expressed as</p>
+<div class="equation eq-four">
+<div>$$\left\{\begin{array}{ll}
+\displaystyle\sum_{k=1}^{N}w_{i'}b_{i'}(\boldsymbol{x})\geq 0,&amp;\rho_{\mathrm{topo}}(\boldsymbol{x})=1\\
+\displaystyle\sum_{k=1}^{N}w_{i'}b_{i'}(\boldsymbol{x})&lt;0,&amp;\rho_{\mathrm{topo}}(\boldsymbol{x})=0
+\end{array}\right.$$</div><span class="number">(4)</span>
+</div>
+<p>in which $b_{i'}(\boldsymbol{x})$ represents the normalized Gaussian function, $w_{i'}$ is the weighting coefficient, and $N$ is the number of Gaussian functions. $b_{i'}(\boldsymbol{x})$ is calculated using</p>
+<div class="equation eq-five"><div>$$b_{i'}(\boldsymbol{x})=G_{i'}(\boldsymbol{x})/\sum_{k=1}^{N}G_k(\boldsymbol{x})$$</div><span class="number">(5)</span></div>
+<p>in which $G_k(\boldsymbol{x})$ represents the Gaussian function with center $\mu_k$ and covariance matrix $\boldsymbol{\Sigma}_k$, expressed as follows:</p>
+<div class="equation eq-six"><div>$$G_k(\boldsymbol{x})=\frac{1}{(2\pi)^{D/2}|\boldsymbol{\Sigma}|^{1/2}}e^{-1/2(\boldsymbol{x}-\boldsymbol{\mu}_k)^T\boldsymbol{\Sigma}_k^{-1}(\boldsymbol{x}-\boldsymbol{\mu}_k)}$$</div><span class="number">(6)</span></div>
+<p>in which $D$ signifies the dimension of input $x$. In this case, $\rho_{\mathrm{topo}}(\boldsymbol{x})$ is mapped into a vector of hyperparameters $\boldsymbol{w}=$</p>
+</div>
+</section>
+
+<section class="right-column">
+<p>in Fig. <span class="blue">2</span>. The first two layers play roles in feature extraction, and the third layer maps the extracted features into the final output, such as the antenna performance at frequency points of concern. The convolution layer is the fundamental component of the CNN, which typically consists of linear and nonlinear operations, i.e., convolution operation and activation operation. The convolution operation introduces a small array of numbers called a kernel to be applied to the input tensor, which is an array of numbers. The elementwise product between each element of the kernel and the input tensor is calculated at each location of the tensor and then summed to obtain the output value at the corresponding position of the output tensor, which is called a feature map. This procedure is then repeated by applying multiple kernels to form multiple feature maps to represent the characteristics of the input tensors. Two main hyperparameters define the convolution operation: the kernel size $p\times q$ and kernel number $n_{\mathrm{kernel}}$. We suggest using a $3\times 3$ size kernel in the proposed algorithm.</p>
+<p class="indented">For overlap of the outermost element of the input tensor, zero padding is essential before the convolution operation. The kernels are shared across the entire image positions, which largely increases the modeling efficiency by reducing the number of parameters to learn. The outputs of the convolution are then passed through a nonlinear activation function, which is the rectified linear unit (ReLU) in the presented algorithm. Then, the output is passed through the pooling layer to implement the downsampling operation, which reduces the in-plane dimensionality of the feature maps. Here, max pooling is implemented, in which the maximum values in each patch extracted from the input feature maps are outputted. The used CNN consists of a stack of several convolution layers and pooling layers, followed by one fully connected layer and one regression layer. To achieve a balance between the computational cost and modeling ability, a shallow CNN with a layer number of 2 is recommended. The output feature maps of the final pooling layer are flattened and connected to the fully connected layer, in which every input is connected to every output by a learnable weight.</p>
+</section>
+</main>
+</body>
+</html>

@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital I/O Registers</title>
+<style>
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10pt;
+    line-height: 1.35;
+    color: #000;
+    margin: 0;
+    padding: 30px 50px 20px 50px;
+    background-color: #fff;
+  }
+
+  .header-logo {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 25px;
+  }
+
+  .ti-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ti-logo svg {
+    height: 36px;
+  }
+
+  .ti-logo-text {
+    font-size: 14pt;
+    font-weight: bold;
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+  }
+
+  .sub-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 15px;
+  }
+
+  .doc-title {
+    font-style: italic;
+    font-size: 9.5pt;
+  }
+
+  .url {
+    font-size: 8.5pt;
+  }
+
+  h2 {
+    font-size: 13pt;
+    font-weight: bold;
+    margin: 0 0 10px 0;
+  }
+
+  p {
+    margin: 0 0 12px 0;
+    font-size: 9.5pt;
+  }
+
+  a {
+    color: #0040b0;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  .note-box {
+    border-top: 0.75px solid #000;
+    border-bottom: 0.75px solid #000;
+    padding: 8px 0;
+    margin: 15px 0 25px 50px;
+    font-size: 9pt;
+    display: flex;
+    line-height: 1.35;
+  }
+
+  .note-label {
+    font-weight: bold;
+    min-width: 55px;
+  }
+
+  .note-content {
+    flex-grow: 1;
+  }
+
+  .table-title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 9.5pt;
+    margin-bottom: 6px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8.5pt;
+  }
+
+  thead th {
+    background-color: #d8d8d8;
+    border-top: 1.5px solid #000;
+    border-bottom: 1.5px solid #000;
+    font-weight: bold;
+    text-align: left;
+    padding: 3px 6px;
+  }
+
+  tbody td {
+    padding: 1.5px 6px;
+    vertical-align: top;
+  }
+
+  tbody tr.group-end td {
+    border-bottom: 0.75px solid #666;
+  }
+
+  /* Specific column alignments & widths */
+  th:nth-child(1), td:nth-child(1) { width: 7%; }
+  th:nth-child(2), td:nth-child(2) { width: 14%; }
+  th:nth-child(3), td:nth-child(3) { width: 33%; }
+  th:nth-child(4), td:nth-child(4) { width: 11%; }
+  th:nth-child(5), td:nth-child(5) { width: 9%; }
+  th:nth-child(6), td:nth-child(6) { width: 11%; }
+  th:nth-child(7), td:nth-child(7) { width: 15%; }
+
+  .footer-rule {
+    border-top: 1px solid #000;
+    margin-top: 30px;
+    padding-top: 4px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 8.5pt;
+  }
+
+  .footer-left {
+    font-style: italic;
+  }
+
+  .footer-left span {
+    font-style: normal;
+    font-weight: bold;
+    margin-right: 5px;
+  }
+
+  .footer-right {
+    text-align: right;
+  }
+
+  .footer-feedback {
+    color: #0040b0;
+    margin-top: 2px;
+  }
+
+  .footer-copyright {
+    text-align: center;
+    font-size: 7.5pt;
+    margin-top: 12px;
+  }
+</style>
+</head>
+<body>
+
+  <!-- Top TI Header -->
+  <div class="header-logo">
+    <div class="ti-logo">
+      <!-- Texas outline icon representation -->
+      <svg viewBox="0 0 40 40" width="34" height="34" fill="#000">
+        <path d="M 6 4 L 14 4 L 15 10 L 22 10 L 22 12 L 28 12 L 31 16 L 33 22 L 30 26 L 31 34 L 26 36 L 22 33 L 19 36 L 16 34 L 13 36 L 12 30 L 10 24 L 6 22 L 6 12 Z"/>
+      </svg>
+      <div class="ti-logo-text">
+        TEXAS<br>INSTRUMENTS
+      </div>
+    </div>
+  </div>
+
+  <!-- Sub Header -->
+  <div class="sub-header">
+    <div class="doc-title">Digital I/O Registers</div>
+    <div class="url">www.ti.com</div>
+  </div>
+
+  <!-- Section 12.4 Heading -->
+  <h2>12.4 Digital I/O Registers</h2>
+  <p>The digital I/O registers are listed in <a href="#table-12-2">Table 12-2</a>. The base addresses can be found in the device-specific data sheet. Each port grouping begins at its base address. The address offsets are given in <a href="#table-12-2">Table 12-2</a>.</p>
+
+  <!-- Note Box -->
+  <div class="note-box">
+    <div class="note-label">NOTE:</div>
+    <div class="note-content">
+      All registers have word or byte register access. For a generic register <i>ANYREG</i>, the suffix "_L" (<i>ANYREG_L</i>) refers to the lower byte of the register (bits 0 through 7). The suffix "_H" (<i>ANYREG_H</i>) refers to the upper byte of the register (bits 8 through 15).
+    </div>
+  </div>
+
+  <!-- Table 12-2 -->
+  <div class="table-title" id="table-12-2">Table 12-2. Digital I/O Registers</div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Offset</th>
+        <th>Acronym</th>
+        <th>Register Name</th>
+        <th>Type</th>
+        <th>Access</th>
+        <th>Reset</th>
+        <th>Section</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>0Eh</td>
+        <td>P1IV</td>
+        <td>Port 1 Interrupt Vector</td>
+        <td>Read only</td>
+        <td>Word</td>
+        <td>0000h</td>
+        <td><a href="#section-12-4-1">Section 12.4.1</a></td>
+      </tr>
+      <tr>
+        <td>0Eh</td>
+        <td>P1IV_L</td>
+        <td></td>
+        <td>Read only</td>
+        <td>Byte</td>
+        <td>00h</td>
+        <td></td>
+      </tr>
+      <tr class="group-end">
+        <td>0Fh</td>
+        <td>P1IV_H</td>
+        <td></td>
+        <td>Read only</td>
+        <td>Byte</td>
+        <td>00h</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>1Eh</td>
+        <td>P2IV</td>
+        <td>Port 2 Interrupt Vector</td>
+        <td>Read only</td>
+        <td>Word</td>
+        <td>0000h</td>
+        <td><a href="#section-12-4-2">Section 12.4.2</a></td>
+      </tr>
+      <tr>
+        <td>1Eh</td>
+        <td>P2IV_L</td>
+        <td></td>
+        <td>Read only</td>
+        <td>Byte</td>
+        <td>00h</td>
+        <td></td>
+      </tr>
+      <tr class="group-end">
+        <td>1Fh</td>
+        <td>P2IV_H</td>
+        <td></td>
+        <td>Read only</td>
+        <td>Byte</td>
+        <td>00h</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>00h</td>
+        <td>P1IN or<br>PAIN_L</td>
+        <td>Port 1 Input</td>
+        <td>Read only</td>
+        <td>Byte</td>
+        <td></td>
+        <td><a href="#section-12-4-9">Section 12.4.9</a></td>
+      </tr>
+      <tr>
+        <td>02h</td>
+        <td>P1OUT or<br>PAOUT_L</td>
+        <td>Port 1 Output</td>
+        <td>Read/write</td>
+        <td>Byte</td>
+        <td>undefined</td>
+        <td><a href="#section-12-4-10">Section 12.4.10</a></td>
+      </tr>
+      <tr>
+        <td>04h</td>
+        <td>P1DIR or<br>PADIR_L</td>
+        <td>Port 1 Direction</td>
+        <td>Read/write</td>
+        <td>Byte</td>
+        <td>00h</td>
+        <td><a href="#section-12-4-11">Section 12.4.11</a></td>
+      </tr>
+      <tr>
+        <td>06h</td>
+        <td>P1REN or<br>PAREN_L</td>
+        <td>Port 1 Resistor Enable</td>
+        <td>Read/write</td>
+        <td>Byte</td>
+        <td>00h</td>
+        <td><a href="#section-12-4-12">Section 12.4.12</a></td>
+      </tr>
+      <tr>
+        <td>08h</td>
+        <td>P1DS or<br>PADS_L</td>
+        <td>Port 1 Drive Strength</td>
+        <td>Read/write</td>
+        <td>Byte</td>
+        <td>00h</td>
+        <td><a href="#section-12-4-13">Section 12.4.13</a></td>
+      </tr>
+      <tr>
+        <td>0Ah</td>
+        <td>P1SEL or<br>PASEL_L</td>
+        <td>Port 1 Port Select</td>
+        <td>Read/write</td>
+        <td>Byte</td>
+        <td>00h</td>
+        <td><a href="#section-12-4-14">Section 12.4.14</a></td>
+      </tr>
+      <tr>
+        <td>18h</td>
+        <td>P1IES or<br>PAIES_L</td>
+        <td>Port 1 Interrupt Edge Select</td>
+        <td>Read/write</td>
+        <td>Byte</td>
+        <td>undefined</td>
+        <td><a href="#section-12-4-3">Section 12.4.3</a></td>
+      </tr>
+      <tr>
+        <td>1Ah</td>
+        <td>P1IE or<br>PAIE_L</td>
+        <td>Port 1 Interrupt Enable</td>
+        <td>Read/write</td>
+        <td>Byte</td>
+        <td>00h</td>
+        <td><a href="#section-12-4-4">Section 12.4.4</a></td>
+      </tr>
+      <tr class="group-end">
+        <td>1Ch</td>
+        <td>P1IFG or<br>PAIFG_L</td>
+        <td>Port 1 Interrupt Flag</td>
+        <td>Read/write</td>
+        <td>Byte</td>
+        <td>00h</td>
+        <td><a href="#section-12-4-5">Section 12.4.5</a></td>
+      </tr>
+
+      <tr>
+        <td>01h</td>
+        <td>P2IN or<br>PAIN_H</td>
+        <td>Port 2 Input</td>
+        <td>Read only</td>
+        <td>Byte</td>
+        <td></td>
+        <td><a href="#section-12-4-9">Section 12.4.9</a></td>
+      </tr>
+      <tr>
+        <td>03h</td>
+        <td>P2OUT or<br>PAOUT_H</td>
+        <td>Port 2 Output</td>
+        <td>Read/write</td>
+        <td>Byte</td>
+        <td>undefined</td>
+        <td><a href="#section-12-4-10">Section 12.4.10</a></td>
+      </tr>
+      <tr>
+        <td>05h</td>
+        <td>P2DIR or<br>PADIR_H</td>
+        <td>Port 2 Direction</td>
+        <td>Read/write</td>
+        <td>Byte</td>
+        <td>00h</td>
+        <td><a href="#section-12-4-11">Section 12.4.11</a></td>
+      </tr>
+      <tr>
+        <td>07h</td>
+        <td>P2REN or<br>PAREN_H</td>
+        <td>Port 2 Resistor Enable</td>
+        <td>Read/write</td>
+        <td>Byte</td>
+        <td>00h</td>
+        <td><a href="#section-12-4-12">Section 12.4.12</a></td>
+      </tr>
+      <tr>
+        <td>09h</td>
+        <td>P2DS or<br>PADS_H</td>
+        <td>Port 2 Drive Strength</td>
+        <td>Read/write</td>
+        <td>Byte</td>
+        <td>00h</td>
+        <td><a href="#section-12-4-13">Section 12.4.13</a></td>
+      </tr>
+      <tr>
+        <td>0Bh</td>
+        <td>P2SEL or<br>PASEL_H</td>
+        <td>Port 2 Port Select</td>
+        <td>Read/write</td>
+        <td>Byte</td>
+        <td>00h</td>
+        <td><a href="#section-12-4-14">Section 12.4.14</a></td>
+      </tr>
+      <tr>
+        <td>19h</td>
+        <td>P2IES or<br>PAIES_H</td>
+        <td>Port 2 Interrupt Edge Select</td>
+        <td>Read/write</td>
+        <td>Byte</td>
+        <td>undefined</td>
+        <td><a href="#section-12-4-6">Section 12.4.6</a></td>
+      </tr>
+      <tr>
+        <td>1Bh</td>
+        <td>P2IE or<br>PAIE_H</td>
+        <td>Port 2 Interrupt Enable</td>
+        <td>Read/write</td>
+        <td>Byte</td>
+        <td>00h</td>
+        <td><a href="#section-12-4-7">Section 12.4.7</a></td>
+      </tr>
+      <tr class="group-end">
+        <td>1Dh</td>
+        <td>P2IFG or<br>PAIFG_H</td>
+        <td>Port 2 Interrupt Flag</td>
+        <td>Read/write</td>
+        <td>Byte</td>
+        <td>00h</td>
+        <td><a href="#section-12-4-8">Section 12.4.8</a></td>
+      </tr>
+
+      <tr>
+        <td>00h</td>
+        <td>P3IN or<br>PBIN_L</td>
+        <td>Port 3 Input</td>
+        <td>Read only</td>
+        <td>Byte</td>
+        <td></td>
+        <td><a href="#section-12-4-9">Section 12.4.9</a></td>
+      </tr>
+      <tr class="group-end">
+        <td>02h</td>
+        <td>P3OUT or<br>PBOUT_L</td>
+        <td>Port 3 Output</td>
+        <td>Read/write</td>
+        <td>Byte</td>
+        <td>undefined</td>
+        <td><a href="#section-12-4-10">Section 12.4.10</a></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Page Footer -->
+  <div class="footer-rule">
+    <div class="footer-left">
+      <span>416</span>Digital I/O Module
+    </div>
+    <div class="footer-right">
+      SLAU208Q&ndash;June 2008&ndash;Revised March 2018<br>
+      <div class="footer-feedback"><a href="#">Submit Documentation Feedback</a></div>
+    </div>
+  </div>
+
+  <div class="footer-copyright">
+    Copyright &copy; 2008&ndash;2018, Texas Instruments Incorporated
+  </div>
+
+</body>
+</html>

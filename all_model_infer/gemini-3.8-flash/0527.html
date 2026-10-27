@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>古代美術 - Ancient Art Exhibition</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background-color: #f0ece1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    font-family: "Songti SC", "SimSun", "Noto Serif CJK SC", "STSong", "Source Han Serif SC", serif;
+    color: #2b2b2b;
+  }
+
+  .poster {
+    width: 600px;
+    min-height: 850px;
+    background-color: #dfd9cc;
+    background-image: 
+      radial-gradient(circle at 50% 20%, rgba(255,255,255,0.2) 0%, transparent 60%),
+      linear-gradient(to bottom, #ded8cb 0%, #dbd4c6 50%, #d8d0c0 100%);
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    display: flex;
+    overflow: hidden;
+  }
+
+  /* Left Main Content Zone */
+  .main-column {
+    width: 68%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    z-index: 1;
+  }
+
+  /* Top Section */
+  .top-section {
+    padding: 40px 25px 20px 35px;
+    height: 275px;
+    position: relative;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    align-items: flex-start;
+  }
+
+  /* Faint Calligraphy Background Watermark */
+  .calligraphy-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.16;
+    pointer-events: none;
+    font-family: "Kaiti SC", "KaiTi", "STKaiti", cursive, serif;
+    font-size: 20px;
+    line-height: 1.6;
+    writing-mode: vertical-rl;
+    overflow: hidden;
+    padding: 10px;
+    user-select: none;
+    filter: blur(0.3px);
+  }
+
+  /* Vertical text columns in header */
+  .vertical-block {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    letter-spacing: 0.2em;
+    position: relative;
+    z-index: 2;
+  }
+
+  .en-title {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    color: #a32d29;
+    font-size: 13px;
+    font-family: "Times New Roman", Times, serif;
+    letter-spacing: 0.15em;
+    margin-left: 20px;
+    font-weight: 600;
+  }
+
+  .address-col {
+    font-size: 10px;
+    color: #4a4a4a;
+    letter-spacing: 0.15em;
+    margin-left: 12px;
+    line-height: 1.4;
+  }
+
+  .museum-col {
+    font-size: 14px;
+    font-weight: bold;
+    color: #2a2a2a;
+    border-left: 1px solid #7a756d;
+    padding-left: 6px;
+    margin-left: 6px;
+    letter-spacing: 0.25em;
+  }
+
+  .exhibition-name {
+    font-size: 15px;
+    font-weight: bold;
+    letter-spacing: 0.35em;
+    color: #222;
+    margin-left: 8px;
+  }
+
+  /* Middle Painting Band */
+  .painting-band {
+    width: 100%;
+    height: 250px;
+    position: relative;
+    background-color: #c9bea9;
+    overflow: hidden;
+    border-top: 1px solid rgba(0,0,0,0.06);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+
+  /* Styled Landscape Painting Representation */
+  .painting-content {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: 
+      radial-gradient(ellipse at 80% 20%, #d8cfbe 0%, #b8ad9a 60%, #9e9380 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* SVG Painting illustration for high fidelity reproduction */
+  .landscape-svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Red seal stamp */
+  .red-seal {
+    position: absolute;
+    top: 16px;
+    right: 18px;
+    width: 26px;
+    height: 26px;
+    border: 1.5px solid #a82e2b;
+    border-radius: 2px;
+    color: #a82e2b;
+    font-size: 9px;
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    line-height: 1.1;
+    letter-spacing: 1px;
+    background: rgba(223, 217, 204, 0.4);
+    transform: rotate(-1deg);
+  }
+
+  /* Bottom Section */
+  .bottom-section {
+    padding: 30px 25px 40px 35px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  .time-header {
+    font-size: 13px;
+    color: #444;
+    margin-bottom: 12px;
+    letter-spacing: 0.05em;
+  }
+
+  .date-row {
+    display: flex;
+    align-items: baseline;
+    font-family: "Didot", "Bodoni MT", "Times New Roman", serif;
+    margin-bottom: 18px;
+  }
+
+  .date-num {
+    font-size: 42px;
+    font-weight: 500;
+    line-height: 1;
+    color: #1a1a1a;
+  }
+
+  .day-tag {
+    writing-mode: vertical-rl;
+    font-size: 8px;
+    font-weight: bold;
+    transform: rotate(180deg);
+    margin: 0 6px;
+    letter-spacing: 1px;
+    color: #444;
+  }
+
+  .date-arrow {
+    display: flex;
+    align-items: center;
+    font-size: 10px;
+    color: #333;
+    margin: 0 4px;
+    font-family: "Songti SC", "SimSun", serif;
+  }
+
+  .date-arrow::before,
+  .date-arrow::after {
+    content: "—";
+    margin: 0 2px;
+    font-weight: 300;
+  }
+
+  .divider-line {
+    width: 100%;
+    height: 1px;
+    background-color: #8c857b;
+    margin-bottom: 14px;
+    opacity: 0.6;
+  }
+
+  .desc-cn {
+    font-size: 12px;
+    line-height: 1.6;
+    color: #2e2e2e;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+  }
+
+  .desc-en {
+    font-size: 7.5px;
+    line-height: 1.45;
+    color: #666;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    letter-spacing: 0.02em;
+    max-width: 95%;
+  }
+
+  /* Right Vertical Large Title Column */
+  .title-column {
+    width: 32%;
+    border-left: 1px solid rgba(140, 133, 123, 0.25);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    padding: 30px 10px;
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .huge-char {
+    font-size: 104px;
+    line-height: 1;
+    font-weight: 400;
+    color: #212121;
+    font-family: "Songti SC", "SimSun", "STSong", "Noto Serif SC", serif;
+    text-shadow: 0 0 1px rgba(0,0,0,0.2);
+  }
+</style>
+</head>
+<body>
+
+<div class="poster">
+  <!-- Left Side Main Area -->
+  <div class="main-column">
+    
+    <!-- Top Text Group with Calligraphy Backdrop -->
+    <div class="top-section">
+      <div class="calligraphy-bg">
+        中国书法艺术博大精深古之学者必有师师者所以传道授业解惑也天地之大人之所倚物之所托和之所贵文之所载
+      </div>
+
+      <!-- Red Vertical English Subtitle -->
+      <div class="en-title">
+        ANCIENT<br>ART EXHIBITION
+      </div>
+
+      <!-- Address Column -->
+      <div class="vertical-block address-col">
+        深圳市南山区金色商业街001号
+      </div>
+
+      <!-- Museum Name Column -->
+      <div class="vertical-block museum-col">
+        琪琪艺术博物馆
+      </div>
+
+      <!-- Exhibition Name Column -->
+      <div class="vertical-block exhibition-name">
+        古代美術文物展
+      </div>
+    </div>
+
+    <!-- Middle Landscape Painting Artwork Placeholder / Visual Representation -->
+    <div class="painting-band">
+      <div class="painting-content">
+        <svg class="landscape-svg" viewBox="0 0 400 240" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <!-- Background Mountains -->
+          <path d="M-20,130 Q40,60 110,100 T240,90 Q300,70 420,105 L420,240 L-20,240 Z" fill="#b5ab96" opacity="0.6"/>
+          <path d="M-10,150 Q70,90 160,130 T320,110 L420,140 L420,240 L-10,240 Z" fill="#9f9580" opacity="0.4"/>
+          <!-- River Water -->
+          <path d="M80,120 C180,130 220,160 420,150 L420,240 L60,240 Z" fill="#ded5c2"/>
+          <!-- Prominent Cliff on Left -->
+          <path d="M-30,-20 Q70,20 80,90 T40,240 L-30,240 Z" fill="#a49377"/>
+          <path d="M-10,0 Q60,40 50,110 T10,240 L-10,240 Z" fill="#756752" opacity="0.8"/>
+          <!-- Rocky Textures -->
+          <g fill="#433e36" opacity="0.65">
+            <circle cx="20" cy="50" r="2"/><circle cx="25" cy="54" r="1.5"/><circle cx="15" cy="62" r="2"/>
+            <circle cx="35" cy="70" r="2"/><circle cx="45" cy="85" r="2.5"/><circle cx="50" cy="98" r="1.5"/>
+            <circle cx="30" cy="110" r="2"/><circle cx="60" cy="130" r="3"/><circle cx="70" cy="145" r="2"/>
+            <circle cx="25" cy="160" r="2.5"/><circle cx="35" cy="175" r="3"/><circle cx="40" cy="190" r="2"/>
+          </g>
+          <!-- Bridge Structure -->
+          <path d="M210,135 Q245,115 285,135 L285,145 Q245,123 210,145 Z" fill="#a39682" stroke="#5d5243" stroke-width="1"/>
+          <!-- Arch -->
+          <path d="M228,144 Q245,122 265,144 Z" fill="#c4baa7" stroke="#4a4237" stroke-width="1"/>
+          <!-- Person on Bridge -->
+          <ellipse cx="246" cy="118" rx="1.5" ry="2" fill="#2d2925"/>
+          <line x1="246" y1="120" x2="246" y2="127" stroke="#2d2925" stroke-width="1.8"/>
+          <!-- Distant Trees and Village near Bridge -->
+          <g fill="#374431" opacity="0.85">
+            <ellipse cx="300" cy="140" rx="8" ry="16"/>
+            <ellipse cx="312" cy="136" rx="9" ry="18"/>
+            <ellipse cx="325" cy="138" rx="7" ry="15"/>
+            <ellipse cx="340" cy="142" rx="10" ry="20"/>
+            <ellipse cx="360" cy="144" rx="8" ry="18"/>
+          </g>
+          <!-- Houses behind Trees -->
+          <path d="M305,145 L320,137 L335,145 L335,153 L305,153 Z" fill="#ece6db" stroke="#5a5247" stroke-width="0.8"/>
+          <path d="M338,145 L352,138 L365,145 L365,153 L338,153 Z" fill="#ece6db" stroke="#5a5247" stroke-width="0.8"/>
+          <!-- Foreground Trees -->
+          <g fill="#2e382b">
+            <!-- Tree Trunks -->
+            <path d="M140,240 Q145,190 142,160 Q138,140 130,130" stroke="#3d3326" stroke-width="3" fill="none"/>
+            <path d="M165,240 Q160,185 168,150 Q172,130 180,118" stroke="#3d3326" stroke-width="3.5" fill="none"/>
+            <path d="M185,240 Q188,190 195,165" stroke="#3d3326" stroke-width="2.5" fill="none"/>
+            <!-- Foliage Clusters -->
+            <circle cx="128" cy="132" r="16" opacity="0.9"/>
+            <circle cx="145" cy="120" r="18" opacity="0.92"/>
+            <circle cx="165" cy="115" r="22" opacity="0.95"/>
+            <circle cx="185" cy="122" r="18" opacity="0.9"/>
+            <circle cx="150" cy="145" r="20" opacity="0.92"/>
+            <circle cx="178" cy="140" r="19" opacity="0.9"/>
+          </g>
+          <!-- River Bank Foreground -->
+          <path d="M60,240 Q120,200 220,240 Z" fill="#91846e"/>
+        </svg>
+
+        <!-- Red Traditional Seal -->
+        <div class="red-seal">
+          <span>古代</span>
+          <span>艺术</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Exhibition Info -->
+    <div class="bottom-section">
+      <div class="time-header">
+        展览时间 | Time
+      </div>
+      
+      <div class="date-row">
+        <span class="date-num">12.11</span>
+        <span class="day-tag">MON</span>
+        <span class="date-arrow">2023</span>
+        <span class="date-num">12.19</span>
+        <span class="day-tag">TUE</span>
+      </div>
+
+      <div class="divider-line"></div>
+
+      <div class="desc-cn">
+        史上首个以传世精品展示“唐宋八大家”家国情怀<br>
+        和时代风华的主题文物展
+      </div>
+
+      <div class="desc-en">
+        The first themed cultural relic exhibition in history<br>
+        to showcase the "eight masters of the Tang and Song Dynasties"<br>
+        family and country feelings and the elegance of the times with handed down masterpieces
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Right Side Massive Vertical Typography -->
+  <div class="title-column">
+    <div class="huge-char">古</div>
+    <div class="huge-char">代</div>
+    <div class="huge-char">美</div>
+    <div class="huge-char">術</div>
+  </div>
+</div>
+
+</body>
+</html>

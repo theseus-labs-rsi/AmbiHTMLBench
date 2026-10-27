@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Part 2：营销策略</title>
+<script>
+MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$','$$']] } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 0;
+    background: #f7a8c4;
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    display: flex;
+    justify-content: center;
+  }
+  .page {
+    position: relative;
+    width: 555px;
+    min-height: 714px;
+    background: linear-gradient(135deg, #f7b8d0 0%, #f8c7da 100%);
+    padding: 10px;
+  }
+  .sidebar-text {
+    position: absolute;
+    left: 4px;
+    top: 10px;
+    writing-mode: vertical-rl;
+    color: #fff;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    opacity: 0.9;
+  }
+  .topright {
+    position: absolute;
+    top: 6px;
+    right: 15px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: right;
+  }
+  .topright .sub {
+    font-size: 9px;
+    font-weight: normal;
+    opacity: 0.85;
+  }
+  .card {
+    margin: 32px 8px 8px 20px;
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 14px 16px 18px 16px;
+    position: relative;
+  }
+  .part-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+  .icon-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg,#f49ac2,#4aa8d8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .icon-circle svg { width: 20px; height: 20px; }
+  .part-title h1 {
+    font-size: 24px;
+    color: #333;
+    margin: 0;
+    font-weight: bold;
+  }
+  .wavy-line {
+    width: 100%;
+    height: 10px;
+    margin: 2px 0 10px 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      #f49ac2 0px, #f49ac2 6px,
+      transparent 6px, transparent 12px
+    );
+    opacity: 0.6;
+  }
+  .section-title {
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    font-weight: bold;
+    color: #222;
+    margin: 6px 0 8px 0;
+  }
+  .play-icon {
+    width: 16px;
+    height: 16px;
+    background: #e4679e;
+    color: #fff;
+    border-radius: 3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    margin-right: 6px;
+    flex-shrink: 0;
+  }
+  .diamond-para {
+    display: flex;
+    align-items: flex-start;
+    font-size: 12px;
+    line-height: 1.6;
+    color: #222;
+    margin-bottom: 8px;
+  }
+  .diamond-para .mark {
+    color: #e4679e;
+    margin-right: 4px;
+    font-size: 12px;
+  }
+  .content-row {
+    display: flex;
+    gap: 8px;
+  }
+  .left-text {
+    flex: 1;
+    font-size: 12px;
+    line-height: 1.6;
+    color: #222;
+  }
+  .image-block {
+    width: 190px;
+    flex-shrink: 0;
+  }
+  .placeholder {
+    background: #eee;
+    border: 1px dashed #bbb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    font-size: 11px;
+    text-align: center;
+    overflow: hidden;
+  }
+  .img-top {
+    width: 190px;
+    height: 150px;
+    background: linear-gradient(135deg,#fdeef5,#e8f1fb);
+  }
+  .img-bottom-row {
+    display: flex;
+    gap: 4px;
+    margin-top: 6px;
+  }
+  .img-bottom {
+    width: 48px;
+    height: 80px;
+  }
+  .marketing-action-title {
+    font-weight: bold;
+    font-size: 13px;
+    color: #222;
+    margin: 10px 0 6px 0;
+  }
+  .num-section {
+    margin-bottom: 6px;
+  }
+  .num-header {
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 4px;
+  }
+  .num-circle {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #e4679e;
+    color: #fff;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 6px;
+    flex-shrink: 0;
+  }
+  ul.sub-list {
+    margin: 0 0 6px 24px;
+    padding: 0;
+    font-size: 11.5px;
+    line-height: 1.6;
+    color: #222;
+  }
+  ul.sub-list li {
+    margin-bottom: 1px;
+    list-style-type: disc;
+  }
+  .side-panel {
+    width: 150px;
+    flex-shrink: 0;
+  }
+  .side-img {
+    width: 150px;
+    height: 230px;
+    background: linear-gradient(135deg,#f7d9e6,#e9f3fb);
+    margin-top: 2px;
+  }
+  .activity-box {
+    width: 150px;
+    margin-top: 10px;
+    border: 1px solid #f3c6da;
+    border-radius: 8px;
+    padding: 6px;
+    background: #fff7fa;
+  }
+  .activity-box .title-tag {
+    background: #e4679e;
+    color: #fff;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 4px;
+  }
+  .activity-box p {
+    font-size: 9.5px;
+    line-height: 1.4;
+    margin: 2px 0;
+    color: #333;
+  }
+  .activity-box2 {
+    width: 150px;
+    margin-top: 8px;
+    border: 1px solid #f3c6da;
+    border-radius: 8px;
+    padding: 6px;
+    background: #fff7fa;
+  }
+  .bottom-images {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .bottom-img {
+    flex: 1;
+    height: 140px;
+  }
+  .caption {
+    text-align: center;
+    font-size: 13px;
+    font-weight: bold;
+    color: #222;
+    margin-top: 6px;
+  }
+  .credit {
+    text-align: right;
+    font-size: 9px;
+    color: #999;
+    margin-top: 2px;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="sidebar-text">@营销学姐Renita</div>
+  <div class="topright">
+    （营销学姐Renita）
+    <div class="sub">7am 小时鹤</div>
+  </div>
+
+  <div class="card">
+    <div class="part-title">
+      <div class="icon-circle">
+        <svg viewBox="0 0 24 24" fill="#fff"><circle cx="12" cy="7" r="4"/><path d="M12 13c-5 0-8 3-8 6h16c0-3-3-6-8-6z"/></svg>
+      </div>
+      <h1>Part 2：营销策略</h1>
+    </div>
+    <div class="wavy-line"></div>
+
+    <div class="section-title">
+      <span class="play-icon">&#9654;</span>
+      策略一：热门IP产品强势联名，迅速形成破圈效应
+    </div>
+
+    <div class="diamond-para">
+      <span class="mark">&#9670;</span>
+      <span>近日，与全球知名IP品牌三丽鸥的联名，活动涉及的三款产品一经上线便秒售罄！行业地位和品牌调性的高度匹配，让此次联名活动迅速引爆两个圈层！</span>
+    </div>
+
+    <div class="content-row">
+      <div class="left-text" style="flex:1.4;">
+        <div class="marketing-action-title">营销动作</div>
+
+        <div class="num-section">
+          <div class="num-header"><span class="num-circle">1</span>联名合作IP高度契合</div>
+          <ul class="sub-list">
+            <li>RiCO是广受精致女性热爱的生活治愈类IP，"可爱"阳光""治愈"</li>
+            <li>合作方三丽鸥一直希望努力传达出"Small Gift，Big Smile"</li>
+            <li>双方在品牌调性、精神、理念，以及受众群体等方面都有着较高匹配</li>
+          </ul>
+        </div>
+
+        <div class="num-section">
+          <div class="num-header"><span class="num-circle">2</span>用心的高水准产品设计</div>
+          <ul class="sub-list">
+            <li>高水准的设计工艺+配色+材质，带两类IP鲜明重要的特点进行深度融合</li>
+            <li>"联动IP+RiCO+RiCO FRIENDS"三个一组的玩具形象搭配</li>
+          </ul>
+        </div>
+
+        <div class="num-section">
+          <div class="num-header"><span class="num-circle">3</span>趣味性的联名活动玩法</div>
+          <ul class="sub-list">
+            <li>RiCO 伙伴扭蛋机</li>
+            <li>RiCO x 三丽鸥极速连闯</li>
+            <li>RiCO 记忆挑战等趣味小游戏</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="side-panel">
+        <div class="side-img placeholder">[Image: 联名角色展示]</div>
+        <div class="activity-box">
+          <span class="title-tag">「伙伴月游戏」</span>
+          <p>5月5日-5月31日，你和你朋友参与报名即可参加RiCO三丽鸥整体系列大转轮活动&周边抽取</p>
+        </div>
+        <div class="activity-box2">
+          <span class="title-tag">活动参与</span>
+          <p>RiCO 伙伴招募活动，等待你的加入</p>
+          <p>RiCO x 三丽鸥 整体主题互动</p>
+          <p>RiCO 小伙伴等你来玩</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-images">
+      <div class="bottom-img placeholder">[Photo: 联名产品-左]</div>
+      <div class="bottom-img placeholder">[Photo: 联名产品-中]</div>
+      <div class="bottom-img placeholder">[Photo: 联名产品-右]</div>
+    </div>
+
+    <div class="caption">RiCO x 三丽鸥联名产品图片</div>
+    <div class="credit">图片来自品牌官方媒体</div>
+  </div>
+</div>
+</body>
+</html>

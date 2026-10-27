@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>必胜客餐厅周 - 2023新菜单</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: #e5e5e5;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .poster-container {
+      width: 600px;
+      min-height: 870px;
+      background: #fbf9f4 radial-gradient(circle at 80% 15%, rgba(255, 255, 255, 0.9) 0%, rgba(246, 241, 230, 0.6) 40%, #f4ede1 100%);
+      position: relative;
+      padding: 30px 24px 20px 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      border: 1px solid #d9ccb5;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    /* Decorative Outer Frame */
+    .inner-border {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      border: 1px solid #c8b99d;
+      pointer-events: none;
+    }
+    .inner-border::before {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      right: 3px;
+      bottom: 3px;
+      border: 1px solid #e3d9c6;
+    }
+
+    /* Header Section */
+    .header {
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+    .header-ornament-top {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 2px;
+      color: #9d8255;
+      font-size: 14px;
+    }
+    .ornament-line {
+      height: 1px;
+      width: 70px;
+      background: linear-gradient(90deg, transparent, #a88d5e, transparent);
+    }
+    .sub-title {
+      font-family: "Songti SC", "SimSun", "STSong", serif;
+      font-size: 23px;
+      color: #8c764b;
+      letter-spacing: 2px;
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+    .main-title {
+      font-family: "Songti SC", "SimSun", "STSong", "Noto Serif CJK SC", serif;
+      font-size: 48px;
+      font-weight: 900;
+      color: #b81b24;
+      letter-spacing: 6px;
+      line-height: 1.15;
+      transform: scaleY(1.08);
+      margin-bottom: 4px;
+    }
+    .price-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 4px;
+      margin-top: 4px;
+    }
+    .price-label {
+      font-family: "Songti SC", "SimSun", serif;
+      font-size: 21px;
+      color: #8c764b;
+      letter-spacing: 2px;
+      font-weight: 600;
+    }
+    .price-num {
+      font-family: "Georgia", "Times New Roman", serif;
+      font-size: 42px;
+      font-weight: 800;
+      color: #b81b24;
+      line-height: 1;
+      margin-left: 2px;
+    }
+    .price-unit {
+      font-size: 19px;
+      color: #8c764b;
+      font-weight: 600;
+      margin-right: 2px;
+    }
+    .price-count {
+      font-family: "Georgia", "Times New Roman", serif;
+      font-size: 38px;
+      font-weight: 800;
+      color: #b81b24;
+      line-height: 1;
+    }
+    .price-count-unit {
+      font-size: 19px;
+      color: #8c764b;
+      font-weight: 600;
+    }
+    
+    .divider-ornament {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 6px auto;
+      width: 140px;
+      height: 10px;
+      position: relative;
+    }
+    .divider-ornament::before, .divider-ornament::after {
+      content: "";
+      position: absolute;
+      height: 1px;
+      width: 45px;
+      background: #b59f71;
+    }
+    .divider-ornament::before { left: 0; }
+    .divider-ornament::after { right: 0; }
+    .divider-symbol {
+      color: #9d8255;
+      font-size: 13px;
+      transform: translateY(-2px);
+    }
+    .activity-time {
+      font-size: 14px;
+      color: #4a433a;
+      letter-spacing: 0.5px;
+      margin-bottom: 20px;
+    }
+
+    /* Content Area */
+    .menu-columns-container {
+      display: flex;
+      position: relative;
+      z-index: 2;
+    }
+    .menu-column {
+      display: flex;
+      flex-direction: column;
+    }
+    .col-left {
+      width: 220px;
+    }
+    .col-mid {
+      width: 190px;
+      padding-left: 20px;
+      border-left: 1px solid rgba(177, 155, 114, 0.45);
+    }
+
+    .category-group {
+      margin-bottom: 22px;
+    }
+    .category-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #b81b24;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: baseline;
+    }
+    .category-title .sub-choice {
+      font-size: 15px;
+      margin-left: 2px;
+      font-weight: 700;
+    }
+    .item-list {
+      list-style: none;
+    }
+    .item-list li {
+      font-size: 12.5px;
+      line-height: 1.6;
+      color: #333333;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .item-list li .spec {
+      font-size: 10.5px;
+      color: #555555;
+    }
+
+    /* Visual Layout - Food and Elements */
+    .visual-elements-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Placeholders matching layout graphics */
+    .placeholder {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      border-radius: 6px;
+      font-size: 11px;
+      color: rgba(90, 75, 55, 0.85);
+      background: rgba(230, 220, 205, 0.35);
+      border: 1px dashed rgba(160, 140, 110, 0.45);
+    }
+
+    .ph-menu-book {
+      top: 275px;
+      right: 25px;
+      width: 145px;
+      height: 220px;
+      transform: rotate(3deg);
+    }
+    .ph-drink-1 {
+      top: 430px;
+      right: 40px;
+      width: 50px;
+      height: 100px;
+      border-radius: 12px;
+    }
+    .ph-drink-2 {
+      top: 515px;
+      right: 15px;
+      width: 50px;
+      height: 105px;
+      border-radius: 12px;
+    }
+    .ph-pasta {
+      top: 450px;
+      left: 175px;
+      width: 195px;
+      height: 160px;
+      border-radius: 50%;
+    }
+    .ph-rolls {
+      top: 540px;
+      right: 80px;
+      width: 130px;
+      height: 95px;
+      border-radius: 40px;
+    }
+    .ph-fries {
+      bottom: 80px;
+      right: 25px;
+      width: 150px;
+      height: 105px;
+      border-radius: 40px;
+    }
+    .ph-pizza {
+      bottom: 30px;
+      left: 80px;
+      width: 270px;
+      height: 240px;
+      border-radius: 50%;
+    }
+
+    /* Footer Note */
+    .footer-note {
+      position: absolute;
+      bottom: 12px;
+      left: 20px;
+      right: 20px;
+      font-size: 7px;
+      color: #a09587;
+      line-height: 1.2;
+      text-align: justify;
+      z-index: 3;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="poster-container">
+    <div class="inner-border"></div>
+
+    <!-- Header -->
+    <header class="header">
+      <div class="header-ornament-top">
+        <div class="ornament-line"></div>
+        <span>❧ ❖ ☙</span>
+        <div class="ornament-line"></div>
+      </div>
+      <div class="sub-title">2023新菜单</div>
+      <h1 class="main-title">必胜客餐厅周</h1>
+      
+      <div class="price-row">
+        <span class="price-label">新品套餐</span>
+        <span class="price-num">99</span>
+        <span class="price-unit">元</span>
+        <span class="price-count">5</span>
+        <span class="price-count-unit">件</span>
+      </div>
+
+      <div class="divider-ornament">
+        <span class="divider-symbol">❦ ❧</span>
+      </div>
+
+      <div class="activity-time">活动时间：2023.6.5-2023.7.9</div>
+    </header>
+
+    <!-- Menu Choices Columns -->
+    <main class="menu-columns-container">
+      <!-- Left Column: 主食 + 饮料 -->
+      <div class="menu-column col-left">
+        <!-- 主食 -->
+        <section class="category-group">
+          <h2 class="category-title">主食 <span class="sub-choice">(5选1)</span></h2>
+          <ul class="item-list">
+            <li>孜香羊肉比萨<span class="spec">(铁盘普装/手拍)</span></li>
+            <li>超级至尊比萨<span class="spec">(铁盘普装/手拍)</span></li>
+            <li>意式肉酱风味牛肉比萨<span class="spec">(铁盘普装/手拍)</span></li>
+            <li>炙烤牛排佐和风烤肉汁</li>
+            <li>那不勒斯式肉丸意面</li>
+          </ul>
+        </section>
+
+        <!-- 饮料 -->
+        <section class="category-group">
+          <h2 class="category-title">饮料 <span class="sub-choice">(4选2)</span></h2>
+          <ul class="item-list">
+            <li>卡曼橘暴打柠檬</li>
+            <li>大红袍手打柠檬茶 <span class="spec">(冰/温)</span></li>
+            <li>粉红斑马暴打柠檬</li>
+            <li>百事可乐无糖 <span class="spec">(冰)</span></li>
+          </ul>
+        </section>
+      </div>
+
+      <!-- Mid/Right Column: 小食 -->
+      <div class="menu-column col-mid">
+        <section class="category-group">
+          <h2 class="category-title">小食 <span class="sub-choice">(5选2)</span></h2>
+          <ul class="item-list">
+            <li>意式肉酱芝士波纹薯条</li>
+            <li>奶香芝士菠萝卷</li>
+            <li>一口波波香肠卷</li>
+            <li>双芝香酥鸭TAPAS</li>
+            <li>甘梅红薯条</li>
+          </ul>
+        </section>
+      </div>
+    </main>
+
+    <!-- Food Graphic Placeholders Positioned as on Poster -->
+    <div class="visual-elements-layer">
+      <div class="placeholder ph-menu-book">[Photo: PIZZA HUT MENU 立体菜单册]</div>
+      <div class="placeholder ph-drink-1">[Photo: 柠檬茶饮品]</div>
+      <div class="placeholder ph-drink-2">[Photo: 粉红暴打柠檬饮品]</div>
+      <div class="placeholder ph-pasta">[Photo: 那不勒斯式肉丸意面]</div>
+      <div class="placeholder ph-rolls">[Photo: 芝士卷小食]</div>
+      <div class="placeholder ph-fries">[Photo: 铁锅肉酱芝士薯条]</div>
+      <div class="placeholder ph-pizza">[Photo: 铁盘/手拍披萨配木托盘]</div>
+    </div>
+
+    <!-- Fine Print / Footer -->
+    <footer class="footer-note">
+      *具体活动规则详见活动细则。不同餐厅售卖产品略有差异，堂食外带适用。产品及包装以实物为准。图示手拍底、铁盘底为产品示意，具体以餐厅实际提供为准。除特别注明外，本套餐优惠不与其它优惠同享。
+    </footer>
+  </div>
+
+</body>
+</html>

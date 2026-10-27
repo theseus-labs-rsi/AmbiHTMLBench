@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JTCVS - Separate pulmonary venous anastomoses</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            font-family: Arial, Helvetica, sans-serif;
+            display: flex;
+            justify-content: center;
+        }
+        .mobile-container {
+            width: 100%;
+            max-width: 480px;
+            background-color: #ffffff;
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        /* Header */
+        .header {
+            background-color: #0b3d91;
+            color: white;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .logo-icon {
+            width: 24px;
+            height: 30px;
+            background-color: white;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .logo-icon::after {
+            content: '';
+            width: 12px;
+            height: 16px;
+            background-color: #0b3d91;
+            border-radius: 50% 50% 0 0;
+            position: absolute;
+            top: 4px;
+        }
+        .logo-text {
+            font-size: 22px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            font-family: 'Times New Roman', Times, serif;
+        }
+        .login-btn {
+            font-size: 16px;
+            color: white;
+            text-decoration: none;
+        }
+
+        /* Search Bar */
+        .search-section {
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .hamburger {
+            font-size: 24px;
+            color: #333;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .search-box {
+            flex-grow: 1;
+            display: flex;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            overflow: hidden;
+            height: 36px;
+        }
+        .search-input {
+            flex-grow: 1;
+            border: none;
+            padding: 0 10px;
+            font-size: 14px;
+            color: #666;
+            outline: none;
+        }
+        .search-btn {
+            background-color: #f9f9f9;
+            border: none;
+            border-left: 1px solid #ccc;
+            padding: 0 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .search-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: #0b3d91;
+        }
+
+        /* Main Content Card */
+        .article-card {
+            background-color: #0f4c9e;
+            background-image: linear-gradient(135deg, #0b3d91 0%, #1a5bb5 100%);
+            color: white;
+            padding: 25px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        /* Abstract background pattern simulation */
+        .article-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: radial-gradient(circle at 80% 60%, rgba(255,255,255,0.1) 0%, transparent 40%),
+                        radial-gradient(circle at 90% 80%, rgba(255,255,255,0.05) 0%, transparent 30%);
+            pointer-events: none;
+        }
+        .article-card::after {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 300px;
+            height: 300px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M10,90 L90,10" stroke="rgba(255,255,255,0.1)" stroke-width="20"/></svg>');
+            background-size: cover;
+            opacity: 0.5;
+            pointer-events: none;
+            transform: rotate(15deg);
+        }
+
+        .meta-info {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 15px;
+            color: #e0e0e0;
+            position: relative;
+            z-index: 1;
+            line-height: 1.4;
+        }
+        .meta-info strong {
+            color: white;
+            font-weight: bold;
+        }
+        .meta-separator {
+            margin: 0 5px;
+            color: #aaa;
+        }
+
+        .article-title {
+            font-size: 24px;
+            line-height: 1.3;
+            margin: 0 0 20px 0;
+            font-weight: normal;
+            position: relative;
+            z-index: 1;
+        }
+
+        .authors {
+            font-size: 14px;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+        .author-line {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .author-name {
+            text-decoration: underline;
+            text-decoration-color: rgba(255,255,255,0.5);
+            text-underline-offset: 3px;
+            margin-right: 5px;
+        }
+        .author-name.red-underline {
+            text-decoration-color: #ff4d4d;
+            text-decoration-thickness: 2px;
+        }
+        .bullet {
+            margin: 0 8px;
+            font-size: 10px;
+        }
+        .icon-small {
+            width: 14px;
+            height: 14px;
+            fill: white;
+            margin-left: 5px;
+            vertical-align: middle;
+        }
+
+        .pub-info {
+            font-size: 13px;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+        .open-archive {
+            color: #ff9966;
+            margin-right: 5px;
+        }
+
+        .doi-link {
+            font-size: 13px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+            word-break: break-all;
+        }
+        .doi-link a {
+            color: white;
+            text-decoration: underline;
+        }
+
+        .plumx {
+            text-align: right;
+            font-size: 16px;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 8px;
+        }
+        .plumx-dots {
+            display: inline-flex;
+            gap: 2px;
+        }
+        .dot { width: 4px; height: 4px; border-radius: 50%; }
+        .dot-1 { background-color: #ff6b6b; }
+        .dot-2 { background-color: #4ecdc4; }
+        .dot-3 { background-color: #ffe66d; }
+        .dot-4 { background-color: #ff6b6b; }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background-color: #ddd;
+            margin: 20px;
+            position: relative;
+        }
+        .divider::after {
+            content: '';
+            position: absolute;
+            right: 20%;
+            top: -2px;
+            width: 4px;
+            height: 4px;
+            background-color: #ffcccc;
+            border-radius: 50%;
+        }
+
+        /* Figure Area */
+        .figure-container {
+            padding: 0 20px 80px 20px;
+            display: flex;
+            justify-content: flex-start;
+        }
+        .figure-placeholder {
+            width: 220px;
+            height: 160px;
+            background-color: #000;
+            position: relative;
+            overflow: hidden;
+        }
+        /* Simulating the 3D lung image with CSS gradients/shapes for fidelity without external assets */
+        .lung-bg {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 50%, #ccaa00 0%, #887700 40%, #000 70%);
+            position: relative;
+        }
+        .lung-label-right {
+            position: absolute;
+            left: 10px;
+            top: 60px;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            line-height: 1.2;
+        }
+        .heart-area {
+            position: absolute;
+            left: 80px;
+            top: 50px;
+            width: 80px;
+            height: 60px;
+            background: radial-gradient(circle, #cc0000 0%, #660000 100%);
+            border-radius: 40% 60% 50% 50%;
+            transform: rotate(-15deg);
+        }
+        .blue-vessel {
+            position: absolute;
+            left: 100px;
+            top: 40px;
+            width: 60px;
+            height: 80px;
+            background: radial-gradient(circle, #0044cc 0%, #001166 100%);
+            border-radius: 50%;
+            opacity: 0.8;
+        }
+        .vessel-lines {
+            position: absolute;
+            right: 10px;
+            top: 20px;
+            width: 80px;
+            height: 100px;
+            background: repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(255,0,0,0.3) 2px, rgba(255,0,0,0.3) 4px),
+                        repeating-linear-gradient(-45deg, transparent, transparent 2px, rgba(0,0,255,0.3) 2px, rgba(0,0,255,0.3) 4px);
+            mask-image: radial-gradient(circle, black 40%, transparent 70%);
+            -webkit-mask-image: radial-gradient(circle, black 40%, transparent 70%);
+        }
+        .label-pa { position: absolute; left: 95px; top: 55px; color: white; font-size: 9px; }
+        .label-laa { position: absolute; left: 115px; top: 75px; color: white; font-size: 9px; }
+        .label-la { position: absolute; left: 105px; top: 105px; color: white; font-size: 9px; }
+        .arrow-white {
+            position: absolute;
+            left: 125px;
+            top: 65px;
+            width: 0; 
+            height: 0; 
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 8px solid white;
+            transform: rotate(-45deg);
+        }
+        .triangle-white {
+            position: absolute;
+            left: 120px;
+            top: 110px;
+            width: 0; 
+            height: 0; 
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 10px solid white;
+        }
+
+        /* Bottom Floating Bar */
+        .bottom-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .menu-btn {
+            width: 60px;
+            height: 50px;
+            background-color: #0b3d91;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+        .nav-arrows {
+            display: flex;
+            gap: 10px;
+            padding-right: 20px;
+            padding-bottom: 10px;
+        }
+        .arrow-btn {
+            width: 40px;
+            height: 30px;
+            background-color: #999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="mobile-container">
+    <!-- Header -->
+    <div class="header">
+        <div class="logo-area">
+            <div class="logo-icon"></div>
+            <div class="logo-text">JTCVS</div>
+        </div>
+        <a href="#" class="login-btn">Log in</a>
+    </div>
+
+    <!-- Search -->
+    <div class="search-section">
+        <div class="hamburger">&#9776;</div>
+        <div class="search-box">
+            <input type="text" class="search-input" placeholder="Search for...">
+            <button class="search-btn">
+                <svg viewBox="0 0 24 24">
+                    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Article Info -->
+    <div class="article-card">
+        <div class="meta-info">
+            <strong>CASE REPORTS: THORACIC</strong> <span class="meta-separator">|</span> VOLUME 152, ISSUE 1, E11-E12, JULY 2016
+        </div>
+
+        <h1 class="article-title">
+            Separate pulmonary venous anastomoses using a left atrial appendage in a left single lung transplantation
+        </h1>
+
+        <div class="authors">
+            <div class="author-line">
+                <span class="author-name">Toyofumi F. Chen-Yoshikawa, MD</span> <span class="bullet">&bull;</span>
+            </div>
+            <div class="author-line">
+                <span class="author-name red-underline">Yasufumi Goda, MD</span> <span class="bullet">&bull;</span>
+                <span class="author-name red-underline">Li Dong, MD</span> <span class="bullet">&bull;</span>
+            </div>
+            <div class="author-line">
+                <span class="author-name">Hiroshi Date, MD</span>
+                <svg class="icon-small" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                <svg class="icon-small" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+            </div>
+        </div>
+
+        <div class="pub-info">
+            <span class="open-archive">Open Archive</span> <span class="bullet">&bull;</span> Published: February 12, 2016 <span class="bullet">&bull;</span>
+        </div>
+
+        <div class="doi-link">
+            DOI: <a href="#">https://doi.org/10.1016/j.jtcvs.2016.01.046</a>
+        </div>
+
+        <div class="plumx">
+            <div class="plumx-dots">
+                <span class="dot dot-1"></span><span class="dot dot-2"></span><span class="dot dot-3"></span><span class="dot dot-4"></span>
+            </div>
+            PlumX Metrics
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Figure -->
+    <div class="figure-container">
+        <div class="figure-placeholder">
+            <div class="lung-bg">
+                <div class="lung-label-right">Right<br>lung</div>
+                <div class="heart-area"></div>
+                <div class="blue-vessel"></div>
+                <div class="vessel-lines"></div>
+                <div class="label-pa">PA</div>
+                <div class="label-laa">LAA</div>
+                <div class="label-la">LA</div>
+                <div class="arrow-white"></div>
+                <div class="triangle-white"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Controls -->
+    <div class="bottom-bar">
+        <div class="menu-btn">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/>
+            </svg>
+        </div>
+        <div class="nav-arrows">
+            <div class="arrow-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+            </div>
+            <div class="arrow-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

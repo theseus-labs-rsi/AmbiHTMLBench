@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人民日报 - 要闻 2</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: "Songti SC", "SimSun", "STSong", serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            color: #000;
+            line-height: 1.6;
+        }
+        .page-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px 40px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        /* Header Styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .header-left {
+            display: flex;
+            align-items: baseline;
+            gap: 15px;
+        }
+        .section-title {
+            font-size: 24px;
+            font-weight: bold;
+            background-color: #000;
+            color: #fff;
+            padding: 2px 10px;
+            font-family: "Heiti SC", "SimHei", sans-serif;
+        }
+        .page-num {
+            font-size: 28px;
+            font-weight: bold;
+            font-family: Arial, sans-serif;
+        }
+        .date-info {
+            font-size: 14px;
+            color: #333;
+        }
+        .logo {
+            font-family: "Kaiti SC", "KaiTi", serif;
+            font-size: 32px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        /* Main Grid Layout */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 30px;
+        }
+
+        /* Typography */
+        h1.main-headline {
+            font-size: 32px;
+            font-weight: bold;
+            text-align: center;
+            margin: 10px 0;
+            line-height: 1.3;
+            font-family: "Heiti SC", "SimHei", sans-serif;
+        }
+        h2.sub-headline {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin: 5px 0 15px 0;
+        }
+        h3.article-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 15px 0 10px 0;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+        .byline {
+            font-size: 12px;
+            color: #666;
+            text-align: right;
+            margin-bottom: 10px;
+        }
+        .dateline {
+            font-weight: bold;
+            font-size: 14px;
+        }
+        p {
+            font-size: 14px;
+            text-align: justify;
+            margin-bottom: 10px;
+            text-indent: 2em;
+        }
+        .no-indent {
+            text-indent: 0;
+        }
+        
+        /* Specific Layouts */
+        .top-article {
+            grid-column: 1 / 3;
+        }
+        .side-article {
+            grid-column: 3 / 4;
+            grid-row: 1 / 3;
+            border-left: 1px solid #eee;
+            padding-left: 20px;
+        }
+        .vertical-title {
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            font-size: 24px;
+            font-weight: bold;
+            float: right;
+            margin-left: 10px;
+            height: 100%;
+            letter-spacing: 5px;
+            font-family: "Heiti SC", "SimHei", sans-serif;
+        }
+        .side-content {
+            overflow: hidden;
+        }
+
+        /* Image Placeholder */
+        .image-container {
+            width: 100%;
+            margin: 15px 0;
+            text-align: center;
+        }
+        .placeholder {
+            background-color: #ddd;
+            border: 1px solid #999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #555;
+            font-size: 12px;
+            margin: 0 auto;
+        }
+        .caption {
+            font-size: 12px;
+            color: #555;
+            margin-top: 5px;
+            text-align: left;
+            text-indent: 0;
+        }
+
+        /* Bottom Section Grid */
+        .bottom-section {
+            grid-column: 1 / 4;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr 0.8fr;
+            gap: 20px;
+            border-top: 2px solid #000;
+            padding-top: 20px;
+            margin-top: 20px;
+        }
+
+        /* Infographic Box */
+        .infographic-box {
+            background-color: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            padding: 15px;
+            font-size: 13px;
+        }
+        .info-header {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .info-item {
+            background: #fff;
+            padding: 10px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .info-label {
+            font-size: 12px;
+            color: #d35400;
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .info-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #c0392b;
+        }
+        .info-desc {
+            font-size: 11px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        /* Chart Placeholder */
+        .chart-placeholder {
+            width: 100%;
+            height: 150px;
+            background-color: #eee;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #777;
+            font-size: 12px;
+            border: 1px dashed #aaa;
+        }
+
+        /* Small Headlines */
+        .small-headline {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 10px 0 5px 0;
+            color: #c0392b;
+        }
+        
+        .footer-note {
+            font-size: 10px;
+            color: #888;
+            text-align: right;
+            margin-top: 5px;
+        }
+
+        /* Columns for text */
+        .text-columns {
+            column-count: 2;
+            column-gap: 20px;
+        }
+        .text-columns p {
+            text-indent: 2em;
+            margin-top: 0;
+        }
+        
+        .single-col-text p {
+            text-indent: 2em;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <span class="section-title">要闻</span>
+            <span class="page-num">2</span>
+            <span class="date-info">2025年1月4日 星期六</span>
+        </div>
+        <div class="logo">人民日报</div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="main-grid">
+        
+        <!-- Top Left Article (Spans 2 cols) -->
+        <div class="top-article">
+            <h2 style="text-align: center; font-size: 18px; margin-bottom: 5px;">国办印发意见</h2>
+            <h1 class="main-headline">全面深化药品医疗器械监管改革<br>促进医药产业高质量发展</h1>
+            
+            <p class="no-indent" style="text-align: center; font-size: 12px; color: #666; margin-bottom: 15px;">
+                本报北京1月3日电 （记者申少铁）国务院办公厅日前印发《关于全面深化药品医疗器械监管改革促进医药产业高质量发展的意见》（以下简称《意见》）。
+            </p>
+
+            <div class="text-columns">
+                <p>《意见》以习近平新时代中国特色社会主义思想为指导，全面贯彻党的二十大和二十届二中、三中全会精神，坚持科学化、法治化、国际化、现代化的监管理念，保障高质量医药产品供给安全，深化药品医疗器械监管全过程改革，加快构建药品医疗器械领域全国统一大市场，打造具有全球竞争力的创新生态，推动我国从制药大国向制药强国跨越，更好满足人民群众对高质量药品医疗器械的需求。</p>
+                
+                <p>《意见》提出，到2027年，药品医疗器械监管法律法规制度更加完善，监管体系、监管机制、监管方式更好适应医药创新和产业高质量发展需求，创新药和医疗器械审评审批质量效率明显提升，全生命周期监管显著加强，质量安全水平稳步提高，建成与医药创新发展相适应的监管体系。到2035年，药品医疗器械科学化、法治化、国际化、现代化水平显著提升，监管体系和能力更加完善，医药产业综合实力和国际竞争力显著增强。</p>
+
+                <p>《意见》明确5方面24条改革举措。一是加大对药品医疗器械研发创新支持力度。完善审评审批机制，支持重大创新，加大中药研发创新支持力度，发挥标准对药品医疗器械创新的引领作用，完善药品医疗器械知识产权保护相关制度，积极支持创新药和医疗器械推广使用。二是提高药品医疗器械审评审批质效。加强药品医疗器械注册申报前置指导，加快临床急需药品医疗器械审评上市，优化临床试验审评审批机制，鼓励补充开展非劣效性评价或等效性评价，加快罕见病用药品医疗器械审评审批。三是以高效严格监管提升医药产业合规水平。推进信用体系建设，加强全链条合规检查，强化协同和区域联动，推动药品生产企业在关键岗位配备人员，强化药品医疗器械监督检查改革，强化创新药和医疗器械质量安全工作，推行创新药械新形态监管模式，四是支持医药产业扩大对外开放合作。深入推进国际通用监管规则转化实施，探索生物制品分段生产模式，优化药品医疗器械进口管理，支持药品医疗器械出口贸易。五是构建适应产业发展和安全需要的监管体系。持续加强监管队伍建设，大力加强药品监管科学，加强监管信息化建设。</p>
+            </div>
+
+            <!-- Image Area -->
+            <div class="image-container">
+                <div class="placeholder" style="width: 100%; height: 250px;">
+                    [Photo: Aerial view of the Yangtze River Bridge and cityscape at dusk/night with lights]
+                </div>
+                <p class="caption">
+                    临近春节，G1503苏嘉杭高速苏州段（常台高速苏州城区段），车辆在“广济互通”立交桥上有序行驶。近年来，江苏省苏州市不断加强交通基础设施建设，完善综合立体交通网，提升城市通行效率。图为近日拍摄的G1503苏嘉杭高速苏州段夜景。<br>
+                    <span style="float: right;">新华社记者 季春鹏摄</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Right Column Article (Vertical Title) -->
+        <div class="side-article">
+            <div class="vertical-title">
+                ——对推动今年经济持续回升向好充满信心
+            </div>
+            <div class="side-content">
+                <h3 style="writing-mode: vertical-rl; float: right; font-size: 16px; margin-right: 5px; height: auto; border: none;">国家发展改革委介绍去年推进高质量发展情况</h3>
+                <p class="byline" style="writing-mode: vertical-rl; float: right; font-size: 12px; margin-right: 5px;">本报记者 刘志强</p>
+                
+                <div style="margin-right: 40px;">
+                    <p>1月3日，国务院新闻办举行“中国经济高质量发展成效”系列新闻发布会，国家发展改革委副主任赵辰昕等介绍2024年扎实推进高质量发展有关情况。</p>
+                    
+                    <p><strong>经济实力、科技实力、综合国力持续增强</strong><br>2024年前11个月制造业技术改造投资增长快于全部投资</p>
+                    
+                    <p>“2024年，我国经济在波动中回升向好，尤其是四季度以来，经济运行呈现回升向好态势。”赵辰昕回顾2024年推动高质量发展成效。</p>
+                    
+                    <p>创新能力持续提升。新动能培育壮大，超长期特别国债支持“两重”建设、“两新”工作加力扩围，现代化产业体系建设不断提速，神舟十九号、嫦娥六号等重大科技成果接续涌现，国产大飞机C919累计承运旅客突破100万人次，首艘国产大型邮轮商业运营，新能源汽车年产销量首次突破1000万辆。</p>
+                    
+                    <p>改革开放稳步推进。全国统一大市场建设加快推进，民营经济促进法草案公开征求意见，外贸出口保持增长，实际使用外资结构优化，共建“一带一路”高质量发展走深走实。</p>
+                    
+                    <p>民生保障扎实有力。就业形势总体稳定，居民收入增长与经济增长基本同步，重要民生商品保供稳价有力有效，公共服务体系不断完善。</p>
+                    
+                    <p>“展望2025年，我国经济基础稳、优势多、韧性强、潜能大，长期向好的支撑条件和基本趋势没有变。”赵辰昕表示，对推动今年经济持续回升向好充满信心。</p>
+
+                    <div style="border-top: 1px dashed #ccc; margin: 15px 0;"></div>
+
+                    <h3 class="article-title" style="border:none; margin-bottom: 5px;">尽快公布《全国统一大市场建设指引》</h3>
+                    <p style="font-weight: bold; margin-bottom: 10px;">推进基础设施竞争性领域向民营企业公平开放</p>
+                    
+                    <p>发布会上，有记者提问了一系列重大问题。国家发展改革委副秘书长肖世杰表示，将尽快公布《全国统一大市场建设指引》，指导各地区各部门对照整改，破除地方保护和市场分割。</p>
+                    
+                    <p>肖世杰介绍，2025年将出台新版市场准入负面清单，进一步缩减清单事项。推进基础设施竞争性领域向经营主体公平开放，完善民营企业参与国家重大项目建设长效机制。</p>
+                    
+                    <p>在要素市场化配置综合改革方面，将深化土地、劳动力、资本、技术、数据等要素市场化配置改革。建立健全城乡统一的建设用地市场，完善二级市场转让、出租、抵押等机制。</p>
+                    
+                    <p>针对外界关注的物价问题，赵辰昕表示，2024年CPI温和上涨，PPI降幅收窄。下一步将加强宏观政策协调配合，促进物价合理回升。</p>
+                </div>
+            </div>
+            
+            <div style="clear: both; margin-top: 20px; border-top: 2px solid #c0392b; padding-top: 10px;">
+                <h3 style="color: #c0392b; border: none; font-size: 20px; text-align: center;">权威发布</h3>
+                <h2 style="text-align: center; font-size: 18px; margin-top: 5px;">开创高质量发展新局面</h2>
+            </div>
+        </div>
+
+        <!-- Bottom Section -->
+        <div class="bottom-section">
+            
+            <!-- Bottom Left: Land Policy -->
+            <div>
+                <h2 style="font-size: 16px; text-align: center; margin-bottom: 5px;">2023年度全国耕地面积19.29亿亩，耕地布局进一步优化</h2>
+                <h1 style="font-size: 24px; text-align: center; margin: 10px 0; font-family: 'Heiti SC', sans-serif;">“占优补优”，改革完善耕地占补平衡管理</h1>
+                <p class="byline" style="text-align: center;">本报记者 常 钦</p>
+                
+                <h3 class="small-headline" style="border-bottom: 2px solid #c0392b; display: inline-block; padding-right: 10px;">国策解读</h3>
+                
+                <div style="display: flex; gap: 15px; margin-top: 10px;">
+                    <div style="flex: 1;">
+                        <p class="no-indent" style="font-size: 13px;">2023年度全国国土变更调查结果显示，全国耕地面积较上年末净增加130万亩，连续两年实现净增加。其中，通过恢复流失的优质耕地，耕地布局进一步优化。</p>
+                        <p class="no-indent" style="font-size: 13px;">自然资源部相关负责人表示，耕地保护是“国之大者”。近年来，自然资源部会同有关部门，改革完善耕地占补平衡制度，压实地方党委和政府耕地保护主体责任，严守耕地红线。</p>
+                        
+                        <h4 style="font-size: 14px; margin: 10px 0 5px 0; font-weight: bold;">调整完善占补平衡制度</h4>
+                        <p class="no-indent" style="font-size: 13px;">自然资源部耕地保护监督司有关负责人介绍，新修订的土地管理法实施条例对耕地占补平衡提出了新要求。将各类对耕地的占用统一纳入占补平衡管理，坚持“以补定占”，健全补充耕地质量验收制度。</p>
+                        <p class="no-indent" style="font-size: 13px;">同时，规范补充耕地来源。除必要的非农建设占用耕地外，将非农建设、造林种树、种果种茶等各类占用耕地行为统一纳入耕地占补平衡管理。对于确需占用耕地的，必须落实“占优补优、占水田补水田”要求。</p>
+                    </div>
+                    <div style="flex: 1;">
+                        <h4 style="font-size: 14px; margin: 0 0 5px 0; font-weight: bold; text-align: center;">强化耕地总量管控<br>和“以补定占”约束</h4>
+                        <p class="no-indent" style="font-size: 13px;">自然资源部将把各省（区、市）上年度净补充耕地数量和质量作为下年度允许非农建设占用耕地的上限。对补充耕地不足的省份，暂停新增建设用地审批，直至补足为止。</p>
+                        <p class="no-indent" style="font-size: 13px;">建立动态平衡机制。利用信息化手段，对补充耕地项目进行全流程监管，确保补充耕地真实、可靠。严禁弄虚作假，严禁违规占用耕地绿化造林、挖湖造景。</p>
+                        
+                        <h4 style="font-size: 14px; margin: 10px 0 5px 0; font-weight: bold; text-align: center;">强化刚性约束，确保<br>补充耕地质量可靠</h4>
+                        <p class="no-indent" style="font-size: 13px;">严把补充耕地质量关。自然资源部会同农业农村部，制定补充耕地质量验收标准。对于质量不达标的，不予确认占补平衡指标。</p>
+                        <p class="no-indent" style="font-size: 13px;">加强后期管护。落实补充耕地后续管护责任，确保补充耕地长期稳定利用。对于因自然灾害损毁的，及时组织修复；对于人为破坏的，依法追究责任。</p>
+                        <p class="no-indent" style="font-size: 13px;">此外，还将加大执法督察力度，严厉打击违法占用耕地行为，公开通报典型案例，形成震慑。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Middle: Aviation & Infographic -->
+            <div>
+                <!-- Infographic Box -->
+                <div class="infographic-box">
+                    <div class="info-header">实施更加积极有为的宏观政策<br><span style="font-size: 12px; font-weight: normal; color: #666;">着力扩大内需，推动科技创新和产业创新融合发展</span></div>
+                    <p style="font-size: 11px; text-align: center; margin-bottom: 10px; text-indent: 0;">2025年是“十四五”规划收官之年，宏观经济政策取向备受关注。</p>
+                    
+                    <div class="info-grid">
+                        <div class="info-item" style="border-left: 4px solid #e67e22;">
+                            <span class="info-label">提高投资效益</span>
+                            <div style="font-size: 12px; margin-bottom: 5px;">2024年</div>
+                            <div style="font-size: 12px;">中央预算内投资支持项目完成投资</div>
+                            <div class="info-value">超1.3万亿元</div>
+                            <div style="margin-top: 8px; font-size: 12px;">地方政府专项债券支持项目完成投资</div>
+                            <div class="info-value">超3.6万亿元</div>
+                        </div>
+                        
+                        <div class="info-item" style="border-left: 4px solid #e74c3c;">
+                            <span class="info-label">消费潜力释放</span>
+                            <div style="font-size: 12px; margin-bottom: 5px;">大规模设备更新和消费品以旧换新</div>
+                            <div style="font-size: 12px;">2024年9-11月</div>
+                            <div style="font-size: 12px;">新能源乘用车零售量同比增长</div>
+                            <div class="info-value">超50%以上</div>
+                            <div style="margin-top: 5px; font-size: 12px;">家电和音像器材类零售额同比增速</div>
+                            <div class="info-value">连续3个月保持在20%以上</div>
+                        </div>
+
+                        <div class="info-item" style="border-left: 4px solid #3498db;">
+                            <span class="info-label">稳预期</span>
+                            <div style="font-size: 12px; margin-bottom: 5px;">2024年</div>
+                            <div style="font-size: 12px;">7000亿元超长期特别国债支持项目已基本全部开工</div>
+                            <div style="font-size: 12px; margin-top: 5px;">完成投资</div>
+                            <div class="info-value">超1.2万亿元</div>
+                            <div style="font-size: 12px; margin-top: 5px;">2025年约1000亿元提前批清单已提前下达</div>
+                        </div>
+
+                        <div class="info-item" style="border-left: 4px solid #2ecc71;">
+                            <span class="info-label">升效能</span>
+                            <div style="font-size: 12px; margin-bottom: 5px;">2024年1-11月</div>
+                            <div style="font-size: 12px;">服务零售额同比增长</div>
+                            <div class="info-value">6.4%</div>
+                            <div style="font-size: 12px; margin-top: 5px;">其中通讯信息服务零售额保持两位数增长</div>
+                            <div style="font-size: 12px; margin-top: 8px;">2024年境外来华人员免签入境便利化措施带动旅游消费</div>
+                            <div style="font-size: 12px; margin-top: 5px;">2024年1-11月</div>
+                            <div style="font-size: 12px;">周边口岸免税店销售额</div>
+                            <div class="info-value">超5.2亿元</div>
+                            <div style="font-size: 12px;">同比增长</div>
+                            <div class="info-value">8.9%</div>
+                        </div>
+                    </div>
+                    <div class="footer-note">数据来源：国家发展改革委<br>版式设计：张芳曼</div>
+                </div>
+
+                <!-- Aviation Article -->
+                <div style="margin-top: 20px;">
+                    <h3 class="article-title" style="font-size: 16px;">去年民航客运量超7.3亿人次创新高</h3>
+                    <p class="no-indent" style="font-size: 12px; text-align: center; color: #666;">全年春运预计超9000万人次</p>
+                    <p class="no-indent" style="font-size: 12px;">
+                        本报北京1月3日电 （记者邱超奕）中国民航局运输司司长梁楠3日介绍，2024年，我国民航运输生产总体平稳，客货运输量均创历史新高。全年完成运输总周转量1485亿吨公里、旅客运输量7.3亿人次、货邮运输量898万吨，同比分别增长25%、17.9%、22.1%。
+                    </p>
+                    <p class="no-indent" style="font-size: 12px;">
+                        今年春运民航旅客运输量预计将达到9000万人次，有望再创历史新高。民航局将全力保障春运期间航班正常运行，优化服务流程，提升旅客出行体验。
+                    </p>
+                </div>
+            </div>
+
+            <!-- Bottom Right: Water Conservancy -->
+            <div>
+                <h3 class="article-title" style="font-size: 16px;">首期淮河流量片水土保持公报发布</h3>
+                <p class="no-indent" style="font-size: 12px; text-align: center; color: #666;">2023年淮河流域水土保持率达92.85%</p>
+                
+                <div class="image-container" style="margin: 10px 0;">
+                     <div class="placeholder" style="width: 100%; height: 120px; background: #e8f4f8;">
+                        [Illustration: Stylized water drop and green hills icon]
+                    </div>
+                </div>
+
+                <p class="no-indent" style="font-size: 12px;">
+                    本报北京1月3日电 （记者王浩）水利部淮河水利委员会近日发布《首期淮河流量片水土保持公报（2023年）》。公报显示，2023年淮河流域水土保持率为92.85%，较上年提高0.32个百分点。
+                </p>
+                <p class="no-indent" style="font-size: 12px;">
+                    淮河流域涉及河南、安徽、江苏、山东、湖北五省。公报指出，流域内水土流失面积持续减少，生态环境明显改善。其中，河南省水土保持率最高，达到94.12%。
+                </p>
+                <p class="no-indent" style="font-size: 12px;">
+                    下一步，淮委将继续加强水土保持监管，推进重点治理工程，提升流域生态系统稳定性，为淮河生态经济带建设提供支撑。
+                </p>
+                
+                <div style="margin-top: 30px; border-top: 1px solid #eee; padding-top: 10px;">
+                    <p class="no-indent" style="font-size: 11px; color: #888;">
+                        本版责编：张彦春 吴凯 刘涓溪<br>
+                        邮箱：rmrbymb@163.com
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

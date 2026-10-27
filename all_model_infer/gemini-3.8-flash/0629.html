@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>股票涨跌幅规则</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  }
+  .poster {
+    width: 540px;
+    background-color: #1a73a7;
+    position: relative;
+    padding: 16px 20px 24px 20px;
+    overflow: hidden;
+  }
+  /* Decorative background circles */
+  .circle {
+    position: absolute;
+    border-radius: 50%;
+    z-index: 1;
+    pointer-events: none;
+  }
+  .c1 { width: 32px; height: 32px; background: #eed7aa; top: 12px; left: 150px; opacity: 0.8; }
+  .c2 { width: 28px; height: 28px; background: #4ba6b8; top: 80px; left: -10px; }
+  .c3 { width: 20px; height: 20px; background: #eed7aa; top: 180px; left: 24px; opacity: 0.7; }
+  .c4 { width: 34px; height: 34px; background: #009688; top: 215px; left: 2px; opacity: 0.8; }
+  .c5 { width: 24px; height: 24px; background: #eed7aa; top: 40px; right: 40px; opacity: 0.9; }
+  .c6 { width: 20px; height: 20px; background: #eed7aa; top: 125px; right: -5px; }
+  .c7 { width: 22px; height: 22px; background: #b08266; top: 680px; right: 8px; opacity: 0.7; }
+  .c8 { width: 28px; height: 28px; background: #eed7aa; top: 920px; right: 18px; }
+  .c9 { width: 26px; height: 26px; background: #eed7aa; bottom: 8px; left: 90px; opacity: 0.8; }
+  .c10 { width: 18px; height: 18px; background: #eed7aa; bottom: 4px; right: 120px; opacity: 0.7; }
+
+  /* Top Bar */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+    margin-bottom: 30px;
+    padding: 0 4px;
+  }
+  .logo-area {
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    font-weight: bold;
+    color: #1a1a1a;
+  }
+  .logo-icon {
+    width: 22px;
+    height: 22px;
+    margin-right: 6px;
+    border-radius: 50%;
+    background: conic-gradient(#d32f2f 0deg 180deg, #1976d2 180deg 360deg);
+    display: inline-block;
+  }
+  .advisor-info {
+    font-size: 11px;
+    font-weight: bold;
+    color: #1a1a1a;
+    letter-spacing: 0.5px;
+  }
+
+  /* Notebook Card */
+  .notebook-container {
+    position: relative;
+    z-index: 2;
+  }
+  /* Binder Rings */
+  .rings {
+    position: absolute;
+    top: -24px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-around;
+    padding: 0 40px;
+    z-index: 10;
+  }
+  .ring {
+    width: 16px;
+    height: 48px;
+    border: 3.5px solid #222;
+    border-radius: 12px;
+    background: transparent;
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.25);
+  }
+
+  .notebook-page {
+    background-color: #ffffff;
+    border: 3px solid #111;
+    border-radius: 16px;
+    padding: 36px 20px 16px 20px;
+    position: relative;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    /* Subtle grid pattern */
+    background-image: 
+      linear-gradient(#f0f4f7 1px, transparent 1px),
+      linear-gradient(90deg, #f0f4f7 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  /* Title Banner */
+  .title-banner {
+    background-color: #ffc457;
+    border-radius: 10px;
+    padding: 16px 14px;
+    position: relative;
+    margin-bottom: 24px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.4);
+  }
+  .title-banner::before, .title-banner::after {
+    content: "";
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background: #fff;
+    border-radius: 50%;
+  }
+  .title-banner::before { top: 6px; left: 6px; }
+  .title-banner::after { top: 6px; right: 6px; }
+  .title-banner h1 {
+    font-size: 21px;
+    line-height: 1.45;
+    color: #111;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+  }
+
+  /* Subtitle */
+  .subtitle {
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 16px;
+  }
+  .star-bullet {
+    color: #f7b447;
+    margin-right: 6px;
+    font-size: 18px;
+  }
+
+  /* Table */
+  .table-box {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 3px solid #f6bc6d;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+  }
+  th, td {
+    border-right: 2px solid #f6bc6d;
+    border-bottom: 2px solid #f6bc6d;
+    text-align: center;
+    padding: 12px 6px;
+  }
+  th:last-child, td:last-child {
+    border-right: none;
+  }
+  tr:last-child td {
+    border-bottom: none;
+  }
+  th {
+    font-size: 15px;
+    font-weight: bold;
+    color: #333;
+    background-color: #fff;
+    padding: 10px 4px;
+  }
+  td {
+    font-size: 14px;
+    color: #222;
+    vertical-align: middle;
+  }
+  td.col-name {
+    font-weight: 500;
+    width: 23%;
+  }
+  td.col-desc {
+    text-align: center;
+    line-height: 1.4;
+    font-weight: 500;
+    padding: 12px 10px;
+    width: 55%;
+  }
+  td.col-rate {
+    font-weight: 500;
+    width: 22%;
+  }
+
+  /* Disclaimer area */
+  .footer-area {
+    display: flex;
+    align-items: flex-end;
+    position: relative;
+    margin-top: 10px;
+    padding-right: 70px;
+  }
+  .disclaimer {
+    font-size: 7.5px;
+    line-height: 1.35;
+    color: #333;
+    text-align: justify;
+    transform: scale(0.92);
+    transform-origin: left bottom;
+  }
+  .astronaut {
+    position: absolute;
+    right: -15px;
+    bottom: -16px;
+    width: 75px;
+    height: 85px;
+  }
+
+  /* Bottom Bar */
+  .bottom-text {
+    text-align: center;
+    color: #111;
+    font-size: 12px;
+    font-weight: bold;
+    margin-top: 14px;
+    position: relative;
+    z-index: 2;
+  }
+</style>
+</head>
+<body>
+
+<div class="poster">
+  <!-- Decorative background confetti -->
+  <div class="circle c1"></div>
+  <div class="circle c2"></div>
+  <div class="circle c3"></div>
+  <div class="circle c4"></div>
+  <div class="circle c5"></div>
+  <div class="circle c6"></div>
+  <div class="circle c7"></div>
+  <div class="circle c8"></div>
+  <div class="circle c9"></div>
+  <div class="circle c10"></div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="logo-area">
+      <span class="logo-icon"></span>
+      中国银河证券 | CGS
+    </div>
+    <div class="advisor-info">
+      常红艳 投顾编号: S0130618110013
+    </div>
+  </header>
+
+  <!-- Main Card -->
+  <main class="notebook-container">
+    <!-- Spiral Rings -->
+    <div class="rings">
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+    </div>
+
+    <!-- Paper Sheet -->
+    <div class="notebook-page">
+      <!-- Q&A Title Banner -->
+      <section class="title-banner">
+        <h1>Q3: 股票涨跌幅为什么有的是10%，有的是20%呢？</h1>
+      </section>
+
+      <!-- Subtitle -->
+      <div class="subtitle">
+        <span class="star-bullet">✦</span>
+        <span>下表是在不同板块炒股的单日涨跌幅规定:</span>
+      </div>
+
+      <!-- Data Table -->
+      <div class="table-box">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 23%;">板块</th>
+              <th style="width: 55%;">含义</th>
+              <th style="width: 22%;">涨跌幅</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="col-name">st类股票</td>
+              <td class="col-desc">财务状况有问题的公司居多，不要轻易买!</td>
+              <td class="col-rate">5%</td>
+            </tr>
+            <tr>
+              <td class="col-name">主板</td>
+              <td class="col-desc">最常见，以传统行业为主的股票交易市场。</td>
+              <td class="col-rate">10%</td>
+            </tr>
+            <tr>
+              <td class="col-name">创业板</td>
+              <td class="col-desc">主要是无法在主板上市的高成长的中小企业。</td>
+              <td class="col-rate">20%</td>
+            </tr>
+            <tr>
+              <td class="col-name">科创板</td>
+              <td class="col-desc">主要是有核心技术的创新型和科技型中小企业。</td>
+              <td class="col-rate">20%</td>
+            </tr>
+            <tr>
+              <td class="col-name">北交所</td>
+              <td class="col-desc">主要是“专精特新”“小巨人”中小企业。</td>
+              <td class="col-rate">30%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Disclaimer & Character -->
+      <footer class="footer-area">
+        <div class="disclaimer">
+          <strong>免责声明:</strong> 本资料仅为投资者教育之目的而发布，不构成投资建议。投资者据此操作，风险自担。银河证券力求所涉信息资料准确可靠，但银河证券不对该信息的准确性、完整性或可靠性、及时性作任何担保。银河证券亦不对因使用此资料的信息而引致的损失承担任何责任。投资有风险，入市需谨慎。
+        </div>
+        
+        <!-- Astronaut Character SVG -->
+        <svg class="astronaut" viewBox="0 0 90 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Helmet -->
+          <rect x="18" y="10" width="54" height="46" rx="20" fill="#ffffff" stroke="#222" stroke-width="2.5"/>
+          <rect x="25" y="16" width="40" height="32" rx="14" fill="#ffddcf" stroke="#222" stroke-width="2"/>
+          <!-- Face Details -->
+          <ellipse cx="37" cy="31" rx="2" ry="3" fill="#222"/>
+          <ellipse cx="53" cy="31" rx="2" ry="3" fill="#222"/>
+          <ellipse cx="32" cy="35" rx="3" ry="1.5" fill="#f89f9f"/>
+          <ellipse cx="58" cy="35" rx="3" ry="1.5" fill="#f89f9f"/>
+          <path d="M42 38 Q45 41 48 38" stroke="#d32f2f" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+          <!-- Body -->
+          <path d="M24 57 C24 57 26 86 28 88 C30 90 60 90 62 88 C64 86 66 57 66 57 Z" fill="#ffffff" stroke="#222" stroke-width="2.5"/>
+          <path d="M38 64 H52 V76 H38 Z" fill="#e9f3f9" stroke="#222" stroke-width="1.8"/>
+          <!-- Arms -->
+          <path d="M18 58 Q8 68 14 74 Q20 74 24 66" fill="#ffffff" stroke="#222" stroke-width="2.5"/>
+          <path d="M72 58 Q82 68 76 74 Q70 74 66 66" fill="#ffffff" stroke="#222" stroke-width="2.5"/>
+          <!-- Feet -->
+          <ellipse cx="34" cy="91" rx="6" ry="3" fill="#ffffff" stroke="#222" stroke-width="2"/>
+          <ellipse cx="56" cy="91" rx="6" ry="3" fill="#ffffff" stroke="#222" stroke-width="2"/>
+        </svg>
+      </footer>
+    </div>
+  </main>
+
+  <!-- Bottom Tip -->
+  <div class="bottom-text">
+    投资有风险，入市需谨慎
+  </div>
+</div>
+
+</body>
+</html>

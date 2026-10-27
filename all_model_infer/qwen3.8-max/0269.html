@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人民日报 - 评论</title>
+    <style>
+        body {
+            font-family: "Songti SC", "SimSun", "STSong", serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            color: #000;
+            line-height: 1.6;
+        }
+        .page-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px 40px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        /* Header Styles */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .logo {
+            font-family: "Kaiti SC", "KaiTi", serif;
+            font-size: 32px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        .header-info {
+            text-align: right;
+            font-size: 14px;
+            display: flex;
+            align-items: baseline;
+            gap: 15px;
+        }
+        .page-num {
+            font-size: 24px;
+            font-weight: bold;
+            font-family: Arial, sans-serif;
+        }
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        /* Grid Layout */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr; /* 4 columns approx */
+            gap: 20px;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 10px 0;
+            line-height: 1.3;
+        }
+        h2 {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 15px 0 10px 0;
+        }
+        h3 {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        p {
+            font-size: 14px;
+            text-align: justify;
+            margin-bottom: 8px;
+            text-indent: 2em;
+        }
+        .no-indent {
+            text-indent: 0;
+        }
+        .author {
+            text-align: right;
+            font-size: 13px;
+            color: #333;
+            margin-top: 5px;
+        }
+        .caption {
+            font-size: 12px;
+            text-align: center;
+            margin-top: 5px;
+            color: #555;
+        }
+
+        /* Specific Components */
+        .red-header {
+            color: #c00;
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 5px;
+            display: block;
+        }
+        
+        .drop-cap {
+            float: left;
+            font-size: 40px;
+            line-height: 40px;
+            padding-right: 5px;
+            font-weight: bold;
+            color: #c00;
+            border: 2px solid #c00;
+            padding: 2px 5px;
+            margin-right: 5px;
+            margin-top: 2px;
+        }
+
+        .sidebar-box {
+            border: 1px solid #c00;
+            padding: 10px;
+            margin-bottom: 20px;
+            background-color: #fff;
+        }
+        .sidebar-box p {
+            font-size: 13px;
+            text-indent: 0;
+            margin-bottom: 5px;
+        }
+
+        .vertical-title {
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 5px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-left: 2px solid #000;
+            padding-left: 10px;
+            margin-left: 10px;
+        }
+
+        /* Layout Areas */
+        .top-article {
+            grid-column: span 3;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+        .top-article h1 {
+            font-size: 36px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .top-article .content-cols {
+            column-count: 3;
+            column-gap: 20px;
+        }
+
+        .right-column {
+            grid-column: span 1;
+            grid-row: span 2;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .middle-section {
+            grid-column: span 3;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        .bottom-section {
+            grid-column: span 4;
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 20px;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            height: 250px;
+            background-color: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 12px;
+            margin-bottom: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+        .image-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .footer-info {
+            margin-top: 30px;
+            border-top: 1px solid #000;
+            padding-top: 10px;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Utility */
+        .bold-red { color: #c00; font-weight: bold; }
+        .small-text { font-size: 12px; }
+        .center-text { text-align: center; }
+        
+        /* Specific Box for "区分不同主题" */
+        .quote-box {
+            border: 1px solid #c00;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        .quote-box p { text-indent: 0; margin-bottom: 0; }
+
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+    <header>
+        <div class="logo">人民日报</div>
+        <div class="header-info">
+            <span>2025 年 1 月 6 日 星期一</span>
+            <span class="page-num">5</span>
+            <span class="section-title">评论</span>
+        </div>
+    </header>
+
+    <div class="main-grid">
+        
+        <!-- Top Main Article -->
+        <div class="top-article">
+            <span class="red-header">R 评论员观察</span>
+            <h1>用新技术找增量 用新办法拓赛道</h1>
+            <div class="author" style="text-align: center; margin-bottom: 15px;">李洪兴</div>
+            
+            <div class="content-cols">
+                <p><span class="drop-cap">只</span>有主树儿想了，主动务实了、主业做大了、内功练强了，才能不惧风浪、破浪前行</p>
+                <p>立足自身特点和优势，专注细分领域，有所为有所不为，就能在产业向绿向新沿着道宽的路子向新挺进</p>
+                <p>不久前，笔者到一家创新型企业采访。谈及企业换赛道的成功经验，负责人认为，一方面，不跟风盲动，始终不断巩固主营业务，夯实发展基础，提高经营质量；另一方面，尊重技术化交换规律，捕捉变革应用趋势，敢闯开辟新赛道的路。</p>
+                <p>有技术上的自信，有战略上的清醒，应对挑战，企业则从容不迫、先人一步。</p>
+                <p>读懂中国经济走势，可得出企业开拓工艺的思路脉络。有的企业种好“责任田”，瞄准关键零部件进行攻关；有的企业深耕细分市，紧抓企业转型自身的优势、力与厚积薄发。不管如何抉择，对企业来说，新的征程少不了对市场的洞察、对产业的把握、对未来的考量。</p>
+                <p>从“新”的维度定出发展的方向和优先级，是一面反映物象的照妖镜。如何“看势”“识变”？既不能只见沙丘的沙丘观海，看过往，我们从来都是在风雨洗礼中成长、在历经考验中壮大。看现在，未来，行进于山海壮阔的宽广，“无限风光在险峰”，必能步履铿锵。</p>
+                <p>聚焦主业，做得好的“其志在也，心无旁骛是也，以成金业”。</p>
+                <p>50%、51%、52%、53%……是湖南省新能源装机规模占全省总装机规模的比重变化。为何能实现“节节高”？背后，企业设备更新、产品更迭，离不开电、山清水秀。大势所趋，方为大势所趋，传统产业升级、中国量子行业进入大芯片时代。如今，“量超融合、融核联芯工程”的路，企业正从科研团队还在奋力奔跑，让五岳同一颗明珠更加璀璨。</p>
+                <p>老树新芽花开满，树定已晚，企业翻开生命活力，提高全要素生产率，大力推进产业“智改数转网联”，乃至长枝抽穗了，主业会活了、主业做大了、内功练强了，才能不惧风浪、破浪前行。</p>
+                <p>因企制宜、见新图新。“传统产业改造升级，就是发展新质生产力”。</p>
+                <p>对企业特别是传统行业的生产企业而言，有着寻求创新的智慧方向，识变应变，尤其是提升基础性、关键性、支撑性能力。拿出壮士一臂之力，可谓大有“看头”。在陕西榆林煤制油基地，全球首套煤间接液化——煤制油装置集聚着在曲折中奋起前行，掌握核心技术，突破“卡脖子”瓶颈，助力中国“煤”向“精”转变。</p>
+                <p>坚定发展信心，勇担使命，敢于“尝鲜”，云化企业大力拓展资源利用领域，延链、补链、强链，铺就三行三业之径护航扩产，加大创新力度生产新能源电池材料……正是越来越多地方，既能做到资源优化，又立自身所长、扬自身所能，有效解决资源枯竭的问题，也能重塑新地标、沿循原有路径下新路。</p>
+                <p>认清趋势，坚守本真，选择“专而精一到到极致”，“专于一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行一行</p>
+                <p>下笔有法，怕的是“坐山观虎斗”。只有选准赛道，把精力用到刀刃上，做到和精细极致上，搞一锤响地，没有目标的方向，发展很难有好成绩。</p>
+                <p>找准新赛道，在风浪起伏中勇立潮头。为什么？从工具论，企业变革是面对市场挑战的主动选择，也是抢抓机遇的敏锐嗅觉；在方法论中涉及“旧瓶换新酒”等，何谈一步三回头呢。从目的论看，创新只是手段，提质、增效才是目的，“改”则双赢。企业要有大视野、“用新技术找增量，用新办法拓赛道”。</p>
+                <p>尊重规律规律，产品做优，改变主业布局，既要防好一步一个脚印走，在行稳中致远，要立足长远，也要脚踏实地，着眼细分方向，也要兼顾大处去，管住远小处，事半功倍。</p>
+                <p>有路有险，远近风景各异。可以预见，今后的发展道路上，还会遇到各种“激流险滩”，继续修成正果，让创新的冲劲强起来、闯的精神燃起来，一定能在新征程上创造新的辉煌，跑出发展的“加速度”。</p>
+            </div>
+        </div>
+
+        <!-- Right Sidebar Column -->
+        <div class="right-column">
+            <span class="red-header">R 人民时评</span>
+            
+            <div class="sidebar-box">
+                <p>重大项目是促进并加固稳增长的重要之针，而高质量投资是战略之举。无论是项目选取，还是资金投向，既要立足当下，更要着眼长远</p>
+            </div>
+
+            <div style="display: flex; height: 100%;">
+                <div style="flex: 1;">
+                    <h2 style="writing-mode: vertical-rl; text-orientation: upright; font-size: 28px; letter-spacing: 5px; margin: 0 auto; height: fit-content;">下好投资“先手棋”</h2>
+                    <div class="author" style="writing-mode: vertical-rl; margin-top: 20px;">韩 鑫</div>
+                </div>
+                <div style="flex: 3; padding-left: 10px; border-left: 1px solid #eee;">
+                    <p class="small-text">开工！湖北召开2024年四季度全省重大项目集中开工活动，新开工亿元以上重大项目106个、总投资超千亿元。这是湖北抓项目建设的生动缩影，也是全国上下拼经济、促发展的缩影。</p>
+                    <p class="small-text">据国家统计局数据，2024年全国固定资产投资（不含农户）51.4万亿元，同比增长3.4%。其中，基础设施投资增长4.4%，制造业投资增长9.2%，房地产开发投资下降10.6%。分领域看，高技术产业投资增长10.3%，快于全部投资6.9个百分点。</p>
+                    <p class="small-text">一段时间以来，重大项目建设按下了“快进键”。从中央到地方，一系列政策举措密集出台，为经济运行回升向好提供了有力支撑。从发行超长期特别国债，到安排中央预算内投资，再到提前下达部分新增地方政府债务限额……一系列政策“组合拳”，有效提振了市场信心，激发了社会投资活力。</p>
+                    <p class="small-text">2025年是“十四五”规划收官之年，也是进一步全面深化改革的重要一年。做好经济工作，必须更好发挥投资的关键作用。中央经济工作会议提出，“全方位扩大国内需求”“提高投资效益”。这为做好2025年投资工作指明了方向。</p>
+                    <p class="small-text">重大项目是促进并加固稳增长的重要之针，而高质量投资是战略之举。无论是项目选取，还是资金投向，既要立足当下，更要着眼长远。要聚焦国家重大战略，聚焦经济社会发展重点领域，聚焦民生改善，谋划实施一批标志性工程，以高质量投资推动高质量发展。</p>
+                    <p class="small-text">下好投资“先手棋”，关键在于精准发力。要围绕发展新质生产力，加大对科技创新、绿色发展、数字经济等领域的投资力度。要围绕保障和改善民生，加大对教育、医疗、养老等领域的投资力度。要围绕区域协调发展，加大对中西部地区、东北地区等领域的投资力度。</p>
+                    <p class="small-text">下好投资“先手棋”，还要注重投资效益。要坚持政府投资和社会资本协同发力，充分发挥政府投资的引导带动作用，激发民间投资活力。要深化投融资体制改革，破除民间投资壁垒，营造公平竞争的市场环境。要加强项目全过程管理，提高资金使用效率，确保每一分钱都花在刀刃上。</p>
+                    <p class="small-text">开局关乎全局，起步决定后程。2025年经济工作大幕已经拉开，让我们以更加饱满的热情、更加务实的作风，下好投资“先手棋”，打好发展“主动仗”，为实现全年经济社会发展目标任务奠定坚实基础。</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 20px; border-top: 1px solid #ccc; padding-top: 10px;">
+                <span class="red-header">R 纵横</span>
+                <h3>“串门”式文旅大有可为</h3>
+                <div class="author">苏 畅</div>
+                <p class="small-text">前不久，23个“尔滨”小朋友踏上了东北之旅，来到黑龙江哈尔滨的亲戚家串门。这一温馨互动，不仅拉近了两地距离，更引发了全网对“串门”式文旅的热议。“小砂糖橘”们化身东北“小老乡”成了“流量密码”，也让“串门”式文旅火出了圈。</p>
+                <p class="small-text">所谓“串门”式文旅，是指不同地区之间通过互动交流、资源共享等方式，推动文旅产业协同发展的一种新模式。这种模式打破了地域界限，促进了文化交融，为文旅产业注入了新活力。</p>
+                <p class="small-text">“串门”式文旅之所以能火，关键在于其独特的互动性和体验感。它不再是简单的观光游览，而是深度的文化体验和情感交流。游客在“串门”过程中，不仅能欣赏到各地的自然风光和人文景观，还能感受到不同地域的风土人情和文化魅力。</p>
+                <p class="small-text">当然，“串门”式文旅要持续发展，还需要各方共同努力。政府部门要加强顶层设计，完善相关政策，为“串门”式文旅提供制度保障。文旅企业要创新产品和服务，提升游客体验。媒体要加大宣传力度，营造良好的舆论氛围。</p>
+                <p class="small-text">总之，“串门”式文旅是一种有益的探索和创新。它不仅丰富了文旅产品的供给，满足了人民群众日益增长的美好生活需要，也为文旅产业的高质量发展提供了新思路。期待未来能有更多地区加入到“串门”行列中来，共同推动文旅产业繁荣发展。</p>
+                <p class="small-text no-indent" style="text-align: right;">（摘编自《广西日报》，原题为《做长做足做强“串门”式文旅》）</p>
+            </div>
+            
+            <div style="margin-top: auto; border: 1px solid #000; padding: 10px; text-align: center;">
+                <h3 style="margin: 0 0 5px 0;">欢迎赐稿</h3>
+                <p class="small-text no-indent" style="margin: 0;">各位读者，本版“大家谈”“暖闻热评”“中国道路中国梦”“来论”等栏目长期征稿，欢迎赐稿，请勿一稿多投。</p>
+                <p class="small-text no-indent" style="margin: 5px 0 0 0;">本版邮箱：rmrbpl@peopledaily.cn（来稿请注明栏目名）</p>
+            </div>
+        </div>
+
+        <!-- Middle Section -->
+        <div class="middle-section">
+            <!-- Left Col -->
+            <div>
+                <span class="red-header">R 中国道路中国梦·与时代一起奔跑</span>
+                <h2>新寨村何以飘来咖啡香</h2>
+                <div class="author">王加维</div>
+                <p class="small-text">短短10多年，从最差到好，这是一条新路吗？从源头上来看是看，漫山遍野的咖啡树绿得油亮亮的叶子，看着就高兴。这就是我们新寨村的咖啡园。</p>
+                <p class="small-text">云南保山市新寨村，有“中国咖啡第一村”的美誉。村里几乎家家户户都种咖啡，全村咖啡种植面积达万亩之多。有着得天独厚的自然地理环境，咖啡是这里的特产，然而，很长一段时间里，咖农收入并不高。村民种的咖啡豆品质虽好，可因为受限于收购商压价，始终卖不上价。前些年，有的村民甚至打算砍掉咖啡树改种其他作物。</p>
+                <p class="small-text">转机出现在几年前。随着精品咖啡概念兴起，新寨村抓住机遇，开始探索咖啡产业升级之路。村里引进了先进的加工设备和技术，建立了标准化的生产流程。同时，通过举办咖啡节、开展电商直播等方式，打响了新寨咖啡的品牌。</p>
+                <p class="small-text">如今，新寨村的咖啡不仅销往全国各地，还远销海外。村民们的腰包鼓起来了，日子越过越红火。更重要的是，咖啡产业带动了乡村旅游的发展。许多游客慕名而来，体验咖啡采摘、加工的乐趣，品尝地道的咖啡美食。</p>
+                <p class="small-text">新寨村的变迁，是中国乡村振兴的一个缩影。它告诉我们，只要立足自身优势，勇于创新，敢于拼搏，就能在广阔的天地里大有作为。</p>
+                <p class="small-text no-indent" style="text-align: right;">（作者为云南省保山市隆阳区潞江镇新寨村党总支书记，本报记者杨文明采访整理）</p>
+            </div>
+
+            <!-- Center Col (Image) -->
+            <div>
+                <div class="image-placeholder">
+                    <!-- Simulating the opera image -->
+                    <div style="background: linear-gradient(135deg, #d4a373, #faedcd); width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #555; font-weight: bold; text-align: center; padding: 20px;">
+                        [Image: A performer in elaborate traditional Chinese opera costume and makeup with a colorful headdress, posing dynamically. Audience members visible in foreground.]
+                    </div>
+                </div>
+                <div class="caption">重庆市綦江区东溪小学，学生川剧社团的同学们正在表演川剧。<br>秦廷富摄（影像中国）</div>
+                
+                <div style="margin-top: 15px; border-top: 1px dashed #ccc; padding-top: 10px;">
+                    <p class="small-text">44个项目列入联合国教科文组织非物质文化遗产名录名册，总数世界第一；公布国家级非遗代表性项目1557项，认定国家级非遗代表性传承人3000多名……一组亮眼数据彰显我国保护非物质文化遗产的力度和成效。</p>
+                    <p class="small-text">非遗保护，功在当代，利在千秋。我们要像爱护眼睛一样爱护非遗，让非遗在新时代绽放出更加迷人的光彩。</p>
+                    <div class="author small-text">徐 文立</div>
+                </div>
+            </div>
+
+            <!-- Right Col (Part of middle grid, actually flows into the right sidebar logic in original, but here placed to fill grid) -->
+            <!-- Wait, looking at layout, the right sidebar spans full height. The middle section is 3 cols under the top article. -->
+            <!-- Actually, the grid structure needs adjustment. 
+                 Top Article: Span 3 cols.
+                 Right Sidebar: Span 1 col, Row span 2 (covers top and middle).
+                 Middle Section: Span 3 cols.
+                 Bottom Section: Span 4 cols.
+            -->
+             <div>
+                <p class="small-text">这正是：</p>
+                <p class="small-text" style="text-align: center; font-style: italic;">彩凤随伴体姿，<br>散发内生动力。<br>传承千年技艺，<br>文明生生不息。</p>
+             </div>
+        </div>
+
+        <!-- Bottom Section -->
+        <div class="bottom-section">
+            <!-- Left Box -->
+            <div>
+                <div class="quote-box">
+                    <p>区分不同主题，将“自己讲”和“他人讲”结合起来，将理论与实践结合起来，以事实说话、以真情动人，群众才听得进去，宣讲才能直抵人心</p>
+                </div>
+                <p class="small-text">基层宣讲是连接党的创新理论与人民群众的桥梁。能否做到内容通俗化、方式大众化，直接关乎宣讲工作成效。基层宣讲干部懂理论、会表达、善沟通，才能把道理讲深、讲透、讲活，让党的创新理论“飞入寻常百姓家”。</p>
+                <p class="small-text">宣讲内容要“接地气”。要把“大道理”转化为“小故事”，把“书面语”转化为“家常话”。要善于运用群众身边的例子，用群众听得懂的语言，讲解党的政策理论。要避免照本宣科，避免空洞说教，要让群众听得进、记得住、用得上。</p>
+                <p class="small-text">宣讲方式要“多样化”。除了传统的报告会、座谈会，还可以利用新媒体平台，开展微宣讲、云宣讲。可以结合文艺表演、知识竞赛等形式，增强宣讲的吸引力和感染力。要鼓励群众参与互动，变“单向灌输”为“双向交流”。</p>
+                <p class="small-text">宣讲队伍要“专业化”。要选拔一批政治素质好、理论水平高、表达能力强的干部担任宣讲员。要加强对宣讲员的培训，提高他们的宣讲能力。要建立健全激励机制，调动宣讲员的积极性。</p>
+                <p class="small-text">基层宣讲是一项长期任务，需要久久为功。我们要不断创新宣讲理念、内容、形式、方法，让党的创新理论在基层落地生根、开花结果。</p>
+            </div>
+
+            <!-- Center Main Bottom Article -->
+            <div>
+                <h2 style="text-align: center; font-size: 24px; margin-bottom: 15px;">基层宣讲要善叙事、能共情</h2>
+                <div class="author" style="text-align: center;">刘 祺</div>
+                <div style="column-count: 2; column-gap: 20px;">
+                    <p class="small-text">身边故事，往往更有吸引力。比如，社区民警讲述平安建设故事，法官讲述普法案例，医生讲述救死扶伤经历，教师讲述教书育人故事。这些故事真实感人，贴近生活，容易引起群众共鸣。通过这些故事，可以将抽象的理论具体化、形象化，让群众在听故事中感悟道理。</p>
+                    <p class="small-text">讲好身边故事，需要善于挖掘素材。要深入基层，深入群众，了解群众的所思所想、所盼所愿。要善于发现群众中的先进典型，总结推广他们的经验做法。要注重细节描写，让人物有血有肉，让故事生动鲜活。</p>
+                    <p class="small-text">共情是宣讲的关键。只有与群众产生情感共鸣，宣讲才能入脑入心。要站在群众的角度思考问题，理解群众的喜怒哀乐。要用真诚的态度打动群众，用真挚的情感感染群众。要避免高高在上，避免盛气凌人，要与群众打成一片。</p>
+                    <p class="small-text">实现共情，需要掌握沟通技巧。要学会倾听，耐心听取群众的意见建议。要学会换位思考，设身处地为群众着想。要学会运用肢体语言、面部表情等非语言符号，增强沟通效果。要注意语气语调，营造轻松和谐的交流氛围。</p>
+                    <p class="small-text">基层宣讲是一门艺术，需要不断琢磨和实践。我们要坚持以人民为中心的工作导向，不断改进宣讲工作，提高宣讲水平，为凝聚民心、汇聚民力作出更大贡献。</p>
+                    <p class="small-text no-indent" style="text-align: right;">（作者为天津市河东区区委党校讲师）</p>
+                </div>
+            </div>
+
+            <!-- Right Info Block -->
+            <div>
+                 <!-- This area seems to be covered by the right sidebar in the visual flow, 
+                      but in the grid, the bottom section spans 4 cols. 
+                      The right sidebar ended above. 
+                      Let's check the image again. 
+                      The right column "下好投资..." and "串门..." ends. 
+                      Below that is "欢迎赐稿". 
+                      The bottom article "基层宣讲..." spans the middle. 
+                      To the left is the red box. 
+                      To the right? Actually, the "欢迎赐稿" is at the very bottom right.
+                      The "串门" article is above it.
+                      So the bottom-right cell might be empty or part of the sidebar flow.
+                      Looking closely, the "基层宣讲" article takes up the center 2 columns roughly.
+                      The left box takes 1 column.
+                      The right side has the end of the "串门" article and the "欢迎赐稿" box.
+                 -->
+                 <!-- Adjusting grid logic mentally: 
+                      Row 1: Top Art (3 cols) + Right Side Bar Start (1 col)
+                      Row 2: Mid Left (1) + Mid Img (1) + Mid Right Text (1) + Right Side Bar Cont (1) -> Wait, the right sidebar is continuous.
+                      Let's stick to the visual blocks.
+                 -->
+                 
+                 <!-- Re-evaluating the bottom right area based on image -->
+                 <!-- The "串门" article ends. Then "欢迎赐稿". -->
+                 <!-- The "基层宣讲" is in the center. -->
+                 <!-- The red box is on the left. -->
+                 <!-- So the bottom row is: [Red Box] [Base Lecturing Art] [End of Right Col stuff] -->
+                 <!-- Since I used a separate div for right-column spanning 2 rows, the bottom-section grid needs to handle the remaining space. -->
+                 <!-- Actually, simpler approach: The right column is a flex container. The main content is to its left. -->
+            </div>
+        </div>
+        
+        <!-- Restructuring for better fidelity using Flexbox for the main body split -->
+    </div>
+    
+    <!-- Let's redo the main layout structure to ensure the right sidebar runs full height correctly alongside the stacked left content -->
+    <div style="display: flex; gap: 20px; margin-top: -800px; /* Hack to overlay previous grid attempt, better to rewrite cleanly */ display: none;"> 
+        <!-- Ignoring this, will rewrite below properly -->
+    </div>
+
+</div>
+
+<!-- CLEAN REWRITE OF BODY CONTENT FOR BETTER LAYOUT CONTROL -->
+<div class="page-container" style="margin-top: 20px;">
+    <header>
+        <div class="logo">人民日报</div>
+        <div class="header-info">
+            <span>2025 年 1 月 6 日 星期一</span>
+            <span class="page-num">5</span>
+            <span class="section-title">评论</span>
+        </div>
+    </header>
+
+    <div style="display: flex; gap: 30px;">
+        <!-- LEFT MAIN CONTENT (75%) -->
+        <div style="flex: 3; display: flex; flex-direction: column; gap: 20px;">
+            
+            <!-- Article 1 -->
+            <article>
+                <span class="red-header">R 评论员观察</span>
+                <h1 style="text-align: center; font-size: 32px; margin: 10px 0;">用新技术找增量 用新办法拓赛道</h1>
+                <div class="author" style="text-align: center;">李洪兴</div>
+                <div style="column-count: 3; column-gap: 25px; margin-top: 15px; text-align: justify; font-size: 14px; line-height: 1.8;">
+                    <p><span class="drop-cap">只</span>有主树儿想了，主动务实了、主业做大了、内功练强了，才能不惧风浪、破浪前行</p>
+                    <p>立足自身特点和优势，专注细分领域，有所为有所不为，就能在产业向绿向新沿着道宽的步子向新挺进</p>
+                    <p>不久前，笔者到一家创新型企业采访。谈及企业换赛道的成功经验，负责人认为，一方面，不跟风盲动，始终不断巩固主营业务，夯实发展基础，提高经营质量；另一方面，尊重技术化交换规律，捕捉变革应用趋势，敢闯开辟新赛道的路。</p>
+                    <p>有技术上的自信，有战略上的清醒，应对挑战，企业则从容不迫、先人一步。</p>
+                    <p>读懂中国经济走势，可得出企业开拓工艺的思路脉络。有的企业种好“责任田”，瞄准关键零部件进行攻关；有的企业深耕细分市，紧抓企业转型自身的优势、力与厚积薄发。不管如何抉择，对企业来说，新的征程少不了对市场的洞察、对产业的把握、对未来的考量。</p>
+                    <p>从“新”的维度定出发展的方向和优先级，是一面反映物象的照妖镜。如何“看势”“识变”？既不能只见沙丘的沙丘观海，看过往，我们从来都是在风雨洗礼中成长、在历经考验中壮大。看现在，未来，行进于山海壮阔的宽广，“无限风光在险峰”，必能步履铿锵。</p>
+                    <p>聚焦主业，做得好的“其志在也，心无旁骛是也，以成金业”。</p>
+                    <p>50%、51%、52%、53%……是湖南省新能源装机规模占全省总装机规模的比重变化。为何能实现“节节高”？背后，企业设备更新、产品更迭，离不开电、山清水秀。大势所趋，方为大势所趋，传统产业升级、中国量子行业进入大芯片时代。如今，“量超融合、融核联芯工程”的路，企业正从科研团队还在奋力奔跑，让五岳同一颗明珠更加璀璨。</p>
+                    <p>老树新芽花开满，树定已晚，企业翻开生命活力，提高全要素生产率，大力推进产业“智改数转网联”，乃至长枝抽穗了，主业会活了、主业做大了、内功练强了，才能不惧风浪、破浪前行。</p>
+                    <p>因企制宜、见新图新。“传统产业改造升级，就是发展新质生产力”。</p>
+                    <p>对企业特别是传统行业的生产企业而言，有着寻求创新的智慧方向，识变应变，尤其是提升基础性、关键性、支撑性能力。拿出壮士一臂之力，可谓大有“看头”。在陕西榆林煤制油基地，全球首套煤间接液化——煤制油装置集聚着在曲折中奋起前行，掌握核心技术，突破“卡脖子”瓶颈，助力中国“煤”向“精”转变。</p>
+                    <p>坚定发展信心，勇担使命，敢于“尝鲜”，云化企业大力拓展资源利用领域，延链、补链、强链，铺就三行三业之径护航扩产，加大创新力度生产新能源电池材料……正是越来越多地方，既能做到资源优化，又立自身所长、扬自身所能，有效解决资源枯竭的问题，也能重塑新地标、沿循原有路径下新路。</p>
+                    <p>认清趋势，坚守本真，选择“专而精一到到极致”，“专于一行一行一行......</p>
+                    <p>下笔有法，怕的是“坐山观虎斗”。只有选准赛道，把精力用到刀刃上，做到和精细极致上，搞一锤响地，没有目标的方向，发展很难有好成绩。</p>
+                    <p>找准新赛道，在风浪起伏中勇立潮头。为什么？从工具论，企业变革是面对市场挑战的主动选择，也是抢抓机遇的敏锐嗅觉；在方法论中涉及“旧瓶换新酒”等，何谈一步三回头呢。从目的论看，创新只是手段，提质、增效才是目的，“改”则双赢。企业要有大视野、“用新技术找增量，用新办法拓赛道”。</p>
+                    <p>尊重规律规律，产品做优，改变主业布局，既要防好一步一个脚印走，在行稳中致远，要立足长远，也要脚踏实地，着眼细分方向，也要兼顾大处去，管住远小处，事半功倍。</p>
+                    <p>有路有险，远近风景各异。可以预见，今后的发展道路上，还会遇到各种“激流险滩”，继续修成正果，让创新的冲劲强起来、闯的精神燃起来，一定能在新征程上创造新的辉煌，跑出发展的“加速度”。</p>
+                </div>
+            </article>
+
+            <hr style="border: 0; border-top: 1px solid #ccc; margin: 10px 0;">
+
+            <!-- Middle Row: 3 Columns -->
+            <div style="display: flex; gap: 20px;">
+                <!-- Col 1 -->
+                <div style="flex: 1;">
+                    <span class="red-header">R 中国道路中国梦·与时代一起奔跑</span>
+                    <h2 style="font-size: 20px; margin: 10px 0;">新寨村何以飘来咖啡香</h2>
+                    <div class="author">王加维</div>
+                    <div style="font-size: 13px; line-height: 1.6; text-align: justify;">
+                        <p>短短10多年，从最差到好，这是一条新路吗？从源头上来看是看，漫山遍野的咖啡树绿得油亮亮的叶子，看着就高兴。这就是我们新寨村的咖啡园。</p>
+                        <p>云南保山市新寨村，有“中国咖啡第一村”的美誉。村里几乎家家户户都种咖啡，全村咖啡种植面积达万亩之多。有着得天独厚的自然地理环境，咖啡是这里的特产，然而，很长一段时间里，咖农收入并不高。村民种的咖啡豆品质虽好，可因为受限于收购商压价，始终卖不上价。前些年，有的村民甚至打算砍掉咖啡树改种其他作物。</p>
+                        <p>转机出现在几年前。随着精品咖啡概念兴起，新寨村抓住机遇，开始探索咖啡产业升级之路。村里引进了先进的加工设备和技术，建立了标准化的生产流程。同时，通过举办咖啡节、开展电商直播等方式，打响了新寨咖啡的品牌。</p>
+                        <p>如今，新寨村的咖啡不仅销往全国各地，还远销海外。村民们的腰包鼓起来了，日子越过越红火。更重要的是，咖啡产业带动了乡村旅游的发展。许多游客慕名而来，体验咖啡采摘、加工的乐趣，品尝地道的咖啡美食。</p>
+                        <p>新寨村的变迁，是中国乡村振兴的一个缩影。它告诉我们，只要立足自身优势，勇于创新，敢于拼搏，就能在广阔的天地里大有作为。</p>
+                        <p class="no-indent" style="text-align: right; font-size: 12px; color: #666;">（作者为云南省保山市隆阳区潞江镇新寨村党总支书记，本报记者杨文明采访整理）</p>
+                    </div>
+                </div>
+
+                <!-- Col 2 (Image) -->
+                <div style="flex: 1.2;">
+                    <div class="image-placeholder" style="height: 220px;">
+                         <div style="background: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'100\'><rect width=\'100\' height=\'100\' fill=\'%23ddd\'/><text x=\'50\' y=\'50\' font-size=\'10\' text-anchor=\'middle\' fill=\'%23666\'>Opera Image</text></svg>') center/cover; width: 100%; height: 100%; background-color: #e0d5c1; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 10px; color: #333; font-weight: bold; text-shadow: 1px 1px 0 #fff;">
+                            <!-- Fallback visual representation -->
+                            <div style="width: 100%; height: 100%; background: linear-gradient(to bottom, #d4a373, #faedcd); position: relative;">
+                                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #5c4033;">
+                                    <div style="font-size: 40px;">🎭</div>
+                                    <div style="font-size: 12px; margin-top: 5px;">[川剧表演图片]</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="caption">重庆市綦江区东溪小学，学生川剧社团的同学们正在表演川剧。<br>秦廷富摄（影像中国）</div>
+                    
+                    <div style="margin-top: 15px; border-top: 1px dashed #ccc; padding-top: 10px; font-size: 12px; line-height: 1.5;">
+                        <p>44个项目列入联合国教科文组织非物质文化遗产名录名册，总数世界第一；公布国家级非遗代表性项目1557项，认定国家级非遗代表性传承人3000多名……一组亮眼数据彰显我国保护非物质文化遗产的力度和成效。</p>
+                        <p>非遗保护，功在当代，利在千秋。我们要像爱护眼睛一样爱护非遗，让非遗在新时代绽放出更加迷人的光彩。</p>
+                        <div class="author">徐 文立</div>
+                    </div>
+                </div>
+
+                <!-- Col 3 -->
+                <div style="flex: 0.8; display: flex; flex-direction: column; justify-content: center;">
+                     <p style="font-size: 13px; text-align: center; margin-bottom: 5px;">这正是：</p>
+                     <p style="font-size: 13px; text-align: center; font-style: italic; line-height: 2;">
+                        彩凤随伴体姿，<br>
+                        散发内生动力。<br>
+                        传承千年技艺，<br>
+                        文明生生不息。
+                     </p>
+                </div>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid #ccc; margin: 10px 0;">
+
+            <!-- Bottom Row -->
+            <div style="display: flex; gap: 20px;">
+                <!-- Left Box -->
+                <div style="flex: 1;">
+                    <div class="quote-box">
+                        <p>区分不同主题，将“自己讲”和“他人讲”结合起来，将理论与实践结合起来，以事实说话、以真情动人，群众才听得进去，宣讲才能直抵人心</p>
+                    </div>
+                    <div style="font-size: 13px; line-height: 1.6; text-align: justify;">
+                        <p>基层宣讲是连接党的创新理论与人民群众的桥梁。能否做到内容通俗化、方式大众化，直接关乎宣讲工作成效。基层宣讲干部懂理论、会表达、善沟通，才能把道理讲深、讲透、讲活，让党的创新理论“飞入寻常百姓家”。</p>
+                        <p>宣讲内容要“接地气”。要把“大道理”转化为“小故事”，把“书面语”转化为“家常话”。要善于运用群众身边的例子，用群众听得懂的语言，讲解党的政策理论。要避免照本宣科，避免空洞说教，要让群众听得进、记得住、用得上。</p>
+                        <p>宣讲方式要“多样化”。除了传统的报告会、座谈会，还可以利用新媒体平台，开展微宣讲、云宣讲。可以结合文艺表演、知识竞赛等形式，增强宣讲的吸引力和感染力。要鼓励群众参与互动，变“单向灌输”为“双向交流”。</p>
+                        <p>宣讲队伍要“专业化”。要选拔一批政治素质好、理论水平高、表达能力强的干部担任宣讲员。要加强对宣讲员的培训，提高他们的宣讲能力。要建立健全激励机制，调动宣讲员的积极性。</p>
+                        <p>基层宣讲是一项长期任务，需要久久为功。我们要不断创新宣讲理念、内容、形式、方法，让党的创新理论在基层落地生根、开花结果。</p>
+                    </div>
+                </div>
+
+                <!-- Center Article -->
+                <div style="flex: 2;">
+                    <h2 style="text-align: center; font-size: 22px; margin-bottom: 10px;">基层宣讲要善叙事、能共情</h2>
+                    <div class="author" style="text-align: center; margin-bottom: 10px;">刘 祺</div>
+                    <div style="column-count: 2; column-gap: 20px; font-size: 13px; line-height: 1.6; text-align: justify;">
+                        <p>身边故事，往往更有吸引力。比如，社区民警讲述平安建设故事，法官讲述普法案例，医生讲述救死扶伤经历，教师讲述教书育人故事。这些故事真实感人，贴近生活，容易引起群众共鸣。通过这些故事，可以将抽象的理论具体化、形象化，让群众在听故事中感悟道理。</p>
+                        <p>讲好身边故事，需要善于挖掘素材。要深入基层，深入群众，了解群众的所思所想、所盼所愿。要善于发现群众中的先进典型，总结推广他们的经验做法。要注重细节描写，让人物有血有肉，让故事生动鲜活。</p>
+                        <p>共情是宣讲的关键。只有与群众产生情感共鸣，宣讲才能入脑入心。要站在群众的角度思考问题，理解群众的喜怒哀乐。要用真诚的态度打动群众，用真挚的情感感染群众。要避免高高在上，避免盛气凌人，要与群众打成一片。</p>
+                        <p>实现共情，需要掌握沟通技巧。要学会倾听，耐心听取群众的意见建议。要学会换位思考，设身处地为群众着想。要学会运用肢体语言、面部表情等非语言符号，增强沟通效果。要注意语气语调，营造轻松和谐的交流氛围。</p>
+                        <p>基层宣讲是一门艺术，需要不断琢磨和实践。我们要坚持以人民为中心的工作导向，不断改进宣讲工作，提高宣讲水平，为凝聚民心、汇聚民力作出更大贡献。</p>
+                        <p class="no-indent" style="text-align: right; font-size: 12px; color: #666;">（作者为天津市河东区区委党校讲师）</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- RIGHT SIDEBAR (25%) -->
+        <div style="flex: 1; border-left: 1px solid #eee; padding-left: 20px; display: flex; flex-direction: column; gap: 20px;">
+            
+            <!-- Top Sidebar Box -->
+            <div>
+                <span class="red-header">R 人民时评</span>
+                <div class="sidebar-box" style="margin-top: 10px;">
+                    <p>重大项目是促进并加固稳增长的重要之针，而高质量投资是战略之举。无论是项目选取，还是资金投向，既要立足当下，更要着眼长远</p>
+                </div>
+            </div>
+
+            <!-- Vertical Title Article -->
+            <div style="display: flex; gap: 10px;">
+                <div style="writing-mode: vertical-rl; text-orientation: upright; font-size: 26px; font-weight: bold; letter-spacing: 8px; color: #000; white-space: nowrap;">
+                    下好投资“先手棋”
+                </div>
+                <div style="flex: 1;">
+                    <div class="author" style="writing-mode: vertical-rl; height: 100px; margin: 0 auto;">韩 鑫</div>
+                    <div style="font-size: 12px; line-height: 1.6; text-align: justify; margin-top: 10px;">
+                        <p>开工！湖北召开2024年四季度全省重大项目集中开工活动，新开工亿元以上重大项目106个、总投资超千亿元。这是湖北抓项目建设的生动缩影，也是全国上下拼经济、促发展的缩影。</p>
+                        <p>据国家统计局数据，2024年全国固定资产投资（不含农户）51.4万亿元，同比增长3.4%。其中，基础设施投资增长4.4%，制造业投资增长9.2%，房地产开发投资下降10.6%。分领域看，高技术产业投资增长10.3%，快于全部投资6.9个百分点。</p>
+                        <p>一段时间以来，重大项目建设按下了“快进键”。从中央到地方，一系列政策举措密集出台，为经济运行回升向好提供了有力支撑。从发行超长期特别国债，到安排中央预算内投资，再到提前下达部分新增地方政府债务限额……一系列政策“组合拳”，有效提振了市场信心，激发了社会投资活力。</p>
+                        <p>2025年是“十四五”规划收官之年，也是进一步全面深化改革的重要一年。做好经济工作，必须更好发挥投资的关键作用。中央经济工作会议提出，“全方位扩大国内需求”“提高投资效益”。这为做好2025年投资工作指明了方向。</p>
+                        <p>重大项目是促进并加固稳增长的重要之针，而高质量投资是战略之举。无论是项目选取，还是资金投向，既要立足当下，更要着眼长远。要聚焦国家重大战略，聚焦经济社会发展重点领域，聚焦民生改善，谋划实施一批标志性工程，以高质量投资推动高质量发展。</p>
+                        <p>下好投资“先手棋”，关键在于精准发力。要围绕发展新质生产力，加大对科技创新、绿色发展、数字经济等领域的投资力度。要围绕保障和改善民生，加大对教育、医疗、养老等领域的投资力度。要围绕区域协调发展，加大对中西部地区、东北地区等领域的投资力度。</p>
+                        <p>下好投资“先手棋”，还要注重投资效益。要坚持政府投资和社会资本协同发力，充分发挥政府投资的引导带动作用，激发民间投资活力。要深化投融资体制改革，破除民间投资壁垒，营造公平竞争的市场环境。要加强项目全过程管理，提高资金使用效率，确保每一分钱都花在刀刃上。</p>
+                        <p>开局关乎全局，起步决定后程。2025年经济工作大幕已经拉开，让我们以更加饱满的热情、更加务实的作风，下好投资“先手棋”，打好发展“主动仗”，为实现全年经济社会发展目标任务奠定坚实基础。</p>
+                    </div>
+                </div>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid #ccc; margin: 0;">
+
+            <!-- Zongheng Article -->
+            <div>
+                <span class="red-header">R 纵横</span>
+                <h3 style="font-size: 18px; margin: 5px 0;">“串门”式文旅大有可为</h3>
+                <div class="author">苏 畅</div>
+                <div style="font-size: 12px; line-height: 1.6; text-align: justify;">
+                    <p>前不久，23个“尔滨”小朋友踏上了东北之旅，来到黑龙江哈尔滨的亲戚家串门。这一温馨互动，不仅拉近了两地距离，更引发了全网对“串门”式文旅的热议。“小砂糖橘”们化身东北“小老乡”成了“流量密码”，也让“串门”式文旅火出了圈。</p>
+                    <p>所谓“串门”式文旅，是指不同地区之间通过互动交流、资源共享等方式，推动文旅产业协同发展的一种新模式。这种模式打破了地域界限，促进了文化交融，为文旅产业注入了新活力。</p>
+                    <p>“串门”式文旅之所以能火，关键在于其独特的互动性和体验感。它不再是简单的观光游览，而是深度的文化体验和情感交流。游客在“串门”过程中，不仅能欣赏到各地的自然风光和人文景观，还能感受到不同地域的风土人情和文化魅力。</p>
+                    <p>当然，“串门”式文旅要持续发展，还需要各方共同努力。政府部门要加强顶层设计，完善相关政策，为“串门”式文旅提供制度保障。文旅企业要创新产品和服务，提升游客体验。媒体要加大宣传力度，营造良好的舆论氛围。</p>
+                    <p>总之，“串门”式文旅是一种有益的探索和创新。它不仅丰富了文旅产品的供给，满足了人民群众日益增长的美好生活需要，也为文旅产业的高质量发展提供了新思路。期待未来能有更多地区加入到“串门”行列中来，共同推动文旅产业繁荣发展。</p>
+                    <p class="no-indent" style="text-align: right; font-size: 11px; color: #666;">（摘编自《广西日报》，原题为《做长做足做强“串门”式文旅》）</p>
+                </div>
+            </div>
+
+            <!-- Submission Box -->
+            <div style="margin-top: auto; border: 1px solid #000; padding: 15px; text-align: center; background: #fafafa;">
+                <h3 style="margin: 0 0 10px 0; font-size: 18px;">欢迎赐稿</h3>
+                <p style="font-size: 12px; line-height: 1.5; margin: 0; text-indent: 0; text-align: left;">
+                    各位读者，本版“大家谈”“暖闻热评”“中国道路中国梦”“来论”等栏目长期征稿，欢迎赐稿，请勿一稿多投。
+                </p>
+                <p style="font-size: 12px; margin: 10px 0 0 0; text-indent: 0; text-align: left;">
+                    本版邮箱：rmrbpl@peopledaily.cn<br>
+                    （来稿请注明栏目名）
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="footer-info">
+        <span>本版责编：李 拯 李浩燃 曾 言</span>
+    </div>
+</div>
+
+</body>
+</html>

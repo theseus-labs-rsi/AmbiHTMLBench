@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guojian Invitation</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Noto+Sans+SC:wght@500;700&display=swap');
+
+        :root {
+            --primary-blue: #1a3b8f;
+            --dark-text: #222222;
+            --grey-text: #555555;
+            --accent-orange: #e87722;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .poster-container {
+            width: 100%;
+            max-width: 600px;
+            aspect-ratio: 1 / 2.2;
+            background: linear-gradient(135deg, #eef2f5 0%, #dcebf5 40%, #a8c6e8 80%, #7baee0 100%);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 40px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Background Watermark Text */
+        .watermark {
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%) rotate(90deg);
+            font-size: 180px;
+            font-weight: 800;
+            color: rgba(255, 255, 255, 0.25);
+            letter-spacing: 20px;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 0;
+            transform-origin: center;
+        }
+
+        /* Geometric Lines */
+        .geo-line-1 {
+            position: absolute;
+            top: 0;
+            right: 100px;
+            width: 200px;
+            height: 200px;
+            border-top: 2px solid rgba(255,255,255,0.4);
+            border-right: 2px solid rgba(255,255,255,0.4);
+            transform: rotate(45deg) translate(50px, -50px);
+            z-index: 0;
+        }
+        
+        .geo-line-2 {
+            position: absolute;
+            bottom: 100px;
+            left: -50px;
+            width: 300px;
+            height: 300px;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            border-left: 2px solid rgba(255,255,255,0.3);
+            transform: rotate(45deg);
+            z-index: 0;
+        }
+
+        .content-layer {
+            position: relative;
+            z-index: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            margin-bottom: 30px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            clip-path: polygon(20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%, 0% 20%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+            /* Simulating the G logo shape roughly */
+            border-radius: 5px;
+            position: relative;
+        }
+        .logo-icon::after {
+            content: "G";
+            font-family: sans-serif;
+            font-style: italic;
+        }
+        .logo-text {
+            font-size: 28px;
+            font-weight: 800;
+            color: #000;
+            letter-spacing: 1px;
+        }
+
+        .company-info h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark-text);
+            margin: 0 0 5px 0;
+        }
+        .company-info p {
+            font-size: 13px;
+            color: var(--dark-text);
+            margin: 2px 0;
+            line-height: 1.4;
+        }
+
+        /* Invitation Title */
+        .invitation-section {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .invitation-title {
+            font-size: 52px;
+            font-weight: 800;
+            color: var(--primary-blue);
+            margin: 0;
+            line-height: 1;
+            letter-spacing: -1px;
+        }
+        .invitation-subtitle {
+            font-size: 14px;
+            color: var(--dark-text);
+            margin-top: 5px;
+        }
+
+        /* Vertical Line Spacer */
+        .vertical-line {
+            width: 2px;
+            height: 60px;
+            background-color: var(--dark-text);
+            margin: 15px 0;
+        }
+
+        /* Event Details */
+        .event-details {
+            margin-bottom: 20px;
+        }
+        .hktdc-logo {
+            color: var(--accent-orange);
+            font-weight: bold;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+        .hktdc-logo span {
+            background: var(--accent-orange);
+            color: white;
+            padding: 0 4px;
+            border-radius: 2px;
+            font-size: 10px;
+        }
+        .event-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--dark-text);
+            margin: 0;
+            line-height: 1.3;
+        }
+        .event-name-cn {
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--dark-text);
+            margin-top: 2px;
+        }
+
+        /* Date and Booth */
+        .info-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .label {
+            font-size: 14px;
+            color: var(--dark-text);
+            width: 100px;
+            position: relative;
+        }
+        .label::after {
+            content: "";
+            position: absolute;
+            right: -10px;
+            top: 50%;
+            width: 30px;
+            height: 1px;
+            background-color: var(--grey-text);
+        }
+        .date-display {
+            display: flex;
+            align-items: baseline;
+            gap: 5px;
+            margin-left: 20px;
+        }
+        .date-num {
+            font-size: 36px;
+            font-weight: 400;
+            color: var(--dark-text);
+        }
+        .date-suffix {
+            font-size: 14px;
+            color: var(--dark-text);
+        }
+        .date-arrow {
+            font-size: 24px;
+            color: var(--dark-text);
+            margin: 0 5px;
+        }
+        .date-month-year {
+            display: flex;
+            flex-direction: column;
+            margin-left: 10px;
+        }
+        .month {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary-blue);
+            text-transform: uppercase;
+        }
+        .year {
+            font-size: 14px;
+            color: var(--dark-text);
+        }
+
+        .booth-number {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--primary-blue);
+            margin-left: 20px;
+            letter-spacing: 1px;
+        }
+
+        /* Location */
+        .location-section {
+            margin-top: 10px;
+            margin-bottom: auto; /* Pushes footer down */
+        }
+        .location-label {
+            font-size: 14px;
+            color: var(--dark-text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+        .location-label::after {
+            content: "";
+            flex-grow: 1;
+            height: 1px;
+            background-color: var(--grey-text);
+            max-width: 200px;
+        }
+        .location-value {
+            font-size: 16px;
+            color: var(--primary-blue);
+            font-weight: 500;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 40px;
+        }
+        .contact-info {
+            margin-bottom: 20px;
+        }
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: var(--dark-text);
+            margin-bottom: 8px;
+        }
+        .icon {
+            width: 16px;
+            height: 16px;
+            fill: var(--dark-text);
+        }
+
+        .qr-codes {
+            display: flex;
+            gap: 20px;
+        }
+        .qr-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        .qr-placeholder {
+            width: 80px;
+            height: 80px;
+            background-color: white;
+            border: 1px solid #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            border-radius: 4px;
+        }
+        /* Simulating QR pattern */
+        .qr-pattern {
+            width: 90%;
+            height: 90%;
+            background-image: 
+                linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000),
+                linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000);
+            background-size: 10px 10px;
+            background-position: 0 0, 5px 5px;
+            opacity: 0.8;
+        }
+        .qr-center-icon {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+        }
+        .qr-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--dark-text);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .social-icon {
+            width: 14px;
+            height: 14px;
+            border-radius: 2px;
+            display: inline-block;
+        }
+        .linkedin { background-color: #0077b5; color: white; font-size: 10px; text-align: center; line-height: 14px; font-weight: bold;}
+        .whatsapp { background-color: #25D366; color: white; font-size: 10px; text-align: center; line-height: 14px; border-radius: 50%;}
+        .wechat { background-color: #07C160; color: white; font-size: 10px; text-align: center; line-height: 14px; border-radius: 50%;}
+
+    </style>
+</head>
+<body>
+
+    <div class="poster-container">
+        <!-- Background Elements -->
+        <div class="watermark">INVITATION</div>
+        <div class="geo-line-1"></div>
+        <div class="geo-line-2"></div>
+
+        <div class="content-layer">
+            <!-- Header -->
+            <div class="header">
+                <div class="logo">
+                    <div class="logo-icon"></div>
+                    <div class="logo-text">GUOJIAN</div>
+                </div>
+                <div class="company-info">
+                    <h2>Hangzhou GuoJian Electrical Co., Ltd.</h2>
+                    <p>More than 20 years of Manufacturing Experience.</p>
+                    <p>Global Expert in Electrical Solutions.</p>
+                </div>
+            </div>
+
+            <!-- Invitation Title -->
+            <div class="invitation-section">
+                <h1 class="invitation-title">INVITATION</h1>
+                <div class="invitation-subtitle">We cordially invite you to visit us at</div>
+            </div>
+
+            <div class="vertical-line"></div>
+
+            <!-- Event Details -->
+            <div class="event-details">
+                <div class="hktdc-logo">
+                    <svg width="20" height="10" viewBox="0 0 20 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 5 Q 5 0 10 5 T 20 5" stroke="#e87722" stroke-width="2" fill="none"/>
+                    </svg>
+                    HKTDC
+                </div>
+                <h3 class="event-name">Hong Kong International Lighting Fair<br>(Spring Edition)</h3>
+                <div class="event-name-cn">香港國際春季燈飾展</div>
+            </div>
+
+            <!-- Date Row -->
+            <div class="info-row">
+                <div class="label">Exhibition<br>Date</div>
+                <div class="date-display">
+                    <span class="date-num">6</span><span class="date-suffix">th</span>
+                    <span class="date-arrow">&#10230;</span>
+                    <span class="date-num">9</span><span class="date-suffix">th</span>
+                </div>
+                <div class="date-month-year">
+                    <span class="month">APRIL</span>
+                    <span class="year">2024</span>
+                </div>
+            </div>
+
+            <!-- Booth Row -->
+            <div class="info-row">
+                <div class="label">Booth NO</div>
+                <div class="booth-number">M4-A14</div>
+            </div>
+
+            <!-- Location -->
+            <div class="location-section">
+                <div class="location-label">Exhibition Location</div>
+                <div class="location-value">Hong Kong Convention and Exhibition Centre</div>
+            </div>
+
+            <!-- Footer -->
+            <div class="footer">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                        Email: mike.john@hzgj-electrical.com
+                    </div>
+                    <div class="contact-item">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                        Phone: (+86) 183 5754 6047
+                    </div>
+                </div>
+
+                <div class="qr-codes">
+                    <div class="qr-item">
+                        <div class="qr-placeholder">
+                            <div class="qr-pattern"></div>
+                            <div class="qr-center-icon">in</div>
+                        </div>
+                        <div class="qr-label">Linked <span class="social-icon linkedin">in</span></div>
+                    </div>
+                    <div class="qr-item">
+                        <div class="qr-placeholder">
+                            <div class="qr-pattern"></div>
+                            <div class="qr-center-icon" style="color:#25D366;">&#9742;</div>
+                        </div>
+                        <div class="qr-label">WhatsApp <span class="social-icon whatsapp">&#9742;</span></div>
+                    </div>
+                    <div class="qr-item">
+                        <div class="qr-placeholder">
+                            <div class="qr-pattern"></div>
+                            <div class="qr-center-icon" style="color:#07C160;">&#128172;</div>
+                        </div>
+                        <div class="qr-label">WeChat <span class="social-icon wechat">&#128172;</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

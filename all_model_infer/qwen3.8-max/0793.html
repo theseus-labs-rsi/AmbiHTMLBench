@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>诉讼实现公平正义 - 思维导图</title>
+    <script>
+        MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            background-color: #fdfbf7;
+            font-family: "Kaiti", "STKaiti", "KaiTi", "楷体", serif;
+            margin: 0;
+            padding: 40px 20px 40px 80px;
+            color: #1a1a1a;
+            line-height: 1.6;
+            background-image: 
+                linear-gradient(#e0e0e0 1px, transparent 1px),
+                linear-gradient(90deg, #e0e0e0 1px, transparent 1px);
+            background-size: 20px 20px;
+            position: relative;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        /* Spiral binding simulation */
+        .binding {
+            position: fixed;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 10;
+            pointer-events: none;
+        }
+        .hole {
+            width: 18px;
+            height: 18px;
+            background-color: #333;
+            border-radius: 50%;
+            box-shadow: inset 2px 2px 4px rgba(0,0,0,0.8), 1px 1px 2px rgba(255,255,255,0.5);
+            position: relative;
+        }
+        .hole::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -10px;
+            width: 35px;
+            height: 28px;
+            border: 3px solid #d4af37;
+            border-radius: 50%;
+            transform: rotate(-15deg);
+            opacity: 0.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            letter-spacing: 15px;
+            margin-bottom: 50px;
+            color: #0f5c54;
+            text-shadow: 1px 1px 0px rgba(0,0,0,0.1);
+            font-weight: bold;
+        }
+
+        .mindmap {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            position: relative;
+        }
+
+        /* Main vertical spine */
+        .mindmap::before {
+            content: '';
+            position: absolute;
+            left: 140px;
+            top: 20px;
+            bottom: 20px;
+            width: 2px;
+            background-color: #5fa39a;
+            z-index: 0;
+        }
+
+        .branch {
+            display: flex;
+            align-items: flex-start;
+            position: relative;
+            z-index: 1;
+        }
+
+        .main-node {
+            width: 120px;
+            text-align: right;
+            padding-right: 20px;
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #0f5c54;
+            position: relative;
+            flex-shrink: 0;
+            padding-top: 2px;
+        }
+
+        /* Connector dot */
+        .main-node::after {
+            content: '';
+            position: absolute;
+            right: -5px;
+            top: 12px;
+            width: 8px;
+            height: 8px;
+            background-color: #5fa39a;
+            border-radius: 50%;
+        }
+
+        .sub-content {
+            flex-grow: 1;
+            padding-left: 30px;
+            border-left: 2px solid #5fa39a;
+            margin-left: 10px;
+            padding-bottom: 10px;
+        }
+
+        .sub-branch {
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .sub-branch:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Horizontal connector for sub-branches */
+        .sub-branch::before {
+            content: '';
+            position: absolute;
+            left: -32px;
+            top: 12px;
+            width: 30px;
+            height: 2px;
+            background-color: #5fa39a;
+        }
+
+        .sub-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+            font-size: 1.1em;
+        }
+
+        .details {
+            padding-left: 20px;
+            color: #333;
+            font-size: 0.95em;
+        }
+
+        .details ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin: 5px 0;
+        }
+
+        .details li {
+            position: relative;
+            padding-left: 15px;
+            margin-bottom: 4px;
+        }
+
+        .details li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #5fa39a;
+        }
+
+        .highlight-red {
+            color: #c0392b;
+            font-weight: bold;
+        }
+
+        .note-box {
+            background-color: rgba(255, 255, 255, 0.7);
+            border: 1px dashed #5fa39a;
+            padding: 8px 12px;
+            margin-top: 8px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: #555;
+            display: inline-block;
+        }
+
+        .footer-note {
+            margin-top: 40px;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-left: 4px solid #0f5c54;
+            font-size: 0.95em;
+            color: #444;
+        }
+
+        /* Specific layout adjustments for complex nesting */
+        .nested-list {
+            margin-top: 10px;
+            padding-left: 15px;
+            border-left: 1px solid #ccc;
+        }
+        
+        .nested-item {
+            margin-bottom: 8px;
+        }
+
+        .tag {
+            display: inline-block;
+            background-color: #e8f6f3;
+            color: #0f5c54;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.85em;
+            margin-right: 5px;
+            border: 1px solid #b2dfdb;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="binding">
+        <!-- Generating spiral holes via JS or just static divs for visual -->
+        <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+        <div class="hole"></div><div class="hole"></div>
+    </div>
+
+    <div class="container">
+        <h1>诉讼实现公平正义</h1>
+
+        <div class="mindmap">
+            
+            <!-- Branch 1: 诉讼权利 -->
+            <div class="branch">
+                <div class="main-node">诉讼权利</div>
+                <div class="sub-content">
+                    <div class="sub-branch">
+                        <div class="sub-title">当事人有委托诉讼代理人或辩护人的权利</div>
+                        <div class="details">
+                            <ul>
+                                <li>民事诉讼、行政诉讼 &rarr; 委托诉讼代理人</li>
+                                <li>刑事诉讼 &rarr; 委托辩护人</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="sub-branch">
+                        <div class="sub-title">当事人有申请回避的权利</div>
+                        <div class="details">
+                            当审判人员或其他有关人员具有法定情形时，当事人有权要求其退出诉讼活动。
+                        </div>
+                    </div>
+                    <div class="sub-branch">
+                        <div class="sub-title">当事人有上诉的权利</div>
+                        <div class="details">
+                            不服一审判决或裁定，在法定期限内向上一级法院提起上诉。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Branch 2: 严格遵守诉讼程序 -->
+            <div class="branch">
+                <div class="main-node">严格遵守<br>诉讼程序</div>
+                <div class="sub-content">
+                    <div class="sub-branch">
+                        <div class="sub-title">起诉与立案</div>
+                        <div class="details">
+                            <ul>
+                                <li><span class="tag">民事诉讼</span> 原告向法院递交起诉状。</li>
+                                <li><span class="tag">行政诉讼</span> 原告向法院递交起诉状。</li>
+                                <li><span class="tag">刑事诉讼</span> 公诉案件由检察院提起公诉；自诉案件由自诉人提起自诉。</li>
+                            </ul>
+                            <div class="note-box">
+                                法院接到起诉状后，应当在7日内决定是否立案。符合起诉条件的，应当登记立案；不符合的，裁定不予受理。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-branch">
+                        <div class="sub-title">审理与判决</div>
+                        <div class="details">
+                            <ul>
+                                <li><strong>开庭审理：</strong> 包括开庭准备、法庭调查、法庭辩论、休庭评议、宣告判决等阶段。</li>
+                                <li><strong>二审程序：</strong> 当事人不服一审裁判，可提起上诉。二审法院对上诉请求的有关事实和适用法律进行审查。</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="sub-branch">
+                        <div class="sub-title">审限规定</div>
+                        <div class="details">
+                            <ul>
+                                <li>民事诉讼一审普通程序：6个月（可延长）。</li>
+                                <li>行政诉讼一审：6个月。</li>
+                                <li>刑事诉讼一审公诉案件：2个月至3个月（可延长）。</li>
+                            </ul>
+                            <div class="highlight-red" style="margin-top: 5px; font-size: 0.9em;">
+                                * 注意：公告送达、鉴定期间等不计入审限。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Branch 3: 依法收集运用证据 -->
+            <div class="branch">
+                <div class="main-node">依法收集<br>运用证据</div>
+                <div class="sub-content">
+                    <div class="sub-branch">
+                        <div class="sub-title">证据的种类</div>
+                        <div class="details">
+                            书证、物证、视听资料、电子数据、证人证言、当事人陈述、鉴定意见、勘验笔录。
+                        </div>
+                    </div>
+                    <div class="sub-branch">
+                        <div class="sub-title">举证责任</div>
+                        <div class="details">
+                            <ul>
+                                <li><strong>民事诉讼：</strong> "谁主张，谁举证"。特殊侵权案件实行举证责任倒置。</li>
+                                <li><strong>行政诉讼：</strong> 被告（行政机关）对作出的行政行为负有举证责任。</li>
+                                <li><strong>刑事诉讼：</strong> 公诉案件中被告人有罪的举证责任由人民检察院承担；自诉案件中由自诉人承担。</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="sub-branch">
+                        <div class="sub-title">证据的收集与保全</div>
+                        <div class="details">
+                            当事人及其诉讼代理人因客观原因不能自行收集的证据，可以申请人民法院调查收集。在证据可能灭失或以后难以取得的情况下，可申请证据保全。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Branch 4: 正确行使诉讼权利 -->
+            <div class="branch">
+                <div class="main-node">正确行使<br>诉讼权利</div>
+                <div class="sub-content">
+                    <div class="sub-branch">
+                        <div class="sub-title">法律援助</div>
+                        <div class="details">
+                            国家建立法律援助制度，为经济困难或特殊案件的当事人提供免费法律服务。
+                            <br>
+                            <span class="highlight-red">意义：</span> 保障公民平等获得司法保护，维护社会公平正义。
+                        </div>
+                    </div>
+                    <div class="sub-branch">
+                        <div class="sub-title">诉讼费用的减免</div>
+                        <div class="details">
+                            当事人交纳诉讼费用确有困难的，可以按照规定向人民法院申请缓交、减交或者免交。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="footer-note">
+            <strong>总结：</strong> 诉讼是解决纠纷的最后途径。通过严格遵守诉讼程序、依法收集运用证据、正确行使诉讼权利，才能确保司法公正，实现"努力让人民群众在每一个司法案件中感受到公平正义"的目标。
+        </div>
+
+    </div>
+
+</body>
+</html>

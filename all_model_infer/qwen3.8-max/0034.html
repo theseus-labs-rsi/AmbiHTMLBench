@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fabric Design Layout</title>
+    <style>
+        body {
+            font-family: "Microsoft YaHei", "SimHei", sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 900px;
+            padding: 40px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        /* Top Row Grid */
+        .top-row {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .caption {
+            font-size: 12px;
+            color: #333;
+            margin-bottom: 8px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .placeholder {
+            background-color: #e0e0e0;
+            width: 100%;
+            aspect-ratio: 3/4; /* Approximate aspect ratio for top images */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 10px;
+            border: 1px solid #ccc;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* Specific adjustments for top row images to look like the source */
+        .top-row .placeholder {
+            height: 140px; /* Fixed height for consistency */
+        }
+
+        /* Bottom Row Grid */
+        .bottom-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 2fr; /* The last image is wider */
+            gap: 15px;
+            margin-bottom: 40px;
+            align-items: start;
+        }
+
+        .bottom-row .item:last-child {
+            grid-column: span 1; /* Actually it looks like 3 columns where the last is wider, or maybe just 3 items */
+        }
+        
+        /* Re-evaluating bottom row layout based on image: 
+           Left: Tall image. Middle: Square-ish image. Right: Wide panoramic image.
+           Let's use flexbox for better control of widths.
+        */
+        .bottom-row-flex {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .bottom-item-1 {
+            flex: 1;
+        }
+        .bottom-item-2 {
+            flex: 1;
+        }
+        .bottom-item-3 {
+            flex: 2; /* Wider */
+        }
+
+        .bottom-row-flex .placeholder {
+            height: 180px;
+            width: 100%;
+        }
+        
+        .bottom-item-3 .placeholder {
+            height: 180px;
+        }
+
+        /* Text Section */
+        .text-section {
+            font-size: 11px;
+            line-height: 1.6;
+            color: #333;
+            text-align: justify;
+        }
+
+        .cn-text {
+            margin-bottom: 15px;
+        }
+
+        .en-text {
+            color: #555;
+        }
+
+        /* Simulating the images with CSS gradients/patterns since I cannot generate real images */
+        .img-fur-splice { background: linear-gradient(to bottom, #333 20%, #fff 20%, #fff 40%, #333 40%); }
+        .img-felt-splice { background: repeating-linear-gradient(45deg, #ccc, #ccc 10px, #999 10px, #999 20px); }
+        .img-splice-fabric { background: repeating-linear-gradient(to bottom, #ddd, #ddd 15px, #bbb 15px, #bbb 30px); }
+        .img-knit { background: radial-gradient(circle, #eee 20%, #ccc 20%); background-size: 10px 10px; }
+        .img-craft { background: repeating-linear-gradient(90deg, #d2b48c, #d2b48c 10px, #fff 10px, #fff 20px); }
+        
+        .img-force-splice { background: linear-gradient(to right, #eef, #ccf); }
+        .img-rabbit-fur { background: radial-gradient(circle at center, #fff, #ddd); }
+        .img-denim { background: linear-gradient(135deg, #4a5d7a 25%, #3b4a63 25%, #3b4a63 50%, #4a5d7a 50%, #4a5d7a 75%, #3b4a63 75%); background-size: 20px 20px; }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <!-- Top Row -->
+    <div class="top-row">
+        <div class="item">
+            <div class="caption">拼接皮草面料</div>
+            <div class="placeholder img-fur-splice">[Image: Fur Splice]</div>
+        </div>
+        <div class="item">
+            <div class="caption">毛毡梭织拼接面料</div>
+            <div class="placeholder img-felt-splice">[Image: Felt Weave]</div>
+        </div>
+        <div class="item">
+            <div class="caption">拼接面料</div>
+            <div class="placeholder img-splice-fabric">[Image: Splice Fabric]</div>
+        </div>
+        <div class="item">
+            <div class="caption">拼接编织面料</div>
+            <div class="placeholder img-knit">[Image: Knit Splice]</div>
+        </div>
+        <div class="item">
+            <div class="caption">拼接工艺</div>
+            <div class="placeholder img-craft">[Image: Craft Detail]</div>
+        </div>
+    </div>
+
+    <!-- Bottom Row -->
+    <div class="bottom-row-flex">
+        <div class="item bottom-item-1">
+            <div class="caption">强力拼接面料</div>
+            <div class="placeholder img-force-splice">[Image: Force Splice]</div>
+        </div>
+        <div class="item bottom-item-2">
+            <div class="caption">加入一些兔毛面料</div>
+            <div class="placeholder img-rabbit-fur">[Image: Rabbit Fur]</div>
+        </div>
+        <div class="item bottom-item-3">
+            <div class="caption">拼接类牛仔面料</div>
+            <div class="placeholder img-denim">[Image: Denim Splice]</div>
+        </div>
+    </div>
+
+    <!-- Text Content -->
+    <div class="text-section">
+        <div class="cn-text">
+            本系列面料使用裘皮与针织加入少量扎色进行设计，将不同品种的裘皮进行拼接染色等工艺再造，或者将裘皮与其他面料进行拼接缝线产生，特别的效果。再其次将裘皮进行不同颜色的拼接拼出不同肌理的感觉。黑牛仔面料则采用拼接穿插。抽丝做出肌理在加入印花系列标志使整个系列更加突出主题，并且使用裘皮符合大赛要求。
+        </div>
+        <div class="en-text">
+            This series of fabrics is designed by adding a small amount of black and white jeans to fur and knitting. Different kinds of fur are reconstructed by splicing and dyeing, or the fur is spliced and wound with other fabrics.Special effect, secondly, fur is spliced with different colors to give different feeling of texture, black denim fabric is interspersed with splicing, silk drawing-like texture feeling in addition to adding to the printing series logo to make the wholeSeries more prominent theme, and the use of fur match the requirements of the competition.
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>光明日报 - 04 要闻</title>
+    <style>
+        :root {
+            --primary-red: #c00;
+            --text-black: #222;
+            --border-color: #000;
+            --bg-color: #fff;
+            --font-serif: "SimSun", "Songti SC", "STSong", serif;
+            --font-sans: "SimHei", "Heiti SC", "Microsoft YaHei", sans-serif;
+            --font-kai: "KaiTi", "Kaiti SC", "STKaiti", serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+            font-family: var(--font-serif);
+            color: var(--text-black);
+            line-height: 1.6;
+        }
+
+        .page-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: var(--bg-color);
+            padding: 20px 30px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        /* Header Styles */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 3px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: baseline;
+            gap: 20px;
+        }
+
+        .page-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            font-family: var(--font-sans);
+            color: #003366;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: bold;
+            font-family: var(--font-sans);
+            color: #003366;
+        }
+
+        .date-info {
+            font-size: 0.9rem;
+            color: #555;
+            margin-left: 10px;
+        }
+
+        .logo {
+            font-family: "MaoZedongFont", "STXingkai", cursive; /* Fallback for calligraphy */
+            font-size: 2.5rem;
+            color: var(--primary-red);
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        /* Main Grid Layout */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 {
+            margin-top: 0;
+            font-family: var(--font-sans);
+        }
+
+        .article-title {
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .article-subtitle {
+            font-size: 1.2rem;
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: normal;
+        }
+
+        .byline {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        p {
+            text-indent: 2em;
+            margin-bottom: 10px;
+            font-size: 1rem;
+            text-align: justify;
+        }
+
+        .no-indent {
+            text-indent: 0;
+        }
+
+        /* Specific Section Styles */
+        .top-story {
+            grid-column: 1 / -1;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 20px;
+            margin-bottom: 10px;
+        }
+
+        .top-story .content-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+        }
+
+        .top-story-text {
+            column-count: 1;
+        }
+        
+        .top-story-main {
+            column-count: 2;
+            column-gap: 20px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin: 20px 0 10px 0;
+            font-family: var(--font-sans);
+            font-weight: bold;
+            color: #0055a5;
+            font-size: 1.1rem;
+        }
+
+        .section-header::before {
+            content: 'G'; /* Approximating the icon */
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            background-color: #0055a5;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            margin-right: 8px;
+            font-size: 0.9rem;
+        }
+
+        .red-banner {
+            background: linear-gradient(to right, transparent, #ffebeb 20%, #ffebeb 80%, transparent);
+            color: var(--primary-red);
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            padding: 5px 0;
+            margin-bottom: 15px;
+            font-family: var(--font-sans);
+            position: relative;
+        }
+        
+        .red-banner span {
+            background-color: var(--primary-red);
+            color: white;
+            padding: 2px 10px;
+            clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+        }
+
+        /* Vertical Text for Right Column Title */
+        .vertical-title-container {
+            display: flex;
+            gap: 15px;
+        }
+
+        .vertical-title {
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            font-size: 2rem;
+            font-family: var(--font-kai);
+            font-weight: bold;
+            letter-spacing: 5px;
+            color: #000;
+            border-left: 2px solid #000;
+            padding-left: 5px;
+            height: 600px; /* Approximate height */
+        }
+
+        .vertical-content {
+            flex: 1;
+            column-count: 2;
+            column-gap: 20px;
+        }
+
+        .vertical-content h3 {
+            font-size: 1.1rem;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            break-after: avoid;
+        }
+
+        /* Image Placeholder */
+        .image-placeholder {
+            width: 100%;
+            height: 250px;
+            background-color: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-family: var(--font-sans);
+            margin: 15px 0;
+            border: 1px solid #ccc;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .image-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.7;
+        }
+
+        .caption {
+            font-size: 0.85rem;
+            color: #333;
+            margin-top: 5px;
+            text-indent: 0;
+            line-height: 1.4;
+        }
+
+        /* Bottom Section */
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+            border-top: 2px solid #000;
+            padding-top: 20px;
+        }
+
+        .qr-code-box {
+            float: right;
+            width: 100px;
+            height: 100px;
+            background: #eee;
+            margin: 0 0 10px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            border: 1px solid #ccc;
+        }
+
+        .ad-box {
+            border: 1px solid #000;
+            padding: 15px;
+            position: relative;
+        }
+        
+        .ad-label {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        /* Utility */
+        .bold { font-weight: bold; }
+        .center { text-align: center; }
+        
+        /* Responsive adjustments for very small screens (though print layout is fixed) */
+        @media (max-width: 768px) {
+            .main-grid, .top-story .content-wrapper, .bottom-grid, .vertical-title-container {
+                grid-template-columns: 1fr;
+                display: block;
+            }
+            .vertical-title {
+                writing-mode: horizontal-tb;
+                height: auto;
+                border-left: none;
+                border-bottom: 2px solid #000;
+                padding-bottom: 5px;
+                margin-bottom: 10px;
+            }
+            .top-story-main, .vertical-content {
+                column-count: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+    <header>
+        <div class="header-left">
+            <span class="page-number">04</span>
+            <span class="section-title">要闻</span>
+            <span class="date-info">2025年 1月 16日 &nbsp; 星期四 &nbsp; 责任编辑：汪熠、杨永磊</span>
+        </div>
+        <div class="logo">光明日報</div>
+    </header>
+
+    <div class="main-grid">
+        <!-- Top Story: Zunyi Conference -->
+        <article class="top-story">
+            <h1 class="article-title">纪念遵义会议 90 周年大会在遵义举行</h1>
+            <h2 class="article-subtitle">李书磊出席并讲话</h2>
+            
+            <div class="content-wrapper">
+                <div class="top-story-text">
+                    <p class="no-indent" style="font-weight:bold; font-size:0.9rem;">新华社贵阳 1 月 15 日电</p>
+                    <p>1 月 15 日，纪念遵义会议 90 周年大会在贵州遵义举行。中共中央政治局委员、中宣部部长李书磊出席并讲话。</p>
+                    <p>会议指出，遵义会议是我们党历史上一次具有伟大转折意义的重要会议。要深入学习贯彻习近平总书记在总结遵义会议历史经验的重要论述，从党的奋斗历史中汲取智慧力量，奋力走好新时代的长征路。</p>
+                </div>
+                <div class="top-story-main">
+                    <p>会议强调，遵义会议重大贡献永载史册，遵义会议精神永放光芒。新征程上传承弘扬遵义会议精神，要深刻领悟“两个确立”的决定性意义，增强做到“两个维护”的思想自觉和行动自觉；自觉推动马克思主义中国化时代化，坚持不懈用习近平新时代中国特色社会主义思想凝心铸魂；始终坚持独立自主走自己的路，坚定以中国式现代化全面推进强国建设、民族复兴伟业的信心决心；大力发扬敢于斗争、敢于胜利的革命传统，凝聚攻坚克难、勇毅前行的强大力量。</p>
+                    <p>纪念大会由中央宣传部、中央党史和文献研究院、中央军委政治工作部、贵州省委举办。中央有关部门、贵州省、南部战区有关负责同志，各界群众和部队官兵代表共约 1000 人参加。</p>
+                    <p>会后，李书磊同部分与会代表参观了遵义会议会址和陈列馆。</p>
+                </div>
+            </div>
+        </article>
+
+        <!-- Left Column: Intellectual Property -->
+        <div class="left-column">
+            <div class="section-header">来自国新办新闻发布会的报道</div>
+            
+            <article>
+                <h3 style="font-size: 1.1rem; margin-bottom: 5px;">我国每万人口高价值发明专利拥有量达 14 件——</h3>
+                <h2 class="article-title" style="font-size: 1.6rem;">知识产权强国建设迈出新的坚实步伐</h2>
+                <div class="byline">本报记者 王美莹</div>
+                
+                <div style="column-count: 2; column-gap: 20px; font-size: 0.95rem;">
+                    <p>1 月 15 日，国务院新闻办公室举行新闻发布会，介绍 2024 年知识产权工作进展情况。国家知识产权局副局长胡文辉在发布会上表示，2024 年我国知识产权强国建设迈出新的坚实步伐。截至 2024 年年底，我国国内发明专利有效量达 475.6 万件，成为世界上首个突破 400 万件的国家；每万人口高价值发明专利拥有量达 14 件，提前完成国家“十四五”的规划预期目标。</p>
+                    
+                    <h4 style="margin: 10px 0 5px 0; font-size: 1rem;">走出“实验室”，走向“产业链”</h4>
+                    <p>2024 年是实现“十四五”规划目标任务的关键一年，全年共授权发明专利 104.5 万件，同比增长 13.5%。全年专利转让许可备案次数达 61.3 万次，同比增长 29.9%。</p>
+                    <p>值得注意的是，国内企业有效发明专利产业化率连续 5 年保持稳步增长。2024 年，我国企业有效发明专利产业化率为 53.3%，较上年提高 2 个百分点；中、小、微型企业发明专利产业化率分别达 61.4%、57.8% 和 36.7%，均创“十四五”以来新高。</p>
+                    <p>“深入实施专利转化运用专项行动，是国务院作出的重要决策部署，旨在大力推进专利产业化，加快创新成果向现实生产力转化。”国家知识产权局知识产权运用促进司司长王培章说。</p>
+                    <p>据介绍，过去一年，我国全面推进专利转化运用专项行动，包括：出台相关政策文件 50 余份；首次完成全国高校和科研机构 134.9 万件存量专利盘点，组织 45 万家企业进行精准对接和匹配推送；指导认定第二批专利密集型产品 3000 多件，产值超 9400 亿；组织开展“知识产权服务万里行”活动，推动 2 万多件专利实现落地转化或达成合作意向……</p>
+
+                    <h4 style="margin: 10px 0 5px 0; font-size: 1rem;">支持密集型产业做大做强</h4>
+                    <p>专利密集型产业主要包括信息通信、装备制造、新材料等七大类产业。近年来，国家知识产权局积极促进知识产权与产业经济深度融合，大力培育壮大专利密集型产业，取得显著成效。</p>
+                    <p>相关数据显示，2023 年，我国专利密集型产业群发展入强度达 2.6%，比上年提高 0.12 个百分点，是非专利密集型产业的 2.2 倍；我国专利密集型产业增加值达 16.87 万亿元，占 GDP 比重提升至 13.04%，“十四五”以来占 GDP 比重累计提高 1.1 个百分点，对经济增长的贡献稳步提高。</p>
+                    <p>国家知识产权局战略规划司负责人荣心新介绍道，从统计数据来看，我国专利密集型产业发展主要呈现出“两密三高”的鲜明特点。“两密”即研发投入密集、专利产出密集；“三高”即劳动生产率高、经济贡献度高、数字产业占比高。</p>
+                    <p>“总的来看，我国专利密集型产业创新密集、生产效率、经济贡献大，在强动力、优结构、促增长方面发挥了重要作用，是培育和发展新质生产力的重要支点。”荣心新表示，国家知识产权局将继续强化知识产权运用和服务，支持专利密集型产业做大做强，切实将专利技术优势转化为创新发展动能。</p>
+
+                    <h4 style="margin: 10px 0 5px 0; font-size: 1rem;">提供有力的制度、技术供给</h4>
+                    <p>2025 年是实现“十四五”规划的收官之年，“知识产权‘十四五’规划设置的 8 个预期性指标，其中 6 个指标已经提前完成，充分彰显了规划实施取得的良好成效。”胡文辉说。</p>
+                    <p>这 6 个提前完成的指标分别是：我国每万人口高价值发明专利拥有量的预期值是 12 件，2024 年年底已达 14 件；专利密集型产业增加值占 GDP 比重已经提升至 13.04%，比预期值高 0.04 个百分点；知识产权保护社会满意度预期值是 82 分，2024 年年底已达 82.36 分；知识产权使用费年进出口总额预期值是 3500 亿元，2024 年前 11 个月已达 3564 亿元；知识产权民事一审案件服判息诉率预期值是 85%，2024 年已达 90%；此外，知识产权质押融资登记金额也远超预期值。</p>
+                    <p>对于知识产权工作来说，“创造是源头，运用是目的，保护是核心，服务是支撑”。胡文辉表示，国家知识产权局将巩固发展成果，为实现“十五五”良好开局打下坚实基础，为实现知识产权强国建设与中国式现代化合拍共振提供有力的制度、技术供给。</p>
+                </div>
+            </article>
+
+            <hr style="border: 0; border-top: 1px solid #ccc; margin: 20px 0;">
+
+            <!-- Central Spiritual Civilization Article -->
+            <article>
+                <h2 class="article-title" style="font-size: 1.5rem;">中央精神文明建设办公室发布<br>2024 年第四季度“中国好人榜”</h2>
+                <div class="byline" style="text-align: left; font-size: 0.85rem;">
+                    <span class="bold">本报大理 1 月 15 日电（记者杨桐彤、徐鑫雨、刘华东）</span>2024 年第四季度“中国好人榜”发布仪式暨全国道德模范与身边好人现场交流活动 15 日在云南省大理州举办。经各地推荐、网友评议和专家评审等环节，共有 153 人（组）助人为乐、见义勇为、诚实守信、敬业奉献、孝老爱亲身边好人光荣上榜。
+                </div>
+                <div style="column-count: 3; column-gap: 15px; font-size: 0.9rem;">
+                    <p>上榜好人中，有捐献血帮助两人重见光明的 26 岁女孩梁雯然；有诚信为本带动村民共同致富的“新农人”刘明坤；有危难之际拼尽全力托举落水男童上岸却不幸牺牲的好男儿张开龙；有积劳成疾倒在工作一线的村支书张发国；有照顾瘫痪丈夫 40 余年的“好媳妇”杨秀凤……他们以行动书写大爱，以坚守诠释担当，以善行温暖人心。</p>
+                    <p>在活动直播现场，“中国好人”代表分享了他们的感人故事，并与全国道德模范、新时代好少年互动交流，展现了他们仁爱、善良、勇敢、奉献的高尚品质，激励着无数中华儿女争做崇高道德的践行者、文明风尚的维护者、美好生活的创造者。网友纷纷留言：“我们不能仅仅被‘中国好人’的事迹所感动，更要将这种精神力量转化为实际行动。”</p>
+                    <p>本次发布活动由中央精神文明建设办公室主办，中国精神文明网、电影频道节目中心、中共云南省委宣传部（中共云南省委精神文明建设办公室）承办，中共大理州委宣传部（中共大理州委精神文明建设办公室）协办。</p>
+                </div>
+            </article>
+        </div>
+
+        <!-- Right Column: Commerce Report -->
+        <div class="right-column">
+            <div class="red-banner">
+                <span>开创高质量发展新局面·权威发布</span>
+            </div>
+
+            <div class="vertical-title-container">
+                <div class="vertical-title">二〇二四年商务运行总体平稳、稳中有进</div>
+                <div style="display: flex; flex-direction: column; width: 100%;">
+                    <div style="writing-mode: vertical-rl; text-orientation: upright; font-size: 0.9rem; margin-bottom: 10px; align-self: flex-end; margin-right: 5px;">本报记者 董 蓓</div>
+                    <div class="vertical-content" style="font-size: 0.9rem;">
+                        <p>1 月 15 日，国务院新闻办公室举行“中国经济高质量发展成效”系列新闻发布会。商务部国际贸易谈判副代表李詠表示，2024 年，国内消费平稳增长，对外贸易再创新高，引资结构持续优化，对外投资合作平稳发展，多边经贸合作成果丰硕。全年商务运行总体平稳、稳中有进，为经济回升向好作出积极贡献。</p>
+
+                        <h3>货物贸易规模再上新台阶</h3>
+                        <p>“2024 年，货物贸易规模再上新台阶，发展质量稳步提升，为全球经贸发展持续贡献新力量。”商务部对外贸易司负责人孟岳介绍，2024 年，我国货物贸易进出口 43.85 万亿元人民币，同比增长 5%，展现出较强的韧性。2024 年我国进口增长 2.3%，创历史新高，连续 16 年保持全球第二大进口国的地位。</p>
+                        <p>创新活力更加充沛。2024 年，有进出口实绩的企业将达 70 万家。中国企业更加重视提升产品的附加值，机电产品出口占比已经攀升到 59.4%，汽车出口首次突破 600 万辆。储能产品、智能家居等绿色低碳、智能化、数字化产品出口快速增长，纺织服装等传统优势产品更加注重品牌驱动和技术赋能。新业态活力涌现。2024 年我国的跨境电商进出口增长了 10.8%，占整个进出口的比重提升到 6%，更多优质的产品可以直达海外的消费者。保税维修已经落地 270 个项目，为企业拓展了发展空间。</p>
+                        <p>发展布局更加开放，贸易伙伴更加多元。我国外贸市场进出口保持增长，对共建“一带一路”国家进出口的占比提升到了 50.3%。2024 年，我国与共建国家的货物贸易额达到 22.1 万亿元。从进口看，我国有近 54% 的进口商品来自共建国家；从出口看，我国出口到共建国家的商品不但包括消费品，还包括设备、零部件等，促进了共建国家产业发展。</p>
+                        <p>面向全球的高标准自由贸易网络不断扩大。李詠介绍，我国已与 30 个国家和地区签署 23 个自贸协定，自贸伙伴遍及五大洲，自贸“朋友圈”更广了，自贸协定的开放水平也更高了。</p>
+
+                        <h3>做好负面清单“减法”、优化营商环境“加法”</h3>
+                        <p>2024 年，我国引资结构持续优化。前 11 个月新设外资企业 5.2 万家，吸引外资 7497 亿元。“我们不断放宽市场准入，制造业领域的准入限制实现‘清零’，高技术制造业引资占 11%，电信、医疗等服务业领域的试点开放也在持续推动中，已经有不少项目正在洽谈和落地的过程中。”李詠箑透露。</p>
+                        <p>2024 年，我国不断优化入境政策，目前已同 25 个国家实现全面互免签证，对 38 个国家实行单方面免签政策，这些政策都为外国投资者来华参会参展、进行项目洽谈、技术交流等提供了更多便利。李詠箑表示，2025 年，商务部将做好负面清单“减法”、优化营商环境“加法”，同时稳步扩大制度型开放。</p>
+                        <p>通过自主开放来做负面清单的“减法”。加大自主开放力度，不断放宽市场准入。出台自贸试验区跨境服务贸易负面清单，对职业资格、金融、专业服务、文化等领域主动扩大开放，将进一步便利境外人士来华提供服务。下一步，商务部将稳步推进服务业扩大开放，特别是要扩大电信、医疗、教育等领域开放试点推广工作。修订《鼓励外商投资产业目录》，提升引资政策的吸引力。</p>
+                        <p>持续打造“投资中国”品牌，营造一流营商环境，做优化营商环境的“加法”。2024 年，商务部在境内外举办了 28 场“投资中国”招商推介活动，“投资中国”品牌影响力不断扩大。“我们将继续在今年开展‘投资中国’系列活动，拓宽引资渠道，提升会展平台引资效能，加大投资促进要素保障，不断擦亮‘投资中国’金字招牌。”李詠说。</p>
+
+                        <h3>消费市场总体保持平稳发展态势</h3>
+                        <p>2024 年，我国消费市场总体保持平稳发展态势。1—11 月，社会消费品零售总额 44.3 万亿元，同比增长 3.5%。</p>
+                        <p>商务部市场运行和消费促进司司长李刚指出，我国消费市场主要呈现以下特点：大宗消费增势好、服务消费需求旺、新型消费亮点多、县域消费活力足。</p>
+                        <p>消费品以旧换新政策成效显著，特别是 7 月加力支持政策实施以来，汽车、家电、家居等重点商品销售明显回升向好。1—11 月，限额以上单位家电、家具的零售额同比分别增长 9.6% 和 2.9%，其中 11 月分别增长 22.2% 和 10.5%；乘用车零售量同比增长 4.7%。</p>
+                        <p>随着促进服务消费高质量发展相关政策落地见效，消费场景不断拓展，服务消费实现较快增长。1—11 月，服务零售额同比增长 6.4%。文旅消费持续活跃，前三季度，国内旅游出游人次和出游总花费分别增长 15.3% 和 17.9%。</p>
+                        <p>大数据、人工智能、虚拟现实等新技术加速应用，激发消费新动能。1—11 月，全国网上零售额增长 7.4%，“双 11”期间，智能学习机、智能耳机等销量增长超过 1 倍。绿色消费理念日益深入人心，1—11 月，新能源乘用车零售量同比增长 41.2%，渗透率连续 5 个月突破 50%。</p>
+                        <p>前三季度，农村居民人均消费支出同比增长 6.5%。1—11 月，乡村消费品零售额达 6 万亿元，同比增长 4.3%。</p>
+                        <p>“展望 2025 年，我国经济基础稳、优势多、韧性强、潜能大，长期向好的支撑条件和基本趋势没有变，随着各项扩消费政策措施持续显效，预计消费市场总体将保持平稳增长态势。”李刚表示。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Image Placeholder for Port -->
+            <figure style="margin: 20px 0;">
+                <div class="image-placeholder">
+                    <!-- Simulating the port image with a gradient and text since I cannot generate actual images -->
+                    <div style="width:100%; height:100%; background: linear-gradient(to bottom, #87CEEB 0%, #4682B4 40%, #2F4F4F 100%); position: relative;">
+                        <div style="position: absolute; bottom: 0; width: 100%; height: 40%; background: repeating-linear-gradient(90deg, #d32f2f, #d32f2f 20px, #1565c0 20px, #1565c0 40px); opacity: 0.8;"></div>
+                        <div style="position: absolute; top: 40%; left: 20%; width: 60%; height: 10%; background: #b71c1c;"></div>
+                        <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; text-shadow: 1px 1px 2px black;">[Photo: Tangshan Port Container Terminal]</span>
+                    </div>
+                </div>
+                <figcaption class="caption">
+                    <span class="bold">2024 年河北唐山港货物吞吐量超 8.6 亿吨</span> &nbsp; 1 月 15 日，一艘轮船在唐山港京唐港区集装箱码头卸载后驶离。记者从河北省唐山市海洋口岸和港航管理局获悉，2024 年，唐山港完成货物吞吐量 86215 万吨，同比增长 2.37%。 &nbsp; <span class="bold">新华社记者 杨世尧摄</span>
+                </figcaption>
+            </figure>
+        </div>
+    </div>
+
+    <!-- Bottom Section -->
+    <div class="bottom-grid">
+        <!-- Left Bottom: Core Values Lecture -->
+        <article>
+            <div class="section-header">核心价值观百场讲坛</div>
+            <h2 class="article-title" style="font-size: 1.3rem; text-align: left;">“核心价值观百场讲坛”第 155 场将在中国非物质文化遗产馆举行</h2>
+            
+            <div style="font-size: 0.9rem; column-count: 2; column-gap: 20px;">
+                <div class="qr-code-box">
+                    <div style="width: 60px; height: 60px; background: #333; margin-bottom: 5px;"></div>
+                    <span>扫描二维码</span>
+                    <span>了解更多内容</span>
+                </div>
+                <p><span class="bold">本报讯（光明网记者刘子璐）</span>由中宣部宣教局、光明日报社共同主办的“核心价值观百场讲坛”第 155 场活动，将于 1 月 17 日在北京中国非物质文化遗产馆举行。本场活动将邀请中国社会科学院学部委员、内蒙古大学特聘教授朝戈金作题为《春节：文化内涵与当代意义》的演讲。</p>
+                <p>作为国家非物质文化遗产保护工作专家委员会委员、联合国教科文组织（UNESCO）非物质文化遗产领域专家，朝戈金有着丰富的国内外非遗保护工作的经历。他带领团队参与了多个项目的申报工作，如《格萨（斯）尔》史诗传统、《玛纳斯》、赫哲族伊玛堪、中国算盘等。2024 年 12 月 4 日，“春节——中国人庆祝传统新年的社会实践”列入人类非物质文化遗产代表作名录，作为参与申报材料编制的专家组成员之一，朝戈金感触颇深：“春节不仅是一个节日，它承载了中国人的人伦情感和国家情怀，是中华民族认同感与历史延续性的生动体现。”</p>
+                <p>“春节的独特性在于全民都是实践者，春节的传统犹如毛细血管般紧接民众生活的方方面面。”面对浩如烟海的春节习俗，申遗工作组采取以点带面的办法，既照顾到覆盖内容的多样性，又精选若干代表性社区和家庭等作为具体样板，从而形成了既有整体图景、又有局部细节的申报策略。保护非物质文化遗产政府间委员会审查机构将“春节——中国人庆祝传统新年的社会实践”的申报材料推荐为“申报范例”。</p>
+                <p>朝戈金长期深耕民俗学、民间文艺学以及少数民族文学研究工作，有力地推动了民间文学与民俗学研究范式的转换，成为积极倡导“口头传统研究”的杰出学者之一。他学术成果丰硕，推出著作、论文、编著、译著、译文上百种，在国内以及美国、俄罗斯、日本等国以多种文字发表，在学界产生了巨大的影响，向世界展示了中国传统民族文化的强大生命力。</p>
+                <p>本次宣讲，朝戈金将以春节申遗成功为原点，回溯春节的历史沿革及文化内涵，并探讨其在当下社会的意义与海外影响。本场活动由中国非物质文化遗产馆、光明网承办。欢迎广大读者、网友参与互动，请访问专题页 http://topics.gmw.cn/bcj/ 。</p>
+            </div>
+        </article>
+
+        <!-- Right Bottom: University Ad/Article -->
+        <article class="ad-box">
+            <h3 style="text-align: center; font-size: 1.1rem; margin-bottom: 5px;">中国石油大学（华东）青岛软件学院</h3>
+            <h2 class="article-title" style="font-size: 1.4rem;">厚植能源“魂” &nbsp; 铸就软件“芯”</h2>
+            
+            <div style="font-size: 0.85rem; column-count: 2; column-gap: 15px; margin-top: 10px;">
+                <p>石油石化工业软件是油气增储上产和提高采收率的技术载体，也是保障石化产业链自主可控的关键所在。2021 年，教育部、工信部批准建设国家特色化示范性软件学院——青岛软件学院，旨在破解石油工业软件人才培养难题，“解卡”关键技术。2024 年，学院联合中石油昆仑数智，探索“应用场景牵引、产教深度融合”的石油工业软件“订单班”培养模式，成效显著。</p>
+                
+                <p><span class="bold">探索多“卡点”联动攻关模式。</span>学院剖析石油工业软件“卡点”属性，并将其分为理论类、机理类、算法类、计算类、应用类 5 大类。在专业硕士培养过程中，培养专班学生具备“单类精、类间通”的综合能力，满足石油工业软件人才所需专业知识门槛高、范围广的要求。</p>
+
+                <p><span class="bold">实行“产学/学业”双导师机制。</span>学院与中石油昆仑数智签署“订单班”培养协议，聘任产业导师 20 余人，通过学术导师与专业导师“一对一”结对，形成产业/学业双导师的“订单式”培养方式。培养过程以石油工业软件应用为牵引，建立产学研之间紧密联系的人才培养模式。</p>
+
+                <p><span class="bold">打造“课堂现场”深度融合的培养模式。</span>学院建立“院校—企业—行业”的产教融合培养新机制。通过资源整合、岗位需求和资源引进互相促进，实现岗位标准、院校教学教研、实习就业岗位的互相优化。在培养企业需求人才的同时完成产业与科研成果共生。</p>
+
+                <p><span class="bold">保障“成才成果”双目标的建设质量。</span>学院在领域专家、软件工程师的指导下设置检查节点，实时跟踪关键技术攻关进展与人才培养成效；在人才培养过程中，注重形成具有自主知识产权的工业软件，推动科研成果在工业生产领域的落地应用。“订单班”学生毕业后进入昆仑数智就业，保障“成才成果”双目标的培养质量。</p>
+                
+                <p style="text-align: right; font-size: 0.8rem; margin-top: 10px;">（宋 琰 王备战 胡长员）</p>
+            </div>
+            <div class="ad-label">· 广告 ·</div>
+        </article>
+    </div>
+
+</div>
+
+</body>
+</html>

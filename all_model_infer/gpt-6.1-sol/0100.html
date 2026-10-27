@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mirror News</title>
+<script>
+window.MathJax = {tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]}};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; background: #fff; }
+body { font-family: Arial, Helvetica, sans-serif; }
+.phone { position: relative; width: 332px; height: 720px; margin: 0 auto; overflow: hidden; background: #121020; color: #fff; }
+.status { height: 42px; background: #000; display: flex; align-items: center; justify-content: space-between; padding: 0 16px 0 30px; font-size: 14px; }
+.indicators { display: flex; align-items: center; gap: 6px; }
+.signal { display: flex; gap: 2px; align-items: flex-end; height: 11px; }
+.signal i { display: block; width: 2px; background: #eee; }
+.signal i:nth-child(1) { height: 4px; }
+.signal i:nth-child(2) { height: 6px; }
+.signal i:nth-child(3) { height: 9px; }
+.signal i:nth-child(4) { height: 11px; background: #555; }
+.wifi { width: 13px; height: 10px; border-top: 2px solid white; border-radius: 50%; position: relative; }
+.wifi::before { content: ""; position: absolute; top: 2px; left: 3px; width: 7px; height: 5px; border-top: 2px solid white; border-radius: 50%; }
+.wifi::after { content: ""; position: absolute; bottom: 0; left: 5px; width: 3px; height: 3px; background: white; border-radius: 50%; }
+.battery { width: 19px; height: 10px; border: 1px solid #555; border-radius: 3px; position: relative; }
+.battery::before { content: ""; position: absolute; top: 2px; left: 2px; width: 3px; height: 4px; background: #d6be39; }
+.battery::after { content: ""; position: absolute; right: -3px; top: 2px; width: 2px; height: 4px; background: #555; }
+.sections { display: flex; gap: 2px; height: 39px; padding: 0 3px 3px; background: #16100f; overflow: hidden; }
+.sections > div { flex: none; height: 36px; background: #a51e1e; border: 1px solid #c14343; display: flex; justify-content: center; align-items: center; font-size: 14px; font-weight: bold; }
+.sections .add { width: 34px; }
+.add span { width: 17px; height: 17px; border-radius: 2px; background: white; color: #a51e1e; font-size: 19px; line-height: 17px; text-align: center; }
+.sections .top { width: 113px; }
+.sections .news { width: 74px; }
+.sections .politics { width: 91px; }
+.sections .edge { width: 20px; }
+.hero { position: relative; height: 189px; }
+.placeholder { display: flex; align-items: center; justify-content: center; overflow: hidden; background: #353238; color: #dedade; font-size: 12px; text-align: center; }
+.portrait { width: 332px; height: 189px; padding: 45px; }
+.logo { position: absolute; top: 11px; left: 14px; background: #b22125; font-weight: 800; font-size: 36px; line-height: 42px; padding: 0 7px; letter-spacing: -1.8px; }
+.content { padding: 4px 14px 0; }
+h1 { font-size: 20px; line-height: 23.5px; margin: 0; font-weight: 800; letter-spacing: -0.25px; }
+.category { margin-top: 8px; font-size: 11px; line-height: 14px; font-weight: bold; color: #c996d5; }
+.grid { display: grid; grid-template-columns: 145px 143px; gap: 16px; margin-top: 9px; }
+.story { margin: 0 0 18px; }
+.school { width: 145px; height: 83px; border-radius: 5px; background: #5b6963; }
+h2 { margin: 4px 0 0; font-size: 14px; line-height: 17px; font-weight: bold; letter-spacing: -0.12px; }
+.tag { color: #e7a0ac; font-size: 11px; line-height: 14px; font-weight: bold; margin-top: 6px; white-space: nowrap; overflow: hidden; }
+.rule-story { border-left: 2px solid #bb6179; padding-left: 6px; }
+.rule-story h2 { margin-top: 0; }
+.right .story { margin-bottom: 14px; }
+.right .tag { margin-top: 6px; }
+.people { width: 143px; height: 80px; margin-top: 0; border-radius: 4px; background: #393d46; }
+.bottom-nav { position: absolute; bottom: 0; left: 0; width: 332px; height: 74px; background: #101211; z-index: 3; }
+.nav-items { display: grid; grid-template-columns: repeat(4, 1fr); padding-top: 7px; }
+.nav-item { text-align: center; font-size: 9px; letter-spacing: .1px; }
+.nav-icon { height: 24px; width: 23px; margin: 0 auto 1px; position: relative; color: #fff; }
+.nav-item.active { color: #e5a3b1; }
+.newspaper { border: 2px solid #e5a3b1; border-radius: 2px; width: 17px; height: 19px; margin-left: 6px; }
+.newspaper::before { content: ""; position: absolute; width: 3px; height: 12px; border-left: 2px solid #e5a3b1; left: -6px; bottom: 0; }
+.newspaper::after { content: "≡"; position: absolute; top: -4px; left: 2px; font-size: 18px; font-weight: bold; }
+.discover::before { content: ""; position: absolute; left: 2px; top: 1px; width: 17px; height: 7px; border: 2px solid white; border-radius: 3px; }
+.discover::after { content: "☷"; position: absolute; left: 2px; top: 9px; font-size: 21px; line-height: 13px; }
+.bookmark { background: white; width: 12px; height: 19px; margin-left: 6px; border-radius: 2px 2px 0 0; clip-path: polygon(0 0,100% 0,100% 100%,50% 76%,0 100%); }
+.account::before { content: ""; position: absolute; width: 10px; height: 10px; background: white; border-radius: 50%; left: 7px; top: 0; }
+.account::after { content: ""; position: absolute; width: 18px; height: 9px; background: white; border-radius: 10px 10px 0 0; left: 3px; top: 11px; }
+.home-line { position: absolute; width: 119px; height: 4px; background: #fff; border-radius: 4px; bottom: 7px; left: 107px; }
+</style>
+</head>
+<body>
+<main class="phone">
+<header class="status">
+<span>8:43</span>
+<div class="indicators" aria-label="Phone status indicators">
+<span class="signal"><i></i><i></i><i></i><i></i></span>
+<span class="wifi"></span><span class="battery"></span>
+</div>
+</header>
+<nav class="sections">
+<div class="add"><span>+</span></div>
+<div class="top">TOP STORIES</div>
+<div class="news">NEWS</div>
+<div class="politics">POLITICS</div>
+<div class="edge"></div>
+</nav>
+<section class="hero">
+<div class="placeholder portrait">[Photo: close-up portrait of a man]</div>
+<div class="logo">Mirror</div>
+</section>
+<section class="content">
+<h1>Alan Carr's husband says 'he<br>never hit me' as he dismisses<br>black eye pic rumours</h1>
+<div class="category">ALAN CARR ▸</div>
+<div class="grid">
+<div class="left">
+<article class="story">
+<div class="placeholder school">[Photo: group outdoors]</div>
+<h2>GCSE results hit<br>record high after<br>cancelled exams –<br>with 30% getting top<br>grades</h2>
+<div class="tag">GCSES ▸</div>
+</article>
+<article class="story rule-story">
+<h2>Rollercoaster<br>comes off tracks at<br>UK theme park as<br>emergency crews</h2>
+</article>
+</div>
+<div class="right">
+<article class="story rule-story">
+<h2>Woman, 32, killed in<br>horror bus crash<br>described as 'kind<br>and thoughtful soul'</h2>
+<div class="tag">TRANSPORT FOR LON...</div>
+</article>
+<article class="story rule-story">
+<h2>Brit spy suspect is<br>'stocky bald man<br>with right-wing<br>views who drives a<br>Fiesta'</h2>
+<div class="tag">MILITARY INTELLIGEN...</div>
+</article>
+<div class="placeholder people">[Photo: two people]</div>
+</div>
+</div>
+</section>
+<nav class="bottom-nav">
+<div class="nav-items">
+<div class="nav-item active"><div class="nav-icon"><div class="newspaper"></div></div>My News</div>
+<div class="nav-item"><div class="nav-icon discover"></div>Discover</div>
+<div class="nav-item"><div class="nav-icon"><div class="bookmark"></div></div>Bookmarks</div>
+<div class="nav-item"><div class="nav-icon account"></div>My Account</div>
+</div>
+<div class="home-line"></div>
+</nav>
+</main>
+</body>
+</html>

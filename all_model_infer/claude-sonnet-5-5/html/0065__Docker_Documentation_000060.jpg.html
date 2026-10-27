@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>docker buildx rm</title>
+<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #1a1a1a;
+    font-size: 14px;
+  }
+  .top-banner {
+    background: #0a1d3a;
+    color: #fff;
+    font-size: 13px;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .top-banner .new-tag {
+    color: #ffb347;
+    font-weight: 600;
+    margin-right: 8px;
+  }
+  .top-banner .close-x {
+    position: absolute;
+    right: 20px;
+    cursor: pointer;
+  }
+  .navbar {
+    background: #1d63ed;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    padding: 12px 24px;
+    justify-content: space-between;
+  }
+  .navbar .logo {
+    font-weight: 700;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .navbar .nav-links {
+    display: flex;
+    gap: 28px;
+    margin-left: 40px;
+  }
+  .navbar .nav-links span {
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .navbar .nav-links .active {
+    border-bottom: 2px solid #fff;
+    padding-bottom: 4px;
+    font-weight: 600;
+  }
+  .navbar .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-left: auto;
+    font-size: 14px;
+  }
+  .navbar .nav-right .pill {
+    background: rgba(255,255,255,0.15);
+    border-radius: 16px;
+    padding: 6px 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .layout {
+    display: flex;
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+  .sidebar {
+    width: 300px;
+    flex-shrink: 0;
+    padding: 20px 15px;
+    font-size: 13px;
+    border-right: 1px solid #eee;
+    max-height: 100vh;
+    overflow-y: auto;
+  }
+  .sidebar .section-title {
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 8px;
+    cursor: pointer;
+  }
+  .sidebar ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .sidebar li {
+    padding: 6px 8px 6px 20px;
+    color: #333;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  .sidebar li.indent2 { padding-left: 32px; }
+  .sidebar li.active {
+    background: #eef2ff;
+    color: #1d63ed;
+    font-weight: 600;
+  }
+  .sidebar li .chevron {
+    float: right;
+  }
+  .content {
+    flex: 1;
+    padding: 30px 40px;
+    min-width: 0;
+  }
+  .breadcrumb {
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 10px;
+  }
+  .breadcrumb a { color: #1d63ed; text-decoration: none; }
+  h1 {
+    font-size: 32px;
+    margin: 10px 0 12px;
+  }
+  .toolbar {
+    display: flex;
+    gap: 20px;
+    font-size: 13px;
+    color: #1d63ed;
+    margin-bottom: 15px;
+  }
+  .toolbar span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+  }
+  hr {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 15px 0 25px;
+  }
+  .meta-table {
+    display: table;
+    width: 100%;
+    margin-bottom: 30px;
+  }
+  .meta-row {
+    display: table-row;
+  }
+  .meta-label {
+    display: table-cell;
+    width: 90px;
+    font-weight: 600;
+    vertical-align: top;
+    padding: 6px 0;
+  }
+  .meta-value {
+    display: table-cell;
+    padding: 6px 0;
+  }
+  code, .code-inline {
+    background: #f0f0f0;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 13px;
+    color: #333;
+  }
+  h2 {
+    font-size: 26px;
+    margin: 30px 0 15px;
+  }
+  h3 {
+    font-size: 18px;
+    margin: 30px 0 10px;
+  }
+  p {
+    line-height: 1.6;
+    margin: 8px 0;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+    font-size: 13px;
+  }
+  thead tr {
+    background: #eee;
+  }
+  th {
+    text-align: left;
+    padding: 10px 12px;
+    font-weight: 600;
+  }
+  td {
+    padding: 10px 12px;
+    border-top: 1px solid #eee;
+    vertical-align: top;
+  }
+  .codeblock {
+    background: #f6f6f6;
+    border: 1px solid #e5e5e5;
+    border-radius: 6px;
+    padding: 14px 16px;
+    font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 13px;
+    margin: 15px 0;
+    white-space: pre-wrap;
+    line-height: 1.6;
+  }
+  .toc {
+    width: 260px;
+    flex-shrink: 0;
+    padding: 30px 20px;
+    font-size: 13px;
+  }
+  .toc-title {
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .toc ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-left: 2px solid #eee;
+  }
+  .toc li {
+    padding: 6px 12px;
+    color: #444;
+    cursor: pointer;
+  }
+  .toc li.active {
+    border-left: 2px solid #1d63ed;
+    margin-left: -2px;
+    color: #1a1a1a;
+    font-weight: 600;
+  }
+  .toc li.sub {
+    padding-left: 20px;
+    color: #1d63ed;
+  }
+  .feedback-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #1d63ed;
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<div class="top-banner">
+  <span class="new-tag">✦ New</span>
+  <span>Insights on the state of AI agents from 800+ builders and leaders. Download your copy →</span>
+  <span class="close-x">✕</span>
+</div>
+
+<div class="navbar">
+  <div class="logo">📄 dockerdocs</div>
+  <div class="nav-links">
+    <span>Get started</span>
+    <span>Guides</span>
+    <span>Manuals</span>
+    <span class="active">Reference</span>
+  </div>
+  <div class="nav-right">
+    <div class="pill">🤖 Gordon</div>
+    <div class="pill">🔍 Search</div>
+    <div class="pill">🌓</div>
+  </div>
+</div>
+
+<div class="layout">
+
+  <div class="sidebar">
+    <div class="section-title">CLI reference <span>⌃</span></div>
+    <ul>
+      <li class="section-title" style="padding-left:8px;">docker <span>⌃</span></li>
+      <li class="indent2">docker build</li>
+      <li class="indent2">docker builder <span class="chevron">⌄</span></li>
+      <li class="indent2" style="font-weight:600;">docker buildx <span class="chevron">⌃</span></li>
+      <li style="padding-left:44px;">docker buildx bake</li>
+      <li style="padding-left:44px;">docker buildx build</li>
+      <li style="padding-left:44px;">docker buildx create</li>
+      <li style="padding-left:44px;">docker buildx dap <span class="chevron">⌄</span></li>
+      <li style="padding-left:44px;">docker buildx debug <span class="chevron">⌄</span></li>
+      <li style="padding-left:44px;">docker buildx dial-stdio</li>
+      <li style="padding-left:44px;">docker buildx du</li>
+      <li style="padding-left:44px;">docker buildx history <span class="chevron">⌄</span></li>
+      <li style="padding-left:44px;">docker buildx imagetools <span class="chevron">⌄</span></li>
+      <li style="padding-left:44px;">docker buildx inspect</li>
+      <li style="padding-left:44px;">docker buildx ls</li>
+      <li style="padding-left:44px;">docker buildx policy <span class="chevron">⌄</span></li>
+      <li style="padding-left:44px;">docker buildx prune</li>
+      <li style="padding-left:44px;" class="active">docker buildx rm</li>
+      <li style="padding-left:44px;">docker buildx stop</li>
+      <li style="padding-left:44px;">docker buildx use</li>
+      <li style="padding-left:44px;">docker buildx version</li>
+      <li class="indent2">docker checkpoint <span class="chevron">⌄</span></li>
+      <li class="indent2">docker compose <span class="chevron">⌄</span></li>
+      <li class="indent2">docker config <span class="chevron">⌄</span></li>
+      <li class="indent2">docker container <span class="chevron">⌄</span></li>
+      <li class="indent2">docker context <span class="chevron">⌄</span></li>
+      <li class="indent2">docker debug</li>
+      <li class="indent2">docker desktop <span class="chevron">⌄</span></li>
+      <li class="indent2">docker dhi <span class="chevron">⌄</span></li>
+      <li class="indent2">docker exec</li>
+      <li class="indent2">docker image <span class="chevron">⌄</span></li>
+      <li class="indent2">docker images</li>
+      <li class="indent2">docker info</li>
+      <li class="indent2">docker init</li>
+      <li class="indent2">docker inspect</li>
+      <li class="indent2">docker login</li>
+      <li class="indent2">docker logout</li>
+      <li class="indent2">docker manifest <span class="chevron">⌄</span></li>
+      <li class="indent2">docker mcp <span class="chevron">⌄</span></li>
+      <li class="indent2">docker model <span class="chevron">⌄</span></li>
+      <li class="indent2">docker network <span class="chevron">⌄</span></li>
+      <li class="indent2">docker node <span class="chevron">⌄</span></li>
+      <li class="indent2">docker offload <span class="chevron">⌄</span></li>
+      <li class="indent2">docker pass <span class="chevron">⌄</span></li>
+      <li class="indent2">docker plugin <span class="chevron">⌄</span></li>
+      <li class="indent2">docker ps</li>
+      <li class="indent2">docker pull</li>
+      <li class="indent2">docker push</li>
+    </ul>
+  </div>
+
+  <div class="content">
+    <div class="breadcrumb">
+      <a href="#">Home</a> / <a href="#">Reference</a> / <a href="#">CLI reference</a> / <a href="#">docker</a> / <a href="#">docker buildx</a> / docker buildx rm
+    </div>
+
+    <h1>docker buildx rm</h1>
+
+    <div class="toolbar">
+      <span>🤖 Ask Gordon</span>
+      <span>📋 Copy Markdown</span>
+      <span>↗ View Markdown</span>
+    </div>
+
+    <hr>
+
+    <div class="meta-table">
+      <div class="meta-row">
+        <div class="meta-label">Description</div>
+        <div class="meta-value">Remove one or more builder instances</div>
+      </div>
+      <div class="meta-row">
+        <div class="meta-label">Usage</div>
+        <div class="meta-value"><code>docker buildx rm [OPTIONS] [NAME...]</code></div>
+      </div>
+    </div>
+
+    <h2>Description</h2>
+    <p>Removes the specified or current builder. It is a no-op attempting to remove the default builder.</p>
+
+    <h2>Options</h2>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:22%;">Option</th>
+          <th style="width:12%;">Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>--all-inactive</code></td>
+          <td></td>
+          <td>Remove all inactive builders</td>
+        </tr>
+        <tr>
+          <td><code>-f, --force</code></td>
+          <td></td>
+          <td>Do not prompt for confirmation</td>
+        </tr>
+        <tr>
+          <td><code>--keep-daemon</code></td>
+          <td></td>
+          <td>Keep the BuildKit daemon running</td>
+        </tr>
+        <tr>
+          <td><code>--keep-state</code></td>
+          <td></td>
+          <td>Keep BuildKit state</td>
+        </tr>
+        <tr>
+          <td><code>--timeout</code></td>
+          <td><code>20s</code></td>
+          <td>Override the default timeout for loading builder status</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Examples</h2>
+
+    <h3>Remove all inactive builders (--all-inactive)</h3>
+    <p>Remove builders that are not in running state.</p>
+    <div class="codeblock">$ docker buildx rm --all-inactive
+WARNING! This will remove all builders that are not in running state. Are yo[illegible]</div>
+
+    <h3>Override the configured builder instance (--builder)</h3>
+    <p>Same as <code>buildx --builder</code>.</p>
+
+    <h3>Do not prompt for confirmation (--force)</h3>
+    <p>Do not prompt for confirmation before removing inactive builders.</p>
+    <div class="codeblock">$ docker buildx rm --all-inactive --force</div>
+
+    <h3>Keep the BuildKit daemon running (--keep-daemon)</h3>
+    <p>Keep the BuildKit daemon running after the buildx context is removed. This is useful when you manage BuildKit daemons and buildx contexts independently. Only supported by the <code>docker-container</code> and <code>kubernetes</code> drivers.</p>
+
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">Table of contents</div>
+    <ul>
+      <li class="active">Description</li>
+      <li>Options</li>
+      <li>Examples</li>
+      <li class="sub">Remove all inactive builders (--all-inactive)</li>
+      <li class="sub">Override the configured builder instance (--builder)</li>
+      <li class="sub">Do not prompt for confirmation (--force)</li>
+      <li class="sub">Keep the BuildKit daemon running (--keep-daem...</li>
+      <li class="sub">Keep BuildKit state (--keep-state)</li>
+    </ul>
+  </div>
+
+</div>
+
+<div class="feedback-btn">🚩 Give feedback</div>
+
+</body>
+</html>

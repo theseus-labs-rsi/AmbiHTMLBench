@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>软考高项 各子过程可用工具与技术大全</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", sans-serif;
+    background-color: #faf7ef;
+    color: #333;
+    padding: 15px;
+    font-size: 11px;
+    line-height: 1.35;
+  }
+  .container {
+    max-width: 1050px;
+    margin: 0 auto;
+    background: #fff;
+    border: 3px solid #333;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 4px 4px 0px rgba(0,0,0,0.15);
+  }
+
+  /* Header Section */
+  .header {
+    text-align: center;
+    position: relative;
+    padding: 10px 0 15px;
+  }
+  .badge-must-pass {
+    position: absolute;
+    left: 15px;
+    top: 5px;
+    background: #ff5232;
+    color: #fff;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 3px 10px;
+    border-radius: 20px 20px 0 20px;
+    border: 2px solid #333;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .badge-must-pass::after {
+    content: "★";
+    font-size: 10px;
+  }
+  .main-title {
+    font-size: 32px;
+    font-weight: 900;
+    color: #1a1a1a;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 0px #ffe57f, 4px 4px 0px #f5a623;
+    display: inline-block;
+  }
+  .sub-title-badge {
+    display: block;
+    width: fit-content;
+    margin: 8px auto 0;
+    background: #ffe6a3;
+    border: 1.5px solid #d49a37;
+    padding: 3px 18px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 12px;
+    color: #4a3411;
+  }
+  .mascot-bubble {
+    position: absolute;
+    right: 20px;
+    top: 5px;
+    text-align: center;
+  }
+  .bubble-text {
+    background: #fff;
+    border: 1.5px solid #333;
+    border-radius: 10px;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 1.2;
+    position: relative;
+    display: inline-block;
+  }
+  .mascot-avatar {
+    width: 38px;
+    height: 38px;
+    display: inline-block;
+    border-radius: 50%;
+    margin-left: 4px;
+    vertical-align: middle;
+  }
+
+  /* Grid Layouts */
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  
+  /* Area Cards */
+  .card {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1.5px solid #444;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+  }
+  .card-header {
+    color: #fff;
+    padding: 4px 8px;
+    font-weight: bold;
+    font-size: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    position: relative;
+  }
+  .card-header .icon {
+    font-size: 14px;
+  }
+
+  /* Header Colors */
+  .c-blue .card-header { background: #2f5597; }
+  .c-green .card-header { background: #388a64; }
+  .c-orange .card-header { background: #e07b22; }
+  .c-purple .card-header { background: #6f478b; }
+  .c-crimson .card-header { background: #c9465a; }
+  .c-teal .card-header { background: #258f8e; }
+  .c-amber .card-header { background: #e88d2f; }
+  .c-red .card-header { background: #cc3737; }
+  .c-slate .card-header { background: #4e6ba6; }
+  .c-darkblue .card-header { background: #2f69a5; }
+
+  /* Tables */
+  table.content-table {
+    width: 100%;
+    border-collapse: collapse;
+    flex-grow: 1;
+  }
+  table.content-table th, table.content-table td {
+    border: 1px solid #ddd;
+    padding: 3px 5px;
+    vertical-align: middle;
+  }
+  table.content-table th {
+    background: #f7f7f7;
+    font-weight: bold;
+    color: #333;
+    font-size: 11px;
+    text-align: center;
+  }
+  table.content-table th.col-proc {
+    width: 28%;
+  }
+  table.content-table td.col-proc {
+    font-weight: bold;
+    text-align: center;
+    font-size: 10.5px;
+    background-color: #fafbfc;
+  }
+  table.content-table td.col-tools {
+    text-align: left;
+    font-size: 10px;
+    line-height: 1.3;
+  }
+
+  /* Extra Info Below Tables */
+  .extra-box {
+    margin: 6px;
+    border-radius: 6px;
+    padding: 5px 8px;
+    font-size: 10.5px;
+  }
+  
+  /* Communication Section Extras */
+  .comm-box {
+    border: 1.5px dashed #f5a623;
+    background: #fffdf5;
+  }
+  .comm-title {
+    color: #d97008;
+    font-weight: bold;
+    margin-bottom: 3px;
+  }
+  .comm-item {
+    margin: 2px 0;
+  }
+  .comm-item strong {
+    color: #1e639e;
+  }
+
+  /* Risk Section Extras */
+  .risk-box {
+    border: 1.5px dashed #cc3737;
+    background: #fffafa;
+    font-size: 10px;
+    line-height: 1.35;
+  }
+  .risk-title {
+    color: #cc3737;
+    font-weight: bold;
+    margin-bottom: 2px;
+  }
+
+  /* Procurement Extra */
+  .proc-box {
+    border: 1.5px dashed #4e6ba6;
+    background: #f8faff;
+    margin-top: 10px;
+    border-radius: 6px;
+    padding: 6px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .proc-title {
+    font-weight: bold;
+    color: #2f5597;
+  }
+
+  /* Row 4: Stakeholder + Top 10 + Risk Strategies */
+  .row-4 {
+    display: grid;
+    grid-template-columns: 3.2fr 2.3fr 4.5fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  /* Top 10 Box */
+  .top10-card {
+    background: #fffdf5;
+    border: 1.5px solid #e5b95a;
+    border-radius: 8px;
+    padding: 8px 10px;
+  }
+  .top10-title {
+    font-size: 13px;
+    font-weight: bold;
+    color: #c44018;
+    text-align: center;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+  }
+  .top10-list {
+    list-style: none;
+    font-size: 10.5px;
+    line-height: 1.5;
+  }
+  .top10-list li {
+    font-weight: bold;
+    color: #222;
+  }
+
+  /* Strategy Box */
+  .strategy-card {
+    background: #fff9f8;
+    border: 1.5px solid #e58f8f;
+    border-radius: 8px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+  }
+  .strategy-title {
+    font-size: 13px;
+    font-weight: bold;
+    color: #b82b2b;
+    text-align: center;
+    margin-bottom: 6px;
+  }
+  .strategy-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .strat-col-title {
+    font-size: 11px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .strat-threat-title { color: #a81c1c; }
+  .strat-opp-title { color: #1c7538; }
+
+  .strat-item {
+    font-size: 10px;
+    margin-bottom: 4px;
+    line-height: 1.25;
+    display: flex;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  .strat-badge {
+    border-radius: 3px;
+    padding: 0 3px;
+    font-weight: bold;
+    flex-shrink: 0;
+    font-size: 9.5px;
+  }
+  .strat-threat .strat-badge {
+    background: #2b578c;
+    color: #fff;
+  }
+  .strat-opp .strat-badge {
+    color: #c67c13;
+  }
+
+  /* Bottom Row: 7 Tools & Lifecycle */
+  .bottom-row {
+    display: grid;
+    grid-template-columns: 5.5fr 4.5fr;
+    gap: 12px;
+    border-top: 1.5px dashed #ccc;
+    padding-top: 12px;
+    margin-bottom: 10px;
+  }
+  .bottom-title {
+    font-size: 13px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .title-tools { color: #d02f2f; }
+  .title-lifecycle { color: #cf2323; }
+
+  /* 7 Quality Tools */
+  .tools-diagram-list {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 4px;
+    text-align: center;
+  }
+  .tool-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .tool-name {
+    font-size: 9.5px;
+    font-weight: bold;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .tool-illus {
+    width: 100%;
+    height: 48px;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    background: #fff;
+    margin-top: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Life cycle diagram */
+  .lifecycle-container {
+    text-align: center;
+    position: relative;
+  }
+  .lifecycle-flow {
+    font-size: 11px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 4px;
+  }
+  .lifecycle-sub {
+    font-size: 9.5px;
+    color: #666;
+    margin-bottom: 8px;
+  }
+  .pg-flow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+  }
+  .pg-node {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    color: #fff;
+    font-weight: bold;
+    font-size: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    line-height: 1.1;
+    border: 1.5px solid #333;
+  }
+  .pg-green { background: #3fa169; }
+  .pg-blue { background: #467cb5; }
+  .pg-yellow { background: #e09228; }
+  .pg-purple { background: #715897; }
+  .pg-red {
+    background: #d84545;
+    position: absolute;
+    bottom: -22px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .arrow {
+    font-size: 14px;
+    font-weight: bold;
+    color: #4a6c96;
+  }
+  
+  .encourage-bubble {
+    position: absolute;
+    right: 0px;
+    top: 15px;
+    text-align: center;
+  }
+  .encourage-text {
+    border: 1.5px solid #333;
+    border-radius: 12px;
+    padding: 3px 8px;
+    font-size: 11px;
+    font-weight: bold;
+    background: #fff;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  /* Footer Note */
+  .footer-bar {
+    background: #2b559b;
+    color: #fff;
+    text-align: center;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* SVG Graphics for mini diagrams */
+  svg.diagram {
+    width: 100%;
+    height: 100%;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="badge-must-pass">必过!</div>
+    <div class="main-title">软考高项 各子过程可用工具与技术大全</div>
+    <div class="sub-title-badge">依据：《信息系统项目管理师教程（第4版）》</div>
+    <div class="mascot-bubble">
+      <div class="bubble-text">工具在手<br>管理不愁!</div>
+      <svg class="mascot-avatar" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="45" fill="#f6c28b" stroke="#333" stroke-width="3"/>
+        <!-- Ears -->
+        <circle cx="20" cy="20" r="14" fill="#693b16" stroke="#333" stroke-width="3"/>
+        <circle cx="80" cy="20" r="14" fill="#693b16" stroke="#333" stroke-width="3"/>
+        <circle cx="50" cy="50" r="40" fill="#fff" />
+        <ellipse cx="40" cy="48" rx="4" ry="6" fill="#333" />
+        <ellipse cx="60" cy="48" rx="4" ry="6" fill="#333" />
+        <ellipse cx="50" cy="58" rx="5" ry="3" fill="#333" />
+        <path d="M44 64 Q50 70 56 64" fill="none" stroke="#333" stroke-width="2" />
+        <ellipse cx="30" cy="56" rx="6" ry="3" fill="#ff9999" />
+        <ellipse cx="70" cy="56" rx="6" ry="3" fill="#ff9999" />
+      </svg>
+    </div>
+  </div>
+
+  <!-- Row 1: 整体, 范围, 进度 -->
+  <div class="grid-3">
+    <!-- 1. 整体管理 -->
+    <div class="card c-blue">
+      <div class="card-header">1. 整体管理 <span class="icon">📋</span></div>
+      <table class="content-table">
+        <thead>
+          <tr><th class="col-proc">子过程</th><th class="col-tools">工具与技术</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="col-proc">1.1 制定项目章程</td><td class="col-tools">专家判断、引导技术、会议</td></tr>
+          <tr><td class="col-proc">1.2 制定项目管理计划</td><td class="col-tools">专家判断、引导技术、会议</td></tr>
+          <tr><td class="col-proc">1.3 指导与管理项目工作</td><td class="col-tools">项目管理信息系统、会议</td></tr>
+          <tr><td class="col-proc">1.4 管理项目知识</td><td class="col-tools">知识管理、信息管理</td></tr>
+          <tr><td class="col-proc">1.5 监控项目工作</td><td class="col-tools">数据分析、决策、会议</td></tr>
+          <tr><td class="col-proc">1.6 实施整体变更控制</td><td class="col-tools">变更控制工具、决策、数据分析</td></tr>
+          <tr><td class="col-proc">1.7 结束项目或阶段</td><td class="col-tools">专家判断、数据分析、会议</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 2. 范围管理 -->
+    <div class="card c-green">
+      <div class="card-header">2. 范围管理 <span class="icon">📐</span></div>
+      <table class="content-table">
+        <thead>
+          <tr><th class="col-proc">子过程</th><th class="col-tools">工具与技术</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="col-proc">2.1 规划范围管理</td><td class="col-tools">专家判断、会议、数据分析</td></tr>
+          <tr><td class="col-proc">2.2 收集需求</td><td class="col-tools">访谈、焦点小组、引导式研讨会、群体创新/决策技术、问卷、原型法、标杆对照、系统交互图、文件分析</td></tr>
+          <tr><td class="col-proc">2.3 定义范围</td><td class="col-tools">产品分析、备选方案生成、引导式研讨会</td></tr>
+          <tr><td class="col-proc">2.4 创建WBS</td><td class="col-tools">分解、专家判断</td></tr>
+          <tr><td class="col-proc">2.5 确认范围</td><td class="col-tools">检查、群体决策技术</td></tr>
+          <tr><td class="col-proc">2.6 控制范围</td><td class="col-tools">偏差分析</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 3. 进度管理 -->
+    <div class="card c-orange">
+      <div class="card-header">3. 进度管理 <span class="icon">🕒</span></div>
+      <table class="content-table">
+        <thead>
+          <tr><th class="col-proc">子过程</th><th class="col-tools">工具与技术</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="col-proc">3.1 规划进度管理</td><td class="col-tools">专家判断、数据分析、会议</td></tr>
+          <tr><td class="col-proc">3.2 定义活动</td><td class="col-tools">分解、滚动式规划、专家判断</td></tr>
+          <tr><td class="col-proc">3.3 排列活动顺序</td><td class="col-tools">紧前关系绘图法（PDM）、确定和整合依赖关系、提前量和滞后量</td></tr>
+          <tr><td class="col-proc">3.4 估算活动持续时间</td><td class="col-tools">类比估算、参数估算、三点估算、自下而上估算、储备分析</td></tr>
+          <tr><td class="col-proc">3.5 制定进度计划</td><td class="col-tools">关键路径法（CPM）、资源优化、进度压缩、蒙特卡洛模拟</td></tr>
+          <tr><td class="col-proc">3.6 控制进度</td><td class="col-tools">数据分析（挣值分析、迭代燃尽图、绩效审查）、进度压缩、资源优化</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Row 2: 成本, 质量, 资源 -->
+  <div class="grid-3">
+    <!-- 4. 成本管理 -->
+    <div class="card c-purple">
+      <div class="card-header">4. 成本管理 <span class="icon">💰</span></div>
+      <table class="content-table">
+        <thead>
+          <tr><th class="col-proc">子过程</th><th class="col-tools">工具与技术</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="col-proc">4.1 规划成本管理</td><td class="col-tools">专家判断、数据分析</td></tr>
+          <tr><td class="col-proc">4.2 估算成本</td><td class="col-tools">类比估算、参数估算、自下而上估算、三点估算、储备分析、质量成本</td></tr>
+          <tr><td class="col-proc">4.3 制定预算</td><td class="col-tools">成本汇总、储备分析、历史关系</td></tr>
+          <tr><td class="col-proc">4.4 控制成本</td><td class="col-tools">挣值分析（EV/PV/AC）、偏差分析、趋势分析、储备分析</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 5. 质量管理 -->
+    <div class="card c-crimson">
+      <div class="card-header">5. 质量管理 <span class="icon">🎯</span></div>
+      <table class="content-table">
+        <thead>
+          <tr><th class="col-proc">子过程</th><th class="col-tools">工具与技术</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="col-proc">5.1 规划质量管理</td><td class="col-tools">标杆对照、成本效益分析、质量成本</td></tr>
+          <tr><td class="col-proc">5.2 管理质量</td><td class="col-tools">老七种工具（因果图/鱼骨图、流程图、直方图、帕累托图、控制图、散点图、核查表）、质量审计、过程分析、根本原因分析</td></tr>
+          <tr><td class="col-proc">5.3 控制质量</td><td class="col-tools">老七种工具、统计抽样、检查、测试/产品评估</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 6. 资源管理 -->
+    <div class="card c-teal">
+      <div class="card-header">6. 资源管理 <span class="icon">👥</span></div>
+      <table class="content-table">
+        <thead>
+          <tr><th class="col-proc">子过程</th><th class="col-tools">工具与技术</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="col-proc">6.1 规划资源管理</td><td class="col-tools">数据表现（责任分配矩阵RAM/组织分解结构OBS）、组织理论</td></tr>
+          <tr><td class="col-proc">6.2 估算活动资源</td><td class="col-tools">自下而上估算、类比估算、参数估算、备选方案分析</td></tr>
+          <tr><td class="col-proc">6.3 获取资源</td><td class="col-tools">预分配、谈判、虚拟团队</td></tr>
+          <tr><td class="col-proc">6.4 建设团队</td><td class="col-tools">人际关系与团队技能（冲突管理、情商、影响力、领导力）、基本规则、培训、团队建设活动</td></tr>
+          <tr><td class="col-proc">6.5 管理团队</td><td class="col-tools">冲突管理、情商、影响、领导力、观察/交谈、绩效评估</td></tr>
+          <tr><td class="col-proc">6.6 控制资源</td><td class="col-tools">数据分析（绩效审查）</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Row 3: 沟通, 风险, 采购 -->
+  <div class="grid-3">
+    <!-- 7. 沟通管理 -->
+    <div class="card c-amber">
+      <div class="card-header">7. 沟通管理 <span class="icon">📢</span></div>
+      <table class="content-table">
+        <thead>
+          <tr><th class="col-proc">子过程</th><th class="col-tools">工具与技术</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="col-proc">7.1 规划沟通管理</td><td class="col-tools">沟通需求分析、沟通技术、沟通模型</td></tr>
+          <tr><td class="col-proc">7.2 管理沟通</td><td class="col-tools">沟通方法（推式/拉式/交互式沟通）、人际关系与团队技能、演示、项目报告</td></tr>
+          <tr><td class="col-proc">7.3 监督沟通</td><td class="col-tools">干系人参与度评估矩阵、数据分析</td></tr>
+        </tbody>
+      </table>
+      <div class="extra-box comm-box">
+        <div class="comm-title">沟通方法三大类:</div>
+        <div class="comm-item"><strong>推式沟通:</strong> 发送方主动推送信息 ✈️</div>
+        <div class="comm-item"><strong>拉式沟通:</strong> 接收方自行获取信息 📢</div>
+        <div class="comm-item"><strong>交互式沟通:</strong> 双方多向交流 🔄</div>
+      </div>
+    </div>
+
+    <!-- 8. 风险管理 -->
+    <div class="card c-red">
+      <div class="card-header">8. 风险管理 <span class="icon">⚠️</span></div>
+      <table class="content-table">
+        <thead>
+          <tr><th class="col-proc">子过程</th><th class="col-tools">工具与技术</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="col-proc">8.1 规划风险管理</td><td class="col-tools">专家判断、数据分析、会议</td></tr>
+          <tr><td class="col-proc">8.2 识别风险</td><td class="col-tools">头脑风暴、德尔菲技术、根本原因分析、核对单、假设分析、SWOT分析、系统或过程流程图、因果图/鱼骨图、文件审查、专家判断</td></tr>
+          <tr><td class="col-proc">8.3 实施定性风险分析</td><td class="col-tools">风险概率与影响评估、概率与影响矩阵、风险分类、数据质量评估、风险紧迫性评估、专家判断</td></tr>
+          <tr><td class="col-proc">8.4 实施定量风险分析</td><td class="col-tools">模拟/蒙特卡洛分析、敏感性分析（龙卷风图）、决策树分析、影响图</td></tr>
+          <tr><td class="col-proc">8.5 规划风险应对</td><td class="col-tools">威胁应对策略（上报、规避、转移、减轻、接受）、机会应对策略（上报、开拓、分享、提高、接受）</td></tr>
+          <tr><td class="col-proc">8.6 实施风险应对</td><td class="col-tools">专家判断、人际关系与团队技能、项目管理信息系统</td></tr>
+          <tr><td class="col-proc">8.7 监督风险</td><td class="col-tools">风险审计、技术绩效分析、储备分析、会议</td></tr>
+        </tbody>
+      </table>
+      <div class="extra-box risk-box">
+        <div class="risk-title">识别风险常用清单: 7种分析工具 + 6种数据收集方法 + 图解技术</div>
+        <div><strong>分析工具:</strong> 专家判断、根本原因分析、假设分析、SWOT分析、流程图等</div>
+        <div><strong>数据收集:</strong> 头脑风暴、德尔菲技术、核对单、文件审查、访谈、问卷等</div>
+        <div><strong>图解技术:</strong> 因果图/鱼骨图、系统或过程流程图等</div>
+      </div>
+    </div>
+
+    <!-- 9. 采购管理 -->
+    <div class="card c-slate">
+      <div class="card-header">9. 采购管理 <span class="icon">🛒</span></div>
+      <table class="content-table">
+        <thead>
+          <tr><th class="col-proc">子过程</th><th class="col-tools">工具与技术</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="col-proc">9.1 规划采购管理</td><td class="col-tools">自制或外购分析、专家判断、市场调查、会议</td></tr>
+          <tr><td class="col-proc">9.2 实施采购</td><td class="col-tools">专家判断、独立估算、广告/投标人会议、建议书评估技术</td></tr>
+          <tr><td class="col-proc">9.3 控制采购</td><td class="col-tools">合同变更控制、采购绩效审查、检查与审计、索赔管理</td></tr>
+        </tbody>
+      </table>
+      <div class="proc-box">
+        <span class="proc-title">采购三要素:</span>
+        <span>质量 ✔</span>
+        <span>成本 ✔</span>
+        <span>交付 ✔</span>
+        <span style="font-size: 16px;">🐱</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 4: 干系人管理, 高频考点, 风险应对策略 -->
+  <div class="row-4">
+    <!-- 10. 干系人管理 -->
+    <div class="card c-darkblue">
+      <div class="card-header">10. 干系人管理 <span class="icon">👥</span></div>
+      <table class="content-table">
+        <thead>
+          <tr><th class="col-proc">子过程</th><th class="col-tools">工具与技术</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="col-proc">10.1 识别干系人</td>
+            <td class="col-tools">干系人分析、权力利益方格、干系人立方体、影响方向、优先级排序、凸显模型、数据收集（问卷/访谈）</td>
+          </tr>
+          <tr>
+            <td class="col-proc">10.2 规划干系人参与</td>
+            <td class="col-tools">干系人参与度评估矩阵、专家判断、会议</td>
+          </tr>
+          <tr>
+            <td class="col-proc">10.3 管理干系人参与</td>
+            <td class="col-tools">沟通方法、人际关系与团队技能（冲突管理、谈判）、基本规则</td>
+          </tr>
+          <tr>
+            <td class="col-proc">10.4 监督干系人参与</td>
+            <td class="col-tools">干系人参与度评估矩阵、数据分析、会议</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 高频考点TOP10 -->
+    <div class="top10-card">
+      <div class="top10-title">⭐ 高频考点TOP10</div>
+      <ol class="top10-list">
+        <li>1. 挣值分析（EVM）</li>
+        <li>2. WBS分解</li>
+        <li>3. 关键路径法（CPM）</li>
+        <li>4. 风险应对策略</li>
+        <li>5. 干系人分析方法</li>
+        <li>6. 质量管理七大工具</li>
+        <li>7. 风险识别工具清单</li>
+        <li>8. 沟通方法三大类</li>
+        <li>9. 合同变更控制</li>
+        <li>10. 偏差分析</li>
+      </ol>
+    </div>
+
+    <!-- 风险应对策略 -->
+    <div class="strategy-card">
+      <div class="strategy-title">风险应对策略（威胁&机会各五种）</div>
+      <div class="strategy-grid">
+        <!-- 威胁应对策略 -->
+        <div class="strat-threat">
+          <div class="strat-col-title strat-threat-title">威胁应对策略</div>
+          <div class="strat-item">
+            <span class="strat-badge">上报</span>
+            <span>（提交给上级或相关方）</span>
+          </div>
+          <div class="strat-item">
+            <span class="strat-badge">规避</span>
+            <span>（改变计划以消除威胁）</span>
+          </div>
+          <div class="strat-item">
+            <span class="strat-badge">转移</span>
+            <span>（将风险转移给第三方）</span>
+          </div>
+          <div class="strat-item">
+            <span class="strat-badge">减轻</span>
+            <span>（降低风险发生的概率或影响）</span>
+          </div>
+          <div class="strat-item">
+            <span class="strat-badge">接受</span>
+            <span>（有意识地接受风险）</span>
+          </div>
+        </div>
+
+        <!-- 机会应对策略 -->
+        <div class="strat-opp">
+          <div class="strat-col-title strat-opp-title">机会应对策略</div>
+          <div class="strat-item">
+            <span class="strat-badge">⭐ 上报</span>
+            <span>（提交给上级或相关方）</span>
+          </div>
+          <div class="strat-item">
+            <span class="strat-badge">⭐ 开拓</span>
+            <span>（确保机会被利用）</span>
+          </div>
+          <div class="strat-item">
+            <span class="strat-badge">⭐ 分享</span>
+            <span>（与第三方共享机会）</span>
+          </div>
+          <div class="strat-item">
+            <span class="strat-badge">⭐ 提高</span>
+            <span>（增加机会的发生概率或影响）</span>
+          </div>
+          <div class="strat-item">
+            <span class="strat-badge">⭐ 接受</span>
+            <span>（有意识地接受机会）</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Row: 质量管理七大工具 & 项目生命周期 -->
+  <div class="bottom-row">
+    <!-- 质量管理七大工具 -->
+    <div>
+      <div class="bottom-title title-tools">质量管理七大工具</div>
+      <div class="tools-diagram-list">
+        <!-- 因果图 -->
+        <div class="tool-box">
+          <div class="tool-name">因果图<br>(鱼骨图)</div>
+          <div class="tool-illus">
+            <svg class="diagram" viewBox="0 0 60 40">
+              <line x1="5" y1="20" x2="55" y2="20" stroke="#333" stroke-width="2"/>
+              <polygon points="55,20 48,16 48,24" fill="#333" />
+              <line x1="15" y1="8" x2="25" y2="20" stroke="#333" stroke-width="1.5"/>
+              <line x1="15" y1="32" x2="25" y2="20" stroke="#333" stroke-width="1.5"/>
+              <line x1="32" y1="8" x2="42" y2="20" stroke="#333" stroke-width="1.5"/>
+              <line x1="32" y1="32" x2="42" y2="20" stroke="#333" stroke-width="1.5"/>
+            </svg>
+          </div>
+        </div>
+        <!-- 直方图 -->
+        <div class="tool-box">
+          <div class="tool-name">直方图</div>
+          <div class="tool-illus">
+            <svg class="diagram" viewBox="0 0 60 40">
+              <rect x="8" y="24" width="7" height="12" fill="#467cb5" stroke="#333" stroke-width="1"/>
+              <rect x="17" y="16" width="7" height="20" fill="#467cb5" stroke="#333" stroke-width="1"/>
+              <rect x="26" y="8" width="7" height="28" fill="#467cb5" stroke="#333" stroke-width="1"/>
+              <rect x="35" y="14" width="7" height="22" fill="#467cb5" stroke="#333" stroke-width="1"/>
+              <rect x="44" y="22" width="7" height="14" fill="#467cb5" stroke="#333" stroke-width="1"/>
+              <line x1="4" y1="36" x2="56" y2="36" stroke="#333" stroke-width="1.5"/>
+            </svg>
+          </div>
+        </div>
+        <!-- 帕累托图 -->
+        <div class="tool-box">
+          <div class="tool-name">帕累托图</div>
+          <div class="tool-illus">
+            <svg class="diagram" viewBox="0 0 60 40">
+              <rect x="10" y="14" width="8" height="22" fill="#467cb5" stroke="#333" stroke-width="1"/>
+              <rect x="20" y="20" width="8" height="16" fill="#467cb5" stroke="#333" stroke-width="1"/>
+              <rect x="30" y="26" width="8" height="10" fill="#467cb5" stroke="#333" stroke-width="1"/>
+              <rect x="40" y="30" width="8" height="6" fill="#467cb5" stroke="#333" stroke-width="1"/>
+              <path d="M14 14 Q25 10 44 8" fill="none" stroke="#d84545" stroke-width="1.5"/>
+              <line x1="5" y1="36" x2="55" y2="36" stroke="#333" stroke-width="1.5"/>
+            </svg>
+          </div>
+        </div>
+        <!-- 控制图 -->
+        <div class="tool-box">
+          <div class="tool-name">控制图</div>
+          <div class="tool-illus">
+            <svg class="diagram" viewBox="0 0 60 40">
+              <line x1="5" y1="8" x2="55" y2="8" stroke="#d84545" stroke-dasharray="2,2" stroke-width="1.5"/>
+              <line x1="5" y1="20" x2="55" y2="20" stroke="#333" stroke-width="1"/>
+              <line x1="5" y1="32" x2="55" y2="32" stroke="#d84545" stroke-dasharray="2,2" stroke-width="1.5"/>
+              <polyline points="8,22 16,14 24,25 32,12 40,28 48,16" fill="none" stroke="#258f8e" stroke-width="1.5"/>
+            </svg>
+          </div>
+        </div>
+        <!-- 散点图 -->
+        <div class="tool-box">
+          <div class="tool-name">散点图</div>
+          <div class="tool-illus">
+            <svg class="diagram" viewBox="0 0 60 40">
+              <line x1="8" y1="34" x2="52" y2="34" stroke="#333" stroke-width="1.5"/>
+              <line x1="8" y1="34" x2="8" y2="8" stroke="#333" stroke-width="1.5"/>
+              <circle cx="16" cy="28" r="1.5" fill="#333"/>
+              <circle cx="22" cy="25" r="1.5" fill="#333"/>
+              <circle cx="28" cy="22" r="1.5" fill="#333"/>
+              <circle cx="34" cy="18" r="1.5" fill="#333"/>
+              <circle cx="42" cy="14" r="1.5" fill="#333"/>
+              <circle cx="46" cy="11" r="1.5" fill="#333"/>
+            </svg>
+          </div>
+        </div>
+        <!-- 核查表 -->
+        <div class="tool-box">
+          <div class="tool-name">核查表</div>
+          <div class="tool-illus">
+            <svg class="diagram" viewBox="0 0 60 40">
+              <rect x="10" y="6" width="40" height="28" fill="#fff" stroke="#333" stroke-width="1.2"/>
+              <line x1="10" y1="13" x2="50" y2="13" stroke="#333" stroke-width="1"/>
+              <line x1="10" y1="20" x2="50" y2="20" stroke="#333" stroke-width="1"/>
+              <line x1="10" y1="27" x2="50" y2="27" stroke="#333" stroke-width="1"/>
+              <line x1="22" y1="6" x2="22" y2="34" stroke="#333" stroke-width="1"/>
+              <text x="14" y="11" font-size="5">✓</text>
+              <text x="14" y="18" font-size="5">✓</text>
+              <text x="14" y="25" font-size="5">✓</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 项目的生命周期 -->
+    <div class="lifecycle-container">
+      <div class="bottom-title title-lifecycle">项目的生命周期</div>
+      <div class="lifecycle-flow">启动 ➔ 规划 ➔ 执行 ➔ 监控 ➔ 收尾</div>
+      <div class="lifecycle-sub">过程组之间相互作用，并行重复<br>(过程组交互图 - PMBOK® 第六版)</div>
+      
+      <div class="pg-flow" style="margin-top: 10px; margin-bottom: 25px;">
+        <div class="pg-node pg-green">启动<br>过程组</div>
+        <div class="arrow">➔</div>
+        <div class="pg-node pg-blue">规划<br>过程组</div>
+        <div class="arrow">➔</div>
+        <div class="pg-node pg-yellow">执行<br>过程组</div>
+        <div class="arrow">➔</div>
+        <div class="pg-node pg-purple">收尾<br>过程组</div>
+        <div class="pg-node pg-red">监控<br>过程组</div>
+      </div>
+
+      <div class="encourage-bubble">
+        <span class="encourage-text">加油！<br>一定可以！</span>
+        <svg viewBox="0 0 40 40" width="35" height="35">
+          <circle cx="20" cy="20" r="16" fill="#fce4c8" stroke="#333" stroke-width="1.5"/>
+          <circle cx="15" cy="18" r="2" fill="#333"/>
+          <circle cx="25" cy="18" r="2" fill="#333"/>
+          <path d="M17 24 Q20 27 23 24" fill="none" stroke="#333" stroke-width="1.5"/>
+          <ellipse cx="12" cy="22" rx="2" ry="1.5" fill="#f59a9a"/>
+          <ellipse cx="28" cy="22" rx="2" ry="1.5" fill="#f59a9a"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Notice Bar -->
+  <div class="footer-bar">
+    <span>提示：以上工具与技术均来自《信息系统项目管理师教程（第4版）》官方内容，软考高项必备！理解记忆，灵活运用，考试更轻松！</span>
+    <span>👍</span>
+  </div>
+
+</div>
+
+</body>
+</html>

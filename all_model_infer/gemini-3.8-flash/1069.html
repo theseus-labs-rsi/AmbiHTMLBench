@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>更年期健康知识可视化 - 健康生活方式</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    background-color: #dcdcdc;
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+    color: #333333;
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+  }
+  .poster {
+    width: 800px;
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+  }
+  .top-header {
+    text-align: right;
+    padding: 8px 24px;
+    font-size: 13px;
+    color: #444;
+    font-weight: 500;
+    border-bottom: 1px solid #777;
+    background: #f1f1f1;
+  }
+  .content-container {
+    display: flex;
+    position: relative;
+  }
+  
+  /* Left Column */
+  .left-col {
+    width: 48%;
+    border-right: 1px solid #777;
+    padding: 16px 20px 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* Right Column */
+  .right-col {
+    width: 52%;
+    padding: 12px 20px 20px 20px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Section Title Styles */
+  .sec-title {
+    font-size: 15px;
+    font-weight: bold;
+    color: #222;
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .sec-title::before {
+    content: "";
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background-color: #e65d5d;
+    margin-right: 6px;
+  }
+  .sub-title {
+    font-size: 12px;
+    font-weight: bold;
+    color: #333;
+    display: flex;
+    align-items: center;
+    margin: 6px 0 4px 0;
+  }
+  .sub-title::before {
+    content: "•";
+    color: #e65d5d;
+    font-size: 14px;
+    margin-right: 4px;
+  }
+
+  .text-block {
+    font-size: 10px;
+    line-height: 1.55;
+    color: #444;
+    text-align: justify;
+  }
+
+  .divider-line {
+    border-top: 1px solid #aaa;
+    margin: 10px 0;
+  }
+
+  /* Exercise Grid */
+  .exercise-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    row-gap: 14px;
+    column-gap: 8px;
+    margin: 12px 0 10px 0;
+    text-align: center;
+  }
+  .exercise-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  .exercise-item svg {
+    height: 44px;
+    width: auto;
+    margin-bottom: 4px;
+  }
+  .exercise-item span {
+    font-size: 10px;
+    color: #555;
+  }
+
+  /* Recommendation Amount */
+  .amount-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+    padding-right: 4px;
+  }
+  .amount-left {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .amount-metric {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #222;
+  }
+  .amount-metric svg {
+    width: 24px;
+    height: 24px;
+  }
+  .amount-right {
+    border: 1px solid #777;
+    background: #fff;
+    padding: 6px 8px;
+    position: relative;
+    width: 154px;
+  }
+  .step-bars {
+    display: flex;
+    height: 12px;
+    gap: 1px;
+    margin-bottom: 6px;
+  }
+  .step-bar {
+    flex: 1;
+    background: #d8d8d8;
+  }
+  .step-bar.active1 { background: #b8c8d8; }
+  .step-bar.active2 { background: #e5b3a3; }
+  .step-bar.active3 { background: #e28a8a; }
+  .amount-info {
+    font-size: 9.5px;
+    line-height: 1.35;
+    color: #333;
+  }
+  .arm-icon {
+    position: absolute;
+    right: 4px;
+    bottom: 4px;
+    width: 32px;
+    height: 24px;
+  }
+
+  /* BMI Section */
+  .bmi-chart {
+    margin: 10px 0 4px 0;
+  }
+  .bar-container {
+    height: 14px;
+    display: flex;
+    width: 100%;
+    position: relative;
+  }
+  .bar-seg { height: 100%; }
+  .bar-blue { width: 35%; background-color: #6da2b8; }
+  .bar-pink { width: 35%; background-color: #e26f63; }
+  .bar-black { width: 30%; background-color: #222222; }
+
+  .bar-labels {
+    position: relative;
+    height: 16px;
+    font-size: 9px;
+    color: #666;
+    margin-top: 2px;
+  }
+  .bar-labels span:nth-child(1) { position: absolute; left: 33%; transform: translateX(-50%); }
+  .bar-labels span:nth-child(2) { position: absolute; left: 70%; transform: translateX(-50%); }
+
+  .bmi-tag {
+    text-align: center;
+    margin: 4px 0;
+  }
+  .bmi-tag span {
+    border: 1px solid #888;
+    background: #fff;
+    font-size: 9.5px;
+    padding: 2px 10px;
+    border-radius: 2px;
+    display: inline-block;
+  }
+  .bmi-formula {
+    font-size: 9.5px;
+    color: #444;
+    margin: 4px 0 8px 0;
+  }
+
+  .bmi-desc-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+  }
+  .gauge-box {
+    width: 80px;
+    flex-shrink: 0;
+    text-align: center;
+  }
+
+  /* Other Habits */
+  .other-grid {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    padding: 0 4px;
+  }
+  .other-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .other-item svg {
+    width: 38px;
+    height: 38px;
+  }
+  .other-item span {
+    font-size: 10px;
+    color: #444;
+  }
+
+  /* Right Column: Plate Area */
+  .diet-area {
+    position: relative;
+    width: 100%;
+    height: 390px;
+  }
+  .plate-circle {
+    position: absolute;
+    right: -75px;
+    top: 5px;
+    width: 340px;
+    height: 340px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid #777;
+    background: #fff;
+  }
+  .callout {
+    position: absolute;
+    background: #fff;
+    border: 1px solid #666;
+    padding: 4px 6px;
+    font-size: 9px;
+    line-height: 1.3;
+    z-index: 10;
+  }
+  .callout .title {
+    font-size: 12px;
+    font-weight: bold;
+    color: #111;
+  }
+  .callout .apples {
+    display: flex;
+    gap: 3px;
+    margin-top: 3px;
+  }
+  .callout .apples svg {
+    width: 10px;
+    height: 10px;
+    fill: #d94b4b;
+  }
+
+  /* Callout Positions */
+  .callout-grains {
+    top: 6px;
+    left: 48px;
+  }
+  .callout-veg {
+    top: 92px;
+    left: 14px;
+  }
+  .callout-fruit {
+    top: 226px;
+    left: 8px;
+  }
+  .callout-milk {
+    top: 345px;
+    left: 20px;
+  }
+  .callout-meat {
+    top: 375px;
+    left: 110px;
+  }
+
+  /* Connecting Lines */
+  .guide-lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  /* Principles Area */
+  .principles-area {
+    margin-top: 50px;
+    padding-right: 8px;
+  }
+  .principles-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 10px;
+    line-height: 1.45;
+    color: #444;
+    text-align: justify;
+  }
+
+  /* Big Footer Title */
+  .poster-title-area {
+    margin-top: 14px;
+    display: flex;
+    flex-direction: column;
+  }
+  .main-title-huge {
+    text-align: right;
+    font-size: 58px;
+    line-height: 1.05;
+    font-weight: 900;
+    font-family: "Songti SC", "SimSun", "STSong", "Noto Serif CJK SC", serif;
+    color: #111;
+    letter-spacing: 4px;
+    margin-right: 10px;
+  }
+  .main-title-huge .line2 {
+    letter-spacing: 14px;
+    margin-right: -14px;
+  }
+
+  .conclusion-box {
+    margin-top: 10px;
+    border-top: 2px solid #222;
+    border-bottom: 2px solid #222;
+    padding: 8px 6px;
+  }
+  .conclusion-title {
+    font-size: 14px;
+    font-weight: bold;
+    color: #111;
+    text-align: center;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .conclusion-text {
+    font-size: 9.5px;
+    line-height: 1.5;
+    color: #444;
+    text-align: justify;
+  }
+</style>
+</head>
+<body>
+
+<div class="poster">
+  <!-- Top Bar -->
+  <div class="top-header">更年期健康知识可视化</div>
+
+  <div class="content-container">
+    <!-- LEFT COLUMN -->
+    <div class="left-col">
+      <!-- Section: 运动健身 -->
+      <div>
+        <div class="sec-title">运动健身</div>
+        <div class="divider-line" style="margin-top:-2px; margin-bottom:8px;"></div>
+        
+        <div class="sub-title">运动的益处</div>
+        <p class="text-block">
+          适宜的运动有益健康，可以提高机体脂肪的供能比例，可以改善脂质代谢，对维持正常血压、降低血清胆固醇水平、提高心肺功能都有积极作用。运动还可以改善人体心理状态，有助于消除焦虑。
+        </p>
+
+        <div class="divider-line"></div>
+
+        <div class="sub-title">推荐运动</div>
+        
+        <div class="exercise-grid">
+          <!-- 自行车 -->
+          <div class="exercise-item">
+            <svg viewBox="0 0 64 50">
+              <circle cx="16" cy="34" r="12" fill="none" stroke="#111" stroke-width="2.5"/>
+              <circle cx="48" cy="34" r="12" fill="none" stroke="#111" stroke-width="2.5"/>
+              <circle cx="16" cy="34" r="2" fill="#111"/>
+              <circle cx="48" cy="34" r="2" fill="#111"/>
+              <path d="M16 34 L28 34 L36 20 L22 20 Z" fill="none" stroke="#111" stroke-width="2.5" stroke-linejoin="round"/>
+              <path d="M28 34 L32 14" fill="none" stroke="#111" stroke-width="2.5"/>
+              <line x1="28" y1="14" x2="36" y2="14" stroke="#111" stroke-width="3" stroke-linecap="round"/>
+              <path d="M48 34 L42 16 L46 14" fill="none" stroke="#111" stroke-width="2.5"/>
+              <line x1="42" y1="14" x2="50" y2="14" stroke="#111" stroke-width="2.5"/>
+            </svg>
+            <span>自行车</span>
+          </div>
+          <!-- 游泳 -->
+          <div class="exercise-item">
+            <svg viewBox="0 0 64 50">
+              <!-- Swimmer figure -->
+              <circle cx="36" cy="12" r="4.5" fill="#e65d5d"/>
+              <path d="M20 25 C26 22, 34 18, 42 22 L50 20" fill="none" stroke="#e65d5d" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M30 20 C24 16, 18 18, 12 24" fill="none" stroke="#e65d5d" stroke-width="2.5" stroke-linecap="round"/>
+              <!-- Water waves -->
+              <path d="M6 32 C12 28, 18 36, 24 32 C30 28, 36 36, 42 32 C48 28, 54 36, 60 32" fill="none" stroke="#e65d5d" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M10 40 C16 36, 22 44, 28 40 C34 36, 40 44, 46 40 C52 36, 58 44, 62 40" fill="none" stroke="#e65d5d" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            <span>游泳</span>
+          </div>
+          <!-- 慢跑 -->
+          <div class="exercise-item">
+            <svg viewBox="0 0 64 50">
+              <circle cx="34" cy="10" r="4.5" fill="#111"/>
+              <path d="M26 14 C28 17, 34 19, 36 25 L32 35 L24 45" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M35 25 L44 32 L40 44" fill="none" stroke="#111" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M24 24 L32 20 L42 22 L46 29" fill="none" stroke="#111" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>慢跑</span>
+          </div>
+          <!-- 广场舞 -->
+          <div class="exercise-item">
+            <svg viewBox="0 0 64 50">
+              <circle cx="30" cy="10" r="4.5" fill="#e65d5d"/>
+              <path d="M18 20 C22 18, 28 22, 32 24 L28 35 L34 45" fill="none" stroke="#e65d5d" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M30 24 L38 33 L44 43" fill="none" stroke="#e65d5d" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M16 28 L24 20 L36 16 L42 12" fill="none" stroke="#e65d5d" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>广场舞</span>
+          </div>
+          <!-- 瑜伽 -->
+          <div class="exercise-item">
+            <svg viewBox="0 0 64 50">
+              <circle cx="32" cy="11" r="4.5" fill="#111"/>
+              <path d="M32 17 L32 32" stroke="#111" stroke-width="3.5" stroke-linecap="round"/>
+              <!-- Lotus legs -->
+              <path d="M20 38 C22 32, 28 34, 32 35 C36 34, 42 32, 44 38 C42 42, 22 42, 20 38 Z" fill="#111"/>
+              <!-- Hands in prayer / meditation -->
+              <path d="M20 26 L26 24 L30 26" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M44 26 L38 24 L34 26" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round"/>
+              <circle cx="32" cy="26" r="2" fill="#111"/>
+            </svg>
+            <span>瑜伽</span>
+          </div>
+          <!-- 太极 -->
+          <div class="exercise-item">
+            <svg viewBox="0 0 64 50">
+              <circle cx="34" cy="11" r="4.5" fill="#e65d5d"/>
+              <path d="M32 17 L30 28 L24 36 L18 45" fill="none" stroke="#e65d5d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M30 28 L38 34 L46 44" fill="none" stroke="#e65d5d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M16 24 L24 23 L32 21 L42 24 L48 30" fill="none" stroke="#e65d5d" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>太极</span>
+          </div>
+        </div>
+
+        <p class="text-block" style="font-size: 8.5px; color:#666; margin-top: 6px;">
+          更年期妇女在运动锻炼中应尽量避免肌肉-关节-骨骼系统损伤，合理进行有氧运动。条件合适可以适量进行肌肉力量训练。
+        </p>
+
+        <div class="divider-line"></div>
+
+        <div class="sub-title">推荐运动量</div>
+
+        <div class="amount-box">
+          <div class="amount-left">
+            <div class="amount-metric">
+              <!-- Footprints icon -->
+              <svg viewBox="0 0 32 32" fill="#111">
+                <ellipse cx="14" cy="20" rx="4.5" ry="7" transform="rotate(-15 14 20)"/>
+                <circle cx="10" cy="10" r="1.5"/>
+                <circle cx="13" cy="9" r="1.5"/>
+                <circle cx="16" cy="10" r="1.4"/>
+                <circle cx="19" cy="12" r="1.2"/>
+              </svg>
+              <span>6000步</span>
+            </div>
+            <div class="amount-metric">
+              <!-- Heart icon -->
+              <svg viewBox="0 0 32 32" fill="#111">
+                <path d="M16 27 C15 26, 4 19, 4 11 C4 6, 8 3, 12.5 3 C14.5 3, 15.5 4, 16 5 C16.5 4, 17.5 3, 19.5 3 C24 3, 28 6, 28 11 C28 19, 17 26, 16 27 Z"/>
+              </svg>
+              <span>150次/min</span>
+            </div>
+          </div>
+
+          <div class="amount-right">
+            <div class="step-bars">
+              <div class="step-bar active1"></div>
+              <div class="step-bar active1"></div>
+              <div class="step-bar active1"></div>
+              <div class="step-bar active2"></div>
+              <div class="step-bar active2"></div>
+              <div class="step-bar active3"></div>
+              <div class="step-bar active3"></div>
+            </div>
+            <div class="amount-info">
+              锻炼最佳方式为每周至少3次<br>
+              <span style="display:inline-block; margin-top:2px; border-bottom:1px solid #ddd;">最佳时长为<br>30min/次</span><br>
+              <div style="margin-top:2px;">每周适量进行2-3<br>次肌肉训练</div>
+            </div>
+            <!-- Bicep icon -->
+            <svg class="arm-icon" viewBox="0 0 32 24" fill="#111">
+              <path d="M2 18 C6 18, 9 16, 12 14 C13 10, 15 7, 19 8 C23 9, 25 13, 27 15 C29 17, 30 20, 27 21 C24 22, 18 22, 13 21 C9 20, 5 21, 2 18 Z"/>
+              <path d="M19 8 C21 5, 25 5, 27 8 C28 9.5, 27 12, 25 13 C23 11, 21 10, 19 8 Z"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section: 维持体重 -->
+      <div>
+        <div class="sec-title">维持体重</div>
+        <div class="divider-line" style="margin-top:-2px; margin-bottom:8px;"></div>
+        <p class="text-block">
+          随着年龄的增长，人体的基础代谢率将缓慢下降，此外，雌激素分泌的减少将进一步降低女性的基础代谢率，40~49岁时可降低5%，50~59岁时可降低10%，从而使热量摄入更容易转化为脂肪并在体内积聚。维持正常体重有利于更年期女性健康。
+        </p>
+
+        <div class="bmi-chart">
+          <div class="bar-container">
+            <div class="bar-seg bar-blue"></div>
+            <div class="bar-seg bar-pink"></div>
+            <div class="bar-seg bar-black"></div>
+          </div>
+          <div class="bar-labels">
+            <span>18.5</span>
+            <span>23.9</span>
+          </div>
+          <div class="bmi-tag">
+            <span>更年期女性建议BMI</span>
+          </div>
+        </div>
+
+        <div class="bmi-formula">
+          计算公式：BMI=体重/身高的平方(国际单位kg/m²)
+        </div>
+
+        <div class="bmi-desc-box">
+          <div class="gauge-box">
+            <!-- Gauge / scale graphic -->
+            <svg viewBox="0 0 100 55" width="80">
+              <rect x="2" y="2" width="96" height="46" rx="4" fill="#fff" stroke="#111" stroke-width="2.5"/>
+              <path d="M22 36 A30 30 0 0 1 78 36" fill="none" stroke="#888" stroke-width="2"/>
+              <!-- Red marker slice -->
+              <path d="M42 36 L46 16 L54 16 L58 36 Z" fill="#e65d5d"/>
+              <!-- Needle -->
+              <line x1="50" y1="36" x2="50" y2="12" stroke="#111" stroke-width="2.5"/>
+              <circle cx="50" cy="36" r="4" fill="#111"/>
+            </svg>
+          </div>
+          <p class="text-block" style="flex:1;">
+            肥胖妇女体重若减轻5%~10%，就能有效改善与肥胖相关的多种异常状况。
+          </p>
+        </div>
+      </div>
+
+      <!-- Section: 其他 -->
+      <div>
+        <div class="sec-title">其他</div>
+        <div class="divider-line" style="margin-top:-2px; margin-bottom:12px;"></div>
+        
+        <div class="other-grid">
+          <!-- 足量睡眠 -->
+          <div class="other-item">
+            <svg viewBox="0 0 40 40">
+              <circle cx="20" cy="22" r="14" fill="#fff" stroke="#111" stroke-width="2"/>
+              <path d="M14 20 Q16 23 18 20" fill="none" stroke="#111" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M22 20 Q24 23 26 20" fill="none" stroke="#111" stroke-width="1.8" stroke-linecap="round"/>
+              <circle cx="20" cy="27" r="2.5" fill="#111"/>
+              <!-- Zzz -->
+              <path d="M24 6 L29 6 L24 11 L29 11" fill="none" stroke="#111" stroke-width="1.8" stroke-linejoin="round"/>
+              <path d="M29 3 L33 3 L29 7 L33 7" fill="none" stroke="#111" stroke-width="1.4" stroke-linejoin="round"/>
+            </svg>
+            <span>足量睡眠</span>
+          </div>
+
+          <!-- 注意避孕 -->
+          <div class="other-item">
+            <svg viewBox="0 0 40 40">
+              <!-- Condom silhouette -->
+              <path d="M20 4 C18 4, 18 7, 16 8 C14 10, 14 26, 14 30 C14 32, 16 33, 20 33 C24 33, 26 32, 26 30 C26 26, 26 10, 24 8 C22 7, 22 4, 20 4 Z" fill="#111"/>
+              <ellipse cx="20" cy="33" rx="7" ry="2" fill="none" stroke="#111" stroke-width="2"/>
+            </svg>
+            <span>注意避孕</span>
+          </div>
+
+          <!-- 戒烟 -->
+          <div class="other-item">
+            <svg viewBox="0 0 40 40">
+              <!-- Smoke -->
+              <path d="M19 6 C17 9, 21 11, 19 14" fill="none" stroke="#111" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M24 4 C22 7, 26 10, 24 13" fill="none" stroke="#111" stroke-width="1.5" stroke-linecap="round"/>
+              <!-- Cigarette -->
+              <rect x="8" y="24" width="22" height="6" rx="1" fill="#fff" stroke="#111" stroke-width="1.8" transform="rotate(-30 18 24)"/>
+              <line x1="12" y1="23" x2="15" y2="28" stroke="#111" stroke-width="2.5"/>
+            </svg>
+            <span>戒烟</span>
+          </div>
+
+          <!-- 戒酒 -->
+          <div class="other-item">
+            <svg viewBox="0 0 40 40">
+              <!-- Bottle -->
+              <rect x="11" y="16" width="9" height="18" rx="1" fill="#111"/>
+              <rect x="13" y="11" width="5" height="5" fill="#111"/>
+              <line x1="14" y1="9" x2="17" y2="9" stroke="#111" stroke-width="2"/>
+              <rect x="12" y="22" width="7" height="6" fill="#fff"/>
+              <!-- Glass -->
+              <path d="M24 22 L31 22 L29.5 28 C29 31, 26 31, 25.5 28 Z" fill="none" stroke="#111" stroke-width="1.8"/>
+              <line x1="27.5" y1="30" x2="27.5" y2="34" stroke="#111" stroke-width="1.8"/>
+              <line x1="24.5" y1="34" x2="30.5" y2="34" stroke="#111" stroke-width="1.8"/>
+              <path d="M25 24 Q27.5 26 30 24 L29 27 Q27.5 29 26 27 Z" fill="#111"/>
+            </svg>
+            <span>戒酒</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="right-col">
+      <!-- Diet Nutrition Plate Area -->
+      <div class="diet-area">
+        <!-- SVG Guide lines connecting labels to plate -->
+        <svg class="guide-lines" viewBox="0 0 400 390">
+          <!-- line to grains -->
+          <line x1="140" y1="42" x2="235" y2="70" stroke="#777" stroke-width="1"/>
+          <!-- line to vegetables -->
+          <line x1="90" y1="130" x2="190" y2="150" stroke="#777" stroke-width="1"/>
+          <!-- line to fruits -->
+          <line x1="88" y1="260" x2="195" y2="260" stroke="#777" stroke-width="1"/>
+          <!-- line to milk -->
+          <polyline points="72,345 140,345 220,310" fill="none" stroke="#777" stroke-width="1"/>
+          <!-- line to animal food -->
+          <line x1="195" y1="375" x2="280" y2="340" stroke="#777" stroke-width="1"/>
+        </svg>
+
+        <!-- Callout 1: 谷类 -->
+        <div class="callout callout-grains">
+          <div class="title">谷类</div>
+          <div>每天250-400g</div>
+          <div style="font-size:8px; color:#555;">粗粮与杂豆50-150g</div>
+          <div class="apples">
+            <svg viewBox="0 0 16 16"><path d="M8 3 C6 1, 3 1, 2 3 C0 6, 2 12, 8 14 C14 12, 16 6, 14 3 C13 1, 10 1, 8 3 Z"/></svg>
+            <svg viewBox="0 0 16 16"><path d="M8 3 C6 1, 3 1, 2 3 C0 6, 2 12, 8 14 C14 12, 16 6, 14 3 C13 1, 10 1, 8 3 Z"/></svg>
+            <svg viewBox="0 0 16 16"><path d="M8 3 C6 1, 3 1, 2 3 C0 6, 2 12, 8 14 C14 12, 16 6, 14 3 C13 1, 10 1, 8 3 Z"/></svg>
+            <svg viewBox="0 0 16 16"><path d="M8 3 C6 1, 3 1, 2 3 C0 6, 2 12, 8 14 C14 12, 16 6, 14 3 C13 1, 10 1, 8 3 Z"/></svg>
+          </div>
+        </div>
+
+        <!-- Callout 2: 蔬菜 -->
+        <div class="callout callout-veg">
+          <div class="title">蔬菜</div>
+          <div>每天300-500g</div>
+          <div class="apples">
+            <svg viewBox="0 0 16 16"><path d="M8 3 C6 1, 3 1, 2 3 C0 6, 2 12, 8 14 C14 12, 16 6, 14 3 C13 1, 10 1, 8 3 Z"/></svg>
+            <svg viewBox="0 0 16 16"><path d="M8 3 C6 1, 3 1, 2 3 C0 6, 2 12, 8 14 C14 12, 16 6, 14 3 C13 1, 10 1, 8 3 Z"/></svg>
+            <svg viewBox="0 0 16 16"><path d="M8 3 C6 1, 3 1, 2 3 C0 6, 2 12, 8 14 C14 12, 16 6, 14 3 C13 1, 10 1, 8 3 Z"/></svg>
+            <svg viewBox="0 0 16 16"><path d="M8 3 C6 1, 3 1, 2 3 C0 6, 2 12, 8 14 C14 12, 16 6, 14 3 C13 1, 10 1, 8 3 Z"/></svg>
+            <svg viewBox="0 0 16 16"><path d="M8 3 C6 1, 3 1, 2 3 C0 6, 2 12, 8 14 C14 12, 16 6, 14 3 C13 1, 10 1, 8 3 Z"/></svg>
+          </div>
+        </div>
+
+        <!-- Callout 3: 水果 -->
+        <div class="callout callout-fruit">
+          <div class="title">水果</div>
+          <div>每天200-400g</div>
+          <div class="apples">
+            <svg viewBox="0 0 16 16"><path d="M8 3 C6 1, 3 1, 2 3 C0 6, 2 12, 8 14 C14 12, 16 6, 14 3 C13 1, 10 1, 8 3 Z"/></svg>
+            <svg viewBox="0 0 16 16"><path d="M8 3 C6 1, 3 1, 2 3 C0 6, 2 12, 8 14 C14 12, 16 6, 14 3 C13 1, 10 1, 8 3 Z"/></svg>
+            <svg viewBox="0 0 16 16"><path d="M8 3 C6 1, 3 1, 2 3 C0 6, 2 12, 8 14 C14 12, 16 6, 14 3 C13 1, 10 1, 8 3 Z"/></svg>
+            <svg viewBox="0 0 16 16"><path d="M8 3 C6 1, 3 1, 2 3 C0 6, 2 12, 8 14 C14 12, 16 6, 14 3 C13 1, 10 1, 8 3 Z"/></svg>
+          </div>
+        </div>
+
+        <!-- Callout 4: 奶 -->
+        <div class="callout callout-milk">
+          <div class="title">奶</div>
+          <div>每天300g</div>
+          <div class="apples">
+            <svg viewBox="0 0 16 16"><path d="M8 3 C6 1, 3 1, 2 3 C0 6, 2 12, 8 14 C14 12, 16 6, 14 3 C13 1, 10 1, 8 3 Z"/></svg>
+            <svg viewBox="0 0 16 16"><path d="M8 3 C6 1, 3 1, 2 3 C0 6, 2 12, 8 14 C14 12, 16 6, 14 3 C13 1, 10 1, 8 3 Z"/></svg>
+            <svg viewBox="0 0 16 16"><path d="M8 3 C6 1, 3 1, 2 3 C0 6, 2 12, 8 14 C14 12, 16 6, 14 3 C13 1, 10 1, 8 3 Z"/></svg>
+          </div>
+        </div>
+
+        <!-- Callout 5: 动物性食物 -->
+        <div class="callout callout-meat">
+          <div class="title">动物性食物</div>
+          <div>每天120-200g</div>
+        </div>
+
+        <!-- Circular Food Plate Graphic -->
+        <div class="plate-circle">
+          <svg viewBox="0 0 340 340" width="340" height="340">
+            <!-- Background base -->
+            <circle cx="170" cy="170" r="165" fill="#fcfcfc" stroke="#555" stroke-width="2"/>
+            
+            <!-- Wedge 1: Grains & Carbs (top-right, pinkish/red/patterned) -->
+            <path d="M170 170 L240 20 A165 165 0 0 1 335 170 Z" fill="#fceceb"/>
+            <!-- Corn, wheat, oats graphics -->
+            <path d="M230 40 L280 80 L250 110 Z" fill="#eb7373" opacity="0.6"/>
+            <circle cx="310" cy="90" r="18" fill="#d9383a"/>
+            <circle cx="310" cy="90" r="10" fill="#fff"/>
+            <circle cx="310" cy="90" r="4" fill="#d9383a"/>
+            <path d="M270 130 C280 120, 310 130, 320 150 C300 160, 280 150, 270 130 Z" fill="#222"/>
+
+            <!-- Wedge 2: Vegetables (top-left & center-left) -->
+            <path d="M170 170 L80 60 A165 165 0 0 1 240 20 Z" fill="#f8f8f8"/>
+            <path d="M170 170 L20 170 A165 165 0 0 1 80 60 Z" fill="#f2f2f2"/>
+            <!-- Broccoli / Veggie icons -->
+            <!-- Eggplant / Pepper -->
+            <path d="M90 100 C75 110, 80 140, 105 140 C125 140, 125 110, 110 100 Z" fill="#111"/>
+            <path d="M100 95 L102 85" stroke="#111" stroke-width="2"/>
+            <!-- Broccoli -->
+            <path d="M120 160 C105 150, 110 125, 135 125 C145 115, 170 120, 175 140 C185 145, 180 165, 165 170 Z" fill="#111"/>
+            <!-- Tomato -->
+            <circle cx="170" cy="190" r="22" fill="#eb5858"/>
+            <path d="M165 165 L170 170 L175 165" stroke="#222" stroke-width="2" fill="none"/>
+            <circle cx="120" cy="205" r="16" fill="#111"/>
+            <circle cx="95" cy="180" r="14" fill="#111"/>
+
+            <!-- Wedge 3: Fruits (bottom-left) -->
+            <path d="M170 170 L110 320 A165 165 0 0 1 20 170 Z" fill="#fff"/>
+            <!-- Big sliced Apple -->
+            <path d="M90 230 C80 200, 130 190, 150 215 C170 190, 220 200, 210 230 C200 270, 155 285, 150 285 C145 285, 100 270, 90 230 Z" fill="#fbe7e7" stroke="#e85b5b" stroke-width="3"/>
+            <!-- Apple core -->
+            <ellipse cx="146" cy="242" rx="2" ry="4" fill="#111" transform="rotate(-15 146 242)"/>
+            <ellipse cx="154" cy="242" rx="2" ry="4" fill="#111" transform="rotate(15 154 242)"/>
+            <!-- Strawberry / watermelon -->
+            <path d="M130 295 L170 295 L150 330 Z" fill="#e85b5b"/>
+            <path d="M185 220 C200 210, 220 220, 215 240 C210 255, 190 255, 185 240 Z" fill="#eb6b6b"/>
+
+            <!-- Wedge 4: Milk & Dairy -->
+            <path d="M170 170 L190 330 A165 165 0 0 1 110 320 Z" fill="#fcfcfc"/>
+            <!-- Milk Jar -->
+            <rect x="180" y="270" width="36" height="42" rx="6" fill="#111"/>
+            <ellipse cx="198" cy="268" rx="16" ry="4" fill="#e65d5d"/>
+            <circle cx="198" cy="290" r="5" fill="#fff"/>
+
+            <!-- Wedge 5: Animal food / Meat & Fish (bottom-right) -->
+            <path d="M170 170 L335 170 A165 165 0 0 1 190 330 Z" fill="#f7f7f7"/>
+            <!-- Fish & Meat -->
+            <!-- Fish skeleton / meat shapes -->
+            <path d="M225 210 L280 235 L260 260 L210 225 Z" fill="#f29f9f"/>
+            <path d="M270 270 C285 250, 315 270, 305 295 C285 315, 260 290, 270 270 Z" fill="#f9d5d5" stroke="#e88a8a" stroke-width="2"/>
+            <!-- Drumstick -->
+            <path d="M290 310 C270 310, 250 280, 270 260 C285 245, 310 270, 290 310 Z" fill="#f7d0d0"/>
+            <circle cx="315" cy="320" r="4" fill="#fff" stroke="#111" stroke-width="2"/>
+            <circle cx="320" cy="312" r="4" fill="#fff" stroke="#111" stroke-width="2"/>
+
+            <!-- Sector separating lines -->
+            <line x1="170" y1="170" x2="240" y2="20" stroke="#777" stroke-width="1.5"/>
+            <line x1="170" y1="170" x2="80" y2="60" stroke="#777" stroke-width="1.5"/>
+            <line x1="170" y1="170" x2="20" y2="170" stroke="#777" stroke-width="1.5"/>
+            <line x1="170" y1="170" x2="110" y2="320" stroke="#777" stroke-width="1.5"/>
+            <line x1="170" y1="170" x2="190" y2="330" stroke="#777" stroke-width="1.5"/>
+            <line x1="170" y1="170" x2="335" y2="170" stroke="#777" stroke-width="1.5"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Principles Section -->
+      <div class="principles-area">
+        <div class="sec-title">基本原则</div>
+        <div class="divider-line" style="margin-top:-2px; margin-bottom:8px;"></div>
+        
+        <div class="principles-list">
+          <p>控制总能量在1800-1900千卡，饮食适量均衡饮食，该年龄段较年轻妇女可适当减少能量。</p>
+          <p>限制脂肪，控制过多脂肪的摄入，避免摄入油炸、油煎的食物。</p>
+          <p>充足蛋白质供给，选择低脂乳制品、瘦肉、豆制品、鱼类等。</p>
+          <p>调整碳水化合物来源种类，多选择富含膳食纤维的全谷类，蔬菜，低糖水果。</p>
+          <p>定时定量，细嚼慢咽,拒绝压力性进食或者焦虑期间进食缓解</p>
+        </div>
+      </div>
+
+      <!-- Footer Typography & Summary -->
+      <div class="poster-title-area">
+        <div class="main-title-huge">
+          <div>健康</div>
+          <div class="line2">生活方式</div>
+        </div>
+
+        <div class="conclusion-box">
+          <div class="conclusion-title">了解更年期有益健康的生活习惯</div>
+          <p class="conclusion-text">
+            根据更年期身体特点培养良好的生活习惯，倡导整体的、预防为先的保健理念，帮助妇女减少更年期相关不良事件及疾病的发生，促进身心健康。
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

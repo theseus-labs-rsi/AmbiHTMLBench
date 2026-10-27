@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clinical Trial Results Presentation</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    background-color: #e9ecef;
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    color: #333;
+  }
+  .slide {
+    width: 100%;
+    max-width: 900px;
+    background: #ffffff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 480px;
+  }
+
+  /* Header styles */
+  .header-bar {
+    background-color: #2b4c7e;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding-left: 60px;
+  }
+  .tab {
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: bold;
+    margin-right: 80px;
+    position: relative;
+    cursor: default;
+  }
+  .tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 7px 7px 0 7px;
+    border-style: solid;
+    border-color: #2b4c7e transparent transparent transparent;
+  }
+
+  /* Slide 1 Content */
+  .slide1-body {
+    padding: 40px 60px;
+    flex-grow: 1;
+  }
+  .bullet-main {
+    color: #c00000;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+  }
+  .bullet-main::before {
+    content: "•";
+    margin-right: 8px;
+    font-size: 20px;
+  }
+  .list-item {
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 22px;
+    padding-left: 30px;
+    position: relative;
+    color: #111;
+  }
+  .list-item .item-label {
+    position: absolute;
+    left: 10px;
+    font-weight: normal;
+  }
+  .list-item p {
+    font-weight: 600;
+  }
+
+  /* Slide 2 Content */
+  .slide2-body {
+    padding: 20px 30px;
+    display: flex;
+    gap: 20px;
+    flex-grow: 1;
+  }
+  .table-container {
+    flex: 0 0 65%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9px;
+    text-align: center;
+    border: 1px solid #7f7f7f;
+  }
+  th, td {
+    border: 1px solid #7f7f7f;
+    padding: 3px 2px;
+    vertical-align: middle;
+  }
+  th {
+    font-weight: bold;
+    background-color: #fff;
+    color: #111;
+  }
+  .th-header-title {
+    text-align: left;
+    padding-left: 6px;
+    font-weight: bold;
+  }
+  .red-text {
+    color: #c00000;
+  }
+  .subtext {
+    display: block;
+    font-size: 8px;
+    font-weight: normal;
+    color: #333;
+  }
+  .text-left {
+    text-align: left;
+    padding-left: 4px;
+  }
+
+  /* Right column summary */
+  .summary-container {
+    flex: 0 0 32%;
+    padding-left: 10px;
+    font-size: 13px;
+  }
+  .summary-section {
+    margin-bottom: 14px;
+  }
+  .summary-title {
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 4px;
+    color: #000;
+  }
+  .summary-list {
+    list-style: none;
+    padding-left: 16px;
+  }
+  .summary-list li {
+    position: relative;
+    margin-bottom: 3px;
+    color: #222;
+    font-size: 12px;
+  }
+  .summary-list li::before {
+    content: "•";
+    position: absolute;
+    left: -12px;
+    color: #000;
+  }
+  .summary-list .highlight {
+    color: #c00000;
+    font-weight: normal;
+  }
+
+  .citation {
+    text-align: right;
+    font-size: 10px;
+    font-weight: bold;
+    color: #222;
+    margin-top: 10px;
+  }
+
+  /* Footer Navigation */
+  .footer-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    padding: 10px 0 15px 0;
+    position: relative;
+  }
+  .nav-item {
+    font-size: 12px;
+    color: #b4b4b4;
+    text-decoration: none;
+    position: relative;
+    padding-top: 4px;
+  }
+  .nav-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1.5px;
+    background-color: #dcdcdc;
+  }
+  .nav-item.active {
+    color: #333;
+    font-weight: bold;
+  }
+  .nav-item.active::before {
+    background-color: #2b4c7e;
+    height: 2px;
+  }
+  .page-num {
+    position: absolute;
+    right: 30px;
+    bottom: 12px;
+    font-size: 10px;
+    color: #aaa;
+  }
+</style>
+</head>
+<body>
+
+  <!-- Slide 1 -->
+  <div class="slide">
+    <div class="header-bar">
+      <div class="tab active">Safety</div>
+      <div class="tab">Therapeutic effect</div>
+    </div>
+    
+    <div class="slide1-body">
+      <div class="bullet-main">
+        <span>In this clinical trial:</span>
+      </div>
+      
+      <div class="list-item">
+        <span class="item-label">c.</span>
+        <p>Treatment-related events of grade ≥3 severity were noted for only 2 patients in the vaccinated group, with 1 case each of hypokalemia and rash.</p>
+      </div>
+
+      <div class="list-item">
+        <span class="item-label">d.</span>
+        <p>1 patient in the vaccinated group discontinued treatment for grade 2 gastritis.</p>
+      </div>
+
+      <div class="list-item">
+        <span class="item-label">e.</span>
+        <p>No treatment-related serious adverse events were observed.</p>
+      </div>
+    </div>
+
+    <div class="footer-nav">
+      <span class="nav-item">Background</span>
+      <span class="nav-item">Study Design</span>
+      <span class="nav-item active">Result</span>
+      <span class="nav-item">Conclusion</span>
+      <span class="page-num">13</span>
+    </div>
+  </div>
+
+  <!-- Slide 2 -->
+  <div class="slide">
+    <div class="header-bar">
+      <div class="tab">Safety</div>
+      <div class="tab active">Therapeutic effect</div>
+    </div>
+    
+    <div class="slide2-body">
+      <div class="table-container">
+        <!-- Table 1: Melanoma -->
+        <table>
+          <thead>
+            <tr>
+              <th class="th-header-title" style="width: 28%;">Melanoma</th>
+              <th style="width: 7%;">N</th>
+              <th style="width: 13%;">Follow<br>Up*</th>
+              <th style="width: 10%;">Prior<br>Therapy</th>
+              <th style="width: 14%;" class="red-text">客观缓解率<br><span style="color:#000;">ORR (months)</span></th>
+              <th style="width: 14%;">(中位)<br>无进展生存期<br>Median<br>PFS (months)</th>
+              <th style="width: 14%;">1年总生存率<br>12-Month<br>OS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left">ITT Set (NT-001)</td>
+              <td>34</td>
+              <td>20</td>
+              <td>41%</td>
+              <td>47%<br><span class="subtext">(30%, 65%)</span></td>
+              <td>15.1<br><span class="subtext">(4.3, NE)</span></td>
+              <td>85%<br><span class="subtext">(68%, 94%)</span></td>
+            </tr>
+            <tr>
+              <td class="text-left">Vaccinated Set (NT-001)</td>
+              <td>27</td>
+              <td>20</td>
+              <td>30%</td>
+              <td>59%<br><span class="subtext">(39%, 78%)</span></td>
+              <td>23.5<br><span class="subtext">(6.6, NE)</span></td>
+              <td>96%<br><span class="subtext">(76%, 99%)</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Table 2: NSCLC -->
+        <table>
+          <thead>
+            <tr>
+              <th class="th-header-title" style="width: 28%;">Non-Small Cell Lung Cancer</th>
+              <th style="width: 7%;">N</th>
+              <th style="width: 13%;">Follow<br>Up (months)</th>
+              <th style="width: 10%;">Prior<br>Therapy</th>
+              <th style="width: 14%;">ORR</th>
+              <th style="width: 14%;">Median<br>PFS (months)</th>
+              <th style="width: 14%;">12-Month<br>OS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left">ITT Set (NT-001)</td>
+              <td>27</td>
+              <td>15</td>
+              <td>67%</td>
+              <td>26%<br><span class="subtext">(11%, 46%)</span></td>
+              <td>4.4<br><span class="subtext">(2.0, 8.5)</span></td>
+              <td>59%<br><span class="subtext">(39%, 75%)</span></td>
+            </tr>
+            <tr>
+              <td class="text-left">Vaccinated Set (NT-001)</td>
+              <td>18</td>
+              <td>15</td>
+              <td>61%</td>
+              <td>39%<br><span class="subtext">(17%, 64%)</span></td>
+              <td>8.5<br><span class="subtext">(3.9, NE)</span></td>
+              <td>83%<br><span class="subtext">(57%, 94%)</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Table 3: Bladder Cancer -->
+        <table>
+          <thead>
+            <tr>
+              <th class="th-header-title" style="width: 28%;">Transitional Cell Carcinoma of the Bladder</th>
+              <th style="width: 7%;">N</th>
+              <th style="width: 13%;">Follow<br>Up (months)</th>
+              <th style="width: 10%;">Prior<br>Therapy</th>
+              <th style="width: 14%;">ORR</th>
+              <th style="width: 14%;">Median<br>PFS (months)</th>
+              <th style="width: 14%;">12-Month<br>OS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left">ITT Set (NT-001)</td>
+              <td>21</td>
+              <td>18</td>
+              <td>67%</td>
+              <td>19%<br><span class="subtext">(5%, 42%)</span></td>
+              <td>5.6<br><span class="subtext">(2.0, 12.0)</span></td>
+              <td>60%<br><span class="subtext">(36%, 78%)</span></td>
+            </tr>
+            <tr>
+              <td class="text-left">Vaccinated Set (NT-001)</td>
+              <td>15</td>
+              <td>18</td>
+              <td>61%</td>
+              <td>27%<br><span class="subtext">(8%, 55%)</span></td>
+              <td>5.8<br><span class="subtext">(2.8, 12.7)</span></td>
+              <td>67%<br><span class="subtext">(38%, 85%)</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Right Column Breakdown -->
+      <div class="summary-container">
+        <div class="summary-section">
+          <div class="summary-title">a. Melanoma</div>
+          <ul class="summary-list">
+            <li>ORR: 47%→<span class="highlight">59%</span></li>
+            <li>PFS: 15.1→23.5</li>
+            <li>OS: 85%→96%</li>
+          </ul>
+        </div>
+
+        <div class="summary-section">
+          <div class="summary-title">b. NSCLC</div>
+          <ul class="summary-list">
+            <li>ORR: 26%→<span class="highlight">39%</span></li>
+            <li>PFS: 4.4→8.5</li>
+            <li>OS: 59%→83%</li>
+          </ul>
+        </div>
+
+        <div class="summary-section">
+          <div class="summary-title">c. Bladder Cancer</div>
+          <ul class="summary-list">
+            <li>ORR: 19%→<span class="highlight">27%</span></li>
+            <li>PFS: 5.6→5.8</li>
+            <li>OS: 60%→67%</li>
+          </ul>
+        </div>
+
+        <div class="citation">
+          Patrick A. Ott, Cell, 2020
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-nav">
+      <span class="nav-item">Background</span>
+      <span class="nav-item">Study Design</span>
+      <span class="nav-item active">Result</span>
+      <span class="nav-item">Conclusion</span>
+      <span class="page-num">14</span>
+    </div>
+  </div>
+
+</body>
+</html>

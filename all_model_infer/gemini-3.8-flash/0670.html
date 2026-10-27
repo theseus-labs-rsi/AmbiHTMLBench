@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NavigationDestination: getState() 方法 - Web API | MDN</title>
+<style>
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    padding: 24px 36px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    color: #1b1b1f;
+    background-color: #ffffff;
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Page Header / Footer (Print layout) */
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #4b4b4b;
+    margin-bottom: 12px;
+  }
+
+  .page-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #4b4b4b;
+    margin-top: 40px;
+    padding-top: 10px;
+  }
+
+  /* Headings */
+  h2 {
+    font-size: 26px;
+    font-weight: 700;
+    margin-top: 28px;
+    margin-bottom: 14px;
+    letter-spacing: -0.2px;
+  }
+
+  /* Links */
+  a {
+    color: #0060df;
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+
+  .ext-icon {
+    display: inline-block;
+    vertical-align: middle;
+    width: 12px;
+    height: 12px;
+    margin-left: 2px;
+    fill: currentColor;
+  }
+
+  /* Code snippet block */
+  .code-container {
+    border: 1px solid #dcdcdc;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 24px;
+    background-color: #f7f7f8;
+  }
+  .code-header {
+    padding: 10px 16px;
+    background-color: #ffffff;
+    font-size: 12px;
+    font-weight: 600;
+    color: #333;
+    border-bottom: 1px solid #e5e5e5;
+    font-family: monospace;
+  }
+  .code-body {
+    padding: 16px 20px;
+    font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+    font-size: 13.5px;
+    line-height: 1.6;
+    background-color: #f1f2f4;
+    white-space: pre;
+    overflow-x: auto;
+  }
+  .kw-method { color: #d63200; }
+  .kw-str { color: #008000; }
+
+  /* Specification Box */
+  .spec-box {
+    border: 1px solid #e1e3e5;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 28px;
+  }
+  .spec-head {
+    background-color: #ffffff;
+    padding: 10px 16px;
+    font-weight: bold;
+    font-size: 13.5px;
+    border-bottom: 1px solid #e1e3e5;
+  }
+  .spec-body {
+    background-color: #fbfbfc;
+    padding: 14px 16px;
+    font-size: 13.5px;
+  }
+  .spec-body .spec-title {
+    margin-bottom: 6px;
+  }
+  .spec-body .spec-link {
+    font-family: Consolas, Monaco, monospace;
+    font-size: 13px;
+  }
+
+  /* Compatibility Section */
+  .compat-sublinks {
+    margin-bottom: 12px;
+    font-size: 13px;
+  }
+  .compat-sublinks span.sep {
+    margin: 0 6px;
+    color: #666;
+  }
+
+  /* Compat Table */
+  .table-container {
+    border: 1px solid #d0d7de;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+  table.bc-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    font-size: 12px;
+  }
+  table.bc-table th, table.bc-table td {
+    border-right: 1px solid #e1e4e8;
+    border-bottom: 1px solid #e1e4e8;
+    padding: 0;
+  }
+  table.bc-table tr th:last-child, table.bc-table tr td:last-child {
+    border-right: none;
+  }
+  table.bc-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  /* Platform group header (Desktop / Mobile) */
+  .bc-platform-header {
+    background-color: #ffffff;
+    padding: 8px 0 !important;
+  }
+  .platform-icon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    vertical-align: middle;
+  }
+
+  /* Browser Column Headers */
+  .bc-browser-header {
+    background-color: #ffffff;
+    height: 165px;
+    vertical-align: bottom;
+    padding-bottom: 10px !important;
+  }
+  .browser-header-content {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100%;
+    width: 100%;
+  }
+  .browser-icon {
+    width: 16px;
+    height: 16px;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .browser-name {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-weight: 500;
+    font-size: 13px;
+    color: #1b1b1f;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    text-align: left;
+  }
+
+  /* Table Body Cell */
+  .bc-feature-name {
+    background-color: #ffffff;
+    text-align: left;
+    padding: 10px 14px !important;
+    width: 16%;
+    vertical-align: middle;
+  }
+  .feature-code {
+    background-color: #f1f2f4;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: Consolas, Monaco, monospace;
+    font-size: 12.5px;
+  }
+
+  .bc-support-cell {
+    background-color: #ffffff;
+    vertical-align: middle;
+    padding: 8px 2px !important;
+  }
+  .bc-support-icon {
+    color: #0e703c;
+    font-size: 15px;
+    line-height: 1;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .bc-version {
+    color: #0e703c;
+    font-size: 12px;
+    line-height: 1.2;
+    display: block;
+  }
+
+  /* Legend */
+  .bc-legend {
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    margin-top: 10px;
+    margin-bottom: 24px;
+  }
+  .bc-legend-icon {
+    color: #0e703c;
+    font-weight: bold;
+    margin-right: 6px;
+    font-size: 14px;
+  }
+
+  /* See Also List */
+  .see-also-list {
+    margin: 0;
+    padding-left: 20px;
+  }
+  .see-also-list li {
+    margin-bottom: 8px;
+    line-height: 1.6;
+  }
+  .see-also-list code {
+    background-color: #edf2f7;
+    color: #004a99;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-family: Consolas, Monaco, monospace;
+    font-size: 12.5px;
+  }
+
+  /* MDN Footer Block */
+  .mdn-footer-block {
+    margin-top: 40px;
+    background-color: #f7f7f8;
+    padding: 28px 24px;
+    border-radius: 4px;
+  }
+  .mdn-logo {
+    display: flex;
+    align-items: baseline;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-weight: 700;
+    font-size: 26px;
+    color: #1b1b1f;
+    margin-bottom: 14px;
+    line-height: 1;
+  }
+  .mdn-logo-m {
+    font-family: serif;
+    font-style: italic;
+    font-size: 34px;
+    margin-right: 4px;
+    font-weight: 900;
+    letter-spacing: -2px;
+  }
+  .mdn-logo-text {
+    font-weight: bold;
+    font-size: 20px;
+    letter-spacing: -0.5px;
+    margin-right: 4px;
+  }
+  .mdn-logo-underscore {
+    display: inline-block;
+    width: 12px;
+    height: 3px;
+    background-color: #1b1b1f;
+    margin-left: 2px;
+  }
+  .mdn-slogan {
+    font-size: 13px;
+    color: #4b4b4b;
+    margin: 0;
+  }
+</style>
+</head>
+<body>
+
+  <!-- Top Header Info -->
+  <div class="page-header">
+    <div>2026/6/29 02:28</div>
+    <div>NavigationDestination: getState() 方法 - Web API | MDN</div>
+  </div>
+
+  <!-- Code Block -->
+  <div class="code-container">
+    <div class="code-header">JS</div>
+    <div class="code-body">navigation.<span class="kw-method">addEventListener</span>(<span class="kw-str">"navigate"</span>, (event) =&gt; {
+  console.<span class="kw-method">log</span>(event.destination.<span class="kw-method">getState</span>());
+});</div>
+  </div>
+
+  <!-- Section: 规范 -->
+  <h2>规范</h2>
+  <div class="spec-box">
+    <div class="spec-head">规范</div>
+    <div class="spec-body">
+      <div class="spec-title"><a href="#">HTML</a></div>
+      <div class="spec-link">
+        <a href="#"># the-navigationdestination-interface:dom-navigationdestination-getstate-2</a>
+        <svg class="ext-icon" viewBox="0 0 24 24"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3m-2 16H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7z"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section: 浏览器兼容性 -->
+  <h2>浏览器兼容性</h2>
+  <div class="compat-sublinks">
+    <a href="#">报告此兼容性问题</a><svg class="ext-icon" viewBox="0 0 24 24"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3m-2 16H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7z"/></svg>
+    <span class="sep">•</span>
+    <a href="#">在 GitHub 上查看数据</a><svg class="ext-icon" viewBox="0 0 24 24"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3m-2 16H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7z"/></svg>
+  </div>
+
+  <div class="table-container">
+    <table class="bc-table">
+      <thead>
+        <!-- Row 1: Platforms -->
+        <tr>
+          <th class="bc-feature-name" style="border-bottom: 1px solid #e1e4e8;"></th>
+          <th colspan="5" class="bc-platform-header">
+            <svg class="platform-icon" viewBox="0 0 24 24">
+              <rect x="2" y="3" width="20" height="14" rx="2" />
+              <line x1="8" y1="21" x2="16" y2="21" />
+              <line x1="12" y1="17" x2="12" y2="21" />
+            </svg>
+          </th>
+          <th colspan="7" class="bc-platform-header">
+            <svg class="platform-icon" viewBox="0 0 24 24">
+              <rect x="6" y="2" width="12" height="20" rx="2" />
+              <line x1="11" y1="18" x2="13" y2="18" />
+            </svg>
+          </th>
+        </tr>
+        <!-- Row 2: Browser Names -->
+        <tr>
+          <th class="bc-feature-name"></th>
+          
+          <!-- Desktop Browsers -->
+          <th class="bc-browser-header">
+            <div class="browser-header-content">
+              <div class="browser-icon">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="#494b4d"><circle cx="12" cy="12" r="9" fill="none" stroke="#494b4d" stroke-width="2"/><circle cx="12" cy="12" r="4"/><path d="M12 3a9 9 0 0 1 7.79 4.5L12 12M12 21a9 9 0 0 1-7.79-4.5L12 12M3 12a9 9 0 0 1 7.79-7.5L12 12"/></svg>
+              </div>
+              <span class="browser-name">Chrome</span>
+            </div>
+          </th>
+          <th class="bc-browser-header">
+            <div class="browser-header-content">
+              <div class="browser-icon">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#494b4d" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 0 1-5.5-2.2c1.5-1.5 3.5-1.8 5.5-1.8s4 .3 5.5 1.8A8 8 0 0 1 12 20zm-6-6c0-3.3 2.7-6 6-6s6 2.7 6 6-2.7 6-6 6"/></svg>
+              </div>
+              <span class="browser-name">Edge</span>
+            </div>
+          </th>
+          <th class="bc-browser-header">
+            <div class="browser-header-content">
+              <div class="browser-icon">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="#494b4d"><circle cx="12" cy="12" r="9" fill="none" stroke="#494b4d" stroke-width="2"/><path d="M12 6a6 6 0 0 1 6 6c0 3-2 5-5 5s-5-2-5-5a6 6 0 0 1 4-6z"/></svg>
+              </div>
+              <span class="browser-name">Firefox</span>
+            </div>
+          </th>
+          <th class="bc-browser-header">
+            <div class="browser-header-content">
+              <div class="browser-icon">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#494b4d" stroke-width="2.5"><ellipse cx="12" cy="12" rx="4.5" ry="9"/><circle cx="12" cy="12" r="9.5" stroke-width="1.5"/></svg>
+              </div>
+              <span class="browser-name">Opera</span>
+            </div>
+          </th>
+          <th class="bc-browser-header">
+            <div class="browser-header-content">
+              <div class="browser-icon">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#494b4d" stroke-width="2"><circle cx="12" cy="12" r="9"/><polygon points="16,8 13.5,13.5 8,16 10.5,10.5" fill="#494b4d"/></svg>
+              </div>
+              <span class="browser-name">Safari</span>
+            </div>
+          </th>
+
+          <!-- Mobile Browsers -->
+          <th class="bc-browser-header">
+            <div class="browser-header-content">
+              <div class="browser-icon">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="#494b4d"><circle cx="12" cy="12" r="9" fill="none" stroke="#494b4d" stroke-width="2"/><circle cx="12" cy="12" r="4"/><path d="M12 3a9 9 0 0 1 7.79 4.5L12 12M12 21a9 9 0 0 1-7.79-4.5L12 12M3 12a9 9 0 0 1 7.79-7.5L12 12"/></svg>
+              </div>
+              <span class="browser-name">Chrome Android</span>
+            </div>
+          </th>
+          <th class="bc-browser-header">
+            <div class="browser-header-content">
+              <div class="browser-icon">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="#494b4d"><circle cx="12" cy="12" r="9" fill="none" stroke="#494b4d" stroke-width="2"/><path d="M12 6a6 6 0 0 1 6 6c0 3-2 5-5 5s-5-2-5-5a6 6 0 0 1 4-6z"/></svg>
+              </div>
+              <span class="browser-name">Firefox for Android</span>
+            </div>
+          </th>
+          <th class="bc-browser-header">
+            <div class="browser-header-content">
+              <div class="browser-icon">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#494b4d" stroke-width="2.5"><ellipse cx="12" cy="12" rx="4.5" ry="9"/><circle cx="12" cy="12" r="9.5" stroke-width="1.5"/></svg>
+              </div>
+              <span class="browser-name">Opera Android</span>
+            </div>
+          </th>
+          <th class="bc-browser-header">
+            <div class="browser-header-content">
+              <div class="browser-icon">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#494b4d" stroke-width="2"><circle cx="12" cy="12" r="9"/><polygon points="16,8 13.5,13.5 8,16 10.5,10.5" fill="#494b4d"/></svg>
+              </div>
+              <span class="browser-name">Safari on iOS</span>
+            </div>
+          </th>
+          <th class="bc-browser-header">
+            <div class="browser-header-content">
+              <div class="browser-icon">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#494b4d" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M7 15c2-4 8-4 10 0M7 9c2 4 8 4 10 0"/></svg>
+              </div>
+              <span class="browser-name">Samsung Internet</span>
+            </div>
+          </th>
+          <th class="bc-browser-header">
+            <div class="browser-header-content">
+              <div class="browser-icon">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="#494b4d"><path d="M6 18h12V9H6v9zm3.5-12l-1.5-2-1 1 1.5 2h-1c-.55 0-1 .45-1 1v1h12V7c0-.55-.45-1-1-1h-1l1.5-2-1-1-1.5 2h-6z"/></svg>
+              </div>
+              <span class="browser-name">WebView Android</span>
+            </div>
+          </th>
+          <th class="bc-browser-header">
+            <div class="browser-header-content">
+              <div class="browser-icon">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#494b4d" stroke-width="2"><circle cx="12" cy="12" r="9"/><polygon points="16,8 13.5,13.5 8,16 10.5,10.5" fill="#494b4d"/></svg>
+              </div>
+              <span class="browser-name">WebView on iOS</span>
+            </div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="bc-feature-name"><span class="feature-code">getState</span></td>
+          <td class="bc-support-cell"><span class="bc-support-icon">✓</span><span class="bc-version">102</span></td>
+          <td class="bc-support-cell"><span class="bc-support-icon">✓</span><span class="bc-version">102</span></td>
+          <td class="bc-support-cell"><span class="bc-support-icon">✓</span><span class="bc-version">147</span></td>
+          <td class="bc-support-cell"><span class="bc-support-icon">✓</span><span class="bc-version">88</span></td>
+          <td class="bc-support-cell"><span class="bc-support-icon">✓</span><span class="bc-version">26.2</span></td>
+          <td class="bc-support-cell"><span class="bc-support-icon">✓</span><span class="bc-version">102</span></td>
+          <td class="bc-support-cell"><span class="bc-support-icon">✓</span><span class="bc-version">147</span></td>
+          <td class="bc-support-cell"><span class="bc-support-icon">✓</span><span class="bc-version">70</span></td>
+          <td class="bc-support-cell"><span class="bc-support-icon">✓</span><span class="bc-version">26.2</span></td>
+          <td class="bc-support-cell"><span class="bc-support-icon">✓</span><span class="bc-version">19</span></td>
+          <td class="bc-support-cell"><span class="bc-support-icon">✓</span><span class="bc-version">102</span></td>
+          <td class="bc-support-cell"><span class="bc-support-icon">✓</span><span class="bc-version">26.2</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="bc-legend">
+    <span class="bc-legend-icon">✓</span> 完全支持
+  </div>
+
+  <!-- Section: 参见 -->
+  <h2>参见</h2>
+  <ul class="see-also-list">
+    <li><a href="#">现代客户端路由: 导航 API</a><svg class="ext-icon" viewBox="0 0 24 24"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3m-2 16H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7z"/></svg></li>
+    <li><a href="#">导航 API 说明</a><svg class="ext-icon" viewBox="0 0 24 24"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3m-2 16H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7z"/></svg></li>
+    <li><a href="#">Domenic Denicola 的导航 API 在线演示</a><svg class="ext-icon" viewBox="0 0 24 24"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3m-2 16H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7z"/></svg></li>
+    <li>允许更新状态的方法—— <code>Navigation.navigate()</code>、<code>Navigation.reload()</code> 和 <code>Navigation.updateCurrentEntry()</code></li>
+  </ul>
+
+  <!-- Bottom MDN Banner -->
+  <div class="mdn-footer-block">
+    <div class="mdn-logo">
+      <span class="mdn-logo-m">M</span>
+      <span class="mdn-logo-text">mdn</span>
+      <span class="mdn-logo-underscore"></span>
+    </div>
+    <p class="mdn-slogan">构建更美好互联网的蓝图。</p>
+  </div>
+
+  <!-- Page Footer Info -->
+  <div class="page-footer">
+    <div>https://developer.mozilla.org/zh-CN/docs/Web/API/NavigationDestination/getState</div>
+    <div>2/2</div>
+  </div>
+
+</body>
+</html>

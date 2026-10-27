@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apple 2030 - Environmental Progress Report</title>
+    <style>
+        :root {
+            --text-main: #1d1d1f;
+            --text-gray: #86868b;
+            --text-light-gray: #6e6e73;
+            --accent-green: #34c759; /* Approximate Apple green */
+            --bg-color: #ffffff;
+            --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 40px 60px;
+            font-family: var(--font-stack);
+            color: var(--text-main);
+            background-color: var(--bg-color);
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.4;
+        }
+
+        /* Header Navigation */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            font-size: 11px;
+            color: var(--text-gray);
+            margin-bottom: 80px;
+            letter-spacing: 0.02em;
+        }
+
+        .nav-left {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-item {
+            cursor: pointer;
+        }
+
+        .nav-item.active {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .sub-nav {
+            display: flex;
+            flex-direction: column;
+            margin-top: 4px;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .sub-nav span {
+            margin-bottom: 2px;
+        }
+
+        .sub-nav span.underlined {
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        /* Main Title Section */
+        .hero-section {
+            margin-bottom: 60px;
+        }
+
+        .approach-label {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--text-main);
+        }
+
+        .main-title {
+            font-size: 64px;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: -0.02em;
+            color: var(--text-main);
+        }
+
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 60px;
+        }
+
+        /* Left Column (Text) */
+        .left-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .intro-text {
+            font-size: 19px;
+            font-weight: 600;
+            line-height: 1.3;
+            color: var(--text-main);
+            margin-bottom: 30px;
+        }
+
+        .body-text {
+            font-size: 13px;
+            color: var(--text-light-gray);
+            line-height: 1.5;
+            margin-bottom: 25px;
+        }
+
+        .body-text sup {
+            font-size: 9px;
+        }
+
+        /* Right Column (Roadmap) */
+        .right-col {
+            padding-left: 20px;
+        }
+
+        .roadmap-header {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 10px;
+        }
+
+        .roadmap-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin: 0 0 40px 0;
+            max-width: 400px;
+            line-height: 1.2;
+        }
+
+        /* Pillars Grid */
+        .pillars-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            position: relative;
+        }
+
+        .pillar {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .icon-box {
+            height: 40px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .icon-box svg {
+            width: 28px;
+            height: 28px;
+            fill: none;
+            stroke: var(--accent-green);
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        
+        /* Specific icon adjustments */
+        .icon-factory {
+            fill: var(--accent-green);
+            stroke: none;
+        }
+
+        .pillar-title {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--text-main);
+        }
+
+        .pillar-desc {
+            font-size: 12px;
+            color: var(--text-light-gray);
+            line-height: 1.5;
+        }
+
+        /* Bracket/Arrow System */
+        .bracket-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-top: 100px; /* Space for the bracket lines */
+            position: relative;
+        }
+
+        .bracket-group-1 {
+            grid-column: 1 / 4; /* Spans first 3 columns */
+            position: relative;
+        }
+
+        .bracket-group-2 {
+            grid-column: 4 / 5; /* Spans last column */
+            position: relative;
+        }
+
+        /* Drawing the lines using borders */
+        .bracket-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40px; /* Height of the vertical drop */
+            border-left: 1px solid #d2d2d7;
+            border-bottom: 1px solid #d2d2d7;
+        }
+        
+        .bracket-line::after {
+            content: '';
+            position: absolute;
+            right: -5px;
+            bottom: -4px;
+            width: 0; 
+            height: 0; 
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+            border-left: 6px solid #1d1d1f;
+        }
+
+        .bracket-label {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.2;
+        }
+
+        /* Adjusting the second bracket to look like the image (starts after gap) */
+        .bracket-group-2 .bracket-line {
+            left: 0; 
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-left">
+            <span class="nav-item">Contents</span>
+            <span class="nav-item">Introduction</span>
+            <div style="display: flex; flex-direction: column;">
+                <span class="nav-item active">Environmental Initiatives</span>
+                <div class="sub-nav">
+                    <span class="underlined">Apple 2030</span>
+                    <span>Resources</span>
+                    <span>Smarter Chemistry</span>
+                </div>
+            </div>
+            <span class="nav-item">Engagement and Advocacy</span>
+            <span class="nav-item">Data</span>
+            <span class="nav-item">Appendix</span>
+        </div>
+        <div class="nav-right">
+            <span>2024 Environmental Progress Report</span>
+            <span>12</span>
+        </div>
+    </header>
+
+    <section class="hero-section">
+        <div class="approach-label">Approach</div>
+        <h1 class="main-title">Apple 2030</h1>
+    </section>
+
+    <div class="content-grid">
+        <!-- Left Column: Text Content -->
+        <div class="left-col">
+            <div class="col-1">
+                <p class="intro-text">
+                    We have an ambitious commitment and a science-based plan to reach our Apple 2030 goal. We're focused on achieving reductions wherever possible, using approaches that offer clear evidence for a way forward while seeking to catalyze industry-wide change.
+                </p>
+                <p class="body-text">
+                    This begins with working to achieve carbon neutrality across our entire carbon footprint by 2030, setting ambitious targets to reduce our emissions by 75 percent. We prioritize carbon reductions, but for emissions that can't be mitigated using existing solutions we invest in high-quality carbon removal projects.
+                </p>
+                <p class="body-text">
+                    Our goal to be carbon neutral extends to our entire carbon footprint and is consistent with the Intergovernmental Panel on Climate Change's (IPCC) recommendation for global carbon neutrality.<sup>24</sup>
+                </p>
+            </div>
+            <div class="col-2">
+                <p class="body-text">
+                    We're also committed to working toward reaching a 90 percent reduction in emissions from our 2015 baseline by 2050. Attaining deep decarbonization will require a collective, worldwide effort. Entire industries and economies must decarbonize. And while reaching a 90 percent reduction in emissions is outside Apple's or any one company's control, we're committed to taking actions that support this goal.
+                </p>
+                <p class="body-text">
+                    We've made significant progress by cutting emissions across our value chain by more than 55 percent since 2015. This started with our transition to sourcing 100 percent renewable electricity at our offices, retail stores, and data centers, which we achieved in 2018. And in 2020, we achieved carbon neutrality for our corporate emissions.<sup>25</sup>
+                </p>
+            </div>
+        </div>
+
+        <!-- Right Column: Roadmap -->
+        <div class="right-col">
+            <div class="roadmap-header">APPLE 2030 ROADMAP</div>
+            <h2 class="roadmap-title">Addressing Apple's carbon footprint through four pillars</h2>
+
+            <div class="pillars-container">
+                <!-- Pillar 1 -->
+                <div class="pillar">
+                    <div class="icon-box">
+                        <!-- Leaf/Recycle Icon Approximation -->
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" stroke="none" fill="none"/>
+                            <path d="M17.66 7.93l-1.06-1.06c-.39-.39-1.02-.39-1.41 0L12 10.06l-3.19-3.19c-.39-.39-1.02-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.02 0 1.41l4.25 4.25c.39.39 1.02.39 1.41 0l4.25-4.25c.38-.39.38-1.02 0-1.41z" fill="var(--accent-green)" stroke="none" transform="rotate(45 12 12)"/>
+                            <path d="M12 22c5.52 0 10-4.48 10-10S17.52 2 12 2 2 6.48 2 12s4.48 10 10 10z" stroke="var(--accent-green)" stroke-width="1.5" fill="none" stroke-dasharray="4 2"/>
+                             <!-- Simplified leaf shape for visual match -->
+                             <path d="M12 21c-4.97 0-9-4.03-9-9s4.03-9 9-9 9 4.03 9 9-4.03 9-9 9z" stroke="var(--accent-green)" stroke-width="2" fill="none"/>
+                             <path d="M12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z" fill="var(--accent-green)"/>
+                             <path d="M12 7v10" stroke="white" stroke-width="1.5"/>
+                        </svg>
+                    </div>
+                    <div class="pillar-title">Design and materials</div>
+                    <div class="pillar-desc">
+                        Designing products and manufacturing processes to be less carbon intensive through thoughtful material selection, increased material efficiency, greater product energy efficiency, the use of recycled and renewable materials in our products and packaging, and enhanced material recovery
+                    </div>
+                </div>
+
+                <!-- Pillar 2 -->
+                <div class="pillar">
+                    <div class="icon-box">
+                        <!-- Lightning Bolt -->
+                        <svg viewBox="0 0 24 24">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="none" stroke="var(--accent-green)" stroke-width="2" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="pillar-title">Electricity</div>
+                    <div class="pillar-desc">
+                        Increasing energy efficiency at our facilities and in our supply chain, and transitioning the electricity in our entire product value chain — including manufacturing and our customers' product use — to 100 percent clean electricity by 2030
+                    </div>
+                </div>
+
+                <!-- Pillar 3 -->
+                <div class="pillar">
+                    <div class="icon-box">
+                        <!-- Factory -->
+                        <svg viewBox="0 0 24 24">
+                            <path d="M2 20h20v-4H2v4zm2-3h2v2H4v-2zM2 4v4h20V4H2zm4 3H4V5h2v2zm-4 6h20v-4H2v4zm2-3h2v2H4v-2z" fill="none"/>
+                            <path d="M22 10l-6-4v4l-6-4v4H2v10h20V10z" fill="var(--accent-green)"/>
+                        </svg>
+                    </div>
+                    <div class="pillar-title">Direct emissions</div>
+                    <div class="pillar-desc">
+                        Reducing direct greenhouse gas emissions in our facilities and our supply chain through process innovation, emissions abatement, and shifting away from fossil fuels
+                    </div>
+                </div>
+
+                <!-- Pillar 4 -->
+                <div class="pillar">
+                    <div class="icon-box">
+                        <!-- Cloud CO2 -->
+                        <svg viewBox="0 0 24 24">
+                            <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z" fill="none" stroke="var(--accent-green)" stroke-width="2"/>
+                            <text x="12" y="14" font-size="6" font-weight="bold" fill="var(--accent-green)" text-anchor="middle" font-family="sans-serif">CO₂</text>
+                            <path d="M8 16v2m4-2v2m4-2v2" stroke="var(--accent-green)" stroke-width="1.5"/>
+                            <path d="M7 18l1 1 1-1m3 0l1 1 1-1m3 0l1 1 1-1" stroke="var(--accent-green)" stroke-width="1" fill="none"/>
+                        </svg>
+                    </div>
+                    <div class="pillar-title">Carbon removal</div>
+                    <div class="pillar-desc">
+                        In parallel with our emissions reduction efforts, scaling up investments in carbon removal projects, including nature-based solutions that protect and restore ecosystems around the world
+                    </div>
+                </div>
+            </div>
+
+            <!-- Brackets / Arrows at bottom -->
+            <div class="bracket-row">
+                <div class="bracket-group-1">
+                    <div class="bracket-line"></div>
+                    <div class="bracket-label">
+                        &gt;75 percent<br>emissions reduction
+                    </div>
+                </div>
+                <div class="bracket-group-2">
+                    <div class="bracket-line"></div>
+                    <div class="bracket-label">
+                        &lt;25 percent of<br>footprint
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

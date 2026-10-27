@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>问题解决 - 分数乘法应用题</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: "KaiTi", "楷体", "STKaiti", serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            line-height: 1.6;
+        }
+        .page-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 40px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        .header h1 {
+            display: inline-block;
+            color: #5e4b8b;
+            font-size: 24px;
+            margin: 0;
+            padding: 5px 20px;
+            border-bottom: 2px solid #dcdcdc;
+            position: relative;
+        }
+        .header-decoration {
+            position: absolute;
+            left: 20%;
+            top: -10px;
+            width: 60px;
+            height: 20px;
+            background: linear-gradient(135deg, #a89cc8 25%, transparent 25%) -10px 0,
+                        linear-gradient(225deg, #a89cc8 25%, transparent 25%) -10px 0,
+                        linear-gradient(315deg, #a89cc8 25%, transparent 25%),
+                        linear-gradient(45deg, #a89cc8 25%, transparent 25%);
+            background-size: 20px 20px;
+            opacity: 0.5;
+        }
+        .purple-diamond {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            background-color: #7b68ae;
+            transform: rotate(45deg);
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+        .purple-square {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            background-color: #bfaee3;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        /* Problem Sections */
+        .problem-section {
+            margin-bottom: 40px;
+        }
+        .problem-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .problem-number {
+            background-color: #e8a87c;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            margin-right: 10px;
+            font-family: Arial, sans-serif;
+            font-style: italic;
+        }
+        .problem-text {
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .concept-tag {
+            color: #d65a5a;
+            font-size: 14px;
+            margin-left: 15px;
+            font-weight: normal;
+        }
+        .arrow-red {
+            color: #d65a5a;
+            margin: 0 5px;
+        }
+
+        /* Illustration Placeholders */
+        .illustration-box {
+            width: 100%;
+            height: 180px;
+            background-color: #eef2f5;
+            border: 1px dashed #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+        .illustration-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        /* Simulating the bus image content with CSS for layout fidelity if image fails, 
+           but primarily using a placeholder div as requested for non-text elements */
+        .scene-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, #87CEEB 0%, #87CEEB 60%, #90EE90 60%, #90EE90 100%);
+            position: relative;
+        }
+        .bus-icon {
+            position: absolute;
+            bottom: 20px;
+            right: 30%;
+            width: 80px;
+            height: 50px;
+            background-color: #f4a460;
+            border-radius: 5px;
+        }
+        .speech-bubble {
+            position: absolute;
+            background: white;
+            border: 1px solid #ccc;
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+        }
+
+        /* Explanation Layout */
+        .explanation-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        .text-block {
+            flex: 1;
+            padding: 0 10px;
+        }
+        .center-diagram {
+            flex: 2;
+            text-align: center;
+        }
+        
+        /* Line Diagram Simulation */
+        .line-diagram {
+            margin: 20px auto;
+            width: 80%;
+            text-align: center;
+        }
+        .line-bar {
+            height: 4px;
+            background-color: #333;
+            width: 100%;
+            position: relative;
+            margin-top: 30px;
+            margin-bottom: 10px;
+        }
+        .line-segment {
+            position: absolute;
+            top: -5px;
+            height: 14px;
+            border-left: 2px solid #333;
+            border-right: 2px solid #333;
+        }
+        .brace-top {
+            border-top: 2px solid #333;
+            border-left: 2px solid #333;
+            border-right: 2px solid #333;
+            height: 10px;
+            width: 66%;
+            margin: 0 auto;
+            position: relative;
+            top: -15px;
+        }
+        .brace-bottom {
+            border-bottom: 2px solid #333;
+            border-left: 2px solid #333;
+            border-right: 2px solid #333;
+            height: 10px;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+            bottom: -15px;
+        }
+
+        /* Calculations */
+        .calculation-area {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 16px;
+        }
+        .answer-line {
+            text-align: center;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .note-text {
+            color: #d65a5a;
+            font-size: 13px;
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        /* Discussion Box */
+        .discussion-box {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            background-color: #fff;
+        }
+        .icon-yi {
+            background-color: #f0e68c;
+            color: #d65a5a;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-right: 10px;
+            border: 1px solid #daa520;
+        }
+
+        /* Problem 2 Specifics */
+        .grid-diagram {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            width: 200px;
+            height: 160px;
+            border: 2px solid #333;
+            margin: 0 auto;
+        }
+        .grid-cell {
+            border: 1px solid #999;
+        }
+        .grid-cell.shaded-pink {
+            background-color: #ffb6c1;
+            /* Diagonal stripes simulation */
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 5px, rgba(255,255,255,0.5) 5px, rgba(255,255,255,0.5) 10px);
+        }
+        .grid-cell.shaded-cross {
+            background-color: #db7093;
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 5px, rgba(255,255,255,0.3) 5px, rgba(255,255,255,0.3) 10px),
+                              repeating-linear-gradient(-45deg, transparent, transparent 5px, rgba(255,255,255,0.3) 5px, rgba(255,255,255,0.3) 10px);
+        }
+
+        /* Characters/Avatars */
+        .avatar {
+            width: 60px;
+            height: 80px;
+            display: inline-block;
+            vertical-align: bottom;
+        }
+        .avatar-placeholder {
+            width: 100%;
+            height: 100%;
+            background-color: #eee;
+            border-radius: 50% 50% 0 0;
+            position: relative;
+        }
+        
+        /* Speech Bubbles in text flow */
+        .bubble {
+            background-color: #e0f7fa;
+            border: 1px solid #b2ebf2;
+            border-radius: 15px;
+            padding: 10px;
+            margin: 10px;
+            position: relative;
+            font-size: 14px;
+            color: #555;
+            max-width: 200px;
+        }
+        .bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 20px;
+            border-width: 10px 10px 0;
+            border-style: solid;
+            border-color: #e0f7fa transparent;
+            display: block;
+            width: 0;
+        }
+        .bubble.right::after {
+            left: auto;
+            right: 20px;
+        }
+
+        /* Footer Note */
+        .footer-note {
+            font-size: 12px;
+            color: #d65a5a;
+            margin-top: 30px;
+            line-height: 1.5;
+            text-align: justify;
+        }
+        .panda-icon {
+            float: right;
+            width: 30px;
+            height: 30px;
+            background-color: #000;
+            border-radius: 50%;
+            margin-left: 10px;
+        }
+
+        /* Utility */
+        .red-text { color: #d65a5a; }
+        .blue-text { color: #4a90e2; }
+        .flex-row { display: flex; align-items: center; }
+        .space-between { justify-content: space-between; }
+        .mt-10 { margin-top: 10px; }
+        .mb-10 { margin-bottom: 10px; }
+        .text-center { text-align: center; }
+        .fraction { display: inline-block; vertical-align: middle; text-align: center; }
+        .fraction > span { display: block; padding: 0.1em; }
+        .fraction span.fdn { border-top: thin solid black; }
+
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+    
+    <!-- Header -->
+    <div class="header">
+        <div class="purple-diamond"></div><div class="purple-square"></div>
+        <h1>问题解决</h1>
+    </div>
+
+    <!-- Problem 1 -->
+    <div class="problem-section">
+        <div class="problem-title">
+            <div class="problem-number">1</div>
+            <div class="problem-text">汽车已经行了多少千米？</div>
+            <div class="concept-tag">求一个数的几分之几的问题 <span class="arrow-red">➜</span> 用已知量乘分率</div>
+        </div>
+
+        <!-- Illustration Area -->
+        <div class="illustration-box">
+            <div class="scene-placeholder">
+                <!-- Simulated Scene Elements -->
+                <div style="position: absolute; top: 10px; left: 10px; color: #555; font-size: 12px;">[Diagram: Road scene with bus]</div>
+                
+                <!-- Speech bubbles from image -->
+                <div class="speech-bubble" style="top: 60%; left: 40%;">要行84千米。</div>
+                <div class="speech-bubble" style="top: 20%; right: 10%;">已经行了全程的 $\frac{2}{3}$。</div>
+                
+                <!-- Bus representation -->
+                <div style="position: absolute; bottom: 30px; right: 25%; width: 100px; height: 60px; background: #f4a460; border-radius: 10px; border: 2px solid #d2691e;"></div>
+                <!-- Trees/Mountains representation -->
+                <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 40px; background: #8fbc8f;"></div>
+            </div>
+        </div>
+
+        <!-- Explanation Text below image -->
+        <div class="text-center red-text" style="font-size: 14px; margin-bottom: 20px;">
+            “行了全程的 $\frac{2}{3}$” 就是把全程看作单位“1”，已经行了的路程是 84km 的 $\frac{2}{3}$。
+        </div>
+
+        <!-- Three column layout for understanding -->
+        <div class="explanation-row">
+            <div class="text-block" style="text-align: right;">
+                <div class="bubble" style="display: inline-block; text-align: left;">
+                    怎么理解“已经行了全程的 $\frac{2}{3}$”？
+                </div>
+            </div>
+            
+            <div class="center-diagram">
+                <div style="margin-bottom: 5px;">行了全程的 $\frac{2}{3}$</div>
+                <!-- Line Diagram -->
+                <div style="width: 300px; margin: 0 auto; position: relative; height: 60px;">
+                    <!-- Top brace for 2/3 -->
+                    <div style="position: absolute; top: 0; left: 0; width: 66%; border-top: 2px solid #333; border-left: 2px solid #333; border-right: 2px solid #333; height: 10px;"></div>
+                    <div style="position: absolute; top: 12px; left: 33%; transform: translateX(-50%); font-size: 12px;"></div>
+                    
+                    <!-- Main Line -->
+                    <div style="position: absolute; top: 30px; left: 0; width: 100%; height: 2px; background: #333;"></div>
+                    <!-- Ticks -->
+                    <div style="position: absolute; top: 25px; left: 0; width: 2px; height: 12px; background: #333;"></div>
+                    <div style="position: absolute; top: 25px; left: 33%; width: 2px; height: 12px; background: #333;"></div>
+                    <div style="position: absolute; top: 25px; left: 66%; width: 2px; height: 12px; background: #333;"></div>
+                    <div style="position: absolute; top: 25px; left: 100%; width: 2px; height: 12px; background: #333;"></div>
+
+                    <!-- Bottom brace for total -->
+                    <div style="position: absolute; bottom: 0; left: 0; width: 100%; border-bottom: 2px solid #333; border-left: 2px solid #333; border-right: 2px solid #333; height: 10px;"></div>
+                    <div style="position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%);">全程 84km</div>
+                </div>
+            </div>
+
+            <div class="text-block" style="text-align: left;">
+                <div class="bubble right" style="display: inline-block; text-align: left;">
+                    把全程平均分成3份，已经行了2份。
+                </div>
+            </div>
+        </div>
+
+        <!-- Calculation Area with Avatars -->
+        <div class="flex-row space-between mt-10" style="margin-top: 40px;">
+            <!-- Left Avatar -->
+            <div style="width: 80px; text-align: center;">
+                <div class="avatar-placeholder" style="background: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'40\' r=\'20\' fill=\'%23ffdab9\'/><path d=\'M20 100 Q50 60 80 100\' fill=\'%2390ee90\'/></svg>') no-repeat center; background-size: contain;"></div>
+            </div>
+
+            <!-- Center Calculations -->
+            <div style="flex: 1; text-align: center;">
+                <div class="calculation-area">
+                    可以这样算：$84 \div 3 \times 2 = 56 (\text{km})$
+                </div>
+                <div class="calculation-area">
+                    也可以这样算：$84 \times \frac{2}{3} = 84 \times \frac{2}{\not{3}_1} = 56 (\text{km})$ 
+                    <!-- Note: The strikethrough in fraction is hard to do perfectly in standard mathjax without custom macros, approximating visual -->
+                </div>
+                <div class="answer-line">
+                    答：汽车已经行了 56km。
+                </div>
+            </div>
+
+            <!-- Right Avatar -->
+            <div style="width: 80px; text-align: center;">
+                 <div class="avatar-placeholder" style="background: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'40\' r=\'20\' fill=\'%23ffdab9\'/><path d=\'M20 100 Q50 60 80 100\' fill=\'%23add8e6\'/></svg>') no-repeat center; background-size: contain;"></div>
+            </div>
+        </div>
+
+        <div class="note-text">
+            当分数用来表示单位“1”的几分之几时，也可以叫做“分率”。<br>
+            单位“1” $\times$ 几分之几 = 几分之几对应的量
+        </div>
+
+        <!-- Discussion -->
+        <div class="discussion-box">
+            <span class="icon-yi">议一议</span>
+            <span>“$84 \times \frac{2}{3}$”这样列式，你是怎么想的？</span>
+        </div>
+    </div>
+
+    <!-- Problem 2 -->
+    <div class="problem-section">
+        <div class="problem-title">
+            <div class="problem-number">2</div>
+            <div class="problem-text" style="font-weight: normal;">
+                张伯伯把 $20\text{hm}^2$ 的 $\frac{3}{4}$ 用来种玫瑰，其中种红玫瑰的面积占玫瑰地面积的 $\frac{3}{5}$。张伯伯种了多少 $\text{hm}^2$ 红玫瑰？
+            </div>
+            <div class="concept-tag" style="margin-left: 10px;">连续求一个数的几分之几的问题</div>
+        </div>
+        
+        <div class="text-center red-text" style="font-size: 14px; margin-bottom: 10px; text-align: right; padding-right: 50px;">
+            用已知量连续乘分率<br>
+            <span style="font-size: 20px;">&#8595;</span>
+        </div>
+
+        <!-- Layout for Problem 2 -->
+        <div class="flex-row space-between" style="align-items: flex-start;">
+            
+            <!-- Left Column: Text & Avatar -->
+            <div style="width: 25%; text-align: center;">
+                <div class="bubble" style="margin-bottom: 20px;">
+                    题中的 $\frac{3}{4}$ 表示什么意思？$\frac{3}{5}$ 呢？
+                </div>
+                <div style="font-size: 13px; text-align: left; padding-left: 10px; line-height: 1.8;">
+                    <span class="red-text" style="font-size: 16px;">$\frac{3}{4}$</span> 表示把 <span style="border: 1px solid #ccc; border-radius: 10px; padding: 0 5px; font-size: 11px;">$20\text{hm}^2$ 土地</span><br>
+                    看作单位“1”，其中的 $\frac{3}{4}$ 种玫瑰。
+                </div>
+                <div style="margin-top: 20px;">
+                    <div class="avatar-placeholder" style="width: 60px; height: 70px; margin: 0 auto; background: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'40\' r=\'20\' fill=\'%23ffdab9\'/><path d=\'M20 100 Q50 60 80 100\' fill=\'%2387ceeb\'/></svg>') no-repeat center; background-size: contain;"></div>
+                </div>
+            </div>
+
+            <!-- Center Column: Grid Diagram -->
+            <div style="width: 50%; text-align: center;">
+                <div style="margin-bottom: 5px;">$20\text{hm}^2$ 土地</div>
+                
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <!-- The Grid -->
+                    <div class="grid-diagram">
+                        <!-- Row 1 -->
+                        <div class="grid-cell shaded-pink"></div>
+                        <div class="grid-cell shaded-pink"></div>
+                        <div class="grid-cell shaded-pink"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <!-- Row 2 -->
+                        <div class="grid-cell shaded-pink"></div>
+                        <div class="grid-cell shaded-pink"></div>
+                        <div class="grid-cell shaded-pink"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <!-- Row 3 -->
+                        <div class="grid-cell shaded-cross"></div>
+                        <div class="grid-cell shaded-cross"></div>
+                        <div class="grid-cell shaded-cross"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <!-- Row 4 -->
+                        <div class="grid-cell shaded-cross"></div>
+                        <div class="grid-cell shaded-cross"></div>
+                        <div class="grid-cell shaded-cross"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                    </div>
+                    
+                    <!-- Right label for grid -->
+                    <div style="margin-left: 10px; text-align: left; font-size: 14px;">
+                        <div style="border-left: 2px solid #333; height: 120px; position: relative; margin-left: 5px;">
+                            <span style="position: absolute; top: 50%; transform: translateY(-50%); white-space: nowrap; left: 10px;">
+                                $20\text{hm}^2$ 土地的 $\frac{3}{4}$ 种玫瑰
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 10px; font-size: 14px;">
+                    玫瑰地的 $\frac{3}{5}$ 种红玫瑰
+                </div>
+                
+                <!-- Calculation below grid -->
+                <div style="margin-top: 20px; font-size: 16px;">
+                    $20 \times \frac{3}{4} \times \frac{3}{5} = 9 (\text{hm}^2)$
+                </div>
+                <div style="font-size: 12px; color: #d65a5a; margin-top: 5px;">
+                    <span style="font-size: 16px;">$\frac{3}{5}$</span> 表示把种玫瑰的土地看作单位“1”，其中的 <span style="font-size: 16px;">$\frac{3}{5}$</span> 种红玫瑰。
+                </div>
+            </div>
+
+            <!-- Right Column: Avatar & Bubble -->
+            <div style="width: 25%; text-align: center;">
+                <div class="bubble right" style="margin-top: 100px; margin-left: auto;">
+                    还可以怎样解决？
+                </div>
+                <div style="margin-top: 20px;">
+                    <div class="avatar-placeholder" style="width: 60px; height: 70px; margin: 0 auto; background: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'40\' r=\'20\' fill=\'%23ffdab9\'/><path d=\'M20 100 Q50 60 80 100\' fill=\'%23ffb6c1\'/></svg>') no-repeat center; background-size: contain;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="answer-line" style="margin-top: 20px;">
+            答：张伯伯种了 $9\text{hm}^2$ 红玫瑰。
+        </div>
+    </div>
+
+    <!-- Footer Note -->
+    <div class="footer-note">
+        <div class="panda-icon" style="background: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'40\' fill=\'white\' stroke=\'black\' stroke-width=\'5\'/><circle cx=\'35\' cy=\'40\' r=\'10\' fill=\'black\'/><circle cx=\'65\' cy=\'40\' r=\'10\' fill=\'black\'/><ellipse cx=\'50\' cy=\'65\' rx=\'15\' ry=\'10\' fill=\'black\'/></svg>') no-repeat center; background-size: contain;"></div>
+        <strong>注意：</strong>分数连乘问题中最基本的数量关系式：单位“1”的量 $\times$ 分率 = 分率的对应量。准确地找出单位“1”的关键在于明确题目中“那个量是（或占、相当于）那个量的几分之几”，是那个量的几分之几，那个量就是单位“1”。
+    </div>
+
+</div>
+
+</body>
+</html>

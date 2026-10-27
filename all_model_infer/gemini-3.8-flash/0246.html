@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>光明日报 - 评论版</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    font-family: "SimSun", "Songti SC", "STSong", serif;
+    color: #111;
+    background-color: #f7f7f5;
+    padding: 20px;
+    line-height: 1.45;
+  }
+  .page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 24px 30px;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 2px solid #222;
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+  }
+  .masthead {
+    font-family: "Kaiti", "STKaiti", "KaiTi_GB2312", serif;
+    font-size: 38px;
+    font-weight: bold;
+    letter-spacing: 2px;
+  }
+  .header-meta {
+    font-size: 12px;
+    color: #333;
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+  }
+  .page-number {
+    display: flex;
+    align-items: baseline;
+    font-family: "SimHei", "Heiti SC", sans-serif;
+  }
+  .page-number .section-title {
+    font-size: 32px;
+    font-weight: bold;
+    margin-right: 6px;
+    letter-spacing: 2px;
+  }
+  .page-number .num {
+    font-size: 32px;
+    font-weight: bold;
+  }
+
+  /* Main Grid */
+  .main-layout {
+    display: flex;
+    gap: 20px;
+  }
+  .left-section {
+    flex: 1.4;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    border-right: 1px solid #ddd;
+    padding-right: 20px;
+  }
+  .right-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* Common Typography */
+  .article-title {
+    font-family: "SimHei", "Heiti SC", sans-serif;
+    font-weight: 900;
+    line-height: 1.15;
+    color: #000;
+  }
+  .author {
+    font-size: 13px;
+    font-weight: normal;
+    margin: 6px 0 10px 0;
+    color: #222;
+  }
+  .affiliation {
+    text-indent: 0 !important;
+    font-size: 11.5px;
+    color: #333;
+    margin-top: 6px;
+    font-weight: bold;
+  }
+  p {
+    text-indent: 2em;
+    font-size: 12px;
+    text-align: justify;
+    text-justify: inter-ideograph;
+    margin-bottom: 4px;
+    line-height: 1.42;
+  }
+
+  /* Horizontal Rules */
+  .section-divider {
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 4px 0;
+  }
+
+  /* Badges & Special Blocks */
+  .badge-forum {
+    border: 1px solid #222;
+    text-align: center;
+    margin-bottom: 10px;
+    background: #fff;
+    width: 100%;
+  }
+  .badge-forum-header {
+    background: #222;
+    color: #fff;
+    font-family: "SimHei", "Heiti SC", sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 3px 0;
+    letter-spacing: 3px;
+  }
+  .badge-forum-body {
+    padding: 4px;
+    font-size: 11px;
+    line-height: 1.3;
+  }
+  .badge-forum-body .award {
+    font-size: 11px;
+    font-weight: bold;
+    margin-bottom: 2px;
+  }
+  .badge-forum-body .email {
+    font-family: Arial, sans-serif;
+    font-size: 10.5px;
+  }
+
+  .badge-commentary {
+    background: #222;
+    color: #fff;
+    padding: 4px 10px;
+    display: inline-block;
+    font-family: "SimHei", "Heiti SC", sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    clip-path: polygon(0 0, 100% 0, 92% 100%, 0% 100%);
+  }
+  .award-sub {
+    font-size: 11.5px;
+    font-weight: bold;
+    margin-top: 3px;
+    margin-bottom: 8px;
+  }
+
+  .badge-culture {
+    display: inline-flex;
+    align-items: center;
+    background: #222;
+    color: #fff;
+    padding: 2px 8px;
+    font-family: "SimHei", "Heiti SC", sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+  .badge-culture-deco {
+    margin-left: 8px;
+    display: grid;
+    grid-template-columns: repeat(2, 4px);
+    gap: 2px;
+  }
+  .badge-culture-deco span {
+    width: 4px;
+    height: 4px;
+    background: #fff;
+  }
+
+  .badge-essay {
+    display: inline-block;
+    background: #222;
+    color: #fff;
+    padding: 2px 8px;
+    font-family: "SimHei", "Heiti SC", sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    clip-path: polygon(0 0, 100% 0, 92% 100%, 0% 100%);
+  }
+
+  /* Multi-column Layouts */
+  .cols-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  .cols-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  /* Article 1 Specifics */
+  .art1-header {
+    margin-bottom: 8px;
+  }
+  .art1-title {
+    font-size: 34px;
+    letter-spacing: 1px;
+  }
+  .art1-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  /* Article 2 Specifics */
+  .art2-title {
+    font-size: 32px;
+    margin-bottom: 4px;
+    letter-spacing: 1px;
+  }
+
+  /* Bottom Left Article Specifics */
+  .art3-title {
+    font-size: 26px;
+    margin-bottom: 4px;
+    letter-spacing: 1px;
+  }
+
+  /* Top Right Article Specifics */
+  .art4-container {
+    display: flex;
+    gap: 14px;
+  }
+  .art4-content {
+    flex: 1;
+  }
+  .art4-title-vertical {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    font-family: "SimHei", "Heiti SC", sans-serif;
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    line-height: 1.2;
+    padding-left: 6px;
+  }
+  .art4-author-vertical {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    font-size: 13px;
+    margin-right: 6px;
+    letter-spacing: 4px;
+  }
+
+  /* Bottom Right Article Specifics */
+  .art5-header {
+    margin-bottom: 6px;
+  }
+  .art5-title {
+    font-size: 28px;
+    line-height: 1.2;
+  }
+</style>
+</head>
+<body>
+
+<div class="page-container">
+  <!-- Masthead -->
+  <header class="header">
+    <div class="masthead">光明日报</div>
+    <div class="header-meta">
+      <div>2025年1月10日 星期五 一版编辑:吴晓杰、李鸾 本版编辑:朱波、赵家明</div>
+      <div class="page-number">
+        <span class="section-title">评论</span>
+        <span class="num">03</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Layout -->
+  <div class="main-layout">
+    <!-- Left Section (3 Articles stacked) -->
+    <div class="left-section">
+      
+      <!-- Article 1: 高水平开放 -->
+      <article>
+        <div class="art1-header">
+          <h1 class="article-title art1-title">高水平开放<br>为经济高质量发展赋能</h1>
+          <div class="author">□ 陆 影</div>
+        </div>
+
+        <div class="art1-grid">
+          <!-- Col 1 -->
+          <div>
+            <div class="badge-forum">
+              <div class="badge-forum-header">光明论坛</div>
+              <div class="badge-forum-body">
+                <div class="award">中国新闻奖名专栏</div>
+                <div>评论投稿邮箱</div>
+                <div class="email">gmpinglun@163.com</div>
+              </div>
+            </div>
+            <p>近日发布的《高质量发展蓝皮书：中国经济高质量发展报告（2024）——践行开放发展理念》显示，2013年至2023年，中国经济开放发展总指数增长了13.4%。这一数值的显著提升表明，中国经济正以高水平开放为动力，全面迈向高质量发展的崭新阶段。以开放促改革，以改革促创新的良性循环正逐步形成，中国经济的活力和韧性越发凸显。</p>
+            <p>开放在国家繁荣发展的必由之路，中国开放的大门只会越开越大。从党的二十大报告将“推进高水平对外开放”作为加快构建新发展格局、着力推动高质量发展的重要内容，到党的二十届三中全会提出“开放是中国式现代化的鲜明标识”，再到2024年中央经济工作会议把“扩大高水</p>
+          </div>
+
+          <!-- Col 2 -->
+          <div>
+            <p>平对外开放”列为今年经济工作的重点任务，无不彰显着我国以开放促发展、以开放应变局的坚强决心与战略智慧。</p>
+            <p>报告显示，我国制度开放指数增长了72.8%，这一数据背后是经济体制、法律法规、政策制度等全方位的改革与创新。制度型开放既是国内经济转型升级的内在要求，也是中国深度融入全球经济、提升国际竞争力的战略选择。稳步推进规则、规制、管理、标准等制度型开放，提升贸易投资合作质量和水平，才能不断拓展中国式现代化的发展空间。</p>
+            <p>简政放权、放管结合、优化服务等改革举措持续深化，行政审批事项大幅减少，市场准入门槛不断降低，为国内外投资者营造了公平、透明、可预期的市场环境。同时，我国积极参与国际规则的制定和对接，推动国内制度与国际通行规则接轨，增强了国内外国要素的信任感，促进了资本、技术、人才等要素的自由流动和高效配置，为经济开放发展提供了坚实的制度保障。</p>
+            <p>报告显示，我国开放布局指</p>
+          </div>
+
+          <!-- Col 3 -->
+          <div>
+            <p>数增长108.3%，表明中国在区域开放布局上实现重大突破，形成了沿海、沿江、沿边和内陆地区协同发展的新格局。沿海地区是开放的前沿阵地，中国自贸试验区建设从上海起步，形成了拥有22个自贸试验区的“雁阵”，海南自由贸易港建设蓬勃展开，有效发挥了改革开放综合试验平台作用。</p>
+            <p>沿江地区是东西双向开放的重要纽带，依托长江经济带发展战略，加强与沿海地区的经济联系与合作，形成东西双向互济的开放格局。例如，位于湖北的东风汽车与上海汽车集团在新能源汽车领域开展项目建设，有效盘活区域项目建设，将大大提升长江流域的交通效率，促进人员、物资等快速流动。</p>
+            <p>沿边地区是拓展开放空间的关键节点，通过边境（跨境）经济合作区等平台，加强与周边国家的经贸往来与人文交流，大力拓展开放空间。云南自贸试验区红河片区打造面向南亚、东南亚的跨境电商综合试验区，新疆自贸试验区乌鲁木齐片区设立国际创</p>
+          </div>
+
+          <!-- Col 4 -->
+          <div>
+            <p>业创新创业基地，深度参与全球产业分工与合作。</p>
+            <p>内陆地区是开放型经济的新高地，积极融入共建“一带一路”，促进区域经济协调发展和整体竞争力提升。郑州航空港经济综合实验区通过大力发展航空物流和高端制造业，打造“四港联动”的全球超级枢纽；西安国际港务区通过开通中欧班列（长安号），畅通跨境贸易通道，加速跨境贸易循环。</p>
+            <p>立足国内，中国经济开放发展带来了经济增长和就业机会增加，直接惠及广大人民群众。开放发展促进商品和服务多样化、优质化，满足了人民日益增长的美好生活需要，从物质消费到精神文化消费，从基本生活保障到高品质生活追求，人民的获得感、幸福感和安全感不断增强，为实现共同富裕奠定了坚实基础。未来推进开放发展，也要兼顾国内发展，强化公共服务供给，推动区域协调发展和城乡融合发展。</p>
+            <div class="affiliation">（作者系山东大学国家治理研究院研究员）</div>
+          </div>
+        </div>
+      </article>
+
+      <hr class="section-divider">
+
+      <!-- Article 2: 跑出体育强国建设“加速度” -->
+      <article>
+        <div>
+          <h1 class="article-title art2-title">跑出体育强国建设“加速度”</h1>
+          <div class="author">□ 何 盟</div>
+        </div>
+
+        <div class="cols-4">
+          <!-- Col 1 -->
+          <div>
+            <p>近日，国家统计局、国家体育总局发布数据显示，2023年全国体育产业总规模（总产出）达36741亿元，增加值为14915亿元，占国内生产总值（GDP）的比重为1.15%，比上年提高0.07个百分点。数字背后，是体育产业加速跑的强劲脉搏，展现出其在国民经济中日益提升的地位。</p>
+            <p>事实上，这一跃升态势已持续多年。2012年至2022年，我国体育产业增加值年均增速达15.4%，占当年国内生产总值比重从0.6%提升至1.08%。刚刚落幕的2024赛季中国足球协会超级联赛就传来喜讯，就为2025年的上海体育消费开了好头：三天的时间，共约55000名观众到场观赛，其中80%来自外地，有人直接拖了行李箱奔赴赛场，票房收入超3000万元。</p>
+            <p>不少球迷看完比赛即打卡当地地标，赛事、商圈、假日经济成三方共赢。有人盘点，继2024年全年举办178项国际国内重大赛事后，2025年的上海“赛事日历”依然充盈，几乎全年有赛；F1</p>
+          </div>
+
+          <!-- Col 2 -->
+          <div>
+            <p>中国大奖赛、上海帆船公开赛、上海环球马术冠军赛、上海赛艇公开赛等国际大赛都将如约而至。其中，2025世界赛艇锦标赛将于9月在上海举行，这是世界赛艇顶级赛事首次落户中国。不只是上海，贵州“村超”、江苏南通国际马拉松等体育赛事成为带动商文旅体融合的成功典范，成功书写事、文体与消费的“双向奔赴”呈现出日趋繁荣的市场活力。</p>
+            <p>从全球范围来看，体育产业尤其是体育竞赛表演业的溢出效益，已得到广泛重视。近年来，沙特、阿联酋等国家纷纷加码体育产业，电子竞技、综合格斗、极限体育等新兴运动蓬勃发展。纽约、洛杉矶、伦敦、巴黎等全球体育城市中，体育产业占比普遍达到3%左右。相较而言，我国体育产业还是一片值得拓展的“蓝海”。细读此次发布的数据，体育服务业的快速壮大尤为引人注目。2023年体育服务业增加值为10849亿元，占体育产业增加值的比重跃升至72.7%，较上年提升2.1个百分</p>
+          </div>
+
+          <!-- Col 3 -->
+          <div>
+            <p>点，成为引领产业发展的中流砥柱。这也表明，我国体育产业正迈向以服务经济为主导的新阶段。促进体育产业创新发展，鼓励体育企业加大研发投入，满足消费者多样化的体育需求，都应当成为发力和支持重点。</p>
+            <p>当下，提供丰富的运动装备商品早已不能满足民众的需要，他们渴望深度体验体育运动，尽情享受专业服务。体育消费需求的变化，为新兴体育项目带来活力。2023年全国露营营地市场规模超过300亿元，曾经的小众探险活动，成为大众休闲新宠。骑行运动更是持续升温，2023年，全国各类自行车赛事超200场，自行车整车、骑行服饰、配件装备等销售水涨船高，骑行驿站、维修保养服务也顺势发展，构建起庞大而活跃的骑行产业链。2023年，我国马术产业市场规模已超200亿元，全国马术俱乐部数量近千家。随着攀岩成为东京奥运会新增项目，行业迎来发展黄金期。2023年，全国攀岩场馆数量突破600家，攀岩</p>
+          </div>
+
+          <!-- Col 4 -->
+          <div>
+            <p>人口达50万人左右。在一线城市大型商场内，常能看到专业攀岩馆人气爆棚，不同年龄层、不同水平的攀岩者挑战自我，感受“岩壁芭蕾”的魅力。与此同时，科技与体育共舞，智能穿戴设备、线上赛事平台、体育场馆智能化改造等，为体育产业增添了新的强劲动力。</p>
+            <p>《体育强国建设纲要》提出，到2035年，体育产业要发展成国民经济支柱性产业。我们有理由相信，在一系列政策支持和市场利好的推动下，人们的健身需求将进一步释放，体育消费市场会不断扩容，“十四五”期末体育产业总规模达到5万亿元的目标有望顺利实现。随着电竞产业、体育元宇宙等新兴热点领域不断涌现，不同人群的多元化体育消费需求将得到更好满足。体育不仅会成为我国经济增长的重要推动力，而且将为提高国民健康水平、推动高质量发展作出更大贡献。</p>
+            <div class="affiliation">（作者系上海立信会计金融学院体育与健康学院教师）</div>
+          </div>
+        </div>
+      </article>
+
+      <hr class="section-divider">
+
+      <!-- Article 3: 沉浸式演出 -->
+      <article>
+        <div>
+          <h1 class="article-title art3-title">沉浸式演出<br>助力体验经济蓬勃发展</h1>
+          <div class="author">□ 周 泉</div>
+        </div>
+
+        <div class="cols-4">
+          <!-- Col 1 -->
+          <div>
+            <div class="badge-culture">
+              文化评析
+              <div class="badge-culture-deco">
+                <span></span><span></span><span></span><span></span>
+              </div>
+            </div>
+            <p>在河北廊坊，“只有红楼梦·戏剧幻城”演出现场人头攒动，观众沉浸其中。2024年以来，“幻城”演出近万场，接待游客超百万人次，并带动周边餐饮、住宿、购物、娱乐等业态发展。无独有偶，在上海、北京、山西、贵州等地，类似的沉浸式演出也竞相纷呈，形成舞台艺术发展的新风向。</p>
+            <p>沉浸式戏剧，指的是在厂房、车库、街头、商场、公园、乡村等非剧场空间改造适应的剧场演出，它强调让观众置身于演出环境，享受互动体验。近年来，中国沉浸式戏剧迅猛发展，新的演出场景、内容、观赏体验不断涌现，“为一场演出奔赴一座城”成为青</p>
+          </div>
+
+          <!-- Col 2 -->
+          <div>
+            <p>年人群的时尚潮流。</p>
+            <p>科技的加持，极大激发了戏剧演出向创新迈进。虚拟现实（VR）、增强现实（AR）、混合现实（MR）、扩展现实（XR）技术为剧场赋能。相对于传统镜框式舞台，沉浸式剧场能让观众自主漫游，演员可以全方位无死角式表演，观众嵌入演出空间，两者实现有机融合、一体互动。</p>
+            <p>从观演关系和空间生产的具体情况来看，借助多媒体呈现手段以及其他高科技，导演或剧场可以让观众获得移步换景的体验。比如，通过VR等技术，将演员的表演创作为虚拟现实，并和真实装置设计融合，实现真实与虚拟的叠合；或是演员虽为真人，而周边的环境为扩展现实，形成现实与虚拟的交互体验。</p>
+            <p>这些技术的运用拓展了沉浸</p>
+          </div>
+
+          <!-- Col 3 -->
+          <div>
+            <p>式戏剧的多样可能性，让整体演出从一种单向叙事转变成为沉浸式体验，丰富、延展了观演体验与效果。从直接观演到技术手段沉浸，从物理沉浸到虚拟沉浸，沉浸式戏剧不仅有传统的视听体验，还有触觉、嗅觉、味觉的直接体验，以及通过感知而多元化、互动化引发的新沉浸与体验。这些都是观众乐此不疲的重要原因。</p>
+            <p>此外，这些创作形式还可以通过短视频、网络直播等形式同步传播，构建观演一体互动的传播矩阵。从模拟现实环境到创造虚拟环境，现实和仿真环境水乳交融，打造新型数字演艺空间，极大激发了艺术的创新创造活力。</p>
+            <p>以体验为主的演出形式促进了旅游业的兴盛，呈现出文旅融合属性。近年来，从国家到地方，都更加注重类似演艺新空间的培</p>
+          </div>
+
+          <!-- Col 4 -->
+          <div>
+            <p>育，提供专项资金和场地，培育丰富多样的沉浸式戏剧形式。如今，“体验经济”焕发活力，沉浸式剧场正逐步完成自然山水实景、地标民俗主题场景、文化题材虚拟场景的打造与转化。可以说，沉浸式戏剧演出自然成为一种演出新业态，为“体验经济”也必将成为一种新的经济增长点。</p>
+            <p>通过展演一体互促，让科技与现实联动、演剧与商业结合、文化和旅游互彰，从而构建一个富有时代气息的演剧综合体，发挥戏剧作为公共艺术的社会功能属性。新春佳节将至，庙会、灯会、游园等盛大活动也将如火如荼地开展起来，科技赋能戏剧演出必将为这些活动带来新气象，推动演艺艺术实现复兴与繁荣。</p>
+            <div class="affiliation">（作者系中央戏剧学院戏剧文学系副主任、教授）</div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Right Section (2 Articles stacked) -->
+    <div class="right-section">
+      
+      <!-- Article 4: 积极促进有为政府和有效市场更好结合 -->
+      <article>
+        <div class="art4-container">
+          <!-- Text Columns (3 cols) -->
+          <div class="art4-content">
+            <div style="margin-bottom: 8px;">
+              <span class="badge-commentary">光明时评</span>
+              <div class="award-sub">中国新闻奖名专栏</div>
+            </div>
+
+            <div class="cols-3">
+              <!-- Col 1 -->
+              <div>
+                <p>近日，国务院办公厅印发《关于严格规范涉企行政检查的意见》，着力解决行政检查过多、频次高、随意性大，以及任性检查、违规立检查、以各种名义变相检查等突出问题。去年以来，国家层面连续发力，直击企业关注的热点难点问题。2024年9月，国家发展改革委发布2024年全国优化营商环境创新实践十大案例。2024年11月，国务院减轻企业负担部际联席会议办公室公布“深化企业服务，提升减负成效”典型案例，63个案例入选。“无事不扰、无感服务”成为打造新型政务环境的重要标志。</p>
+                <p>有效市场和有为政府相辅相成、相互依存、相互统一。有为政府并不是管得越多越好，相反，政府必须减少对市场的不当干预，尽量减轻企业负担，不干扰企业正常生产经营活动。“无事不扰”正是明确政府权力边界、尊重市场规律的重要体现，是有为政府的重要标志。政府“无为”不是“甩手掌柜”，无为”是为企业提供“无处不在”又“无事不扰”的高质服务。只有政府“无事不扰”，企业才能真正放开手脚，迎面市场规律，专注于生产经营和自身发展。</p>
+              </div>
+
+              <!-- Col 2 -->
+              <div>
+                <p>近年来，各级政府“无事不扰、无感服务”的工作作风正在形成。浙江运用数字技术实施营商环境“无感监测”，以企业“免感”的方式开展营商环境监测、评价和整改，最大限度地减少对企业的干扰；海南实施“预约制”管理，统筹监测涉企检查、调研等活动，赋予企业拒绝不合理调研的权利。国务院办公厅发布的《关于严格规范涉企行政检查的意见》，本质上是进一步深化政府管理体制改革，减少政府干预，减轻企业负担，管法化涉企营商环境，最大限度激发企业活力、增强企业信心、挖掘发展潜力的又一重大举措，标志着“有为政府”建设又迈上一个新的台阶。</p>
+                <p>同时也要看到，尽管近年来改革取得明显成效，政府行使职能的效率明显提高，但是国内外的形势已经发生深刻变化，我国经济发展阶段、社会主要矛盾都已经发生重要转变，一系列形势变化对如何更好发挥政府作用提出了更高要求。政府履职方式正在从管理走向治理，政府自身则从管理者走向服务者，成为多元治理主体中的重要一员。特别是伴随新一轮科技革命，数字技术、人工智能向各领域全面渗透，数据</p>
+              </div>
+
+              <!-- Col 3 -->
+              <div>
+                <p>作为新型要素在各领域得到广泛应用，政务服务数字化、智能化水平大幅提升，“最多跑一次”“一网通办”“一网统管”“一网协同”等政务服务数字化创新举措层出不穷，政府决策、执行、监督等各环节都面临流程再造。下一阶段，应从两个方面持续发力，进一步提升政府“无事不扰、无感服务”的履职水平，为企业增强信心、放开手脚、大胆为创造有利条件。</p>
+                <p>一方面，抓改革，进一步厘清政府与市场的作为边界，促进有效政府和有效市场更好结合。推动各级地方政府完善政府责任清单、建立政府权力清单，落实市场准入负面清单。通过“列单”，梳理各级政府及其部门的主要责任，推动经营主体“法无禁止即可为”，最大限度减少政府对企业和市场的过多干预；通过“晒单”，将政府的责任和权力公之于众，让人民明白政府应该做的事是什么，什么部门具体负责什么事；通过“跟单”，跟踪检查权力运行的内外流程和效果，客观评估权力行使成效，建立健全政府部门行政裁量权基准制度。通过优化调整行业权力配置，改革行政权力运行机制，构建和完善行政权力的运行体系，进一步明晰政府职能边界，更好地向市场放权、向企业放权，创造良好营商环境，筑牢有效市场的底座支撑。</p>
+                <p>另一方面，抓创新，强化场景引领，进一步推动政府数字化、智能化升级，以新一代信息技术提升政府政务效能。近年来各地涌现出一批改革服务创新典型做法，已经不是对原有政务服务模式的“修修补补”，而是最新技术手段与现代治理要求深度融合的结果。特别要注意的是，在数字技术、人工智能快速迭代升级的大背景下，场景创新已经成为引领政务服务提质升级的重要引擎。应鼓励各地结合本地实际，顺应企业诉求，因地制宜打造、推广一批引领性、示范性、带动性强的政务服务创新场景，充分运用数字化、智能化前沿技术，深度挖掘自身数据资源优势，全面改造传统政务工作模式，重塑政府工作流程，创造适应企业发展需要的新型体制机制环境，让企业放下包袱、增强信心、轻装上阵，在有效市场中展现活力、增强动力、提升竞争力。</p>
+                <div class="affiliation">（作者系国家发展和改革委员会经济体制与管理研究所研究室主任、研究员）</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Vertical Headline -->
+          <div style="display: flex; flex-direction: row-reverse;">
+            <h1 class="art4-title-vertical">积极促进有为政府和有效市场更好结合</h1>
+            <div class="art4-author-vertical">□ 王琛伟</div>
+          </div>
+        </div>
+      </article>
+
+      <hr class="section-divider">
+
+      <!-- Article 5: 给“星星的孩子”更优质教育 -->
+      <article>
+        <div class="art5-header">
+          <h1 class="article-title art5-title">给“星星的孩子”<br>更优质教育</h1>
+          <div class="author">□ 李 健</div>
+        </div>
+
+        <div class="cols-3">
+          <!-- Col 1 -->
+          <div>
+            <div class="badge-essay">新闻随笔</div>
+            <p>孤独症是一种神经发育障碍性疾病，患儿被称为‘星星的孩子’，难以顺畅理解他人情绪，也缺乏社交技巧，因此被称为“星星的孩子”。2024年7月，中国残联、教育部等部门印发《孤独症儿童关爱促进行动实施方案（2024—2028年）》，提出健全孤独症儿童普惠保障机制，推动落实特教普惠阶段孤独症儿童学生特殊教育公用经费标准由每生每年6000元提高至7000元以上。</p>
+            <p>教育公平是社会公平的起点，特殊教育是不同特质特殊儿童最急需、最迫切、最现实的生存发展需求，特殊教育发展水平是社会文明进步的重要标志。作为特殊教育中的重要群体，我国约有1000万孤独症患者，0至14岁孤独症儿童数量超过300万。如何畅通“星星的孩子”们的成长之路，是全社会共同的关切。</p>
+            <p>当前，融合教育是实现特殊教育高质量发展的重要路径，也是当前特殊教育发展的主流趋势。将特殊需要的儿童纳入普</p>
+          </div>
+
+          <!-- Col 2 -->
+          <div>
+            <p>通常学校班级接受融合教育，有利于让孤独症儿童与普通儿童在互动中学习规则、学会沟通交往，为日后融入社会创造一定的前提条件。《“十四五”特殊教育发展提升行动计划》明确指出，要推进融合教育，全面提高特殊教育质量。随着我国融合教育工作不断推进，越来越多的特殊儿童进入普通学校就读。如何改善孤独症儿童在情绪认知、社交沟通以及生活适应能力等方面的不足，不断提高随班就读的适宜性和有效性，是优化融合教育环境的坚实方面。无论是通过配备资源教室、特教助理，为随班就读的孤独症儿童提供个案支持与个性化辅导；还是在学校内部重视孤独症儿童的受教育权，融助其与普通儿童社交互动，营造包容友善的校园环境；抑或是推行家庭培训项目，加强对孤独症患者的早期筛查、诊断和干预，帮助父母掌握科学方法，缓解家庭负担，构建家庭教育良性循环……这些都是未来学校合作、协同发力的重要方向。</p>
+            <p>从事相关方面工作的教师，不仅要具备扎实的教育教学理论基础，还要掌握特殊的教育方法、心理学知识、行为干预技术等方面的方法和技能。因此，</p>
+          </div>
+
+          <!-- Col 3 -->
+          <div>
+            <p>实现对教师的精细化、专业化培养至关重要。当前，我国已推动20多个省份出台特殊教育教师编制标准，其中，山东将特殊教育儿童教育的师生比明确为1:1.5；在《普通高等学校本科专业目录》中，孤独症儿童教育成为目录中的新专业之一；今年启动实施的“‘星星计划’特殊教育公益项目，首期拨付300万元，重点支持孤独症中心承担孤独症教育教师专项培训，并向中西部省份提供‘送教到省’服务……这些都为孤独症儿童教育加强师资保障、夯实教育资源提供了实践范本。未来，应不断提高孤独症教师队伍的专业化水平，加强特殊教育评估，完善特殊教育办学质量评价指标体系，深化教学改革、提高教育质量，让孤独症儿童得到缺陷补偿和潜能开发，获得更好发展。</p>
+            <p>教育的本质是点亮生命，而每个孤独症孩子，都是一颗等待被点亮的星星。相信在精准支持、资源整合与社会共融的基础上，推动政府、学校、家庭和社会合力共建，定能点亮希望之灯，为更多‘星星的孩子’照亮成长之路。</p>
+            <div class="affiliation">（作者系北京航空航天大学公共管理学院副教授）</div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

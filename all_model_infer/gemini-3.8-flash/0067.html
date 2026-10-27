@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What is Cloud Run | Google Cloud</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #3c4043;
+      background-color: #fff;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    a {
+      color: #1a73e8;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Top Header */
+    .top-nav {
+      height: 48px;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      font-size: 13px;
+    }
+    .top-nav-left {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .gc-logo {
+      display: flex;
+      align-items: center;
+      font-size: 18px;
+      font-weight: 500;
+      color: #5f6368;
+      gap: 6px;
+    }
+    .gc-logo svg {
+      width: 20px;
+      height: 20px;
+    }
+    .gc-logo span {
+      color: #5f6368;
+    }
+    .top-menu-item {
+      color: #1a73e8;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .top-menu-item.muted {
+      color: #3c4043;
+    }
+    .arrow-down {
+      border: solid currentColor;
+      border-width: 0 1.5px 1.5px 0;
+      display: inline-block;
+      padding: 2.5px;
+      transform: rotate(45deg);
+      margin-bottom: 2px;
+    }
+    .top-nav-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .search-box {
+      background: #f1f3f4;
+      border-radius: 4px;
+      padding: 6px 12px;
+      display: flex;
+      align-items: center;
+      width: 220px;
+      color: #5f6368;
+      font-size: 13px;
+      justify-content: space-between;
+    }
+    .search-box span.shortcut {
+      border: 1px solid #dadce0;
+      background: #fff;
+      border-radius: 2px;
+      padding: 0 4px;
+      font-size: 11px;
+    }
+    .icon-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #3c4043;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    /* Sub Navigation */
+    .sub-nav {
+      height: 48px;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+    }
+    .product-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 18px;
+      color: #202124;
+      font-weight: 400;
+    }
+    .product-icon {
+      width: 24px;
+      height: 24px;
+    }
+    .nav-tabs {
+      display: flex;
+      height: 100%;
+      margin-left: 28px;
+    }
+    .nav-tab {
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      color: #5f6368;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      position: relative;
+    }
+    .nav-tab:hover {
+      text-decoration: none;
+      color: #1a73e8;
+    }
+    .nav-tab.active {
+      color: #1a73e8;
+    }
+    .nav-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 16px;
+      right: 16px;
+      height: 3px;
+      background-color: #1a73e8;
+      border-radius: 2px 2px 0 0;
+    }
+    .btn-start-free {
+      background: #1a73e8;
+      color: white;
+      padding: 6px 16px;
+      border-radius: 4px;
+      font-weight: 500;
+      font-size: 13px;
+      text-decoration: none;
+    }
+    .btn-start-free:hover {
+      background: #1557b0;
+      text-decoration: none;
+    }
+
+    /* Main Container Grid */
+    .container {
+      display: grid;
+      grid-template-columns: 240px minmax(0, 1fr) 200px;
+      min-height: calc(100vh - 96px);
+    }
+
+    /* Left Sidebar */
+    .left-sidebar {
+      border-right: 1px solid #e0e0e0;
+      padding: 16px 0;
+      font-size: 12px;
+      color: #3c4043;
+      position: relative;
+      background: #fff;
+    }
+    .filter-box {
+      margin: 0 12px 12px 12px;
+      padding: 6px 8px;
+      background: #f1f3f4;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #5f6368;
+    }
+    .sidebar-group-title {
+      padding: 8px 16px 4px 16px;
+      font-weight: 600;
+      color: #202124;
+      font-size: 11px;
+    }
+    .sidebar-item {
+      padding: 5px 16px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      color: #3c4043;
+      text-decoration: none;
+      line-height: 1.3;
+    }
+    .sidebar-item:hover {
+      background-color: #f8f9fa;
+    }
+    .sidebar-item.active {
+      background-color: #e8f0fe;
+      color: #1a73e8;
+      font-weight: 500;
+    }
+    .sidebar-item .tree-arrow {
+      margin-right: 6px;
+      font-size: 8px;
+      color: #5f6368;
+    }
+    .sidebar-collapse-btn {
+      position: absolute;
+      bottom: 20px;
+      right: 12px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #f1f3f4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      font-size: 12px;
+    }
+
+    /* Center Content */
+    .content-area {
+      padding: 24px 48px;
+      max-width: 900px;
+    }
+    .breadcrumbs-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #5f6368;
+      margin-bottom: 20px;
+    }
+    .breadcrumbs {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .was-helpful {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .helpful-icons {
+      display: flex;
+      gap: 8px;
+      cursor: pointer;
+    }
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    h1.page-title {
+      font-size: 32px;
+      font-weight: 400;
+      color: #202124;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .title-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      border: 1px solid #dadce0;
+      border-radius: 4px;
+      padding: 2px 4px;
+      font-size: 12px;
+      color: #5f6368;
+      cursor: pointer;
+    }
+    .btn-feedback {
+      border: 1px solid #dadce0;
+      background: #fff;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      color: #1a73e8;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .btn-feedback:hover {
+      background: #f8f9fa;
+    }
+    .text-body {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #3c4043;
+      margin-bottom: 16px;
+    }
+    h2 {
+      font-size: 20px;
+      font-weight: 400;
+      color: #202124;
+      margin-top: 36px;
+      margin-bottom: 16px;
+    }
+    h3 {
+      font-size: 15px;
+      font-weight: 500;
+      color: #202124;
+      margin-top: 24px;
+      margin-bottom: 12px;
+    }
+
+    /* Table */
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 13px;
+    }
+    table.data-table th {
+      background-color: #f1f3f4;
+      text-align: left;
+      font-weight: 600;
+      color: #202124;
+      padding: 10px 14px;
+      border-bottom: 1px solid #dadce0;
+    }
+    table.data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid #dadce0;
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    table.data-table tr td:first-child {
+      white-space: nowrap;
+      font-weight: 500;
+    }
+
+    /* Diagram */
+    .diagram-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 28px 0;
+      padding: 16px;
+    }
+    .diagram-box {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      position: relative;
+    }
+    .client-node {
+      background-color: #1a73e8;
+      color: white;
+      padding: 12px 28px;
+      border-radius: 2px;
+      font-size: 14px;
+      font-weight: 400;
+    }
+    .arrow-container {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 140px;
+    }
+    .arrow-label-top {
+      font-size: 11px;
+      color: #3c4043;
+      text-align: center;
+      margin-bottom: 6px;
+    }
+    .arrow-line {
+      width: 100%;
+      height: 1px;
+      border-top: 1px dashed #5f6368;
+      position: relative;
+    }
+    .arrow-line::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: -4px;
+      width: 0;
+      height: 0;
+      border-top: 4px solid transparent;
+      border-bottom: 4px solid transparent;
+      border-left: 6px solid #202124;
+    }
+    .arrow-label-bottom {
+      font-size: 11px;
+      color: #3c4043;
+      text-align: center;
+      margin-top: 6px;
+    }
+    .cloud-run-boundary {
+      background-color: #eaedf1;
+      padding: 12px 16px 20px 16px;
+      border-radius: 2px;
+      position: relative;
+      min-width: 160px;
+    }
+    .cloud-run-label {
+      font-size: 13px;
+      color: #202124;
+      margin-bottom: 12px;
+      text-align: left;
+    }
+    .container-stack {
+      position: relative;
+      height: 48px;
+      width: 110px;
+      margin-left: 12px;
+    }
+    .container-layer {
+      position: absolute;
+      border-radius: 4px;
+      background: #8ab4f8;
+      border: 1px solid #1a73e8;
+    }
+    .container-layer.l3 {
+      top: 6px;
+      left: 6px;
+      width: 100%;
+      height: 100%;
+      background: #7ca5eb;
+    }
+    .container-layer.l2 {
+      top: 3px;
+      left: 3px;
+      width: 100%;
+      height: 100%;
+      background: #89aff0;
+    }
+    .container-layer.l1 {
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #9abcf5;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-size: 12px;
+      color: #202124;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    code {
+      font-family: monospace, monospace;
+      font-size: 12px;
+      background-color: #f1f3f4;
+      padding: 2px 4px;
+      border-radius: 2px;
+    }
+
+    /* Right Sidebar */
+    .right-sidebar {
+      padding: 24px 16px;
+      font-size: 11px;
+      color: #5f6368;
+    }
+    .right-sidebar-title {
+      font-weight: 500;
+      color: #202124;
+      margin-bottom: 12px;
+    }
+    .toc-list {
+      list-style: none;
+      border-left: 2px solid #e0e0e0;
+      padding-left: 10px;
+    }
+    .toc-item {
+      margin-bottom: 8px;
+      line-height: 1.35;
+    }
+    .toc-item.active {
+      color: #1a73e8;
+      font-weight: 500;
+    }
+    .toc-item.highlight {
+      border-left: 2px solid #1a73e8;
+      margin-left: -12px;
+      padding-left: 10px;
+      color: #1a73e8;
+    }
+    .toc-item a {
+      color: inherit;
+      text-decoration: none;
+    }
+    .toc-item a:hover {
+      color: #1a73e8;
+    }
+    .toc-subitem {
+      padding-left: 10px;
+      margin-top: 6px;
+      margin-bottom: 6px;
+      color: #5f6368;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Global Header -->
+  <header class="top-nav">
+    <div class="top-nav-left">
+      <div class="gc-logo">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z" fill="#4285F4"/>
+        </svg>
+        <span>Google Cloud</span>
+      </div>
+      <div class="top-menu-item">Technology areas <span class="arrow-down"></span></div>
+      <div class="top-menu-item muted">Cross-product tools <span class="arrow-down"></span></div>
+    </div>
+    <div class="top-nav-right">
+      <div class="search-box">
+        <span>🔍 Search</span>
+        <span class="shortcut">/</span>
+      </div>
+      <div class="icon-btn">
+        <span>📄 Console</span>
+      </div>
+      <div class="icon-btn">
+        <span>☀️</span>
+      </div>
+      <div class="icon-btn">
+        <span>🌐 English</span>
+        <span class="arrow-down"></span>
+      </div>
+      <a href="#" class="top-menu-item">Sign in</a>
+    </div>
+  </header>
+
+  <!-- Product Sub Navigation -->
+  <nav class="sub-nav">
+    <div style="display: flex; align-items: center;">
+      <div class="product-title">
+        <svg class="product-icon" viewBox="0 0 24 24" fill="none">
+          <path d="M4 16l4-8 4 8H4z" fill="#EA4335"/>
+          <path d="M10 16l4-8 4 8h-8z" fill="#4285F4"/>
+        </svg>
+        Cloud Run
+      </div>
+      <div class="nav-tabs">
+        <a href="#" class="nav-tab">Overview</a>
+        <a href="#" class="nav-tab active">Guides</a>
+        <a href="#" class="nav-tab">Reference</a>
+        <a href="#" class="nav-tab">Samples</a>
+        <a href="#" class="nav-tab">Resources</a>
+      </div>
+    </div>
+    <div>
+      <a href="#" class="btn-start-free">Start free</a>
+    </div>
+  </nav>
+
+  <!-- Main Document Container -->
+  <div class="container">
+
+    <!-- Left Navigation Sidebar -->
+    <aside class="left-sidebar">
+      <div class="filter-box">
+        <span>▼ Filter</span>
+      </div>
+
+      <div class="sidebar-group-title">Discover</div>
+      <a class="sidebar-item active" href="#">Product overview</a>
+      <a class="sidebar-item" href="#">Cloud Run resource model</a>
+      <a class="sidebar-item" href="#">Container runtime contract</a>
+      <a class="sidebar-item" href="#"><span class="tree-arrow">▶</span>Use cases</a>
+
+      <div class="sidebar-group-title" style="margin-top: 8px;">Get started</div>
+      <a class="sidebar-item" href="#">Overview</a>
+      <a class="sidebar-item" href="#"><span class="tree-arrow">▶</span>Deploy a sample web service</a>
+      <a class="sidebar-item" href="#"><span class="tree-arrow">▶</span>Deploy a sample function</a>
+      <a class="sidebar-item" href="#"><span class="tree-arrow">▶</span>Execute a sample job</a>
+      <a class="sidebar-item" href="#">Deploy a sample worker pool</a>
+
+      <div class="sidebar-group-title" style="margin-top: 8px;">Develop</div>
+      <a class="sidebar-item" href="#">Set up your environment</a>
+      <a class="sidebar-item" href="#"><span class="tree-arrow">▶</span>Plan and prepare your service</a>
+      <a class="sidebar-item" href="#"><span class="tree-arrow">▶</span>Plan and prepare your function</a>
+      <a class="sidebar-item" href="#"><span class="tree-arrow">▶</span>Build and test</a>
+
+      <div class="sidebar-group-title" style="margin-top: 8px;">Serve HTTP requests</div>
+      <a class="sidebar-item" href="#"><span class="tree-arrow">▶</span>Deploy services</a>
+      <a class="sidebar-item" href="#"><span class="tree-arrow">▶</span>Serve web traffic</a>
+      <a class="sidebar-item" href="#"><span class="tree-arrow">▶</span>Manage services</a>
+      <a class="sidebar-item" href="#"><span class="tree-arrow">▶</span>Configure services</a>
+      <a class="sidebar-item" href="#"><span class="tree-arrow">▶</span>Invoke and trigger services</a>
+      <a class="sidebar-item" href="#"><span class="tree-arrow">▶</span>Best practices</a>
+
+      <div class="sidebar-group-title" style="margin-top: 8px;">Execute job tasks to completion</div>
+      <a class="sidebar-item" href="#">Create jobs</a>
+      <a class="sidebar-item" href="#"><span class="tree-arrow">▶</span>Execute jobs</a>
+      <a class="sidebar-item" href="#"><span class="tree-arrow">▶</span>Configure jobs</a>
+      <a class="sidebar-item" href="#"><span class="tree-arrow">▶</span>Manage jobs</a>
+      <a class="sidebar-item" href="#"><span class="tree-arrow">▶</span>Best practices</a>
+
+      <div class="sidebar-group-title" style="margin-top: 8px;">Perform continuous background work</div>
+      <a class="sidebar-item" href="#"><span class="tree-arrow">▶</span>Deploy worker pools</a>
+      <a class="sidebar-item" href="#"><span class="tree-arrow">▶</span>Manage worker pools</a>
+      <a class="sidebar-item" href="#"><span class="tree-arrow">▶</span>Configure worker pools</a>
+      <a class="sidebar-item" href="#"><span class="tree-arrow">▶</span>Scale based on external metrics</a>
+      <a class="sidebar-item" href="#">Cost optimization</a>
+
+      <div class="sidebar-group-title" style="margin-top: 8px;">Configure networking</div>
+      <a class="sidebar-item" href="#">Best practices for Cloud Run networking</a>
+      <a class="sidebar-item" href="#">Configure private networking</a>
+      <a class="sidebar-item" href="#"><span class="tree-arrow">▶</span>Send traffic to VPC network</a>
+      <a class="sidebar-item" href="#"><span class="tree-arrow">▶</span>Send traffic to Shared VPC network</a>
+      <a class="sidebar-item" href="#">Static outbound IP address</a>
+      <a class="sidebar-item" href="#"><span class="tree-arrow">▶</span>Network security</a>
+      <a class="sidebar-item" href="#">Cloud Service Mesh ↗</a>
+
+      <div class="sidebar-group-title" style="margin-top: 8px;">Secure</div>
+      <a class="sidebar-item" href="#">Security design overview</a>
+      <a class="sidebar-item" href="#"><span class="tree-arrow">▶</span>Authenticate requests</a>
+      <a class="sidebar-item" href="#"><span class="tree-arrow">▶</span>Secure your resources</a>
+
+      <div class="sidebar-collapse-btn">&lt;</div>
+    </aside>
+
+    <!-- Center Main Documentation Content -->
+    <main class="content-area">
+      <div class="breadcrumbs-bar">
+        <div class="breadcrumbs">
+          <a href="#">Home</a> &gt; 
+          <a href="#">Documentation</a> &gt; 
+          <a href="#">Application hosting</a> &gt; 
+          <a href="#">Cloud Run</a> &gt; 
+          <a href="#">Guides</a>
+        </div>
+        <div class="was-helpful">
+          <span>Was this helpful?</span>
+          <div class="helpful-icons">
+            <span>👍</span>
+            <span>👎</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-header">
+        <h1 class="page-title">
+          What is Cloud Run
+          <span class="title-actions">🔖</span>
+          <span class="title-actions">❐ ▾</span>
+        </h1>
+        <button class="btn-feedback">Send feedback</button>
+      </div>
+
+      <p class="text-body">
+        Cloud Run is a fully managed application platform for running your code, function, or container on top of Google's highly scalable infrastructure.
+      </p>
+
+      <p class="text-body">
+        You can deploy code written in any programming language on Cloud Run if you can build a container image from it. In fact, building container images is optional. If you're using Go, Node.js, Python, Java, .NET, Ruby, or a supported framework you can use the <a href="#">source-based deployment</a> option that builds the container for you, using the best practices for the language you're using.
+      </p>
+
+      <p class="text-body">
+        Google has built Cloud Run to work well together with other services on Google Cloud, so you can build full-featured applications.
+      </p>
+
+      <p class="text-body">
+        In short, Cloud Run lets developers spend their time writing their code, and very little time operating, configuring, and scaling their Cloud Run service. You don't have to create a cluster or manage infrastructure to be productive with Cloud Run.
+      </p>
+
+      <h2>Services, jobs, and worker pools: three ways to run your code</h2>
+
+      <p class="text-body">
+        On Cloud Run, your code can run as a <em>service</em>, <em>job</em>, or <em>worker pool</em>. All of these resource types are running sandboxed container instances in the same execution environment and can integrate with Google Cloud services.
+      </p>
+
+      <p class="text-body">
+        The following table provides a high-level look at the options provided by each Cloud Run resource type.
+      </p>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th style="width: 15%;">Resource</th>
+            <th style="width: 85%;">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Service</td>
+            <td>Responds to HTTP requests sent to a unique and stable endpoint, using stateless instances that autoscale based on a variety of key metrics, also responds to events and functions.</td>
+          </tr>
+          <tr>
+            <td>Job</td>
+            <td>Executes parallelizable tasks that are executed manually, or on a schedule, and run to completion.</td>
+          </tr>
+          <tr>
+            <td>Worker pool</td>
+            <td>Handles always-on background workloads such as pull-based workloads, for example, Kafka consumers, Pub/Sub pull queues, or RabbitMQ consumers.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Cloud Run services</h2>
+
+      <p class="text-body">
+        A Cloud Run service provides you with the infrastructure required to run a reliable HTTPS endpoint. Your responsibility is to make sure your code listens on a TCP port and handles HTTP requests.
+      </p>
+
+      <p class="text-body">
+        The following diagram shows a Cloud Run service running several container instances to handle web requests and events from the client using an HTTPS endpoint.
+      </p>
+
+      <!-- Architecture Diagram -->
+      <div class="diagram-container">
+        <div class="diagram-box">
+          <div class="client-node">Client</div>
+          <div class="arrow-container">
+            <span class="arrow-label-top">Web requests<br>and events</span>
+            <div class="arrow-line"></div>
+            <span class="arrow-label-bottom">HTTPS<br>endpoint</span>
+          </div>
+          <div class="cloud-run-boundary">
+            <div class="cloud-run-label">Cloud Run service</div>
+            <div class="container-stack">
+              <div class="container-layer l3"></div>
+              <div class="container-layer l2"></div>
+              <div class="container-layer l1">
+                <span>Container</span>
+                <span>instance</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="text-body">
+        A standard service includes the following features:
+      </p>
+
+      <h3>Unique HTTPS endpoint for every service</h3>
+
+      <p class="text-body">
+        Every Cloud Run service has an HTTPS endpoint on a unique subdomain of the <code>*.run.app</code> domain — and you can configure custom domains as well. Cloud Run manages TLS for you and supports WebSockets, HTTP/2 (end-to-
+      </p>
+    </main>
+
+    <!-- Right Outline / Table of Contents -->
+    <aside class="right-sidebar">
+      <div class="right-sidebar-title">On this page</div>
+      <ul class="toc-list">
+        <li class="toc-item highlight">
+          <a href="#">Services, jobs, and worker pools: three ways to run your code</a>
+        </li>
+        <li class="toc-item">
+          <a href="#">Cloud Run services</a>
+          <div class="toc-subitem"><a href="#">Scale to zero and minimum instances</a></div>
+          <div class="toc-subitem"><a href="#">Pay-per-use pricing for services</a></div>
+          <div class="toc-subitem"><a href="#">A disposable container file system</a></div>
+          <div class="toc-subitem"><a href="#">When to use Cloud Run services</a></div>
+        </li>
+        <li class="toc-item">
+          <a href="#">Cloud Run jobs</a>
+          <div class="toc-subitem"><a href="#">Array jobs are a faster way to run jobs</a></div>
+          <div class="toc-subitem"><a href="#">When to use Cloud Run jobs</a></div>
+        </li>
+        <li class="toc-item">
+          <a href="#">Cloud Run worker pools</a>
+          <div class="toc-subitem"><a href="#">When to use Cloud Run worker pools</a></div>
+        </li>
+        <li class="toc-item"><a href="#">Google Cloud integrations</a></li>
+        <li class="toc-item"><a href="#">Code is running in a container image</a></li>
+        <li class="toc-item"><a href="#">What's next</a></li>
+      </ul>
+    </aside>
+
+  </div>
+
+</body>
+</html>

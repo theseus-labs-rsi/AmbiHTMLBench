@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人民日报 - 评论</title>
+    <style>
+        body {
+            font-family: "Songti SC", "SimSun", "STSong", serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+            color: #000;
+            line-height: 1.6;
+        }
+        .page-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        /* Header Styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .logo {
+            font-family: "Kaiti", "STKaiti", serif;
+            font-size: 32px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        .date-info {
+            font-size: 14px;
+            text-align: right;
+        }
+        .page-num {
+            font-size: 24px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        /* Main Layout Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr; /* 4 columns roughly */
+            gap: 20px;
+        }
+
+        /* Column Spans */
+        .col-span-2 { grid-column: span 2; }
+        .col-span-3 { grid-column: span 3; }
+        .col-span-4 { grid-column: span 4; }
+        .col-span-1 { grid-column: span 1; }
+
+        /* Section Headers */
+        .section-header {
+            color: #c00; /* Red color for section titles */
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .section-header::before {
+            content: "";
+            display: inline-block;
+            width: 4px;
+            height: 16px;
+            background-color: #c00;
+            margin-right: 8px;
+        }
+
+        /* Article Titles */
+        h1.main-title {
+            font-size: 36px;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+            letter-spacing: 4px;
+        }
+        h2.article-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin: 15px 0 10px 0;
+        }
+        h3.sub-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        /* Text Content */
+        .author {
+            text-align: center;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .content-text {
+            font-size: 14px;
+            text-align: justify;
+            text-indent: 2em;
+            margin-bottom: 10px;
+        }
+        .content-text-no-indent {
+            font-size: 14px;
+            text-align: justify;
+            margin-bottom: 10px;
+        }
+
+        /* Sidebar / Vertical Text */
+        .vertical-sidebar {
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            border: 2px solid #000;
+            padding: 15px 10px;
+            font-size: 20px;
+            font-weight: bold;
+            height: 100%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #fff;
+        }
+        .vertical-sidebar .small-text {
+            font-size: 14px;
+            font-weight: normal;
+            margin-top: 20px;
+            writing-mode: vertical-rl;
+        }
+
+        /* Image Placeholder */
+        .image-placeholder {
+            width: 100%;
+            height: 300px;
+            background-color: #ddd;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 15px 0;
+            border: 1px solid #999;
+            position: relative;
+        }
+        .image-caption {
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 12px;
+            color: #555;
+        }
+
+        /* Boxed Text */
+        .boxed-text {
+            border: 2px solid #c00;
+            padding: 15px;
+            margin: 20px 0;
+            background-color: #fff;
+        }
+        .boxed-text h4 {
+            margin-top: 0;
+            color: #000;
+            font-size: 16px;
+        }
+
+        /* Specific Layout Adjustments */
+        .top-section {
+            display: grid;
+            grid-template-columns: 2.5fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .middle-section {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .bottom-section {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 20px;
+        }
+
+        .quote-box {
+            border: 1px solid #000;
+            padding: 10px;
+            margin-bottom: 15px;
+            background-color: #f0f0f0;
+        }
+        .quote-box p {
+            margin: 5px 0;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .footer-info {
+            margin-top: 20px;
+            font-size: 12px;
+            text-align: right;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+        }
+
+        /* Utility */
+        .bold { font-weight: bold; }
+        .center { text-align: center; }
+        .small { font-size: 12px; }
+        .red-text { color: #c00; }
+        
+        /* Simulating the complex grid of the newspaper */
+        .newspaper-body {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 15px;
+        }
+        
+        .item-1 { grid-column: span 3; }
+        .item-2 { grid-column: span 3; }
+        .item-3 { grid-column: span 3; }
+        .item-4 { grid-column: span 3; }
+        .item-5 { grid-column: span 4; }
+        .item-6 { grid-column: span 4; }
+        .item-7 { grid-column: span 4; }
+        .item-8 { grid-column: span 6; }
+        .item-9 { grid-column: span 6; }
+        .item-10 { grid-column: span 12; }
+        .item-11 { grid-column: span 2; } /* Sidebar */
+        .item-12 { grid-column: span 10; }
+
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">人民日报</div>
+        <div class="date-info">
+            2025 年 1 月 7 日 星期二 <span class="page-num">5 评论</span>
+        </div>
+    </div>
+
+    <!-- Top Section: Main Article + Sidebar -->
+    <div style="display: flex; gap: 20px; margin-bottom: 30px;">
+        <div style="flex: 3;">
+            <div class="section-header">大家谈</div>
+            <h1 class="main-title">让科普与创新比翼齐飞</h1>
+            
+            <div style="display: flex; gap: 20px;">
+                <div style="flex: 1;">
+                    <h3 class="sub-title">让优秀科普人才脱颖而出</h3>
+                    <div class="author">李秀国</div>
+                    <p class="content-text">做好科普是提升科技创新效率的重要途径。数据显示，我国公民具备科学素质的比例不断提升，但“高精尖”科普人才仍显不足。应建立以创新价值、能力、贡献为导向的科普人才评价体系，让优秀科普人才脱颖而出。</p>
+                    <p class="content-text">科普是创新的土壤。2023年，我国公民具备科学素质的比例达到14.14%，比2022年的12.93%提高了1.21个百分点。科普工作任重道远，需要更多优秀人才投身其中。要完善科普人才培养机制，加强科普学科建设，鼓励高校、科研院所开设科普专业或课程，培养复合型科普人才。</p>
+                    <p class="content-text">全国政协十四届常委会第九次会议提出，要“加强国家科普能力建设”。这为科普工作指明了方向。我们要以此为契机，进一步完善科普政策体系，加大科普投入，改善科普条件，营造热爱科学、崇尚创新的社会氛围，让科普之光照亮创新之路。</p>
+                    <p class="content-text small">（作者为中国科协科普部副部长）</p>
+                </div>
+                <div style="flex: 1;">
+                    <p class="content-text">前不久，新修订的《中华人民共和国科学技术普及法》（以下简称“科普法”）正式公布施行。这是科普法自2002年颁布实施以来的首次大修，对于推动新时代科普事业高质量发展具有重要意义。</p>
+                    <p class="content-text">科普法是科普工作的基本遵循。此次修订，明确了科普是国家创新体系的重要组成部分，是实现创新发展的基础性工作。法律的实施，将为科普事业发展提供强有力的法治保障。</p>
+                    <p class="content-text">新修订的科普法有许多亮点。比如，增加了“科普人员”专章，对科普人员的培养、使用、评价、激励等作出了规定；明确了科普经费投入机制，保障科普事业发展的物质基础；强化了科普社会责任，鼓励社会力量参与科普。</p>
+                    <p class="content-text">法律的的生命力在于实施。我们要认真学习宣传贯彻新修订的科普法，依法推动科普事业高质量发展，为实现高水平科技自立自强、建设世界科技强国贡献力量。</p>
+                    <p class="content-text small">（作者为中国科普作家协会理事长）</p>
+                </div>
+                <div style="flex: 1;">
+                    <h3 class="sub-title">扩大科普活动的辐射范围</h3>
+                    <div class="author">林秋颖</div>
+                    <p class="content-text">科普活动是普及科学知识、传播科学思想、倡导科学方法的重要载体。要创新科普活动形式，丰富科普活动内容，扩大科普活动的覆盖面和影响力，让更多人参与到科普活动中来。</p>
+                    <p class="content-text">随着互联网技术的发展，网络科普成为重要阵地。要充分利用新媒体平台，打造一批科普精品力作，让科学知识“飞入寻常百姓家”。同时，要注重线下科普活动的体验性和互动性，举办形式多样的科普展览、科普讲座、科技竞赛等活动，增强科普的吸引力和感染力。</p>
+                    <p class="content-text">科普活动要贴近群众、贴近生活、贴近实际。要针对不同群体的需求，开展精准科普。比如，面向青少年，开展科学实验、科技制作等活动，激发他们的好奇心和想象力；面向老年人，开展健康养生、防骗识骗等科普，提高他们的生活质量；面向农民，开展农业技术推广、乡村振兴等科普，助力农业农村现代化。</p>
+                    <p class="content-text small">（作者为浙江省科技馆馆长）</p>
+                </div>
+                <div style="flex: 1;">
+                    <h3 class="sub-title">调动社会力量兴办科普事业</h3>
+                    <div class="author">喻思南</div>
+                    <p class="content-text">科普事业是全社会共同的事业。要充分调动社会各界的积极性、主动性、创造性，形成政府引导、社会参与、市场运作的科普发展格局，汇聚起推动科普事业发展的强大合力。</p>
+                    <p class="content-text">企业是科技创新的主体，也是科普的重要力量。要鼓励企业开放实验室、生产线等科普资源，支持企业开展科普创作、科普服务。高校、科研院所拥有丰富的科教资源，要建立健全科普资源共享机制，推动科研设施、仪器设备等向社会开放。</p>
+                    <p class="content-text">社会组织是科普事业的重要补充。要加强对科普社会组织的培育和管理，支持其依法依章程开展科普活动。媒体要承担科普社会责任，加大科普宣传力度，普及科学知识，传播科学思想。</p>
+                    <p class="content-text">众人拾柴火焰高。只要全社会共同努力，就一定能够开创科普事业新局面，为提高全民科学素质、建设创新型国家作出更大贡献。</p>
+                    <p class="content-text small">（作者为本报经济社会部记者）</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Sidebar -->
+        <div style="flex: 1; display: flex; flex-direction: column; gap: 20px;">
+            <div class="section-header">人民时评</div>
+            <div class="quote-box">
+                <p>下大气力综合整治“内卷式”竞争，优化经济发展环境，激发市场活力、创新潜能</p>
+            </div>
+            <div class="vertical-sidebar">
+                <div>不搞“政策洼地”，精心打造“营商环境高地”</div>
+                <div class="small-text">杨 柳</div>
+            </div>
+            <div style="font-size: 13px; text-align: justify; text-indent: 2em;">
+                <p>部分地区存在为招商引资“拼优惠”、“拼政策”的现象，甚至搞“政策洼地”，这不仅扰乱了市场秩序，也影响了经济高质量发展。中央经济工作会议明确提出，要“综合整治‘内卷式’竞争，规范地方政府和企业行为”。</p>
+                <p>优化营商环境，关键在于法治化、市场化、国际化。要打破地方保护和市场分割，促进商品要素资源在更大范围内畅通流动。要深化“放管服”改革，降低制度性交易成本，激发市场主体活力。</p>
+                <p>各地应摒弃“政策洼地”思维，转而打造“营商环境高地”。通过提升政务服务效率、完善基础设施配套、加强知识产权保护等措施，吸引优质企业和项目落地。只有栽下梧桐树，才能引得凤凰来。</p>
+                <p>优化营商环境是一场持久战。要保持战略定力，久久为功，持续深化改革，破除体制机制障碍，为各类所有制企业创造公平竞争、竞相发展的良好环境，推动中国经济行稳致远。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Middle Section -->
+    <div style="display: grid; grid-template-columns: 1fr 1.5fr 1fr; gap: 20px; margin-bottom: 30px;">
+        <!-- Left Column -->
+        <div>
+            <div class="section-header">金台随笔</div>
+            <h2 class="article-title">从乡村脉搏中寻找艺术脉动</h2>
+            <div class="author">常 晋</div>
+            <p class="content-text">近日，浙江安吉余村的“村咖”火了。这些由老房子改造而成的咖啡馆，不仅保留了乡村的古朴韵味，还融入了现代时尚元素，成为游客打卡的热门地。从“卖石头”到“卖风景”，再到“卖文化”，余村的转型之路，正是乡村振兴的生动缩影。</p>
+            <p class="content-text">艺术介入乡村，不是简单的涂鸦或雕塑，而是要深入挖掘乡村的文化内涵，激活乡村的内生动力。在安徽黟县，艺术家们利用废弃的猪圈、牛棚改造成工作室、画廊，让古老的村落焕发出新的生机。在云南大理，一些“新村民”将传统手工艺与现代设计相结合，开发出深受市场欢迎的文创产品。</p>
+            <p class="content-text">乡村艺术的蓬勃发展，离不开人才的支撑。要鼓励艺术家、设计师、建筑师等专业人才下乡，参与乡村规划建设。同时，也要注重培养本土人才，挖掘民间艺人、非遗传承人，让他们成为乡村文化建设的主力军。</p>
+            <p class="content-text">艺术赋能乡村，最终目的是为了让农民受益。要通过艺术产业的发展，带动农民增收致富，改善农村人居环境，提升乡村文明程度。让乡村既有“颜值”又有“产值”，既有“乡愁”又有“未来”。</p>
+            <p class="content-text">从乡村脉搏中寻找艺术脉动，就是要尊重乡村发展规律，顺应农民意愿，因地制宜，分类施策。只有这样，才能让艺术在乡村大地生根发芽，结出丰硕的果实，绘就一幅幅宜居宜业和美乡村的新画卷。</p>
+        </div>
+
+        <!-- Center Column (Image) -->
+        <div>
+            <div class="image-placeholder">
+                [Photo: Industrial machinery/robots in a factory setting]
+                <div class="image-caption">江苏省某汽车制造有限公司新能源汽车生产线，机械手臂正在作业。<br>朱红生摄（影像中国）</div>
+            </div>
+            <div style="margin-top: 30px;">
+                <p class="content-text">前不久印发的《制造业企业数字化转型实施指南》，为制造业企业数字化转型提供了行动指引。当前，新一轮科技革命和产业变革深入发展，数字技术与实体经济深度融合，为制造业转型升级提供了难得机遇。</p>
+                <p class="content-text">制造业是国民经济的主体，是立国之本、兴国之器、强国之基。推进制造业数字化转型，不仅是技术层面的革新，更是生产方式、管理模式、组织形态的深刻变革。要坚持以智能制造为主攻方向，推动互联网、大数据、人工智能等新一代信息技术与制造业深度融合。</p>
+                <p class="content-text">中小企业是制造业数字化转型的重点和难点。要加大政策支持力度，降低转型成本，提供普惠性数字化服务，帮助中小企业“上云用数赋智”。同时，要发挥龙头企业的引领作用，构建大中小企业融通发展的产业生态。</p>
+                <p class="content-text">数字化转型是一场持久战，需要政府、企业、社会各方共同努力。要完善基础设施，加强数据安全，培养数字人才，营造良好的转型环境。只有这样，才能推动我国制造业高质量发展，加快建设制造强国。</p>
+                <div style="text-align: right; font-size: 12px; margin-top: 10px;">徐雷鹏文</div>
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <div>
+            <div class="section-header">纵横</div>
+            <h2 class="article-title">与野生动物“距离产生美”</h2>
+            <div class="author">付 勤</div>
+            <p class="content-text">前不久，某景区发生游客投喂野生动物导致其受伤的事件，引发社会关注。这再次提醒我们，人与野生动物应保持适当距离，“距离产生美”不仅是一种审美原则，更是一种生态伦理。</p>
+            <p class="content-text">野生动物是自然生态系统的重要组成部分。随意投喂、近距离接触，不仅会改变它们的习性，影响其生存能力，还可能传播疾病，威胁人类健康。近年来，一些地方出现的“人兽冲突”事件，往往与人类活动干扰野生动物栖息地有关。</p>
+            <p class="content-text">保护野生动物，就是保护人类自己。我们要树立尊重自然、顺应自然、保护自然的生态文明理念，自觉遵守相关法律法规，不捕猎、不食用、不买卖野生动物。在野外遇到野生动物时，应保持安全距离，不惊扰、不投喂。</p>
+            <p class="content-text">相关部门应加强监管，完善警示标识，加大宣传力度，引导公众文明观赏野生动物。景区管理者要承担起主体责任，采取有效措施防止游客与野生动物不当接触。只有人人行动起来，才能构建人与自然和谐共生的美好家园。</p>
+            <p class="content-text">“万物各得其和以生，各得其养以成。”让我们与野生动物保持适当的距离，给它们留出足够的生存空间，也让我们的家园更加美丽、安全。</p>
+        </div>
+    </div>
+
+    <!-- Bottom Section -->
+    <div style="display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 20px;">
+        <!-- Left Box -->
+        <div>
+            <div class="boxed-text">
+                <h4>大力发展水循环经济，积极构建水资源高效循环利用体系，最大程度保障水安全，最大幅度提高水资源利用效率，最大努力改善水生态环境质量</h4>
+            </div>
+            <p class="content-text">河北迁西，一家钢铁企业通过实施水循环利用项目，实现了工业废水“零排放”。该企业将生产过程中产生的废水经过深度处理后，全部回用于生产工序，不仅节约了大量新鲜水资源，还减少了污染物排放。</p>
+            <p class="content-text">水是生命之源、生产之要、生态之基。我国人多水少、水资源时空分布不均，水安全问题尤为突出。大力发展水循环经济，是缓解水资源短缺、保障水安全的根本出路。</p>
+            <p class="content-text">水循环经济强调“减量化、再利用、资源化”。在农业领域，推广节水灌溉技术，提高农业用水效率；在工业领域，推行清洁生产，加强工业废水循环利用；在城市领域，建设海绵城市，促进雨水资源利用。</p>
+            <p class="content-text">构建水循环经济体系，需要技术创新、制度创新和模式创新。要加大研发投入，突破关键核心技术；完善法律法规，强化政策激励；探索市场化运作机制，吸引社会资本参与。</p>
+        </div>
+
+        <!-- Center Article -->
+        <div>
+            <h1 class="main-title" style="font-size: 28px;">水循环经济大有可为</h1>
+            <div class="author">张俊光</div>
+            <p class="content-text">面对水资源短缺的挑战，让有限的水资源发挥最大的效益，水循环经济大有可为。水循环经济是指在水资源开发利用过程中，通过工程措施和非工程措施，实现水资源的循环利用、梯级利用和再生利用，以提高水资源利用效率和效益的发展模式。</p>
+            <p class="content-text">我国高度重视水循环经济发展。近年来，出台了一系列政策措施，推动节水型社会建设。各地积极探索实践，涌现出一批水循环经济的典型案例。比如，宁夏宁东能源化工基地通过构建水循环产业链，实现了水资源的高效利用；山东青岛通过海水淡化与综合利用，缓解了沿海地区缺水问题。</p>
+            <p class="content-text">发展水循环经济，要坚持系统观念。统筹考虑水资源、水环境、水生态，协同推进节水、治污、生态修复。要加强流域统一管理，优化水资源配置，促进上下游、左右岸、干支流协同发展。</p>
+            <p class="content-text">发展水循环经济，要强化科技支撑。加快研发推广节水新技术、新工艺、新设备，提高水处理技术水平。利用物联网、大数据、人工智能等现代信息技术，提升水资源管理智能化水平。</p>
+            <p class="content-text">发展水循环经济，要完善市场机制。建立健全水权交易制度，发挥市场在水资源配置中的决定性作用。推行阶梯水价，利用价格杠杆促进节约用水。鼓励金融机构加大对水循环经济项目的支持力度。</p>
+            <p class="content-text">水循环经济是一项系统工程，需要政府、企业、公众共同参与。让我们携手努力，大力发展水循环经济，为建设美丽中国、实现中华民族永续发展提供有力支撑。</p>
+            <p class="content-text small">（作者为国家发展改革委环资司副司长）</p>
+        </div>
+
+        <!-- Right Info -->
+        <div>
+            <div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px;">
+                <p class="content-text-no-indent"><strong>征稿启事</strong></p>
+                <p class="content-text-no-indent small">各位读者，本版“大家谈”“暖闻热评”等栏目长期征稿。欢迎围绕经济社会发展热点问题，踊跃投稿。</p>
+                <p class="content-text-no-indent small">投稿邮箱：rmrbpl@peopledaily.com.cn</p>
+                <p class="content-text-no-indent small">请在邮件主题中注明栏目名称。</p>
+            </div>
+            
+            <div style="margin-top: 30px;">
+                <h2 class="article-title" style="text-align: center;">欢迎赐稿</h2>
+                <p class="content-text small">本版编辑：李 栋 李洪兴 管 璇</p>
+                <p class="content-text small">版式设计：蔡华伟</p>
+            </div>
+            
+            <div style="margin-top: 20px; font-size: 12px; color: #666;">
+                <p>本社社址：北京市金台西路2号</p>
+                <p>邮政编码：100733</p>
+                <p>电话：(010)65368114</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-info">
+        第 5 版
+    </div>
+
+</div>
+
+</body>
+</html>

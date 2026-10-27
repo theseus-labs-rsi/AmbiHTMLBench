@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>案例与思考 - 欢乐海洋池</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    font-family: "SimSun", "Songti SC", "STSong", "Source Han Serif SC", serif;
+    color: #222;
+    background-color: #f7f7f7;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+  }
+  .page {
+    width: 820px;
+    background: #fff;
+    padding: 40px 45px 30px 45px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    position: relative;
+    font-size: 13px;
+    line-height: 1.75;
+  }
+
+  /* Header */
+  .header {
+    border-top: 3px solid #1a5951;
+    border-bottom: 1px solid #1a5951;
+    padding: 6px 0;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+  }
+  .header-tag {
+    background: #333338;
+    color: #fff;
+    font-family: "SimHei", "Heiti SC", sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 2px 8px;
+    letter-spacing: 1px;
+    margin-right: 8px;
+  }
+  .header-en {
+    font-family: "Arial", sans-serif;
+    font-size: 11px;
+    font-weight: bold;
+    color: #333;
+    letter-spacing: 0.5px;
+  }
+
+  /* Two-column layout */
+  .columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 24px;
+  }
+
+  .col {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Text styles */
+  p {
+    text-indent: 2em;
+    margin-bottom: 10px;
+    text-align: justify;
+  }
+
+  .highlight-title {
+    background-color: #fef08a;
+    font-weight: bold;
+    font-family: "SimHei", "Heiti SC", sans-serif;
+    display: inline-block;
+    padding: 0 2px;
+    margin-bottom: 6px;
+    text-indent: 0;
+  }
+
+  .highlight-inline {
+    background-color: #fef08a;
+    font-weight: bold;
+  }
+
+  /* Left Diagram: Support Strategies */
+  .strategy-diagram {
+    border: 1px solid #ccc;
+    background: #fff;
+    padding: 8px;
+    margin-bottom: 14px;
+    display: grid;
+    grid-template-columns: 90px 80px 1fr;
+    gap: 6px;
+    font-size: 10px;
+    line-height: 1.25;
+  }
+  .diag-col-header {
+    background: #687178;
+    color: #fff;
+    text-align: center;
+    padding: 3px 2px;
+    border-radius: 3px;
+    font-weight: bold;
+    margin-bottom: 6px;
+  }
+  .diag-item {
+    border: 1px solid #777;
+    border-radius: 4px;
+    padding: 4px;
+    text-align: center;
+    margin-bottom: 6px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .diag-col-1 .diag-item {
+    min-height: 38px;
+  }
+  .diag-col-2 {
+    border-left: 1px dashed #bbb;
+    border-right: 1px dashed #bbb;
+    padding: 0 4px;
+  }
+  .diag-col-2 .diag-item {
+    min-height: 22px;
+    margin-bottom: 5px;
+  }
+  .diag-col-3 .diag-desc {
+    border: 1px solid #ddd;
+    padding: 3px 4px;
+    margin-bottom: 4px;
+    background: #fafafa;
+    text-align: justify;
+    line-height: 1.25;
+    font-size: 9.5px;
+  }
+
+  /* Right Diagram: Project Process Flow & Table */
+  .process-diagram {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px 0 16px 0;
+  }
+  .flow-box {
+    border: 1px solid #333;
+    padding: 3px 12px;
+    text-align: center;
+    background: #fff;
+    font-size: 11px;
+    position: relative;
+  }
+  .flow-box .title {
+    font-size: 9.5px;
+    color: #444;
+  }
+  .flow-box .name {
+    font-weight: bold;
+    font-size: 13px;
+  }
+  .flow-arrow {
+    font-size: 14px;
+    line-height: 14px;
+    color: #555;
+    margin: 3px 0;
+  }
+  .plan-row {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    justify-content: center;
+  }
+  .plan-sub-boxes {
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    position: relative;
+  }
+  .sub-box {
+    border: 1px solid #555;
+    padding: 1px 6px;
+    font-size: 9px;
+    background: #fff;
+    white-space: nowrap;
+  }
+
+  /* Tree-like lines */
+  .plan-sub-boxes::before {
+    content: "";
+    position: absolute;
+    left: -12px;
+    top: 9px;
+    bottom: 9px;
+    width: 1px;
+    background: #555;
+  }
+  .sub-box::before {
+    content: "";
+    position: absolute;
+    left: -12px;
+    width: 12px;
+    height: 1px;
+    background: #555;
+  }
+  .plan-row::after {
+    content: "";
+    position: absolute;
+    left: calc(50% + 28px);
+    width: 12px;
+    height: 1px;
+    background: #555;
+  }
+
+  /* Table */
+  .table-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-top: 8px;
+  }
+  .vertical-arrow {
+    font-size: 28px;
+    color: #555;
+    margin-right: 6px;
+    transform: scaleX(0.7);
+  }
+  .process-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9px;
+    text-align: center;
+  }
+  .process-table th {
+    background-color: #5b656b;
+    color: #fff;
+    font-weight: normal;
+    border: 1px solid #777;
+    padding: 3px 2px;
+  }
+  .process-table td {
+    border: 1px solid #aaa;
+    padding: 2.5px 2px;
+    line-height: 1.2;
+  }
+
+  /* Endmark */
+  .endmark {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: #000;
+    color: #fff;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 10px;
+    font-size: 8px;
+    margin-left: 4px;
+    vertical-align: middle;
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 35px;
+    border-top: 1px solid #eee;
+    padding-top: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    font-family: "Arial", sans-serif;
+  }
+  .page-num {
+    font-weight: bold;
+    font-size: 14px;
+  }
+  .mag-info {
+    font-family: "SimSun", serif;
+  }
+  .cnki-bar {
+    text-align: center;
+    font-size: 10px;
+    color: #888;
+    margin-top: 6px;
+    font-family: "Arial", sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-tag">案例与思考</div>
+    <div class="header-en">CASE AND CONSIDERATION</div>
+  </div>
+
+  <!-- Content 2 Columns -->
+  <div class="columns">
+    <!-- Left Column -->
+    <div class="col">
+      <!-- Strategy Diagram -->
+      <div class="strategy-diagram">
+        <!-- Col 1 -->
+        <div class="diag-col-1">
+          <div class="diag-col-header">总体支持策略</div>
+          <div class="diag-item" style="min-height: 38px;">支持幼儿<br>自主选择材料</div>
+          <div class="diag-item" style="min-height: 38px;">保障幼儿<br>充足探究时间</div>
+          <div class="diag-item" style="min-height: 38px;">提供幼儿<br>实地探究空间</div>
+          <div class="diag-item" style="min-height: 60px;">每一环节中<br>不断引导幼儿<br>针对具体问题<br>开展深入的探讨</div>
+        </div>
+
+        <!-- Col 2 -->
+        <div class="diag-col-2">
+          <div class="diag-col-header">进程</div>
+          <div class="diag-item">规划与设计过程</div>
+          <div class="diag-item">简单挖坑</div>
+          <div class="diag-item">PVC管接水</div>
+          <div class="diag-item">石头铺底</div>
+          <div class="diag-item">塑料袋铺底</div>
+          <div class="diag-item">水盆蓄水</div>
+        </div>
+
+        <!-- Col 3 -->
+        <div class="diag-col-3">
+          <div class="diag-col-header">过程性支持策略</div>
+          <div class="diag-desc">支持幼儿将感兴趣的事物作为探究内容，对“海洋池”活动的价值分析、预设活动目标，提供必备资料。</div>
+          <div class="diag-desc">查阅相关资源科学解释水流失的原因，引导幼儿通过观察剖析问题的原因，并能做相关的科学小实验。</div>
+          <div class="diag-desc">提供以前在黄沙池内的游戏活动图片，帮助幼儿快速回忆起已有知识经验。</div>
+          <div class="diag-desc">对于成人看来明显无效的探究思路，教师尊重幼儿的想法，让他们在失败中总结经验。</div>
+          <div class="diag-desc">幼儿在多次尝试并失败后，教师及时地给予鼓励和引导，持续激发他们探究的兴趣。</div>
+          <div class="diag-desc">在幼儿取得最终的成功后予以表扬，并引导他们及时地总结成功经验，对本次活动开展客观评价。</div>
+        </div>
+      </div>
+
+      <!-- Text Left -->
+      <p>开展，幼儿在多次探究中尝试解决“海洋池”中水消失的问题。整个探究活动包含较多的幼儿深度学习的过程，例如规划与设计“海洋池”，制作注水管道、水渗入沙子的阻隔办法等。</p>
+
+      <p><span class="highlight-inline">走自然，亲近泥土。</span>本次活动在户外沙水区开展，是幼儿亲近自然的重要机会。幼儿与沙、水、石头等自然资源展开了有效的互动，感受到了自然物的基本属性和特点。户外场地拥有更加宽阔的活动空间，为幼儿充分的探究活动提供了场地支持。</p>
+
+      <p><span class="highlight-inline">学习发展，清晰可见。</span>中班幼儿的各项能力水平有限，在解决问题中表现出的认识和操作技能的发展是明显的。幼儿在多次尝试失败后仍然坚持不懈地投入探究中去，是本次活动最主要的亮点。除此之外，幼儿能常常动手动脑探索物体和材料并乐在其中，能对事物或现象进行观察比较并发现其异同，能根据观察结果提出问题并大胆猜测答案，能用图画或其他符号进行记录，这些都达到了《3~6岁儿童学习与发展指南》中的发展目标。</p>
+
+      <div><span class="highlight-title">2. 教师的支持策略分析。</span></div>
+
+      <p>《3~6岁儿童学习与发展指南》中明确指出，幼儿科学学习的核心是激发探究兴趣，体验探究过程，发展初步的探究能力。成人要善于发现和保护幼儿的好奇心，充分利用自然和实际生活机会，引导幼儿通过观察、比较、操作、实验等方法，提高发现问题，分析问题和解决问题的</p>
+    </div>
+
+    <!-- Right Column -->
+    <div class="col">
+      <p>能力；帮助幼儿不断积累经验，并运用于新的学习活动，形成受益终身的学习态度和能力。在本次探究活动中，幼儿5次尝试解决同一个问题，接连以失败告终，但是这期间我们看到了教师以幼儿为主体的正确理念。教师隐身在幼儿的身后，在持续的观察中捕捉幼儿的兴趣和需要，不断支持幼儿投入探究过程中。尽管最后解决问题的方法缺乏挑战性，但是教师能正确认识到，此前的一次次探究过程已经为幼儿的学习与发展创造了丰富的教育机会。在整个活动中，用水盆埋于地底下这一策略在如此丰富、有趣的探究进程中已显得不那么重要，这其中是教师对中班幼儿年龄特点的正确理解。</p>
+
+      <!-- Flowchart / Table Diagram -->
+      <div class="process-diagram">
+        <div class="flow-box">
+          <div class="title">明确项目内容</div>
+          <div class="name">欢乐海洋池</div>
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="plan-row">
+          <div class="flow-box">
+            <div>初步规划</div>
+          </div>
+          <div class="plan-sub-boxes">
+            <div class="sub-box">设计图：长方形水池</div>
+            <div class="sub-box">选址：靠近水源的黄沙区</div>
+          </div>
+        </div>
+
+        <div class="flow-arrow" style="margin-left: -110px;">↓</div>
+
+        <div class="table-container">
+          <div class="vertical-arrow">⇩</div>
+          <table class="process-table">
+            <thead>
+              <tr>
+                <th style="width: 18%;">过程</th>
+                <th style="width: 38%;">探究策略</th>
+                <th style="width: 44%;">探究结果</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>第一次尝试</td>
+                <td>简单挖一个沙坑</td>
+                <td>“海洋池”里的水去哪了？</td>
+              </tr>
+              <tr>
+                <td>第二次尝试</td>
+                <td>用PVC管接入更多的水</td>
+                <td>水迅速渗入了沙子中</td>
+              </tr>
+              <tr>
+                <td>第三次尝试</td>
+                <td>用石头铺在沙坑的底部</td>
+                <td>水沿着石头缝隙渗入沙子中</td>
+              </tr>
+              <tr>
+                <td>第四次尝试</td>
+                <td>将塑料袋铺在沙坑的底部</td>
+                <td>水沿着袋子的缝隙渗入沙子中</td>
+              </tr>
+              <tr>
+                <td>第五次尝试</td>
+                <td>用水盆蓄水</td>
+                <td>成功蓄水</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Section (二) -->
+      <div><span class="highlight-title">（二）幼儿的反思</span></div>
+
+      <p>本次项目活动在清洗海洋生物的讨论中，幼儿形成了制作“海洋池”的共同愿景。幼儿通过对“海洋池”形状、位置的初步规划明确了本次活动的探究方向。前后所经历的4次失败和1次成功，凸显了幼儿在活动中所拥有的积极主动、认真专注、不怕困难、敢于探究和尝试、乐于想象和创造等良好学习品质。围绕沙子的渗水性，幼儿从发现问题，到提出解决方法，在一次次的实践中总结出经验。尽管最终提出的解决方案是“投机取巧”的，但是幼儿在整个活动中表现出的深度学习是显而易见的，他们聚焦真实问题、剖析问题和解决问题的思路是清晰的。<span class="endmark">Y</span></p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="page-num">52</div>
+    <div class="mag-info">幼儿100 · 2020.09</div>
+  </div>
+  <div class="cnki-bar">
+    (C)1994-2022 China Academic Journal Electronic Publishing House. All rights reserved. http://www.cnki.net
+  </div>
+</div>
+
+</body>
+</html>

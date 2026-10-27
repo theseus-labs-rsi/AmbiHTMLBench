@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>破晓艺术跨界展览 2026</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+  }
+
+  .poster {
+    width: 480px;
+    height: 854px;
+    background-color: #ffffff;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Grid Lines */
+  .grid-lines {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .grid-h {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: #f0f1f3;
+  }
+  .grid-v {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background-color: #f0f1f3;
+  }
+
+  /* Watermark Background Text & Shapes */
+  .watermark {
+    position: absolute;
+    font-weight: 900;
+    color: rgba(22, 34, 122, 0.04);
+    letter-spacing: 2px;
+    line-height: 1;
+    user-select: none;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .watermark-new {
+    top: 28px;
+    left: 32px;
+    font-size: 110px;
+  }
+  .watermark-year {
+    bottom: 110px;
+    left: 170px;
+    font-size: 112px;
+  }
+
+  /* Thin decorative circles */
+  .deco-circle {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(22, 34, 122, 0.05);
+    pointer-events: none;
+    z-index: 2;
+  }
+  .circle-1 {
+    width: 220px;
+    height: 220px;
+    top: 150px;
+    right: -40px;
+  }
+  .circle-2 {
+    width: 380px;
+    height: 380px;
+    top: 50px;
+    right: -120px;
+  }
+  .circle-3 {
+    width: 280px;
+    height: 280px;
+    bottom: 160px;
+    right: 30px;
+  }
+
+  /* Content Container */
+  .content {
+    position: relative;
+    z-index: 10;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 76px 34px 28px 34px;
+  }
+
+  /* Section Top */
+  .top-bar {
+    width: 32px;
+    height: 7px;
+    background-color: #14227d;
+    margin-bottom: 22px;
+  }
+
+  .year-title {
+    font-size: 54px;
+    font-weight: 900;
+    color: #14227d;
+    line-height: 1;
+    letter-spacing: -1px;
+    margin-bottom: 26px;
+  }
+
+  /* 破晓艺术 */
+  .sub-title-box {
+    display: inline-flex;
+    position: relative;
+    font-size: 44px;
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .sub-title-box .char {
+    position: relative;
+    color: #ff0055;
+    letter-spacing: 2px;
+  }
+  .sub-title-box .bg-box {
+    background-color: #14227d;
+    padding: 0 4px;
+    margin: 0 1px;
+    display: inline-block;
+  }
+
+  /* 跨界 / 展览 */
+  .main-title-wrap {
+    position: relative;
+  }
+  .title-row {
+    display: flex;
+    align-items: center;
+  }
+  .big-char {
+    font-size: 124px;
+    font-weight: 950;
+    color: #14227d;
+    line-height: 0.95;
+    letter-spacing: -4px;
+  }
+  .big-char-margin {
+    margin-right: 14px;
+  }
+
+  /* Pink Block behind 展览 */
+  .row-exhibition {
+    position: relative;
+  }
+  .pink-highlight {
+    position: absolute;
+    bottom: 8px;
+    left: -2px;
+    width: 268px;
+    height: 38px;
+    background-color: #ff0055;
+    z-index: -1;
+  }
+
+  /* Exhibition Date Block (Right of 展览) */
+  .date-block {
+    position: absolute;
+    right: 0;
+    top: 382px;
+    text-align: right;
+  }
+  .date-label {
+    font-size: 15px;
+    font-weight: 500;
+    color: #2b2b2b;
+    margin-bottom: 6px;
+  }
+  .date-value {
+    font-size: 28px;
+    font-weight: 900;
+    color: #ff0055;
+    line-height: 1.1;
+    font-family: Impact, -apple-system, sans-serif;
+    letter-spacing: 1px;
+  }
+  .date-dash {
+    display: inline-block;
+    width: 20px;
+    height: 6px;
+    background-color: #ff0055;
+    margin: 6px 0;
+  }
+
+  /* Middle Info Section */
+  .mid-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 10px;
+  }
+  .price-col {
+    padding-left: 2px;
+  }
+  .price-val {
+    color: #ff0055;
+    font-family: Impact, "PingFang SC", sans-serif;
+  }
+  .price-val .curr {
+    font-size: 20px;
+    font-weight: bold;
+    margin-right: 2px;
+  }
+  .price-val .num {
+    font-size: 38px;
+    font-weight: 900;
+    letter-spacing: -1px;
+  }
+  .price-val .unit {
+    font-size: 22px;
+    font-weight: bold;
+    margin-left: 2px;
+  }
+  .price-desc {
+    font-size: 14px;
+    font-weight: 500;
+    color: #222222;
+    margin-top: 4px;
+  }
+
+  .location-col {
+    text-align: right;
+  }
+  .loc-bar {
+    display: inline-block;
+    width: 20px;
+    height: 6px;
+    background-color: #14227d;
+    margin-bottom: 8px;
+  }
+  .loc-label {
+    font-size: 15px;
+    font-weight: 500;
+    color: #222222;
+    margin-bottom: 6px;
+  }
+  .loc-val {
+    font-size: 18px;
+    font-weight: 900;
+    color: #14227d;
+  }
+
+  /* Bottom Sponsor & Contact Section */
+  .bottom-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-top: 30px;
+  }
+  .sponsor-col {
+    text-align: left;
+  }
+  .sponsor-label {
+    font-size: 15px;
+    font-weight: 500;
+    color: #222222;
+    margin-bottom: 6px;
+  }
+  .sponsor-val {
+    font-size: 20px;
+    font-weight: 900;
+    color: #14227d;
+    letter-spacing: 0.5px;
+  }
+  .btm-bar-left {
+    width: 20px;
+    height: 6px;
+    background-color: #14227d;
+    margin-top: 50px;
+  }
+
+  .contact-col {
+    text-align: right;
+  }
+  .contact-label {
+    font-size: 15px;
+    font-weight: 500;
+    color: #222222;
+    margin-bottom: 6px;
+  }
+  .contact-phone {
+    font-size: 21px;
+    font-weight: 900;
+    color: #14227d;
+    letter-spacing: 0.5px;
+    font-family: Impact, "PingFang SC", sans-serif;
+  }
+  .btm-bar-right {
+    display: inline-block;
+    width: 20px;
+    height: 6px;
+    background-color: #14227d;
+    margin-top: 50px;
+  }
+</style>
+</head>
+<body>
+
+<div class="poster">
+  <!-- Background Grid Lines -->
+  <div class="grid-lines">
+    <!-- Horizontal lines -->
+    <div class="grid-h" style="top: 32px;"></div>
+    <div class="grid-h" style="top: 174px;"></div>
+    <div class="grid-h" style="top: 242px;"></div>
+    <div class="grid-h" style="top: 388px;"></div>
+    <div class="grid-h" style="top: 524px;"></div>
+    <div class="grid-h" style="top: 648px;"></div>
+    <div class="grid-h" style="top: 730px;"></div>
+    <div class="grid-h" style="top: 812px;"></div>
+    
+    <!-- Vertical lines -->
+    <div class="grid-v" style="left: 32px;"></div>
+    <div class="grid-v" style="left: 168px;"></div>
+    <div class="grid-v" style="left: 296px;"></div>
+    <div class="grid-v" style="left: 448px;"></div>
+  </div>
+
+  <!-- Watermarks & Circles -->
+  <div class="watermark watermark-new">NEW</div>
+  <div class="watermark watermark-year">YEAR</div>
+  <div class="deco-circle circle-1"></div>
+  <div class="deco-circle circle-2"></div>
+  <div class="deco-circle circle-3"></div>
+
+  <!-- Foreground Content -->
+  <div class="content">
+    <div>
+      <!-- Top Bar & 2026 -->
+      <div class="top-bar"></div>
+      <div class="year-title">2026</div>
+
+      <!-- 破晓艺术 -->
+      <div class="sub-title-box">
+        <span class="char">破</span>
+        <span class="bg-box"><span class="char">晓</span></span>
+        <span class="char">艺</span>
+        <span class="bg-box"><span class="char">术</span></span>
+      </div>
+
+      <!-- 跨界 展览 -->
+      <div class="main-title-wrap">
+        <div class="title-row">
+          <span class="big-char big-char-margin">跨</span>
+          <span class="big-char">界</span>
+        </div>
+        <div class="title-row row-exhibition">
+          <div class="pink-highlight"></div>
+          <span class="big-char big-char-margin">展</span>
+          <span class="big-char">览</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Date (Right aligned, positioned in rhythm with 展览) -->
+    <div class="date-block">
+      <div class="date-label">活动时间</div>
+      <div class="date-value">01/01</div>
+      <div><span class="date-dash"></span></div>
+      <div class="date-value">01/03</div>
+    </div>
+
+    <!-- Pricing & Location -->
+    <div class="mid-info">
+      <div class="price-col">
+        <div class="price-val">
+          <span class="curr">¥</span>
+          <span class="num">60</span>
+          <span class="unit">起</span>
+        </div>
+        <div class="price-desc">单人票价</div>
+      </div>
+      <div class="location-col">
+        <div><span class="loc-bar"></span></div>
+        <div class="loc-label">活动地点</div>
+        <div class="loc-val">厦门湖里区稿定艺术馆</div>
+      </div>
+    </div>
+
+    <!-- Sponsor & Contact -->
+    <div class="bottom-info">
+      <div class="sponsor-col">
+        <div class="sponsor-label">主办方：</div>
+        <div class="sponsor-val">稿定集团</div>
+        <div class="btm-bar-left"></div>
+      </div>
+      <div class="contact-col">
+        <div class="contact-label">联系电话</div>
+        <div class="contact-phone">0592-88888888</div>
+        <div class="btm-bar-right"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

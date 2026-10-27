@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Well Calibrated Simulation Study of a Novel Adaptive Parallelised Bayesian Inference</title>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: "Times New Roman", Times, Georgia, serif;
+    background-color: #f0f0f0;
+    color: #111;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .poster {
+    background-color: #ffffff;
+    width: 1100px;
+    padding: 24px 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    border: 1px solid #ccc;
+  }
+
+  /* Header Section */
+  header {
+    text-align: center;
+    margin-bottom: 8px;
+  }
+
+  h1.title {
+    font-size: 19px;
+    font-weight: 900;
+    line-height: 1.35;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-bottom: 12px;
+  }
+
+  .banner-line {
+    height: 6px;
+    background-color: #0b3954;
+    width: 58%;
+    margin: 0 auto 12px auto;
+  }
+
+  .header-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 0 10px;
+  }
+
+  /* Logos */
+  .logo-uoa {
+    width: 190px;
+    background-color: #00467f;
+    color: white;
+    padding: 8px 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 3px;
+    text-align: left;
+    font-family: Arial, sans-serif;
+  }
+
+  .logo-uoa-icon {
+    font-size: 24px;
+    border: 1.5px solid white;
+    padding: 2px 4px;
+    border-radius: 2px;
+  }
+
+  .logo-uoa-text {
+    font-size: 8px;
+    line-height: 1.1;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  .logo-uoa-text .large {
+    font-size: 10px;
+  }
+
+  .authors-block {
+    text-align: center;
+    flex-grow: 1;
+    padding: 0 15px;
+  }
+
+  .authors {
+    font-size: 13.5px;
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
+
+  .affiliations {
+    font-size: 11px;
+    color: #222;
+    line-height: 1.3;
+  }
+
+  .logo-beast {
+    width: 140px;
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .beast-title {
+    font-family: Arial, sans-serif;
+    font-size: 26px;
+    font-weight: bold;
+    color: #4a90e2;
+    letter-spacing: -0.5px;
+  }
+
+  .beast-icon {
+    width: 80px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2px;
+  }
+
+  /* Main Layout */
+  .main-content {
+    display: flex;
+    gap: 20px;
+  }
+
+  .col-left {
+    flex: 0 0 35%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .col-right {
+    flex: 0 0 calc(65% - 20px);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* Section Styles */
+  .section-header {
+    background: linear-gradient(to right, #448ccb, #559ddc);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    padding: 4px 0;
+    border-radius: 2px;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
+
+  p {
+    font-size: 10px;
+    line-height: 1.35;
+    text-align: justify;
+    margin-bottom: 6px;
+  }
+
+  .caption {
+    font-size: 8.5px;
+    line-height: 1.25;
+    text-align: justify;
+    color: #111;
+    margin-top: 4px;
+    margin-bottom: 8px;
+  }
+
+  .caption strong {
+    font-family: Arial, sans-serif;
+    font-size: 8.5px;
+  }
+
+  /* Operator Workflow Header (Right Column) */
+  .workflow-title {
+    font-size: 9.5px;
+    text-align: center;
+    margin-bottom: 6px;
+  }
+
+  .workflow-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    margin-bottom: 8px;
+  }
+
+  .workflow-step {
+    flex: 1;
+    font-size: 8.5px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 1.15;
+    padding: 4px 2px;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .workflow-badge {
+    background-color: #4a90e2;
+    color: white;
+    font-weight: bold;
+    font-size: 9px;
+    padding: 8px 6px;
+    border-radius: 4px;
+    clip-path: polygon(0 0, 85% 0, 100% 50%, 85% 100%, 0 100%, 10% 50%);
+    text-align: center;
+    min-width: 65px;
+    margin-left: 2px;
+  }
+
+  /* Diagrams & Placeholders */
+  .diagram-container {
+    border: 1px solid #ddd;
+    background-color: #fafafa;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Figure 1 Flowchart Mockup */
+  .flowchart-box {
+    width: 100%;
+    padding: 10px 6px;
+    background: #fff;
+    border: 1px solid #bbb;
+    position: relative;
+  }
+
+  .fc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px 12px;
+    font-size: 7.5px;
+    text-align: center;
+  }
+
+  .fc-node {
+    border: 1px solid #333;
+    padding: 3px 2px;
+    background: #fff;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 20px;
+  }
+
+  .fc-circle {
+    border: 1px solid #333;
+    border-radius: 50%;
+    padding: 4px;
+    background: #eef7fc;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    font-size: 7px;
+  }
+
+  .fc-group {
+    background-color: #e8f4fc;
+    border: 1px dashed #7eb4e2;
+    border-radius: 6px;
+    padding: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  /* Results Grid (Plots) */
+  .plots-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px 12px;
+    margin-bottom: 8px;
+  }
+
+  .plot-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .plot-header {
+    font-size: 7.5px;
+    text-align: center;
+    margin-bottom: 2px;
+    line-height: 1.1;
+  }
+
+  .plot-header .title {
+    font-weight: normal;
+  }
+
+  .plot-header .coverage {
+    font-weight: normal;
+  }
+
+  .plot-box {
+    width: 100%;
+    height: 85px;
+    border-left: 1.5px solid #222;
+    border-bottom: 1.5px solid #222;
+    position: relative;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .axis-label-y {
+    position: absolute;
+    left: -18px;
+    top: 50%;
+    transform: rotate(-90deg) translateX(50%);
+    transform-origin: left top;
+    font-size: 6px;
+    color: #333;
+  }
+
+  .axis-label-x {
+    position: absolute;
+    bottom: -10px;
+    font-size: 6px;
+    color: #333;
+    width: 100%;
+    text-align: center;
+  }
+
+  .plot-ticks-x {
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    font-size: 5px;
+    color: #666;
+    padding: 0 4px;
+  }
+
+  .plot-ticks-y {
+    position: absolute;
+    left: -12px;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 5px;
+    color: #666;
+  }
+
+  /* Synthetic diagonal scatter plot preview */
+  .diagonal-line {
+    position: absolute;
+    width: 110%;
+    height: 1px;
+    background: #ccc;
+    transform: rotate(-45deg);
+    top: 42px;
+    left: -5%;
+  }
+
+  .scatter-cloud {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .scatter-cloud::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(#00467f 1.5px, transparent 1.5px), radial-gradient(#d9534f 1.5px, transparent 1.5px);
+    background-size: 12px 12px, 20px 20px;
+    background-position: 0 85px, 20px 40px;
+    opacity: 0.85;
+    clip-path: polygon(0 100%, 20% 80%, 40% 60%, 60% 40%, 80% 20%, 100% 0, 90% 0, 70% 30%, 50% 50%, 30% 70%, 10% 90%, 0 100%);
+  }
+
+  /* Two centered plots in bottom row */
+  .plots-bottom-row {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 8px;
+  }
+
+  .plots-bottom-row .plot-item {
+    width: 30%;
+  }
+
+  /* Conclusion Section */
+  .conclusion-footer {
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+    margin-top: 4px;
+  }
+
+  .conclusion-text {
+    flex: 1;
+  }
+
+  .qr-code-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 8px;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .qr-placeholder {
+    width: 70px;
+    height: 70px;
+    background-color: #222;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-family: monospace;
+    font-size: 8px;
+    padding: 2px;
+    background-image:
+      linear-gradient(45deg, #000 25%, transparent 25%),
+      linear-gradient(-45deg, #000 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #000 75%),
+      linear-gradient(-45deg, transparent 75%, #000 75%);
+    background-size: 8px 8px;
+    background-position: 0 0, 0 4px, 4px -4px, -4px 0px;
+    background-color: #fff;
+    border: 2px solid #000;
+  }
+
+  .qr-placeholder::after {
+    content: "QR CODE";
+    background: white;
+    padding: 1px 3px;
+    color: black;
+    font-weight: bold;
+  }
+
+  .tree-plot-graphic {
+    width: 100%;
+    height: 120px;
+    border: 1px solid #aaa;
+    background: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+</style>
+</head>
+<body>
+
+<div class="poster">
+  <!-- Poster Header -->
+  <header>
+    <h1 class="title">
+      WELL CALIBRATED SIMULATION STUDY OF A NOVEL ADAPTIVE<br>
+      PARALLELISED BAYESIAN INFERENCE OF THE MULTISPECIES COALESCENT<br>
+      MODEL TESTING A DIFFERENT NUMBER OF TAXAAND GENES.
+    </h1>
+    <div class="banner-line"></div>
+    <div class="header-meta">
+      <!-- University of Auckland Logo -->
+      <div class="logo-uoa">
+        <div class="logo-uoa-icon">🎓</div>
+        <div class="logo-uoa-text">
+          <span style="font-size:7px;">THE UNIVERSITY OF</span><br>
+          <span class="large">AUCKLAND</span><br>
+          <span style="font-size:5px;">Te Whare Wānanga o Tāmaki Makaurau</span><br>
+          <span style="letter-spacing:1px; font-size:6px;">NEW ZEALAND</span>
+        </div>
+      </div>
+
+      <!-- Authors -->
+      <div class="authors-block">
+        <div class="authors">Hu Ge<sup>1</sup>, Jordan Douglas<sup>2</sup>, Remco Bouckaert<sup>2</sup></div>
+        <div class="affiliations">
+          (1) School of Biological Sciences, University of Auckland, Auckland 1010, New Zealand<br>
+          (2) School of Computer Science, University of Auckland, Auckland, 1010, New Zealand
+        </div>
+      </div>
+
+      <!-- Beast2 Logo -->
+      <div class="logo-beast">
+        <div class="beast-icon">
+          <!-- Beast icon placeholder -->
+          <svg width="60" height="35" viewBox="0 0 100 60" fill="none" stroke="#222" stroke-width="3">
+            <path d="M 10,50 Q 25,20 40,45 Q 60,10 75,30 Q 85,5 95,20 Q 90,45 80,45 Q 70,55 50,50 Z" fill="#222" />
+            <circle cx="85" cy="18" r="2" fill="white" />
+          </svg>
+        </div>
+        <div class="beast-title">Beast2</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Poster Body -->
+  <div class="main-content">
+    <!-- LEFT COLUMN -->
+    <div class="col-left">
+      <!-- Introduction Section -->
+      <section>
+        <div class="section-header">Introduction</div>
+        <p>
+          A novel <strong>Parallelised Bayesian Inference of the Multispecies Coalescent with new MCMC proposals</strong> has been implemented in the open-source BEAST 2 platform as the <strong>StarBeast3</strong> package. This new approach avoids biases, such as being an inconsistent estimator of the tree topology. Furthermore, it explores the state space much more efficiently, allowing the handle of data sets one and a half orders of magnitude larger than StarBeast2 and more than two orders faster than *BEAST.
+        </p>
+        <p>
+          <strong>Our goal was to establish the correct implementation of StarBeast3 by testing different numbers of taxa and genes.</strong>
+        </p>
+        <p>
+          <strong>Key words:</strong> multispecies coalescent; BEAST 2; phylogenetics; bayesian inference; high performance; adaptive; parallelisarion.
+        </p>
+      </section>
+
+      <!-- Methods Section -->
+      <section>
+        <div class="section-header">Methods</div>
+        <p>
+          We performed well calibration studies by simulating alignments using parameters directly sampled from the prior distribution, and then we inferred the posterior estimates of these parameters using StarBeast3 <strong>(Figure 1)</strong>.
+        </p>
+
+        <!-- Figure 1 Pipeline Flowchart -->
+        <div class="flowchart-box">
+          <div class="fc-grid">
+            <div style="display:flex; flex-direction:column; gap:6px; align-items:center;">
+              <div class="fc-node" style="width:50px;">prior.xml</div>
+              <div class="fc-circle">1. BEAST</div>
+              <div style="display:flex; gap:4px;">
+                <div class="fc-node" style="font-size:6.5px;">tree.log</div>
+                <div class="fc-node" style="font-size:6.5px;">XML template</div>
+                <div class="fc-node" style="font-size:6.5px;">trace.log</div>
+              </div>
+              <div class="fc-node" style="font-size:6.5px; border-radius:10px; width:90%;">2. CoverageTestXMLGenerator</div>
+            </div>
+
+            <div class="fc-group" style="align-items:center;">
+              <div class="fc-node" style="width:55px;">beast.xml</div>
+              <div class="fc-circle">3. BEAST</div>
+              <div style="display:flex; gap:4px;">
+                <div class="fc-node" style="font-size:6.5px;">trace.log</div>
+                <div class="fc-node" style="font-size:6.5px;">tree.log</div>
+              </div>
+              <div style="font-size:6.5px; font-weight:bold;">N times</div>
+              <div class="fc-node" style="font-size:6.5px; border-radius:10px; width:70px;">4. loganalyser</div>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:8px; align-items:center; justify-content:center;">
+              <div class="fc-node" style="width:60px;">summary</div>
+              <div class="fc-node" style="font-size:6.5px; border-radius:10px; width:80px;">5. CoverageCalculator</div>
+              <div class="fc-node" style="width:60px;">coverage stats</div>
+            </div>
+          </div>
+        </div>
+        <div class="caption">
+          <strong>Figure 1.</strong> Pipeline of 5 steps implemented by Experimenter package in BEAST 2 that assists in simulation studies to verify correctness of the implementation. (1) Set up XML for desired model and sample from prior. (2) Generate (MCMC) analysis for each of the samples (support for multiple alignments). (3) Run the analyses using StarBeast3 package in BEAST2. (4) Use loganalyser to summarise trace files. (5) Run CoverageCalculator to summarise coverage of parameters. <strong>Source:</strong> <em>https://github.com/rbouckaert/DeveloperManual.git</em>
+        </div>
+
+        <p>
+          We evaluated a strict and relaxed clock model, across varying tree sizes ( 4 species: 12 taxa; 16 species: 48 taxa), and multiple genes (10, 50, 100, and 200). With 100 independent runs, we estimated the coverage of the true value by the 95% highest probability density (HPD) estimates for various parameters in the model <strong>(Figure 2)</strong> and its newly developed efficient MCMC operators.
+        </p>
+
+        <!-- Figure 2: Simulated species trees -->
+        <div class="tree-plot-graphic">
+          <svg width="100%" height="100%" viewBox="0 0 350 120">
+            <!-- Grid lines and tree representation -->
+            <line x1="40" y1="100" x2="330" y2="100" stroke="#bbb" stroke-width="0.8"/>
+            <line x1="40" y1="20" x2="40" y2="100" stroke="#333" stroke-width="1.2"/>
+            <text x="32" y="60" font-size="7" fill="#333" transform="rotate(-90 32 60)">Time</text>
+            <!-- Species tree branches (thick gray/black tubes) -->
+            <path d="M 40,85 L 120,85 L 180,60 L 260,30 L 330,30" fill="none" stroke="#666" stroke-width="6" opacity="0.3"/>
+            <path d="M 180,60 L 250,75 L 330,75" fill="none" stroke="#666" stroke-width="5" opacity="0.3"/>
+            <path d="M 120,85 L 200,95 L 330,95" fill="none" stroke="#666" stroke-width="4" opacity="0.3"/>
+            <!-- Gene trees embedded (colored lines) -->
+            <path d="M 40,85 Q 110,80 180,62 Q 250,32 330,28" fill="none" stroke="#e41a1c" stroke-width="1"/>
+            <path d="M 180,62 Q 240,73 330,73" fill="none" stroke="#377eb8" stroke-width="1"/>
+            <path d="M 120,85 Q 190,93 330,93" fill="none" stroke="#4daf4a" stroke-width="1"/>
+            <!-- Annotations -->
+            <text x="45" y="15" font-size="6.5" fill="#000">Relative clock rates ν1, ..., νk</text>
+            <text x="45" y="32" font-size="6.5" fill="#000">Branch rates r1, ..., r2n-1 (optional)</text>
+            <text x="180" y="45" font-size="6.5" fill="#000">Species tree S</text>
+            <text x="240" y="55" font-size="6.5" fill="#000">Site models v1, ..., vk</text>
+            <text x="240" y="88" font-size="6.5" fill="#000">Gene trees g1, ..., gk</text>
+            <text x="80" y="108" font-size="6.5" fill="#000">Population sizes Ne1, ..., Ne2n-1</text>
+            <text x="80" y="117" font-size="6.5" fill="#000">Alignments D1, ..., Dk</text>
+          </svg>
+        </div>
+        <div class="caption">
+          <strong>Figure 2.</strong> Simulated species trees \(S\) with \(n = 16\) species with \(k = 100\) gene trees embedded. Parameters in the multispecies coalescent model are indicated in the figure: Node heights (time) are shown on the y-axis, and effective population sizes are on the x-axis. Species tree branch rates are indicated by line thickness. Colors show Gen trees. The tree was built from a Direct simulator in BEAST2 and visualized using UglyTrees (Douglas, 2020).
+        </div>
+      </section>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="col-right">
+      <!-- MCMC Operators Workflow Header -->
+      <section>
+        <div class="workflow-title">
+          Novel MCMC operators which generate proposals that explore the state space more efficiently implementing in Starbeast3:
+        </div>
+        <div class="workflow-container">
+          <div class="workflow-step">Effective<br>Population Size<br>Gibbs Operator</div>
+          <div class="workflow-step">Bactrian<br>Operators for<br>Trees</div>
+          <div class="workflow-step">Adaptive variance<br>multivariate<br>normal (AVMN)<br>operator</div>
+          <div class="workflow-step">Parallel Gene Tree<br>Operator</div>
+          <div class="workflow-step">Species Tree<br>Relaxed Clock<br>Model Operators</div>
+          <div class="workflow-badge">StarBeast3</div>
+        </div>
+      </section>
+
+      <!-- Results Section -->
+      <section>
+        <div class="section-header">Results</div>
+
+        <!-- 3x3 Grid of Plots -->
+        <div class="plots-grid">
+          <!-- Row 1 -->
+          <div class="plot-item">
+            <div class="plot-header">
+              <span class="title">Species tree height</span><br>
+              <span class="coverage">Coverage: 96%</span>
+            </div>
+            <div class="plot-box">
+              <span class="axis-label-y">Posterior<br>estimate</span>
+              <div class="plot-ticks-y"><span>0.6</span><span>0.4</span><span>0.2</span><span>0.0</span></div>
+              <div class="diagonal-line"></div>
+              <div class="scatter-cloud"></div>
+              <div class="plot-ticks-x"><span>0.0</span><span>0.1</span><span>0.2</span><span>0.3</span><span>0.4</span><span>0.5</span><span>0.6</span></div>
+              <span class="axis-label-x">True value</span>
+            </div>
+          </div>
+
+          <div class="plot-item">
+            <div class="plot-header">
+              <span class="title">Species tree birth rate</span><br>
+              <span class="coverage">Coverage: 84%</span>
+            </div>
+            <div class="plot-box">
+              <span class="axis-label-y">Posterior<br>estimate</span>
+              <div class="plot-ticks-y"><span>50</span><span>40</span><span>30</span><span>20</span><span>10</span><span>0</span></div>
+              <div class="diagonal-line"></div>
+              <div class="scatter-cloud"></div>
+              <div class="plot-ticks-x"><span>0</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50</span></div>
+              <span class="axis-label-x">True value</span>
+            </div>
+          </div>
+
+          <div class="plot-item">
+            <div class="plot-header">
+              <span class="title">Gene tree height</span><br>
+              <span class="coverage">Coverage: 91%</span>
+            </div>
+            <div class="plot-box">
+              <span class="axis-label-y">Posterior<br>estimate</span>
+              <div class="plot-ticks-y"><span>1.5</span><span>1.0</span><span>0.0</span></div>
+              <div class="diagonal-line"></div>
+              <div class="scatter-cloud"></div>
+              <div class="plot-ticks-x"><span>0.0</span><span>0.5</span><span>1.0</span><span>1.5</span></div>
+              <span class="axis-label-x">True value</span>
+            </div>
+          </div>
+
+          <!-- Row 2 -->
+          <div class="plot-item">
+            <div class="plot-header">
+              <span class="title">Clock model standard deviation</span><br>
+              <span class="coverage">Coverage: 97%</span>
+            </div>
+            <div class="plot-box">
+              <span class="axis-label-y">Posterior<br>estimate</span>
+              <div class="plot-ticks-y"><span>2.5</span><span>2.0</span><span>0.0</span></div>
+              <div class="diagonal-line"></div>
+              <div class="scatter-cloud"></div>
+              <div class="plot-ticks-x"><span>0.0</span><span>0.5</span><span>1.0</span><span>1.5</span><span>2.0</span><span>2.5</span></div>
+              <span class="axis-label-x">True value</span>
+            </div>
+          </div>
+
+          <div class="plot-item">
+            <div class="plot-header">
+              <span class="title">Branch rate mean</span><br>
+              <span class="coverage">Coverage: 92%</span>
+            </div>
+            <div class="plot-box">
+              <span class="axis-label-y">Posterior<br>estimate</span>
+              <div class="plot-ticks-y"><span>3</span><span>2</span><span>1</span><span>0</span></div>
+              <div class="diagonal-line"></div>
+              <div class="scatter-cloud"></div>
+              <div class="plot-ticks-x"><span>0</span><span>1</span><span>2</span><span>3</span></div>
+              <span class="axis-label-x">True value</span>
+            </div>
+          </div>
+
+          <div class="plot-item">
+            <div class="plot-header">
+              <span class="title">Branch rate variance</span><br>
+              <span class="coverage">Coverage: 97%</span>
+            </div>
+            <div class="plot-box">
+              <span class="axis-label-y">Posterior<br>estimate</span>
+              <div class="plot-ticks-y"><span>6</span><span>4</span><span>2</span><span>0</span></div>
+              <div class="diagonal-line"></div>
+              <div class="scatter-cloud"></div>
+              <div class="plot-ticks-x"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span></div>
+              <span class="axis-label-x">True value</span>
+            </div>
+          </div>
+
+          <!-- Row 3 -->
+          <div class="plot-item">
+            <div class="plot-header">
+              <span class="title">Transition–transversion ratio</span><br>
+              <span class="coverage">Coverage: 96%</span>
+            </div>
+            <div class="plot-box">
+              <span class="axis-label-y">Posterior<br>estimate</span>
+              <div class="plot-ticks-y"><span>150</span><span>100</span><span>50</span><span>0</span></div>
+              <div class="diagonal-line"></div>
+              <div class="scatter-cloud"></div>
+              <div class="plot-ticks-x"><span>0</span><span>50</span><span>100</span><span>150</span></div>
+              <span class="axis-label-x">True value</span>
+            </div>
+          </div>
+
+          <div class="plot-item">
+            <div class="plot-header">
+              <span class="title">Gene tree substitution rate</span><br>
+              <span class="coverage">Coverage: 94%</span>
+            </div>
+            <div class="plot-box">
+              <span class="axis-label-y">Posterior<br>estimate</span>
+              <div class="plot-ticks-y"><span>20</span><span>15</span><span>10</span><span>5</span><span>0</span></div>
+              <div class="diagonal-line"></div>
+              <div class="scatter-cloud"></div>
+              <div class="plot-ticks-x"><span>0</span><span>5</span><span>10</span><span>15</span><span>20</span></div>
+              <span class="axis-label-x">True value</span>
+            </div>
+          </div>
+
+          <div class="plot-item">
+            <div class="plot-header">
+              <span class="title">Gene tree frequency</span><br>
+              <span class="coverage">Coverage: 94%</span>
+            </div>
+            <div class="plot-box">
+              <span class="axis-label-y">Posterior<br>estimate</span>
+              <div class="plot-ticks-y"><span>1.2</span><span>1.0</span><span>0.8</span><span>0.6</span><span>0.4</span><span>0.2</span><span>0.0</span></div>
+              <div class="diagonal-line"></div>
+              <div class="scatter-cloud"></div>
+              <div class="plot-ticks-x"><span>0.0</span><span>0.2</span><span>0.4</span><span>0.6</span><span>0.8</span><span>1.0</span><span>1.2</span></div>
+              <span class="axis-label-x">True value</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 4: 2 Bottom Centered Plots -->
+        <div class="plots-bottom-row">
+          <div class="plot-item">
+            <div class="plot-header">
+              <span class="title">Effective population size</span><br>
+              <span class="coverage">Coverage: 92%</span>
+            </div>
+            <div class="plot-box">
+              <span class="axis-label-y">Posterior<br>estimate</span>
+              <div class="plot-ticks-y"><span>0.08</span><span>0.06</span><span>0.04</span><span>0.02</span><span>0.00</span></div>
+              <div class="diagonal-line"></div>
+              <div class="scatter-cloud"></div>
+              <div class="plot-ticks-x"><span>0.00</span><span>0.02</span><span>0.04</span><span>0.06</span><span>0.08</span></div>
+              <span class="axis-label-x">True value</span>
+            </div>
+          </div>
+
+          <div class="plot-item">
+            <div class="plot-header">
+              <span class="title">Mean effective population size</span><br>
+              <span class="coverage">Coverage: 95%</span>
+            </div>
+            <div class="plot-box">
+              <span class="axis-label-y">Posterior<br>estimate</span>
+              <div class="plot-ticks-y"><span>0.025</span><span>0.020</span><span>0.015</span><span>0.010</span><span>0.005</span><span>0.000</span></div>
+              <div class="diagonal-line"></div>
+              <div class="scatter-cloud"></div>
+              <div class="plot-ticks-x"><span>0.000</span><span>0.005</span><span>0.010</span><span>0.015</span><span>0.020</span><span>0.025</span></div>
+              <span class="axis-label-x">True value</span>
+            </div>
+          </div>
+        </div>
+
+        <p style="font-size: 8px; margin-top: 4px;">
+          <strong>Well-calibrated simulation study analysing \(nS = 16\) species, \(nG = 48\) taxa, and \(k = 50\) genes.</strong> One hundred simulations were performed to recover the coverage between “true” simulated values and their estimates under the posterior distribution. Vertical lines represent 95% highest posterior density (HPD) intervals of parameters. Each line represents a single simulation and is colored blue when the true value was contained within the 95% interval, or red otherwise. The top of each plot shows the coverage of each parameter (i.e., the number of MCMC simulations for which the “true” parameter value was contained within the 95% HPD). This result was coherent when we tested 100 and 200 genes, respectively.
+        </p>
+      </section>
+
+      <!-- Conclusion Section -->
+      <section>
+        <div class="section-header">Conclusion</div>
+        <p>
+          Our results show all coverage observed is in the expected range, from 90 to 99 inclusive, suggesting the correct implementation of StarBeast3 for all experiments performed. Furthermore, these experiments evidence that startbeast3 is suitable for multispecies coalescent inference on large datasets (100+ genes).
+        </p>
+
+        <div class="conclusion-footer">
+          <div class="conclusion-text">
+            <p style="font-size: 7.8px; margin-bottom: 4px;">
+              <strong>Software Availability:</strong> StarBeast3 is available as an open-source BEAST 2 package with an easy-to-use graphical user interface.Instructions for downloading and running StarBeast3 can be found at https://github.com/rbouckaert/starbeast3
+            </p>
+            <p style="font-size: 7.5px; margin-bottom: 0;">
+              <strong>Acknowledgments:</strong> The study was supported by a Marsden grant 18-UOA-096 from the Royal Society of New Zealand. Software packages were benchmarked using the New Zealand Science Infrastructure (NeSI) cluster, funded by the New Zealand Ministry of Business, Innovation, and Employment.
+            </p>
+          </div>
+
+          <div class="qr-code-box">
+            <span>StarBeast3<br>preprint:</span>
+            <div class="qr-placeholder"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

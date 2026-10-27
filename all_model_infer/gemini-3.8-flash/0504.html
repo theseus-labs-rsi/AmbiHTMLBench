@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>利益相关方参与 & 双重要性评估</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+    background-color: #f5f5f5;
+    color: #4a4a4a;
+    line-height: 1.6;
+    font-size: 13px;
+  }
+  .spread-container {
+    width: 1700px;
+    margin: 20px auto;
+    background-color: #fff;
+    display: flex;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+  .page {
+    width: 850px;
+    padding: 45px 50px 40px 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 1100px;
+    position: relative;
+  }
+  .page-left {
+    border-right: 1px solid #f0f0f0;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #8c8c8c;
+    margin-bottom: 50px;
+  }
+  .nav-items {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+  }
+  .nav-tag {
+    background-color: #008cd6;
+    color: #fff;
+    padding: 2px 10px;
+    border-radius: 12px;
+  }
+
+  /* Left Page Styles */
+  .title-primary {
+    font-size: 26px;
+    color: #008cd6;
+    font-weight: 600;
+    margin-bottom: 18px;
+    letter-spacing: 0.5px;
+  }
+  .intro-text {
+    font-size: 12.5px;
+    color: #666;
+    line-height: 1.7;
+    margin-bottom: 25px;
+    text-align: justify;
+  }
+  
+  /* Matrix Table */
+  .stakeholder-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11.5px;
+    margin-top: 10px;
+  }
+  .stakeholder-table th {
+    background-color: #008cd6;
+    color: #fff;
+    font-weight: normal;
+    padding: 8px 12px;
+    text-align: left;
+  }
+  .stakeholder-table th:first-child {
+    text-align: center;
+    width: 105px;
+  }
+  .stakeholder-table th:nth-child(2) {
+    width: 150px;
+  }
+  .stakeholder-table th:nth-child(3) {
+    width: 140px;
+  }
+  .stakeholder-table th:nth-child(4) {
+    width: auto;
+  }
+  .stakeholder-table td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #e1eaf0;
+    vertical-align: middle;
+  }
+  .col-entity {
+    text-align: center;
+    border-right: 1px solid #e1eaf0;
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+  }
+  .entity-icon {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 6px;
+    color: #008cd6;
+  }
+  .entity-icon svg {
+    width: 32px;
+    height: 32px;
+    stroke: #008cd6;
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .entity-name {
+    color: #008cd6;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .bullet-list {
+    list-style: none;
+    padding-left: 0;
+  }
+  .bullet-list li {
+    position: relative;
+    padding-left: 11px;
+    line-height: 1.6;
+    color: #555;
+  }
+  .bullet-list li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #555;
+    font-size: 13px;
+  }
+
+  /* Right Page Styles */
+  .badge-title {
+    display: inline-block;
+    background-color: #008cd6;
+    color: #fff;
+    font-size: 17px;
+    font-weight: 500;
+    padding: 5px 22px;
+    border-radius: 18px;
+    margin-bottom: 20px;
+  }
+  .diagram-container {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .diagram-header {
+    color: #008cd6;
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 25px;
+    letter-spacing: 0.5px;
+  }
+  
+  /* Process Flow */
+  .process-body {
+    display: flex;
+    width: 100%;
+    position: relative;
+  }
+  .process-left-nodes {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 70px;
+    margin-right: 25px;
+    position: relative;
+  }
+  .node-box {
+    width: 68px;
+    border-radius: 6px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    letter-spacing: 1px;
+    z-index: 2;
+  }
+  .node-box.blue-1 {
+    background-color: #008cd6;
+    height: 70px;
+  }
+  .node-box.blue-2 {
+    background-color: #49b4eb;
+    height: 260px;
+  }
+  .node-box.blue-3 {
+    background-color: #85d0f5;
+    height: 55px;
+  }
+  .arrow-down {
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 8px solid #a3c9e6;
+    margin: 15px 0;
+  }
+
+  /* Content Cards */
+  .process-right-cards {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .card-item {
+    border: 1px solid #49b4eb;
+    border-radius: 14px;
+    padding: 16px 20px;
+    position: relative;
+    background: #fff;
+  }
+  .connector-dot {
+    position: absolute;
+    left: -18px;
+    top: 35px;
+    width: 8px;
+    height: 8px;
+    background: #008cd6;
+    border-radius: 50%;
+  }
+  .connector-line {
+    position: absolute;
+    left: -18px;
+    top: 38px;
+    width: 18px;
+    height: 1px;
+    background: #008cd6;
+  }
+  .card-item p {
+    font-size: 12px;
+    color: #555;
+    line-height: 1.7;
+    text-align: justify;
+  }
+  .sub-section {
+    margin-bottom: 12px;
+  }
+  .sub-section:last-child {
+    margin-bottom: 0;
+  }
+  .sub-title {
+    color: #008cd6;
+    font-size: 12.5px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .card-bullet-list {
+    list-style: none;
+    padding-left: 0;
+  }
+  .card-bullet-list li {
+    position: relative;
+    padding-left: 14px;
+    font-size: 12px;
+    color: #555;
+    line-height: 1.65;
+    margin-bottom: 8px;
+    text-align: justify;
+  }
+  .card-bullet-list li:last-child {
+    margin-bottom: 0;
+  }
+  .card-bullet-list li::before {
+    content: "•";
+    position: absolute;
+    left: 2px;
+    color: #008cd6;
+    font-size: 14px;
+  }
+
+  /* Footer */
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #8c8c8c;
+    margin-top: 30px;
+  }
+</style>
+</head>
+<body>
+
+<div class="spread-container">
+  <!-- PAGE 13 -->
+  <div class="page page-left">
+    <div>
+      <div class="header">
+        <div>2024 · 美的集团ESG报告</div>
+        <div class="nav-items" style="visibility: hidden;">占位</div>
+      </div>
+
+      <div class="title-primary">利益相关方参与</div>
+      <div class="intro-text">
+        我们根据各利益相关方的诉求和沟通习惯，建立了常态化的沟通机制和相应的制度文件。我们希望通过更有针对性和多样化的沟通方式与利益相关方进行互动，及时回应并实时更新其诉求，积极为各方创造价值。
+      </div>
+
+      <table class="stakeholder-table">
+        <thead>
+          <tr>
+            <th>利益相关方</th>
+            <th>关注议题</th>
+            <th>沟通渠道</th>
+            <th>响应举措</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- 投资者与股东 -->
+          <tr>
+            <td class="col-entity">
+              <div class="entity-icon">
+                <svg viewBox="0 0 40 40">
+                  <circle cx="20" cy="12" r="5" />
+                  <path d="M12 28 C12 22 28 22 28 28" />
+                  <path d="M8 32 L32 32" />
+                  <circle cx="10" cy="20" r="2" />
+                  <circle cx="30" cy="20" r="2" />
+                </svg>
+              </div>
+              <div class="entity-name">投资者与股东</div>
+            </td>
+            <td>
+              <ul class="bullet-list">
+                <li>环境合规管理</li>
+                <li>公司治理</li>
+                <li>股东权益</li>
+              </ul>
+            </td>
+            <td>
+              <ul class="bullet-list">
+                <li>股东大会</li>
+                <li>企业公告，如年报等</li>
+                <li>投资者电话会</li>
+                <li>路演</li>
+                <li>互动易</li>
+                <li>投资者热线</li>
+              </ul>
+            </td>
+            <td>
+              <ul class="bullet-list">
+                <li>推进绿色战略</li>
+                <li>优化治理结构</li>
+                <li>完善风险管理</li>
+                <li>发布定期报告及公司公告</li>
+              </ul>
+            </td>
+          </tr>
+          <!-- 客户 -->
+          <tr>
+            <td class="col-entity">
+              <div class="entity-icon">
+                <svg viewBox="0 0 40 40">
+                  <circle cx="20" cy="11" r="4.5" />
+                  <path d="M13 25 C13 20 27 20 27 25" />
+                  <circle cx="11" cy="15" r="3.5" />
+                  <path d="M6 26 C6 22 15 22 15 26" />
+                  <circle cx="29" cy="15" r="3.5" />
+                  <path d="M25 26 C25 22 34 22 34 26" />
+                </svg>
+              </div>
+              <div class="entity-name">客户</div>
+            </td>
+            <td>
+              <ul class="bullet-list">
+                <li>创新与研发</li>
+                <li>数据安全和客户隐私保护</li>
+                <li>产品质量与安全</li>
+                <li>消费者体验</li>
+              </ul>
+            </td>
+            <td>
+              <ul class="bullet-list">
+                <li>公司官网</li>
+                <li>门店专员</li>
+                <li>沟通热线</li>
+              </ul>
+            </td>
+            <td>
+              <ul class="bullet-list">
+                <li>强化技术创新</li>
+                <li>设立保护客户隐私的制度和流程</li>
+                <li>优化业务流程</li>
+                <li>打造智能化主动服务</li>
+              </ul>
+            </td>
+          </tr>
+          <!-- 员工 -->
+          <tr>
+            <td class="col-entity">
+              <div class="entity-icon">
+                <svg viewBox="0 0 40 40">
+                  <circle cx="20" cy="12" r="4.5" />
+                  <path d="M14 26 C14 21 26 21 26 26" />
+                  <circle cx="13" cy="20" r="2.5" />
+                  <circle cx="27" cy="20" r="2.5" />
+                  <circle cx="20" cy="23" r="2.5" />
+                </svg>
+              </div>
+              <div class="entity-name">员工</div>
+            </td>
+            <td>
+              <ul class="bullet-list">
+                <li>员工培训与发展</li>
+                <li>员工健康与安全</li>
+                <li>员工权益与多元化</li>
+              </ul>
+            </td>
+            <td>
+              <ul class="bullet-list">
+                <li>美的“说吧”</li>
+                <li>员工座谈会</li>
+                <li>“董事长直通车”</li>
+                <li>举报邮件及热线</li>
+              </ul>
+            </td>
+            <td>
+              <ul class="bullet-list">
+                <li>完善职业发展通道</li>
+                <li>优化职业健康与安全措施</li>
+                <li>保障员工权益</li>
+                <li>尊重职场环境的多元化</li>
+                <li>提供有竞争力的薪酬和福利</li>
+              </ul>
+            </td>
+          </tr>
+          <!-- 政府及监管机构 -->
+          <tr>
+            <td class="col-entity">
+              <div class="entity-icon">
+                <svg viewBox="0 0 40 40">
+                  <path d="M20 8 L20 28" />
+                  <path d="M12 14 L28 14" />
+                  <path d="M9 22 L15 22 L12 14 Z" />
+                  <path d="M25 22 L31 22 L28 14 Z" />
+                  <path d="M16 28 L24 28" />
+                  <circle cx="20" cy="8" r="2" />
+                </svg>
+              </div>
+              <div class="entity-name">政府及监管机构</div>
+            </td>
+            <td>
+              <ul class="bullet-list">
+                <li>应对气候变化</li>
+                <li>反商业贿赂及反贪污</li>
+                <li>反不正当竞争</li>
+                <li>促进行业发展</li>
+                <li>社会贡献</li>
+              </ul>
+            </td>
+            <td>
+              <ul class="bullet-list">
+                <li>政府会议</li>
+                <li>定期拜访</li>
+                <li>政府现场监察</li>
+              </ul>
+            </td>
+            <td>
+              <ul class="bullet-list">
+                <li>完善应对气候变化应对举措</li>
+                <li>恪守商业道德</li>
+                <li>创造就业机会</li>
+              </ul>
+            </td>
+          </tr>
+          <!-- 供应商 -->
+          <tr>
+            <td class="col-entity">
+              <div class="entity-icon">
+                <svg viewBox="0 0 40 40">
+                  <circle cx="20" cy="18" r="8" stroke-dasharray="2,2" />
+                  <circle cx="20" cy="18" r="4" />
+                  <path d="M10 30 C10 26 14 24 20 24 C26 24 30 26 30 30" />
+                </svg>
+              </div>
+              <div class="entity-name">供应商</div>
+            </td>
+            <td>
+              <ul class="bullet-list">
+                <li>供应链管理与安全</li>
+                <li>促进行业发展</li>
+              </ul>
+            </td>
+            <td>
+              <ul class="bullet-list">
+                <li>供应商大会</li>
+                <li>定期一对一沟通</li>
+                <li>GSC平台</li>
+                <li>举报邮箱及热线</li>
+              </ul>
+            </td>
+            <td>
+              <ul class="bullet-list">
+                <li>完善供应商准入审查机制</li>
+                <li>审查和赋能供应商ESG管理</li>
+                <li>加强合作交流</li>
+              </ul>
+            </td>
+          </tr>
+          <!-- 其他合作伙伴 -->
+          <tr>
+            <td class="col-entity">
+              <div class="entity-icon">
+                <svg viewBox="0 0 40 40">
+                  <circle cx="14" cy="13" r="3.5" />
+                  <circle cx="26" cy="13" r="3.5" />
+                  <path d="M10 24 C10 20 18 20 18 24" />
+                  <path d="M22 24 C22 20 30 20 30 24" />
+                  <path d="M16 23 L24 23" />
+                </svg>
+              </div>
+              <div class="entity-name">其他合作伙伴</div>
+            </td>
+            <td>
+              <ul class="bullet-list">
+                <li>促进行业发展</li>
+                <li>知识产权保障</li>
+              </ul>
+            </td>
+            <td>
+              <ul class="bullet-list">
+                <li>行业协会</li>
+              </ul>
+            </td>
+            <td>
+              <ul class="bullet-list">
+                <li>共享发展成果</li>
+                <li>参与行业标准制定</li>
+              </ul>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="footer">
+      <div>13</div>
+      <div></div>
+    </div>
+  </div>
+
+  <!-- PAGE 14 -->
+  <div class="page">
+    <div>
+      <div class="header">
+        <div class="nav-items" style="margin-left: auto;">
+          <span>关于本报告</span>
+          <span>走进美的</span>
+          <span class="nav-tag">可持续发展治理</span>
+          <span>守护蓝色星球</span>
+          <span>构建和谐社区</span>
+          <span>践行科技尽善</span>
+          <span>共创繁荣生态</span>
+          <span>附录</span>
+        </div>
+      </div>
+
+      <div class="badge-title">双重要性评估</div>
+      <div class="intro-text">
+        为充分了解利益相关方的关注重点，并在自身经营和发展过程中响应利益相关方的实际诉求，美的集团综合考量多维度的影响因素，开展双重要性议题评估工作，以持续提升ESG管理成效。
+      </div>
+
+      <div class="diagram-container">
+        <div class="diagram-header">双重要性议题评估流程</div>
+        
+        <div class="process-body">
+          <!-- Flow Nodes (Left) -->
+          <div class="process-left-nodes">
+            <div class="node-box blue-1">识别</div>
+            <div class="arrow-down"></div>
+            <div class="node-box blue-2">评估</div>
+            <div class="arrow-down"></div>
+            <div class="node-box blue-3">确认</div>
+          </div>
+
+          <!-- Flow Cards (Right) -->
+          <div class="process-right-cards">
+            <!-- Card 1 -->
+            <div class="card-item" style="min-height: 70px; display: flex; align-items: center;">
+              <div class="connector-line"></div>
+              <div class="connector-dot"></div>
+              <p>依据国际可持续发展目标和框架（GRI、SDGs、UNGC）及ESG报告守则和可持续发展报告指引，结合美的集团所处地域、行业背景、业务活动、业务关系及战略发展方向，识别集团所涉及的可持续发展相关风险和机遇。</p>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="card-item" style="min-height: 260px;">
+              <div class="connector-line" style="top: 130px;"></div>
+              <div class="connector-dot" style="top: 127px;"></div>
+              
+              <div class="sub-section">
+                <div class="sub-title">影响重要性评估</div>
+                <ul class="card-bullet-list">
+                  <li>通过书面、电话、会议、股东大会、问卷调查等多种沟通形式，及时了解各利益相关方的实际诉求，结合运营所在地监管机构要求、国内外同行优秀管理实践以及第三方专家意见，明确各ESG议题，分析不同议题对自身和利益相关方的影响程度并进行排序，最终形成影响重要性矩阵。</li>
+                </ul>
+              </div>
+
+              <div class="sub-section" style="margin-top: 18px;">
+                <div class="sub-title">财务重要性评估</div>
+                <ul class="card-bullet-list">
+                  <li>考虑美的集团所在行业、业务模式和发展战略，并从国际综合报告委员会（IIRC）提出的金融资本、生产资本、智力资本、人力资本、社会和关系资本及自然资本六方面，分析各项ESG重要性议题对美的集团财务表现造成的潜在影响。</li>
+                  <li>基于美的集团的财务表现、财务状况、现金流以及资本的获取和成本，结合短、中、长期战略规划及业务开展情况，对非常重要的ESG议题进行定量评估。</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="card-item" style="min-height: 55px; display: flex; align-items: center;">
+              <div class="connector-line" style="top: 27px;"></div>
+              <div class="connector-dot" style="top: 24px;"></div>
+              <p>重要性议题评估结果经由董事会、ESG委员会等自上而下的多层级单位进行审核与确认，并将其作为美的集团ESG管理与规划、信息披露重点的依据。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div></div>
+      <div>14</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

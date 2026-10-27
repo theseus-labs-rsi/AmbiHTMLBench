@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>不满意分析—大平台渠道</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .slide-container {
+            width: 1000px;
+            background-color: #ffffff;
+            padding: 25px 35px 30px 35px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .header-icon {
+            position: relative;
+            width: 32px;
+            height: 36px;
+            background-color: #536474;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-weight: bold;
+            font-size: 20px;
+            margin-right: 12px;
+        }
+        .header-icon::before {
+            content: "";
+            position: absolute;
+            top: -6px;
+            left: 0;
+            width: 8px;
+            height: 12px;
+            background-color: #0088cc;
+        }
+        .header-title {
+            font-size: 24px;
+            font-weight: bold;
+            font-style: italic;
+            color: #1a1a1a;
+            letter-spacing: 0.5px;
+        }
+
+        /* Main Content Layout */
+        .content-body {
+            display: flex;
+            gap: 20px;
+        }
+
+        /* Left Column */
+        .left-col {
+            flex: 0 0 250px;
+            display: flex;
+            flex-direction: column;
+        }
+        .chart-title {
+            font-size: 15px;
+            font-weight: bold;
+            font-style: italic;
+            margin-bottom: 15px;
+            text-align: center;
+            color: #222;
+        }
+        .pie-chart-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .bottom-notes {
+            display: flex;
+            align-items: flex-start;
+            margin-top: auto;
+            gap: 8px;
+        }
+        .note-icon {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            margin-top: 2px;
+            color: #1282a2;
+        }
+        .note-list {
+            font-size: 11px;
+            line-height: 1.45;
+            color: #222;
+            font-weight: bold;
+        }
+        .note-list p {
+            margin-bottom: 5px;
+            position: relative;
+            padding-left: 10px;
+        }
+        .note-list p::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            font-size: 12px;
+        }
+
+        /* Right Column */
+        .right-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .table-title {
+            font-size: 14px;
+            font-weight: bold;
+            font-style: italic;
+            color: #cf1322;
+            text-align: center;
+            margin-bottom: 6px;
+            letter-spacing: 1px;
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #0066a1;
+            font-size: 11px;
+        }
+        th, td {
+            border: 1px solid #0066a1;
+            padding: 4px 6px;
+        }
+        th {
+            background-color: #0066a1;
+            color: #ffffff;
+            font-weight: normal;
+            text-align: center;
+            height: 24px;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+        .col-name { width: 36px; }
+        .col-kf { width: 36px; }
+        .col-sat { width: 50px; text-align: center; }
+        .col-unsat-cnt { width: 45px; text-align: center; }
+        .col-sat-cnt { width: 45px; text-align: center; }
+        .col-diff { width: 50px; text-align: center; }
+        .col-desc { text-align: left; vertical-align: middle; }
+
+        .text-alert {
+            color: #c00000;
+            font-weight: bold;
+        }
+        .text-center {
+            text-align: center;
+        }
+        
+        .desc-text {
+            font-size: 10px;
+            line-height: 1.35;
+            color: #222;
+        }
+
+        /* Decorative footer right */
+        .footer-decor {
+            position: absolute;
+            bottom: 8px;
+            right: 15px;
+            display: flex;
+            gap: 2px;
+        }
+        .diamond {
+            width: 9px;
+            height: 9px;
+            border: 1.5px solid #0088cc;
+            transform: rotate(45deg);
+        }
+    </style>
+</head>
+<body>
+
+<div class="slide-container">
+    <!-- Header -->
+    <div class="header">
+        <div class="header-icon">3</div>
+        <div class="header-title">不满意分析—大平台渠道</div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content-body">
+        <!-- Left Column: Pie Chart and Notes -->
+        <div class="left-col">
+            <div class="chart-title">本周不满意出错类型</div>
+            
+            <div class="pie-chart-container">
+                <svg width="180" height="180" viewBox="-1.1 -1.1 2.2 2.2">
+                    <!-- 客户问题层面: 50% (-90deg to 90deg, but oriented leftwards in image) -->
+                    <!-- Slices visually:
+                         Left half (180deg): Grey (50%) - from 90deg to 270deg
+                         Top-right (27%): Yellow - from 270deg to ~6deg (97.2 deg)
+                         Bottom-right (23%): Light Green - remaining (~82.8 deg)
+                    -->
+                    <!-- Grey Slice (50%): (-90deg to -270deg / left half) -->
+                    <path d="M 0 0 L 0 -1 A 1 1 0 0 0 0 1 Z" fill="#d2d4d5" />
+                    <!-- Yellow Slice (27%): from 0,-1 clockwise by 27% (97.2 deg) -> angle 7.2 deg from right -->
+                    <path d="M 0 0 L 0 -1 A 1 1 0 0 1 0.992 -0.125 Z" fill="#fde699" />
+                    <!-- Green Slice (23%): from 0.992,-0.125 to 0,1 -->
+                    <path d="M 0 0 L 0.992 -0.125 A 1 1 0 0 1 0 1 Z" fill="#d8f3b8" />
+                    
+                    <!-- Labels -->
+                    <!-- Left: 客户问题层面 50% -->
+                    <text x="-0.5" y="-0.1" font-size="0.13" font-weight="bold" fill="#333" text-anchor="middle">客户问题层面</text>
+                    <text x="-0.5" y="0.08" font-size="0.15" font-weight="bold" fill="#000" text-anchor="middle">50%</text>
+
+                    <!-- Top Right: 业务知识层面 27% -->
+                    <text x="0.5" y="-0.32" font-size="0.13" font-weight="bold" fill="#333" text-anchor="middle">业务知识</text>
+                    <text x="0.5" y="-0.16" font-size="0.13" font-weight="bold" fill="#333" text-anchor="middle">层面</text>
+                    <text x="0.5" y="0.02" font-size="0.15" font-weight="bold" fill="#000" text-anchor="middle">27%</text>
+
+                    <!-- Bottom Right: 服务技巧层面 23% -->
+                    <text x="0.45" y="0.34" font-size="0.13" font-weight="bold" fill="#333" text-anchor="middle">服务技巧</text>
+                    <text x="0.45" y="0.50" font-size="0.13" font-weight="bold" fill="#333" text-anchor="middle">层面</text>
+                    <text x="0.45" y="0.68" font-size="0.15" font-weight="bold" fill="#000" text-anchor="middle">23%</text>
+                </svg>
+            </div>
+
+            <div class="bottom-notes">
+                <svg class="note-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="10" r="3"/>
+                    <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"/>
+                    <path d="M2 18h4m12 0h4" stroke-width="1.5"/>
+                </svg>
+                <div class="note-list">
+                    <p>业务知识层面导致的服务不满意仍为当前主要薄弱点</p>
+                    <p>针对业务知识，定期收集整理不满意会话进行集中培训</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Table -->
+        <div class="right-col">
+            <div class="table-title">不达标客服明细</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="col-name">姓名</th>
+                        <th class="col-kf">客服</th>
+                        <th class="col-sat">满意度</th>
+                        <th class="col-unsat-cnt">不满意数</th>
+                        <th class="col-sat-cnt">满意数</th>
+                        <th class="col-diff">达标差值</th>
+                        <th class="col-desc">不满意分析</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="col-name"></td>
+                        <td class="col-kf"></td>
+                        <td class="col-sat text-alert">89.23%</td>
+                        <td class="col-unsat-cnt text-alert">5</td>
+                        <td class="col-sat-cnt text-alert">44</td>
+                        <td class="col-diff text-alert">151</td>
+                        <td class="col-desc desc-text">
+                            1.无法达到客户的加赠需求<br>
+                            2.客户进线表明需求产品后客服未及时人工响应解决客户问题，而是让机器人自动回复，在机器人错误回复完客户问题后未及时撤回致歉，并补充正确的解答<br>
+                            3.未正面解答客户咨询的达人精萃水活动价格问题
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-name"></td>
+                        <td class="col-kf"></td>
+                        <td class="col-sat text-alert">89.09%</td>
+                        <td class="col-unsat-cnt text-alert">4</td>
+                        <td class="col-sat-cnt text-alert">35</td>
+                        <td class="col-diff text-alert">121</td>
+                        <td class="col-desc desc-text">
+                            1.答应订单已发货的客户修改地址后，未跟进，导致后期未修改成功<br>
+                            2.未结合产品功效信息针对性解答客户咨询的产品适合什么肤质的问题<br>
+                            3.机器人错误回复了退货问题后，客服未及时致歉撤回并补充正确解答
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-name"></td>
+                        <td class="col-kf"></td>
+                        <td class="col-sat">95.00%</td>
+                        <td class="col-unsat-cnt">3</td>
+                        <td class="col-sat-cnt">57</td>
+                        <td class="col-diff">60</td>
+                        <td class="col-desc desc-text">
+                            1.未对停发地区客户咨询为什么拍不了做出解答和安抚，仅告知会反馈<br>
+                            2.购买了多个产品的客户进线咨询如何使用，客服仅回复了其中一款产品的使用方式，后期客户再次咨询产品早晚使用问题，客服答非所问推荐其它产品链接，导致未解决客户问题
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-name"></td>
+                        <td class="col-kf"></td>
+                        <td class="col-sat">96.00%</td>
+                        <td class="col-unsat-cnt">3</td>
+                        <td class="col-sat-cnt">71</td>
+                        <td class="col-diff">46</td>
+                        <td class="col-desc desc-text text-center" style="color: #c00000;">
+                            已核检本周3条不满意均非客服服务原因
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-name"></td>
+                        <td class="col-kf"></td>
+                        <td class="col-sat">96.77%</td>
+                        <td class="col-unsat-cnt">3</td>
+                        <td class="col-sat-cnt">88</td>
+                        <td class="col-diff">29</td>
+                        <td class="col-desc desc-text">
+                            未对客户的介绍产品的需求提供完善的解答，需客户分别咨询后才进行回复，一次性解决率过低，服务体验不佳
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-name"></td>
+                        <td class="col-kf"></td>
+                        <td class="col-sat">97.06%</td>
+                        <td class="col-unsat-cnt">2</td>
+                        <td class="col-sat-cnt">65</td>
+                        <td class="col-diff">13</td>
+                        <td class="col-desc desc-text">
+                            未对停发地区，但是购买欲望强烈的客户提供解决方案，仅告知确实发不了
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Decorative Bottom Right Diamonds -->
+    <div class="footer-decor">
+        <div class="diamond"></div>
+        <div class="diamond"></div>
+        <div class="diamond"></div>
+    </div>
+</div>
+
+</body>
+</html>

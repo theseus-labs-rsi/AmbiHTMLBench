@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Architecture Center - Google Cloud</title>
+    <style>
+        :root {
+            --google-blue: #1a73e8;
+            --text-primary: #202124;
+            --text-secondary: #5f6368;
+            --bg-gray: #f1f3f4;
+            --border-color: #dadce0;
+            --font-family: 'Roboto', 'Google Sans', Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-family);
+            color: var(--text-primary);
+            background-color: #fff;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Header Styles */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 24px;
+            border-bottom: 1px solid var(--border-color);
+            height: 48px;
+            box-sizing: border-box;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 22px;
+            font-weight: 500;
+            color: #5f6368;
+            text-decoration: none;
+        }
+
+        .logo img {
+            height: 24px;
+            margin-right: 8px;
+        }
+        
+        .logo span.google {
+            color: #5f6368; 
+            font-weight: 500;
+            letter-spacing: -0.5px;
+        }
+        
+        .logo span.cloud {
+            color: #5f6368;
+            margin-left: 4px;
+        }
+
+        /* Simulating Google Colors for Logo Text manually since no image */
+        .g-blue { color: #4285F4; }
+        .g-red { color: #EA4335; }
+        .g-yellow { color: #FBBC05; }
+        .g-green { color: #34A853; }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .nav-item {
+            font-size: 14px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: var(--bg-gray);
+            border-radius: 4px;
+            padding: 6px 12px;
+            width: 200px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .search-bar input {
+            border: none;
+            background: transparent;
+            outline: none;
+            margin-left: 8px;
+            width: 100%;
+            font-size: 14px;
+        }
+
+        .icon-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 6px 12px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+        
+        .icon-btn.bordered {
+            border: 1px solid var(--border-color);
+        }
+
+        .sign-in {
+            color: var(--google-blue);
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 6px 12px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #e8f0fe 0%, #e6f4ea 100%);
+            padding: 60px 40px;
+            position: relative;
+            overflow: hidden;
+            min-height: 200px;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 400;
+            margin: 0 0 16px 0;
+            color: var(--text-primary);
+        }
+
+        .hero p {
+            font-size: 16px;
+            color: var(--text-primary);
+            max-width: 800px;
+            line-height: 1.5;
+            margin: 0 0 8px 0;
+        }
+
+        .hero a {
+            color: var(--google-blue);
+            text-decoration: none;
+        }
+
+        .hero-graphics {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 50%;
+            pointer-events: none;
+        }
+        
+        /* Placeholder for hero graphics */
+        .graphic-placeholder {
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 300"><path d="M350,150 Q400,50 500,100" stroke="%23fbbc05" stroke-width="4" fill="none"/><circle cx="450" cy="80" r="40" stroke="%23dadce0" stroke-width="2" fill="none"/><path d="M300,200 L350,120 L450,120 L500,200 L450,280 L350,280 Z" stroke="%231a73e8" stroke-width="4" fill="none"/><circle cx="400" cy="200" r="40" stroke="%231a73e8" stroke-width="4" fill="none"/><path d="M250,100 Q270,80 290,100 Q310,100 300,120 L260,120 Q240,110 250,100" stroke="%2334a853" stroke-width="3" fill="none"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right center;
+            background-size: contain;
+            opacity: 0.8;
+        }
+
+        /* Main Content Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+
+        /* Section 1: Foundational Guidance */
+        .section-gray {
+            background-color: var(--bg-gray);
+            padding: 40px 0;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 400;
+            margin: 0 0 24px 0;
+            color: var(--text-primary);
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card h3 {
+            margin: 0 0 16px 0;
+            font-size: 18px;
+            font-weight: 400;
+        }
+
+        .card h3 a {
+            color: var(--google-blue);
+            text-decoration: none;
+        }
+        
+        .card h3 a:hover {
+            text-decoration: underline;
+        }
+
+        .card p {
+            margin: 0;
+            font-size: 14px;
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        /* Section 2: Domain Specific */
+        .domain-section {
+            padding: 40px 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .domain-layout {
+            display: flex;
+            gap: 40px;
+            margin-top: 24px;
+        }
+
+        /* Sidebar Filter */
+        .sidebar {
+            width: 280px;
+            flex-shrink: 0;
+        }
+
+        .filter-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-gray);
+            padding: 10px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .filter-list li {
+            padding: 10px 16px 10px 40px;
+            font-size: 14px;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+        
+        .filter-list li:hover {
+            background-color: var(--bg-gray);
+        }
+
+        /* Results Area */
+        .results-area {
+            flex-grow: 1;
+        }
+
+        .search-filter-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 14px;
+            margin-bottom: 24px;
+            box-sizing: border-box;
+            color: var(--text-secondary);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .result-card {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .result-card h3 {
+            margin: 0 0 12px 0;
+            font-size: 18px;
+            font-weight: 400;
+            line-height: 1.4;
+        }
+
+        .result-card h3 a {
+            color: var(--google-blue);
+            text-decoration: none;
+        }
+
+        .result-date {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .result-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        /* Icons simulation */
+        .icon {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+            vertical-align: middle;
+        }
+        
+        .external-link-icon {
+            width: 14px;
+            height: 14px;
+            margin-left: 4px;
+            vertical-align: baseline;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="header-left">
+            <a href="#" class="logo">
+                <span style="font-family: 'Product Sans', Arial, sans-serif; font-size: 22px; margin-right: 4px;">
+                    <span class="g-blue">G</span><span class="g-red">o</span><span class="g-yellow">o</span><span class="g-blue">g</span><span class="g-green">l</span><span class="g-red">e</span>
+                </span>
+                <span class="cloud" style="color: #5f6368; font-weight: 400;">Cloud</span>
+            </a>
+            <div class="nav-links">
+                <div class="nav-item">Technology areas <span style="font-size: 10px;">▼</span></div>
+                <div class="nav-item">Cross-product tools <span style="font-size: 10px;">▼</span></div>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="search-bar">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                <input type="text" placeholder="Search">
+                <span style="margin-left: auto; font-size: 12px; color: #9aa0a6;">/</span>
+            </div>
+            <div class="icon-btn bordered">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M20 3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H4V5h16v14zM6 7h12v2H6zm0 4h12v2H6zm0 4h8v2H6z"/></svg>
+                Console
+            </div>
+            <div class="icon-btn">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0 .39-.39.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0 .39-.39.39-1.03 0-1.41l-1.06-1.06zm1.06-10.96c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41.39.39 1.03.39 1.41 0l1.06-1.06zM7.05 18.36c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41.39.39 1.03.39 1.41 0l1.06-1.06z"/></svg>
+            </div>
+            <div class="icon-btn bordered">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2 0 .68.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.9-4.33-3.56zm2.95-8H5.08c.96-1.66 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2 0-.68.07-1.35.16-2h4.68c.09.65.16 1.32.16 2 0 .68-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2 0-.68-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z"/></svg>
+                English <span style="font-size: 10px;">▼</span>
+            </div>
+            <div class="sign-in">Sign in</div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Cloud Architecture Center</h1>
+            <p>Discover reference architectures, design guidance, and best practices for building, migrating, and managing your cloud workloads.</p>
+            <p>See <a href="#">what's new</a>!</p>
+        </div>
+        <div class="hero-graphics">
+            <div class="graphic-placeholder"></div>
+        </div>
+    </section>
+
+    <!-- Foundational Guidance Section -->
+    <section class="section-gray">
+        <div class="container" style="padding-top: 0; padding-bottom: 0;">
+            <h2 class="section-title">Review foundational architecture guidance for enterprise deployments in Google Cloud</h2>
+            
+            <div class="card-grid" style="padding: 0; margin-bottom: 40px;">
+                <!-- Row 1 -->
+                <div class="card">
+                    <h3><a href="#">Google Cloud Well-Architected Framework</a></h3>
+                    <p>Design cloud topologies that are secure, efficient, resilient, high-performing, cost-effective, and sustainable.</p>
+                </div>
+                <div class="card">
+                    <h3><a href="#">Deployment archetypes</a></h3>
+                    <p>Learn about basic archetypes for cloud deployments: zonal, regional, multi-regional, global, hybrid, and multicloud.</p>
+                </div>
+                <div class="card">
+                    <h3><a href="#">Infrastructure reliability guide</a></h3>
+                    <p>Design and build infrastructure to run workloads reliably in Google Cloud.</p>
+                </div>
+
+                <!-- Row 2 -->
+                <div class="card">
+                    <h3><a href="#">Landing zone design</a></h3>
+                    <p>Build a landing zone that includes identity onboarding, resource hierarchy, network design, and security controls.</p>
+                </div>
+                <div class="card">
+                    <h3><a href="#">Enterprise foundations blueprint</a></h3>
+                    <p>Build a foundation for governance, security scale, visibility, and access.</p>
+                </div>
+                <div class="card">
+                    <h3><a href="#">Delivery Navigator <svg class="external-link-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg></a></h3>
+                    <p>Accelerate cloud solution deployments with implementation plans and technical guides from Google Cloud Consulting.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Domain Specific Section -->
+    <section class="domain-section">
+        <h2 class="section-title">Discover domain-specific architecture guidance</h2>
+        
+        <div class="domain-layout">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="filter-header">
+                    <svg class="icon" viewBox="0 0 24 24" style="width: 18px; height: 18px;"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+                    FILTER BY
+                </div>
+                <ul class="filter-list">
+                    <li>AI and ML</li>
+                    <li>Application development</li>
+                    <li>Big data and analytics</li>
+                    <li>Databases</li>
+                    <li>Hybrid and multicoud</li>
+                    <li>Migration</li>
+                    <li>Monitoring and Logging</li>
+                    <li>Networking</li>
+                    <li>Reliability and DR</li>
+                    <li>Security and compliance</li>
+                    <li>Storage</li>
+                </ul>
+            </aside>
+
+            <!-- Results -->
+            <div class="results-area">
+                <input type="text" class="search-filter-input" placeholder="Filter results">
+                
+                <div class="results-grid">
+                    <!-- Card 1 -->
+                    <div class="result-card">
+                        <h3><a href="#">DevOps capabilities</a></h3>
+                        <div class="result-date">Updated May 21, 2026</div>
+                        <p class="result-desc">A set of capabilities that drive higher software delivery and organizational performance, as identified and validated by the DevOps Research and Assessment (DORA) team.</p>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="result-card">
+                        <h3><a href="#">Networking for AI inference model serving on all backends</a></h3>
+                        <div class="result-date">Updated May 20, 2026</div>
+                        <p class="result-desc">Guidance to help you create a unified frontend for multiple AI models that are hosted on-premises or by any provider, including third-party and Google Cloud.</p>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="result-card">
+                        <h3><a href="#">Networking for AI inference model serving on GKE</a></h3>
+                        <div class="result-date">Updated May 20, 2026</div>
+                        <p class="result-desc">Guidance to help you create a multiple-model inference service using GKE.</p>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div class="result-card">
+                        <h3><a href="#">Build trusted AI agents with Google Maps Platform</a></h3>
+                        <div class="result-date">Updated May 1, 2026</div>
+                        <p class="result-desc">A high-level architecture to build trusted and effective AI agents by grounding them in real-world contextual data from Google Maps Platform and Google Calendar.</p>
+                    </div>
+
+                    <!-- Card 5 -->
+                    <div class="result-card">
+                        <h3><a href="#">Deployment guidance for Gemini for Government</a></h3>
+                        <div class="result-date">Updated April 23, 2026</div>
+                        <p class="result-desc">This document provides technical guidance for US Federal agencies and DoD departments on deploying and using Gemini for Government in compliance with FedRAMP...</p>
+                    </div>
+
+                    <!-- Card 6 -->
+                    <div class="result-card">
+                        <h3><a href="#">Agentic AI use case: Build a multicloud open data lakehouse</a></h3>
+                        <div class="result-date">Updated April 22, 2026</div>
+                        <p class="result-desc">A high-level architecture to build a multicloud open data lakehouse that establishes a highly governed, secure pipeline from raw multicloud silos to AI and agentic driven actions.</p>
+                    </div>
+                    
+                    <!-- Card 7 (Partial) -->
+                    <div class="result-card">
+                        <h3><a href="#">Choose your agentic AI architecture components</a></h3>
+                    </div>
+
+                    <!-- Card 8 (Partial) -->
+                    <div class="result-card">
+                        <h3><a href="#">FedRAMP and DoD compliance scope for Google Cloud and</a></h3>
+                    </div>
+
+                    <!-- Card 9 (Partial) -->
+                    <div class="result-card">
+                        <h3><a href="#">DoD compliance scope for Distributed Cloud air-gapped</a></h3>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>

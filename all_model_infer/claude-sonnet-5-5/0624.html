@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>手写笔记（螺旋本） - OCR复刻</title>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+  body {
+    background: #2b2e33;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  .page-wrap {
+    width: 540px;
+    height: 740px;
+    position: relative;
+    transform: rotate(0deg);
+  }
+  .notebook {
+    width: 100%;
+    height: 100%;
+    background-color: #f5f3ee;
+    background-image:
+      linear-gradient(to right, rgba(150,170,190,0.35) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(150,170,190,0.35) 1px, transparent 1px);
+    background-size: 14px 14px;
+    border: 1px solid #999;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0,0,0,0.6);
+  }
+  /* spiral binding - vertical column of holes going through middle horizontally in image orientation,
+     but since whole page content is rotated, binding runs vertically down the center */
+  .spiral {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 60px;
+    height: 100%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 5;
+  }
+  .ring {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 2px solid #8a8a8a;
+    background: radial-gradient(circle at 35% 35%, #e8e8e8, #b5b5b5 60%, #888 100%);
+    box-shadow: inset 0 0 3px rgba(0,0,0,0.5);
+  }
+
+  .content {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
+  /* Two text columns, text rotated 90deg (reading direction top-to-bottom in original = rotated) */
+  .col {
+    position: absolute;
+    top: 0;
+    width: 48%;
+    height: 100%;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    font-size: 11px;
+    line-height: 1.55;
+    padding: 10px 6px;
+    box-sizing: border-box;
+    color: #1c1c1c;
+    font-family: "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  }
+  .col-left {
+    left: 0;
+  }
+  .col-right {
+    right: 0;
+  }
+
+  .red { color: #c21f1f; }
+  .purple { color: #9b2d8e; }
+  .box {
+    border: 1px solid #333;
+    padding: 1px 2px;
+    display: inline-block;
+  }
+  .small-note {
+    font-size: 9px;
+    color: #333;
+  }
+  .label-circle {
+    display: inline-block;
+    border: 1px solid #333;
+    border-radius: 50%;
+    width: 1em;
+    height: 1em;
+    text-align: center;
+    line-height: 1em;
+    font-size: 0.85em;
+  }
+  figure.placeholder {
+    border: 1px dashed #888;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: #555;
+    margin: 4px 0;
+  }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+  <div class="notebook">
+    <div class="spiral">
+      <!-- spiral binding rings -->
+      <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+      <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+      <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+      <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+      <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+      <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+      <div class="ring"></div><div class="ring"></div>
+    </div>
+
+    <div class="content">
+
+      <!-- RIGHT COLUMN (top portion of rotated page) -->
+      <div class="col col-right">
+        ①中国特别领导地位，党的方面组织的改革和政策方向，巩固和完善党的领导制度体系，
+        确保党始终总揽全局、协调各方。<br>
+        ②坚定理想信念宗旨，全面贯彻落实新时代党的建设总要求，坚持和加强党的全面领导，
+        落实新发展理念，坚定不移走中国特色社会主义道路。<br>
+        <span class="red">[?]</span>全面抓好落实，各级党组织和党员干部要切实提高政治判断力、
+        政治领悟力、政治执行力，坚决维护党中央权威和集中统一领导。<br>
+        （4）健全党的全面领导制度，建立不忘初心、牢记使命的制度，推进党的建设制度改革，
+        不断提高党的建设质量。<br>
+        研究、落实（）相关制度，切实把加强党的领导贯彻到各方面工作中。<br>
+        <span class="box">防止和纠正</span><br>
+        <span class="box">纠偏</span><br>
+        <br>
+        （2）全面把握新时代党的建设总要求，完善全面从严治党制度体系，持续推进反腐败斗争，
+        坚持无禁区、全覆盖、零容忍，坚持重遏制、强高压、长震慑。<br>
+        ①深入推进全面从严治党，严肃党内政治生活，营造风清气正的良好政治生态。<br>
+        ②坚持严管和厚爱结合、激励和约束并重，完善考核评价和激励机制，
+        激发干部干事创业的积极性、主动性、创造性。<br>
+        [illegible]<br>
+      </div>
+
+      <!-- LEFT COLUMN (bottom portion of rotated page) -->
+      <div class="col col-left">
+        为实现新时代党的建设总要求，持续推进全面从严治党，坚持不懈纠正"四风"，
+        坚决整治形式主义、官僚主义等突出问题，坚持以上率下，着力解决群众身边的不正之风。<br>
+        这要求人力资源管理及用人导向，持续推进党风廉政建设和反腐败工作，
+        不断提高治理腐败的能力和水平，推进标准化、规范化建设（SSSS）。<br>
+        （中）持续健全体制机制，强化制度约束和监督检查，确保各项制度落实到位，
+        切实维护党纪国法的严肃性和权威性，防止出现"破窗效应"。<br>
+        <br>
+        ①<span class="label-circle">1</span>全面推进党的作风建设和纪律建设，强化纪律执行力，
+        健全党内监督体系，形成（（<span class="purple">[illegible]</span>）标准）。<br>
+        （2）各级党组织和党员干部要以身作则，发挥"关键少数"的示范引领作用，
+        切实落实中央八项规定精神，严格执行廉洁从政各项规定。<br>
+        ②坚持纪严于法、纪在法前，强化纪律执行的刚性约束，对违纪违法行为
+        做到快查快结、从严惩处，起到强有力的震慑作用。<br>
+        <br>
+        （2）全面梳理和规范党内法规制度，推进依规治党和依法治国有机统一，
+        督促各级党组织严格落实全面从严治党主体责任。<br>
+        ①坚持教育、制度、监督同时发力、同向发力，着力提高干部队伍整体素质和能力。<br>
+        ②坚持党要管党、全面从严治党，落实"两个责任"（主体责任和监督责任），
+        层层传导压力、压实责任，推动全面从严治党向纵深发展。<br>
+      </div>
+
+    </div>
+  </div>
+</div>
+</body>
+</html>

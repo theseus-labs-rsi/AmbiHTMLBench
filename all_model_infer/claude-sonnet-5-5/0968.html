@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RFC 9053 - COSE Algorithms</title>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+<style>
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: #222;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 30px 40px;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 15px;
+    border-bottom: 1px solid #999;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+  }
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 15px;
+    border-top: 1px solid #999;
+    padding-top: 10px;
+    margin-top: 40px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 8px;
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+  }
+  th {
+    background: #e7e7e7;
+    text-align: left;
+    padding: 12px 15px;
+    font-weight: bold;
+    border-bottom: 1px solid #ccc;
+  }
+  td {
+    padding: 12px 15px;
+    vertical-align: top;
+    border: none;
+  }
+  .table-caption {
+    font-style: italic;
+    margin-bottom: 30px;
+    margin-top: 2px;
+  }
+  h2 {
+    font-size: 22px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+  }
+  p {
+    margin: 0 0 16px 0;
+    text-align: left;
+  }
+  a {
+    color: #1a5fb4;
+    text-decoration: none;
+  }
+  ul {
+    margin: 0 0 16px 0;
+    padding-left: 25px;
+  }
+  li {
+    margin-bottom: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>RFC 9053</div>
+  <div>COSE Algorithms</div>
+  <div>August 2022</div>
+</div>
+
+<table>
+  <tr>
+    <th style="width:10%;">Name</th>
+    <th style="width:8%;">Label</th>
+    <th style="width:8%;">Type</th>
+    <th style="width:54%;">Algorithm</th>
+    <th style="width:20%;">Description</th>
+  </tr>
+  <tr>
+    <td>salt</td>
+    <td>-20</td>
+    <td>bstr</td>
+    <td>
+      direct+HKDF-SHA-256, direct+HKDF-SHA-512,
+      direct+HKDF-AES-128, direct+HKDF-AES-256,
+      ECDH-ES+HKDF-256, ECDH-ES+HKDF-512, ECDH-
+      SS+HKDF-256, ECDH-SS+HKDF-512, ECDH-
+      ES+A128KW, ECDH-ES+A192KW, ECDH-
+      ES+A256KW, ECDH-SS+A128KW, ECDH-SS+A192KW,
+      ECDH-SS+A256KW
+    </td>
+    <td>Random salt</td>
+  </tr>
+</table>
+<div class="table-caption">Table 9: HKDF Algorithm Parameters</div>
+
+<h2>5.2.&nbsp;&nbsp;Context Information Structure</h2>
+
+<p>The context information structure is used to ensure that the derived keying material is "bound" to the context of the transaction. The context information structure used here is based on that defined in [<a href="#">SP800-56A</a>]. By using CBOR for the encoding of the context information structure, we automatically get the same type and length separation of fields that is obtained by the use of ASN.1. This means that there is no need to encode the lengths for the base elements, as it is done by the encoding used in JSON Object Signing and Encryption (JOSE) (<a href="#">Section 4.6.2</a> of [<a href="#">RFC7518</a>]).</p>
+
+<p>The context information structure refers to PartyU and PartyV as the two parties that are doing the key derivation. Unless the application protocol defines differently, we assign PartyU to the entity that is creating the message and PartyV to the entity that is receiving the message. By defining this association, different keys will be derived for each direction, as the context information is different in each direction.</p>
+
+<p>The context structure is built from information that is known to both entities. This information can be obtained from a variety of sources:</p>
+
+<ul>
+  <li>Fields can be defined by the application. This is commonly used to assign fixed names to parties, but it can be used for other items such as nonces.</li>
+  <li>Fields can be defined by usage of the output. Examples of this are the algorithm and key size that are being generated.</li>
+  <li>Fields can be defined by parameters from the message. We define a set of header parameters in <a href="#">Table 10</a> that can be used to carry the values associated with the context structure. Examples of this are identities and nonce values. These header parameters are designed to be placed in the unprotected bucket of the recipient structure; they do not need to be in the protected bucket, since they are already included in the cryptographic computation by virtue of being included in the context structure.</li>
+</ul>
+
+<div class="footer">
+  <div>Schaad</div>
+  <div>Informational</div>
+  <div>Page 17</div>
+</div>
+
+</body>
+</html>

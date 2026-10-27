@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人民日报 2025年1月2日 要闻</title>
+    <style>
+        body {
+            font-family: "Songti SC", "SimSun", "STSong", serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+            color: #000;
+            line-height: 1.6;
+        }
+        .page-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px 40px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .header-left {
+            display: flex;
+            align-items: baseline;
+            gap: 20px;
+        }
+        .page-num {
+            font-size: 48px;
+            font-weight: bold;
+            font-style: italic;
+            font-family: Arial, sans-serif;
+            line-height: 1;
+        }
+        .section-title {
+            font-size: 32px;
+            font-weight: bold;
+            letter-spacing: 5px;
+            background-color: #0056b3; /* Approximate blue from image */
+            color: white;
+            padding: 2px 15px;
+            /* Fallback if bg color isn't exact, text is usually white on dark bg in header */
+            /* Actually looking closer, the '02' is black, '要闻' is white on blue block */
+        }
+        .section-title-wrapper {
+            background-color: #1a5cb0;
+            color: white;
+            padding: 5px 20px;
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 10px;
+        }
+        .header-center {
+            flex-grow: 1;
+            text-align: center;
+        }
+        .logo {
+            font-family: "KaiTi", "STKaiti", serif;
+            font-size: 42px;
+            color: #d32f2f; /* Red logo color */
+            font-weight: bold;
+            letter-spacing: 5px;
+        }
+        .header-right {
+            text-align: right;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+            gap: 25px;
+            font-size: 14px;
+            text-align: justify;
+        }
+        .col {
+            display: flex;
+            flex-direction: column;
+        }
+        .article {
+            margin-bottom: 20px;
+        }
+        .article-title {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+        .article-subtitle {
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .byline {
+            text-align: center;
+            font-size: 12px;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        p {
+            margin: 0 0 8px 0;
+            text-indent: 2em;
+        }
+        .no-indent {
+            text-indent: 0;
+        }
+        .bold-text {
+            font-weight: bold;
+        }
+        .separator {
+            text-align: center;
+            margin: 10px 0;
+            font-size: 12px;
+            color: #666;
+        }
+        .footer-note {
+            text-align: right;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        /* Specific layout adjustments based on visual scan */
+        .col-1 { grid-column: 1; }
+        .col-2 { grid-column: 2; }
+        .col-3 { grid-column: 3; }
+        .col-4 { grid-column: 4; }
+        .col-5 { grid-column: 5; }
+        
+        /* The main article spans columns 2, 3, 4 partially? 
+           Looking at the image:
+           Col 1: Top part is continuation "(上接第一版)...", then a separator, then "团结奋斗为人民..."
+           Col 2: Starts with "人民至上 矢志不渝", then title "中国式现代化...", then text.
+           Col 3: Continuation of text.
+           Col 4: Continuation of text. Bottom part has "自信自立 彰显担当".
+           Col 5: Top part continuation. Middle "同心协力...". Bottom "吹响再出发的...".
+           
+           Actually, the layout is more complex.
+           Row 1:
+           Col 1: (上接第一版) text block.
+           Col 2-4: Main Article "人民至上..." spanning 3 columns width visually? 
+           No, looking closely at the vertical lines:
+           There are 5 distinct columns of text.
+           
+           Column 1:
+           - (上接第一版) text...
+           - [Separator]
+           - Title: 团结奋斗为人民 攻坚克难写华章
+           - Text...
+           
+           Column 2:
+           - Title: 人民至上 矢志不渝
+           - Subtitle: “中国式现代化，民生为大”
+           - Text...
+           
+           Column 3:
+           - Text continuation...
+           
+           Column 4:
+           - Text continuation...
+           - [Separator near bottom]
+           - Title: 自信自立 彰显担当
+           - Subtitle: “在和平发展、合作共赢中不断拓展中国式现代化的广度和深度”
+           - Text...
+           
+           Column 5:
+           - Text continuation (from col 4? or independent?) -> Looks like continuation of the main flow or separate.
+           - Wait, the text "28届联合国气候变化大会..." is at the top of Col 5.
+           - Then "大国担当..."
+           - Then "同心协力 一往无前" title in the middle of Col 5?
+           - Let's re-evaluate the flow.
+           
+           Flow Analysis:
+           The main article "人民至上 矢志不渝" seems to span Col 2, 3, 4.
+           Col 1 is separate (continuation from prev page + new article).
+           Col 5 seems to contain the end of the previous section or a new section?
+           Actually, looking at the top of Col 5: "28届联合国气候变化大会..." this looks like it connects to something.
+           Ah, the text in Col 4 ends with "...习近平主席出席".
+           Col 5 starts with "28届联合国气候变化大会...". This is a continuation.
+           So the main article spans Col 2, 3, 4, 5?
+           Let's check Col 4 bottom. "自信自立 彰显担当" is a new section header.
+           So Col 2, 3, 4(top) is one article.
+           Col 4(bottom), 5(top) is another?
+           
+           Let's trace:
+           Col 2: Title "人民至上..." -> Text.
+           Col 3: Text.
+           Col 4: Text. Ends with "...习近平主席出席".
+           Col 5: Starts "28届联合国气候变化大会...". This connects.
+           So Article 1 spans Col 2, 3, 4, 5 (top half).
+           
+           Then in Col 5 middle: "同心协力 一往无前" title.
+           Then text.
+           
+           Then in Col 4 bottom: "自信自立 彰显担当" title.
+           Wait, if Col 4 has text ending in "出席", and Col 5 starts with "28届...", then Col 4 is before Col 5.
+           But Col 4 *also* has "自信自立..." at the bottom.
+           This implies the text flows Col 2 -> Col 3 -> Col 4 (top) -> Col 5 (top) -> Col 5 (mid) -> Col 4 (bottom)? No, that's zigzag.
+           
+           Standard newspaper flow:
+           Col 1 -> Col 2 -> Col 3 -> Col 4 -> Col 5.
+           
+           Let's look at the headers again.
+           Col 2 Top: "人民至上 矢志不渝"
+           Col 4 Bottom: "自信自立 彰显担当"
+           Col 5 Mid: "同心协力 一往无前"
+           Col 5 Bottom: "吹响再出发的“冲锋号”"
+           
+           Hypothesis:
+           Article A: "人民至上..." starts Col 2. Flows through Col 3, Col 4.
+           Does it flow into Col 5?
+           Col 4 text ends: "...习近平主席出席".
+           Col 5 text starts: "28届联合国气候变化大会...".
+           Yes, likely connected.
+           So Article A occupies Col 2, 3, 4 (most), 5 (top).
+           
+           Then Article B: "同心协力..." starts in Col 5 (middle).
+           Then Article C: "自信自立..." starts in Col 4 (bottom)?
+           This would mean Col 4 has two articles? Top part A, bottom part C.
+           And Col 5 has Top part A, Mid part B, Bottom part D ("吹响...").
+           
+           This implies a complex grid where columns are not strictly independent vertical streams but flow horizontally then wrap?
+           Or maybe:
+           Row 1: Col 2, 3, 4, 5 (Top section) -> Article A.
+           Row 2: Col 4, 5 (Bottom section) -> Article C (Col 4), Article B (Col 5 mid), Article D (Col 5 bot).
+           
+           Actually, looking at the vertical alignment:
+           The text in Col 4 "自信自立..." is aligned with the bottom half.
+           The text in Col 5 "同心协力..." is aligned with the middle.
+           
+           Let's try a simpler CSS Grid approach where I define the columns and let the text flow, but since I must hardcode the HTML structure to match the image exactly, I will create 5 column divs and manually distribute the text based on visual inspection.
+           
+           Distribution Plan:
+           Col 1:
+           - (上接第一版) text.
+           - Separator.
+           - Title: 团结奋斗为人民...
+           - Text.
+           
+           Col 2:
+           - Title: 人民至上...
+           - Subtitle.
+           - Text (part 1).
+           
+           Col 3:
+           - Text (part 2).
+           
+           Col 4:
+           - Text (part 3).
+           - Separator.
+           - Title: 自信自立...
+           - Subtitle.
+           - Text (part 4).
+           
+           Col 5:
+           - Text (part 5 - continuation of Col 4 top? "28届...").
+           - Text (part 6).
+           - Separator.
+           - Title: 同心协力...
+           - Subtitle.
+           - Text (part 7).
+           - Separator.
+           - Title: 吹响再出发...
+           - Text (part 8).
+           
+           Wait, if Col 4 ends with "出席" and Col 5 starts with "28届", then Col 4 top flows to Col 5 top.
+           But Col 4 *also* has "自信自立" at the bottom.
+           This means Col 4 contains the end of Article A AND the start of Article C.
+           And Col 5 contains the continuation of Article A AND Article B AND Article D.
+           This is physically impossible in a standard column flow unless the text wraps around.
+           
+           Alternative Interpretation:
+           Maybe "自信自立" in Col 4 is a separate box?
+           Looking at the image, there is a horizontal line or space above "自信自立".
+           And "同心协力" in Col 5 has space above it.
+           
+           Let's assume the layout is:
+           Top Band: Col 2, 3, 4, 5 (Article A).
+           Bottom Band: Col 1 (Article E), Col 4 (Article C), Col 5 (Article B & D).
+           
+           But Col 1 is full height.
+           Col 2, 3 seem full height of Article A.
+           
+           Let's just transcribe column by column as they appear visually, even if the logical flow jumps. The prompt asks for spatial fidelity.
+           
+           Visual Column 1:
+           - (上接第一版)...
+           - [Separator]
+           - 团结奋斗为人民...
+           
+           Visual Column 2:
+           - 人民至上...
+           - Text...
+           
+           Visual Column 3:
+           - Text...
+           
+           Visual Column 4:
+           - Text... (ends with ...出席)
+           - [Space/Separator]
+           - 自信自立...
+           - Text...
+           
+           Visual Column 5:
+           - Text... (starts with 28届...) -> This connects to Col 4 top.
+           - Text...
+           - [Space/Separator]
+           - 同心协力...
+           - Text...
+           - [Space/Separator]
+           - 吹响再出发...
+           - Text...
+           
+           This implies the reading order is Col 2 -> Col 3 -> Col 4 (top) -> Col 5 (top) -> Col 5 (mid) -> Col 4 (bottom)?
+           Or Col 2 -> Col 3 -> Col 4 (top) -> Col 5 (top) -> Col 4 (bottom) -> Col 5 (mid)?
+           
+           Actually, looking at the very bottom right: "(新华社北京 2024 年 12 月 31 日电)". This is the end of the last article.
+           The last article is "吹响再出发...".
+           
+           Okay, I will structure the HTML as 5 flex columns. I will place the text blocks in the order they appear vertically in each column.
+        */
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <div class="page-num">02</div>
+            <div class="section-title-wrapper">要闻</div>
+        </div>
+        <div class="header-center">
+            <div class="logo">人民日报</div>
+        </div>
+        <div class="header-right">
+            2025 年 1 月 2 日 星期四<br>
+            一版责编：孙 懿 赵 昊 二版责编：殷 新 吕九海
+        </div>
+    </div>
+
+    <!-- Content Grid -->
+    <div class="content-grid">
+        
+        <!-- Column 1 -->
+        <div class="col col-1">
+            <div class="article">
+                <p class="no-indent" style="font-size: 12px; color: #666;">（上接第一版）</p>
+                <p>《中共中央、国务院关于加快经济社会发展全面绿色转型的意见》发布，“积极稳妥、弹性原则推进碳排放权交易市场建设”成为高频词；各地，民营经济促进法草案提请全国人大常委会会议审议……</p>
+                <p>一系列事关全局、备受瞩目、含金量足的政策举措密集出台，既为一季度经济开局备好了“政策包”，也释放了中国经济社会发展的新动能，一幅中国式现代化的新画卷铺展开来。</p>
+                <p class="bold-text" style="text-align: center; margin: 15px 0;">迎难而上 坚定信心</p>
+                <p class="bold-text" style="text-align: center; margin-bottom: 15px;">“必须完整准确全面贯彻新发展理念，<br>全面深化改革，扩大高水平对外开放”</p>
+                <p>2024 年 12 月 11 日至 12 日，中央经济工作会议在北京召开。习近平总书记发表重要讲话，总结 2024 年经济工作，分析当前经济形势，部署 2025 年经济工作。</p>
+                <p>从一季度实现良好开局，到二、三季度下行压力逐渐加大，面对中国经济社会发展的新形势、新挑战，以习近平同志为核心的党中央沉着应变、综合施策，推动经济运行总体平稳、稳中有进。</p>
+                <p>实施大规模设备更新和消费品以旧换新，有效降低全社会物流成本，促进外贸稳定增长，激发消费活力……一个个“政策礼包”送出，一项项真招实招落地。</p>
+                <p>进入 10 月份，国家统计局公布的数据显示，经济运行出现回升势头，主要指标明显好转，市场信心增强。</p>
+                <p>正视困难、保持定力，在危机中育先机、于变局中开新局。回望过去一年，中国经济顶压前行、向新而优，交出了一份来之不易的成绩单。</p>
+                <p>回首过去一年，中国经济走过的不平凡道路，愈显韧性和潜力的难能可贵——</p>
+                <p>2024 年 11 月 14 日，随着一辆新车驶出生产线，我国新能源汽车产量首次突破年度 1000 万辆，中国由汽车大国向汽车强国迈进坚实一步。</p>
+                <p>一年来，从新兴产业厚积薄发，到传统产业焕新升级，新质生产力展示出对中国经济发展的强劲推动力、支撑力。这一年，我国成为全球首个国内有效发明专利拥有量突破 400 万件的国家。</p>
+                <p>“惟改革者进，惟创新者强，惟改革创新者胜。”</p>
+                <p>面对外部压力加大、内部困难增多的复杂严峻形势，中国经济之所以能够顶住压力、逆势而上，根本在于以习近平同志为核心的党中央坚强领导，在于习近平新时代中国特色社会主义思想科学指引。</p>
+                <p>“坚持和加强党的全面领导是做好经济工作的根本保证”。越是形势复杂，越要坚持和加强党的全面领导。</p>
+                <p>“党中央集中统一领导是做好经济工作的根本保证”。在关键时刻、重要节点，党中央及时研判形势、作出决策部署，确保我国经济航船乘风破浪、行稳致远。</p>
+                <p>“必须完整准确全面贯彻新发展理念，坚持社会主义市场经济改革方向，坚持高水平对外开放”。这是中国经济高质量发展的必由之路。</p>
+                <p>“改革开放是决定当代中国命运的关键一招”。面对纷繁复杂的国际国内形势，中国始终坚持对外开放的基本国策，以开放促改革、促发展。</p>
+                <p>“要着力扩大国内需求，推动消费持续增长”。把恢复和扩大消费摆在优先位置，通过政府补贴、企业让利等方式，激发消费潜力。</p>
+                <p>“要切实保障和改善民生，兜牢民生底线”。就业是最大的民生，要把稳就业提高到战略高度通盘考虑。</p>
+                <p>“要坚持不懈抓好‘三农’工作，扎实推进乡村全面振兴”。粮食安全是“国之大者”，要牢牢守住十八亿亩耕地红线。</p>
+                <p>“要推动城乡融合发展，缩小城乡差距”。建立健全城乡融合发展体制机制和政策体系，加快推进农业农村现代化。</p>
+                <p>“要深入推进生态文明建设和绿色低碳发展”。绿水青山就是金山银山，要坚定不移走生态优先、绿色发展之路。</p>
+                <p>“要防范化解重点领域风险，守住不发生系统性风险的底线”。统筹发展和安全，增强忧患意识，做到居安思危。</p>
+                <p>“要做好岁末年初各项工作，确保社会大局稳定”。加强值班值守，强化安全生产，关心困难群众生活。</p>
+                <p>“明年是‘十四五’规划收官之年，也是进一步全面深化改革的重要一年”。我们要以习近平新时代中国特色社会主义思想为指导，全面贯彻落实党的二十大和二十届二中、三中全会精神，坚持稳中求进工作总基调，完整、准确、全面贯彻新发展理念，加快构建新发展格局，着力推动高质量发展，全面深化改革开放，推动高水平科技自立自强，加大宏观调控力度，统筹扩大内需和深化供给侧结构性改革，统筹新型城镇化和乡村全面振兴，统筹高质量发展和高水平安全，切实增强经济活力、防范化解风险、改善社会预期，巩固和增强经济回升向好态势，持续推动经济实现质的有效提升和量的合理增长，增进民生福祉，保持社会稳定，以中国式现代化全面推进强国建设、民族复兴伟业。</p>
+            </div>
+            
+            <div class="separator">（上接第一版）</div>
+            
+            <div class="article">
+                <div class="article-title">团结奋斗为人民 攻坚克难写华章</div>
+                <p>中国式现代化，民生为大。“对大家关心的就业增收、‘一老一小’、教育医疗等问题，我一直挂念。”习近平总书记的深情话语，温暖人心。</p>
+                <p>“老百姓的事情是最重要的事情，一定要办好。”“我们的目标很宏伟，也很朴素，归根到底就是让老百姓过上更好的日子。”</p>
+                <p>“家事国事天下事，让人民过上幸福生活是头等大事。”习近平主席在二〇二五年新年贺词中的深情牵挂，暖流涌动。</p>
+                <p>“我将无我，不负人民。”领袖的为民情怀，映照在跋山涉水的足迹里，体现在夙夜在公的操劳中，彰显在治国理政的实践中。</p>
+                <p>“民之所忧，我必念之；民之所盼，我必行之。”从黄土高原到雪域高原，从革命老区到边疆民族地区，习近平总书记深入基层、深入群众，倾听民声、体察民情。</p>
+                <p>“江山就是人民，人民就是江山。”中国共产党根基在人民、血脉在人民、力量在人民。</p>
+                <p>“让人民生活幸福是‘国之大者’。”以习近平同志为核心的党中央，始终把人民放在心中最高位置，把人民对美好生活的向往作为奋斗目标。</p>
+                <p>“共同富裕是社会主义的本质要求，是中国式现代化的重要特征。”要坚持以人民为中心的发展思想，在高质量发展中促进共同富裕。</p>
+                <p>“就业是最大的民生工程、民心工程、根基工程。”要强化就业优先政策，健全就业促进机制，促进高质量充分就业。</p>
+                <p>“教育是国之大计、党之大计。”要坚持教育优先发展，落实立德树人根本任务，培养德智体美劳全面发展的社会主义建设者和接班人。</p>
+                <p>“健康是促进人的全面发展的必然要求，是经济社会发展的基础条件。”要全面推进健康中国建设，为人民群众提供全方位全周期健康服务。</p>
+                <p>“社会保障是保障和改善民生、维护社会公平、增进人民福祉的基本制度保障。”要全面建成覆盖全民、城乡统筹、权责清晰、保障适度、可持续的多层次社会保障体系。</p>
+                <p>“生态环境是关系党的使命宗旨的重大政治问题，也是关系民生的重大社会问题。”要提供更多优质生态产品以满足人民日益增长的优美生态环境需要。</p>
+                <p>“国家安全是安邦定国的重要基石，维护国家安全是全国各族人民根本利益所在。”要贯彻总体国家安全观，统筹发展和安全，统筹开放和安全，统筹传统安全和非传统安全，统筹自身安全和共同安全，统筹维护国家安全和塑造国家安全。</p>
+                <p>“团结就是力量，奋斗开创未来。”能团结奋斗的民族才有前途，能团结奋斗的政党才能立于不败之地。</p>
+                <p>“围绕明确奋斗目标形成的团结才是最牢固的团结，依靠紧密团结进行的奋斗才是最有力的奋斗。”</p>
+                <p>“我们靠团结奋斗创造了辉煌历史，还要靠团结奋斗开辟美好未来。”</p>
+                <p>“路虽远，行则将至；事虽难，做则必成。”只要有愚公移山的志气、滴水穿石的毅力，脚踏实地，埋头苦干，积跬步以至千里，就一定能够把宏伟目标变为美好现实。</p>
+                <p>“14 亿多中国人心往一处想、劲往一处使，同舟共济、众志成城，就没有干不成的事、迈不过的坎。”</p>
+                <p>“让我们更加紧密地团结在以习近平同志为核心的党中央周围，全面贯彻习近平新时代中国特色社会主义思想，深刻领悟‘两个确立’的决定性意义，增强‘四个意识’、坚定‘四个自信’、做到‘两个维护’，坚定信心、开拓奋进，为全面建设社会主义现代化国家、全面推进中华民族伟大复兴而团结奋斗！”</p>
+            </div>
+        </div>
+
+        <!-- Column 2 -->
+        <div class="col col-2">
+            <div class="article">
+                <div class="article-title">人民至上 矢志不渝</div>
+                <div class="article-subtitle">“中国式现代化，民生为大”</div>
+                <p>事无巨细，枝叶关情。一次次深入基层访贫问苦，察民情、听民声、纳民意，只为“让人民的生活一天天好起来，一年比一年过得好”。</p>
+                <p>这是新时代中国共产党人的深情告白——“我愿意做到一个‘无我’的状态，为中国的发展奉献自己”。</p>
+                <p>不顾病痛缠身、照亮山区女孩求学之路的张桂梅，拖着病体带领村民脱贫致富的黄文秀，扎根基层、服务群众的黄诗燕……无数党员干部用生命践行承诺，用行动诠释担当。</p>
+                <p>“中国共产党是为人民服务的党，为民造福是最大政绩。”</p>
+                <p>2024 年，习近平总书记赴地方考察调研，足迹遍布大江南北。从春意盎然的南国到白雪皑皑的北疆，从繁华都市到偏远山村，总书记始终心系百姓冷暖。</p>
+                <p>在天津，看望慰问基层干部群众，强调“提高公共服务共建能力和共享水平”；在湖南，考察春耕备耕，强调“中国人的饭碗要牢牢端在自己手中”；在重庆，主持召开新时代推动西部大开发座谈会，强调“进一步形成大保护、大开放、高质量发展新格局”……</p>
+                <p>“民生无小事，枝叶总关情。”总书记的每一次考察、每一句嘱托，都饱含着对人民群众的深厚感情。</p>
+                <p>“就业是民生之本。”总书记高度重视就业工作，强调“要强化就业优先政策，健全就业促进机制”。</p>
+                <p>“教育是民族振兴、社会进步的重要基石。”总书记关心教育事业，强调“要坚持把立德树人作为中心环节”。</p>
+                <p>“健康是幸福之基。”总书记关注卫生健康事业，强调“要把保障人民健康放在优先发展的战略位置”。</p>
+                <p>“老有所养、幼有所育。”总书记牵挂“一老一小”，强调“要完善养老服务体系，健全生育支持政策”。</p>
+                <p>“住房问题关系民生福祉。”总书记关心住房保障，强调“要坚持房子是用来住的、不是用来炒的定位”。</p>
+                <p>“环境就是民生，青山就是美丽，蓝天也是幸福。”总书记重视生态环保，强调“要像保护眼睛一样保护生态环境”。</p>
+                <p>“平安是老百姓解决温饱后的第一需求。”总书记关注社会治理，强调“要建设更高水平的平安中国”。</p>
+                <p>“人民对美好生活的向往，就是我们的奋斗目标。”这是中国共产党人的庄严承诺，也是新时代中国发展的根本遵循。</p>
+                <p>“治国有常，而利民为本。”在以习近平同志为核心的党中央坚强领导下，中国人民正朝着共同富裕的目标稳步前进，中国式现代化道路越走越宽广。</p>
+            </div>
+        </div>
+
+        <!-- Column 3 -->
+        <div class="col col-3">
+            <div class="article">
+                <p>28 届联合国气候变化大会，并同他们一一合影。</p>
+                <p>“中国式现代化不走殖民掠夺的老路，不走国强必霸的歪路，走的是和平发展的人间正道。”习近平主席的话掷地有声。</p>
+                <p>“中国始终是世界的和平建设者、全球发展的贡献者、国际秩序的维护者。”</p>
+                <p>2024 年，习近平主席密集开展元首外交，出席系列主场外交活动，访问欧洲、东南亚等多国，同各国领导人深入交流，推动构建人类命运共同体。</p>
+                <p>“大国之大，不在于体量大、拳头大，而在于胸襟大、格局大、担当大。”</p>
+                <p>从提出全球发展倡议、全球安全倡议、全球文明倡议，到推动共建“一带一路”高质量发展，中国为世界和平与发展注入正能量。</p>
+                <p>“一花独放不是春，百花齐放春满园。”中国坚持真正的多边主义，践行共商共建共享的全球治理观。</p>
+                <p>“大道之行，天下为公。”中国愿同各国一道，推动建设持久和平、普遍安全、共同繁荣、开放包容、清洁美丽的世界。</p>
+                <p>“讲信修睦、亲仁善邻是中华文明一贯的处世之道。”中国坚持与邻为善、以邻为伴，深化同周边国家互利合作和互联互通。</p>
+                <p>“团结就是力量，分裂没有出路。”中国支持非洲一体化进程，推动中非合作论坛北京峰会取得圆满成功。</p>
+                <p>“拉美和加勒比国家是发展中国家的重要组成部分，也是国际事务的积极参与者。”中国同拉美和加勒比国家关系保持良好发展势头。</p>
+                <p>“中国同阿拉伯国家友好交往源远流长。”中阿合作论坛第十届部长级会议在北京举行，双方宣布建立中阿命运共同体。</p>
+                <p>“中欧是推动多极化的两大力量、支持全球化的两大市场、倡导多样性的两大文明。”习近平主席访问欧洲三国，推动中欧关系行稳致远。</p>
+                <p>“中美两国应该做伙伴，而不是当对手。”习近平主席同美国总统拜登举行会晤，为中美关系指明方向。</p>
+                <p>“中俄关系处于历史最好时期。”习近平主席同俄罗斯总统普京多次会晤，推动中俄新时代全面战略协作伙伴关系不断深化。</p>
+                <p>“金砖国家是新兴市场国家和发展中国家合作的重要平台。”习近平主席出席金砖国家领导人第十六次会晤，推动“大金砖合作”行稳致远。</p>
+                <p>“亚太经合组织是亚太地区层级最高、领域最广、最具影响力的经济合作机制。”习近平主席出席亚太经合组织第三十一次领导人非正式会议，推动亚太合作再出发。</p>
+                <p>“二十国集团是国际经济合作的主要论坛。”习近平主席出席二十国集团领导人第十九次峰会，推动全球经济治理体系改革。</p>
+                <p>“上海合作组织是维护地区安全稳定、促进共同发展的重要力量。”习近平主席出席上海合作组织成员国元首理事会第二十四次会议，推动上合组织发展壮大。</p>
+                <p>“中国—中亚机制是六国共创的美好家园。”习近平主席主持中国—中亚峰会，推动中国—中亚命运共同体建设。</p>
+                <p>“澜沧江—湄公河合作是新兴次区域合作的典范。”习近平主席出席澜沧江—湄公河合作第四次领导人会议，推动澜湄合作提质升级。</p>
+                <p>“中国—东盟合作是东亚合作的标杆。”习近平主席出席中国—东盟博览会，推动中国—东盟命运共同体建设。</p>
+                <p>“中非合作论坛是中非集体对话的重要平台。”习近平主席出席中非合作论坛北京峰会，推动中非命运共同体建设。</p>
+                <p>“中阿合作论坛是中阿集体合作的重要机制。”习近平主席出席中阿合作论坛第十届部长级会议，推动中阿命运共同体建设。</p>
+                <p>“中拉论坛是中拉整体合作的重要平台。”习近平主席同拉美和加勒比国家领导人举行会晤，推动中拉命运共同体建设。</p>
+            </div>
+        </div>
+
+        <!-- Column 4 -->
+        <div class="col col-4">
+            <div class="article">
+                <p>2024 年 6 月 25 日，嫦娥六号返回器携带月球背面样品成功着陆在内蒙古四子王旗预定区域，探月工程嫦娥六号任务取得圆满成功。</p>
+                <p>“探索浩瀚宇宙，发展航天事业，建设航天强国，是我们不懈追求的航天梦。”</p>
+                <p>从“嫦娥”奔月到“天问”探火，从“北斗”指路到“天宫”览胜，中国航天人自力更生、自主创新，刷新中国高度，创造中国奇迹。</p>
+                <p>“关键核心技术是要不来、买不来、讨不来的。”只有把关键核心技术掌握在自己手中，才能从根本上保障国家经济安全、国防安全和其他安全。</p>
+                <p>“科技创新能够催生新产业、新模式、新动能，是发展新质生产力的核心要素。”</p>
+                <p>2024 年，中国在人工智能、量子信息、生物医药、新能源等领域取得一批重大原创成果，新质生产力加快形成。</p>
+                <p>“人才是第一资源。”中国深入实施人才强国战略，加快建设世界重要人才中心和创新高地。</p>
+                <p>“创新是第一动力。”中国坚持创新驱动发展战略，完善科技创新体系，提升国家创新体系整体效能。</p>
+                <p>“抓创新就是抓发展，谋创新就是谋未来。”中国把科技自立自强作为国家发展的战略支撑，坚定不移走中国特色自主创新道路。</p>
+                <p>“中国式现代化要靠科技现代化作支撑。”中国加快实现高水平科技自立自强，为高质量发展提供强大动力。</p>
+                <p>“我们要建成的科技强国，必须具备拥有强大的基础研究和原始创新能力、关键核心技术攻关能力、国际影响力和引领力、高水平科技人才培养和集聚能力、科技治理体系和治理能力等基本要素。”</p>
+                <p>“向着建成科技强国的宏伟目标奋勇前进！”</p>
+            </div>
+            
+            <div class="separator"></div>
+            
+            <div class="article">
+                <div class="article-title">自信自立 彰显担当</div>
+                <div class="article-subtitle">“在和平发展、合作共赢中不断拓展<br>中国式现代化的广度和深度”</div>
+                <p>2024 年 12 月 31 日晚，国家主席习近平发表二〇二五年新年贺词。</p>
+                <p>“2024 年，我们一起走过春夏秋冬，一道经历风雨彩虹，一个个瞬间定格在这不平凡的一年。”</p>
+                <p>“我们积极应对国内外环境变化带来的影响，出台一系列政策‘组合拳’，扎实推动高质量发展，我国经济回暖向好。”</p>
+                <p>“粮食产量突破 1.4 万亿斤，中国碗装了更多中国粮。”</p>
+                <p>“新产业新业态新模式竞相涌现，新能源汽车年产量首次突破 1000 万辆，集成电路、人工智能、量子通信等领域取得新成果。”</p>
+                <p>“嫦娥六号首次月背采样，梦想号探秘大洋，深中通道踏浪海天，南极秦岭站崛起冰原，展现了中国人逐梦星辰大海的豪情壮志。”</p>
+                <p>“今年，我到地方考察，看到大家生活多姿多彩。”</p>
+                <p>“大家对过去一年的收获满满，对未来充满信心。”</p>
+                <p>“家事国事天下事，让人民过上幸福生活是头等大事。”</p>
+                <p>“我在基层看到，老百姓的身边事操心事烦心事，就是我的大事。”</p>
+                <p>“每个‘小家’热气腾腾，中国这个‘大家’就蒸蒸日上。”</p>
+                <p>“2025 年是‘十四五’规划收官之年。我们要坚持以习近平新时代中国特色社会主义思想为指导，全面贯彻落实党的二十大和二十届二中、三中全会精神，坚持稳中求进工作总基调，完整、准确、全面贯彻新发展理念，加快构建新发展格局，着力推动高质量发展，全面深化改革开放，推动高水平科技自立自强，加大宏观调控力度，统筹扩大内需和深化供给侧结构性改革，统筹新型城镇化和乡村全面振兴，统筹高质量发展和高水平安全，切实增强经济活力、防范化解风险、改善社会预期，巩固和增强经济回升向好态势，持续推动经济实现质的有效提升和量的合理增长，增进民生福祉，保持社会稳定，以中国式现代化全面推进强国建设、民族复兴伟业。”</p>
+                <p>“山海寻梦，不觉其远；前路迢，阔步而行。让我们拿出跃马扬鞭的勇气，激发万马奔腾的活力，保持马不停蹄的干劲，一起为梦想奋斗、为幸福打拼，把宏伟愿景变成美好现实。”</p>
+                <p>“新年的钟声即将敲响。习近平主席祝福大家：‘所愿皆所成，多喜乐、长安宁。’”</p>
+                <p class="footer-note">（本报记者 李 锋 整理）</p>
+            </div>
+        </div>
+
+        <!-- Column 5 -->
+        <div class="col col-5">
+            <div class="article">
+                <p>28 届联合国气候变化大会，并同他们一一合影。</p>
+                <p>“中国式现代化不走殖民掠夺的老路，不走国强必霸的歪路，走的是和平发展的人间正道。”习近平主席的话掷地有声。</p>
+                <p>“中国始终是世界的和平建设者、全球发展的贡献者、国际秩序的维护者。”</p>
+                <p>2024 年，习近平主席密集开展元首外交，出席系列主场外交活动，访问欧洲、东南亚等多国，同各国领导人深入交流，推动构建人类命运共同体。</p>
+                <p>“大国之大，不在于体量大、拳头大，而在于胸襟大、格局大、担当大。”</p>
+                <p>从提出全球发展倡议、全球安全倡议、全球文明倡议，到推动共建“一带一路”高质量发展，中国为世界和平与发展注入正能量。</p>
+                <p>“一花独放不是春，百花齐放春满园。”中国坚持真正的多边主义，践行共商共建共享的全球治理观。</p>
+                <p>“大道之行，天下为公。”中国愿同各国一道，推动建设持久和平、普遍安全、共同繁荣、开放包容、清洁美丽的世界。</p>
+                <p>“讲信修睦、亲仁善邻是中华文明一贯的处世之道。”中国坚持与邻为善、以邻为伴，深化同周边国家互利合作和互联互通。</p>
+                <p>“团结就是力量，分裂没有出路。”中国支持非洲一体化进程，推动中非合作论坛北京峰会取得圆满成功。</p>
+                <p>“拉美和加勒比国家是发展中国家的重要组成部分，也是国际事务的积极参与者。”中国同拉美和加勒比国家关系保持良好发展势头。</p>
+                <p>“中国同阿拉伯国家友好交往源远流长。”中阿合作论坛第十届部长级会议在北京举行，双方宣布建立中阿命运共同体。</p>
+                <p>“中欧是推动多极化的两大力量、支持全球化的两大市场、倡导多样性的两大文明。”习近平主席访问欧洲三国，推动中欧关系行稳致远。</p>
+                <p>“中美两国应该做伙伴，而不是当对手。”习近平主席同美国总统拜登举行会晤，为中美关系指明方向。</p>
+                <p>“中俄关系处于历史最好时期。”习近平主席同俄罗斯总统普京多次会晤，推动中俄新时代全面战略协作伙伴关系不断深化。</p>
+                <p>“金砖国家是新兴市场国家和发展中国家合作的重要平台。”习近平主席出席金砖国家领导人第十六次会晤，推动“大金砖合作”行稳致远。</p>
+                <p>“亚太经合组织是亚太地区层级最高、领域最广、最具影响力的经济合作机制。”习近平主席出席亚太经合组织第三十一次领导人非正式会议，推动亚太合作再出发。</p>
+                <p>“二十国集团是国际经济合作的主要论坛。”习近平主席出席二十国集团领导人第十九次峰会，推动全球经济治理体系改革。</p>
+                <p>“上海合作组织是维护地区安全稳定、促进共同发展的重要力量。”习近平主席出席上海合作组织成员国元首理事会第二十四次会议，推动上合组织发展壮大。</p>
+                <p>“中国—中亚机制是六国共创的美好家园。”习近平主席主持中国—中亚峰会，推动中国—中亚命运共同体建设。</p>
+                <p>“澜沧江—湄公河合作是新兴次区域合作的典范。”习近平主席出席澜沧江—湄公河合作第四次领导人会议，推动澜湄合作提质升级。</p>
+                <p>“中国—东盟合作是东亚合作的标杆。”习近平主席出席中国—东盟博览会，推动中国—东盟命运共同体建设。</p>
+                <p>“中非合作论坛是中非集体对话的重要平台。”习近平主席出席中非合作论坛北京峰会，推动中非命运共同体建设。</p>
+                <p>“中阿合作论坛是中阿集体合作的重要机制。”习近平主席出席中阿合作论坛第十届部长级会议，推动中阿命运共同体建设。</p>
+                <p>“中拉论坛是中拉整体合作的重要平台。”习近平主席同拉美和加勒比国家领导人举行会晤，推动中拉命运共同体建设。</p>
+            </div>
+
+            <div class="separator"></div>
+
+            <div class="article">
+                <div class="article-title">同心协力 一往无前</div>
+                <div class="article-subtitle">“凝聚起以中国式现代化全面推进强国<br>建设、民族复兴伟业的磅礴力量”</div>
+                <p>2024 年 6 月 30 日，历时 7 年建设的深中通道正式通车试运营。集“桥、岛、隧、水下互通”于一体的深中通道，是当前世界上综合建设难度最高的跨海集群工程。</p>
+                <p>“深中通道的建成通车，充分说明了中国基建的实力，也彰显了中国特色社会主义制度的优越性。”</p>
+                <p>“社会主义是干出来的，新时代是奋斗出来的。”</p>
+                <p>从港珠澳大桥到深中通道，从“复兴号”飞驰到“嫦娥”奔月，一个个大国重器、一项项超级工程，见证了中国速度、中国质量、中国智慧。</p>
+                <p>“团结奋斗是中国人民创造历史伟业的必由之路。”</p>
+                <p>2024 年，面对外部压力加大、内部困难增多的复杂严峻形势，全国各族人民在以习近平同志为核心的党中央坚强领导下，团结一心、众志成城，战胜了各种困难挑战，取得了来之不易的成绩。</p>
+                <p>“力量源于团结，奋斗创造奇迹。”</p>
+                <p>“只要我们紧紧依靠人民，一切为了人民，一切依靠人民，就没有克服不了的困难，就没有完成不了的任务。”</p>
+                <p>“中国式现代化是全体中国人民的共同事业，也是全体中华儿女的共同梦想。”</p>
+                <p>“让我们更加紧密地团结在以习近平同志为核心的党中央周围，凝心聚力、奋发进取，为全面建设社会主义现代化国家、全面推进中华民族伟大复兴而团结奋斗！”</p>
+            </div>
+
+            <div class="separator"></div>
+
+            <div class="article">
+                <div class="article-title">吹响再出发的“冲锋号”</div>
+                <p>习近平主席发表的新年贺词，让“我和你”心手相牵，让“家与国”同频共振。</p>
+                <p>“2024 年，我们见证了太多感动，经历了太多风雨，也收获了太多喜悦。”</p>
+                <p>“每一个平凡的人都作出了不平凡的贡献。”</p>
+                <p>“点点星火，汇聚成炬，这就是中国力量！”</p>
+                <p>“2025 年，我们将迎来‘十四五’规划收官之年。新的征程上，我们要继续踔厉奋发、勇毅前行。”</p>
+                <p>“路虽远，行则将至；事虽难，做则必成。”</p>
+                <p>“让我们拿出跃马扬鞭的勇气，激发万马奔腾的活力，保持马不停蹄的干劲，一起为梦想奋斗、为幸福打拼！”</p>
+                <p>“祝愿祖国繁荣昌盛、世界和平安宁！祝愿大家所愿皆所成，多喜乐、长安宁！”</p>
+                <p class="footer-note">（新华社北京 2024 年 12 月 31 日电）</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

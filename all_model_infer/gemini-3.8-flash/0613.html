@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>直播后 - 数据复盘</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+            background-color: #e5e5e5;
+            display: flex;
+            justify-content: center;
+            padding: 20px 0;
+        }
+
+        .container {
+            width: 580px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Header Bar */
+        .header {
+            background-color: #9cb2c9;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            color: #333333;
+        }
+
+        .header-title {
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #3e4e5e;
+            font-style: italic;
+        }
+
+        .watermark {
+            position: absolute;
+            right: 20px;
+            top: 24px;
+            text-align: right;
+            color: #ffffff;
+            font-size: 11px;
+            opacity: 0.95;
+            line-height: 1.2;
+        }
+
+        .watermark .author {
+            font-weight: bold;
+        }
+
+        .watermark .platform {
+            font-size: 9px;
+            opacity: 0.8;
+            transform: scale(0.9);
+            transform-origin: right top;
+        }
+
+        /* Top Yellow Notice Section */
+        .notice-section {
+            background-color: #fce390;
+            padding: 16px 20px 18px 20px;
+            color: #555555;
+            font-size: 13.5px;
+            line-height: 1.6;
+        }
+
+        .notice-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #333333;
+            margin-bottom: 2px;
+        }
+
+        .notice-desc {
+            margin-bottom: 4px;
+            color: #4a4a4a;
+        }
+
+        .notice-list {
+            list-style: none;
+            padding-left: 2px;
+        }
+
+        .notice-list li {
+            position: relative;
+            padding-left: 12px;
+            line-height: 1.5;
+            color: #4a4a4a;
+        }
+
+        .notice-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #4a4a4a;
+        }
+
+        /* Tree Diagram Content Area */
+        .content-area {
+            position: relative;
+            padding: 30px 20px 40px 15px;
+            min-height: 560px;
+        }
+
+        /* SVG Connections */
+        .tree-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Left Root Node */
+        .root-node-container {
+            position: absolute;
+            left: 15px;
+            top: 312px;
+            z-index: 2;
+        }
+
+        .root-node {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            border-radius: 6px;
+            padding: 7px 14px;
+            font-size: 15px;
+            font-weight: 700;
+            color: #111111;
+            white-space: nowrap;
+        }
+
+        /* Right Branches Area */
+        .branches-container {
+            margin-left: 175px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .branch-item {
+            display: flex;
+            flex-direction: column;
+            width: 370px;
+        }
+
+        /* Top Blue Explanatory Tag */
+        .tag-bubble {
+            background-color: #274794;
+            color: #ffffff;
+            font-size: 13px;
+            line-height: 1.45;
+            padding: 7px 12px;
+            border-radius: 5px;
+            margin-bottom: 6px;
+            margin-left: 16px;
+            box-shadow: 0 2px 4px rgba(39, 71, 148, 0.2);
+        }
+
+        /* Main Dashed Node Frame */
+        .node-outer-frame {
+            border: 2px dashed #274794;
+            border-radius: 12px;
+            padding: 4px;
+            background-color: #ffffff;
+        }
+
+        .node-inner-pill {
+            background-color: #e9eff8;
+            border-radius: 8px;
+            padding: 9px 16px;
+            font-size: 14.5px;
+            color: #222222;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Bottom Gray-Blue Strip */
+        .footer-bar {
+            background-color: #9cb2c9;
+            height: 24px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <div class="header-title">三、直播后</div>
+        <div class="watermark">
+            <div class="author">(@自律的营销学姐Renita)</div>
+            <div class="platform">From 小红书</div>
+        </div>
+    </div>
+
+    <!-- Yellow Notice Info -->
+    <div class="notice-section">
+        <div class="notice-title">2、数据复盘</div>
+        <div class="notice-desc">进行直播数据复盘的时候，重点关注4个关键数据:</div>
+        <ul class="notice-list">
+            <li>人气峰值和平均在线</li>
+            <li>观众平均停留时长</li>
+            <li>带货转化率</li>
+            <li>UV价值</li>
+        </ul>
+    </div>
+
+    <!-- Main Tree Content -->
+    <div class="content-area">
+        <!-- SVG Connecting Tree Lines -->
+        <svg class="tree-svg">
+            <!--
+              Root node right side: x=122, y=328
+              Main branch line points:
+              From (122, 328) -> (148, 328)
+              Vertical trunk line at x=148, extending from y=88 to y=518
+              Branch 1: (148, 88) -> (175, 88)
+              Branch 2: (148, 230) -> (175, 230)
+              Branch 3: (148, 375) -> (175, 375)
+              Branch 4: (148, 518) -> (175, 518)
+            -->
+            <!-- Root to trunk -->
+            <path d="M 122 328 L 148 328" stroke="#1f2937" stroke-width="2" fill="none" />
+            
+            <!-- Trunk line with smooth rounded corners to top and bottom -->
+            <path d="M 175 88 
+                     L 156 88 
+                     A 8 8 0 0 0 148 96 
+                     L 148 510 
+                     A 8 8 0 0 0 156 518 
+                     L 175 518" 
+                  stroke="#1f2937" stroke-width="2" fill="none" />
+            
+            <!-- Branch 2 (middle) -->
+            <path d="M 148 230 L 175 230" stroke="#1f2937" stroke-width="2" fill="none" />
+            
+            <!-- Branch 3 (middle) -->
+            <path d="M 148 375 L 175 375" stroke="#1f2937" stroke-width="2" fill="none" />
+        </svg>
+
+        <!-- Root Node -->
+        <div class="root-node-container">
+            <div class="root-node">2、数据复盘</div>
+        </div>
+
+        <!-- Branches List -->
+        <div class="branches-container">
+            <!-- Item 1 -->
+            <div class="branch-item">
+                <div class="tag-bubble">
+                    一般平均在线能稳定在50人左右直播就有基本的带货能力，能够赚到钱
+                </div>
+                <div class="node-outer-frame">
+                    <div class="node-inner-pill">
+                        ① 人气峰值和平均在线人数
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item 2 -->
+            <div class="branch-item">
+                <div class="tag-bubble">
+                    通常停留时长超过2分钟算不错的数据，超过30s是一个及格线
+                </div>
+                <div class="node-outer-frame">
+                    <div class="node-inner-pill">
+                        ② 观众平均停留时长
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item 3 -->
+            <div class="branch-item">
+                <div class="tag-bubble">
+                    一般带货转化率达到1%以上算合格，优秀的3%以上
+                </div>
+                <div class="node-outer-frame">
+                    <div class="node-inner-pill">
+                        ③ 带货转化率
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item 4 -->
+            <div class="branch-item">
+                <div class="tag-bubble">
+                    单个用户给直播间贡献的价值，这个数值越高，说明用户在这个直播间的付费意愿更强
+                </div>
+                <div class="node-outer-frame">
+                    <div class="node-inner-pill">
+                        ④ UV价值
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Decorative Bar -->
+    <div class="footer-bar"></div>
+</div>
+
+</body>
+</html>

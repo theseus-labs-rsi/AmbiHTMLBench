@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1200, initial-scale=1.0">
+<title>人民日报 - 评论版</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    font-family: "SimSun", "Songti SC", "STSong", "Noto Serif CJK SC", serif;
+    background-color: #f7f7f7;
+    color: #111;
+    line-height: 1.55;
+    font-size: 13px;
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+  }
+  .page {
+    width: 1140px;
+    background-color: #fff;
+    padding: 25px 35px 35px 35px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.15);
+  }
+
+  /* Masthead */
+  .masthead {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-bottom: 8px;
+    border-bottom: 3px solid #b71c1c;
+  }
+  .masthead-logo {
+    font-family: "KaiTi", "STKaiti", serif;
+    font-size: 46px;
+    font-weight: bold;
+    letter-spacing: -2px;
+    line-height: 1;
+    color: #000;
+  }
+  .masthead-meta {
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    font-family: "SimHei", "STHeiti", sans-serif;
+  }
+  .page-num-tag {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .page-num {
+    font-size: 38px;
+    line-height: 0.9;
+    font-family: "Arial", sans-serif;
+    font-weight: 900;
+  }
+  .page-title {
+    font-size: 26px;
+    letter-spacing: 4px;
+    line-height: 1;
+  }
+
+  /* Main Container */
+  .main-content {
+    display: flex;
+    margin-top: 15px;
+    gap: 20px;
+  }
+  .left-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding-right: 15px;
+    border-right: 1px solid #d0d0d0;
+  }
+  .right-column {
+    width: 290px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Common Components */
+  .section-tag {
+    display: inline-flex;
+    align-items: center;
+    color: #c62828;
+    font-family: "SimHei", "STHeiti", sans-serif;
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+  .section-tag::before {
+    content: "■";
+    margin-right: 4px;
+    font-size: 14px;
+  }
+  .author {
+    font-size: 13px;
+    font-family: "KaiTi", "STKaiti", serif;
+    color: #333;
+    margin-bottom: 6px;
+  }
+  .author-affil {
+    font-size: 12px;
+    font-family: "KaiTi", "STKaiti", serif;
+    color: #555;
+    text-align: right;
+    margin-top: 6px;
+  }
+  p {
+    text-indent: 2em;
+    text-align: justify;
+    margin-bottom: 4px;
+  }
+  hr.divider {
+    border: none;
+    border-top: 1px solid #e0e0e0;
+    margin: 14px 0;
+  }
+
+  /* Section: 大家谈 */
+  .dajiatai-title {
+    font-family: "SimHei", "STHeiti", sans-serif;
+    font-size: 32px;
+    text-align: center;
+    letter-spacing: 4px;
+    font-weight: bold;
+    margin: 5px 0 12px 0;
+  }
+  .editor-intro-box {
+    background-color: #f7f7f7;
+    border: 1px solid #ebebeb;
+    padding: 8px 14px;
+    font-size: 12px;
+    font-family: "KaiTi", "STKaiti", serif;
+    margin: 0 40px 14px 40px;
+    line-height: 1.5;
+    text-align: justify;
+  }
+  .editor-intro-box .editor-sign {
+    text-align: right;
+    font-weight: bold;
+  }
+  .three-columns {
+    display: flex;
+    gap: 16px;
+  }
+  .three-columns .col {
+    flex: 1;
+    position: relative;
+  }
+  .three-columns .col:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    right: -8px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background-color: #eee;
+  }
+  .sub-article-title {
+    font-family: "SimHei", "STHeiti", sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .sub-article-author {
+    font-family: "KaiTi", "STKaiti", serif;
+    font-size: 13px;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+
+  /* Section: 金台随笔 & 图片 */
+  .middle-row {
+    display: flex;
+    gap: 18px;
+  }
+  .jintai-content {
+    flex: 1.8;
+  }
+  .jintai-title {
+    font-family: "SimHei", "STHeiti", sans-serif;
+    font-size: 23px;
+    font-weight: bold;
+    margin: 4px 0 6px 0;
+    letter-spacing: 1px;
+  }
+  .jintai-author {
+    font-family: "KaiTi", "STKaiti", serif;
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
+  .jintai-text-cols {
+    display: flex;
+    gap: 14px;
+  }
+  .jintai-text-cols .col {
+    flex: 1;
+  }
+
+  /* Image & Micro-commentary Section */
+  .photo-section {
+    flex: 1.2;
+    display: flex;
+    flex-direction: column;
+    padding-left: 10px;
+    border-left: 1px solid #eee;
+  }
+  .photo-wrapper {
+    width: 100%;
+    margin-bottom: 6px;
+  }
+  .placeholder {
+    width: 100%;
+    height: 180px;
+    background-color: #eceff1;
+    border: 1px solid #cfd8dc;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    color: #546e7a;
+    font-family: "SimHei", "STHeiti", sans-serif;
+  }
+  .photo-caption {
+    font-size: 11px;
+    font-family: "SimSun", serif;
+    color: #444;
+    line-height: 1.4;
+    margin-bottom: 10px;
+  }
+  .photo-caption .credit {
+    color: #777;
+    float: right;
+  }
+  .micro-text {
+    font-size: 12px;
+    line-height: 1.5;
+    text-align: justify;
+    margin-bottom: 8px;
+  }
+  .rhyme-box {
+    border-top: 1px dashed #ccc;
+    padding-top: 6px;
+    font-size: 12px;
+    font-family: "KaiTi", "STKaiti", serif;
+    line-height: 1.6;
+    color: #222;
+  }
+  .rhyme-box .sign {
+    text-align: right;
+    font-family: "SimHei", sans-serif;
+  }
+
+  /* Section: 水循环经济大有可为 */
+  .bottom-section {
+    margin-top: 4px;
+  }
+  .water-header-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 10px;
+  }
+  .water-quote-box {
+    width: 180px;
+    flex-shrink: 0;
+    border: 1px solid #c62828;
+    padding: 10px;
+    background: #fffafa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .water-quote-text {
+    font-family: "SimHei", "STHeiti", sans-serif;
+    font-size: 14px;
+    color: #c62828;
+    line-height: 1.5;
+    text-align: justify;
+    font-weight: bold;
+  }
+  .water-title-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .water-title {
+    font-family: "SimHei", "STHeiti", sans-serif;
+    font-size: 32px;
+    font-weight: bold;
+    letter-spacing: 3px;
+    margin-bottom: 4px;
+  }
+  .water-author {
+    font-family: "KaiTi", "STKaiti", serif;
+    font-size: 14px;
+  }
+  .water-columns {
+    display: flex;
+    gap: 16px;
+  }
+  .water-columns .col {
+    flex: 1;
+    position: relative;
+  }
+  .water-columns .col:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    right: -8px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background-color: #eee;
+  }
+
+  /* Right Column: 人民时评 */
+  .shiping-box {
+    display: flex;
+    flex-direction: column;
+  }
+  .shiping-headline-box {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .shiping-subhead {
+    flex: 1;
+    border: 1px solid #777;
+    padding: 6px;
+    font-family: "SimHei", "STHeiti", sans-serif;
+    font-size: 13px;
+    line-height: 1.45;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    text-align: justify;
+  }
+  .shiping-body-wrapper {
+    display: flex;
+    gap: 10px;
+  }
+  .shiping-text-cols {
+    flex: 1;
+    display: flex;
+    gap: 10px;
+  }
+  .shiping-text-cols .col {
+    flex: 1;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .shiping-vertical-title {
+    width: 32px;
+    flex-shrink: 0;
+    font-family: "SimHei", "STHeiti", sans-serif;
+    font-size: 20px;
+    font-weight: 900;
+    line-height: 1.15;
+    text-align: center;
+    letter-spacing: 2px;
+    word-break: break-all;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    writing-mode: vertical-rl;
+  }
+
+  /* Right Column: 纵横 */
+  .zongheng-title {
+    font-family: "SimHei", "STHeiti", sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 4px 0 2px 0;
+    letter-spacing: 1px;
+    text-align: center;
+  }
+  .zongheng-author {
+    font-family: "KaiTi", "STKaiti", serif;
+    font-size: 13px;
+    text-align: center;
+    margin-bottom: 6px;
+  }
+  .zongheng-text {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .source-tag {
+    text-align: right;
+    font-size: 11px;
+    font-family: "KaiTi", "STKaiti", serif;
+    color: #444;
+    margin-top: 4px;
+  }
+
+  /* Right Column: 欢迎赐稿 & 责编 */
+  .callout-box {
+    border: 1px solid #222;
+    padding: 8px;
+    margin-top: 15px;
+  }
+  .callout-title {
+    font-family: "SimHei", "STHeiti", sans-serif;
+    font-size: 17px;
+    font-weight: bold;
+    letter-spacing: 4px;
+    float: left;
+    margin-right: 10px;
+    line-height: 1.2;
+    width: 60px;
+    text-align: center;
+    border-right: 1px solid #ccc;
+    padding-right: 6px;
+  }
+  .callout-body {
+    font-size: 11px;
+    line-height: 1.35;
+    font-family: "SimSun", serif;
+  }
+  .editor-footer {
+    margin-top: 8px;
+    font-size: 11px;
+    font-family: "SimSun", serif;
+    display: flex;
+    justify-content: space-between;
+    color: #222;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <!-- Masthead -->
+  <header class="masthead">
+    <div class="masthead-logo">人民日報</div>
+    <div class="masthead-meta">
+      <div class="date-str">2025年1月7日 星期二</div>
+      <div class="page-num-tag">
+        <span class="page-num">5</span>
+        <span class="page-title">评论</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Layout -->
+  <div class="main-content">
+    
+    <!-- Left Column (approx 75%) -->
+    <main class="left-column">
+      
+      <!-- Section: 大家谈 -->
+      <section class="section-dajiatai">
+        <div class="section-tag">大家谈</div>
+        <h1 class="dajiatai-title">让科普与创新比翼齐飞</h1>
+        
+        <div class="editor-intro-box">
+          前不久，新修订的《中华人民共和国科学技术普及法》（以下简称“科普法”）正式公布施行。科技创新、科学普及是实现创新发展的两翼。本期大家谈刊发3篇稿件，与读者一起探讨如何依法推动科普事业高质量发展。
+          <div class="editor-sign">——编 者</div>
+        </div>
+
+        <div class="three-columns">
+          <!-- Col 1 -->
+          <article class="col">
+            <h2 class="sub-article-title">让优秀科普人才脱颖而出</h2>
+            <div class="sub-article-author">李秀菊</div>
+            <p>做好科普是建设科技强国的重要支撑，有赖于高质量的科普人才。科普法中专门增加“科普人员”一章，提出“建立专业化科普工作人员队伍”，凸显对人才的重视。</p>
+            <p>科技部发布的数据显示，2023年，我国共有科普专、兼职人员215.63万人，同比增长7.59%。科学家、科技工作者、科技志愿者等越来越积极地参与到科普工作中。期盼各类科学界人士发挥自身优势和专长，积极参与和支持科普活动，能有效放大做强科普人才“蓄水池”。</p>
+            <p>全面性的数字化科普带来了新的挑战，提出了新的要求。研究火山数十期的中国科学院院士刘嘉麒立刻“抢网”，把科普阵地拓展到视频平台，凭借专业的知识、亲切风趣又通俗易懂的风格，受到许多网友喜爱。这表明，科普人才队伍建设不仅需要重视专业知识储备，也需要更多关注传播规律和技巧。</p>
+            <p>中国科协在2024年科普职称评定工作中，将网络阅读量“10万+”的优秀科普作品等同于发表论文，体现出对传播效果的重视。以人才评价、职业路径、激励机制等改革为牵引，强化政策导向，有利于激发科技工作者投身科普事业的主动性，让更多优秀科普人才脱颖而出。</p>
+            <div class="author-affil">（作者为中国科普研究所研究员）</div>
+          </article>
+
+          <!-- Col 2 -->
+          <article class="col">
+            <h2 class="sub-article-title">扩大科普活动的辐射范围</h2>
+            <div class="sub-article-author">林成华</div>
+            <p>科普法提出：“科普是全社会的共同责任。”高校拥有丰富的科技资源和科技人才，应当在科普事业中发挥重要作用。目前与社会期待相比，高校科普存在一些短板，体现为科普资源开发不足、缺乏系统机制建设、没有形成品牌效应、辐射范围不够广等。</p>
+            <p>组织就是发力点。科普是素质教育的重要内容，一方面，要抓好制度建设，把科普纳入组织建设、工作规划、兼职考核等工作中。另一方面，要壮大优质内容，用足用好校内科普资源，打造具有本校特色的科普资源库。可鼓励教师根据本学科取得的重大科研成果编写科普读物、开设选修课程，开展科研诚信和科技伦理教育等；也可通过科普竞赛、科普研学等趣味性活动，动员学校师生广泛参与。</p>
+            <p>扩大科普活动的辐射范围，推动科普资源走进更高、高校亦大有可为。比如，可与当地企业、科技馆、博物馆、图书馆、历史纪念馆等场馆合作，形成科普合力；可组织高校教师和学生进小学、进中学、进社区、进街道，营造科普氛围，努力提升人们的科学素养。</p>
+            <div class="author-affil">（作者为浙江大学中国科教战略研究院研究员）</div>
+          </article>
+
+          <!-- Col 3 -->
+          <article class="col">
+            <h2 class="sub-article-title">调动社会力量兴办科普事业</h2>
+            <div class="sub-article-author">喻思南</div>
+            <p>发展科普事业是国家的长远任务。发展科普产业，鼓励兴办科普企业，促进科普与其他产业融合发展，构建政府、社会、市场等协同推进的科普发展格局，既是科普法明确要求，也是厚植创新沃土、夯实创新之基的内在需要。</p>
+            <p>当前，我国科普产业比较薄弱，促进科普与文化、旅游、体育、卫生健康、农业、生态环保等产业融合发展，有助于提高产业的内生动力。2024年10月，上海市第十人民医院的科普项目——甲状腺预防治技术培训，通过上海技术交易所成功实现科普成果转化。科普成果和市场效应互促共进，这样的有益尝试，能大大激发各方的参与积极性。完善科普创作激励机制，鼓励更多科技成果以科普作品形式走向市场，有助于调动更多社会力量投身科普事业。</p>
+            <p>以法治护航，确保科普工作与国家科技创新战略同步推进，新时代科普事业必将不断迈上新的台阶。</p>
+            <div class="author-affil">（作者为本报经济社会部记者）</div>
+          </article>
+        </div>
+      </section>
+
+      <hr class="divider">
+
+      <!-- Section: 金台随笔 + 车间图片与微评 -->
+      <section class="middle-row">
+        <!-- Left: 金台随笔 -->
+        <article class="jintai-content">
+          <div class="section-tag">金台随笔</div>
+          <h2 class="jintai-title">从乡村脉搏中寻找艺术脉动</h2>
+          <div class="jintai-author">常 晋</div>
+          <div class="jintai-text-cols">
+            <div class="col">
+              <p>过去，综艺节目往往将镜头对准都市场景，聚焦明星日常，传播潮流文化。近年来，越来越多综艺节目扎根视野乡村，记录新时代田园生活，涌现出不少佳作。</p>
+              <p>在《种地吧》见证庄稼丰收的喜悦，到《山水间的家》聆听山乡巨变的故事之声，在《宝藏般的乡村》感受绿水青山的生态之美……以乡村为背景，把大地做“广位”，一个个乡村综艺如同一个个窗口，展现出乡土文化的万千风情与乡村发展的勃勃生机，受到观众喜爱。</p>
+              <p>让满是泥土气息的“乡”味，是乡村综艺最宝贵的地方。在《乡土中国》中，费孝通写道，“从基层上看去，中国社会是乡土性的”。数千年“乡土中国”，使乡村文明成为中华民族文明史的主体，使乡村成为我们精神的故园、文化的源乡。一个农村老家、一缕炊烟袅袅，都能勾起浓浓的乡愁。若初这份情感所在，勾画风土物候、描祝邻舍际情，乡村综艺以充满泥土味与烟火气的写意笔触，细绘出一幅幅“望得见山、看得见水、记得住乡愁”的乡村画卷，让观众深受共鸣，感受到在天地深处的记忆链接、精神慰藉。</p>
+              <p>乡村综艺要扎根乡村，主要受众却是都市人群。舒缓质朴的“慢”节奏，安宁和乐的“桃花源”，固然令人向往，更需折射出新时代乡村风貌与当代人的“精神坐标”。迈开“绿洲”的脚步，就不仅限于呈现乡土的浪漫，更在于记录耕作的不易。比如，在《种地吧》中，10位年轻人拿起锄头，翻泞土地泥草，经历200天在142亩土地上播种、灌溉、施肥，将一粒粒麦子变成麦田。对农业生产的真实记录，拉近了镜头间的距离，人们能够更好了解食粮的来之不易、体会乡村的发展变</p>
+            </div>
+            <div class="col">
+              <p>迁、领悟土地中蕴含的劳动智慧。</p>
+              <p>乡村综艺之所以能走红“破圈”，还有一个重要背景——乡村全面振兴扎实推进。如今，农村发展日新月异，在经济、文化、社会、生态等领域都取得了非凡成就，这为乡村综艺的蓬勃发展提供了丰厚土壤。《我们的美好生活》以乡村民宿为切口，展示“千万工程”带来的生活变迁；《云上的小店》以便利店为载体，观察真实的新农村生活；《出境吧！新农人》将镜头对准扎根农村一线的高校学生，探讨农业新技术落地应用、农业农村发展等问题……产业跃迁、文化新貌，今天的乡村，有太多故事值得讲述。乡村综艺从乡村发展的脉搏中寻找艺术的脉动，用镜头呈现乡村之美、奋斗之美、发展之美，切中了人们对客居客益和美好生活的好奇期待，满足着人们对欣欣向荣的憧憬期待。</p>
+              <p>乡村综艺的价值，不仅在于展现乡村变迁，还在于反哺乡村发展。《生机勃勃的我们》打造“新农”品牌，推介优质农产品销售。《种地吧》热播，带动节目录制地农业综合体园区迅速走红，贵州雷山县西江千户苗寨等地，以此为契机，加快配套设施建设、升级旅游资源，实现文旅新增长。今天，综艺、影视、微波式直播等文化新业态的乡村实践，正发挥强大的溢出效应，推动乡村文化资源转化为生产力、乡村生态丰富发展。充分利用“文化+”辐射“流量密码”，让更多目光向乡村汇聚、更多资源向乡村集聚，将更好助力乡村全面振兴。</p>
+              <p>“农为国之根本，农业兴人民安。”今天，广袤沃野生机勃勃。繁荣乡村发展步伐，发掘、书写、赋能时代中的乡村，广袤乡村必将涌现更加精彩的崭新画卷。</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Right: 工业生产图片与微评 -->
+        <aside class="photo-section">
+          <div class="photo-wrapper">
+            <div class="placeholder">
+              [照片：汽车自动化生产线上机械手臂作业]
+            </div>
+          </div>
+          <div class="photo-caption">
+            江苏南京长安汽车有限公司新能源汽车生产线，机械手臂正灵活作业。
+            <span class="credit">朱红生摄（影像中国）</span>
+          </div>
+
+          <div class="micro-text">
+            前不久印发的《制造业企业数字化转型实施指南》提出，“明确不同类型企业的数字化转型重点和策略，形成差异化的转型实施方案”。近年来，我国制造业的数字化和智能化水平不断提升，智能工厂和智能供应链加快建设，企业发展动力、活力不断增强。
+          </div>
+
+          <div class="rhyme-box">
+            <div>这正是：</div>
+            <div>数字巧算舞云上，</div>
+            <div>智能作业展风采。</div>
+            <div>转型升级有指南，</div>
+            <div>实业再展新气象。</div>
+            <div class="sign">徐雷鹏 文</div>
+          </div>
+        </aside>
+      </section>
+
+      <hr class="divider">
+
+      <!-- Section: 水循环经济大有可为 -->
+      <section class="bottom-section">
+        <div class="water-header-row">
+          <div class="water-quote-box">
+            <div class="water-quote-text">
+              大力发展水循环经济，把发展建立在水资源可持续利用基础上，最大程度保障水资源安全，最大程度提高水资源利用率，尽最大努力改善水生态环境质量
+            </div>
+          </div>
+          <div class="water-title-area">
+            <h2 class="water-title">水循环经济大有可为</h2>
+            <div class="water-author">张德元</div>
+          </div>
+        </div>
+
+        <div class="water-columns">
+          <div class="col">
+            <p>河北迁安，一家钢铁企业应用电化学除垢技术，成功解决高碱度、高硬度水质的循环水浓缩问题；浙江杭州，一家印染公司采用膜处理系统和智慧用水管控技术，显著提高中水回用率及水资源利用率；山东日照，一家制浆造纸公司综合应用生物处理等技术，实现废水减量或深度回用并对外供给……如今，水资源循环利用技术成熟、效率更高，水循环经济大有可为。</p>
+            <p>我国人多水少，水资源时空分布不均。伴随经济社会发展，水资源需求量持续增长，供需矛盾日益突出，加之利用效率总体不高，高质量发展和生态环境保护都</p>
+          </div>
+          <div class="col">
+            <p>面临水资源短缺的挑战。这样的现状，迫切要求我们进一步转变水资源开发利用观念，大力发展水循环经济。</p>
+            <p>水循环经济，以水资源节约和循环利用为核心，以实现水的高效安全利用与循环保护统一为目标。其在用水环节强调节约用水，通过工业企业节水改造、发展节水型农业、推广节水型产品等，最大限度减少生产生活用水量，提高水资源利用效率；在污水排放环节，把污水作为“第二水源”全力开发，对污水进行处理并重新用于工业生产或绿化灌溉、生态补水，减少原生水资源消耗。</p>
+            <p>发展水循环经济，首先要从价格和制度设计上体现水资源的稀缺性。水资源的稀缺性不仅在价格上，就是关于水资源使用和治理成本，如合理反映不同水质的差别，居民日常生活用水的阶梯水价等。再如支持</p>
+          </div>
+          <div class="col">
+            <p>开展多种形式的水权交易。水资源稀缺性体现在制度上，就是对用水总量和强度进行管理，如健全节水规划体系、完善用水定额指标等。这些机制、规则，为发展水循环经济打下坚实基础。</p>
+            <p>也要加强主体培育。一方面，要积极引导各类主体在全面生产及发展全过程注重循环。比如推动农业、工业等领域用水户进行节水改造，开展水的重复使用和再生水综合利用等。另一方面，还要培育服务于水循环经济各环节的配套主体，比如第三方节水服务企业、污水处理与再生水综合利用企业、节水产品和节水装备制造企业等，以充满活力的经营主体助力水循环经济高质量发展。</p>
+            <p>还要注重机制的更加创新，形成内生动力。从激励机制看，可以通过投资、价格、财税等一系列政策组合拳，支持水循环经</p>
+          </div>
+          <div class="col">
+            <p>济发展。比如实施居民阶梯水价，对工业用水效率达到国家用水定额先进值的纳税人返还一定比例水资源税等。从约束机制看，通过法律、标准、认证等规范和引导用水行为，比如施行《节约用水条例》、对节水潜力大、使用面广的用水产品实行水效标识管理，并逐步淘汰水效等级较低的用水产品等。</p>
+            <p>习近平总书记指出：“推进中国式现代化，要把水资源问题考虑进去”。大力发展水循环经济，把发展建立在水资源可持续利用基础上，最大程度保障水资源安全，最大程度提高水资源利用率，尽最大努力改善水生态环境质量，定能更好推进“人水和谐”，不断书写中国民族治水安邦、兴水利民的新篇章。</p>
+            <div class="author-affil">（作者为中国宏观经济研究院经济体制与管理研究所副研究员）</div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Right Column (approx 25%) -->
+    <aside class="right-column">
+      
+      <!-- Section: 人民时评 -->
+      <section class="shiping-box">
+        <div class="section-tag">人民时评</div>
+        
+        <div class="shiping-headline-box">
+          <div class="shiping-subhead">
+            下大力气综合整治“内卷式”竞争，优化经济运行环境，激发市场活力、创新潜能
+          </div>
+        </div>
+
+        <div class="shiping-body-wrapper">
+          <div class="shiping-text-cols">
+            <div class="col">
+              <p>部分新能源车企为抢占市场份额一味压价，“赊账式”销售；储能行业低价劣质营销，部分部件“带病”运行；有机硅胶企业卖出产成品，账面回收周期长达5个月。以“新三样”为代表的新兴产业快速发展，相关领域却也出现了不容忽视的“内卷式”竞争问题。</p>
+              <p>一段时间以来，一些地方各搞招商引资，违规实施各种优惠，人为制造“政策洼地”，让企业成本、利润进入不合理状态，也造成产业规划同质化、重复建设、资源浪费。一些企业通过“偷梁换柱”低质跑量，不仅难以保障产品质量与服务，更使行业形成低效内卷恶态，影响创新动力。</p>
+              <p>前不久举行的中央经济工作会议提出，“综合整治‘内卷式’竞争”。狠抓落实，破除劣质竞争，才能更好规范经营主体行为，形成良性产业生态，激荡经济发展的内生动力。</p>
+              <p>综合整治“内卷式”竞争，关键在于规范地方政府和企业行为。党的二十届三中全会《决定》提出：“规范地方招商引资法规制度，严禁违法违规给予政策优惠行为。”近年，多地推出务实举措，以更有力规制正风肃纪。比如，广州市2024年优化营商环境工作要点涵盖100条改革任务，围绕打造“产业链”营商环境。在招商引资方面，不搞比拼优惠政策、搞“政策洼地”，功夫要下在比拼服务意识、打造“营商环境高地”。</p>
+            </div>
+            <div class="col">
+              <p>放眼一省、全看全局。打破地方保护和市场分割，加快建设高效规范、公平竞争、充分开放的全国统一大市场是治本之策。坚持全国一盘棋，从宏观运转着眼，进行差异化产业布局，避免“一哄而上”，才能找准自身定位，发挥比较优势。避免搞村村小市场、自搞小循环，依法查处不正当竞争行为，破除区域壁垒、打通循环堵点，充分发挥市场作用，才能在更大的经济循环中拓展发展空间。</p>
+              <p>在这方面，一些实践值得关注。浙江开展工程建设项目招投标领域专项整治，严格实行“盲审即入”等做法。湖北发布公平竞争审查工作规范地方标准，从源头破除公平竞争审查系统。此外，多地清理废止违规出台的招商引资优惠政策，开辟绿色通道一大事项建设网举报投诉12345热线服务平台。</p>
+              <p>整治“内卷式”竞争，不是不要竞争，而是要鼓励公平竞争，引导企业将报价策略转向更长期的发展，坚定走创新发展的路径。这就需要完善创新创业环境，强化知识产权保护，促进社会资源向高附加值产业转移。同时，培育壮大耐心资本，为科技创新提供稳定的长期投资，鼓励企业专注于技术进步和模式创新。对企业来说，也必须摆脱打价格战、同质化竞争的纯利润，以创新产品、提升质量、走差异化发展路径等方案提升市场竞争力。</p>
+              <p>下大力气综合整治“内卷式”竞争，优化经济运行环境，激发市场活力、创新潜能，必将为高质量发展注入源源不断的动力。</p>
+            </div>
+          </div>
+          <h2 class="shiping-vertical-title">不搞“政策洼地”，精心打造“营商环境高地”</h2>
+        </div>
+      </section>
+
+      <hr class="divider">
+
+      <!-- Section: 纵横 -->
+      <section class="zongheng-box">
+        <div class="section-tag">纵横</div>
+        <h2 class="zongheng-title">与野生动物“距离产生美”</h2>
+        <div class="zongheng-author">付 勤</div>
+        <div class="zongheng-text">
+          <p>前不久，多名网友在社交平台发文称，疑似长期被游客投喂的“可可西里网红狼”，在公路附近被一辆大货车碾压致死。对此，三江源国家公园管理局发布公告称，网传狼一事属实，但死因判断并非碾压，并再次关注到近日“网红狼”，呼吁禁止投喂野生动物，共同呵护好它们自身的自然环境。</p>
+          <p>可可西里位于青藏高原腹地，是野生动物栖息地和生态宝库。事故发生前，可可西里公路边的这只狼因常被游客投喂、大肆抢食食物，从骨瘦如柴变得“膘肥体壮”，走红网络，并引来了更多投喂者。投喂食物可能导致它们失去自主觅食的本能，影响种群平衡；人类食物中的高糖、高盐、高脂肪等成分，也会对野生动物的脏器造成损伤，影响其正常发育。同时，长期投喂还会降低它们对车辆和人类的警惕性，从而导致交通事故。公园管理方和有关专家曾多次建议：不要向野生动物投喂食物。</p>
+          <p>野生动物是自然生态系统的重要组成部分，保护它们的多样性，实质上是人与自然和谐共生，就要守护好它们的生存环境，远距离观望，不打扰。近年来，随着全社会生态环保意识不断提升，伤害野生动物的行为大大减少，但以“爱”为名干扰野生动物的行为时有发生。爱护野生动物要特别牢记“距离产生美”，让它们可以按照自然规律繁衍生长，这是为野生动物安全负责、为守护自然生态负责，也是为自身安全负责。</p>
+          <p>入冬以来，候鸟南归，湖北武汉周边的湿地成了鸟儿的天堂。在东湖、府河、沉湖周边，黑鹳、芦苇、白鹤、豆雁等一批批成了冬至客人的生态画卷。候鸟何以纷纷到来？客观条件改善、适宜环境构建、划定保护区、组织护鸟队伍……多方合力，搭建静谧栖息地，造出“保持距离”，为打造越来越多数的候鸟前来越冬，形成自然、严谨守护之景。自然界的生生不息包含复杂的食物链，哪怕生存及其自然规律，我们需要做的，就是呵护良好的生态环境，尊重自然法则，不破坏、不打扰，如此才能真正保护好野生动物群体。</p>
+          <p>保护生态，就是要留存行的生活绿地，给它们一个相对完整、自由的自主空间。今天，人类的脚步几乎踏遍地球的每一个角落。但有的动物，停下脚步，放慢脚步，站在一个合适的位置，留下一个合适空间，才能真正欣赏到自然之美和生命之美。</p>
+          <div class="source-tag">〔摘编自《湖北日报》〕</div>
+        </div>
+      </section>
+
+      <!-- Section: 欢迎赐稿 -->
+      <div class="callout-box">
+        <div class="callout-title">欢迎赐稿</div>
+        <div class="callout-body">
+          各位读者，本版“大家谈”“现代评论”“中国道路中国梦”“来论”等栏目长期征稿，欢迎赐稿，请勿一稿多投。<br>
+          本版邮箱：rmrbpl@peopledaily.com.cn（来稿请注明栏目名）
+        </div>
+      </div>
+
+      <div class="editor-footer">
+        <span>本版责编：李 标</span>
+        <span>李巩荣</span>
+        <span>曹 蕾</span>
+      </div>
+
+    </aside>
+
+  </div>
+</div>
+
+</body>
+</html>

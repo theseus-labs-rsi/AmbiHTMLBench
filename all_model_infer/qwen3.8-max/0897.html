@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>切腹の間とは？</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=Zen+Maru+Gothic:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Zen Maru Gothic', 'Kosugi Maru', sans-serif;
+            background-color: #ffffff;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            position: relative;
+        }
+
+        /* Header Styles */
+        .header {
+            display: flex;
+            align-items: flex-end;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .title-main {
+            font-size: 2.8rem;
+            font-weight: bold;
+            color: #e57373; /* Reddish pink */
+            text-shadow: 2px 2px 0px #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff, 3px 3px 5px rgba(0,0,0,0.1);
+            letter-spacing: 2px;
+            transform: rotate(-2deg);
+            margin-right: 10px;
+            /* Simulating the hand-drawn outline effect roughly */
+            -webkit-text-stroke: 1px #5d4037;
+        }
+
+        .title-sub {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #81d4fa; /* Light blue */
+            -webkit-text-stroke: 1px #5d4037;
+            transform: rotate(-1deg);
+        }
+
+        .author {
+            font-size: 1rem;
+            font-weight: bold;
+            margin-left: auto;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        /* Text Block Styles */
+        .text-block {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .highlight-bold {
+            font-weight: bold;
+        }
+
+        .circle-num {
+            display: inline-block;
+            width: 1.2em;
+            height: 1.2em;
+            background-color: #b39ddb; /* Light purple */
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 1.2em;
+            font-size: 0.9em;
+            vertical-align: middle;
+            margin: 0 2px;
+        }
+
+        /* Diagrams Section */
+        .diagrams-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+
+        .diagram-item {
+            flex: 1;
+            position: relative;
+        }
+
+        .diagram-label {
+            position: absolute;
+            top: -25px;
+            left: 5px;
+            width: 24px;
+            height: 24px;
+            background-color: #b39ddb;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            font-weight: bold;
+            z-index: 10;
+        }
+
+        .tatami-grid {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            background-color: #c5e1a5; /* Tatami green */
+            border: 2px solid #333;
+            display: grid;
+            gap: 2px;
+            background-color: #333; /* Grid lines color */
+        }
+        
+        .tatami-cell {
+            background-color: #c5e1a5;
+        }
+
+        /* Specific Grid Layouts */
+        .grid-1 {
+            grid-template-columns: 2fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr;
+        }
+        .grid-1 .c1 { grid-column: 1; grid-row: 1 / 3; }
+        .grid-1 .c2 { grid-column: 2; grid-row: 1 / 4; }
+        .grid-1 .c3 { grid-column: 1; grid-row: 3; }
+        /* Wait, looking closer at image 1: Top left is wide, bottom left is wide? No.
+           Image 1: Left col has 2 stacked horizontal rects. Right col has 1 tall vertical rect.
+           Actually: Top-left (horizontal), Mid-left (horizontal), Bottom (full width? No).
+           Let's re-evaluate Image 1 based on standard tatami or visual:
+           Visual: Left side has two horizontal blocks stacked. Right side has one vertical block. Bottom has one horizontal block spanning full width?
+           Looking at crop 4: 
+           - Top left: horizontal rectangle.
+           - Middle left: horizontal rectangle.
+           - Right: Vertical rectangle spanning top and middle height.
+           - Bottom: Horizontal rectangle spanning full width.
+           Wait, the red circle is on the top right corner of the top-left block / top left of the right block.
+        */
+        
+        /* Refined Grid 1 */
+        .grid-1 {
+            grid-template-columns: 1.5fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr;
+        }
+        .g1-1 { grid-column: 1; grid-row: 1; }
+        .g1-2 { grid-column: 1; grid-row: 2; }
+        .g1-3 { grid-column: 2; grid-row: 1 / 3; }
+        .g1-4 { grid-column: 1 / 3; grid-row: 3; }
+
+        /* Refined Grid 2 */
+        /* Visual: Top row: 2 squares. Middle: 1 square center? Right vertical. Bottom: Full width.
+           Crop 5 shows: Top left square, Top right square. Middle left small square? 
+           Actually: Top row (2 blocks). Middle row (1 block left, 1 block right vertical?). Bottom row (1 block full width).
+           Let's look at the red circle. It's between the top two blocks.
+        */
+        .grid-2 {
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr;
+        }
+        .g2-1 { grid-column: 1 / 3; grid-row: 1; } /* Top wide? No, looks like 2 blocks */
+        /* Let's try: */
+        .grid-2 {
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr;
+        }
+        .g2-1 { grid-column: 1; grid-row: 1; }
+        .g2-2 { grid-column: 2; grid-row: 1; }
+        .g2-3 { grid-column: 1; grid-row: 2; } /* Small square? */
+        .g2-4 { grid-column: 2; grid-row: 2 / 4; } /* Right vertical */
+        .g2-5 { grid-column: 1; grid-row: 3; }
+        /* This is getting complex to guess perfectly. I will approximate the visual structure using nested divs or simple grid */
+        
+        /* Simplified Visual Approximation for Grids */
+        .tatami-box {
+            width: 100%;
+            height: 150px;
+            border: 2px solid #333;
+            background-color: #333;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .t-row { display: flex; gap: 2px; flex: 1; }
+        .t-col { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+        .t-cell { background-color: #c5e1a5; flex: 1; }
+
+        /* Hand drawn marks */
+        .mark-circle {
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            width: 40px;
+            height: 30px;
+            border: 3px solid #e57373;
+            border-radius: 50%;
+            transform: rotate(-15deg);
+            pointer-events: none;
+        }
+        
+        .mark-triangle {
+            position: absolute;
+            top: -15px;
+            right: 5px;
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-bottom: 25px solid #e57373;
+            opacity: 0.8;
+            transform: rotate(10deg);
+        }
+        .mark-question {
+            position: absolute;
+            top: -25px;
+            right: -5px;
+            color: #e57373;
+            font-weight: bold;
+            font-size: 1.5rem;
+            transform: rotate(15deg);
+        }
+
+        /* Bottom Section */
+        .bottom-section {
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+        }
+
+        .bottom-text {
+            flex: 1.2;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .underline-red {
+            border-bottom: 2px solid #e57373;
+            padding-bottom: 1px;
+        }
+
+        .floor-plan-container {
+            flex: 1;
+            position: relative;
+        }
+
+        .floor-plan {
+            width: 100%;
+            aspect-ratio: 1.2 / 1;
+            border: 2px solid #333;
+            background-color: #c5e1a5;
+            position: relative;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            grid-template-rows: 1fr;
+        }
+
+        .fp-main {
+            border-right: 2px solid #333;
+            position: relative;
+            padding: 5px;
+        }
+
+        .fp-tokonoma {
+            background-color: #a5d6a7; /* Slightly different green or same */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            writing-mode: vertical-rl;
+            font-weight: bold;
+            font-size: 1.1rem;
+            border-left: 2px solid #333;
+        }
+
+        .fp-label {
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .fp-arrow-group {
+            position: absolute;
+            top: -25px;
+            left: 20%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .fp-arrow-text {
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .fp-arrows {
+            color: #e57373;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+        }
+
+        .fp-dimensions {
+            position: absolute;
+            right: 5px;
+            top: 10%;
+            bottom: 10%;
+            width: 20px;
+            border-left: 1px solid #e57373;
+            border-top: 1px solid #e57373;
+            border-bottom: 1px solid #e57373;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .fp-dim-text {
+            writing-mode: vertical-rl;
+            color: #fff;
+            background-color: #e57373; /* Highlighting the text bg? No, text is white on green in image? */
+            /* In image, "約3m" is white text with red outline or just white? Looks like white text on the green bg, maybe with shadow */
+            color: #fff;
+            text-shadow: 1px 1px 2px #e57373;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        .fp-inner-labels {
+            position: absolute;
+            top: 30%;
+            left: 10%;
+        }
+        
+        .fp-bukkyo {
+            color: #e57373;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .fp-tatami-label {
+            font-weight: bold;
+            font-size: 1rem;
+            line-height: 1.2;
+        }
+
+        /* Tokonoma specific styling */
+        .tokonoma-box {
+            background-color: #8d6e63; /* Brownish for tokonoma? In image it's green but labeled */
+            /* Actually in the image, the tokonoma area is green too, just separated by line */
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <div class="title-main">切腹の間</div>
+        <div class="title-sub">とは？</div>
+        <div class="author">@吉田靖治</div>
+    </div>
+
+    <!-- Top Text -->
+    <div class="text-block">
+        四畳半の畳の敷き方について、たまに「<span class="highlight-bold">切腹の間</span>」という話を聞きます。多くの場合は <span class="circle-num">3</span> のような敷き方については<span class="highlight-bold">縁起が悪いので避けるべきだ</span>ということのようですが、調べてみてもきちんとした出典がなく（いくつかの工務店等のウェブサイトに中途半端な言及がある程度）、内容も地方によってまちまちなので、<span class="highlight-bold">気にする必要はあまり無さそう</span>です。どうしても気になるようであれば、<span class="circle-num">3</span> についてはなるべく避けるようにする、くらいで大丈夫だと思います。
+    </div>
+
+    <!-- Diagrams Row -->
+    <div class="diagrams-row">
+        <!-- Diagram 1 -->
+        <div class="diagram-item">
+            <div class="diagram-label">1</div>
+            <div class="mark-circle"></div>
+            <div class="tatami-box">
+                <div class="t-row" style="flex: 2;">
+                    <div class="t-col" style="flex: 1.5;">
+                        <div class="t-cell"></div>
+                        <div class="t-cell"></div>
+                    </div>
+                    <div class="t-cell" style="flex: 1;"></div>
+                </div>
+                <div class="t-row" style="flex: 1;">
+                    <div class="t-cell"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Diagram 2 -->
+        <div class="diagram-item">
+            <div class="diagram-label">2</div>
+            <div class="mark-circle"></div>
+            <div class="tatami-box">
+                <div class="t-row" style="flex: 1;">
+                    <div class="t-cell"></div>
+                    <div class="t-cell"></div>
+                </div>
+                <div class="t-row" style="flex: 2;">
+                    <div class="t-col" style="flex: 1;">
+                        <div class="t-cell" style="flex: 1;"></div>
+                        <div class="t-cell" style="flex: 1;"></div>
+                    </div>
+                    <div class="t-cell" style="flex: 1;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Diagram 3 -->
+        <div class="diagram-item">
+            <div class="diagram-label">3</div>
+            <div class="mark-triangle"></div>
+            <div class="mark-question">?</div>
+            <div class="tatami-box">
+                <div class="t-row" style="flex: 1;">
+                    <div class="t-cell" style="flex: 1;"></div>
+                    <div class="t-cell" style="flex: 1;"></div>
+                </div>
+                <div class="t-row" style="flex: 1;">
+                    <div class="t-cell" style="flex: 1;"></div>
+                    <div class="t-col" style="flex: 1;">
+                         <div class="t-cell"></div>
+                    </div>
+                </div>
+                 <div class="t-row" style="flex: 1;">
+                    <div class="t-cell"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Section -->
+    <div class="bottom-section">
+        <div class="bottom-text">
+            むしろ和室では、床の間に対して畳の長辺が平行になることや、<span class="underline-red">出入り口に対して畳の目が垂直になること</span>が重要です。さらに茶室や掘り炬燵のある和室では中央に半畳の畳が来るので、右図のような間取りでは <span class="circle-num">3</span> のような敷き方になることも多いようです。ただどれも「<span class="highlight-bold">できれば守る</span>」程度の決め事で、<span class="highlight-bold">場合によって変わってくる</span>ので、<span class="underline-red">あまり拘りすぎない</span>のが良いと思います。
+        </div>
+
+        <div class="floor-plan-container">
+            <div class="fp-arrow-group">
+                <div class="fp-arrow-text">出入口</div>
+                <div class="fp-arrows">↓↓↓</div>
+            </div>
+            
+            <div class="floor-plan">
+                <div class="fp-main">
+                    <div class="fp-inner-labels">
+                        <div class="fp-bukkyo">仏の間</div>
+                        <div class="fp-tatami-label">畳<br>ｺﾏﾘ</div>
+                    </div>
+                    
+                    <div class="fp-dimensions">
+                        <span class="fp-dim-text">約3m</span>
+                    </div>
+                </div>
+                <div class="fp-tokonoma">
+                    床の間
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
