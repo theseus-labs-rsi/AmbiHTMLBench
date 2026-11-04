@@ -1,268 +1,206 @@
 # AmbiHTMLBench
 
-AmbiHTMLBench 用于评测模型把页面图像重建为可执行 HTML 的能力。仓库目前包含两条互补评测路径：
+AmbiHTMLBench evaluates how well models reconstruct page images as executable HTML. It provides two complementary evaluation paths:
 
-1. **客观评测**：渲染模型输出的 HTML，抽取可见页面 block，并与人工 GT 做页面级匹配和打分。
-2. **主观评测**：以 Reference 页面为锚点，让 VLM Judge 进行成对视觉偏好判断，并用 Batch Bradley--Terry 聚合。
+- **Objective evaluation:** render predicted HTML in Chromium, extract visible blocks, align them with annotated ground truth (GT), and measure text, table, and layout fidelity.
+- **Subjective evaluation:** replay the paper's frozen, human-calibrated five-judge OLS preference proxy, then fit a soft Bradley?Terry ranking with page-level bootstrap intervals.
 
-客观评测当前主入口是 `eval-objective-v3`。旧版 `eval-json-html`、`eval-dataset-json-html`、`eval-quality-inspection` 等接口已不再是 README 推荐路径。
+The paper uses the **`candidate_refresh` release of the frozen OLS5 protocol**. Historical Arena v1 code and commands have been removed. The subjective tools in this repository operate on recorded judgments; they do not collect new judgments through model APIs.
 
-## 1. 环境安装
+## Installation
+
+Python 3.10 or later is required.
 
 ```bash
 python -m pip install -e .
 python -m playwright install chromium
 ```
 
-运行测试时安装开发依赖：
+Chromium is required for objective HTML evaluation. The offline subjective modules use only the Python standard library and do not require a browser or API key.
+
+To install development dependencies and run the tests:
 
 ```bash
 python -m pip install -r requirements-dev.txt
 python -m pytest
 ```
 
-入口命令：
+Inspect the available commands:
 
 ```bash
-python main.py -h
+python main.py --help
+python -m benchmark.frozen_proxy_cli --help
 ```
 
-## 2. 客观评测
+Installed entry points are `ambihtmlbench` (alias `ambibench`) for objective evaluation and `ambihtmlbench-proxy` for the frozen subjective proxy.
 
-### 2.1 输入文件组织
+## Objective evaluation
 
-默认 GT 文件：
+### Inputs
 
-```text
-AmbiHTMLBench_GT_v5_1115.json
-```
+The default ground-truth file is `AmbiHTMLBench_GT_v5_1115.json`. It contains a list of pages with exactly three top-level fields: `ID`, `imageUrl`, and `contentList`. Each block in `contentList` describes its type in `name`, its text, table HTML, or formula content in `remark`, and its bounding box in `left`, `top`, `width`, and `height`.
 
-该文件是固定 schema 的页面列表。每个页面包含 `ID`、`imageUrl` 和 `contentList`。`contentList` 中的 block 使用 `name` 表示类型，`remark` 表示文本、表格 HTML 或公式内容，`left/top/width/height` 表示 GT 框。
-
-默认模型输出目录：
-
-`all_model_infer/` 由使用者在本地准备，不随主分支代码发布，已加入 Git 忽略规则。
+Prepare model outputs locally in this layout:
 
 ```text
 all_model_infer/
   model_a/
     html/
-      0001_xxx.html
-      0002_xxx.html
+      0001_example.html
+      0002_example.html
   model_b/
     html/
-      0001_xxx.html
+      0001_example.html
 ```
 
-模型目录名会作为 leaderboard 中的 `model` 名称。每个 HTML 文件名前四位是页面 ID，例如 `0006_xxx.html` 对应 GT 中的 `ID=6`。
+Directory names become model names in the leaderboard. The first four characters of an HTML filename identify its page: `0006_example.html` corresponds to GT page `ID=6`.
 
-### 2.2 运行全量客观评测
+`all_model_infer/` is excluded from the current main branch and ignored by Git. Supply the inference files separately. Generated results under `outputs/` are also ignored.
 
-```powershell
-python main.py eval-objective-v3 `
-  --gt-json AmbiHTMLBench_GT_v5_1115.json `
-  --infer-dir all_model_infer `
-  --out-dir outputs/objective_v3
+### Run the evaluator
+
+```bash
+python main.py eval-objective-v3 --gt-json AmbiHTMLBench_GT_v5_1115.json --infer-dir all_model_infer --out-dir outputs/objective_v3
 ```
 
-Linux/macOS shell 可以把行尾的反引号替换为反斜杠，或者写成单行命令。
+Evaluate selected models and pages:
 
-常用调试参数：
-
-```powershell
-python main.py eval-objective-v3 `
-  --models gpt-5.6-sol,gemini-3.1-pro-preview `
-  --page-ids 0006,0359 `
-  --out-dir outputs/objective_debug
+```bash
+python main.py eval-objective-v3 --models gpt-5.6-sol,gemini-3.1-pro-preview --page-ids 0006,0359 --out-dir outputs/objective_debug
 ```
 
-```powershell
-python main.py eval-objective-v3 `
-  --max-pages 20 `
-  --no-visualizations `
-  --out-dir outputs/objective_smoke
+For a small run without visualization output:
+
+```bash
+python main.py eval-objective-v3 --max-pages 20 --no-visualizations --out-dir outputs/objective_smoke
 ```
 
-输出文件：
+`--max-pages` limits the number of pages per model. Partial CSV files support resuming interrupted runs; use a separate output directory for a different evaluation scope.
 
-- `page_scores.csv`：每个模型、每个页面的页面级指标。
-- `leaderboard.csv`：每个模型的聚合分数和排序。
-- `page_scores.partial.csv` / `leaderboard.partial.csv`：断点中间结果。
-- `visualizations/<model>/<page_id>.html`：表格、文本、layout graph 匹配可视化。
-- `visualizations/<model>/_assets/<page_id>.png`：模型 HTML 渲染截图。
+### Outputs
 
-### 2.3 页面元素抽取
+| Output | Contents |
+|---|---|
+| `page_scores.csv` | Metrics for each model and page |
+| `leaderboard.csv` | Aggregated model scores and ranks |
+| `page_scores.partial.csv`, `leaderboard.partial.csv` | Intermediate results |
+| `visualizations/<model>/<page_id>.html` | Reference and prediction boxes, text/table matches, and layout edges |
+| `visualizations/<model>/_assets/<page_id>.png` | Rendered prediction screenshots |
 
-预测 HTML 会先在 headless Chromium 中渲染，再抽取可见 DOM block。抽取逻辑包括：
+Visualizations are enabled by default. Use them to inspect alignment quality, or pass `--no-visualizations` to reduce runtime and output size.
 
-- 可见文本节点会被合并到语义 block。
-- 表格保留为完整 table block，不会在主抽取阶段拆成单元格。
-- `img/svg/canvas/video/figure/table/math/.MathJax/.katex` 等结构节点会作为结构 block 抽取。
-- `class` 包含 `placeholder` 的元素会被排除，不参与匹配和打分。
-- 不可见文本、透明文本、极小字号文本、`display:none` 和 `visibility:hidden` 内容会被排除。
+### Extraction and alignment
 
-### 2.4 匹配逻辑
+The evaluator renders HTML in headless Chromium and extracts visible DOM blocks. Text nodes are grouped into semantic blocks. Tables remain whole objects during extraction, while images, SVG, canvas, video, figures, and mathematical structures are extracted as structural blocks. Elements with `placeholder` in their class names, hidden or transparent text, and text below the visibility thresholds are excluded.
 
-客观评测不是直接比较 HTML 源码，而是在 block 层面比较 GT 和预测结果。
+**Tables.** Candidate table matches combine content similarity, structural similarity, text agreement, and geometry. Hungarian assignment produces a global one-to-one matching. Matched tables receive TEDS and TEDS-S scores. Cells from unmatched tables enter the text pool.
 
-**表格匹配**
+**Formulas.** Formula content enters the text pool after dollar delimiters are removed. The current evaluator does not compute a separate formula CDM score; the compatibility field `formula_cdm` is normally empty.
 
-- GT 表格和预测表格先做一对一匹配。
-- 候选分数综合表格 TEDS、TEDS-S、文本相似度和几何重叠。
-- 使用 Hungarian assignment 求全局一对一匹配。
-- 匹配成功的表格用于计算 TEDS 和 TEDS-S。
-- 未匹配到的 GT/预测表格会被拆成单元格文本，放入后续文本池。
+**Text.** A bipartite graph links GT and predicted text using `partial_ratio` similarity. Connected components support one-to-one, one-to-many, many-to-one, and many-to-many alignment. The matcher considers reading, horizontal, reversed, and graph-guided orders, with bounded local reordering. Segmentation dynamic programming forms aligned groups. Page text distance uses character-level Levenshtein distance with denominator `max(len(gt), len(pred), 1)`. The GT character `?` acts as a wildcard for one character.
 
-**公式处理**
+### Metrics and aggregation
 
-- 当前版本不再单独计算公式 CDM。
-- GT 和预测中的公式会去掉 `$` 包裹后作为普通文本加入文本池。
-- 因此 `formula_cdm` 在当前 leaderboard 中通常为空。
+| Metric | Meaning | Better |
+|---|---|---|
+| `table_teds` | Approximate table content and structure similarity using normalized row/cell sequence edits | Higher |
+| `table_teds_s` | Approximate table structure similarity, excluding cell text | Higher |
+| `text_edit_distance` | Normalized page text edit distance | Lower |
+| `layout_graph_similarity` | Similarity of aligned block geometry and spatial relationships | Higher |
 
-**文本匹配**
-
-- 文本池包含普通文本、公式文本和未匹配表格拆出的单元格文本。
-- 先基于 `partial_ratio` 文本相似度建立 GT-text 到 Pred-text 的二分图。
-- 连通分量支持一对一、一对多、多对一、多对多。
-- 分量内部会尝试阅读顺序、横向顺序、反向顺序、图引导顺序和小规模局部重排。
-- 固定顺序后使用分段 DP 得到多对多文本组。
-- 页面级 `text_edit_distance` 最终基于匹配组拼接后的 GT 文本和预测文本计算。
-- 文本编辑距离用字符级 Levenshtein，归一化分母为 `max(len(gt), len(pred), 1)`。
-- GT 文本中的 `ξ` 被视作通配符，可匹配任意单字符。
-
-### 2.5 指标
-
-每个页面输出以下核心指标：
-
-- `table_teds`：表格内容与结构相似度，使用行/单元格序列编辑的归一化 TEDS 近似实现，范围 `[0,1]`，越高越好。只在 GT 有表格的页面计算。
-- `table_teds_s`：只考虑表格结构、不考虑单元格文本的 TEDS-S 近似实现，范围 `[0,1]`，越高越好。只在 GT 有表格的页面计算。
-- `formula_cdm`：当前版本不单独计算公式指标，通常为空。
-- `text_edit_distance`：整页文本编辑距离，范围通常为 `[0,1]`，越低越好。
-- `layout_graph_similarity`：二维 layout graph 相似度，范围 `[0,1]`，越高越好。
-
-模型聚合时：
-
-- `table_teds` 和 `table_teds_s` 只在有 GT 表格的页面上平均。
-- `text_edit_distance` 和 `layout_graph_similarity` 在全部页面上平均。
-- weighted score 使用：
+Table metrics are averaged over pages with GT tables. Text and layout metrics are averaged over all evaluated pages. The model score is:
 
 ```text
 text_quality = 1 - text_edit_distance
 weighted_score = (text_quality + layout_graph_similarity + 0.3 * table_teds) / 2.3
 ```
 
-如果某个模型的评测页面均没有 GT 表格，则去掉表格项，分母改为 `2.0`。
+When none of a model's evaluated pages has GT tables, the evaluator omits the table term and uses denominator `2.0`. TEDS-S remains a diagnostic metric and does not contribute an additional weight.
 
-其中 TEDS-S 是诊断指标，不额外进入 weighted score，避免重复计算表格结构。
-
-### 2.6 Layout Graph 分数
-
-layout 只基于成功匹配的对象计算：
-
-- 一个匹配表格贡献一个节点。
-- 一个文本匹配组贡献一个节点。
-- 一对多或多对多文本组会先取 GT 侧和预测侧各自的包络框。
-- GT 或预测任一侧为空的文本组不进入 layout graph。
-
-每个节点比较中心点位移和宽高相似度。然后在 GT 节点中心上构建 `k=3` 的 KNN 图，并用相同节点身份读取预测侧对应边，比较边的方向、长度和二维位移。最终分数由边相似度、节点相似度和匹配覆盖率加权得到：
+Layout nodes represent matched tables and text groups. Groups containing multiple blocks use an enclosing box on each side; groups with an empty side are excluded. The scorer compares node centers and sizes, constructs a `k=3` nearest-neighbor graph on GT centers, and compares corresponding predicted edges by direction, length, and displacement:
 
 ```text
 layout_graph_similarity = 0.55 * edge_score + 0.30 * node_score + 0.15 * coverage_f1
 ```
 
-### 2.7 可视化
+### Merge existing reports
 
-默认会为每个页面生成可视化 HTML。可视化页面包含：
-
-- GT 原图和 GT 匹配框。
-- 预测 HTML 渲染截图和预测匹配框。
-- 表格匹配、文本匹配和 layout graph 边。
-- 每个匹配组对应的 GT 文本和预测文本。
-
-这部分主要用于人工检查匹配是否合理。
-
-### 2.8 合并已有实验报表
-
-安装项目后，可以合并多个 `page_scores.csv`，无需重新渲染 HTML：
+Combine page-score CSVs without rendering HTML again:
 
 ```bash
 python -m scripts.build_leaderboard outputs/run_a/page_scores.csv outputs/run_b/page_scores.csv --out-dir outputs/merged
 ```
 
-使用 `--exclude-model 模型名` 排除模型，可重复指定。四个 `build_leaderboard_*` 实验脚本保留原有默认路径，共用这一实现。历史合并报表的模型总分始终除以 `2.3`；主评测入口在模型没有 GT 表格时使用 `2.0`，对比结果时应保持相同口径。
+Repeat `--exclude-model MODEL_NAME` to exclude models. The four experiment-specific `build_leaderboard_*` scripts retain their default paths and share the same report implementation.
 
-## 3. 主观评测
+Historical merged reports always use denominator `2.3` for model scores, including models without GT tables. The main evaluator uses `2.0` in that case. Use a consistent scoring convention when comparing reports.
 
-### 3.1 当前论文协议：冻结 OLS5 代理
+## Frozen OLS5 subjective evaluation
 
-主观评测比较 Reference 与两个候选页面的视觉还原质量。全局布局、文本呈现是固定诊断轴；表格、公式、算法、竖排文本、列表层级按参考结构激活。轴分数用于解释差异，不进入总体代理。
+### Paper protocol and result versions
 
-人工校准集包含 1,872 个物理比较。五位裁判各做双方向、两次重复，共 37,440 个判断；每裁判四个 canonical overall 判断的均值作为 OLS 特征。冻结后，部署改为每题每裁判单方向、单次：10,000 个比较、50,000 个判断。五个 overall 判断按固定系数组合，得到连续偏好分数，再拟合 soft Bradley–Terry 排名；区间来自 2,000 次整页 bootstrap。
+The human calibration set contains 1,872 physical comparisons. Five judges each evaluated both display orders twice, producing 37,440 judgments. The mean of each judge's four canonical overall votes formed one OLS feature.
 
-原始单次部署与候选更新版分别保留：GPT-5.6-Sol 的 BT 分数为 154.34 和 154.70。当前论文使用后者。更新接受 54 个 model-page 候选，影响 98 个比较，其中 21 个属于旧人工子集；旧标签不能验证这些更新后的候选。全 10,000 场均由代理评分，不能声称获得了全量人工 Accuracy/Recall/F1。
+Deployment uses one display order and one vote per judge for each comparison: 10,000 comparisons and 50,000 judgments. Overall labels are encoded as `A=1`, `TIE=0.5`, and `B=0`, then combined using the frozen coefficients:
 
-### 3.2 离线验证与复现
-
-新入口 `benchmark.frozen_proxy_cli` **不联网、不调用裁判 API**；仅使用该离线层不需要安装或启动浏览器，也不需要 API key。本次同步包含代码、冻结配置、轻量证据与两版汇总榜单，不包含完整原始判断、图片或人工标注。以下 `artifacts/` 路径是用户另行提供的外置数据，不是仓库已附文件。
-
-```bash
-python -m benchmark.frozen_proxy_cli validate \
-  --results artifacts/candidate_refresh/single_results.jsonl \
-  --config configs/subjective_ols5_frozen.json \
-  --artifact-manifest evidence/subjective/dataset_versions.json \
-  --dataset candidate_refresh
-
-python -m benchmark.frozen_proxy_cli replay \
-  --results artifacts/candidate_refresh/single_results.jsonl \
-  --config configs/subjective_ols5_frozen.json \
-  --artifact-manifest evidence/subjective/dataset_versions.json \
-  --dataset candidate_refresh \
-  --out-dir outputs/candidate_refresh_replay \
-  --bootstrap 2000
+```text
+p_A = clip(sum(beta[j] * vote[j] for j in the five judges), 0, 1)
 ```
 
-输出目录必须是新目录，不覆盖冻结结果。省略 artifact manifest 时只能验证输入结构，不能认证为论文发布数据；`--fixture` 仅用于小型测试，不是论文复现。校准数据的离线 OLS/留一题卷复现见 [冻结代理说明](docs/FROZEN_PROXY.md)。
+There is no intercept or weight normalization. Diagnostic axes explain visual differences but do not contribute to this overall score. The continuous preferences feed a soft Bradley?Terry model; intervals use 2,000 whole-page bootstrap replicates with fixed proxy predictions and coefficients.
 
-本次迁移没有提供新的图片→渲染→API 全流程。历史 `all_model_infer/` 原始候选集并未包含上述 54 个更新，使用时需另行准备；当前客观 GT v5 也不能替代冻结主观实验的旧快照。详见 [版本与来源说明](docs/SUBJECTIVE_SYNC_PROVENANCE.md)。
+Two deployment datasets are retained under the same frozen method:
 
-主观评测仅保留冻结 OLS5 方案，入口为 `ambihtmlbench-proxy` 或
-`python -m benchmark.frozen_proxy_cli`，提供 `validate`、`replay`、`calibrate`。
-历史 Arena v1 的在线裁判、渲染预检、调度、配置和专用测试已移除。
+| Dataset | GPT-5.6-Sol BT score | Role |
+|---|---:|---|
+| `original_single` | 154.34 | Original single-vote deployment |
+| `candidate_refresh` | 154.70 | **Current paper results** |
 
-## 4. 目录结构
+The refresh accepted 54 model-page replacements affecting 98 comparisons. Of these, 21 belong to the earlier human subset; old labels do not validate the updated candidates. All 10,000 deployment comparisons are proxy-scored, so the leaderboard does not measure full-deployment human accuracy, recall, or F1.
+
+### Validate and replay recorded judgments
+
+The repository includes frozen code, configuration, prompts, aggregate evidence, and both leaderboard releases. Full judgment records, candidate/reference images, and participant annotations are external artifacts. The `artifacts/` paths below are examples of separately supplied files.
+
+Validate the paper's recorded results:
+
+```bash
+python -m benchmark.frozen_proxy_cli validate --results artifacts/candidate_refresh/single_results.jsonl --config configs/subjective_ols5_frozen.json --artifact-manifest evidence/subjective/dataset_versions.json --dataset candidate_refresh
+```
+
+Replay the leaderboard and bootstrap intervals:
+
+```bash
+python -m benchmark.frozen_proxy_cli replay --results artifacts/candidate_refresh/single_results.jsonl --config configs/subjective_ols5_frozen.json --artifact-manifest evidence/subjective/dataset_versions.json --dataset candidate_refresh --out-dir outputs/candidate_refresh_replay --bootstrap 2000
+```
+
+Replay and calibration require a new output directory and refuse to overwrite an existing one. Without an artifact manifest, validation checks structure but cannot authenticate a paper release. `--fixture` is for small synthetic tests and must not be described as paper reproduction.
+
+Use `calibrate` to reproduce OLS fitting and leave-one-annotation-block-out evaluation from recorded calibration judgments and human targets. See [Frozen OLS5 evaluation](docs/FROZEN_PROXY.md) for the command and detailed scoring semantics.
+
+The repository does not provide a new image-to-render-to-API collection pipeline. Historical inference files do not contain the 54 refreshed candidates, and objective GT v5 is not interchangeable with the frozen subjective GT snapshot. See [version and provenance notes](docs/SUBJECTIVE_SYNC_PROVENANCE.md) before preparing external inputs.
+
+## Repository layout
 
 ```text
 benchmark/
-  objective_v3.py          # 当前客观评测：匹配、指标、leaderboard、可视化
-  objective_reports.py     # 合并已有客观评测 CSV，复用历史报表口径
-  html_extractor.py        # Chromium 渲染后的 block 抽取
-  cli.py                   # 客观 eval-objective-v3 命令
-  frozen_proxy_cli.py      # 当前主观代理：离线 validate / replay / calibrate
-  schema.py                # 页面元素数据结构
-  scorer.py                # 旧版基础 scorer，非当前主客观榜单入口
-  frozen_proxy.py          # 冻结系数组合、soft Bradley–Terry 与整页 bootstrap
-  frozen_proxy_io.py       # 输入校验、方向归一化与来源哈希
-  frozen_calibration.py    # OLS 校准和留一标注块验证
-scripts/
-  build_leaderboard.py
-  convert_json_infer_to_model_dirs.py
-  rebuild_objective_v5_reports.py
-  merge_lowpage_rerun_results.py
-  update_paper_objective_eval.py
-tests/
-  unit/test_objective_v3.py
-configs/
-  subjective_ols5_frozen.json
-evidence/subjective/       # 脱敏轻量证据、两版榜单和来源哈希；不含原始判断全集
-main.py
-pyproject.toml
-requirements.txt
-requirements-dev.txt
+  cli.py                    # Objective evaluation CLI
+  objective_v3.py           # Alignment, metrics, reports, and visualizations
+  objective_reports.py      # Merge existing objective score CSVs
+  html_extractor.py         # Visible block extraction with Chromium
+  schema.py                 # Page and element data structures
+  scorer.py                 # Legacy objective Python API
+  frozen_proxy_cli.py       # Offline validate, replay, and calibrate commands
+  frozen_proxy.py           # Frozen scoring, soft Bradley?Terry, and bootstrap
+  frozen_proxy_io.py        # Record validation and artifact identity checks
+  frozen_calibration.py     # OLS fitting and annotation-block evaluation
+  prompts/                  # Frozen English OLS5 prompt
+configs/                    # Frozen OLS5 coefficients
+scripts/                    # Report and dataset preparation utilities
+tests/                      # Unit, integration, and regression tests
+evidence/subjective/        # Aggregate evidence, result versions, and digests
+docs/                       # Architecture, protocol, and provenance
+main.py                     # Objective CLI entry point
 ```
 
-## 5. 注意事项
-
-- `outputs/` 和 `all_model_infer/` 均为本地目录，已被 Git 忽略；主分支当前版本不包含模型推理产物。
-- `AmbiHTMLBench_GT_v5_1115.json` 是当前客观评测默认 GT 文件。
-- 若只想快速检查代码是否可运行，建议使用 `--max-pages` 或 `--page-ids`。
-- 若只需要 CSV 分数而不需要人工检查匹配，可加 `--no-visualizations` 降低运行时间和输出体积。
+See [Architecture](docs/ARCHITECTURE.md) for module responsibilities and [Subjective evidence](evidence/subjective/README.md) for the included experiment records.
