@@ -41,6 +41,8 @@ AmbiHTMLBench_GT_v5_1115.json
 
 默认模型输出目录：
 
+`all_model_infer/` 由使用者在本地准备，不随主分支代码发布，已加入 Git 忽略规则。
+
 ```text
 all_model_infer/
   model_a/
@@ -149,6 +151,8 @@ text_quality = 1 - text_edit_distance
 weighted_score = (text_quality + layout_graph_similarity + 0.3 * table_teds) / 2.3
 ```
 
+如果某个模型的评测页面均没有 GT 表格，则去掉表格项，分母改为 `2.0`。
+
 其中 TEDS-S 是诊断指标，不额外进入 weighted score，避免重复计算表格结构。
 
 ### 2.6 Layout Graph 分数
@@ -176,6 +180,16 @@ layout_graph_similarity = 0.55 * edge_score + 0.30 * node_score + 0.15 * coverag
 - 每个匹配组对应的 GT 文本和预测文本。
 
 这部分主要用于人工检查匹配是否合理。
+
+### 2.8 合并已有实验报表
+
+安装项目后，可以合并多个 `page_scores.csv`，无需重新渲染 HTML：
+
+```bash
+python -m scripts.build_leaderboard outputs/run_a/page_scores.csv outputs/run_b/page_scores.csv --out-dir outputs/merged
+```
+
+使用 `--exclude-model 模型名` 排除模型，可重复指定。四个 `build_leaderboard_*` 实验脚本保留原有默认路径，共用这一实现。历史合并报表的模型总分始终除以 `2.3`；主评测入口在模型没有 GT 表格时使用 `2.0`，对比结果时应保持相同口径。
 
 ## 3. 主观评测
 
@@ -209,7 +223,7 @@ python -m benchmark.frozen_proxy_cli replay \
 
 输出目录必须是新目录，不覆盖冻结结果。省略 artifact manifest 时只能验证输入结构，不能认证为论文发布数据；`--fixture` 仅用于小型测试，不是论文复现。校准数据的离线 OLS/留一题卷复现见 [冻结代理说明](docs/FROZEN_PROXY.md)。
 
-本次迁移没有提供新的图片→渲染→API 全流程。仓库现有 `all_model_infer/` 仍是原始候选集，并未包含上述 54 个更新；当前客观 GT v5 也不能替代冻结主观实验的旧快照。详见 [版本与来源说明](docs/SUBJECTIVE_SYNC_PROVENANCE.md)。
+本次迁移没有提供新的图片→渲染→API 全流程。历史 `all_model_infer/` 原始候选集并未包含上述 54 个更新，使用时需另行准备；当前客观 GT v5 也不能替代冻结主观实验的旧快照。详见 [版本与来源说明](docs/SUBJECTIVE_SYNC_PROVENANCE.md)。
 
 ### 3.3 历史 Arena v1
 
@@ -220,6 +234,7 @@ python -m benchmark.frozen_proxy_cli replay \
 ```text
 benchmark/
   objective_v3.py          # 当前客观评测：匹配、指标、leaderboard、可视化
+  objective_reports.py     # 合并已有客观评测 CSV，复用历史报表口径
   html_extractor.py        # Chromium 渲染后的 block 抽取
   cli.py                   # 客观 eval-objective-v3 + 历史 Arena v1 命令
   frozen_proxy_cli.py      # 当前主观代理：离线 validate / replay / calibrate
@@ -232,6 +247,7 @@ benchmark/
   subjective.py            # 历史 v1：七轴、Prompt、解析与方向归一化
   render.py                # Chromium 复用与有界回退
 scripts/
+  build_leaderboard.py
   convert_json_infer_to_model_dirs.py
   rebuild_objective_v5_reports.py
   merge_lowpage_rerun_results.py
@@ -249,7 +265,7 @@ requirements-dev.txt
 
 ## 5. 注意事项
 
-- `outputs/` 和 `all_model_infer/` 通常很大，默认不建议提交。
+- `outputs/` 和 `all_model_infer/` 均为本地目录，已被 Git 忽略；主分支当前版本不包含模型推理产物。
 - `AmbiHTMLBench_GT_v5_1115.json` 是当前客观评测默认 GT 文件。
 - 若只想快速检查代码是否可运行，建议使用 `--max-pages` 或 `--page-ids`。
 - 若只需要 CSV 分数而不需要人工检查匹配，可加 `--no-visualizations` 降低运行时间和输出体积。

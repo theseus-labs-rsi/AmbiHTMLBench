@@ -1,9 +1,7 @@
 from __future__ import annotations
 
+import argparse
 from pathlib import Path
-
-
-TEX = Path(r"D:\helloworld\HTMLbench\AmbiHTMLBench-论文\iclr2025_conference.tex")
 
 
 BLOCK_MATCHING = r"""\subsubsection{Block Matching Algorithm}
@@ -65,11 +63,14 @@ def replace_between(text: str, start: str, end: str, replacement: str) -> str:
 
 
 def main() -> None:
-    text = TEX.read_text(encoding="utf-8")
+    parser = argparse.ArgumentParser(description="Update objective evaluation sections in a LaTeX paper.")
+    parser.add_argument("tex", type=Path, help="Path to the LaTeX source to update")
+    args = parser.parse_args()
+    text = args.tex.read_text(encoding="utf-8")
     text = replace_between(text, r"\subsubsection{Block Matching Algorithm}", r"\subsubsection{Content consistency}", BLOCK_MATCHING)
     text = replace_between(text, r"\subsubsection{Content consistency}", r"\subsubsection{Layout consistency}", CONTENT)
     text = replace_between(text, r"\subsection{Text normalization and grouping}", r"\subsection{Layout graph similarity}", APP_TEXT)
-    TEX.write_text(text, encoding="utf-8", newline="\n")
+    args.tex.write_text(text, encoding="utf-8", newline="\n")
 
 
 if __name__ == "__main__":
