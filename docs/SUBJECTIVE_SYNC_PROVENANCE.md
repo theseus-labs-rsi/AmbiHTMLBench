@@ -1,8 +1,8 @@
 # Subjective evaluation: versions and synchronization scope
 
-This release synchronizes the paper's frozen OLS5 scoring logic, offline validation/replay/calibration interfaces, tests and lightweight evidence. It does not migrate the entire experiment workstation, run new paid judgments, rewrite historical freezes or replace repository-wide candidate data.
+The repository retains the paper's frozen OLS5 scoring logic, offline validation/replay/calibration interfaces, tests and lightweight evidence. It does not migrate the entire experiment workstation, run new paid judgments, rewrite historical freezes or bundle candidate data.
 
-The repository was partially synchronized before this change: `paper_summary.md` already reported OLS5 and the candidate-refresh leaderboard, while the recommended commands implemented historical Arena v1. The new offline path closes that code/documentation gap. Objective evaluation, the historical v1 protocol and their tests remain separate.
+Before OLS5 was synchronized, `paper_summary.md` already reported the candidate-refresh leaderboard while the recommended commands implemented historical Arena v1. The offline path closed that gap. Arena v1 code, commands, configuration and dedicated tests have since been removed; objective evaluation is retained separately.
 
 ## Three data versions
 
@@ -26,9 +26,9 @@ The candidate-update filter is part of the recorded experiment. Bootstrap interv
 
 ## Repository HTML and GT are not the frozen subjective input bundle
 
-The audited repository has 11,150 HTML files: ten models × 1,115 pages. All match the historical original inference archive by SHA-256. The 54 accepted refreshed HTML files have **not** been synchronized into that shared tree. The current candidate-refresh leaderboard therefore cannot be assigned to the repository HTML merely because model names and page IDs match.
+The historical audit examined 11,150 HTML files: ten models × 1,115 pages. All matched the original inference archive by SHA-256. The 54 accepted refreshed HTML files were **not** synchronized into that tree. `all_model_infer/` has since been removed from the current main branch and is ignored by Git. The candidate-refresh leaderboard cannot be assigned to locally supplied HTML merely because model names and page IDs match.
 
-Keep these updated subjective inputs in a versioned external artifact with per-file hashes and an explicit replacement ledger. Updating shared `all_model_infer/` requires its own owner-approved data operation; the offline scoring migration does not perform it.
+Keep these subjective inputs in a versioned external artifact with per-file hashes and an explicit replacement ledger. The offline scorer does not replace candidates.
 
 The repository's current objective GT is v5; the frozen subjective pipeline used an older GT snapshot. Both contain the same 1,115 page IDs and reference image URLs, but 649 `contentList` records changed. An audit with the frozen axis-mapping rules found four changed special-axis sets: pages 0065, 0690, 1006 and 1047. Thus matching IDs or image URLs is insufficient evidence of protocol identity. Do not silently rebuild frozen active axes from GT v5 or reselect comparisons using the current objective inputs.
 
@@ -47,7 +47,7 @@ The repository's current objective GT is v5; the frozen subjective pipeline used
 | [Dataset versions](../evidence/subjective/dataset_versions.json) | External data identities, source/result/GT hashes and version metadata |
 | [Release manifest](../evidence/subjective/release_manifest.json) | Hashes of the lightweight release files |
 
-The release manifest describes files distributed in this code/evidence bundle. The dataset manifest identifies external experiment artifacts. Neither means that the full artifacts have been published or that their privacy and redistribution rights have been cleared.
+The release manifest records the original OLS5 import snapshot, including documentation that has since changed; it is not an inventory of the current code tree. The dataset manifest identifies external experiment artifacts and the unchanged frozen configuration and prompt. Neither means that full artifacts have been published or that their privacy and redistribution rights have been cleared.
 
 Not bundled: large judgment JSONL files, SQLite checkpoints, raw participant records, candidate/reference image collections, rerun archives, rendering caches, local credentials or proprietary system fonts. Existing absolute-path freeze files remain historical evidence outside this release; they are not rewritten to appear portable. External datasets need an approved storage location, a privacy/license review and portable manifests before distribution.
 
@@ -73,4 +73,4 @@ This study uses discrete committee aggregation and human-vote weighting. Its Bri
 
 The offline layer does not need a new browser or model call. The existing full-repository tests are a separate environment boundary: the objective module imports SciPy, which was not declared in the supplied dependency files. SciPy was supplied only in the temporary verification environment; this subjective synchronization does not change the owner's objective code or dependency declarations.
 
-See [FROZEN_PROXY.md](FROZEN_PROXY.md) for commands and scoring semantics. Historical Arena v1 documentation remains under [METHOD.md](METHOD.md), [REPRODUCIBILITY.md](REPRODUCIBILITY.md) and [VALIDATION_CLAIMS.md](VALIDATION_CLAIMS.md); those historical studies and their negative findings are not rewritten as the new human experiment.
+See [FROZEN_PROXY.md](FROZEN_PROXY.md) for commands and scoring semantics. Historical Arena v1 code and documentation remain available in Git history. The committee and calibration evidence above retain the studies' recorded findings and boundaries.

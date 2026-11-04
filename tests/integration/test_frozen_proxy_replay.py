@@ -187,22 +187,6 @@ def test_artifact_digest_authenticates_input_and_rejects_modified_file(tmp_path,
         )
 
 
-def test_old_arena_cli_arguments_remain_compatible():
-    from benchmark.cli import build_parser
-
-    parser = build_parser()
-    args = parser.parse_args(["arena-run", "--manifest", "offline.json"])
-    assert args.manifest == "offline.json"
-    assert args.concurrency == 4
-    report = parser.parse_args([
-        "arena-report", "--manifest", "offline.json", "--decisions-json", "decisions.json",
-    ])
-    assert report.bootstrap_replicates == 1000
-    assert report.bootstrap_seed == 20260812
-    objective = parser.parse_args(["eval-objective-v3"])
-    assert objective.gt_json == "AmbiHTMLBench_GT_v5_1115.json"
-    assert objective.infer_dir == "all_model_infer"
-
 
 def calibration_fixture(tmp_path):
     """Two full-rank blocks; four-vote means are 0.5, not last-vote labels."""

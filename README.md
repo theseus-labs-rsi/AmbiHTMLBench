@@ -225,9 +225,9 @@ python -m benchmark.frozen_proxy_cli replay \
 
 本次迁移没有提供新的图片→渲染→API 全流程。历史 `all_model_infer/` 原始候选集并未包含上述 54 个更新，使用时需另行准备；当前客观 GT v5 也不能替代冻结主观实验的旧快照。详见 [版本与来源说明](docs/SUBJECTIVE_SYNC_PROVENANCE.md)。
 
-### 3.3 历史 Arena v1
-
-`arena-preflight`、`arena-run`、`arena-report` 及旧配置继续保留，用于历史单裁判双方向实验；其中 `arena-run` 会调用付费 API。方向不一致折为 reliability TIE、1000 中心 BT、round-robin block bootstrap 等旧语义不属于当前 OLS5 部署。历史方法和验证边界见 [Method v1](docs/METHOD.md) 与 [旧验证记录](docs/REPRODUCIBILITY.md)，旧测试和冻结 prompt 均不改写。
+主观评测仅保留冻结 OLS5 方案，入口为 `ambihtmlbench-proxy` 或
+`python -m benchmark.frozen_proxy_cli`，提供 `validate`、`replay`、`calibrate`。
+历史 Arena v1 的在线裁判、渲染预检、调度、配置和专用测试已移除。
 
 ## 4. 目录结构
 
@@ -236,16 +236,13 @@ benchmark/
   objective_v3.py          # 当前客观评测：匹配、指标、leaderboard、可视化
   objective_reports.py     # 合并已有客观评测 CSV，复用历史报表口径
   html_extractor.py        # Chromium 渲染后的 block 抽取
-  cli.py                   # 客观 eval-objective-v3 + 历史 Arena v1 命令
+  cli.py                   # 客观 eval-objective-v3 命令
   frozen_proxy_cli.py      # 当前主观代理：离线 validate / replay / calibrate
   schema.py                # 页面元素数据结构
   scorer.py                # 旧版基础 scorer，非当前主客观榜单入口
-  arena.py                 # 历史 v1：编排、预检与断点续跑
-  arena_audit.py           # 历史 v1：pair collapse、可靠性与 block bootstrap
-  arena_schedule.py        # 历史 v1：平衡 round-robin 调度
-  rating.py                # 历史 v1：离散结果的 Batch Bradley--Terry
-  subjective.py            # 历史 v1：七轴、Prompt、解析与方向归一化
-  render.py                # Chromium 复用与有界回退
+  frozen_proxy.py          # 冻结系数组合、soft Bradley–Terry 与整页 bootstrap
+  frozen_proxy_io.py       # 输入校验、方向归一化与来源哈希
+  frozen_calibration.py    # OLS 校准和留一标注块验证
 scripts/
   build_leaderboard.py
   convert_json_infer_to_model_dirs.py

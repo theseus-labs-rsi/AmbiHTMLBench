@@ -1,6 +1,6 @@
 # Architecture
 
-The repository has two current evaluation paths and a historical Arena protocol.
+The repository has two evaluation paths: objective scoring and frozen OLS5.
 They use separate entry points because their inputs and scoring rules differ.
 
 ## Objective evaluation
@@ -38,17 +38,12 @@ Frozen configurations, prompts and provenance are in `configs/`,
 `benchmark/prompts/` and `evidence/subjective/`. External raw experiment artifacts
 are supplied separately. See [FROZEN_PROXY.md](FROZEN_PROXY.md).
 
-## Historical Arena v1
+The historical Arena v1 implementation, commands, renderer, schedule builder,
+configuration and dedicated tests have been removed. OLS5 has no dependency on
+them. `original_single` and `candidate_refresh` remain separate input/result
+versions of the same frozen OLS5 method; the paper uses `candidate_refresh`.
 
-`arena-preflight`, `arena-run` and `arena-report` support historical single-judge
-experiments:
-
-- `arena.py`: manifest loading, rendering preflight, API orchestration and resume.
-- `arena_schedule.py`: balanced round-robin schedules and reserve selection.
-- `subjective.py`: diagnostic axes, frozen prompt, judge client and parsing.
-- `arena_audit.py`: orientation collapse, reliability, bootstrap and reports.
-- `rating.py`: discrete Bradley–Terry fitting.
-- `render.py`: browser reuse and bounded rendering fallbacks.
-
-`arena-run` calls the configured paid API. Its rules differ from the current
-frozen OLS5 protocol; see [METHOD.md](METHOD.md).
+Runtime dependencies are limited to Playwright for objective rendering,
+RapidFuzz for text comparison and SciPy for table assignment. The offline OLS5
+modules use Python's standard library. Historical code is available in Git
+history.

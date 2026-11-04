@@ -1,6 +1,6 @@
 # Frozen OLS5 subjective evaluation
 
-This is the offline reproduction layer for the paper's human-calibrated preference proxy. It reads recorded judgments; it does not render new candidates, contact model providers, or launch paid experiments. Historical Arena v1 remains available under its original interfaces and tests, but is not the scoring protocol described here.
+This is the subjective evaluation implementation for the paper's human-calibrated preference proxy. It reads recorded judgments; it does not render new candidates, contact model providers, or launch paid experiments. The historical Arena v1 implementation and its interfaces have been removed.
 
 ## Protocol and score
 
@@ -20,7 +20,7 @@ The coefficients in [subjective_ols5_frozen.json](../configs/subjective_ols5_fro
 | openai_sol | 0.1374207709022521 |
 | openai_terra | 0.160124982073635 |
 
-There is no intercept and no weight normalization. The ten-model representation has five additional zero entries; these are not five additional observed judges. Axis scores and confidence do not enter the proxy. The [frozen prompt](../benchmark/prompts/subjective_ols5_frozen.txt) is a separate version from the historical v1 prompt.
+There is no intercept and no weight normalization. The ten-model representation has five additional zero entries; these are not five additional observed judges. Axis scores and confidence do not enter the proxy. The [frozen prompt](../benchmark/prompts/subjective_ols5_frozen.txt) defines the recorded OLS5 judgments.
 
 In particular, unanimous A does not force `p_A = 1`, and five explicit TIE labels do not force `p_A = 0.5`. Their outputs are approximately 0.8677755 and 0.4338877. Re-encoding canonical A/B and recomputing the regression is not guaranteed to yield complementary predictions. The implementation preserves the frozen convention rather than silently normalizing or symmetrizing it. Within a scored comparison, B receives the complementary soft score `1 - p_A` for ranking.
 

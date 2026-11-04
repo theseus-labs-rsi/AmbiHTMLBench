@@ -30,7 +30,9 @@ a replacement for that snapshot. New candidate HTML and image rendering are
 outside this replay release. A hash manifest must itself come from a trusted
 repository revision; it is not an independent digital signature.
 
-`release_manifest.json` hashes the lightweight release files and records their
-source paths/hashes. `reproduction_check.json` records the offline numeric replay
+`release_manifest.json` records the original OLS5 import snapshot and its source
+paths/hashes; it is not an inventory of the current tree after code cleanup.
+`dataset_versions.json` still identifies the unchanged frozen config and prompt.
+`reproduction_check.json` records the offline numeric replay
 checks for this migration. Neither authorizes paid calls or changes to the
 original results. No full-deployment human Accuracy/Recall/F1 is claimed.

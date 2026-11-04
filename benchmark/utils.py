@@ -1,9 +1,7 @@
 ﻿from __future__ import annotations
 
 from dataclasses import dataclass
-import math
 import re
-from typing import Iterable
 
 from rapidfuzz.distance import Levenshtein
 
@@ -206,24 +204,3 @@ def safe_div(a: float, b: float) -> float:
     if b == 0:
         return 0.0
     return a / b
-
-
-
-def stem_key(path: str) -> str:
-    key = path.replace("\\", "/").split("/")[-1]
-    if "." in key:
-        key = key.rsplit(".", 1)[0]
-    return key
-
-
-
-def mean(values: Iterable[float]) -> float:
-    vals = list(values)
-    if not vals:
-        return 0.0
-    return sum(vals) / len(vals)
-
-
-
-def logistic_expected(r_a: float, r_b: float) -> float:
-    return 1.0 / (1.0 + math.pow(10.0, (r_b - r_a) / 400.0))
