@@ -21,6 +21,7 @@ def _cmd_eval_objective_v3(args: argparse.Namespace) -> None:
         models=models,
         page_ids=page_ids,
         partial_interval=args.partial_interval,
+        dataset_dir=args.dataset_dir,
     )
     print(f"Objective v3 complete: models={len(leaderboard)}, page_rows={len(page_rows)}")
     print(f"page scores: {Path(args.out_dir).resolve() / 'page_scores.csv'}")
@@ -48,6 +49,7 @@ def build_parser() -> argparse.ArgumentParser:
     # all_model_infer model folders, and the new page-level metrics only.
     p = sub.add_parser("eval-objective-v3", help="evaluate all all_model_infer outputs with AmbiHTMLBench objective metrics")
     p.add_argument("--gt-json", default="AmbiHTMLBench_GT_v5_1115.json")
+    p.add_argument("--dataset-dir", help="downloaded Hugging Face dataset root containing index/pages.jsonl and pages/")
     p.add_argument("--infer-dir", default="all_model_infer")
     p.add_argument("--out-dir", default="outputs/objective_v3")
     p.add_argument("--viewport-width", type=int, default=1280)

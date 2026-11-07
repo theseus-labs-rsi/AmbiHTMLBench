@@ -38,7 +38,6 @@ def test_text_match_key_preserves_punctuation_symbols_and_cjk():
 def test_text_group_matching_supports_many_to_one():
     gt_page = {
         "ID": 1,
-        "imageUrl": "",
         "contentList": [
             {"id": "a", "left": 0, "top": 0, "width": 100, "height": 20, "visible": True, "name": "text", "remark": "hello"},
             {"id": "b", "left": 0, "top": 20, "width": 100, "height": 20, "visible": True, "name": "text", "remark": "world"},
@@ -62,7 +61,6 @@ def test_text_group_matching_supports_many_to_one():
 def test_text_group_matching_treats_xi_as_wildcard():
     gt_page = {
         "ID": 1,
-        "imageUrl": "",
         "contentList": [
             {"id": "a", "left": 0, "top": 0, "width": 100, "height": 20, "visible": True, "name": "text", "remark": "a\u03bec"},
         ],
@@ -89,7 +87,6 @@ def test_text_group_distance_uses_max_length_normalization():
     )
     gt_page = {
         "ID": 1,
-        "imageUrl": "",
         "contentList": [
             {"id": "g0", "left": 0, "top": 0, "width": 100, "height": 20, "visible": True, "name": "text", "remark": gt[0].text},
         ],
@@ -121,7 +118,6 @@ def test_placeholder_class_text_is_not_extracted(tmp_path):
 def test_formula_is_scored_as_text_not_cdm():
     gt_page = {
         "ID": 1,
-        "imageUrl": "",
         "contentList": [
             {"id": "f", "left": 0, "top": 0, "width": 100, "height": 20, "visible": True, "name": "inline_formula", "remark": "$x+y$"},
         ],
@@ -141,7 +137,6 @@ def test_formula_is_scored_as_text_not_cdm():
 def test_unmatched_table_cells_fall_back_to_text_matching():
     gt_page = {
         "ID": 1,
-        "imageUrl": "",
         "contentList": [
             {
                 "id": "t",

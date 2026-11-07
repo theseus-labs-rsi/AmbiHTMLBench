@@ -23,6 +23,7 @@ from scipy.optimize import linear_sum_assignment
 
 from .html_extractor import extract_html_with_page
 from .schema import PageData
+from .dataset import load_image_paths
 from .utils import BBox, clean_text, safe_div
 
 
@@ -80,8 +81,8 @@ def load_gt_v3(path: str | Path) -> dict[str, dict[str, Any]]:
         raise ValueError("AmbiHTMLBench GT must be a list of page objects")
     pages: dict[str, dict[str, Any]] = {}
     for page in raw:
-        if not isinstance(page, dict) or set(page.keys()) != {"ID", "contentList", "imageUrl"}:
-            raise ValueError("AmbiHTMLBench GT page must contain exactly ID/contentList/imageUrl")
+        if not isinstance(page, dict) or not {"ID", "contentList"}.issubset(page):
+            raise ValueError("AmbiHTMLBench GT page must contain ID/contentList")
         if not isinstance(page["contentList"], list):
             raise ValueError(f"page {page.get('ID')} contentList must be a list")
         pid = f"{int(page['ID']):04d}"
@@ -1401,8 +1402,14 @@ def evaluate_all_models_v3(
     models: set[str] | None = None,
     page_ids: set[str] | None = None,
     partial_interval: int = 25,
+    dataset_dir: str | Path | None = None,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     gt_pages = load_gt_v3(gt_json)
+    image_paths = load_image_paths(dataset_dir) if dataset_dir is not None and visualizations else {}
+    if dataset_dir is not None and visualizations:
+        missing = (set(gt_pages) if page_ids is None else set(gt_pages) & page_ids) - image_paths.keys()
+        if missing:
+            raise ValueError(f"Dataset index missing GT page IDs: {', '.join(sorted(missing))}")
     root = Path(infer_dir)
     out = Path(out_dir)
     page_rows: list[dict[str, Any]] = []
@@ -1464,7 +1471,7 @@ def evaluate_all_models_v3(
                             model_dir.name,
                             scores,
                             debug,
-                            gt_image=str(gt_page.get("imageUrl", "")) or None,
+                            gt_image=image_paths.get(page_id),
                             rendered_html=rendered_image,
                             html_href=str(html_path.resolve()),
                         )

@@ -164,7 +164,6 @@ def _load_quality_inspection_page(
         meta={
             "format": "quality_inspection_v1",
             "page_id": str(selected.get("ID", "")),
-            "image_url": selected.get("imageUrl", ""),
             "page_size_source": page_size_source,
             "skipped_ignored_tags": skipped,
         },
@@ -182,7 +181,7 @@ def parse_page_json(
     # Supported formats:
     # 1) {"width": ..., "height": ..., "elements": [...]}
     # 2) {"page": {"width":...,"height":...}, "items": [...]}
-    # 3) [{"ID": ..., "contentList": [...], "imageUrl": ...}, ...] (Quality Inspection GT)
+    # 3) [{"ID": ..., "contentList": [...]}, ...] (Quality Inspection GT)
     # 4) [...] (elements only, assumed relative coords)
     if isinstance(raw, list):
         if raw and isinstance(raw[0], dict) and "contentList" in raw[0] and "ID" in raw[0]:

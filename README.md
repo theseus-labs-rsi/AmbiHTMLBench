@@ -17,6 +17,8 @@ Chromium is needed only for objective evaluation. Subjective replay requires no 
 
 To get benchmark images for model inference， visit https://huggingface.co/datasets/Theseus-Lab/AmbiHTMLBench.
 
+Download and extract the dataset ZIP from Hugging Face, or use `huggingface_hub.snapshot_download`. To include local reference images in evaluation visualizations, pass `--dataset-dir /path/to/AmbiHTMLBench` (the directory containing `index/pages.jsonl` and `pages/`). Images are resolved by the annotation `ID` through the index's `page_id` and `image_path`, preserving each image's original format. No `imageUrl` field or network access is required. Without `--dataset-dir`, scoring still works, but reference images are omitted from visualizations.
+
 ## Objective evaluation
 
 Prepare HTML predictions locally. Model directory names identify models, and the first four characters of each filename identify the ground-truth page.

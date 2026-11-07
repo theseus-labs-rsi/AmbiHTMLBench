@@ -6,11 +6,11 @@ from benchmark.objective_v3 import evaluate_all_models_v3
 def test_resumed_csv_preserves_table_page_count_and_scores(tmp_path):
     gt = tmp_path / "gt.json"
     gt.write_text(json.dumps([
-        {"ID": 1, "imageUrl": "", "contentList": [
+        {"ID": 1, "contentList": [
             {"id": "a", "name": "text", "remark": "Hello", "left": 0,
              "top": 0, "width": 100, "height": 30},
         ]},
-        {"ID": 2, "imageUrl": "", "contentList": [
+        {"ID": 2, "contentList": [
             {"id": "b", "name": "table", "left": 0, "top": 0,
              "width": 100, "height": 30,
              "remark": "<table><tr><td>42</td></tr></table>"},
