@@ -13,8 +13,9 @@ Requires Python 3.10 or later.
 python -m pip install -e .
 python -m playwright install chromium
 ```
-
 Chromium is needed only for objective evaluation. Subjective replay requires no browser or API key.
+
+To get benchmark images for model inference， visit https://huggingface.co/datasets/Theseus-Lab/AmbiHTMLBench.
 
 ## Objective evaluation
 
@@ -70,6 +71,9 @@ python -m pytest
 - [Architecture](docs/ARCHITECTURE.md)
 - [Frozen OLS5 protocol](docs/FROZEN_PROXY.md)
 - [Data provenance and reproducibility](docs/SUBJECTIVE_SYNC_PROVENANCE.md)
-- [Subjective evidence and paper results](evidence/subjective/README.md)
 
 Run `python main.py --help` or `python -m benchmark.frozen_proxy_cli --help` for command options.
+
+## License
+
+This repository is licensed under the [MIT License](LICENSE).
